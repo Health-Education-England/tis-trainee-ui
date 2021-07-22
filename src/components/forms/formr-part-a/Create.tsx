@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { connect } from "react-redux";
 import { RootState } from "../../../redux/reducers";
+import MyAutocomplete from "../Autocomplete";
 import {
   Button,
   ErrorSummary,
@@ -257,14 +258,16 @@ class Create extends React.PureComponent<CreateProps> {
                 />
                 {values.declarationType === CCT_DECLARATION ? (
                   <>
-                    <SelectInputField
+                    <MyAutocomplete
                       label="Specialty 1 for Award of CCT"
                       name="cctSpecialty1"
+                      id="DeclarationSpeciality1"
                       options={curricula}
                     />
-                    <SelectInputField
+                    <MyAutocomplete
                       label="Specialty 2 for Award of CCT"
                       name="cctSpecialty2"
+                      id="DeclarationSpeciality2"
                       options={curricula}
                     />
                   </>
