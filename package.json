@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@cypress/code-coverage": "^3.9.9",
+    "@cypress/instrument-cra": "^1.4.0",
     "@cypress/react": "^5.8.0",
     "@cypress/webpack-dev-server": "^1.4.0",
     "@material-ui/core": "^4.12.2",
@@ -51,7 +52,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts -r @cypress/instrument-cra start",
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",

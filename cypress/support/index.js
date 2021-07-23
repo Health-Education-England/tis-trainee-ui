@@ -1,4 +1,5 @@
 import "./commands";
+import "@cypress/code-coverage/support";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
