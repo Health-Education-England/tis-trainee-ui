@@ -8,16 +8,18 @@ interface IProps {
   options: KeyValue[];
   label: string;
   id?: string;
-  defaultValue?: any;
-  onInputChange?: any;
   handleOpen?: any;
   inputValue?: string;
+  width?: string;
 }
 const useStyles = makeStyles(theme => ({
   wrapper: {
     position: "relative",
+    marginBottom: "20px",
     width: "100%",
-    marginBottom: "20px"
+    [theme.breakpoints.down(780)]: {
+      width: "100%!important"
+    }
   },
   chevronDown: {
     backgroundPosition: "right center",
@@ -94,15 +96,17 @@ const Autocomplete: React.FC<IProps> = (props: IProps) => {
     options: props.options.length
       ? [{ label: "", value: "" }, ...props.options]
       : [],
-    inputValue: field.value ? field.value : "",
+    inputValue: props.inputValue
+      ? props.inputValue
+      : field.value
+      ? field.value
+      : "",
     getOptionLabel: (option: KeyValue) => option.label,
     getOptionSelected: (option, value) => option.value === value.value,
     onInputChange: (_, option, reason) => {
-      if (reason === "reset") {
-        helpers.setValue(option ? option : field.value);
-      } else {
-        helpers.setValue(option);
-      }
+      reason === "reset"
+        ? helpers.setValue(option ? option : field.value)
+        : helpers.setValue(option);
     },
     onOpen: () => {
       setOpen(true);
@@ -116,7 +120,10 @@ const Autocomplete: React.FC<IProps> = (props: IProps) => {
   });
 
   return (
-    <div className={classes.wrapper}>
+    <div
+      className={classes.wrapper}
+      style={props.width ? { width: props.width } : undefined}
+    >
       <div
         className={
           error
@@ -146,7 +153,6 @@ const Autocomplete: React.FC<IProps> = (props: IProps) => {
               ? `${classes.chevronUp} nhsuk-input`
               : `${classes.chevronDown} nhsuk-input`
           }
-          style={{ cursor: "context-menu" }}
           placeholder={loading ? "Loading..." : "Select / start typing..."}
           {...getInputProps()}
         />
