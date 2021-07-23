@@ -132,7 +132,7 @@ class Create extends React.PureComponent<CreateProps> {
           validationSchema={ValidationSchema}
           onSubmit={values => this.handleSubmit(values)}
         >
-          {({ values, errors }) => (
+          {({ values, errors, setFieldValue }) => (
             <Form>
               <WarningCallout label="Important">
                 <p>
@@ -249,6 +249,9 @@ class Create extends React.PureComponent<CreateProps> {
                       value: d
                     };
                   })}
+                  onChange={() => {
+                    setFieldValue("cctSpecialty1", "", false);
+                  }}
                 />
 
                 <SelectInputField
