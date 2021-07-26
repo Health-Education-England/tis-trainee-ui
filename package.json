@@ -14,7 +14,7 @@
     "@types/react-helmet": "^6.1.1",
     "@types/react-router-dom": "^5.1.5",
     "@types/yup": "0.29.13",
-    "aws-amplify": "^3.3.13",
+    "aws-amplify": "^4.2.1",
     "aws-amplify-react": "^4.2.30",
     "axios": "^0.21.1",
     "browser-update": "^3.3.25",
