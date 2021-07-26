@@ -149,9 +149,9 @@ const Autocomplete: React.FC<IProps> = (props: IProps) => {
         )}
 
         <input
-          data-jest={props.dataJest && props.dataJest}
-          data-cy={props.dataCy && props.dataCy}
-          data-ct={props.dataCt && props.dataCt}
+          data-jest={props.dataJest ? props.dataJest : null}
+          data-cy={props.dataCy ? props.dataCy : null}
+          data-ct={props.dataCt ? props.dataCt : null}
           name={props.name}
           id={props.id ? props.id : props.name}
           className={
