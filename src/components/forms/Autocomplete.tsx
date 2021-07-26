@@ -11,6 +11,9 @@ interface IProps {
   handleOpen?: any;
   inputValue?: string;
   width?: string;
+  dataCy?: string;
+  dataJest?: string;
+  dataCt?: string;
 }
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -146,6 +149,9 @@ const Autocomplete: React.FC<IProps> = (props: IProps) => {
         )}
 
         <input
+          data-jest={props.dataJest && props.dataJest}
+          data-cy={props.dataCy && props.dataCy}
+          data-ct={props.dataCt && props.dataCt}
           name={props.name}
           id={props.id ? props.id : props.name}
           className={
