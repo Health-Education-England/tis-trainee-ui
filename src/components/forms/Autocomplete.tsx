@@ -95,7 +95,12 @@ const Autocomplete: React.FC<IProps> = props => {
     getOptionProps,
     groupedOptions
   } = useAutocomplete({
-    id: props.id ? props.id : "defaultAutocompleteID",
+    id: ((): string => {
+      if (props.id) {
+        return props.id;
+      }
+      return "defaultAutocompleteID";
+    })(),
     options: props.options.length
       ? [{ label: "", value: "" }, ...props.options]
       : [],
