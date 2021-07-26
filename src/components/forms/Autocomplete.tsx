@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Autocomplete: React.FC<IProps> = (props: IProps) => {
+const Autocomplete: React.FC<IProps> = props => {
   const [field, { error }, helpers] = useField(props);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
