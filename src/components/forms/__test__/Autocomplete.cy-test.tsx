@@ -12,7 +12,7 @@ const options: KeyValue[] = [
 ];
 
 const getComponent = (
-  options: KeyValue[],
+  opts: KeyValue[],
   initialValue: {} = {},
   inputValue: string = ""
 ) => (
@@ -23,7 +23,9 @@ const getComponent = (
     validateOnChange={true}
     validateOnBlur={true}
     initialValues={initialValue}
-    onSubmit={() => {}}
+    onSubmit={() => {
+      cy.get("input").clear();
+    }}
   >
     {() => (
       <Form>
@@ -31,7 +33,7 @@ const getComponent = (
           label="Specialty 1 for Award of CCT"
           name="cctSpecialty1"
           id="DeclarationSpeciality1"
-          options={options}
+          options={opts}
           width="50%"
           inputValue={inputValue}
         />
