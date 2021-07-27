@@ -73,11 +73,11 @@ Cypress.Commands.add(
       .should("exist")
       .should("not.have.value", "--Please select--");
 
-    cy.get("#cctSpecialty1")
+    cy.get("[data-cy=cctSpecialty1]")
       .should("exist")
       .should("not.have.value", "--Please select--");
 
-    cy.get("#cctSpecialty2")
+    cy.get("[data-cy=cctSpecialty2]")
       .should("exist")
       .should("not.have.value", "--Please select--");
 

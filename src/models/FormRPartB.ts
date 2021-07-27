@@ -1,5 +1,7 @@
 import { IFormR } from "./IFormR";
 
+type DateType = Date | string | undefined;
+
 export interface FormRPartB extends IFormR {
   traineeTisId?: string;
   forename: string;
@@ -8,8 +10,8 @@ export interface FormRPartB extends IFormR {
   email: string;
   localOfficeName: string;
   prevRevalBody: string;
-  currRevalDate: Date | undefined;
-  prevRevalDate: Date | undefined | null;
+  currRevalDate: DateType;
+  prevRevalDate: Date | string | undefined | null;
   programmeSpecialty: string;
   dualSpecialty: string;
   work: Work[];
@@ -40,7 +42,7 @@ export interface FormRPartB extends IFormR {
 
 export interface Declaration {
   declarationType: string | undefined;
-  dateOfEntry: Date | undefined;
+  dateOfEntry: DateType;
   title: string;
   locationOfEntry: string;
 }

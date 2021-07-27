@@ -16,8 +16,10 @@
  * @type {Cypress.PluginConfig}
  */
 const injectDevServer = require("@cypress/react/plugins/react-scripts");
+const codeCoverage = require("@cypress/code-coverage/task");
 
 module.exports = (on, config) => {
   injectDevServer(on, config);
+  codeCoverage(on, config);
   return config;
 };

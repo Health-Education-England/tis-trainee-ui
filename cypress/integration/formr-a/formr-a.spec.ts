@@ -100,11 +100,11 @@ describe("Form R (Part A)", () => {
           cy.get("#email").should("exist").type("traineeui.tester@hee.nhs.uk");
 
           //-- Declarations section --
-          cy.get("#cctSpecialty1").should("not.exist");
-          cy.get("#cctSpecialty2").should("not.exist");
+          cy.get("[data-cy=cctSpecialty1]").should("not.exist");
+          cy.get("[data-cy=cctSpecialty2]").should("not.exist");
           cy.get("[data-cy=declarationType0]").click();
-          cy.get("#cctSpecialty1").should("exist");
-          cy.get("#cctSpecialty2").should("exist");
+          cy.get("[data-cy=cctSpecialty1]").should("exist");
+          cy.get("[data-cy=cctSpecialty2]").should("exist");
 
           //- Programme specialty section --
           cy.get("#programmeSpecialty > option")
@@ -115,22 +115,19 @@ describe("Form R (Part A)", () => {
                 .select(selectedItem)
                 .should("not.have.value", "--Please select--");
             });
-          cy.get("#cctSpecialty1 > option")
-            .eq(1)
-            .then(element => {
-              const selectedItem = element.val().toString();
-              cy.get("#cctSpecialty1")
-                .select(selectedItem)
-                .should("not.have.value", "--Please select--");
-            });
-          cy.get("#cctSpecialty2 > option")
-            .eq(2)
-            .then(element => {
-              const selectedItem = element.val().toString();
-              cy.get("#cctSpecialty2")
-                .select(selectedItem)
-                .should("not.have.value", "--Please select--");
-            });
+
+          cy.get("[data-cy=cctSpecialty1]").should("exist");
+          cy.get("[data-cy=cctSpecialty1]").click();
+          cy.get("[data-cy=cctSpecialty1] + ul").should("exist");
+          cy.get("[data-cy=cctSpecialty1] + ul li").eq(1).click();
+          cy.get("[data-cy=cctSpecialty1]").should("not.have.value", "");
+
+          cy.get("[data-cy=cctSpecialty2]").should("exist");
+          cy.get("[data-cy=cctSpecialty2]").click();
+          cy.get("[data-cy=cctSpecialty2] + ul").should("exist");
+          cy.get("[data-cy=cctSpecialty2] + ul li").eq(1).click();
+          cy.get("[data-cy=cctSpecialty2]").should("not.have.value", "");
+
           cy.get("#college > option")
             .eq(1)
             .then(element => {
@@ -221,20 +218,23 @@ describe("Form R (Part A)", () => {
           cy.get("#email").should("exist").type("traineeui.tester@hee.nhs.uk");
 
           //-- Declarations section --
-          cy.get("#cctSpecialty1").should("not.exist");
-          cy.get("#cctSpecialty2").should("not.exist");
+          cy.get("[data-cy=cctSpecialty1]").should("not.exist");
+          cy.get("[data-cy=cctSpecialty2]").should("not.exist");
           cy.get("[data-cy=declarationType0]").click();
-          cy.get("#cctSpecialty1").should("exist");
-          cy.get("#cctSpecialty2").should("exist");
+          cy.get("[data-cy=cctSpecialty1]").should("exist");
+          cy.get("[data-cy=cctSpecialty2]").should("exist");
 
           //- Programme specialty section --
           cy.get("#programmeSpecialty")
             .should("exist")
             .select("Geriatric Medicine");
-          cy.get("#cctSpecialty1")
-            .should("exist")
-            .select("Geriatric Medicine")
-            .should("not.have.value", "--Please select--");
+          cy.get("[data-cy=cctSpecialty1]").click();
+          cy.get("[data-cy=cctSpecialty1] > ul").should("exists");
+          cy.get("[data-cy=cctSpecialty1] > ul li").first().click();
+          cy.get("[data-cy=cctSpecialty1]").should(
+            "have.value",
+            "ACCS - Anaesthetics"
+          );
 
           cy.get("#college")
             .should("exist")

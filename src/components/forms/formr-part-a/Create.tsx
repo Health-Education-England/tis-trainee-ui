@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { connect } from "react-redux";
 import { RootState } from "../../../redux/reducers";
+import Autocomplete from "../Autocomplete";
 import {
   Button,
   ErrorSummary,
@@ -131,7 +132,7 @@ class Create extends React.PureComponent<CreateProps> {
           validationSchema={ValidationSchema}
           onSubmit={values => this.handleSubmit(values)}
         >
-          {({ values, errors }) => (
+          {({ values, errors, setFieldValue }) => (
             <Form>
               <WarningCallout label="Important">
                 <p>
@@ -248,6 +249,9 @@ class Create extends React.PureComponent<CreateProps> {
                       value: d
                     };
                   })}
+                  onChange={() => {
+                    setFieldValue("cctSpecialty1", "", false);
+                  }}
                 />
 
                 <SelectInputField
@@ -257,15 +261,21 @@ class Create extends React.PureComponent<CreateProps> {
                 />
                 {values.declarationType === CCT_DECLARATION ? (
                   <>
-                    <SelectInputField
+                    <Autocomplete
                       label="Specialty 1 for Award of CCT"
                       name="cctSpecialty1"
+                      id="DeclarationSpeciality1"
                       options={curricula}
+                      dataCy="cctSpecialty1"
+                      width="75%"
                     />
-                    <SelectInputField
+                    <Autocomplete
                       label="Specialty 2 for Award of CCT"
                       name="cctSpecialty2"
+                      id="DeclarationSpeciality2"
                       options={curricula}
+                      dataCy="cctSpecialty2"
+                      width="75%"
                     />
                   </>
                 ) : null}

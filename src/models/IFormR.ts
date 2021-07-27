@@ -1,8 +1,10 @@
 import { LifeCycleState } from "./LifeCycleState";
 
+type DateType = Date | string | null;
+
 export interface IFormR {
   id?: string;
-  submissionDate: Date | null;
-  lastModifiedDate: Date | null;
+  submissionDate: DateType;
+  lastModifiedDate: DateType;
   lifecycleState: LifeCycleState;
 }

@@ -11,8 +11,8 @@ export const submittedFormRPartBs: FormRPartB[] = [
     email: "email@email.com",
     localOfficeName: "Health Education England Thames Valley",
     prevRevalBody: "Health Education England Midlands",
-    prevRevalDate: new Date("2020-04-22"),
-    currRevalDate: new Date("2020-04-22"),
+    prevRevalDate: "2020-04-22",
+    currRevalDate: "2020-04-22",
     programmeSpecialty: "ST3",
     dualSpecialty: "DS",
     work: [
@@ -49,7 +49,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     previousDeclarations: [
       {
         declarationType: "Significant Event",
-        dateOfEntry: new Date("2020-03-07"),
+        dateOfEntry: "2020-03-07",
         title: "Previous declaration title",
         locationOfEntry: "Previous declaration location of entry"
       }
@@ -59,7 +59,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     currentDeclarations: [
       {
         declarationType: "Complaint",
-        dateOfEntry: new Date("2020-06-12"),
+        dateOfEntry: "2020-06-12",
         title: "Current declaration title",
         locationOfEntry: "Current declaration location of entry"
       }
@@ -69,7 +69,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     haveCovidDeclarations: null,
     covidDeclarationDto: null,
     lifecycleState: LifeCycleState.Submitted,
-    submissionDate: new Date("2020-04-22"),
-    lastModifiedDate: new Date("2020-04-15")
+    submissionDate: "2020-04-22",
+    lastModifiedDate: "2020-04-15"
   }
 ];

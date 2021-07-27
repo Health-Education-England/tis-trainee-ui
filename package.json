@@ -1,10 +1,14 @@
 {
   "name": "trainee-ui-app",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "private": true,
   "dependencies": {
+    "@cypress/code-coverage": "^3.9.9",
+    "@cypress/instrument-cra": "^1.4.0",
     "@cypress/react": "^5.8.0",
     "@cypress/webpack-dev-server": "^1.4.0",
+    "@material-ui/core": "^4.12.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
     "@sentry/browser": "^6.8.0",
     "@types/node": "^14.14.32",
     "@types/qrcode.react": "^1.0.1",
@@ -48,7 +52,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts -r @cypress/instrument-cra start",
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",
@@ -89,6 +93,7 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/redux-mock-store": "^1.0.2",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
+    "babel-plugin-istanbul": "^6.0.0",
     "cypress-multi-reporters": "^1.4.0",
     "enzyme": "^3.11.0",
     "eslint": "^7.30.0",

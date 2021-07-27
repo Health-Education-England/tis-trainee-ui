@@ -1,16 +1,18 @@
 import { IFormR } from "./IFormR";
 
+type DateType = Date | string | null;
+
 export interface FormRPartA extends IFormR {
   traineeTisId?: string;
   forename: string;
   surname: string;
   gmcNumber: string;
   localOfficeName: string;
-  dateOfBirth: Date | null;
+  dateOfBirth: DateType;
   gender: string;
   immigrationStatus: string;
   qualification: string;
-  dateAttained: Date | null;
+  dateAttained: DateType;
   medicalSchool: string;
   address1: string;
   address2: string;
@@ -25,9 +27,9 @@ export interface FormRPartA extends IFormR {
   cctSpecialty1: string;
   cctSpecialty2: string;
   college: string;
-  completionDate: Date | null;
+  completionDate: DateType;
   trainingGrade: string;
-  startDate: Date | null;
+  startDate: DateType;
   programmeMembershipType: string;
   wholeTimeEquivalent: number | undefined;
   declarationType: string;
