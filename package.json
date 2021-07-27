@@ -106,8 +106,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "!**/node_modules/**",
-      "!**/vendor/**",
+      "**/src/**/*.{ts,tsx}",
       "!**/src/mock-data/*.{js,jsx,ts,tsx}",
       "!**/src/redux/store/*.{js,jsx,ts,tsx}",
       "!**/src/redux/types.ts",
@@ -116,7 +115,7 @@
       "!**/src/index.tsx",
       "!**/src/models/*.ts",
       "!**/src/redux/reducers/index.ts",
-      "**/src/**/*.{ts,tsx}"
+      "!**/src/**/*.cy-test.{js,jsx,ts,tsx}"
     ],
     "coverageReporters": [
       "json",
