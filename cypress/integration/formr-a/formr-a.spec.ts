@@ -107,23 +107,17 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=cctSpecialty2]").should("exist");
 
           //- Programme specialty section --
-          cy.get("#programmeSpecialty > option")
-            .eq(1)
-            .then(element => {
-              const selectedItem = element.val().toString();
-              cy.get("#programmeSpecialty")
-                .select(selectedItem)
-                .should("not.have.value", "--Please select--");
-            });
+          cy.get("[data-cy=programmeSpecialty]").should("exist").click();
+          cy.get("[data-cy=programmeSpecialty] + ul").should("exist");
+          cy.get("[data-cy=programmeSpecialty] + ul li").eq(1).click();
+          cy.get("[data-cy=programmeSpecialty]").should("not.have.value", "");
 
-          cy.get("[data-cy=cctSpecialty1]").should("exist");
-          cy.get("[data-cy=cctSpecialty1]").click();
+          cy.get("[data-cy=cctSpecialty1]").should("exist").click();
           cy.get("[data-cy=cctSpecialty1] + ul").should("exist");
           cy.get("[data-cy=cctSpecialty1] + ul li").eq(1).click();
           cy.get("[data-cy=cctSpecialty1]").should("not.have.value", "");
 
-          cy.get("[data-cy=cctSpecialty2]").should("exist");
-          cy.get("[data-cy=cctSpecialty2]").click();
+          cy.get("[data-cy=cctSpecialty2]").should("exist").click();
           cy.get("[data-cy=cctSpecialty2] + ul").should("exist");
           cy.get("[data-cy=cctSpecialty2] + ul li").eq(1).click();
           cy.get("[data-cy=cctSpecialty2]").should("not.have.value", "");

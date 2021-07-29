@@ -51,6 +51,15 @@ describe("Form R Part A - Create", () => {
     cy.get(`[data-cy="forename"]`).should("exist");
   });
 
+  it("should dispaly the selected Programme Specialty option ", () => {
+    cy.get("#programmeSpecialty").should("exist").click();
+    cy.get(".nhsuk-error-message").should("exist");
+    cy.get("#programmeSpecialty").clear().type("do");
+    cy.get("#programmeSpecialty + ul li").first().click();
+    cy.get("#programmeSpecialty").should("have.value", "Doctor");
+    cy.get(".nhsuk-error-message").should("not.exist");
+  });
+
   it("should display Specialties 1 & 2 when CCT Declaration is selected", () => {
     cy.get(`[data-cy="declarationType0"]`).should("exist");
     cy.get("#DeclarationSpeciality1").should("not.exist");
@@ -62,7 +71,7 @@ describe("Form R Part A - Create", () => {
   it("Should display the correct option when using smart search", () => {
     cy.get("[data-cy=declarationType0]").click();
     cy.get("#DeclarationSpeciality1").clear().type("doct");
-    cy.get("#DeclarationSpeciality1 + ul li:first").click();
+    cy.get("#DeclarationSpeciality1 + ul li").first().click();
     cy.get("#DeclarationSpeciality1").should("have.value", "Doctor");
   });
 
@@ -75,7 +84,7 @@ describe("Form R Part A - Create", () => {
     cy.get("[data-cy=declarationType0]").click();
     cy.get(".nhsuk-error-message").should("exist");
     cy.get("#DeclarationSpeciality1").clear().type("gp");
-    cy.get("#DeclarationSpeciality1 + ul li:first").click();
+    cy.get("#DeclarationSpeciality1 + ul li").first().click();
     cy.get("#DeclarationSpeciality1").should("have.value", "GP Returner");
     cy.get(".nhsuk-error-message").should("not.exist");
   });
