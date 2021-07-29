@@ -253,11 +253,13 @@ class Create extends React.PureComponent<CreateProps> {
                     setFieldValue("cctSpecialty1", "", false);
                   }}
                 />
-
-                <SelectInputField
+                <Autocomplete
                   label="Programme Specialty"
                   name="programmeSpecialty"
+                  id="programmeSpecialty"
                   options={curricula}
+                  dataCy="programmeSpecialty"
+                  width="75%"
                 />
                 {values.declarationType === CCT_DECLARATION ? (
                   <>
