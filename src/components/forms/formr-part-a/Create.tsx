@@ -258,8 +258,7 @@ class Create extends React.PureComponent<CreateProps> {
                   name="programmeSpecialty"
                   id="programmeSpecialty"
                   options={curricula.filter(
-                    c =>
-                      c.curriculumSubType === "MEDICAL_CURRICULUM"
+                    c => c.curriculumSubType === "MEDICAL_CURRICULUM"
                   )}
                   dataCy="programmeSpecialty"
                   width="75%"
