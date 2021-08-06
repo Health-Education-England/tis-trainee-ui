@@ -143,7 +143,8 @@ function getKeyValuesFromResponse(response: AxiosResponse<any[]>): KeyValue[] {
     return {
       tisId: d.tisId,
       label: d.label,
-      value: d.label
+      value: d.label,
+      curriculumSubType: d.curriculumSubType
     };
   });
 }
