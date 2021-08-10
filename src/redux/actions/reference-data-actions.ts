@@ -18,6 +18,7 @@ import {
 import { TraineeReferenceService } from "../../services/TraineeReferenceService";
 import { KeyValue } from "../../models/KeyValue";
 import { AxiosResponse } from "axios";
+import { CurriculumKeyValue } from "../../models/CurriculumKeyValue";
 
 export const loadReferenceData =
   (referenceService: TraineeReferenceService) =>
@@ -117,7 +118,7 @@ export const loadReferenceData =
       .then(response => {
         dispatch({
           type: LOAD_REFERENCE_CURRICULA_SUCCESS,
-          payload: getKeyValuesFromResponse(response)
+          payload: getCurriculumKeyValuesFromResponse(response)
         });
       })
       .catch(error =>
@@ -144,6 +145,18 @@ function getKeyValuesFromResponse(response: AxiosResponse<any[]>): KeyValue[] {
       tisId: d.tisId,
       label: d.label,
       value: d.label
+    };
+  });
+}
+function getCurriculumKeyValuesFromResponse(
+  response: AxiosResponse<any[]>
+): CurriculumKeyValue[] {
+  return response.data.map<CurriculumKeyValue>(d => {
+    return {
+      tisId: d.tisId,
+      label: d.label,
+      value: d.label,
+      curriculumSubType: d.curriculumSubType
     };
   });
 }
