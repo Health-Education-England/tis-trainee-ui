@@ -1,6 +1,5 @@
-export interface CurriculumKeyValue {
-  label: string;
-  value: string;
-  tisId?: string;
+import { KeyValue } from "./KeyValue";
+
+export interface CurriculumKeyValue extends KeyValue {
   curriculumSubType?: string;
 }
