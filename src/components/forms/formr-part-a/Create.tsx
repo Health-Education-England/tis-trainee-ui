@@ -30,6 +30,7 @@ import Loading from "../../common/Loading";
 import { loadReferenceData } from "../../../redux/actions/reference-data-actions";
 import { TraineeReferenceService } from "../../../services/TraineeReferenceService";
 import { KeyValue } from "../../../models/KeyValue";
+import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import { AxiosResponse } from "axios";
@@ -44,7 +45,7 @@ interface CreateProps extends GenericOwnProps {
   localOffices: KeyValue[];
   trainingGrades: KeyValue[];
   immigrationStatus: KeyValue[];
-  curricula: KeyValue[];
+  curricula: CurriculumKeyValue[];
   isLoaded: boolean;
   loadReferenceData: (
     referenceService: TraineeReferenceService
@@ -257,7 +258,9 @@ class Create extends React.PureComponent<CreateProps> {
                   label="Programme Specialty"
                   name="programmeSpecialty"
                   id="programmeSpecialty"
-                  options={curricula}
+                  options={curricula.filter(
+                    c => c.curriculumSubType === "MEDICAL_CURRICULUM"
+                  )}
                   dataCy="programmeSpecialty"
                   width="75%"
                 />

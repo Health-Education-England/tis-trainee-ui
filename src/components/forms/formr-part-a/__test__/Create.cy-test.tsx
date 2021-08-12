@@ -22,8 +22,16 @@ describe("Form R Part A - Create", () => {
         ],
         designatedBodies: [],
         curricula: [
-          { label: "GP Returner", value: "GP Returner" },
-          { label: "Doctor", value: "Doctor" }
+          {
+            label: "GP Returner",
+            value: "GP Returner",
+            curriculumSubType: "SUB_SPECIALTY"
+          },
+          {
+            label: "Doctor",
+            value: "Doctor",
+            curriculumSubType: "MEDICAL_CURRICULUM"
+          }
         ],
         qualifications: [{ label: "qualification", value: "qualification" }],
         grades: [{ label: "grade", value: "grade" }],
@@ -54,10 +62,19 @@ describe("Form R Part A - Create", () => {
   it("should dispaly the selected Programme Specialty option ", () => {
     cy.get("#programmeSpecialty").should("exist").click();
     cy.get(".nhsuk-error-message").should("exist");
-    cy.get("#programmeSpecialty").clear().type("do");
+    cy.get("#programmeSpecialty").clear().type("Do");
     cy.get("#programmeSpecialty + ul li").first().click();
     cy.get("#programmeSpecialty").should("have.value", "Doctor");
     cy.get(".nhsuk-error-message").should("not.exist");
+  });
+
+  it("should not find subSpeciality SUB_SPECIALITY options in Program Speciality option", () => {
+    cy.get("#programmeSpecialty").should("exist").click();
+    cy.get("#programmeSpecialty").clear().type("Do");
+    cy.get("#programmeSpecialty + ul li").first().click();
+    cy.get("#programmeSpecialty").should("have.value", "Doctor");
+    cy.get("#programmeSpecialty").clear().type("Gp");
+    cy.get("#programmeSpecialty + ul li").should("not.exist");
   });
 
   it("should display Specialties 1 & 2 when CCT Declaration is selected", () => {
