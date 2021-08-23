@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Header } from "nhsuk-react-components";
 import Navbar from "./Navbar";
 import HEEHeaderLogo from "./HEEHeaderLogo";
 
 import styles from "./HEEHeader.module.scss";
+import { AuthState } from "@aws-amplify/ui-components";
 
-const headerOpen = () => {
+interface HEEHeaderProps {
+  authState: AuthState | undefined;
+  user: any;
+}
+
+const showHeaderDefault = () => {
   return (
     <Header.Container>
       <HEEHeaderLogo />
@@ -13,14 +19,14 @@ const headerOpen = () => {
   );
 };
 
-const HEEHeader = (props: any) => {
+const HEEHeader = ({ authState, user }: HEEHeaderProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const updateMenuStatus = (open: boolean) => {
     setShowMenu(open);
   };
   return (
     <Header className={styles.header}>
-      {props.isAuthenticated ? (
+      {authState === AuthState.SignedIn ? (
         <>
           <Header.Container>
             <HEEHeaderLogo />
@@ -37,10 +43,14 @@ const HEEHeader = (props: any) => {
             </Header.Content>
           </Header.Container>
 
-          <Navbar showMenu={showMenu} updateMenuStatus={updateMenuStatus} />
+          <Navbar
+            showMenu={showMenu}
+            updateMenuStatus={updateMenuStatus}
+            user={user}
+          />
         </>
       ) : (
-        headerOpen()
+        showHeaderDefault()
       )}
     </Header>
   );

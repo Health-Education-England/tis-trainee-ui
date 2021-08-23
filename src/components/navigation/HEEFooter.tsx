@@ -1,9 +1,14 @@
-import React from "react";
+import { AuthState } from "@aws-amplify/ui-components";
 import { Footer } from "nhsuk-react-components";
 import styles from "./HEEFooter.module.scss";
 
-const HEEFooter = (props: any) => {
-  const { appVersion } = props;
+interface HEEFooterProps {
+  authState: AuthState | undefined;
+  appVersion: any;
+  user: any;
+}
+
+const HEEFooter = ({ authState, appVersion, user }: HEEFooterProps) => {
   return (
     <Footer>
       <Footer.List>
@@ -11,7 +16,9 @@ const HEEFooter = (props: any) => {
           className={styles.refLink}
           data-cy="linkSupport"
           href={
-            props.isAuthenticated
+            authState === AuthState.SignedIn &&
+            user &&
+            user.attributes["custom:tisId"]
               ? "/support"
               : "https://tis-support.hee.nhs.uk"
           }
@@ -21,7 +28,7 @@ const HEEFooter = (props: any) => {
         <Footer.ListItem
           className={styles.refLink}
           data-cy="linkPrivacyPolicy"
-          onClick={props.displayPrivacyPolicy}
+          // onClick={props.displayPrivacyPolicy}
           href="#"
         >
           Privacy &amp; cookie policy

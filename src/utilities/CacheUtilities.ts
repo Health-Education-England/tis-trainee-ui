@@ -1,5 +1,5 @@
 export class CacheUtilities {
-  public static SemverGreaterThan(
+  private static SemverGreaterThan(
     latestVersion: string,
     currentVersion: string
   ): boolean {
@@ -19,7 +19,7 @@ export class CacheUtilities {
     return false;
   }
 
-  public static async UnregisterServiceWorker(): Promise<void> {
+  private static async UnregisterServiceWorker(): Promise<void> {
     if (navigator.serviceWorker.controller != null) {
       const registrations: readonly ServiceWorkerRegistration[] =
         await navigator.serviceWorker.getRegistrations();
@@ -27,17 +27,17 @@ export class CacheUtilities {
     }
   }
 
-  public static async ClearCaches(): Promise<void> {
+  private static async ClearCaches(): Promise<void> {
     if ("caches" in window) {
       const keys: string[] = await caches.keys();
-      keys.forEach(async name => await caches.delete(name));
+      keys.forEach(async name => caches.delete(name));
     }
   }
-  public static async ReloadPage(): Promise<void> {
+  private static async ReloadPage(): Promise<void> {
     window.location.reload();
   }
 
-  public static async FetchMetaFile(): Promise<string | null> {
+  private static async FetchMetaFile(): Promise<string | null> {
     try {
       const response = await fetch(`/meta.json?${new Date().getTime()}`, {
         cache: "no-cache"
@@ -48,5 +48,17 @@ export class CacheUtilities {
       console.error(`fetch error: ${error}`);
       return null;
     }
+  }
+
+  public static async checkAppVersion(currV: string): Promise<string> {
+    let returnedV: string = currV;
+    const latestV: string | null = await this.FetchMetaFile();
+    if (latestV && this.SemverGreaterThan(latestV, currV)) {
+      await this.UnregisterServiceWorker();
+      await this.ClearCaches();
+      await this.ReloadPage();
+      returnedV = latestV;
+    }
+    return returnedV;
   }
 }
