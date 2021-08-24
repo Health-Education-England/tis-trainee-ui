@@ -35,9 +35,7 @@ const HEEHeader = ({ authState, user }: HEEHeaderProps) => {
                 className={`nhsuk-header__menu-toggle ${
                   showMenu ? "closeMenu" : ""
                 }`}
-                onClick={() => {
-                  showMenu ? setShowMenu(false) : setShowMenu(true);
-                }}
+                onClick={() => setShowMenu(!showMenu)}
                 data-cy="BtnMenu"
               />
             </Header.Content>
