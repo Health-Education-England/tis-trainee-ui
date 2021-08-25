@@ -24,6 +24,9 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authUser) => {
+      console.log("in onAuthUIStateChange");
+      console.log("nextAuthState ", nextAuthState);
+      console.log("nextAuthState ", authUser);
       setAuthState(nextAuthState);
       setUser(authUser as CognitoUserInterface);
     });

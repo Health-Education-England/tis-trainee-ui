@@ -26,9 +26,7 @@ const HEEFooter = ({ authState, appVersion, user }: HEEFooterProps) => {
             className={styles.refLink}
             data-cy="linkSupport"
             href={
-              authState === AuthState.SignedIn &&
-              user &&
-              user.attributes["custom:tisId"]
+              authState === AuthState.SignedIn && user
                 ? "/support"
                 : "https://tis-support.hee.nhs.uk"
             }

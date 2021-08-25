@@ -13,20 +13,20 @@ interface MainProps {
 }
 
 export const Main = ({ user }: MainProps) => {
-  if (user && user.attributes["custom:tisId"]) {
-    return (
-      <main className="nhsuk-width-container nhsuk-u-margin-top-5">
-        <Switch>
-          <Route path="/profile" component={Profile} />
-          <Route path="/formr-a" component={FormRPartA} />
-          <Route path="/formr-b" component={FormRPartB} />
-          <Route path="/support" component={Support} />
-          <Route path="/howtoexport" component={HowToPrintToPDF} />
-          <Redirect exact path="/" to="/profile" />
+  return user ? (
+    <main className="nhsuk-width-container nhsuk-u-margin-top-5">
+      <Switch>
+        <Route path="/profile" component={Profile} />
+        <Route path="/formr-a" component={FormRPartA} />
+        <Route path="/formr-b" component={FormRPartB} />
+        <Route path="/support" component={Support} />
+        <Route path="/howtoexport" component={HowToPrintToPDF} />
+        <Redirect exact path="/" to="/profile" />
 
-          <Route path="/*" component={PageNotFound} />
-        </Switch>
-      </main>
-    );
-  } else return <ContactLO />;
+        <Route path="/*" component={PageNotFound} />
+      </Switch>
+    </main>
+  ) : (
+    <ContactLO />
+  );
 };

@@ -42,7 +42,7 @@ const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {
   };
   return (
     <Header.Nav open={open} title="Menu">
-      {user && user.attributes["custom:tisId"] ? addLinks() : null}
+      {user ? addLinks() : null}
       <li className="nhsuk-header__navigation-item">
         <Logout />
       </li>
