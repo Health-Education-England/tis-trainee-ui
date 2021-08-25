@@ -1,4 +1,4 @@
-import { AuthState } from "@aws-amplify/ui-components";
+import { AuthState, CognitoUserInterface } from "@aws-amplify/ui-components";
 import { Footer } from "nhsuk-react-components";
 import { useState } from "react";
 import { Cookie } from "../common/Cookie";
@@ -8,7 +8,7 @@ import styles from "./HEEFooter.module.scss";
 interface HEEFooterProps {
   authState: AuthState | undefined;
   appVersion: any;
-  user: any;
+  user: CognitoUserInterface | undefined;
 }
 
 const HEEFooter = ({ authState, appVersion, user }: HEEFooterProps) => {

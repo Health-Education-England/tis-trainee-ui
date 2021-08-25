@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import {
+  AuthState,
+  CognitoUserInterface,
+  onAuthUIStateChange
+} from "@aws-amplify/ui-components";
 import { BrowserRouter } from "react-router-dom";
 import PageTitle from "./components/common/PageTitle";
 import HEEHeader from "./components/navigation/HEEHeader";
@@ -15,15 +19,15 @@ globalAny.appVersion = packageJson.version;
 
 const App: React.FunctionComponent = () => {
   const [authState, setAuthState] = useState<AuthState>();
-  const [user, setUser] = useState<any | undefined>();
+  const [user, setUser] = useState<CognitoUserInterface>();
   const [appVersion, setAppVersion] = useState("");
 
   useEffect(() => {
-    return onAuthUIStateChange((nextAuthState, authData) => {
+    return onAuthUIStateChange((nextAuthState, authUser) => {
       setAuthState(nextAuthState);
-      setUser(authData);
+      setUser(authUser as CognitoUserInterface);
     });
-  }, [authState]);
+  }, []);
 
   useEffect(() => {
     const fetchAppVersion = async () => {
@@ -39,8 +43,11 @@ const App: React.FunctionComponent = () => {
     <BrowserRouter>
       <PageTitle />
       <HEEHeader authState={authState} user={user} />
-      {authState === AuthState.SignedIn ? <Main user={user} /> : <LoginNew />}
-
+      {authState === AuthState.SignedIn ? (
+        <Main user={user} />
+      ) : (
+        <LoginNew user={user} />
+      )}
       <HEEFooter appVersion={appVersion} authState={authState} user={user} />
     </BrowserRouter>
   );

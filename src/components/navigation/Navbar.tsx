@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Header } from "nhsuk-react-components";
 import Logout from "../authentication/Logout";
 import { NavLink } from "react-router-dom";
+import { CognitoUserInterface } from "@aws-amplify/ui-components";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
-  user: any;
+  user: CognitoUserInterface | undefined;
 }
 
 const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {

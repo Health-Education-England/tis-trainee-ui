@@ -6,9 +6,10 @@ import Support from "../support/Support";
 import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
 import { ContactLO } from "../common/ContactLO";
+import { CognitoUserInterface } from "@aws-amplify/ui-components";
 
 interface MainProps {
-  user: any;
+  user: CognitoUserInterface | undefined;
 }
 
 export const Main = ({ user }: MainProps) => {
