@@ -6,14 +6,23 @@ import Support from "../support/Support";
 import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
 import { ContactLO } from "../common/ContactLO";
-import { CognitoUserInterface } from "@aws-amplify/ui-components";
+import { Auth } from "aws-amplify";
+import { useEffect, useState } from "react";
 
-interface MainProps {
-  user: CognitoUserInterface | undefined;
-}
+export const Main = () => {
+  const [thisUser, setThisUser] = useState(null);
 
-export const Main = ({ user }: MainProps) => {
-  return user ? (
+  useEffect(() => {
+    const fetchUser = async () => {
+      const fetchedUser = await Auth.currentAuthenticatedUser();
+      if (fetchedUser) {
+        setThisUser(fetchedUser.attributes["custom:tisId"]);
+      }
+    };
+    fetchUser();
+  }, [thisUser]);
+
+  return thisUser ? (
     <main className="nhsuk-width-container nhsuk-u-margin-top-5">
       <Switch>
         <Route path="/profile" component={Profile} />

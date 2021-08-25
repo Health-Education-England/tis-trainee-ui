@@ -24,9 +24,6 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authUser) => {
-      console.log("in onAuthUIStateChange");
-      console.log("nextAuthState ", nextAuthState);
-      console.log("nextAuthState ", authUser);
       setAuthState(nextAuthState);
       setUser(authUser as CognitoUserInterface);
     });
@@ -46,11 +43,7 @@ const App: React.FunctionComponent = () => {
     <BrowserRouter>
       <PageTitle />
       <HEEHeader authState={authState} user={user} />
-      {authState === AuthState.SignedIn ? (
-        <Main user={user} />
-      ) : (
-        <LoginNew user={user} />
-      )}
+      {authState === AuthState.SignedIn ? <Main /> : <LoginNew user={user} />}
       <HEEFooter appVersion={appVersion} authState={authState} user={user} />
     </BrowserRouter>
   );
