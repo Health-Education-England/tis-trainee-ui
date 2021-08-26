@@ -64,4 +64,12 @@ describe("DateUtilities", () => {
   it("IsFutureDate should return true if date is future date", () => {
     expect(DateUtilities.IsFutureDate(new Date("2025-04-20"))).toEqual(true);
   });
+
+  it("should accept a date type of ISO_8601", () => {
+    expect(DateUtilities.IsFutureDate(new Date("2025-04-25T02:00:00.000Z"))).toEqual(true);
+  });
+
+  it("IsInsideDateRange should return true using ISO_8601 format", () => {
+    expect(DateUtilities.IsInsideDateRange(new Date("2020-04-20T02:00:00.000Z"))).toEqual(true);
+  });
 });

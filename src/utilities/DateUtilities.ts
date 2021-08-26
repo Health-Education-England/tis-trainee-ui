@@ -1,12 +1,15 @@
-import moment from "moment";
+import day from "dayjs";
+import isBetween from 'dayjs/plugin/isBetween';
+
+day.extend(isBetween);
 
 export class DateUtilities {
   public static ToUTCDate(date: Date | string | null): string {
     let utcDate = "";
 
     if (date) {
-      const momentDate = moment(date, moment.ISO_8601);
-      utcDate = momentDate.isValid() ? moment(date).format("YYYY-MM-DD") : "";
+      const dayDate = day(date);
+      utcDate = dayDate.isValid() ? day(date).format("YYYY-MM-DD") : "";
     }
 
     return utcDate;
@@ -15,8 +18,8 @@ export class DateUtilities {
   public static ToLocalDate(date: Date | string | null): string {
     let localDate = "";
     if (date) {
-      const momentDate = moment(date, moment.ISO_8601);
-      localDate = momentDate.isValid() ? momentDate.format("DD/MM/YYYY") : "";
+      const dayDate = day(date);
+      localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY") : "";
     }
 
     return localDate;
@@ -24,8 +27,8 @@ export class DateUtilities {
 
   public static IsLegalAge(value: Date | string | null | undefined): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      return momentDate.isValid() && moment().diff(momentDate, "years") >= 18;
+      const dayDate = day(value);
+      return dayDate.isValid() && day().diff(dayDate, "years") >= 18;
     }
     return false;
   }
@@ -34,8 +37,8 @@ export class DateUtilities {
     value: Date | string | null | undefined
   ): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      return momentDate.isValid() && moment().diff(momentDate, "years") < 100;
+      const dayDate = day(value);
+      return dayDate.isValid() && day().diff(dayDate, "years") < 100;
     }
     return false;
   }
@@ -44,9 +47,9 @@ export class DateUtilities {
     value: Date | string | null | undefined
   ): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      const maxDate = moment().add(50, "y");
-      return momentDate.isValid() && momentDate < maxDate;
+      const dayDate = day(value);
+      const maxDate = day().add(50, "y");
+      return dayDate.isValid() && dayDate < maxDate;
     }
     return false;
   }
@@ -55,26 +58,26 @@ export class DateUtilities {
     value: Date | string | null | undefined
   ): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      const minDate = moment().subtract(25, "y");
-      const maxDate = moment().add(25, "y");
-      return momentDate.isValid() && momentDate.isBetween(minDate, maxDate);
+      const dayDate = day(value);
+      const minDate = day().subtract(25, "y");
+      const maxDate = day().add(25, "y");
+      return dayDate.isValid() && dayDate.isBetween(minDate, maxDate);
     }
     return false;
   }
 
   public static IsPastDate(value: Date | string | null | undefined): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      return momentDate.isValid() && moment().diff(momentDate, "days") >= 1;
+      const dayDate = day(value);
+      return dayDate.isValid() && day().diff(dayDate, "days") >= 1;
     }
     return false;
   }
 
   public static IsFutureDate(value: Date | string | null | undefined): boolean {
     if (value) {
-      const momentDate = moment(value, moment.ISO_8601);
-      return momentDate.isValid() && moment().diff(momentDate, "years") <= 1;
+      const dayDate = day(value);
+      return dayDate.isValid() && day().diff(dayDate, "years") <= 1;
     }
     return false;
   }
