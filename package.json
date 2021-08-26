@@ -1,6 +1,6 @@
 {
   "name": "trainee-ui-app",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "private": true,
   "dependencies": {
     "@cypress/code-coverage": "^3.9.9",
@@ -55,7 +55,7 @@
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",
-    "test": "react-scripts test --silent --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter",
+    "test": "react-scripts test --silent --watchAll=true --coverage --testResultsProcessor jest-sonar-reporter",
     "cypress": "cypress run",
     "cypress:open": "cypress open",
     "ct:open": "npx cypress open-ct",
