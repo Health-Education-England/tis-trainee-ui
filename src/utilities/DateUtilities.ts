@@ -1,5 +1,5 @@
 import day from "dayjs";
-import isBetween from 'dayjs/plugin/isBetween';
+import isBetween from "dayjs/plugin/isBetween";
 
 day.extend(isBetween);
 
