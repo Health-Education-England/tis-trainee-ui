@@ -12,8 +12,8 @@ interface NavProps {
 const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
-    { path: "formr-a", name: "FormR (Part A)" },
-    { path: "formr-b", name: "FormR (Part B)" },
+    { path: "formr-a", name: "Form R (Part A)" },
+    { path: "formr-b", name: "Form R (Part B)" },
     { path: "support", name: "Support" }
   ];
 

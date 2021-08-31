@@ -25,6 +25,39 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // cypress/support/index.js
 
+Cypress.Commands.add("confirmCookie", () => {
+  cy.get("body").then($body => {
+    if ($body.find("button#rcc-confirm-button").length > 0) {
+      cy.get("button#rcc-confirm-button").click();
+    }
+  });
+});
+
+Cypress.Commands.add("signIn", () => {
+  cy.get("body").then($body => {
+    if ($body.find("[slot='sign-in']").length > 0) {
+      cy.get("[slot='sign-in']")
+        .find("input[name=username]")
+        .type(Cypress.env("username"), { log: false, force: true });
+
+      cy.get("[slot='sign-in']")
+        .get("#password")
+        .type(`${Cypress.env("password")}{enter}`, {
+          log: false,
+          force: true
+        });
+
+      cy.task("generateOTP", Cypress.env("secret"), { log: false });
+
+      cy.task("generateOTP").then(token => {
+        cy.get("amplify-authenticator")
+          .find("#code")
+          .type(`${token}{enter}`, { force: true });
+      });
+    }
+  });
+});
+
 Cypress.Commands.add(
   "checkFormRAValues",
   (dateAttained, completionDate, startDate, wholeTimeEquivalent) => {
@@ -434,6 +467,10 @@ Cypress.Commands.add("login", () => {
       log: false
     });
   }
+});
+
+Cypress.Commands.add("logoutDesktop", () => {
+  cy.get("a[data-jest='btn-logout']").click();
 });
 
 Cypress.Commands.add("checkFlags", name => {

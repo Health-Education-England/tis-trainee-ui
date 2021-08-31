@@ -1,5 +1,11 @@
 /// <reference types="cypress" />
 describe("Profile", () => {
+  before(() => {
+    cy.visit("./profile");
+    cy.confirmCookie();
+    cy.signIn();
+  });
+
   it("should click expand to show all personal information then toggle close", () => {
     cy.contains("Personal details").should("exist").click();
     cy.contains("Gender").should("exist");

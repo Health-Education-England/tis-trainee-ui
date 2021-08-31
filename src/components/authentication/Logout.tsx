@@ -19,6 +19,7 @@ const Logout = () => {
   return (
     <a
       data-jest="btn-logout"
+      data-cy="btnLogout"
       href="/"
       className="nhsuk-header__navigation-link"
       onClick={handleSignOutButtonClick}
