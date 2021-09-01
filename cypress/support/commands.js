@@ -47,12 +47,8 @@ Cypress.Commands.add("signIn", () => {
           force: true
         });
 
-      cy.task("generateOTP", Cypress.env("secret"), { log: false });
-
       cy.task("generateOTP").then(token => {
-        cy.get("amplify-authenticator")
-          .find("#code")
-          .type(`${token}{enter}`, { force: true });
+        cy.get("amplify-authenticator").find("#code").type(`${token}{enter}`);
       });
     }
   });

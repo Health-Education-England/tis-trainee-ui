@@ -8,3 +8,7 @@ dayjs.extend(duration);
 
 Cypress.dayjs = dayjs;
 Cypress.duration = duration;
+
+before(() => {
+  cy.task("generateOTP", Cypress.env("secret"), { log: false });
+});
