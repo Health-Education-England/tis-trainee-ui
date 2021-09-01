@@ -12,6 +12,9 @@ const startDate = Cypress.dayjs()
   .format("YYYY-MM-DD");
 
 describe("Form R (Part A)", () => {
+  before(() => {
+    cy.wait(30000);
+  });
   it("Should complete a new Form R Part A.", () => {
     cy.visit("./profile");
     cy.confirmCookie();

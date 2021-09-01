@@ -1,5 +1,6 @@
 describe("Support", () => {
   before(() => {
+    cy.wait(30000);
     cy.visit("./");
     cy.confirmCookie();
   });

@@ -19,6 +19,9 @@ const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
 const prevRevalDate = Cypress.dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B)", () => {
+  before(() => {
+    cy.wait(30000);
+  });
   it("Should complete a new Form R Part B.", () => {
     isCovid = true;
     cy.visit("./");

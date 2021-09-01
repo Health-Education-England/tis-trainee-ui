@@ -6,6 +6,7 @@ describe("Desktop/ tablet header", () => {
   const sizes = [mobileView, desktopView];
 
   before(() => {
+    cy.wait(30000);
     cy.visit("./profile");
     cy.confirmCookie();
   });
