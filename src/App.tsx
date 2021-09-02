@@ -43,7 +43,7 @@ const App: React.FunctionComponent = () => {
     <BrowserRouter>
       <PageTitle />
       <HEEHeader authState={authState} user={user} />
-      {authState === AuthState.SignedIn ? <Main /> : <LoginNew user={user} />}
+      {authState === AuthState.SignedIn ? <Main /> : <LoginNew />}
       <HEEFooter appVersion={appVersion} authState={authState} user={user} />
     </BrowserRouter>
   );

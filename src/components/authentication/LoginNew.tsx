@@ -1,22 +1,15 @@
-import { CognitoUserInterface } from "@aws-amplify/ui-components";
 import {
   AmplifyAuthContainer,
   AmplifyAuthenticator,
-  AmplifySignIn,
-  AmplifyTotpSetup
+  AmplifySignIn
 } from "@aws-amplify/ui-react";
 import { Container } from "nhsuk-react-components";
 
-interface LoginNewProps {
-  user: CognitoUserInterface | undefined;
-}
-
-export const LoginNew = ({ user }: LoginNewProps) => {
+export const LoginNew = () => {
   return (
     <Container>
       <AmplifyAuthContainer>
         <AmplifyAuthenticator>
-          <AmplifyTotpSetup user={user} standalone />
           <AmplifySignIn
             headerText="Trainee Self-Service Sign-In"
             slot="sign-in"
