@@ -47,12 +47,13 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ### configurating e2e tests
 
-Before you can run the e2e tests (logging in as an authorised user), you will need to add a `cypress.env.json` file to the root of your project folder:
+Before you can run the e2e tests (logging in as an authorised user using a One Time Pass Code), you will need to add a `cypress.env.json` file to the root of your project folder:
 
 ```
 {
-  "username": "anthony.gilliam@hee.nhs.uk",
-  "password": "xxxxxxxx"
+  "username": "end.tester@hee.nhs.uk",
+  "password": "xxxxxxxx",
+  "secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
 

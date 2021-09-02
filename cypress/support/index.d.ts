@@ -16,6 +16,11 @@ declare namespace Cypress {
     logout: any;
     login: any;
     checkFlags: any;
+    confirmCookie: any;
+    signIn: any;
+    getTotp: any;
+    useTotp: any;
+    logoutDesktop: any;
   }
 
   import dayjs from "dayjs";

@@ -3,10 +3,6 @@
 
 let isCovid = false;
 
-before(() => {
-  isCovid = true;
-});
-
 const currentDate = Cypress.dayjs().format("YYYY-MM-DD");
 const futureDate = Cypress.dayjs()
   .add(Cypress.dayjs.duration({ months: 6 }))
@@ -23,15 +19,21 @@ const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
 const prevRevalDate = Cypress.dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B)", () => {
+  before(() => {
+    cy.wait(30000);
+  });
   it("Should complete a new Form R Part B.", () => {
+    isCovid = true;
+    cy.visit("./");
+    cy.confirmCookie();
     cy.viewport("iphone-6");
+    cy.signIn();
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
 
     cy.get("#btnOpenForm").click();
 
     cy.get(".nhsuk-warning-callout > p").should("exist");
-    cy.location("pathname", { timeout: 10000 }).should("include", "/formr-b");
 
     // -------- Section 1 - Doctor's details -----------
     cy.checkAndFillSection1(currRevalDate, prevRevalDate);
@@ -121,7 +123,7 @@ describe("Form R (Part B)", () => {
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
-    // -------- Section 6: Compliments -----------
+    // -------- Section 6: Compliments --------------------------------------
     cy.checkAndFillSection6("This is the compliment text.");
 
     // Navigate back to section 5
@@ -137,7 +139,7 @@ describe("Form R (Part B)", () => {
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
-    // -------- COVID Section -----------
+    // -------- COVID Section ------------------------------------------------
     if (isCovid) {
       cy.log("### COVID SECTION CHECK ###");
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
@@ -146,7 +148,7 @@ describe("Form R (Part B)", () => {
       cy.checkAndFillCovidSection();
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
     }
-    // -------- Section 7: Declarations -----------
+    // -------- Section 7: Declarations --------------------------------------
 
     // Initial state
     cy.get("[data-cy=legendFieldset7]").should("include.text", "Section 7");
@@ -159,14 +161,14 @@ describe("Form R (Part B)", () => {
       .should("contain.value", "true")
       .should("not.be.checked");
 
-    //Attempt to submit without checking boxes should fail
+    // Attempt to submit without checking boxes should fail
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
     cy.get("[data-cy=isDeclarationAccepted] .nhsuk-error-message").should(
       "exist"
     );
     cy.get("[data-cy=isConsentAccepted] .nhsuk-error-message").should("exist");
 
-    //Toggle error message when clicked
+    // Toggle error message when clicked
     cy.get("[data-cy=isDeclarationAccepted0]").click().should("be.checked");
     cy.get("[data-cy=isDeclarationAccepted0]").click().should("not.be.checked");
     cy.get("[data-cy=isDeclarationAccepted] .nhsuk-error-message").should(
@@ -190,7 +192,7 @@ describe("Form R (Part B)", () => {
       .should("exist")
       .should("be.checked");
 
-    // Navigate to submit page
+    // ----------- Submit page ---------------------------------------------------
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
     cy.get("[data-cy=BtnEditSection1]").should("exist");
     cy.get("[data-cy=gmcNumber]").should("exist");
@@ -247,7 +249,6 @@ describe("Form R (Part B)", () => {
     }
 
     // Navigate to section 7
-
     cy.get("[data-cy=isConsentAccepted0]").should("exist").should("be.checked");
     cy.get("[data-cy=isDeclarationAccepted0]")
       .should("exist")
@@ -257,6 +258,27 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
     cy.get("[data-cy=gmcNumber]").should("have.text", "11111111");
+
+    // -------------- Save draft ------------------------------------------------
+    cy.get("[data-cy=BtnSaveDraft]").click();
+
+    // -------------- Retrieve saved draft form ----------------------------------
+    cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
+    cy.get(".nhsuk-warning-callout").should("exist");
+    cy.get("[data-cy=gmcNumber]").should("exist");
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+
+    // complete declaration again
+    cy.get("[data-cy=isDeclarationAccepted0]").click();
+    cy.get("[data-cy=isConsentAccepted0]").click();
+
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
     // intercept formr-partb POST req
     let uid: string;
@@ -268,11 +290,12 @@ describe("Form R (Part B)", () => {
     // intercept formr-partBs GET req
     cy.intercept("GET", "/api/forms/formr-partbs").as("getFormrPartBs");
 
-    // submit form
+    // ------------- submit form -----------------------------------------
     cy.get("[data-cy=BtnSubmitPartB]").scrollIntoView().should("exist").click();
     cy.get("[data-cy=btnSubmitNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
 
+    // ------------- Check newly-submitted form exists -------------------
     // compare uid to row id
     cy.wait("@getFormrPartBs").then(interception => {
       const body = interception.response.body;
@@ -295,150 +318,6 @@ describe("Form R (Part B)", () => {
         }
       });
     });
-  });
-
-  it("should be able save and edit the form", () => {
-    cy.viewport("iphone-6");
-    cy.get("[data-cy=BtnMenu]").should("exist").click();
-    cy.contains("Form R (Part B)").click();
-
-    cy.get("#btnOpenForm")
-      .should("exist")
-      .focus()
-
-      .then((submitButton: JQuery) => {
-        cy.get("#btnOpenForm").click();
-
-        cy.get(".nhsuk-warning-callout > p").should("exist");
-        cy.location("pathname", { timeout: 10000 }).should(
-          "include",
-          "/formr-b"
-        );
-
-        // #### SAVE DRAFTS ####
-        // Fill in section 1
-        cy.checkAndFillSection1(currRevalDate, prevRevalDate);
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        cy.logout();
-        cy.login();
-        cy.get("[data-cy=BtnMenu]").should("exist").click();
-        cy.contains("Form R (Part B)").click();
-
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=gmcNumber]").should("have.value", "11111111");
-
-        // Navigate to and complete section 2
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.checkAndFillSection2(pastDate, currentDate);
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to and complete section 3
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.checkAndFillSection3();
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to and complete section 4
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.checkAndFillSection4(pastDate);
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to and complete section 5
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.checkAndFillSection5(pastDate);
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to and complete section 6
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.checkAndFillSection6("This is the compliment text.");
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to COVID
-        if (isCovid) {
-          // Navigate to and complete section 6
-          cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-          cy.checkAndFillCovidSection();
-          cy.get("[data-cy=BtnSaveDraft]").click();
-        }
-
-        // Navigate to and complete section 7
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        //On section 1
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        //On section 2
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        //On section 3
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        //On section 4
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        //On section 5
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        //On section 6
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-        if (isCovid) {
-          // On section COVID
-
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-        }
-        // On section 7
-        cy.get("[data-cy=isConsentAccepted0]").click().should("be.checked");
-        cy.get("[data-cy=isDeclarationAccepted0]").click().should("be.checked");
-        cy.get("[data-cy=BtnSaveDraft]").click();
-
-        // Navigate to and complete section 7 and submit
-        cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-        if (isCovid) {
-          // on section COVID
-          cy.get(
-            "[data-cy=LinkToNextSection] > .nhsuk-pagination__page"
-          ).click();
-        }
-        cy.get("[data-cy=isConsentAccepted0]").click().should("be.checked");
-        cy.get("[data-cy=isDeclarationAccepted0]").click().should("be.checked");
-        cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-        cy.get("[data-cy=BtnSubmitPartB]").should("exist").click();
-      });
+    cy.logout();
   });
 });

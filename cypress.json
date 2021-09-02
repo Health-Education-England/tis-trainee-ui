@@ -10,5 +10,6 @@
     "componentFolder": "src",
     "testFiles": "**/*cy-test.{js,jsx,ts,tsx}",
     "supportFile": false
-  }
+  },
+  "includeShadowDom": true
 }

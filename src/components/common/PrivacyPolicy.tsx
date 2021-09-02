@@ -1,9 +1,8 @@
-import React from "react";
 import "./PrivacyPolicy.scss";
 import { CloseIcon } from "nhsuk-react-components";
-interface IProps {
-  modal?: boolean;
-  displayPrivacyPolicy?: any;
+interface PrivacyPolicyProps {
+  modal: boolean;
+  showPrivacyPolicy: any;
 }
 const PrivacyPolicyText = (): JSX.Element => {
   return (
@@ -489,15 +488,18 @@ const PrivacyPolicyText = (): JSX.Element => {
     </>
   );
 };
-const PrivacyPolicy = (props: IProps): JSX.Element => {
+const PrivacyPolicy = ({
+  modal,
+  showPrivacyPolicy
+}: PrivacyPolicyProps): JSX.Element => {
   return (
     <>
-      {props.modal ? (
+      {modal ? (
         <div className="modalWrapper" data-jest="modal">
           <div className="modalHeader">
             <div className="title">Privacy Policy</div>
             <div className="close">
-              <button onClick={props.displayPrivacyPolicy}>
+              <button onClick={showPrivacyPolicy}>
                 <CloseIcon style={{ fill: "white" }} />
               </button>
             </div>

@@ -1,70 +1,51 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "nhsuk-react-components";
 import Logout from "../authentication/Logout";
 import { NavLink } from "react-router-dom";
-import { Auth } from "aws-amplify";
-
-interface navProps {
+import { CognitoUserInterface } from "@aws-amplify/ui-components";
+interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
+  user: CognitoUserInterface | undefined;
 }
 
-const Navbar = (props: navProps) => {
-  const [open, setOpen] = useState<boolean | undefined>(props.showMenu);
+const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {
+  const paths = [
+    { path: "profile", name: "Profile" },
+    { path: "formr-a", name: "Form R (Part A)" },
+    { path: "formr-b", name: "Form R (Part B)" },
+    { path: "support", name: "Support" }
+  ];
+
+  const addLinks = () => {
+    return paths.map(p => (
+      <li key={p.name} className="nhsuk-header__navigation-item">
+        <NavLink
+          className="nhsuk-header__navigation-link"
+          onClick={handleClick}
+          to={`/${p.path}`}
+        >
+          {p.name}
+        </NavLink>
+      </li>
+    ));
+  };
+
+  const [open, setOpen] = useState<boolean | undefined>(showMenu);
   useEffect(() => {
-    setOpen(props.showMenu);
-  }, [props.showMenu]);
+    setOpen(showMenu);
+  }, [showMenu]);
 
   const handleClick = () => {
     setOpen(false);
-    props.updateMenuStatus(false);
+    updateMenuStatus(false);
   };
   return (
     <Header.Nav open={open} title="Menu">
+      {user ? addLinks() : null}
       <li className="nhsuk-header__navigation-item">
-        <NavLink
-          className="nhsuk-header__navigation-link"
-          onClick={handleClick}
-          to="/profile"
-        >
-          Profile
-        </NavLink>
+        <Logout />
       </li>
-      <li className="nhsuk-header__navigation-item">
-        <NavLink
-          onClick={handleClick}
-          className="nhsuk-header__navigation-link"
-          to="/formr-a"
-        >
-          Form R (Part A)
-        </NavLink>
-      </li>
-
-      <li className="nhsuk-header__navigation-item">
-        <NavLink
-          onClick={handleClick}
-          className="nhsuk-header__navigation-link"
-          to="/formr-b"
-        >
-          Form R (Part B)
-        </NavLink>
-      </li>
-      <li className="nhsuk-header__navigation-item">
-        <NavLink
-          onClick={handleClick}
-          className="nhsuk-header__navigation-link"
-          to="/support"
-        >
-          Support
-        </NavLink>
-      </li>
-      <Logout
-        onClick={async (event: MouseEvent) => {
-          event.preventDefault();
-          handleClick();
-          await Auth.signOut();
-        }}
-      ></Logout>
     </Header.Nav>
   );
 };

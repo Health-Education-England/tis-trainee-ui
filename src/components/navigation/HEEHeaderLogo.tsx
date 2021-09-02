@@ -8,7 +8,12 @@ const HEEHeaderLogo = () => {
         href="/"
         aria-label="Trainee Self-Service homepage"
       >
-        <img width="230" height="48" src={logo} alt="" />
+        <img
+          width="230"
+          height="48"
+          src={logo}
+          alt="Trainee Self-Service homepage"
+        />
       </a>
     </div>
   );

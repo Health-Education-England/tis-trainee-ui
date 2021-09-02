@@ -1,20 +1,31 @@
-import React from "react";
+import { Auth, Hub } from "aws-amplify";
 
-interface LogoutProps {
-  onClick: any;
-}
-const Logout = (props: LogoutProps) => {
+const handleSignOutButtonClick = async (event: {
+  preventDefault: () => void;
+}) => {
+  event.preventDefault();
+  try {
+    await Auth.signOut();
+    Hub.dispatch("UI Auth", {
+      event: "AuthStateChange",
+      message: "signedout"
+    });
+  } catch (error) {
+    console.log("error signing out: ", error);
+  }
+};
+
+const Logout = () => {
   return (
-    <li className="nhsuk-header__navigation-item">
-      <a
-        data-jest="btn-logout"
-        href="/"
-        className="nhsuk-header__navigation-link"
-        onClick={props.onClick}
-      >
-        Logout
-      </a>
-    </li>
+    <a
+      data-jest="btn-logout"
+      data-cy="btnLogout"
+      href="/"
+      className="nhsuk-header__navigation-link"
+      onClick={handleSignOutButtonClick}
+    >
+      Logout
+    </a>
   );
 };
 
