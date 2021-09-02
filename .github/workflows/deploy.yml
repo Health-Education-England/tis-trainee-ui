@@ -94,8 +94,14 @@ jobs:
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
           CYPRESS_coverage: false
+          DEBUG: "@cypress/github-action"
         with:
           browser: chrome
+
+      - name: Cypress tests with debug logs
+        uses: cypress-io/github-action@v2
+        env:
+          DEBUG: "cypress:*"
 
       - name: Merge test results into one
         if: always()
