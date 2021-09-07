@@ -30,6 +30,14 @@
   }
 }
 
+.callout {
+  padding: 2em !important;
+  margin: 0 0 10px 0;
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px #dbdfe0;
+  align-items: center;
+}
+
 @media (max-width: 940px) {
   .row {
     flex-direction: column;

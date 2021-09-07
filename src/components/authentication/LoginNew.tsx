@@ -7,7 +7,7 @@ import {
   AmplifyForgotPassword,
   AmplifyRequireNewPassword
 } from "@aws-amplify/ui-react";
-import { Container } from "nhsuk-react-components";
+import { Container, WarningCallout } from "nhsuk-react-components";
 import { AuthState, CognitoUserInterface } from "@aws-amplify/ui-components";
 import "./Login.scss";
 import styles from "./Login.module.scss";
@@ -42,6 +42,21 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
             </p>
           </div>
           <div className={styles.colForm}>
+            {authState === AuthState.TOTPSetup && (
+              <WarningCallout className={styles.callout}>
+                <p>
+                  For further guidance on setting up an authenticator app, visit
+                  the{" "}
+                  <a
+                    href="https://tis-support.hee.nhs.uk/trainees/enhancing-the-security-of-the-trainee-self-service-application/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    TIS Support website.
+                  </a>
+                </p>
+              </WarningCallout>
+            )}
             <AmplifyAuthContainer>
               <AmplifyAuthenticator>
                 {authState === AuthState.TOTPSetup ? (
