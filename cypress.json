@@ -8,8 +8,7 @@
   },
   "component": {
     "componentFolder": "src",
-    "testFiles": "**/*cy-test.{js,jsx,ts,tsx}",
-    "supportFile": false
+    "testFiles": "**/*cy-test.{js,jsx,ts,tsx}"
   },
   "includeShadowDom": true
 }

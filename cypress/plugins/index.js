@@ -12,16 +12,30 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-/**
+/*jkl=,p,*
  * @type {Cypress.PluginConfig}
  */
-const injectDevServer = require("@cypress/react/plugins/react-scripts");
-const codeCoverage = require("@cypress/code-coverage/task");
-const cypressOtp = require("cypress-otp");
+import findReactScriptsWebpackConfig from "@cypress/react/plugins/react-scripts/findReactScriptsWebpackConfig";
+
+import { startDevServer } from "@cypress/webpack-dev-server";
+
+import codeCoverageTask from "@cypress/code-coverage/task";
+
+import cypressOtp from "cypress-otp";
 
 module.exports = (on, config) => {
-  injectDevServer(on, config);
-  codeCoverage(on, config);
   on("task", { generateOTP: cypressOtp });
+  codeCoverageTask(on, config);
+  if (config.testingType === "component") {
+    const webpackConfig = findReactScriptsWebpackConfig(config, {
+      webpackConfigPath: "react-scripts/config/webpack.config"
+    });
+    const rules = webpackConfig.module.rules.find(rule => !!rule.oneOf).oneOf;
+    const babelRule = rules.find(rule => /babel-loader/.test(rule.loader));
+    babelRule.options.plugins.push(require.resolve("babel-plugin-istanbul"));
+    on("dev-server:start", options => {
+      return startDevServer({ options, webpackConfig });
+    });
+  }
   return config;
 };
