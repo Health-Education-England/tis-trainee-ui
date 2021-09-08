@@ -37,7 +37,7 @@ Cypress.Commands.add("signIn", () => {
         .type(Cypress.env("username"), { log: false, force: true });
 
       cy.get("[slot='sign-in']")
-        .get("#password")
+        .find("#password")
         .type(`${Cypress.env("password")}{enter}`, {
           log: false,
           force: true

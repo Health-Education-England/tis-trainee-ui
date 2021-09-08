@@ -1,0 +1,48 @@
+.header {
+  width: 100%;
+  position: sticky;
+  top: 0px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col {
+  flex: 1;
+  width: 50%;
+  padding: 1em;
+}
+
+.colText {
+  @extend .col;
+  @media (max-width: 940px) {
+    order: 2;
+  }
+}
+
+.colForm {
+  @extend .col;
+  position: relative;
+  @media (max-width: 940px) {
+    order: 1;
+  }
+}
+
+.callout {
+  padding: 2em !important;
+  margin: 0 0 10px 0;
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px #dbdfe0;
+  align-items: center;
+}
+
+@media (max-width: 940px) {
+  .row {
+    flex-direction: column;
+  }
+  .col {
+    width: 100%;
+  }
+}

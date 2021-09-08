@@ -1,0 +1,63 @@
+:root {
+  --amplify-primary-color: #005eb8;
+  --amplify-primary-tint: #0069ce;
+  --amplify-primary-shade: #0057ab;
+  --amplify-font-family: "Frutiger W01", Arial, sans-serif;
+}
+
+amplify-authenticator {
+  --container-align: top;
+  --container-display: flex;
+  --container-height: auto;
+  --container-justify: center;
+  --margin-bottom: 0;
+  --min-width: 100%;
+  --width: 100%;
+}
+
+amplify-sign-in {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-confirm-sign-in {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+amplify-sign-up {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-confirm-sign-up {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-forgot-password {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-require-new-password {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-verify-contact {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+amplify-totp-setup {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
