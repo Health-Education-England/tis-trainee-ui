@@ -61,8 +61,9 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
               <AmplifyAuthenticator>
                 {authState === AuthState.TOTPSetup ? (
                   <AmplifyTotpSetup
-                    headerText="Scan the barcode below using your preferred authenicator application."
+                    headerText="Scan the barcode below using your preferred authenticator application."
                     slot="totp-setup"
+                    issuer="Trainee Self-Service"
                     user={user}
                     standalone
                   />
