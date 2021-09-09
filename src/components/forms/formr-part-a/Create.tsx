@@ -74,7 +74,13 @@ const mapDispatchProps = {
   saveTraineeFormRPartA
 };
 
-class Create extends React.PureComponent<CreateProps> {
+interface LocalState {
+  isDirty: boolean;
+}
+
+class Create extends React.PureComponent<CreateProps, LocalState> {
+  state: LocalState = { isDirty: false };
+
   componentDidMount() {
     if (!this.props.isLoaded) {
       this.props.loadReferenceData(new TraineeReferenceService());
@@ -132,6 +138,8 @@ class Create extends React.PureComponent<CreateProps> {
           initialValues={formData}
           validationSchema={ValidationSchema}
           onSubmit={values => this.handleSubmit(values)}
+          validateOnChange={this.state.isDirty}
+          validateOnBlur={this.state.isDirty}
         >
           {({ values, errors, setFieldValue }) => (
             <Form>
@@ -341,7 +349,13 @@ class Create extends React.PureComponent<CreateProps> {
                       />
                     </div>
                     <div className="nhsuk-grid-column-two-thirds">
-                      <Button type="submit" data-cy="BtnContinue">
+                      <Button
+                        type="submit"
+                        data-cy="BtnContinue"
+                        onClick={() => {
+                          this.setState({ isDirty: true });
+                        }}
+                      >
                         Continue to submit
                       </Button>
                     </div>
