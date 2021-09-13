@@ -109,15 +109,15 @@ const Autocomplete: React.FC<IProps> = props => {
     getOptionSelected: (option, value) => option.value === value.value,
     onInputChange: (_, option, reason) => {
       if (reason === "reset") {
-        helpers.setValue(option ? option : field.value);
+        helpers.setValue(option ? option : field.value, false);
       } else {
-        helpers.setValue(option);
+        helpers.setValue(option, false);
       }
     },
     onOpen: () => {
       setOpen(true);
       props.handleOpen && props.handleOpen();
-      helpers.setValue("");
+      helpers.setValue("", false);
     },
     onClose: () => {
       setOpen(false);
