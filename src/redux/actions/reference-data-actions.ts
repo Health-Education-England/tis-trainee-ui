@@ -19,6 +19,7 @@ import { TraineeReferenceService } from "../../services/TraineeReferenceService"
 import { KeyValue } from "../../models/KeyValue";
 import { AxiosResponse } from "axios";
 import { CurriculumKeyValue } from "../../models/CurriculumKeyValue";
+import { DesignatedBodyKeyValue } from "../../models/DesignatedBodyKeyValue";
 
 export const loadReferenceData =
   (referenceService: TraineeReferenceService) =>
@@ -58,7 +59,7 @@ export const loadReferenceData =
       .then(response => {
         dispatch({
           type: LOAD_REFERENCE_DESIGNATED_BODIES_SUCCESS,
-          payload: getKeyValuesFromResponse(response)
+          payload: getDesignatedBodyKeyValuesFromResponse(response)
         });
       })
       .catch(error =>
@@ -157,6 +158,18 @@ function getCurriculumKeyValuesFromResponse(
       label: d.label,
       value: d.label,
       curriculumSubType: d.curriculumSubType
+    };
+  });
+}
+function getDesignatedBodyKeyValuesFromResponse(
+  response: AxiosResponse<any[]>
+): DesignatedBodyKeyValue[] {
+  return response.data.map<DesignatedBodyKeyValue>(d => {
+    return {
+      tisId: d.tisId,
+      label: d.label,
+      value: d.label,
+      internal: d.internal
     };
   });
 }
