@@ -112,36 +112,9 @@ describe("Autocomplete component", () => {
   it("should not display error when validation criteria met", async () => {
     const wrapper = mount(getComponent(options, {}, "I"));
     await waitForComponentToPaint(wrapper);
-    // This opens drop down menu
     wrapper.find("input").simulate("change");
     wrapper.find("li").first().simulate("click");
     await waitForComponentToPaint(wrapper);
     expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
-
-    //const wrapper = mount(getComponent(options, {}));
-    // No inputChange event fires. No error
-
-    // const wrapper = mount(getComponent(options, { autocompleteComp: "Item 2" }));
-    // Reason:reset Event:null option:  field:Item 2 len:1
-    // Input value = Item 2. No error
-
-    //     wrapper
-    //       .find("input")
-    //       .simulate("change", { target: { label: "Item 1", value: "Item 1" } });
-    //     await waitForComponentToPaint(wrapper);
-    // //Reason:input Event:[object Object] option: Item 1 field:Item 2 len:1
-
-    // wrapper.find("input").simulate("click");
-    // await waitForComponentToPaint(wrapper);
-    console.log(wrapper.debug());
-
-    // console.log(wrapper.debug());
-    // wrapper.find("li").first().simulate("click");
-    // await waitForComponentToPaint(wrapper);
-
-    // wrapper.find("input").simulate("change");
-    // await waitForComponentToPaint(wrapper);
-
-    // expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
   });
 });
