@@ -19,19 +19,17 @@ const getComponent = (
 ) => (
   <Formik
     validationSchema={Yup.object().shape({
-      cctSpecialty1: Yup.string().required("Required").min(4)
+      autocompleteComp: Yup.string().required("Required").min(4)
     })}
-    validateOnChange={true}
-    validateOnBlur={true}
     initialValues={initialValue}
     onSubmit={() => {}}
   >
-    {() => (
+    {({ values, errors, setFieldValue }) => (
       <Form>
         <Autocomplete
-          label="Specialty 1 for Award of CCT"
-          name="cctSpecialty1"
-          id="DeclarationSpeciality1"
+          label="Autocomplete component"
+          name="autocompleteComp"
+          id="autocompleteComp"
           options={options}
           width="50%"
           inputValue={inputValue}
@@ -60,7 +58,9 @@ describe("Autocomplete component", () => {
   });
 
   it("should display value as selected when passed in form data", () => {
-    const wrapper = mount(getComponent(options, { cctSpecialty1: "Item 2" }));
+    const wrapper = mount(
+      getComponent(options, { autocompleteComp: "Item 2" })
+    );
 
     expect(wrapper.find("input")).toHaveLength(1);
     expect(wrapper.find("input").props().value).toBe("Item 2");
@@ -90,7 +90,16 @@ describe("Autocomplete component", () => {
     const wrapper = mount(getComponent(options, {}, "Item 3"));
     wrapper.find("input").simulate("change");
     await waitForComponentToPaint(wrapper);
+
     expect(wrapper.find("li")).toHaveLength(1);
+  });
+
+  it("should NOT display error when rendered with initial value.", async () => {
+    const wrapper = mount(
+      getComponent(options, { autocompleteComp: "Item 2" })
+    );
+    await waitForComponentToPaint(wrapper);
+    expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
   });
 
   it("should display error when validation criteria not met", async () => {
@@ -101,12 +110,38 @@ describe("Autocomplete component", () => {
   });
 
   it("should not display error when validation criteria met", async () => {
-    const wrapper = mount(getComponent(options, {}, "Item"));
-    wrapper.find("input").simulate("change");
+    const wrapper = mount(getComponent(options, {}, "I"));
     await waitForComponentToPaint(wrapper);
+    // This opens drop down menu
+    wrapper.find("input").simulate("change");
     wrapper.find("li").first().simulate("click");
     await waitForComponentToPaint(wrapper);
-
     expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
+
+    //const wrapper = mount(getComponent(options, {}));
+    // No inputChange event fires. No error
+
+    // const wrapper = mount(getComponent(options, { autocompleteComp: "Item 2" }));
+    // Reason:reset Event:null option:  field:Item 2 len:1
+    // Input value = Item 2. No error
+
+    //     wrapper
+    //       .find("input")
+    //       .simulate("change", { target: { label: "Item 1", value: "Item 1" } });
+    //     await waitForComponentToPaint(wrapper);
+    // //Reason:input Event:[object Object] option: Item 1 field:Item 2 len:1
+
+    // wrapper.find("input").simulate("click");
+    // await waitForComponentToPaint(wrapper);
+    console.log(wrapper.debug());
+
+    // console.log(wrapper.debug());
+    // wrapper.find("li").first().simulate("click");
+    // await waitForComponentToPaint(wrapper);
+
+    // wrapper.find("input").simulate("change");
+    // await waitForComponentToPaint(wrapper);
+
+    // expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
   });
 });
