@@ -14,10 +14,11 @@ import {
 import { Form, Formik } from "formik";
 import { Section1ValidationSchema } from "../ValidationSchema";
 import { KeyValue } from "../../../../models/KeyValue";
+import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
 
 interface Section1Props {
   localOffices: KeyValue[];
-  designatedBodies: KeyValue[];
+  designatedBodies: DesignatedBodyKeyValue[];
   curricula: KeyValue[];
 }
 type CombinedSectionProps = SectionProps & Section1Props;
@@ -97,11 +98,29 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
               <SelectInputField
                 label="Previous Designated Body for Revalidation (if applicable)"
                 options={[
-                  ...designatedBodies,
+                  ...designatedBodies.filter(c => c.internal === true),
                   { label: "other", value: "other" }
                 ]}
                 name="prevRevalBody"
               />
+              {values.prevRevalBody === "other" ? (
+                <SelectInputField
+                  label="Please Specify 'Other'"
+                  options={designatedBodies.filter(c => c.internal === false)}
+                  name="prevRevalBodyOther"
+                />
+              ) : null}
+              {values.prevRevalBody === "other" ? (
+                <p>
+                  {" "}
+                  <a
+                    style={{ whiteSpace: "nowrap" }}
+                    href="https://tis-support.hee.nhs.uk"
+                  >
+                    I dont see my Designated Body?
+                  </a>
+                </p>
+              ) : null}
               <TextInputField
                 label="Current Revalidation Date"
                 type="date"
