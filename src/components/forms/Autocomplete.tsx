@@ -121,37 +121,6 @@ const Autocomplete: React.FC<IProps> = props => {
           helpers.setValue(option, true);
         }
       }
-      // if (reason === "reset") {
-      //   // Reason = reset when programmatic change
-      //   if (option) {
-      //     helpers.setValue(option, true);
-      //   } else {
-      //     if (event) {
-      //       const fieldValue =
-      //         props.options.filter(option => option.value === field.value)
-      //           .length === 1
-      //           ? field.value
-      //           : "";
-
-      //       helpers.setValue(fieldValue, true);
-      //     }
-      //   }
-      // } else {
-      //   //Reason = input and user is typing. Bound control
-      //   helpers.setValue(option, true);
-      // }
-      setBug(
-        "Reason:" +
-          reason +
-          " Event:" +
-          event +
-          " option: " +
-          option +
-          " field:" +
-          field.value +
-          " len:" +
-          props.options.filter(option => option.value === field.value).length
-      );
     },
     onOpen: () => {
       setOpen(true);
