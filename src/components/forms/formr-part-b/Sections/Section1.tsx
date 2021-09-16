@@ -108,7 +108,7 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
                 <>
                   <Autocomplete
                     label="Please Specify 'Other'"
-                    name="prevRevalBodyOther"
+                    name="DesignatedBodyOther"
                     id="DesignatedBodyOther"
                     options={designatedBodies.filter(c => c.internal === false)}
                     dataCy="DesignatedBodyOther"
