@@ -86,7 +86,6 @@ const Autocomplete: React.FC<IProps> = props => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const loading = open && props.options.length === 0 ? true : false;
-  const [bug, setBug] = useState("");
   const {
     getRootProps,
     getInputLabelProps,
@@ -111,8 +110,8 @@ const Autocomplete: React.FC<IProps> = props => {
       if (event) {
         if (reason === "reset") {
           const fieldValue =
-            props.options.filter(option => option.value === field.value)
-              .length === 1
+            props.options.filter(item => item.value === field.value).length ===
+            1
               ? field.value
               : "";
           helpers.setValue(option || fieldValue, true);
