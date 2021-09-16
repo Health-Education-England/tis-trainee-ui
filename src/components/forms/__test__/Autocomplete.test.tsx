@@ -15,7 +15,8 @@ const options: KeyValue[] = [
 const getComponent = (
   options: KeyValue[],
   initialValue: {} = {},
-  inputValue: string = ""
+  inputValue: string = "",
+  allowCustomInput: boolean = false
 ) => (
   <Formik
     validationSchema={Yup.object().shape({
@@ -33,6 +34,7 @@ const getComponent = (
           options={options}
           width="50%"
           inputValue={inputValue}
+          allowCustomInput={allowCustomInput}
         />
       </Form>
     )}

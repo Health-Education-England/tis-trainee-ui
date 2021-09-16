@@ -10,6 +10,7 @@ interface IProps {
   id?: string;
   handleOpen?: any;
   inputValue?: string;
+  allowCustomInput?: boolean;
   width?: string;
   dataCy?: string;
   dataJest?: string;
@@ -103,19 +104,23 @@ const Autocomplete: React.FC<IProps> = props => {
     options: props.options.length
       ? [{ label: "", value: "" }, ...props.options]
       : [],
+
     inputValue: props.inputValue ? props.inputValue : field.value || "",
     getOptionLabel: (option: KeyValue) => option.label,
     getOptionSelected: (option, value) => option.value === value.value,
     onInputChange: (event: ChangeEvent<{}>, option, reason) => {
       if (event) {
         if (reason === "reset") {
-          const fieldValue =
-            props.options.filter(item => item.value === field.value).length ===
-            1
-              ? field.value
-              : "";
-          helpers.setValue(option || fieldValue, true);
-          console.log("option: " + option + " # field:" + field.value);
+          if (props.allowCustomInput) {
+            helpers.setValue(field.value || option, true);
+          } else {
+            const fieldValue =
+              props.options.filter(item => item.value === field.value)
+                .length === 1
+                ? field.value
+                : "";
+            helpers.setValue(option || fieldValue, true);
+          }
         } else {
           helpers.setValue(option, true);
         }
