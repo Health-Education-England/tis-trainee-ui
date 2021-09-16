@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import SelectInputField from "../../SelectInputField";
+import Autocomplete from "../../Autocomplete";
 import TextInputField from "../../TextInputField";
 import ScrollTo from "../../ScrollTo";
 import FormRPartBPagination from "./FormRPartBPagination";
@@ -104,22 +105,16 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
                 name="prevRevalBody"
               />
               {values.prevRevalBody === "other" ? (
-                <SelectInputField
-                  label="Please Specify 'Other'"
-                  options={designatedBodies.filter(c => c.internal === false)}
-                  name="prevRevalBodyOther"
-                />
-              ) : null}
-              {values.prevRevalBody === "other" ? (
-                <p>
-                  {" "}
-                  <a
-                    style={{ whiteSpace: "nowrap" }}
-                    href="https://tis-support.hee.nhs.uk"
-                  >
-                    I dont see my Designated Body?
-                  </a>
-                </p>
+                <>
+                  <Autocomplete
+                    label="Please Specify 'Other'"
+                    name="prevRevalBodyOther"
+                    id="DesignatedBodyOther"
+                    options={designatedBodies.filter(c => c.internal === false)}
+                    dataCy="DesignatedBodyOther"
+                    width="75%"
+                  />
+                </>
               ) : null}
               <TextInputField
                 label="Current Revalidation Date"
