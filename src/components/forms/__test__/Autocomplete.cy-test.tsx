@@ -14,7 +14,8 @@ const options: KeyValue[] = [
 const getComponent = (
   opts: KeyValue[],
   initialValue: {} = {},
-  inputValue: string = ""
+  inputValue: string = "",
+  allowCustomInput: boolean = false
 ) => (
   <Formik
     validationSchema={Yup.object().shape({
@@ -36,6 +37,7 @@ const getComponent = (
           options={opts}
           width="50%"
           inputValue={inputValue}
+          allowCustomInput={allowCustomInput}
         />
       </Form>
     )}
@@ -79,5 +81,18 @@ describe("Autocomplete component", () => {
     cy.get("input").type("Item");
     cy.get("li").first().click();
     cy.get(".nhsuk-error-message").should("have.length", 0);
+  });
+
+  it("should clear input on blur when value is not in list and alloCustomValue = false", () => {
+    mount(getComponent(options));
+    cy.get("input").type("Item is not in list");
+    cy.get("input").blur();
+    cy.get("input").should("not.contain.value");
+  });
+  it("should NOT clear input on blur when value is not in list and alloCustomValue = false", () => {
+    mount(getComponent(options, {}, "", true));
+    cy.get("input").type("Item is not in list");
+    cy.get("input").blur();
+    cy.get("input").should("contain.value", "Item is not in list");
   });
 });

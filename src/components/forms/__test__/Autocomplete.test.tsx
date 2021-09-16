@@ -15,26 +15,26 @@ const options: KeyValue[] = [
 const getComponent = (
   options: KeyValue[],
   initialValue: {} = {},
-  inputValue: string = ""
+  inputValue: string = "",
+  allowCustomInput: boolean = false
 ) => (
   <Formik
     validationSchema={Yup.object().shape({
-      cctSpecialty1: Yup.string().required("Required").min(4)
+      autocompleteComp: Yup.string().required("Required").min(4)
     })}
-    validateOnChange={true}
-    validateOnBlur={true}
     initialValues={initialValue}
     onSubmit={() => {}}
   >
-    {() => (
+    {({ values, errors, setFieldValue }) => (
       <Form>
         <Autocomplete
-          label="Specialty 1 for Award of CCT"
-          name="cctSpecialty1"
-          id="DeclarationSpeciality1"
+          label="Autocomplete component"
+          name="autocompleteComp"
+          id="autocompleteComp"
           options={options}
           width="50%"
           inputValue={inputValue}
+          allowCustomInput={allowCustomInput}
         />
       </Form>
     )}
@@ -60,7 +60,9 @@ describe("Autocomplete component", () => {
   });
 
   it("should display value as selected when passed in form data", () => {
-    const wrapper = mount(getComponent(options, { cctSpecialty1: "Item 2" }));
+    const wrapper = mount(
+      getComponent(options, { autocompleteComp: "Item 2" })
+    );
 
     expect(wrapper.find("input")).toHaveLength(1);
     expect(wrapper.find("input").props().value).toBe("Item 2");
@@ -90,7 +92,16 @@ describe("Autocomplete component", () => {
     const wrapper = mount(getComponent(options, {}, "Item 3"));
     wrapper.find("input").simulate("change");
     await waitForComponentToPaint(wrapper);
+
     expect(wrapper.find("li")).toHaveLength(1);
+  });
+
+  it("should NOT display error when rendered with initial value.", async () => {
+    const wrapper = mount(
+      getComponent(options, { autocompleteComp: "Item 2" })
+    );
+    await waitForComponentToPaint(wrapper);
+    expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
   });
 
   it("should display error when validation criteria not met", async () => {
@@ -101,12 +112,11 @@ describe("Autocomplete component", () => {
   });
 
   it("should not display error when validation criteria met", async () => {
-    const wrapper = mount(getComponent(options, {}, "Item"));
-    wrapper.find("input").simulate("change");
+    const wrapper = mount(getComponent(options, {}, "I"));
     await waitForComponentToPaint(wrapper);
+    wrapper.find("input").simulate("change");
     wrapper.find("li").first().simulate("click");
     await waitForComponentToPaint(wrapper);
-
     expect(wrapper.find(".nhsuk-error-message")).toHaveLength(0);
   });
 });

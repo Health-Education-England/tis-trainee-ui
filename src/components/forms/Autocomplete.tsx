@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import useAutocomplete from "@material-ui/lab/useAutocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect, useField } from "formik";
@@ -10,6 +10,7 @@ interface IProps {
   id?: string;
   handleOpen?: any;
   inputValue?: string;
+  allowCustomInput?: boolean;
   width?: string;
   dataCy?: string;
   dataJest?: string;
@@ -86,7 +87,6 @@ const Autocomplete: React.FC<IProps> = props => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const loading = open && props.options.length === 0 ? true : false;
-
   const {
     getRootProps,
     getInputLabelProps,
@@ -104,20 +104,32 @@ const Autocomplete: React.FC<IProps> = props => {
     options: props.options.length
       ? [{ label: "", value: "" }, ...props.options]
       : [],
+
     inputValue: props.inputValue ? props.inputValue : field.value || "",
     getOptionLabel: (option: KeyValue) => option.label,
     getOptionSelected: (option, value) => option.value === value.value,
-    onInputChange: (_, option, reason) => {
-      if (reason === "reset") {
-        helpers.setValue(option ? option : field.value);
-      } else {
-        helpers.setValue(option);
+    onInputChange: (event: ChangeEvent<{}>, option, reason) => {
+      if (event) {
+        if (reason === "reset") {
+          if (props.allowCustomInput) {
+            helpers.setValue(field.value || option, true);
+          } else {
+            const fieldValue =
+              props.options.filter(item => item.value === field.value)
+                .length === 1
+                ? field.value
+                : "";
+            helpers.setValue(option || fieldValue, true);
+          }
+        } else {
+          helpers.setValue(option, true);
+        }
       }
     },
     onOpen: () => {
       setOpen(true);
       props.handleOpen && props.handleOpen();
-      helpers.setValue("");
+      helpers.setValue("", true);
     },
     onClose: () => {
       setOpen(false);
