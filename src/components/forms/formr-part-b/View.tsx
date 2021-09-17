@@ -149,6 +149,14 @@ class View extends React.PureComponent<ViewProps> {
                 </SummaryList.Key>
                 <SummaryList.Value>{formData.prevRevalBody}</SummaryList.Value>
               </SummaryList.Row>
+              {formData.prevRevalBody === "other" ? (
+                <SummaryList.Row>
+                  <SummaryList.Key>Other Previous Revalidation</SummaryList.Key>
+                  <SummaryList.Value>
+                    {formData.prevRevalBodyOther}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+              ) : null}
               <SummaryList.Row>
                 <SummaryList.Key>Current Revalidation Date</SummaryList.Key>
                 <SummaryList.Value data-jest="currRevalDate">

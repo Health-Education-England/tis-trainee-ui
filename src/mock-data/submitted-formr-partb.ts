@@ -11,6 +11,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     email: "email@email.com",
     localOfficeName: "Health Education England Thames Valley",
     prevRevalBody: "Health Education England Midlands",
+    prevRevalBodyOther: "",
     prevRevalDate: "2020-04-22",
     currRevalDate: "2020-04-22",
     programmeSpecialty: "ST3",

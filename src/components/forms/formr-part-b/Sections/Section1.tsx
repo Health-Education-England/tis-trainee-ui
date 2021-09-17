@@ -104,7 +104,7 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
                 ]}
                 name="prevRevalBody"
               />
-              {values.prevRevalBody === "other" ? (
+              {values.prevRevalBodyOther && (
                 <>
                   <Autocomplete
                     label="Please Specify 'Other'"
@@ -115,7 +115,7 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
                     width="75%"
                   />
                 </>
-              ) : null}
+              )}
               <TextInputField
                 label="Current Revalidation Date"
                 type="date"

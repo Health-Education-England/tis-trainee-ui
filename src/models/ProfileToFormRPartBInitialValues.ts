@@ -50,6 +50,7 @@ export function ProfileToFormRPartBInitialValues(
     email: "",
     localOfficeName: pd?.personOwner || "",
     prevRevalBody: pd?.prevRevalBody || "",
+    prevRevalBodyOther: pd?.prevRevalBodyOther || "",
     currRevalDate: pd?.currRevalDate || undefined,
     prevRevalDate: pd?.prevRevalDate || undefined,
     programmeSpecialty: curriculum?.curriculumName || "",
