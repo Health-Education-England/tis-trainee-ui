@@ -99,22 +99,20 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
               <SelectInputField
                 label="Previous Designated Body for Revalidation (if applicable)"
                 options={[
-                  ...designatedBodies.filter(c => c.internal === true),
+                  ...designatedBodies.filter(db => db.internal === true),
                   { label: "other", value: "other" }
                 ]}
                 name="prevRevalBody"
               />
-              {values.prevRevalBodyOther && (
-                <>
-                  <Autocomplete
-                    label="Please Specify 'Other'"
-                    name="DesignatedBodyOther"
-                    id="DesignatedBodyOther"
-                    options={designatedBodies.filter(c => c.internal === false)}
-                    dataCy="DesignatedBodyOther"
-                    width="75%"
-                  />
-                </>
+              {values.prevRevalBody === "other" && (
+                <Autocomplete
+                  label="Please Specify 'Other'"
+                  name="DesignatedBodyOther"
+                  id="DesignatedBodyOther"
+                  options={designatedBodies.filter(db => db.internal === false)}
+                  dataCy="DesignatedBodyOther"
+                  width="75%"
+                />
               )}
               <TextInputField
                 label="Current Revalidation Date"
