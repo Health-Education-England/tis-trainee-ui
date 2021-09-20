@@ -91,7 +91,7 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
                       this, open the authenticator application installed on your
                       mobile phone and add a new account (e.g. clicking the '+'
                       button on Microsoft Authenticator, and choosing 'Work or
-                      school acount' from the options, then 'Scan QR code').
+                      school account' from the options, then 'Scan QR code').
                     </p>
                     <p>
                       An account named 'Trainee Self-Service' should now be
