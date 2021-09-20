@@ -7,7 +7,7 @@ import {
   AmplifyForgotPassword,
   AmplifyRequireNewPassword
 } from "@aws-amplify/ui-react";
-import { Container, WarningCallout } from "nhsuk-react-components";
+import { Container, Details, WarningCallout } from "nhsuk-react-components";
 import { AuthState, CognitoUserInterface } from "@aws-amplify/ui-components";
 import "./Login.scss";
 import styles from "./Login.module.scss";
@@ -30,16 +30,88 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
               HEE hold about them and undertake the Form R process for junior
               doctors.
             </p>
-            <p>
-              For further information and support, visit the{" "}
-              <a
-                style={{ whiteSpace: "nowrap" }}
-                href="https://tis-support.hee.nhs.uk"
-              >
-                TIS Support website
-              </a>
-              .
-            </p>
+            {authState === AuthState.TOTPSetup && (
+              <p>
+                We are currenly piloting Trainee Self-Service so there will be
+                some issues to iron out - particularly with Authentication.
+                Apologies in advance if this affects you. We have links below to
+                some common issues so far.
+              </p>
+            )}
+            {authState === AuthState.SignIn && (
+              <p>
+                For further information and support, visit the{" "}
+                <a
+                  style={{ whiteSpace: "nowrap" }}
+                  href="https://tis-support.hee.nhs.uk"
+                >
+                  TIS Support website
+                </a>
+                .
+              </p>
+            )}
+            {authState === AuthState.TOTPSetup && (
+              <>
+                <Details>
+                  <Details.Summary>
+                    I enter the 6-digit code from my authenticator app and click{" "}
+                    <b>‘Verify Security Token’</b> but nothing happens
+                  </Details.Summary>
+                  <Details.Text>
+                    <p>
+                      Check your authenticator app on your mobile phone, looking
+                      for the account named “Trainee Self-Service”
+                    </p>
+                    <p>
+                      Wait for the 6-digit code to refresh (
+                      <b>
+                        You have a maximum of 30 seconds before this number
+                        expires and gets refreshed
+                      </b>
+                      ). This will then give you a full 30 seconds to use this
+                      code before it expires.
+                    </p>
+                    <p>
+                      Enter this 6-digit code in the box below the QR Code
+                      before the 30-second refresh happens.
+                    </p>
+                    <p>
+                      Repeat the above if you don't input the 6-digit code
+                      within the 30 second time limit.
+                    </p>
+                  </Details.Text>
+                </Details>
+                <Details>
+                  <Details.Summary>
+                    I click on the QR Code image but nothing happens.
+                  </Details.Summary>
+                  <Details.Text>
+                    <p>
+                      The QR code needs to be scanned using your camera. To do
+                      this, open the authenticator application installed on your
+                      mobile phone and add a new account (e.g. clicking the '+'
+                      button on Microsoft Authenticator, and choosing 'Work or
+                      school acount' from the options, then 'Scan QR code').
+                    </p>
+                    <p>
+                      An account named 'Trainee Self-Service' should now be
+                      installed on your authenticator app.
+                    </p>
+                    <p>
+                      Wait for the 6-digit code to refresh (You have a maximum
+                      of 30 seconds before this number expires and gets
+                      refreshed). This will then give you a full 30 seconds to
+                      use this code before it expires.
+                    </p>
+                    <p>
+                      Go back to your desktop/ laptop and enter this 6-digit
+                      code in the box below the QR Code before the 30-second
+                      refresh happens.
+                    </p>
+                  </Details.Text>
+                </Details>
+              </>
+            )}
           </div>
           <div className={styles.colForm}>
             {authState === AuthState.TOTPSetup && (
