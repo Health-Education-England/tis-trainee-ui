@@ -137,7 +137,7 @@ Cypress.Commands.add("checkAndFillSection1", (currRevalDate, prevRevalDate) => {
   cy.get(".nhsuk-warning-callout > p").should("exist");
 
   cy.get("#prevRevalBody").should("exist");
-  cy.get("#DesignatedBodyOther").should("not.exist");
+  cy.get("#prevRevalBodyOther").should("not.exist");
 
   cy.get("#forename").should("exist").invoke("val");
   cy.get("#forename").focus();
@@ -197,19 +197,19 @@ Cypress.Commands.add("checkAndFillSection1", (currRevalDate, prevRevalDate) => {
     "Health Education England Wessex"
   );
   cy.get("#prevRevalBody").select("other");
-  cy.get("#DesignatedBodyOther").should("exist");
+  cy.get("#prevRevalBodyOther").should("exist");
 
-  cy.get("#DesignatedBodyOther").clear().type("Health ");
-  cy.get("#DesignatedBodyOther + ul li").should("exist");
+  cy.get("#prevRevalBodyOther").clear().type("Health ");
+  cy.get("#prevRevalBodyOther + ul li").should("exist");
 
-  cy.get("#DesignatedBodyOther").clear().type("Dental Training Agency");
-  cy.get("#DesignatedBodyOther + ul li").should("not.exist");
+  cy.get("#prevRevalBodyOther").clear().type("Dental Training Agency");
+  cy.get("#prevRevalBodyOther + ul li").should("not.exist");
 
   cy.get('[data-cy="currRevalDate"]').click();
-  cy.get('[data-cy="DesignatedBodyOther"]').should("have.value", "");
-  cy.get('[data-cy="DesignatedBodyOther"]').clear().type("Health");
-  cy.get("#DesignatedBodyOther + ul li").should("exist");
-  cy.get("#DesignatedBodyOther + ul li").eq(1).click();
+  cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
+  cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
+  cy.get("#prevRevalBodyOther + ul li").should("exist");
+  cy.get("#prevRevalBodyOther + ul li").eq(1).click();
 });
 
 // ### SECTION 2: CHECK AND FILL

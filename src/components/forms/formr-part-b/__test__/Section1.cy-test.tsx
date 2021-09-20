@@ -55,9 +55,9 @@ describe("Section 2", () => {
 
   it("should not display 'other' Autocomplete box until 'other' opiton selected in 'Previous Designated Body'", () => {
     cy.get("#prevRevalBody").should("exist");
-    cy.get("#DesignatedBodyOther").should("not.exist");
+    cy.get("#prevRevalBodyOther").should("not.exist");
     cy.get("#prevRevalBody").select("other");
-    cy.get("#DesignatedBodyOther").should("exist");
+    cy.get("#prevRevalBodyOther").should("exist");
   });
 
   it("should only find internal Designated Bodies in 'Previous Designated Body' inputField", () => {
@@ -75,14 +75,14 @@ describe("Section 2", () => {
 
   it("should only find external Designated Bodies in 'other' AutoComplete", () => {
     cy.get("#prevRevalBody").select("other");
-    cy.get("#DesignatedBodyOther").should("exist");
-    cy.get("#DesignatedBodyOther").clear().type("Thames");
-    cy.get("#DesignatedBodyOther + ul li").first().click();
-    cy.get("#DesignatedBodyOther").should(
+    cy.get("#prevRevalBodyOther").should("exist");
+    cy.get("#prevRevalBodyOther").clear().type("Thames");
+    cy.get("#prevRevalBodyOther + ul li").first().click();
+    cy.get("#prevRevalBodyOther").should(
       "have.value",
       "Health Education England Thames Valley"
     );
-    cy.get("#DesignatedBodyOther").clear().type("Wessex");
-    cy.get("#DesignatedBodyOther + ul li").should("not.exist");
+    cy.get("#prevRevalBodyOther").clear().type("Wessex");
+    cy.get("#prevRevalBodyOther + ul li").should("not.exist");
   });
 });
