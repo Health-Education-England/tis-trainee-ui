@@ -47,7 +47,7 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
         nextSection(values);
       }}
     >
-      {({ values, errors, handleSubmit }) => (
+      {({ values, errors, handleSubmit, setFieldValue }) => (
         <Form>
           <ScrollTo />
           <Fieldset disableErrorLine={true} name="doctorsDetails">
@@ -103,6 +103,10 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
                   { label: "other", value: "other" }
                 ]}
                 name="prevRevalBody"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue("prevRevalBody", e.target.value, false);
+                  setFieldValue("prevRevalBodyOther", "", false);
+                }}
               />
               {values.prevRevalBody === "other" && (
                 <Autocomplete

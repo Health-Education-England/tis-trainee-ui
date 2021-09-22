@@ -209,7 +209,10 @@ Cypress.Commands.add("checkAndFillSection1", (currRevalDate, prevRevalDate) => {
   cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
   cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
   cy.get("#prevRevalBodyOther + ul li").should("exist");
-  cy.get("#prevRevalBodyOther + ul li").eq(1).click();
+  cy.get("#prevRevalBodyOther + ul li").eq(0).click();
+
+  cy.get("#prevRevalBody").select("other");
+  cy.get("#prevRevalBodyOther").should("have.value", "");
 });
 
 // ### SECTION 2: CHECK AND FILL
