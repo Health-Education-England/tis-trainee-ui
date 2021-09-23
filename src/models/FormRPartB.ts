@@ -10,6 +10,7 @@ export interface FormRPartB extends IFormR {
   email: string;
   localOfficeName: string;
   prevRevalBody: string;
+  prevRevalBodyOther: string;
   currRevalDate: DateType;
   prevRevalDate: Date | string | undefined | null;
   programmeSpecialty: string;

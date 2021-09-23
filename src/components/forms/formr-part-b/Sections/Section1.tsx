@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import SelectInputField from "../../SelectInputField";
+import Autocomplete from "../../Autocomplete";
 import TextInputField from "../../TextInputField";
 import ScrollTo from "../../ScrollTo";
 import FormRPartBPagination from "./FormRPartBPagination";
@@ -14,10 +15,11 @@ import {
 import { Form, Formik } from "formik";
 import { Section1ValidationSchema } from "../ValidationSchema";
 import { KeyValue } from "../../../../models/KeyValue";
+import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
 
 interface Section1Props {
   localOffices: KeyValue[];
-  designatedBodies: KeyValue[];
+  designatedBodies: DesignatedBodyKeyValue[];
   curricula: KeyValue[];
 }
 type CombinedSectionProps = SectionProps & Section1Props;
@@ -45,7 +47,7 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
         nextSection(values);
       }}
     >
-      {({ values, errors, handleSubmit }) => (
+      {({ values, errors, handleSubmit, setFieldValue }) => (
         <Form>
           <ScrollTo />
           <Fieldset disableErrorLine={true} name="doctorsDetails">
@@ -97,11 +99,25 @@ const Section1: FunctionComponent<CombinedSectionProps> = (
               <SelectInputField
                 label="Previous Designated Body for Revalidation (if applicable)"
                 options={[
-                  ...designatedBodies,
+                  ...designatedBodies.filter(db => db.internal === true),
                   { label: "other", value: "other" }
                 ]}
                 name="prevRevalBody"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue("prevRevalBody", e.target.value, false);
+                  setFieldValue("prevRevalBodyOther", "", false);
+                }}
               />
+              {values.prevRevalBody === "other" && (
+                <Autocomplete
+                  label="Please Specify 'Other'"
+                  name="prevRevalBodyOther"
+                  id="prevRevalBodyOther"
+                  options={designatedBodies.filter(db => db.internal === false)}
+                  dataCy="prevRevalBodyOther"
+                  width="75%"
+                />
+              )}
               <TextInputField
                 label="Current Revalidation Date"
                 type="date"

@@ -34,6 +34,7 @@ export const mockPersonalDetails: PersonalDetails = {
   visaIssued: "",
   detailsNumber: "",
   prevRevalBody: "",
+  prevRevalBodyOther: "",
   prevRevalDate: new Date("2021-12-31"),
   currRevalDate: new Date("2021-12-31")
 };

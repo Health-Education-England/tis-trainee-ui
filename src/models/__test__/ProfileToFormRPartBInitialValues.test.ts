@@ -17,6 +17,7 @@ const formrPartB: FormRPartB = {
   email: "",
   programmeSpecialty: "ST6",
   prevRevalBody: "",
+  prevRevalBodyOther: "",
   currRevalDate: new Date("2021-12-31"),
   prevRevalDate: new Date("2021-12-31"),
   dualSpecialty: "",
