@@ -89,8 +89,7 @@ export const Section2ValidationSchema = yup.object({
           )
       })
     )
-    .min(1, "At least one type of work should be added")
-    .max(30, "Maximum number of placements allowed are restricted to 30"),
+    .min(1, "At least one type of work should be added"),
   sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
   parentalLeave: leaveValidation(
     "Parental leave (incl Maternity / Paternity leave)"
