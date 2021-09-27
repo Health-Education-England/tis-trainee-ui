@@ -7,15 +7,32 @@ import {
   AmplifyForgotPassword,
   AmplifyRequireNewPassword
 } from "@aws-amplify/ui-react";
-import { Container, Details, WarningCallout } from "nhsuk-react-components";
+import {
+  Button,
+  Container,
+  Details,
+  WarningCallout
+} from "nhsuk-react-components";
 import { AuthState, CognitoUserInterface } from "@aws-amplify/ui-components";
 import "./Login.scss";
 import styles from "./Login.module.scss";
+import { useEffect, useState } from "react";
 interface LoginNewProps {
   user: CognitoUserInterface | undefined;
   authState: AuthState | undefined;
 }
 export const LoginNew = ({ user, authState }: LoginNewProps) => {
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    if (authState === AuthState.TOTPSetup) {
+      let timeOut = setTimeout(() => setExpired(true), 180000);
+      return () => {
+        clearTimeout(timeOut);
+      };
+    }
+  }, [authState]);
+
   return (
     <main className="nhsuk-main-wrapper" id="maincontent">
       <Container>
@@ -59,26 +76,37 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
                   </Details.Summary>
                   <Details.Text>
                     <p>
-                      Check your authenticator app on your mobile phone, looking
-                      for the account named “Trainee Self-Service”
+                      You may have exceeded the 3 minutes to use this QR code
+                      before it expires - after which you will need to reload
+                      the page and sign in again.
                     </p>
-                    <p>
-                      Wait for the 6-digit code to refresh (
-                      <b>
-                        You have a maximum of 30 seconds before this number
-                        expires and gets refreshed
-                      </b>
-                      ). This will then give you a full 30 seconds to use this
-                      code before it expires.
-                    </p>
-                    <p>
-                      Enter this 6-digit code in the box below the QR Code
-                      before the 30-second refresh happens.
-                    </p>
-                    <p>
-                      Repeat the above if you don't input the 6-digit code
-                      within the 30 second time limit.
-                    </p>
+                    <ul>
+                      <li>
+                        Click the green 'Reload' button when it appears or hold
+                        down the 'Ctrl' and 'R' keys.
+                      </li>
+                      <li>
+                        This should take you from the QR code screen back to the
+                        Sign In page.
+                      </li>
+                      <li>
+                        Sign in again and you should be back on the page with a
+                        new QR code.
+                      </li>
+                      <li>Scan the QR code using your authenticator app.</li>
+                      <li>
+                        Take note of the 6-digit code on the Authenticator app
+                        (Trainee Self-Service account).
+                      </li>
+                      <li>
+                        Back on your laptop/desktop, enter this 6-digit Security
+                        Code in the box below the QR Code (leaving no spaces
+                        between the digits).
+                      </li>
+                      <li>
+                        You will have up to 60 seconds to input this number.
+                      </li>
+                    </ul>
                   </Details.Text>
                 </Details>
                 <Details>
@@ -86,36 +114,31 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
                     I click on the QR Code image but nothing happens.
                   </Details.Summary>
                   <Details.Text>
-                    <p>
-                      The QR code needs to be scanned using your camera. To do
-                      this, open the authenticator application installed on your
-                      mobile phone and add a new account (e.g. clicking the '+'
-                      button on Microsoft Authenticator, and choosing 'Work or
-                      school account' from the options, then 'Scan QR code').
-                    </p>
-                    <p>
-                      An account named 'Trainee Self-Service' should now be
-                      installed on your authenticator app.
-                    </p>
-                    <p>
-                      Wait for the 6-digit code to refresh (You have a maximum
-                      of 30 seconds before this number expires and gets
-                      refreshed). This will then give you a full 30 seconds to
-                      use this code before it expires.
-                    </p>
-                    <p>
-                      Go back to your desktop/ laptop and enter this 6-digit
-                      code in the box below the QR Code before the 30-second
-                      refresh happens.
-                    </p>
+                    <p>The QR code needs to be scanned using your camera.</p>
+                    <ul>
+                      <li>
+                        To do this, open the authenticator application installed
+                        on your mobile phone and add a new account (e.g.
+                        clicking the '+' button on Microsoft Authenticator, and
+                        choosing 'Work or school account' from the options, then
+                        'Scan QR code').
+                      </li>
+                      <li>
+                        An account named 'Trainee Self-Service' should now be
+                        installed on your authenticator app.
+                      </li>
+                      <li>
+                        Take note of the 6-digit code on the Authenticator app
+                        (Trainee Self-Service account){" "}
+                      </li>
+                      <li>
+                        Back on your laptop/desktop, enter this 6-digit Security
+                        Code in the box below the QR Code (leaving no spaces
+                        between the digits).
+                      </li>
+                    </ul>
                   </Details.Text>
                 </Details>
-              </>
-            )}
-          </div>
-          <div className={styles.colForm}>
-            {authState === AuthState.TOTPSetup && (
-              <WarningCallout className={styles.callout}>
                 <p>
                   For further guidance on setting up an authenticator app, visit
                   the{" "}
@@ -127,6 +150,35 @@ export const LoginNew = ({ user, authState }: LoginNewProps) => {
                     TIS Support website.
                   </a>
                 </p>
+              </>
+            )}
+          </div>
+          <div className={styles.colForm}>
+            {authState === AuthState.TOTPSetup && (
+              <WarningCallout className={styles.callout}>
+                {(() => {
+                  if (expired) {
+                    return (
+                      <>
+                        <p className={styles.expired}>
+                          Your QR Code has expired. Please reload the page and
+                          sign in again.
+                        </p>
+                        <Button onClick={() => window.location.reload()}>
+                          Reload
+                        </Button>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <p>
+                        As part of inbuilt measures to secure your data, you
+                        have <b>3 minutes</b> to scan the QR code below and
+                        generate a Security Code before it expires.
+                      </p>
+                    );
+                  }
+                })()}
               </WarningCallout>
             )}
             <AmplifyAuthContainer>
