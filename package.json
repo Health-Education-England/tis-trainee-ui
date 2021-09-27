@@ -17,7 +17,7 @@
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.3",
     "@types/react-gtm-module": "^2.0.0",
-    "@types/react-helmet": "^6.1.1",
+    "@types/react-helmet": "^6.1.2",
     "@types/react-router-dom": "^5.1.5",
     "@types/yup": "0.29.13",
     "aws-amplify": "^4.2.4",
