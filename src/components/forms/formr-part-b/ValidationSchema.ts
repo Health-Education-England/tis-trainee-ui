@@ -47,7 +47,7 @@ export const Section1ValidationSchema = yup.object({
     .required("Email is required"),
   localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   prevRevalBody: yup.string(),
-  prevRevalBodyOther: yup.string(),
+  prevRevalBodyOther: yup.string().nullable(),
   currRevalDate: dateValidationSchema("Current Revalidation date")
     .test("currRevalDate", "The date has to be on or after today", value =>
       DateUtilities.IsFutureDate(value)
