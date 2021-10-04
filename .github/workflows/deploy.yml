@@ -85,7 +85,7 @@ jobs:
       - name: Get workflow
         run: |
           echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
-      - name: Run E2E tests
+      - name: Run E2E tests & Run Component tests
         uses: cypress-io/github-action@v2
         env:
           CYPRESS_baseUrl: https://trainee.tis.nhs.uk
@@ -94,16 +94,7 @@ jobs:
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
           browser: chrome
-      
-      - name: Run Component tests
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-        with:
-          install: false
-          command: npm run ct
+          command: npm run cypress & npm run ct
       
       - name: Generate coverage report
         run: npx nyc report --reporter=text
@@ -114,10 +105,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # Extra config
-      - name: Generate HTML report
-        if: always()
-        run: npm run report:generate
-
       - name: Create report artifact
         if: always()
         uses: actions/upload-artifact@v2
