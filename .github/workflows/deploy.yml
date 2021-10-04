@@ -1,10 +1,9 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
+    branches:
+      - feat/AmendWorkflow
   workflow_dispatch:
 
 jobs:
@@ -76,7 +75,7 @@ jobs:
 
   cypress-e2e:
     needs: [deploy-pre-prod]
-    name: Run Cypress E2E tests
+    name: Cypress
     runs-on: ubuntu-latest
     container: cypress/browsers:node14.16.0-chrome89-ff86
 
@@ -86,22 +85,35 @@ jobs:
       - name: Get workflow
         run: |
           echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
-
-      - name: Cypress run
+      - name: Run E2E tests
         uses: cypress-io/github-action@v2
         env:
           CYPRESS_baseUrl: https://trainee.tis.nhs.uk
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-          CYPRESS_coverage: false
         with:
           browser: chrome
+      
+      - name: Run Component tests
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          install: false
+          command: npm run ct
+      
+      - name: Generate coverage report
+        run: npx nyc report --reporter=text
 
-      - name: Merge test results into one
-        if: always()
-        run: npm run report:merge
-
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # Extra config
       - name: Generate HTML report
         if: always()
         run: npm run report:generate
@@ -181,38 +193,38 @@ jobs:
           workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')
           aws s3 sync build-artifacts s3://tis-build-artifacts/${{ github.event.repository.name }}/$workflow/${{ github.run_number }}
 
-  deploy-prod:
-    runs-on: ubuntu-latest
-    environment: prod
-    needs: [cypress-e2e]
+  # deploy-prod:
+  #   runs-on: ubuntu-latest
+  #   environment: prod
+  #   needs: [cypress-e2e]
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: eu-west-2
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: .aws/task-definition-prod.json
-          container-name: ${{ github.event.repository.name }}
-          image: ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ github.sha }}
+  #     - name: Fill in the new image ID in the Amazon ECS task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: .aws/task-definition-prod.json
+  #         container-name: ${{ github.event.repository.name }}
+  #         image: ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ github.sha }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ github.event.repository.name }}
-          cluster: trainee-prod
-          wait-for-service-stability: true
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: ${{ github.event.repository.name }}
+  #         cluster: trainee-prod
+  #         wait-for-service-stability: true
