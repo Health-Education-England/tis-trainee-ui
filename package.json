@@ -65,7 +65,7 @@
     "start": "react-scripts -r @cypress/instrument-cra start",
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
-    "build": "react-scripts cypress/instrument-cra build",
+    "build": "react-scripts build",
     "test": "react-scripts test --silent --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter",
     "test-cypress": "npm run cypress & npm run ct & npm run coverage:nyc",
     "coverage:nyc": "npx nyc report --reporter=text",
