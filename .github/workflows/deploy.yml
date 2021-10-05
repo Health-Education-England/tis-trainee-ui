@@ -106,6 +106,13 @@ jobs:
         with:
           install: false
           command: npm run ct
+      
+      - name: Merge test results into one
+        if: always()
+        run: npm run report:merge
+      
+      - name: Generate coverage report
+        run: npx nyc report --reporter=text
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.6
