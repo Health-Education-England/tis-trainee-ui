@@ -86,16 +86,6 @@ jobs:
         run: |
           echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
 
-      - name: Run Component tests
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-        with:
-          install: false
-          command: npm run ct
-
       - name: Run E2E tests
         uses: cypress-io/github-action@v2
         env:
@@ -105,11 +95,17 @@ jobs:
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
           browser: chrome
-          install: false
           command: npm run cypress
-      
-      - name: Generate coverage report
-        run: npx nyc report --reporter=text
+
+      - name: Run Component tests
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          install: false
+          command: npm run ct
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.6
