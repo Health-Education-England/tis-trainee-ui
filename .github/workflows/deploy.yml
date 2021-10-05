@@ -97,19 +97,15 @@ jobs:
           browser: chrome
           command: npm run cypress
 
-      - name: Run Component tests
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-        with:
-          install: false
-          command: npm run ct
-      
-      - name: Merge test results into one
-        if: always()
-        run: npm run report:merge
+      # - name: Run Component tests
+      #   uses: cypress-io/github-action@v2
+      #   env:
+      #     CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+      #     CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+      #     CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+      #   with:
+      #     install: false
+      #     command: npm run ct
       
       - name: Generate coverage report
         run: npx nyc report --reporter=text
