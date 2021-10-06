@@ -25,7 +25,7 @@ import cypressOtp from "cypress-otp";
 
 module.exports = (on, config) => {
   on("task", { generateOTP: cypressOtp });
-  codeCoverageTask(on, config);
+  require("@cypress/code-coverage/task")(on, config);
   if (config.testingType === "component") {
     const webpackConfig = findReactScriptsWebpackConfig(config, {
       webpackConfigPath: "react-scripts/config/webpack.config"
