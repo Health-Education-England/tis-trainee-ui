@@ -29,6 +29,7 @@ jobs:
       #     path: .nyc_output/
       
       - name: Npm Start
+        run: npm install
         run: npm run start
 
       - name: Cypress E2E test run
