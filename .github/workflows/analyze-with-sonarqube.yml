@@ -27,9 +27,11 @@ jobs:
       #   with:
       #     name: nyc-output-post-ct
       #     path: .nyc_output/
+
+      - name: Npm Install
+        run: npm install
       
       - name: Npm Start
-        run: npm install
         run: npm run start
 
       - name: Cypress E2E test run
