@@ -1,18 +1,60 @@
 name: Analyse with SonarQube
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
-  build:
+  cypress-e2e:
+    name: Run Cypress E2E tests
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js for use with actions
-        uses: actions/setup-node@v2.2.0
+
+      - name: Cypress CT run
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
-          node-version: 14.15.0
-      - run: npm install
-      - run: npm run lint -- -f json -o eslint-report.json
+          browser: chrome
+          headless: true
+          command: npm run ct
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyc-output-post-ct
+          path: .nyc_output/
+
+      - name: Cypress E2E test run
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_baseUrl: https://trainee.tis.nhs.uk
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          browser: chrome
+          headless: true
+          command: npm run cypress
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyc-output-post-e2e
+          path: .nyc_output/
+
+      - name: Generate coverage report
+        run: npx nyc report --reporter=text
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage-post-nyc-report
+          path: coverage/
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
