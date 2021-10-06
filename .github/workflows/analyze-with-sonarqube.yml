@@ -27,6 +27,9 @@ jobs:
       #   with:
       #     name: nyc-output-post-ct
       #     path: .nyc_output/
+      
+      - name: Npm Start
+        run: npm run start
 
       - name: Cypress E2E test run
         uses: cypress-io/github-action@v2
