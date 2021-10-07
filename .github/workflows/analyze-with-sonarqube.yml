@@ -39,10 +39,9 @@ jobs:
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
-          start: npm run start
           browser: chrome
           headless: true
-          command: npm run cypress
+          command: npm run start & npm run cypress
 
       - uses: actions/upload-artifact@v2
         with:
