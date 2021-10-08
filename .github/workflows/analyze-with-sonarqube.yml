@@ -30,6 +30,9 @@ jobs:
 
       - name: Npm Install
         run: npm install
+      
+      - name: Increase number of watchers
+        run: sudo sysctl -w fs.inotify.max_user_watches=524288
 
       - name: Cypress E2E test run
         uses: cypress-io/github-action@v2
