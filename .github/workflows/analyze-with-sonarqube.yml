@@ -44,7 +44,7 @@ jobs:
         with:
           browser: chrome
           headless: true
-          command: npm run start & npm run cypress
+          command: npm run cypress
 
       - uses: actions/upload-artifact@v2
         with:
