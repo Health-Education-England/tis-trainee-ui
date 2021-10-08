@@ -136,6 +136,7 @@
       "lcov",
       "text"
     ],
+    "collectCorverage": true,
     "resetMocks": false
   },
   "jestSonar": {

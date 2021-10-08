@@ -30,6 +30,10 @@ jobs:
           browser: chrome
           headless: true
           command: npm run ct
+      
+      - name: Merge test results into one
+        if: always()
+        run: npm run report:merge
 
       - uses: actions/upload-artifact@v2
         with:
