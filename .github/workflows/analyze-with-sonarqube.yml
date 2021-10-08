@@ -12,39 +12,36 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Cypress CT run
-      #   uses: cypress-io/github-action@v2
-      #   env:
-      #     CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-      #     CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-      #     CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-      #   with:
-      #     browser: chrome
-      #     headless: true
-      #     command: npm run ct
+      - name: Jest tests
+        run: npm test
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: nyc-output-post-ct
-      #     path: .nyc_output/
-
-      - name: Npm Install
-        run: npm install
-      
-      - name: Increase number of watchers
-        run: sudo sysctl -w fs.inotify.max_user_watches=524288
-
-      - name: Cypress E2E test run
+      - name: Cypress CT run
         uses: cypress-io/github-action@v2
         env:
-          CYPRESS_baseUrl: https://trainee.tis.nhs.uk
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
           browser: chrome
           headless: true
-          command: npm run cypress
+          command: npm run ct
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyc-output-post-ct
+          path: .nyc_output/
+
+      # - name: Cypress E2E test run
+      #   uses: cypress-io/github-action@v2
+      #   env:
+      #     CYPRESS_baseUrl: https://trainee.tis.nhs.uk
+      #     CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+      #     CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+      #     CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+      #   with:
+      #     browser: chrome
+      #     headless: true
+      #     command: npm run cypress
 
       - uses: actions/upload-artifact@v2
         with:
