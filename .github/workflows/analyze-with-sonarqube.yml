@@ -33,7 +33,7 @@ jobs:
       
       - name: Merge test results into one
         if: always()
-        run: npm run report:merge
+        run: npx istanbul-merge --out ./.nyc_output/out.json ./coverage/coverage-final.json ./.nyc_output/out.json
 
       - uses: actions/upload-artifact@v2
         with:
