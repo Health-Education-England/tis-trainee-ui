@@ -12,8 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Jest tests
-        run: npm test
+      - name: Setup Node.js for use with actions
+        uses: actions/setup-node@v2.2.0
+        with:
+          node-version: 14.15.0
+      - run: npm install
+      - run: npm run lint -- -f json -o eslint-report.json
+      - run: npm test
 
       - name: Cypress CT run
         uses: cypress-io/github-action@v2
