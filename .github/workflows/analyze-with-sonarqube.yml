@@ -20,20 +20,20 @@ jobs:
       - run: npm run lint -- -f json -o eslint-report.json
       - run: npm test
 
-      - name: Cypress CT run
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-        with:
-          browser: chrome
-          headless: true
-          command: npm run ct
+      # - name: Cypress CT run
+      #   uses: cypress-io/github-action@v2
+      #   env:
+      #     CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+      #     CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+      #     CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+      #   with:
+      #     browser: chrome
+      #     headless: true
+      #     command: npm run ct
       
-      - name: Merge test results into one
-        if: always()
-        run: npx istanbul-merge --out ./.nyc_output/out-merged.json ./coverage/coverage-final.json ./.nyc_output/out.json
+      # - name: Merge test results into one
+      #   if: always()
+      #   run: npx istanbul-merge --out ./.nyc_output/out-merged.json ./coverage/coverage-final.json ./.nyc_output/out.json
 
       - uses: actions/upload-artifact@v2
         with:
