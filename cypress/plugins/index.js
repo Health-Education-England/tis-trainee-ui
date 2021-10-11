@@ -9,33 +9,28 @@
 // https://on.cypress.io/plugins-guide
 // ***********************************************************
 
+// Found this tidier solution https://github.com/elevatebart/cy-ct-cra/blob/master/cypress/plugins/index.js for CRA cypress and ct coverage config
+
+import cypressOtp from "cypress-otp";
+
+require("@cypress/instrument-cra");
+const injectCraDevServer = require("@cypress/react/plugins/react-scripts");
+const codeCoverageTask = require("@cypress/code-coverage/task");
+
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
 /**
  * @type {Cypress.PluginConfig}
  */
-import findReactScriptsWebpackConfig from "@cypress/react/plugins/react-scripts/findReactScriptsWebpackConfig";
 
-import { startDevServer } from "@cypress/webpack-dev-server";
-
-import codeCoverageTask from "@cypress/code-coverage/task";
-
-import cypressOtp from "cypress-otp";
-
+// eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
+  // `on` is used to hook into various events Cypress emits
+  // `config` is the resolved Cypress config
   on("task", { generateOTP: cypressOtp });
+  injectCraDevServer(on, config);
   codeCoverageTask(on, config);
-  if (config.testingType === "component") {
-    const webpackConfig = findReactScriptsWebpackConfig(config, {
-      webpackConfigPath: "react-scripts/config/webpack.config"
-    });
-    const rules = webpackConfig.module.rules.find(rule => !!rule.oneOf).oneOf;
-    const babelRule = rules.find(rule => /babel-loader/.test(rule.loader));
-    babelRule.options.plugins.push(require.resolve("babel-plugin-istanbul"));
-    on("dev-server:start", options => {
-      return startDevServer({ options, webpackConfig });
-    });
-  }
+
   return config;
 };
