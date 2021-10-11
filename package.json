@@ -23,6 +23,7 @@
     "@types/yup": "0.29.13",
     "aws-amplify": "^4.2.4",
     "axios": "^0.21.1",
+    "babel-plugin-istanbul": "^6.0.0",
     "browser-update": "^3.3.25",
     "cross-env": "^7.0.3",
     "cypress": "^7.3.0",
@@ -66,7 +67,7 @@
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",
-    "test": "react-scripts test --silent --watchAll=false --coverage --testResultsProcessor jest-sonar-reporter",
+    "test": "react-scripts test --silent --watchAll=false --coverage --coverageDirectory=jest-coverage",
     "test-cypress": "npm run cypress & npm run ct & npm run coverage:nyc",
     "coverage:nyc": "npx nyc report --reporter=text",
     "cypress": "cypress run",
@@ -78,7 +79,9 @@
     "lint": "eslint . --ext .ts,.tsx,.js --fix",
     "stylelint": "stylelint \"src/**/*.scss\" \"src/**/*.css\" --fix",
     "report:merge": "mochawesome-merge cypress/results/json/*.json > cypress/results/index.json",
-    "report:generate": "marge cypress/results/index.json --reportDir cypress/reports --assetsDir cypress/reports/assets --reportPageTitle index.html"
+    "report:generate": "marge cypress/results/index.json --reportDir cypress/reports --assetsDir cypress/reports/assets --reportPageTitle index.html",
+    "report:combined": "node ./mergeCoverage.js",
+    "local:report-combined": "npm test & npm run ct & npm run report:combined"
   },
   "husky": {
     "hooks": {
@@ -106,7 +109,6 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/redux-mock-store": "^1.0.2",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
-    "babel-plugin-istanbul": "^6.0.0",
     "cypress-multi-reporters": "^1.4.0",
     "enzyme": "^3.11.0",
     "eslint": "^7.30.0",
@@ -127,8 +129,7 @@
       "!**/src/*.{js,ts}",
       "!**/src/index.tsx",
       "!**/src/models/*.ts",
-      "!**/src/redux/reducers/index.ts",
-      "!**/src/**/*.cy-test.{js,jsx,ts,tsx}"
+      "!**/src/redux/reducers/index.ts"
     ],
     "coverageReporters": [
       "json",
@@ -137,11 +138,5 @@
       "text"
     ],
     "resetMocks": false
-  },
-  "jestSonar": {
-    "sonar56x": true,
-    "reportPath": ".",
-    "reportFile": "coverage/sonar-report.xml",
-    "indent": 4
   }
 }

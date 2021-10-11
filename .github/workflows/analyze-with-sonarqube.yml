@@ -5,7 +5,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  reports:
+    name: Run test coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -17,6 +18,19 @@ jobs:
       - run: npm install
       - run: npm run lint -- -f json -o eslint-report.json
       - run: npm test
+
+      - name: Cypress CT
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          browser: chrome
+          command: npm run ct
+
+      - run: npm run report:combined
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.6
         env:
