@@ -108,7 +108,7 @@
     "@types/jest": "^26.0.23",
     "@types/react-test-renderer": "^17.0.1",
     "@types/redux-mock-store": "^1.0.2",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.2",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "cypress-multi-reporters": "^1.4.0",
     "enzyme": "^3.11.0",
     "eslint": "^7.30.0",
