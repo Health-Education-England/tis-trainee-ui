@@ -1,0 +1,78 @@
+name: PR Analysis
+
+permissions:
+  pull-requests: write
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  analyse:
+    name: Analyse PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2.2.0
+        with:
+          node-version: 14.15.0
+          cache: npm
+
+      - name: Install
+        run: npm install
+      
+      - name: Lint
+        run: npm run lint -- -f json -o eslint-report.json
+
+      - name: Test
+        run: npm test
+
+      - name: Cypress CT
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          browser: chrome
+          command: npm run ct
+
+      - name: Report
+        run: npm run report:combined
+
+      - name: Get modified files
+        id: changed-files
+        uses: jitterbit/get-changed-files@v1
+
+      - name: Check modified files
+        id: check-files
+        run: |
+          do_analysis=false
+          for changed_file in ${{ steps.changed-files.outputs.all }}; do
+            if [[ $changed_file =~ ^(src|cypress)\/.+$ ]]; then
+              do_analysis=true
+              break
+            fi
+          done
+          echo ::set-output name=do-analysis::$do_analysis
+
+      - name: Notify skipped analysis
+        if: steps.check-files.outputs.do-analysis == 'false'
+        uses: mshick/add-pr-comment@v1
+        with:
+          allow-repeats: true
+          repo-token: ${{ github.token }}
+          message: |
+            Quality analysis was skipped as no source changes were detected.
+
+      - name: Analyse quality
+        if: steps.check-files.outputs.do-analysis == 'true'
+        uses: SonarSource/sonarcloud-github-action@v1.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
