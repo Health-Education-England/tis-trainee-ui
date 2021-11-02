@@ -1,4 +1,4 @@
-import { AuthState, CognitoUserInterface } from "@aws-amplify/ui-components";
+import { AuthState } from "@aws-amplify/ui-components";
 import { Footer } from "nhsuk-react-components";
 import { useState } from "react";
 import { Cookie } from "../common/Cookie";
@@ -7,11 +7,11 @@ import styles from "./HEEFooter.module.scss";
 
 interface HEEFooterProps {
   authState: AuthState | undefined;
-  appVersion: any;
-  user: CognitoUserInterface | undefined;
+  appVersion: string;
+  hasTisId: boolean;
 }
 
-const HEEFooter = ({ authState, appVersion, user }: HEEFooterProps) => {
+const HEEFooter = ({ authState, appVersion, hasTisId }: HEEFooterProps) => {
   const [displayPrivacyPolicy, setDisplayPrivacyPolicy] = useState(false);
 
   const showPrivacyPolicy = (event: { preventDefault: () => void }) => {
@@ -26,7 +26,7 @@ const HEEFooter = ({ authState, appVersion, user }: HEEFooterProps) => {
             className={styles.refLink}
             data-cy="linkSupport"
             href={
-              authState === AuthState.SignedIn && user
+              authState === AuthState.SignedIn && hasTisId
                 ? "/support"
                 : "https://tis-support.hee.nhs.uk"
             }

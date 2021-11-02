@@ -1,12 +1,12 @@
-import { Container } from "nhsuk-react-components";
+import { Hero } from "nhsuk-react-components";
 
 export const ContactLO = () => {
   return (
-    <Container>
-      <p>
-        Sorry, we couldn't match your login details with your records. Please
-        contact you Local Office for further help.
-      </p>
-    </Container>
+    <Hero>
+      <Hero.Heading>
+        Sorry, we couldn't match your login details with your records.
+      </Hero.Heading>
+      <Hero.Text>Please contact your Local Office for further help.</Hero.Text>
+    </Hero>
   );
 };

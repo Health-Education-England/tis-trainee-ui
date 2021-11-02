@@ -8,7 +8,7 @@ import { AuthState } from "@aws-amplify/ui-components";
 
 interface HEEHeaderProps {
   authState: AuthState | undefined;
-  user: any;
+  hasTisId: boolean;
 }
 
 const showHeaderDefault = () => {
@@ -19,11 +19,12 @@ const showHeaderDefault = () => {
   );
 };
 
-const HEEHeader = ({ authState, user }: HEEHeaderProps) => {
+const HEEHeader = ({ authState, hasTisId }: HEEHeaderProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const updateMenuStatus = (open: boolean) => {
     setShowMenu(open);
   };
+
   return (
     <Header className={styles.header}>
       {authState === AuthState.SignedIn ? (
@@ -44,7 +45,7 @@ const HEEHeader = ({ authState, user }: HEEHeaderProps) => {
           <Navbar
             showMenu={showMenu}
             updateMenuStatus={updateMenuStatus}
-            user={user}
+            hasTisId={hasTisId}
           />
         </>
       ) : (

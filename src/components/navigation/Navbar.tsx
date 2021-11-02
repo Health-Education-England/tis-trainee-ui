@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { Header } from "nhsuk-react-components";
 import Logout from "../authentication/Logout";
 import { NavLink } from "react-router-dom";
-import { CognitoUserInterface } from "@aws-amplify/ui-components";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
-  user: CognitoUserInterface | undefined;
+  hasTisId: boolean;
 }
 
-const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {
+const Navbar = ({ showMenu, updateMenuStatus, hasTisId }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
@@ -40,9 +39,10 @@ const Navbar = ({ showMenu, updateMenuStatus, user }: NavProps) => {
     setOpen(false);
     updateMenuStatus(false);
   };
+
   return (
     <Header.Nav open={open} title="Menu">
-      {user ? addLinks() : null}
+      {hasTisId ? addLinks() : null}
       <li className="nhsuk-header__navigation-item">
         <Logout />
       </li>

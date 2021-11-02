@@ -6,23 +6,13 @@ import Support from "../support/Support";
 import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
 import { ContactLO } from "../common/ContactLO";
-import { Auth } from "aws-amplify";
-import { useEffect, useState } from "react";
 
-export const Main = () => {
-  const [thisUser, setThisUser] = useState(null);
+interface HEEMainProps {
+  hasTisId: boolean;
+}
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const fetchedUser = await Auth.currentAuthenticatedUser();
-      if (fetchedUser) {
-        setThisUser(fetchedUser.attributes["custom:tisId"]);
-      }
-    };
-    fetchUser();
-  }, [thisUser]);
-
-  return thisUser ? (
+export const Main = ({ hasTisId }: HEEMainProps) => {
+  return hasTisId ? (
     <main className="nhsuk-width-container nhsuk-u-margin-top-5">
       <Switch>
         <Route path="/profile" component={Profile} />
