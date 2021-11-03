@@ -27,13 +27,15 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const fetchedUser = await Auth.currentAuthenticatedUser();
-      if (fetchedUser.attributes["custom:tisId"]) {
-        setHasTisId(true);
+      if (authState === AuthState.SignedIn) {
+        const fetchedUser = await Auth.currentAuthenticatedUser();
+        if (fetchedUser.attributes["custom:tisId"]) {
+          setHasTisId(true);
+        }
       }
     };
     fetchUser();
-  }, []);
+  }, [authState]);
 
   useEffect(() => {
     const fetchAppVersion = async () => {
