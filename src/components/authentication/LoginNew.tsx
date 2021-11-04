@@ -7,6 +7,31 @@ import { Container } from "nhsuk-react-components";
 import "./Login.scss";
 import styles from "./Login.module.scss";
 
+const formFields = [
+  {
+    type: "given_name",
+    label: "First name *",
+    required: true,
+    placeholder: "Enter your first name"
+  },
+  {
+    type: "family_name",
+    label: "Surname *",
+    required: true,
+    placeholder: "Enter your surname"
+  },
+  {
+    type: "email",
+    label: "Email Address *",
+    required: true
+  },
+  {
+    type: "password",
+    label: "Password *",
+    required: true
+  }
+];
+
 export const LoginNew = () => {
   return (
     <main className="nhsuk-main-wrapper" id="maincontent">
@@ -29,7 +54,7 @@ export const LoginNew = () => {
                 <AmplifySignUp
                   usernameAlias="email"
                   slot="sign-up"
-                  formFields={[{ type: "email" }, { type: "password" }]}
+                  formFields={formFields}
                 />
               </AmplifyAuthenticator>
             </AmplifyAuthContainer>

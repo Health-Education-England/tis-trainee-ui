@@ -8,10 +8,9 @@ import styles from "./HEEFooter.module.scss";
 interface HEEFooterProps {
   authState: AuthState | undefined;
   appVersion: string;
-  hasTisId: boolean;
 }
 
-const HEEFooter = ({ authState, appVersion, hasTisId }: HEEFooterProps) => {
+const HEEFooter = ({ authState, appVersion }: HEEFooterProps) => {
   const [displayPrivacyPolicy, setDisplayPrivacyPolicy] = useState(false);
 
   const showPrivacyPolicy = (event: { preventDefault: () => void }) => {
@@ -26,7 +25,7 @@ const HEEFooter = ({ authState, appVersion, hasTisId }: HEEFooterProps) => {
             className={styles.refLink}
             data-cy="linkSupport"
             href={
-              authState === AuthState.SignedIn && hasTisId
+              authState === AuthState.SignedIn
                 ? "/support"
                 : "https://tis-support.hee.nhs.uk"
             }

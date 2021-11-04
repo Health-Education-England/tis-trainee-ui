@@ -5,10 +5,9 @@ import { NavLink } from "react-router-dom";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
-  hasTisId: boolean;
 }
 
-const Navbar = ({ showMenu, updateMenuStatus, hasTisId }: NavProps) => {
+const Navbar = ({ showMenu, updateMenuStatus }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
@@ -16,7 +15,7 @@ const Navbar = ({ showMenu, updateMenuStatus, hasTisId }: NavProps) => {
     { path: "support", name: "Support" }
   ];
 
-  const addLinks = () => {
+  const addLinks = (): JSX.Element[] => {
     return paths.map(p => (
       <li key={p.name} className="nhsuk-header__navigation-item">
         <NavLink
@@ -42,7 +41,7 @@ const Navbar = ({ showMenu, updateMenuStatus, hasTisId }: NavProps) => {
 
   return (
     <Header.Nav open={open} title="Menu">
-      {hasTisId ? addLinks() : null}
+      {addLinks()}
       <li className="nhsuk-header__navigation-item">
         <Logout />
       </li>

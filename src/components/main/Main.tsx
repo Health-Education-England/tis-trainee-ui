@@ -5,14 +5,9 @@ import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
 import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
-import { ContactLO } from "../common/ContactLO";
 
-interface HEEMainProps {
-  hasTisId: boolean;
-}
-
-export const Main = ({ hasTisId }: HEEMainProps) => {
-  return hasTisId ? (
+export const Main = () => {
+  return (
     <main className="nhsuk-width-container nhsuk-u-margin-top-5">
       <Switch>
         <Route path="/profile" component={Profile} />
@@ -25,7 +20,5 @@ export const Main = ({ hasTisId }: HEEMainProps) => {
         <Route path="/*" component={PageNotFound} />
       </Switch>
     </main>
-  ) : (
-    <ContactLO />
   );
 };
