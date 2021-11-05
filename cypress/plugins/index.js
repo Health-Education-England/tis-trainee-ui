@@ -11,8 +11,6 @@
 
 // Found this tidier solution https://github.com/elevatebart/cy-ct-cra/blob/master/cypress/plugins/index.js for CRA cypress and ct coverage config
 
-import cypressOtp from "cypress-otp";
-
 require("@cypress/instrument-cra");
 const injectCraDevServer = require("@cypress/react/plugins/react-scripts");
 const codeCoverageTask = require("@cypress/code-coverage/task");
@@ -28,7 +26,6 @@ const codeCoverageTask = require("@cypress/code-coverage/task");
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  on("task", { generateOTP: cypressOtp });
   injectCraDevServer(on, config);
   codeCoverageTask(on, config);
 
