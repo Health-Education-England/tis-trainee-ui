@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import {
-  AuthState,
-  CognitoUserInterface,
-  onAuthUIStateChange
-} from "@aws-amplify/ui-components";
+import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import { BrowserRouter } from "react-router-dom";
 import PageTitle from "./components/common/PageTitle";
 import HEEHeader from "./components/navigation/HEEHeader";
@@ -19,13 +15,11 @@ globalAny.appVersion = packageJson.version;
 
 const App: React.FunctionComponent = () => {
   const [authState, setAuthState] = useState<AuthState>();
-  const [user, setUser] = useState<CognitoUserInterface>();
   const [appVersion, setAppVersion] = useState("");
 
   useEffect(() => {
-    return onAuthUIStateChange((nextAuthState, authUser) => {
+    return onAuthUIStateChange(nextAuthState => {
       setAuthState(nextAuthState);
-      setUser(authUser as CognitoUserInterface);
     });
   }, []);
 
@@ -42,13 +36,9 @@ const App: React.FunctionComponent = () => {
   return (
     <BrowserRouter>
       <PageTitle />
-      <HEEHeader authState={authState} user={user} />
-      {authState === AuthState.SignedIn ? (
-        <Main />
-      ) : (
-        <LoginNew authState={authState} user={user} />
-      )}
-      <HEEFooter appVersion={appVersion} authState={authState} user={user} />
+      <HEEHeader authState={authState} />
+      {authState === AuthState.SignedIn ? <Main /> : <LoginNew />}
+      <HEEFooter appVersion={appVersion} authState={authState} />
     </BrowserRouter>
   );
 };

@@ -6,13 +6,10 @@
 }
 
 amplify-authenticator {
-  --container-align: top;
   --container-display: flex;
   --container-height: auto;
   --container-justify: center;
   --margin-bottom: 0;
-  --min-width: 100%;
-  --width: 100%;
 }
 
 amplify-sign-in {
@@ -44,19 +41,7 @@ amplify-forgot-password {
   margin: 0;
 }
 
-amplify-require-new-password {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
 amplify-verify-contact {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-amplify-totp-setup {
   width: 100%;
   padding: 0;
   margin: 0;
