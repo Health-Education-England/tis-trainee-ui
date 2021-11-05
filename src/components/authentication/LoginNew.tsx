@@ -1,6 +1,7 @@
 import {
   AmplifyAuthContainer,
   AmplifyAuthenticator,
+  AmplifySignIn,
   AmplifySignUp
 } from "@aws-amplify/ui-react";
 import { Container } from "nhsuk-react-components";
@@ -56,6 +57,10 @@ export const LoginNew = () => {
                   slot="sign-up"
                   formFields={formFields}
                 />
+                <AmplifySignIn
+                  headerText="Sign in to Trainee Self-Service."
+                  slot="sign-in"
+                ></AmplifySignIn>
               </AmplifyAuthenticator>
             </AmplifyAuthContainer>
           </div>
