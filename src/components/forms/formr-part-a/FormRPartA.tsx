@@ -15,7 +15,9 @@ class FormRPartA extends React.PureComponent {
         <PageTitle title="Form R Part-A" />
         <ScrollTo />
         <Fieldset>
-          <Fieldset.Legend isPageHeading>Form R (Part A)</Fieldset.Legend>
+          <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+            Form R (Part A)
+          </Fieldset.Legend>
           <Label>
             Trainee registration for Postgraduate Speciality Training
           </Label>

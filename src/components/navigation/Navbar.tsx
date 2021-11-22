@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import { Header } from "nhsuk-react-components";
-import Logout from "../authentication/Logout";
+import { Button, Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
+  signOut: any;
 }
 
-const Navbar = ({ showMenu, updateMenuStatus }: NavProps) => {
+const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
@@ -42,8 +42,13 @@ const Navbar = ({ showMenu, updateMenuStatus }: NavProps) => {
   return (
     <Header.Nav open={open} title="Menu">
       {addLinks()}
-      <li className="nhsuk-header__navigation-item">
-        <Logout />
+      <li>
+        <Button
+          onClick={signOut}
+          style={{ margin: "6px 0 8px 8px", padding: "4px 6px" }}
+        >
+          Logout
+        </Button>
       </li>
     </Header.Nav>
   );
