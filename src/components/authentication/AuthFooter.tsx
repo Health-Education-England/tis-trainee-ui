@@ -1,20 +1,19 @@
-import styles from "./Auth.module.scss";
+import { View } from "@aws-amplify/ui-react";
 
 const AuthFooter = (): JSX.Element => {
   return (
-    <div
-      className={styles.footerDiv}
-      style={{
-        textAlign: "center",
-        width: "100%",
-        backgroundColor: "#005EB8",
-        padding: "16px 0"
-      }}
-    >
-      <p style={{ color: "white", margin: 0 }}>
+    <View textAlign="center" padding="16px">
+      <p
+        style={{
+          color: "#5c6670",
+          fontSize: "16px",
+          margin: 0,
+          fontWeight: 600
+        }}
+      >
         &copy; Health Education England
       </p>
-    </div>
+    </View>
   );
 };
 

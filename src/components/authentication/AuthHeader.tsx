@@ -1,5 +1,5 @@
-import { Divider, Flex, Heading, Image, View } from "@aws-amplify/ui-react";
-import logo from "../../static/images/nhs-hee-logo-rev.svg";
+import { Flex, Image, Text, useTheme, View } from "@aws-amplify/ui-react";
+import logo from "../../static/images/HEE_logo.svg";
 import styles from "./Auth.module.scss";
 
 const headerLinks = [
@@ -13,41 +13,46 @@ const headerLinks = [
 
 const addHeaderLinks = (): JSX.Element[] => {
   return headerLinks.map(link => (
-    <a
-      key={link.name}
-      href={link.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.AuthHeaderLink}
-    >
-      {link.name}
-    </a>
+    <Text>
+      <a
+        key={link.name}
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.AuthHeaderLink}
+      >
+        {link.name}
+      </a>
+    </Text>
   ));
 };
 
 const AuthHeader = (): JSX.Element => {
+  const { tokens } = useTheme();
   return (
-    <View textAlign="left" width="100%" backgroundColor="#005EB8">
-      <Image
-        src={logo}
-        alt="NHS Health Education England Trainee Self-Service"
-        width="230px"
-        height="48px"
-        padding="16px 0 0 32px"
-      ></Image>
-      <Heading
-        level={4}
-        color="white"
-        fontWeight="normal"
-        padding="0 0 16px 32px"
-      >
-        Trainee Self-Service
-      </Heading>
-      <Divider size="small" />
-      <Flex justifyContent="space-between" padding="12px 32px">
+    <>
+      <View textAlign="center" padding={tokens.space.small}>
+        <Image
+          src={logo}
+          alt="NHS Health Education England Trainee Self-Service"
+          width="230px"
+          height="48px"
+        ></Image>
+        <p
+          style={{
+            fontSize: "26px",
+            margin: 0,
+            lineHeight: "16px",
+            fontWeight: 600
+          }}
+        >
+          Trainee Self-Service
+        </p>
+      </View>
+      <Flex justifyContent="space-between" padding="10px 32px 8px 32px">
         {addHeaderLinks()}
       </Flex>
-    </View>
+    </>
   );
 };
 

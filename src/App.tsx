@@ -13,7 +13,6 @@ import {
   CheckboxField,
   Heading,
   useAuthenticator,
-  useTheme,
   View
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
@@ -35,14 +34,12 @@ const components = {
 
   SignIn: {
     Header() {
-      const { tokens } = useTheme();
-
       return (
         <Heading
-          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          padding="32px 0 0 30px"
           level={3}
           fontWeight="normal"
-          color="#5C6670"
+          color="#047D95"
         >
           Log back in
         </Heading>
@@ -68,14 +65,12 @@ const components = {
 
   SignUp: {
     Header() {
-      const { tokens } = useTheme();
-
       return (
         <Heading
-          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
+          padding="32px 0 0 30px"
           level={3}
           fontWeight="normal"
-          color="#5C6670"
+          color="#047D95"
         >
           First time sign-up
         </Heading>
@@ -161,7 +156,7 @@ const App: React.FunctionComponent = () => {
       loginMechanisms={loginMechanisms}
       signUpAttributes={signUpAttributes}
       services={services}
-      variation="default"
+      variation="modal"
     >
       {({ signOut }) => (
         <>

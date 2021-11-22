@@ -1,13 +1,14 @@
 // header
 .AuthHeaderLink {
-  text-decoration: none;
-  &:link,
-  &:visited {
-    color: white;
+  color: #5c6670;
+  &:link {
     text-decoration: none;
+    font-weight: 500;
   }
   &:hover,
-  &:active {
+  &:active,
+  &:visited {
+    color: #5c6670;
     text-decoration: underline;
   }
 }
