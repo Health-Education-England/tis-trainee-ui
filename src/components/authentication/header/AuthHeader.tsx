@@ -1,6 +1,6 @@
 import { Flex, Image, Text, useTheme, View } from "@aws-amplify/ui-react";
-import logo from "../../static/images/HEE_logo.svg";
-import styles from "./Auth.module.scss";
+import logo from "../../../static/images/HEE_logo.svg";
+import styles from "../../authentication/Auth.module.scss";
 
 const headerLinks = [
   { name: "Support", href: "https://tis-support.hee.nhs.uk/" },
@@ -12,10 +12,9 @@ const headerLinks = [
 ];
 
 const addHeaderLinks = (): JSX.Element[] => {
-  return headerLinks.map(link => (
-    <Text>
+  return headerLinks.map((link, index) => (
+    <Text key={index}>
       <a
-        key={link.name}
         href={link.href}
         target="_blank"
         rel="noopener noreferrer"
