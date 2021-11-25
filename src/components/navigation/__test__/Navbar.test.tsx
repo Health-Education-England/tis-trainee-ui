@@ -4,6 +4,12 @@ import Navbar from "../Navbar";
 
 describe("Navbar", () => {
   it("renders without crashing", () => {
-    shallow(<Navbar />);
+    shallow(
+      <Navbar
+        showMenu={false}
+        updateMenuStatus={undefined}
+        signOut={undefined}
+      />
+    );
   });
 });
