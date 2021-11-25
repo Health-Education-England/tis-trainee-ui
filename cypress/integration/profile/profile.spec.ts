@@ -1,9 +1,7 @@
 /// <reference types="cypress" />
 describe("Profile", () => {
   before(() => {
-    cy.wait(30000);
     cy.visit("./profile");
-    cy.confirmCookie();
     cy.signIn();
   });
 

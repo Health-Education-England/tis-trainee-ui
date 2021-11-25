@@ -44,6 +44,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
       {addLinks()}
       <li>
         <Button
+          data-cy="logoutBtn"
           onClick={signOut}
           style={{ margin: "6px 0 8px 8px", padding: "4px 6px" }}
         >

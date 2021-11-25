@@ -5,30 +5,22 @@
 
 describe("Footer", () => {
   before(() => {
-    cy.wait(30000);
     cy.visit("./");
-    cy.confirmCookie();
-  });
-
-  // when logged out...
-  it("should link to privacy policy and TIS support website when logged out", () => {
-    cy.get("a[data-cy='linkPrivacyPolicy']").should("exist").click();
-    cy.get("div.title").contains("Privacy Policy");
-    cy.get(".modalHeader").find("button").click();
-    cy.get("a[data-cy='linkSupport']")
-      .should("exist")
-      .should("have.attr", "href", "https://tis-support.hee.nhs.uk");
-  });
-
-  // when logged in...
-  it("should link to privacy policy and Support page when logged in", () => {
     cy.signIn();
-    cy.get("a[data-cy='linkSupport']")
-      .should("exist")
-      .should("have.attr", "href", "/support");
-    cy.get("a[data-cy='linkPrivacyPolicy']").should("exist").click();
-    cy.get("div.title").contains("Privacy Policy");
-    cy.get(".modalHeader").find("button").click();
-    cy.logoutDesktop();
+  });
+
+  it("should link to Support, About, and Privacy & Cookies pages", () => {
+    cy.get("[data-cy='linkSupport']").should("exist").click();
+    cy.get("[data-cy=pageTitle]").should("to.contain", "Support");
+    cy.get("[data-cy='linkAbout']").should(
+      "have.attr",
+      "href",
+      "https://tis-support.hee.nhs.uk/about-tis/"
+    );
+    cy.get("[data-cy=linkPrivacyPolicy]").should(
+      "have.attr",
+      "href",
+      "https://www.hee.nhs.uk/about/privacy-notice"
+    );
   });
 });

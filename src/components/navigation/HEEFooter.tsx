@@ -13,7 +13,11 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
         <Footer.List>
           <Row>
             <Col width="one-quarter">
-              <NavLink className={styles.refLink} to={"/support"}>
+              <NavLink
+                className={styles.refLink}
+                data-cy="linkSupport"
+                to={"/support"}
+              >
                 Contact us
               </NavLink>
             </Col>
@@ -21,7 +25,7 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
               <a
                 className={styles.refLink}
                 data-cy="linkAbout"
-                href="https://www.hee.nhs.uk"
+                href="https://tis-support.hee.nhs.uk/about-tis/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
