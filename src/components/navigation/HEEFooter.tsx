@@ -11,37 +11,35 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
     <>
       <Footer>
         <Footer.List>
-          <Footer.ListItem>
-            <Row>
-              <Col width="one-third">
-                <NavLink className={styles.refLink} to={"/support"}>
-                  Contact us
-                </NavLink>
-              </Col>
-              <Col width="one-third">
-                <a
-                  className={styles.refLink}
-                  data-cy="linkAbout"
-                  href="https://www.hee.nhs.uk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  About
-                </a>
-              </Col>
-              <Col width="one-third">
-                <a
-                  className={styles.refLink}
-                  data-cy="linkPrivacyPolicy"
-                  href="https://www.hee.nhs.uk/about/privacy-notice"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Privacy &amp; cookie policy
-                </a>
-              </Col>
-            </Row>
-          </Footer.ListItem>
+          <Row>
+            <Col width="one-quarter">
+              <NavLink className={styles.refLink} to={"/support"}>
+                Contact us
+              </NavLink>
+            </Col>
+            <Col width="one-quarter">
+              <a
+                className={styles.refLink}
+                data-cy="linkAbout"
+                href="https://www.hee.nhs.uk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                About
+              </a>
+            </Col>
+            <Col width="one-quarter">
+              <a
+                className={styles.refLink}
+                data-cy="linkPrivacyPolicy"
+                href="https://www.hee.nhs.uk/about/privacy-notice"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy &amp; cookie policy
+              </a>
+            </Col>
+          </Row>
         </Footer.List>
         <Footer.Copyright>&copy; Health Education England</Footer.Copyright>
         {appVersion ? (

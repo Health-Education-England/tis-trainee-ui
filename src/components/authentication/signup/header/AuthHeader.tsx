@@ -1,6 +1,6 @@
 import { Flex, Image, Text, useTheme, View } from "@aws-amplify/ui-react";
-import logo from "../../../static/images/HEE_logo.svg";
-import styles from "../../authentication/Auth.module.scss";
+import logo from "../../../../static/images/HEE_logo.svg";
+import styles from "../Auth.module.scss";
 
 const headerLinks = [
   { name: "Support", href: "https://tis-support.hee.nhs.uk/" },

@@ -9,11 +9,11 @@ import { CacheUtilities } from "./utilities/CacheUtilities";
 import packageJson from "../package.json";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import AuthHeader from "./components/authentication/header/AuthHeader";
-import AuthFooter from "./components/authentication/footer/AuthFooter";
-import AuthHeading from "./components/authentication/sharedPrimitives/AuthHeading";
-import AuthBtnLink from "./components/authentication/sharedPrimitives/AuthBtnLink";
-import AuthFormFields from "./components/authentication/formFields/AuthFormFields";
+import AuthHeader from "./components/authentication/signup/header/AuthHeader";
+import AuthFooter from "./components/authentication/signup/footer/AuthFooter";
+import AuthHeading from "./components/authentication/signup/sharedPrimitives/AuthHeading";
+import AuthBtnLink from "./components/authentication/signup/sharedPrimitives/AuthBtnLink";
+import AuthFormFields from "./components/authentication/signup/formFields/AuthFormFields";
 
 import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
@@ -21,7 +21,7 @@ import {
   SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY
-} from "./components/authentication/constants/AuthConstants";
+} from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 
 const globalAny: any = global;
@@ -71,9 +71,11 @@ const services = {
 };
 
 const loginMechanisms: LoginMechanism[] = ["email"];
-// TODO Possibly remove given_name, family_name from sign-up
-// const signUpAttributes: any = ["given_name", "family_name", "email"];
-const signUpAttributes: SignUpAttribute[] = ["email"];
+const signUpAttributes: SignUpAttribute[] = [
+  "given_name",
+  "family_name",
+  "email"
+];
 
 const App: React.FunctionComponent = () => {
   const [appVersion, setAppVersion] = useState("");

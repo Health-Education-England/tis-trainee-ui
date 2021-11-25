@@ -5,6 +5,8 @@ export const FORM_FIELD_VALUES = {
   "Create Account": "Sign up", //create account tab header
   Email: "Email  (used by your Local Office)", // email
   "Confirm Password": "Confirm your chosen password", // Confirm Password label
+  "Given Name": "First name",
+  "Family Name": "Last name",
   "Sign In": "Log in", // Tab header
   "Sign in": "Log in", // Button label
   "Sign in to your account": "Trainee Self Service Login",
