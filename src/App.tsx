@@ -8,7 +8,6 @@ import { Main } from "./components/main/Main";
 import { CacheUtilities } from "./utilities/CacheUtilities";
 import packageJson from "../package.json";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
 import AuthHeader from "./components/authentication/signup/header/AuthHeader";
 import AuthFooter from "./components/authentication/signup/footer/AuthFooter";
 import AuthHeading from "./components/authentication/signup/sharedPrimitives/AuthHeading";

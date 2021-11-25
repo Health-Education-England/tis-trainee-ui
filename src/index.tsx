@@ -6,11 +6,12 @@ import * as serviceWorker from "./serviceWorker";
 import * as Sentry from "@sentry/browser";
 import Amplify from "aws-amplify";
 import config from "./aws-amplify/config";
-
 import store from "./redux/store/store";
 import browserUpdate from "browser-update";
 import browserUpdateConfig from "./browser-update-config.json";
 import TagManager from "react-gtm-module";
+// The styles.css import below is needed for Authenticator default theme https://ui.docs.amplify.aws/components/authenticator
+import "@aws-amplify/ui-react/styles.css";
 
 const tagManagerArgs = {
   gtmId: "GTM-5PWDC87"
