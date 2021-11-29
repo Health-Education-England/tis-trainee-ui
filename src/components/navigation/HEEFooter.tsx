@@ -40,16 +40,19 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Privacy &amp; cookie policy
+                Privacy &amp; Cookies Policy
               </a>
             </Col>
           </Row>
         </Footer.List>
-        <Footer.Copyright>&copy; Health Education England</Footer.Copyright>
+        <Footer.Copyright data-cy="copyrightText">
+          &copy; Health Education England
+        </Footer.Copyright>
         {appVersion ? (
           <Footer.List>
             <Footer.ListItem>
               <span
+                data-cy="versionText"
                 style={{ fontSize: "10pt" }}
               >{`version: ${appVersion}`}</span>
             </Footer.ListItem>

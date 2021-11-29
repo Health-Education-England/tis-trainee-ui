@@ -2,7 +2,7 @@ import logo from "../../static/images/nhs-hee-logo-rev.svg";
 
 const HEEHeaderLogo = () => {
   return (
-    <div className="nhsuk-header__logo">
+    <div data-cy="headerLogo" className="nhsuk-header__logo">
       <a
         style={{ display: "block" }}
         href="/"
