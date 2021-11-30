@@ -40,7 +40,9 @@ class Profile extends React.PureComponent<profileProps> {
             <PageTitle title="Profile" />
             <ScrollTo />
             <Fieldset>
-              <Fieldset.Legend isPageHeading>Profile</Fieldset.Legend>
+              <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+                Profile
+              </Fieldset.Legend>
             </Fieldset>
             <Details.ExpanderGroup>
               <PersonalDetailsComponent

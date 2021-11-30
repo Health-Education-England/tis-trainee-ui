@@ -1,63 +1,64 @@
-import { AuthState } from "@aws-amplify/ui-components";
-import { Footer } from "nhsuk-react-components";
-import { useState } from "react";
-import { Cookie } from "../common/Cookie";
-import PrivacyPolicy from "../common/PrivacyPolicy";
+import { Col, Footer, Row } from "nhsuk-react-components";
+import { NavLink } from "react-router-dom";
 import styles from "./HEEFooter.module.scss";
 
 interface HEEFooterProps {
-  authState: AuthState | undefined;
   appVersion: string;
 }
 
-const HEEFooter = ({ authState, appVersion }: HEEFooterProps) => {
-  const [displayPrivacyPolicy, setDisplayPrivacyPolicy] = useState(false);
-
-  const showPrivacyPolicy = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    setDisplayPrivacyPolicy(!displayPrivacyPolicy);
-  };
+const HEEFooter = ({ appVersion }: HEEFooterProps) => {
   return (
     <>
       <Footer>
         <Footer.List>
-          <Footer.ListItem
-            className={styles.refLink}
-            data-cy="linkSupport"
-            href={
-              authState === AuthState.SignedIn
-                ? "/support"
-                : "https://tis-support.hee.nhs.uk"
-            }
-          >
-            Contact us
-          </Footer.ListItem>
-          <Footer.ListItem
-            className={styles.refLink}
-            data-cy="linkPrivacyPolicy"
-            onClick={showPrivacyPolicy}
-            href="#"
-          >
-            Privacy &amp; cookie policy
-          </Footer.ListItem>
+          <Row>
+            <Col width="one-quarter">
+              <NavLink
+                className={styles.refLink}
+                data-cy="linkSupport"
+                to={"/support"}
+              >
+                Contact us
+              </NavLink>
+            </Col>
+            <Col width="one-quarter">
+              <a
+                className={styles.refLink}
+                data-cy="linkAbout"
+                href="https://tis-support.hee.nhs.uk/about-tis/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                About
+              </a>
+            </Col>
+            <Col width="one-quarter">
+              <a
+                className={styles.refLink}
+                data-cy="linkPrivacyPolicy"
+                href="https://www.hee.nhs.uk/about/privacy-notice"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy &amp; Cookies Policy
+              </a>
+            </Col>
+          </Row>
         </Footer.List>
-        <Footer.Copyright>
-          &copy; <a href="https://www.hee.nhs.uk">hee.nhs.uk</a>
+        <Footer.Copyright data-cy="copyrightText">
+          &copy; Health Education England
         </Footer.Copyright>
         {appVersion ? (
           <Footer.List>
             <Footer.ListItem>
               <span
+                data-cy="versionText"
                 style={{ fontSize: "10pt" }}
               >{`version: ${appVersion}`}</span>
             </Footer.ListItem>
           </Footer.List>
         ) : null}
       </Footer>
-      <Cookie showPrivacyPolicy={showPrivacyPolicy} />
-      {displayPrivacyPolicy && (
-        <PrivacyPolicy showPrivacyPolicy={showPrivacyPolicy} modal={true} />
-      )}
     </>
   );
 };

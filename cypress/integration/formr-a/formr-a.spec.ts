@@ -13,13 +13,10 @@ const startDate = Cypress.dayjs()
 
 describe("Form R (Part A)", () => {
   before(() => {
-    cy.wait(30000);
+    cy.visit("./profile");
+    cy.signIn();
   });
   it("Should complete a new Form R Part A.", () => {
-    cy.visit("./profile");
-    cy.confirmCookie();
-    cy.signIn();
-
     cy.contains("Form R (Part A)").click();
     cy.get("#btnOpenForm")
       .should("exist")
@@ -310,7 +307,5 @@ describe("Form R (Part A)", () => {
         }
       });
     });
-
-    cy.logoutDesktop();
   });
 });

@@ -25,25 +25,11 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // cypress/support/index.js
 
-Cypress.Commands.add("confirmCookie", () => {
-  cy.get("button#rcc-confirm-button").click();
-});
-
 Cypress.Commands.add("signIn", () => {
-  cy.get("body").then($body => {
-    if ($body.find("[slot='sign-in']").length > 0) {
-      cy.get("[slot='sign-in']")
-        .find("input[name=username]")
-        .type(Cypress.env("username"), { log: false, force: true });
-
-      cy.get("[slot='sign-in']")
-        .find("#password")
-        .type(`${Cypress.env("password")}{enter}`, {
-          log: false,
-          force: true
-        });
-    }
-  });
+  cy.get("[id^=radix-][id$=-0]").first().click();
+  cy.get("[id^=radix-][id$=-9]").first().clear().type(Cypress.env("username"));
+  cy.get("[id^=radix-][id$=-10]").first().clear().type(Cypress.env("password"));
+  cy.get('[data-fullwidth="true"]').click();
 });
 
 Cypress.Commands.add(
@@ -474,7 +460,7 @@ Cypress.Commands.add("addWorkPanel", (startDate, endDate) => {
 Cypress.Commands.add("logout", () => {
   cy.viewport("iphone-6");
   cy.get("[data-cy=BtnMenu]").should("exist").click();
-  cy.contains("Logout").click();
+  cy.get("[data-cy=logoutBtn]").click();
 });
 
 Cypress.Commands.add("login", () => {
@@ -489,7 +475,7 @@ Cypress.Commands.add("login", () => {
 });
 
 Cypress.Commands.add("logoutDesktop", () => {
-  cy.get("a[data-jest='btn-logout']").click();
+  cy.get("[data-cy=logoutBtn]").click();
 });
 
 Cypress.Commands.add("checkFlags", name => {

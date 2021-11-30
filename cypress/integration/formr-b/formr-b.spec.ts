@@ -20,14 +20,12 @@ const prevRevalDate = Cypress.dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B)", () => {
   before(() => {
-    cy.wait(30000);
+    cy.visit("./");
+    cy.viewport("iphone-6");
+    cy.signIn();
   });
   it("Should complete a new Form R Part B.", () => {
     isCovid = true;
-    cy.visit("./");
-    cy.confirmCookie();
-    cy.viewport("iphone-6");
-    cy.signIn();
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
 
@@ -318,6 +316,5 @@ describe("Form R (Part B)", () => {
         }
       });
     });
-    cy.logout();
   });
 });

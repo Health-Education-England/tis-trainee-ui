@@ -79,7 +79,12 @@ export class Support extends React.PureComponent<profileProps, LocalState> {
         traineeProfile && (
           <>
             <PageTitle title="Support" />
-            <h1 style={{ marginBottom: 16 }}>Support</h1>
+            <h1
+              data-cy="pageTitle"
+              style={{ marginBottom: 16, color: "#005EB8" }}
+            >
+              Support
+            </h1>
             <Details>
               <Details.Summary>Got a question?</Details.Summary>
               <Details.Text>

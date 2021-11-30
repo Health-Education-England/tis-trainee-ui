@@ -1,8 +1,8 @@
-import React from "react";
 import logo from "../../static/images/nhs-hee-logo-rev.svg";
+
 const HEEHeaderLogo = () => {
   return (
-    <div className="nhsuk-header__logo">
+    <div data-cy="headerLogo" className="nhsuk-header__logo">
       <a
         style={{ display: "block" }}
         href="/"
@@ -15,6 +15,16 @@ const HEEHeaderLogo = () => {
           alt="Trainee Self-Service homepage"
         />
       </a>
+      <p
+        style={{
+          width: "240px",
+          color: "white",
+          margin: "0",
+          fontSize: "24px"
+        }}
+      >
+        Trainee Self-Service
+      </p>
     </div>
   );
 };

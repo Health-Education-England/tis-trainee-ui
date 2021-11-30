@@ -14,7 +14,9 @@ const FormRPartB: React.FC = () => {
       <PageTitle title="Form R Part-B" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend isPageHeading>Form R (Part B)</Fieldset.Legend>
+        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+          Form R (Part B)
+        </Fieldset.Legend>
         <Label>
           Self-declaration for the Revalidation of Doctors in Training
         </Label>
