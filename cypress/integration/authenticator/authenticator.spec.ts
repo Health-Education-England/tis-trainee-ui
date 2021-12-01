@@ -6,20 +6,23 @@ describe("Authenticator", () => {
     cy.visit("./");
   });
 
-  it("Header links should go to the relevant TIS Support site page when clicked", () => {
-    const links: { href: string }[] = [
-      { href: "https://tis-support.hee.nhs.uk/" },
-      { href: "https://tis-support.hee.nhs.uk/about-tis/" },
-      { href: "https://www.hee.nhs.uk/about/privacy-notice" }
+  it("Header links should have the correct links", () => {
+    const links: string[] = [
+      "https://tis-support.hee.nhs.uk/",
+      "https://tis-support.hee.nhs.uk/about-tis/",
+      "https://www.hee.nhs.uk/about/privacy-notice"
     ];
+    cy.get(".amplify-flex")
+      .find("a")
+      .should($anchors => {
+        expect($anchors).to.have.length(3);
+        expect($anchors.first()).to.contain("Support");
 
-    links.forEach((link, index) => {
-      cy.get(`:nth-child(${index + 1}) > .Auth_AuthHeaderLink__1sdj_`).should(
-        "have.attr",
-        "href",
-        `${link.href}`
-      );
-    });
+        const hrefs = $anchors.map<string>((_i, a) => {
+          return Cypress.$(a).attr("href");
+        });
+        expect(hrefs.get()).to.deep.eq(links);
+      });
   });
 
   it("should remove the privacy & cookies error message and show the Sign up button if checkbox checked", () => {
