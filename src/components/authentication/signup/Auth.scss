@@ -1,0 +1,25 @@
+[data-amplify-authenticator] {
+  font-family: "Frutiger W01", Arial, sans-serif;
+  [data-state="active"] {
+    background-color: #fff !important;
+    color: #005eb8 !important;
+  }
+  [data-state="inactive"] {
+    background-color: #eee !important;
+  }
+
+  .amplify-heading {
+    color: #005eb8 !important;
+  }
+  .amplify-button[data-variation="primary"] {
+    background-color: #005eb8 !important;
+  }
+
+  .amplify-button[data-variation="link"] {
+    color: #005eb8 !important;
+  }
+
+  [data-amplify-router] {
+    box-shadow: rgb(0, 21, 42) 0px 16px 24px -10px !important;
+  }
+}
