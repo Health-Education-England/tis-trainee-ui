@@ -1,5 +1,5 @@
 export const YES_TO_PRIVACY =
-  "To use Trainee Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link above for more details.)";
+  "To use Trainee Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
 
 export const FORM_FIELD_VALUES = {
   "Create Account": "Sign up", //create account tab header
