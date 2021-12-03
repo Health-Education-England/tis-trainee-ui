@@ -13,7 +13,8 @@ import AuthFooter from "./components/authentication/signup/footer/AuthFooter";
 import AuthHeading from "./components/authentication/signup/sharedPrimitives/AuthHeading";
 import AuthBtnLink from "./components/authentication/signup/sharedPrimitives/AuthBtnLink";
 import AuthFormFields from "./components/authentication/signup/formFields/AuthFormFields";
-
+import styles from "./components/authentication/signup/Auth.module.scss";
+import "./components/authentication/signup/Auth.scss";
 import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
   SIGN_IN_HEADING_TEXT,
@@ -97,6 +98,7 @@ const App: React.FunctionComponent = () => {
       signUpAttributes={signUpAttributes}
       services={services}
       variation="modal"
+      className={styles.authAuthenticator}
     >
       {({ signOut }) => (
         <>

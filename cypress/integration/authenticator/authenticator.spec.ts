@@ -6,7 +6,15 @@ describe("Authenticator", () => {
     cy.visit("./");
   });
 
-  it("Header links should have the correct links", () => {
+  it("Header should show logo and heading", () => {
+    cy.get("[data-cy=authLogo]").should("exist");
+    cy.get("[data-cy=authTitle]").should(
+      "contain.text",
+      "Trainee Self-Service"
+    );
+  });
+
+  it("Footer should have the correct links and copyright text", () => {
     const links: string[] = [
       "https://tis-support.hee.nhs.uk/",
       "https://tis-support.hee.nhs.uk/about-tis/",
@@ -23,6 +31,10 @@ describe("Authenticator", () => {
         });
         expect(hrefs.get()).to.deep.eq(links);
       });
+    cy.get("[data-cy=footerCopy]").should(
+      "contain.text",
+      "Health Education England"
+    );
   });
 
   it("should remove the privacy & cookies error message and show the Sign up button if checkbox checked", () => {
