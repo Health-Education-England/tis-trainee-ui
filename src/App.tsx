@@ -97,7 +97,7 @@ const App: React.FunctionComponent = () => {
       loginMechanisms={loginMechanisms}
       signUpAttributes={signUpAttributes}
       services={services}
-      variation="modal"
+      variation="default"
       className={styles.authAuthenticator}
     >
       {({ signOut }) => (
