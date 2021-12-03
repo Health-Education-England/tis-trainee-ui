@@ -7,6 +7,7 @@ const AuthHeader = (): JSX.Element => {
     <>
       <Flex className={styles.authLogo}>
         <Image
+          data-cy="authLogo"
           src={logo}
           alt="NHS Health Education England Trainee Self-Service"
           width="230px"
@@ -15,7 +16,7 @@ const AuthHeader = (): JSX.Element => {
       </Flex>
       <Flex className={styles.authTitle}>
         <View>
-          <h1>Trainee Self-Service</h1>
+          <h1 data-cy="authTitle">Trainee Self-Service</h1>
         </View>
       </Flex>
     </>
