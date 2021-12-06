@@ -71,6 +71,7 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
     } catch (error) {
       setErrorMessage((error as Error).message);
     }
+    setIsSending(false);
   };
 
   return (

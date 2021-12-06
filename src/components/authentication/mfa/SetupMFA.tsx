@@ -26,7 +26,7 @@ const SetupMFA = ({ user, mfaStatus }: ISetupMFA) => {
 
   return (
     <>
-      <h1>Setup multi-factor authentication</h1>
+      <h1>Set up multi-factor authentication</h1>
 
       <Stepper ref={ref}>
         <Step
