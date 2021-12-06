@@ -31,7 +31,7 @@ Cypress.Commands.add("signIn", () => {
   cy.get("[id^=radix-][id$=-10]").first().clear().type(Cypress.env("password"));
   cy.get('[data-fullwidth="true"]').click();
   cy.task("generateOTP").then(token => {
-    cy.get("[id^=radix-][id$=-11]").first().clear().type(`${token}{enter}`);
+    cy.get("amplify-authenticator").find("#code").type(`${token}{enter}`);
   });
 });
 
