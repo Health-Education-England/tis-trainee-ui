@@ -2,7 +2,6 @@ import { FunctionComponent } from "react";
 import { useField, connect } from "formik";
 import PhoneInput from "react-phone-number-input";
 import InputFooterLabel from "./InputFooterLabel";
-import "./MobilePhoneInputField.scss";
 interface IMobilePhoneInputField {
   name: string;
   label?: string;

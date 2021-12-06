@@ -11,7 +11,7 @@ import {
   MobilePhoneValidationSchema,
   VerifySMSCodeValidationSchema
 } from "./ValidationSchema";
-import styles from "./MFA.module.scss";
+import "./SetupMFA.scss";
 interface ISetSMS {
   user: CognitoUser;
   mfaStatus: string;
@@ -68,12 +68,8 @@ const SetupSMS = ({ user, incrementStep }: ISetSMS) => {
   };
 
   return (
-    <div className={styles.setupSMS}>
-      <div
-        className={`${styles.step} ${
-          !authCodeSent ? styles.active : styles.disabled
-        }`}
-      >
+    <div className="set-sms">
+      <div className={`step ${!authCodeSent ? "active" : "disabled"}`}>
         <h3>Step 1</h3>
 
         <Formik
@@ -114,11 +110,7 @@ const SetupSMS = ({ user, incrementStep }: ISetSMS) => {
           </ErrorSummary>
         )}
       </div>
-      <div
-        className={`${styles.step} ${
-          authCodeSent ? styles.active : styles.disabled
-        }`}
-      >
+      <div className={`step ${authCodeSent ? "active" : "disabled"}`}>
         {authCodeSent && <ScrollTo location="element" scrollType="smooth" />}
         <h3>Step 2</h3>
         <p>
