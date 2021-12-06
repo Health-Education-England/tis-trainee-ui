@@ -1,13 +1,4 @@
-.set-sms {
-  .phone-input-wrapper {
-    padding: 10px;
-
-    margin-bottom: 20px;
-  }
-  .PhoneInputInput {
-    padding: 8px;
-    font-size: 1em;
-  }
+.setupSMS {
   .step {
     padding: 2em;
     margin-bottom: 1.4em;
@@ -24,6 +15,6 @@
   }
 }
 
-.callout {
-  padding: 1.6em !important;
+.setupTOTP {
+  min-height: calc(50vh);
 }
