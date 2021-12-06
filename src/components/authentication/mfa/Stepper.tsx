@@ -70,7 +70,7 @@ export const Step = ({
   return (
     <>
       {stepIndex > 0 && activeStep === stepIndex && (
-        <ScrollTo location="element" scrollType="smooth" offset={-100} />
+        <ScrollTo location="element" scrollType="smooth" offset={-30} />
       )}
       <li
         data-cy={`index_${stepIndex}`}
