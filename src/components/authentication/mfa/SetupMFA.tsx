@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import SetupTOTP from "./SetupTOTP";
 import SetupSMS from "./SetupSMS";
-
+import "./SetupMFA.scss";
 import { Stepper, Step } from "./Stepper";
 import { ActionLink, Fieldset, Radios } from "nhsuk-react-components";
 
@@ -26,7 +26,7 @@ const SetupMFA = ({ user, mfaStatus }: ISetupMFA) => {
 
   return (
     <>
-      <h1>Set up multi-factor authentication</h1>
+      <h1>Setup multi-factor authentication</h1>
 
       <Stepper ref={ref}>
         <Step
