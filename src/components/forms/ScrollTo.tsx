@@ -13,16 +13,26 @@ export default class ScrollTo extends React.Component<IProps> {
     const {
       location = "top",
       scrollType,
-      offset = 0,
+      offset,
       offsetMobile = -40
     } = this.props;
     const element = this.elementRef.current;
 
-    if (location === "element" && element) {
-      let verticalScroll = element.offsetTop + offset;
+    if (location === "element") {
+      if (element) {
+        let verticalScroll = element.offsetTop;
 
-      if (window.matchMedia("screen and (max-width: 768px)").matches) {
-        verticalScroll = verticalScroll + offsetMobile;
+        if (window.matchMedia("screen and (max-width: 768px)").matches) {
+          verticalScroll = verticalScroll + offsetMobile;
+        }
+        if (offset) {
+          verticalScroll = verticalScroll + offset;
+        }
+        window.scrollTo({
+          top: verticalScroll,
+          behavior: scrollType || "auto"
+        });
+        console.log("SCROLL:", scrollType);
       }
 
       window.scrollTo({
