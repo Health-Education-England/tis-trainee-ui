@@ -13,6 +13,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../forms/TextInputField";
 import { MFAStatus } from "../../../models/MFAStatus";
+import styles from "./MFA.module.scss";
 interface ISetupMFA {
   user: CognitoUser;
   mfaStatus: string;
@@ -75,7 +76,7 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
   };
 
   return (
-    <>
+    <div className={styles.setupTOTP}>
       {qrCode !== "" && (
         <div>
           {mfaStatus === MFAStatus.TOTP && (
@@ -88,11 +89,12 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
               </p>
             </WarningCallout>
           )}
-          <WarningCallout className="callout">
+          <WarningCallout label="Warning">
             <p>
               As part of inbuilt measures to secure your data, you have{" "}
               <strong>3 minutes</strong> to scan the QR code below and generate
-              a Security Code before it expires.
+              a Security Code before it expires, after which the screen will
+              refresh.
             </p>
           </WarningCallout>
           <p>
@@ -167,7 +169,7 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
