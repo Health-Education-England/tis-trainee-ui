@@ -26,12 +26,12 @@ const SetupMFA = ({ user, mfaStatus }: ISetupMFA) => {
 
   return (
     <>
-      <h1>Setup multi-factor authentication</h1>
+      <h1>Set up multi-factor authentication</h1>
 
       <Stepper ref={ref}>
         <Step
           disableNextButton={newMFAStatus ? false : true}
-          title="Set-up multi-factor authentication"
+          title="Set up multi-factor authentication"
         >
           <p>
             Multi-factor authentication (MFA) is an extra layer of security used
@@ -86,9 +86,10 @@ const SetupMFA = ({ user, mfaStatus }: ISetupMFA) => {
         <Step title="Complete" disableBackButton={true}>
           {newMFAStatus === "totp" && (
             <p>
-              Authenticator app successfully registered. You will need to enter
-              a 6-digit code each time you login to Trainee Self-Service, which
-              you obtain from the authnticator app.
+              Trainee Self-Service has successfully registered on your
+              authenicator app. You will need to enter a 6-digit code each time
+              you login to Trainee Self-Service, which you obtain from the
+              authenticator app.
             </p>
           )}
           {newMFAStatus === "sms" && (

@@ -39,7 +39,6 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
           "&issuer=AWSCognito";
         setCode(totpCode);
         setQRCode(authCode);
-        console.log("authCode:", user.getUsername());
         let timeOut = setTimeout(() => setExpired(true), 180000);
         return () => {
           clearTimeout(timeOut);
@@ -73,6 +72,7 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
     } catch (error) {
       setErrorMessage((error as Error).message);
     }
+    setIsSending(false);
   };
 
   return (
