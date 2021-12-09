@@ -3,6 +3,9 @@
   [data-state="active"] {
     background-color: #fff !important;
     color: #005eb8 !important;
+    &:focus {
+      outline: none !important;
+    }
   }
   [data-state="inactive"] {
     background-color: #eee !important;
