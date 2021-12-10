@@ -83,8 +83,8 @@ const Section7: FunctionComponent<SectionProps> = (props: SectionProps) => {
               handleSubmit={handleSubmit}
               saveDraft={saveDraft}
               prevSectionLabel={prevSectionLabel}
-              nextSectionLabel="Continue to submit"
               section={section}
+              continueToSubmit
             />
           </Form>
         )}

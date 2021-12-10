@@ -1,5 +1,5 @@
 import React, { FormEvent } from "react";
-import { Pagination } from "nhsuk-react-components";
+import { Button, Pagination } from "nhsuk-react-components";
 import SubmitButton from "../../SubmitButton";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import classes from "../FormRPartB.module.scss";
@@ -12,10 +12,17 @@ interface Props {
   section: number;
   prevSectionLabel?: string;
   nextSectionLabel?: string;
+  continueToSubmit?: boolean;
 }
 
 const FormRPartBPagination: React.FC<Props> = (props: Props) => {
-  const { values, nextSectionLabel, prevSectionLabel, section } = props;
+  const {
+    values,
+    nextSectionLabel,
+    prevSectionLabel,
+    section,
+    continueToSubmit
+  } = props;
 
   const paginationClasses = [
     classes.heePagination,
@@ -47,18 +54,26 @@ const FormRPartBPagination: React.FC<Props> = (props: Props) => {
         />
       </Pagination.Link>
 
-      <Pagination.Link
-        next
-        onClick={() => props.handleSubmit()}
-        data-cy="LinkToNextSection"
-        data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
-      >
-        {nextSectionLabel
-          ? nextSectionLabel
-              .split("\n")
-              .map((item, index) => <div key={index}>{item}</div>)
-          : null}
-      </Pagination.Link>
+      {continueToSubmit ? (
+        <Pagination.Link>
+          <Button type="submit" data-cy="BtnContinue">
+            Continue to submit
+          </Button>
+        </Pagination.Link>
+      ) : null}
+
+      {nextSectionLabel ? (
+        <Pagination.Link
+          next
+          onClick={() => props.handleSubmit()}
+          data-cy="LinkToNextSection"
+          data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
+        >
+          {nextSectionLabel.split("\n").map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+        </Pagination.Link>
+      ) : null}
     </Pagination>
   );
 };
