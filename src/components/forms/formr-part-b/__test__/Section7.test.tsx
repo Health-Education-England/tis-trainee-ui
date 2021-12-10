@@ -50,14 +50,14 @@ describe("Form-R Part-B Section7", () => {
     expect(prevSection).toHaveBeenCalled();
   });
 
-  it("should render next section link buttons with correct label", () => {
+  it("should render Continue to submit button", () => {
     const wrapper = mount(<Section7 {...props} />);
 
-    expect(wrapper.find("li.nhsuk-pagination-item--next").length).toBe(1);
-    expect(wrapper.find("li.nhsuk-pagination-item--next").text()).toContain(
+    expect(wrapper.find("[data-cy='BtnContinue']").length).toBe(3);
+    expect(wrapper.find("[data-cy='BtnContinue']").last().text()).toContain(
       "Continue to submit"
     );
-    wrapper.find("a.nhsuk-pagination__link--next").first().simulate("click");
+    wrapper.find("[data-cy='BtnContinue']").last().simulate("click");
   });
 
   it("should submit the form", () => {
