@@ -162,7 +162,7 @@ describe("Form R (Part B)", () => {
       .should("not.be.checked");
 
     // Attempt to submit without checking boxes should fail
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=BtnContinue]").click();
     cy.get("[data-cy=isDeclarationAccepted] .nhsuk-error-message").should(
       "exist"
     );
@@ -193,7 +193,7 @@ describe("Form R (Part B)", () => {
       .should("be.checked");
 
     // ----------- Submit page ---------------------------------------------------
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=BtnContinue]").click();
     cy.get("[data-cy=BtnEditSection1]").should("exist");
     cy.get("[data-cy=gmcNumber]").should("exist");
     cy.get("[data-cy=BtnEditSection2]").should("exist");
@@ -255,7 +255,7 @@ describe("Form R (Part B)", () => {
       .should("be.checked");
 
     // Navigate to submit
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=BtnContinue]").click();
 
     cy.get("[data-cy=gmcNumber]").should("have.text", "11111111");
 
@@ -278,7 +278,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=isDeclarationAccepted0]").click();
     cy.get("[data-cy=isConsentAccepted0]").click();
 
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=BtnContinue]").click();
 
     // intercept formr-partb POST req
     let uid: string;
