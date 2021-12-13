@@ -55,7 +55,7 @@ const FormRPartBPagination: React.FC<Props> = (props: Props) => {
       </Pagination.Link>
 
       {continueToSubmit ? (
-        <Pagination.Link>
+        <Pagination.Link onClick={() => props.handleSubmit()}>
           <Button type="submit" data-cy="BtnContinue">
             Continue to submit
           </Button>
