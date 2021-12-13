@@ -3,15 +3,15 @@ export const YES_TO_PRIVACY =
 
 export const FORM_FIELD_VALUES = {
   "Create Account": "Sign up", //create account tab header
-  Email: "Email  (used by your Local Office)", // email
-  "Confirm Password": "Confirm your chosen password", // Confirm Password label
+  Email: "Email  (used by HEE)", // email
+  "Confirm Password": "Confirm chosen password", // Confirm Password label
   "Given Name": "First name",
   "Family Name": "Last name",
   "Sign In": "Log in", // Tab header
   "Sign in": "Log in", // Button label
   "Sign in to your account": "Trainee Self Service Login",
-  "Confirm Sign Up": "Check your email for a confirmation code",
-  "Enter your code": "Enter the code sent to your email address" // Confirm Sign Up input
+  "Confirm Sign Up": "Check your email for a verification code",
+  "Enter your code": "Enter 6-digit code (no spaces)" // Confirm Sign Up input
 };
 
 export const SIGN_UP_HEADING_TEXT = "First time sign-up";
