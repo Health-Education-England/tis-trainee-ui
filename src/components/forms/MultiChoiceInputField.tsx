@@ -43,7 +43,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
             <FormChildElement
               key={item.value}
               value={item.value}
-              id={item.id || "item_" + index}
+              id={item.id}
               data-cy={`${props.name}${index}`}
               checked={setCheckedStatus(field, item)}
               onChange={() => setOnChangeValue(props, helpers, item)}
