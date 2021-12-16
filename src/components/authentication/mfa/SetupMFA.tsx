@@ -7,14 +7,14 @@ import { Stepper, Step } from "./Stepper";
 import { ActionLink, Fieldset, Radios } from "nhsuk-react-components";
 
 interface ISetupMFA {
-  user: CognitoUser;
-  mfaStatus: string;
+  user: CognitoUser | any;
 }
 
 interface RefObject {
   updateActiveStep: (step: number) => void;
 }
-const SetupMFA = ({ user, mfaStatus }: ISetupMFA) => {
+const SetupMFA = ({ user }: ISetupMFA) => {
+  const mfaStatus = user.preferredMFA;
   const [newMFAStatus, setNewMFAStatus] = useState("");
   const incrementStep = (increment: number) => {
     if (ref.current) {

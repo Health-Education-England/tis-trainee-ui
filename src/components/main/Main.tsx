@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Auth } from "aws-amplify";
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { MFAStatus } from "../../models/MFAStatus";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
@@ -25,32 +24,26 @@ const MainRoutes = (): JSX.Element => {
   );
 };
 export const Main = () => {
-  const [user, setUser] = useState<CognitoUser>();
-  const [mfaStatus, setMFAStatus] = useState<string>("");
+  const [user, setUser] = useState<CognitoUser | any>();
+
   useEffect(() => {
     const getUser = async () => {
       try {
-        const currentUser: CognitoUser = await Auth.currentAuthenticatedUser();
-        const currentMFA: string = await Auth.getPreferredMFA(currentUser);
-        setUser(currentUser);
-        setMFAStatus(currentMFA);
+        setUser(await Auth.currentAuthenticatedUser());
       } catch (error) {
         console.log("Error: ", error);
       }
     };
     getUser();
   }, []);
+
   return (
-    <>
-      {user && (
-        <main className="nhsuk-width-container nhsuk-u-margin-top-5">
-          {mfaStatus === MFAStatus.SMS || mfaStatus === MFAStatus.TOTP ? (
-            <MainRoutes />
-          ) : (
-            <SetupMFA mfaStatus={mfaStatus} user={user} />
-          )}
-        </main>
+    <main className="nhsuk-width-container nhsuk-u-margin-top-5">
+      {user && user.preferredMFA === "NOMFA" ? (
+        <SetupMFA user={user} />
+      ) : (
+        <MainRoutes />
       )}
-    </>
+    </main>
   );
 };
