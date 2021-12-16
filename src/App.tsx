@@ -23,10 +23,11 @@ import {
   YES_TO_PRIVACY
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
-
+import { I18n } from "@aws-amplify/core";
+import { FORM_FIELD_VALUES } from "./components/authentication/signup/constants/AuthConstants";
 const globalAny: any = global;
 globalAny.appVersion = packageJson.version;
-
+I18n.putVocabulariesForLanguage("en", FORM_FIELD_VALUES);
 const components = {
   Header() {
     return <AuthHeader />;
@@ -93,7 +94,7 @@ const App: React.FunctionComponent = () => {
   return (
     <Authenticator
       components={components}
-      initialState="signUp"
+      initialState="signIn"
       loginMechanisms={loginMechanisms}
       signUpAttributes={signUpAttributes}
       services={services}
