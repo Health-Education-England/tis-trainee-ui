@@ -4,22 +4,35 @@ import styles from "./HEEFooter.module.scss";
 
 interface HEEFooterProps {
   appVersion: string;
+  mfa: string;
 }
 
-const HEEFooter = ({ appVersion }: HEEFooterProps) => {
+const HEEFooter = ({ appVersion, mfa }: HEEFooterProps) => {
   return (
     <>
       <Footer>
         <Footer.List>
           <Row>
             <Col width="one-quarter">
-              <NavLink
-                className={styles.refLink}
-                data-cy="linkSupport"
-                to={"/support"}
-              >
-                Contact us
-              </NavLink>
+              {mfa !== "NOMFA" ? (
+                <NavLink
+                  className={styles.refLink}
+                  data-cy="linkSupport"
+                  to={"/support"}
+                >
+                  Support
+                </NavLink>
+              ) : (
+                <a
+                  className={styles.refLink}
+                  data-cy="linkSupport"
+                  href="https://tis-support.hee.nhs.uk/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Support
+                </a>
+              )}
             </Col>
             <Col width="one-quarter">
               <a

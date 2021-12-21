@@ -7,7 +7,7 @@ describe("Footer", () => {
   beforeEach(() => {
     mount(
       <BrowserRouter>
-        <HEEFooter appVersion={"0.0.1"} />
+        <HEEFooter appVersion={"0.0.1"} mfa={""} />
       </BrowserRouter>
     );
   });

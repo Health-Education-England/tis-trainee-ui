@@ -6,7 +6,8 @@ import HEEHeader from "../HEEHeader";
 describe("Header", () => {
   beforeEach(() => {
     const props = {
-      signOut: cy.stub()
+      signOut: cy.stub(),
+      mfa: ""
     };
     mount(
       <BrowserRouter>

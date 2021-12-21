@@ -8,13 +8,13 @@ import { ActionLink, Fieldset, Radios } from "nhsuk-react-components";
 
 interface ISetupMFA {
   user: CognitoUser | any;
+  mfa: string;
 }
 
 interface RefObject {
   updateActiveStep: (step: number) => void;
 }
-const SetupMFA = ({ user }: ISetupMFA) => {
-  const mfaStatus = user.preferredMFA;
+const SetupMFA = ({ user, mfa }: ISetupMFA) => {
   const [newMFAStatus, setNewMFAStatus] = useState("");
   const incrementStep = (increment: number) => {
     if (ref.current) {
@@ -72,14 +72,14 @@ const SetupMFA = ({ user }: ISetupMFA) => {
             <SetupTOTP
               incrementStep={incrementStep}
               user={user}
-              mfaStatus={mfaStatus}
+              mfaStatus={mfa}
             ></SetupTOTP>
           )}
           {newMFAStatus === "sms" && (
             <SetupSMS
               incrementStep={incrementStep}
               user={user}
-              mfaStatus={mfaStatus}
+              mfaStatus={mfa}
             ></SetupSMS>
           )}
         </Step>

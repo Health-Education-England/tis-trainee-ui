@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import { BrowserRouter } from "react-router-dom";
-import PageTitle from "./components/common/PageTitle";
-import HEEHeader from "./components/navigation/HEEHeader";
-import HEEFooter from "./components/navigation/HEEFooter";
 import { Main } from "./components/main/Main";
 import { CacheUtilities } from "./utilities/CacheUtilities";
 import packageJson from "../package.json";
@@ -101,15 +97,8 @@ const App: React.FunctionComponent = () => {
       variation="default"
       className={styles.authAuthenticator}
     >
-      {({ signOut }) => (
-        <>
-          <BrowserRouter>
-            <PageTitle />
-            <HEEHeader signOut={signOut} />
-            <Main />
-            <HEEFooter appVersion={appVersion} />
-          </BrowserRouter>
-        </>
+      {({ signOut, user }) => (
+        <Main user={user} signOut={signOut} appVersion={appVersion} />
       )}
     </Authenticator>
   );
