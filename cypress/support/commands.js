@@ -27,11 +27,21 @@
 
 Cypress.Commands.add("signIn", () => {
   cy.get("[id^=radix-][id$=-0]").first().click();
-  cy.get("[id^=radix-][id$=-9]").first().clear().type(Cypress.env("username"));
-  cy.get("[id^=radix-][id$=-10]").first().clear().type(Cypress.env("password"));
+  cy.get("[id^=radix-][id$=-4]").first().clear().type(Cypress.env("username"));
+  cy.get("[id^=radix-][id$=-5]").first().clear().type(Cypress.env("password"));
   cy.get('[data-fullwidth="true"]').click();
   cy.task("generateOTP").then(token => {
-    cy.get("[id^=radix-][id$=-11]").first().clear().type(`${token}{enter}`);
+    cy.get("[id^=radix-][id$=-6]").first().clear().type(`${token}{enter}`);
+  });
+});
+
+Cypress.Commands.add("signBackIn", () => {
+  cy.get("[id^=radix-][id$=-0]").first().click();
+  cy.get("[id^=radix-][id$=-10]").first().clear().type(Cypress.env("username"));
+  cy.get("[id^=radix-][id$=-11]").first().clear().type(Cypress.env("password"));
+  cy.get('[data-fullwidth="true"]').click();
+  cy.task("generateOTP").then(token => {
+    cy.get("[id^=radix-][id$=-12]").first().clear().type(`${token}{enter}`);
   });
 });
 
