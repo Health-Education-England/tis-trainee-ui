@@ -11,8 +11,6 @@ const mockStore = configureMockStore(middlewares);
 
 const globalAny: any = global;
 
-let wrapper: any;
-
 beforeEach(() => {
   const store = mockStore({});
 
@@ -25,7 +23,7 @@ beforeEach(() => {
     })
   );
 
-  wrapper = mount(
+  mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/"]}>
         <BrowserRouter>

@@ -13,6 +13,7 @@ const startDate = Cypress.dayjs()
 
 describe("Form R (Part A)", () => {
   before(() => {
+    cy.wait(30000);
     cy.visit("./profile");
     cy.signIn();
   });

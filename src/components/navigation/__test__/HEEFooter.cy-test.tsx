@@ -7,13 +7,13 @@ describe("Footer", () => {
   beforeEach(() => {
     mount(
       <BrowserRouter>
-        <HEEFooter appVersion={"0.0.1"} />
+        <HEEFooter appVersion={"0.0.1"} mfa={"SMS"} />
       </BrowserRouter>
     );
   });
 
   const links = [
-    { name: "Contact us", href: "/support", id: "[data-cy=linkSupport]" },
+    { name: "Support", href: "/support", id: "[data-cy=linkSupport]" },
     {
       name: "About",
       href: "https://tis-support.hee.nhs.uk/about-tis/",
@@ -43,5 +43,16 @@ describe("Footer", () => {
 
   it("should have the correct version shown in the footer", () => {
     cy.get("[data-cy=versionText]").should("contain.text", "0.0.1");
+  });
+
+  it("should go to external tis-support when NOMFA", () => {
+    mount(
+      <BrowserRouter>
+        <HEEFooter appVersion={"0.0.1"} mfa={"NOMFA"} />
+      </BrowserRouter>
+    );
+    cy.get("[data-cy=linkSupport]")
+      .should("contain.text", "Support")
+      .should("have.attr", "href", "https://tis-support.hee.nhs.uk/");
   });
 });

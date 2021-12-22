@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import { BrowserRouter } from "react-router-dom";
-import PageTitle from "./components/common/PageTitle";
-import HEEHeader from "./components/navigation/HEEHeader";
-import HEEFooter from "./components/navigation/HEEFooter";
 import { Main } from "./components/main/Main";
 import { CacheUtilities } from "./utilities/CacheUtilities";
 import packageJson from "../package.json";
@@ -20,13 +16,14 @@ import {
   SIGN_IN_HEADING_TEXT,
   SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
-  YES_TO_PRIVACY
+  YES_TO_PRIVACY,
+  FORM_FIELD_VALUES
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
-
+import { I18n } from "@aws-amplify/core";
 const globalAny: any = global;
 globalAny.appVersion = packageJson.version;
-
+I18n.putVocabulariesForLanguage("en", FORM_FIELD_VALUES);
 const components = {
   Header() {
     return <AuthHeader />;
@@ -93,22 +90,15 @@ const App: React.FunctionComponent = () => {
   return (
     <Authenticator
       components={components}
-      initialState="signUp"
+      initialState="signIn"
       loginMechanisms={loginMechanisms}
       signUpAttributes={signUpAttributes}
       services={services}
       variation="default"
       className={styles.authAuthenticator}
     >
-      {({ signOut }) => (
-        <>
-          <BrowserRouter>
-            <PageTitle />
-            <HEEHeader signOut={signOut} />
-            <Main />
-            <HEEFooter appVersion={appVersion} />
-          </BrowserRouter>
-        </>
+      {({ signOut, user }) => (
+        <Main user={user} signOut={signOut} appVersion={appVersion} />
       )}
     </Authenticator>
   );

@@ -42,7 +42,8 @@ describe("Desktop/ tablet header", () => {
   });
 
   it("should logout of mobile", () => {
-    cy.login();
+    cy.wait(30000);
+    cy.signBackIn();
     cy.logout();
   });
 });

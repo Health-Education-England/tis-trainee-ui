@@ -5,9 +5,10 @@ import HEEHeaderLogo from "./HEEHeaderLogo";
 import styles from "./HEEHeader.module.scss";
 interface HEEHeaderProps {
   signOut: any;
+  mfa: string;
 }
 
-const HEEHeader = ({ signOut }: HEEHeaderProps) => {
+const HEEHeader = ({ signOut, mfa }: HEEHeaderProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const updateMenuStatus = (open: boolean) => {
     setShowMenu(open);
@@ -31,6 +32,7 @@ const HEEHeader = ({ signOut }: HEEHeaderProps) => {
         showMenu={showMenu}
         updateMenuStatus={updateMenuStatus}
         signOut={signOut}
+        mfa={mfa}
       />
     </Header>
   );

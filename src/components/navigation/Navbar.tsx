@@ -5,9 +5,10 @@ interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
   signOut: any;
+  mfa: string;
 }
 
-const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
+const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
@@ -41,7 +42,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
 
   return (
     <Header.Nav open={open} title="Menu">
-      {addLinks()}
+      {mfa !== "NOMFA" && addLinks()}
       <li>
         <Button
           data-cy="logoutBtn"

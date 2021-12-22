@@ -18,6 +18,7 @@ declare namespace Cypress {
     checkFlags: any;
     confirmCookie: any;
     signIn: any;
+    signBackIn: any;
     getTotp: any;
     useTotp: any;
     logoutDesktop: any;

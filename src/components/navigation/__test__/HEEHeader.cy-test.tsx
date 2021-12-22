@@ -6,7 +6,8 @@ import HEEHeader from "../HEEHeader";
 describe("Header", () => {
   beforeEach(() => {
     const props = {
-      signOut: cy.stub()
+      signOut: cy.stub(),
+      mfa: "SMS"
     };
     mount(
       <BrowserRouter>
@@ -43,5 +44,22 @@ describe("Header", () => {
     cy.get("[data-cy=logoutBtn]")
       .should("exist")
       .should("contain.text", "Logout");
+  });
+
+  navLinks.forEach((link, index) => {
+    it(`should hide the ${link.name} link when NOMFA`, () => {
+      const props = {
+        signOut: cy.stub(),
+        mfa: "NOMFA"
+      };
+      mount(
+        <BrowserRouter>
+          <HEEHeader {...props} />
+        </BrowserRouter>
+      );
+      cy.get(
+        `:nth-child(${index + 1}) > .nhsuk-header__navigation-link`
+      ).should("not.exist");
+    });
   });
 });
