@@ -16,11 +16,11 @@ import {
   SIGN_IN_HEADING_TEXT,
   SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
-  YES_TO_PRIVACY
+  YES_TO_PRIVACY,
+  FORM_FIELD_VALUES
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 import { I18n } from "@aws-amplify/core";
-import { FORM_FIELD_VALUES } from "./components/authentication/signup/constants/AuthConstants";
 const globalAny: any = global;
 globalAny.appVersion = packageJson.version;
 I18n.putVocabulariesForLanguage("en", FORM_FIELD_VALUES);

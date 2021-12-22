@@ -20,13 +20,9 @@ const MobilePhoneInputField: FunctionComponent<IMobilePhoneInputField> =
     const [field, { error }, helpers] = useField(props);
     return (
       <div
-        className={
-          error
-            ? "nhsuk-form-group nhsuk-form-group--error"
-            : props.hidelabel
-            ? "hide-label nhsuk-form-group"
-            : "nhsuk-form-group"
-        }
+        className={`nhsuk-form-group ${error && "nhsuk-form-group--error"} ${
+          props.hidelabel && "hide-label"
+        }`}
       >
         {props.label && (
           <label htmlFor="mobilePhoneNumber" className="nhsuk-label">

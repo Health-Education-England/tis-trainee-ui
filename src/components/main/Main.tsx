@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Auth } from "aws-amplify";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
 import Profile from "../profile/Profile";
@@ -33,28 +31,19 @@ const MainRoutes = (): JSX.Element => {
   );
 };
 export const Main = ({ user, signOut, appVersion }: IMain) => {
-  const [mfa, setMfa] = useState<string>("");
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await Auth.currentAuthenticatedUser();
-      setMfa(user.preferredMFA);
-    };
-    getUser();
-  }, [mfa]);
-
   return (
     <>
       <BrowserRouter>
         <PageTitle />
-        <HEEHeader signOut={signOut} mfa={mfa} />
+        <HEEHeader signOut={signOut} mfa={user.preferredMFA} />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">
-          {mfa === "NOMFA" ? (
-            <SetupMFA user={user} mfa={mfa} />
+          {user.preferredMFA === "NOMFA" ? (
+            <SetupMFA user={user} mfa={user.preferredMFA} />
           ) : (
             <MainRoutes />
           )}
         </main>
-        <HEEFooter appVersion={appVersion} mfa={mfa} />
+        <HEEFooter appVersion={appVersion} mfa={user.preferredMFA} />
       </BrowserRouter>
     </>
   );
