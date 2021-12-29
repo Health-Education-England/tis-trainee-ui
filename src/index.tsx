@@ -1,12 +1,12 @@
 import ReactDOM from "react-dom";
+import store from "./redux/store/store";
 import { Provider } from "react-redux";
 import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import * as Sentry from "@sentry/browser";
+// import * as Sentry from "@sentry/browser";
 import Amplify from "aws-amplify";
 import config from "./aws-amplify/config";
-import store from "./redux/store/store";
 import browserUpdate from "browser-update";
 import browserUpdateConfig from "./browser-update-config.json";
 import TagManager from "react-gtm-module";
@@ -59,7 +59,7 @@ async function fetchData(): Promise<any> {
   serviceWorker.unregister();
 })();
 
-Sentry.init({
-  dsn: "https://abba1f8a43dd4da4a00277b34beaaf59@sentry.io/1882746",
-  environment: process.env.NODE_ENV
-});
+// Sentry.init({
+//   dsn: "https://abba1f8a43dd4da4a00277b34beaaf59@sentry.io/1882746",
+//   environment: process.env.NODE_ENV
+// });

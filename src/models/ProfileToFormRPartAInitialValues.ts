@@ -3,17 +3,22 @@ import { FormRPartA } from "./FormRPartA";
 import { LifeCycleState } from "./LifeCycleState";
 import { MEDICAL_CURRICULUM } from "../utilities/Constants";
 
+import { useAppSelector } from "../redux/hooks/hooks";
+import { selectTraineeProfile } from "../redux/slices/traineeProfileSlice";
+
+const traineeProfileData = useAppSelector(selectTraineeProfile);
+
 export function ProfileToFormRPartAInitialValues(
-  traineeProfile: TraineeProfile | null
+  traineeProfileData: TraineeProfile | null
 ): FormRPartA | null {
-  if (!traineeProfile) {
+  if (!traineeProfileData) {
     return null;
   }
 
-  const pd = traineeProfile.personalDetails;
+  const pd = traineeProfileData.personalDetails;
   const programme =
-    traineeProfile.programmeMemberships.length > 0
-      ? traineeProfile.programmeMemberships.reduce(function (a, b) {
+    traineeProfileData.programmeMemberships.length > 0
+      ? traineeProfileData.programmeMemberships.reduce(function (a, b) {
           return a.startDate > b.startDate ? a : b;
         })
       : null;
@@ -65,7 +70,7 @@ export function ProfileToFormRPartAInitialValues(
     wholeTimeEquivalent: undefined,
     declarationType: "",
     otherImmigrationStatus: "",
-    traineeTisId: traineeProfile.traineeTisId,
+    traineeTisId: traineeProfileData.traineeTisId,
     lifecycleState: LifeCycleState.New,
     submissionDate: null,
     lastModifiedDate: null
