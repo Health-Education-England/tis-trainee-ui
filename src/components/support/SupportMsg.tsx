@@ -1,24 +1,13 @@
 import { ErrorMessage } from "nhsuk-react-components";
-import React from "react";
 
-interface Props {
-  dataError: boolean;
-  matchError: boolean;
-  personOwner: string | null | undefined;
+interface ISupportMsg {
+  personOwner: string | undefined;
+  mappedContact: string | null;
 }
 
-export const SupportMsg = (props: Props) => {
-  const { dataError, matchError, personOwner } = props;
-  if (dataError) {
-    return (
-      <div data-jest="dataErrorMsg">
-        <ErrorMessage>
-          Sorry but your contact could not be found. Please choose a contact
-          from the list below (which will provide a new link)
-        </ErrorMessage>
-      </div>
-    );
-  } else if (matchError) {
+const SupportMsg = (props: ISupportMsg) => {
+  const { personOwner, mappedContact } = props;
+  if (mappedContact === null) {
     return (
       <div data-jest="matchErrorMsg">
         <ErrorMessage>
@@ -39,3 +28,5 @@ export const SupportMsg = (props: Props) => {
     );
   }
 };
+
+export default SupportMsg;
