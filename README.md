@@ -1,6 +1,6 @@
 ![Analyse with SonarQube](https://github.com/Health-Education-England/trainee-ui/workflows/Analyse%20with%20SonarQube/badge.svg)  
-![Master Branch Status: CI/CD Workflow](https://github.com/Health-Education-England/trainee-ui/workflows/CI/CD%20Workflow/badge.svg?branch=master)  
-![Deployment Status: CI/CD Workflow](https://github.com/Health-Education-England/trainee-ui/workflows/CI/CD%20Workflow/badge.svg?branch=master&event=deployment_status)
+![Main Branch Status: CI/CD Workflow](https://github.com/Health-Education-England/trainee-ui/workflows/CI/CD%20Workflow/badge.svg?branch=main)  
+![Deployment Status: CI/CD Workflow](https://github.com/Health-Education-England/trainee-ui/workflows/CI/CD%20Workflow/badge.svg?branch=main&event=deployment_status)
 
 # trainee-ui
 
@@ -36,7 +36,7 @@ The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
 Note: To populate the form with data, you will need to run the Docker containers to start the back-end services. See
-[dev-handbook](https://github.com/Health-Education-England/dev-handbook/tree/master/tis-self-service) for more details on these services.
+[dev-handbook](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service) for more details on these services.
 
 ## Unit tests (Jest)
 
