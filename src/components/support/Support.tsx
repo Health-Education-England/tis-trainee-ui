@@ -11,7 +11,7 @@ const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
 
   const personOwner: string | undefined =
-    traineeProfileData.personalDetails?.personOwner;
+    traineeProfileData?.personalDetails?.personOwner;
 
   let mappedContact: string | null = null;
 
