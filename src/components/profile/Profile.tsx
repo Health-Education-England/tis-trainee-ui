@@ -21,7 +21,7 @@ const Profile = () => {
         </Fieldset.Legend>
       </Fieldset>
       <Details.ExpanderGroup>
-        {traineeProfileData.personalDetails && (
+        {traineeProfileData?.personalDetails && (
           <>
             <PersonalDetailsComponent
               personalDetails={traineeProfileData.personalDetails}
