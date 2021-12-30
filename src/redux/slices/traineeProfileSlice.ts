@@ -26,8 +26,6 @@ export const fetchTraineeProfileData = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<TraineeProfile> =
       await traineeProfileService.getTraineeProfile();
-    console.log("profile slice data", response.data);
-
     return response.data;
   }
 );
@@ -54,5 +52,5 @@ const traineeProfileSlice = createSlice({
 
 export default traineeProfileSlice.reducer;
 
-export const selectTraineeProfile = (state: { traineeProfile: any }) =>
+export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>
   state.traineeProfile.traineeProfileData;

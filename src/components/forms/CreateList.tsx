@@ -6,20 +6,22 @@ import Loading from "../common/Loading";
 import ScrollTo from "./ScrollTo";
 import styles from "./FormR.module.scss";
 import { DateUtilities } from "../../utilities/DateUtilities";
-
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import { selectAllforms, fetchForms } from "../../redux/slices/formsSlice";
 import { useEffect } from "react";
-
+import { loadSavedForm } from "../../redux/slices/formASlice";
 import FormsListBtn from "./FormsListBtn";
+import { useHistory } from "react-router-dom";
 
 const CreateList = () => {
+  let content;
+  let history = useHistory();
   const dispatch = useAppDispatch();
+
   const formRPartAList = useAppSelector(selectAllforms);
-
   const formRPartAListStatus = useAppSelector(state => state.forms.status);
-
   const formRPartAListError = useAppSelector(state => state.forms.error);
+  const formRPartAStatus = useAppSelector(state => state.formA.status);
 
   useEffect(() => {
     if (formRPartAListStatus === "idle") {
@@ -27,7 +29,15 @@ const CreateList = () => {
     }
   }, [formRPartAListStatus, dispatch]);
 
-  let content: any;
+  const handleRowClick = (formId: any) => {
+    if (formRPartAStatus === "idle") {
+      dispatch(loadSavedForm(formId));
+    }
+    console.log("this is the form id", formId);
+    history.push(`/formr-a/${formId}`);
+    // TODO could set canEdit to false here (unless this is already default value)?
+    // could get the id from param in the View comp e.g. const { formId } = match.params
+  };
 
   if (formRPartAListStatus === "loading") return <Loading />;
   else if (formRPartAListStatus === "succeeded") {
@@ -40,7 +50,7 @@ const CreateList = () => {
         <Table.Row key={formData.id} className={styles.listTableRow}>
           <td>
             <ActionLink
-              onClick={() => console.log("handleRowClick(formData.id)")}
+              onClick={() => handleRowClick(formData.id)}
               data-cy="submittedForm"
             >
               form submitted on{" "}

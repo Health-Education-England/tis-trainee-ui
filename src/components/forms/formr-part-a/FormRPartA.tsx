@@ -3,6 +3,7 @@ import ScrollTo from "../ScrollTo";
 import PageTitle from "../../common/PageTitle";
 import { Fieldset, Label } from "nhsuk-react-components";
 import CreateList from "../CreateList";
+import View from "../View";
 
 const FormRPartA = () => {
   return (
@@ -17,10 +18,10 @@ const FormRPartA = () => {
       </Fieldset>
       <BrowserRouter>
         <Switch>
-          {/* <Route path="/formr-a/create" component={Create} />
-<Route path="/formr-a/confirm" component={Confirm} />
-<Route path="/formr-a/howtoexport" component={HowToPrintToPDF} />
-<Route path="/formr-a/:id" component={View} /> */}
+          {/* <Route path="/formr-a/create" component={Create} /> */}
+          {/* <Route path="/formr-a/confirm" component={Confirm} /> */}
+          {/* <Route path="/formr-a/howtoexport" component={HowToPrintToPDF} /> */}
+          <Route path="/formr-a/:id" component={View} />
           <Route path="/" component={CreateList} />
         </Switch>
       </BrowserRouter>

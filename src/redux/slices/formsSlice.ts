@@ -45,4 +45,4 @@ const formsSlice = createSlice({
 
 export default formsSlice.reducer;
 
-export const selectAllforms = (state: { forms: any }) => state.forms.forms;
+export const selectAllforms = (state: { forms: IForms }) => state.forms.forms;
