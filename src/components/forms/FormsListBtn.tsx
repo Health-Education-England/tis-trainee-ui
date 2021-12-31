@@ -1,5 +1,8 @@
 import { Button } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
+import { resetted } from "../../redux/slices/formASlice";
+import { useAppDispatch } from "../../redux/hooks/hooks";
+// import store from "../../redux/store/store";
 
 interface IFormsListBtn {
   formRPartAList: IFormR[];
@@ -23,6 +26,7 @@ const btnProps = [
 ];
 
 const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
+  const dispatch = useAppDispatch();
   let btnForm: any = null;
   let bFProps: any = btnProps[btnForm?.lifecycleState];
 
@@ -35,9 +39,13 @@ const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
     }
   }
 
-  // temp stuff to stop errors
+  // mostly temp stuff
   const loadSavedForm = (id: string) => console.log("load saved form", id);
-  const loadNewForm = () => console.log("load new form");
+  const loadNewForm = () => {
+    dispatch(resetted());
+    //todo ProfileToFormRPartAInitialValues
+    //  console.log(store.getState().formA);
+  };
 
   return (
     <Button
