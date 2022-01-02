@@ -7,34 +7,54 @@ import ScrollTo from "../forms/ScrollTo";
 
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import Loading from "../common/Loading";
+import ErrorPage from "../common/ErrorPage";
 
 const Profile = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
 
-  return (
-    <div id="profile">
-      <PageTitle title="Profile" />
-      <ScrollTo />
-      <Fieldset>
-        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
-          Profile
-        </Fieldset.Legend>
-      </Fieldset>
-      <Details.ExpanderGroup>
-        {traineeProfileData?.personalDetails && (
-          <>
+  const traineeProfileDataStatus = useAppSelector(
+    state => state.traineeProfile.status
+  );
+
+  const traineeProfileDataError = useAppSelector(
+    state => state.traineeProfile.error
+  );
+
+  let content;
+
+  if (traineeProfileDataStatus === "loading") return <Loading />;
+  else if (traineeProfileDataStatus === "succeeded")
+    content = (
+      <div id="profile">
+        <PageTitle title="Profile" />
+        <ScrollTo />
+        <Fieldset>
+          <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+            Profile
+          </Fieldset.Legend>
+        </Fieldset>
+        <Details.ExpanderGroup>
+          {traineeProfileData.personalDetails && (
             <PersonalDetailsComponent
               personalDetails={traineeProfileData.personalDetails}
             />
+          )}
+          {traineeProfileData.placements && (
             <Placements placements={traineeProfileData.placements}></Placements>
+          )}
+          {traineeProfileData.programmeMemberships && (
             <Programmes
               programmeMemberships={traineeProfileData.programmeMemberships}
             ></Programmes>
-          </>
-        )}
-      </Details.ExpanderGroup>
-    </div>
-  );
+          )}
+        </Details.ExpanderGroup>
+      </div>
+    );
+  else if (traineeProfileDataStatus === "failed")
+    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
+
+  return <div>{content}</div>;
 };
 
 export default Profile;

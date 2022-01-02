@@ -1,12 +1,17 @@
-const ErrorPage = (error: any) => {
+const ErrorPage = (errors: any) => {
   return (
     <>
-      <h2>
+      <p>
         Sorry, there was an error loading the data. Please try again. If it
         keeps happening, please contact your local office.
-      </h2>
+      </p>
       <br />
-      <h3>{`The error message is: ${error}`}</h3>
+      <p>"The error message is: </p>
+      <div>
+        {errors.map((error: any, index: number) => {
+          return <p key={index}>{error}</p>;
+        })}
+      </div>
     </>
   );
 };

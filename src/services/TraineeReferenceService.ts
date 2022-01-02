@@ -45,4 +45,19 @@ export class TraineeReferenceService extends ApiService {
   getCovidChangeCircs(): Promise<AxiosResponse<any>> {
     return this.get("/covid-change-circs");
   }
+
+  getCombinedReference() {
+    const res: any = Promise.all([
+      this.get("/gender"),
+      this.get("/college"),
+      this.get("/dbc"),
+      this.get("/local-office"),
+      this.get("/grade"),
+      this.get("/immigration-status"),
+      this.get("/curriculum"),
+      this.get("/declaration-type"),
+      this.get("/covid-change-circs")
+    ]);
+    return res;
+  }
 }

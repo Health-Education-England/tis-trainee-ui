@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
-
+import { initialPersonalDetails } from "../../models/PersonalDetails";
 interface IProfile {
-  traineeProfileData: TraineeProfile | null;
+  traineeProfileData: TraineeProfile;
   status: string;
   error: any;
 }
@@ -12,7 +12,7 @@ interface IProfile {
 export const initialState: IProfile = {
   traineeProfileData: {
     traineeTisId: "",
-    personalDetails: null,
+    personalDetails: initialPersonalDetails,
     programmeMemberships: [],
     placements: []
   },
@@ -33,7 +33,11 @@ export const fetchTraineeProfileData = createAsyncThunk(
 const traineeProfileSlice = createSlice({
   name: "traineeProfile",
   initialState,
-  reducers: {},
+  reducers: {
+    resetToInit() {
+      return initialState;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchTraineeProfileData.pending, (state, _action) => {
@@ -51,6 +55,8 @@ const traineeProfileSlice = createSlice({
 });
 
 export default traineeProfileSlice.reducer;
+
+export const { resetToInit } = traineeProfileSlice.actions;
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>
   state.traineeProfile.traineeProfileData;

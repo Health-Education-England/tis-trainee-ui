@@ -6,15 +6,23 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import Loading from "../common/Loading";
+import ErrorPage from "../common/ErrorPage";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
 
-  const personOwner: string | undefined =
-    traineeProfileData?.personalDetails?.personOwner;
+  const traineeProfileDataStatus = useAppSelector(
+    state => state.traineeProfile.status
+  );
 
-  let mappedContact: string | null = null;
+  const traineeProfileDataError = useAppSelector(
+    state => state.traineeProfile.error
+  );
 
+  const personOwner = traineeProfileData?.personalDetails?.personOwner;
+
+  let mappedContact;
   if (personOwner) {
     for (const localOffice of localOfficeContacts) {
       if (localOffice.name === personOwner) {
@@ -23,8 +31,10 @@ const Support = () => {
     }
   }
 
-  return (
-    traineeProfileData && (
+  let content;
+  if (traineeProfileDataStatus === "loading") return <Loading />;
+  else if (traineeProfileDataStatus === "succeeded")
+    content = (
       <>
         <PageTitle title="Support" />
         <h1 data-cy="pageTitle" style={{ marginBottom: 16, color: "#005EB8" }}>
@@ -60,8 +70,11 @@ const Support = () => {
           <SupportList mappedContact={mappedContact} />
         </Panel>
       </>
-    )
-  );
+    );
+  else if (traineeProfileDataStatus === "failed")
+    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
+
+  return <div>{content}</div>;
 };
 
 export default Support;

@@ -33,7 +33,6 @@ const CreateList = () => {
     if (formRPartAStatus === "idle") {
       dispatch(loadSavedForm(formId));
     }
-    console.log("this is the form id", formId);
     history.push(`/formr-a/${formId}`);
     // TODO could set canEdit to false here (unless this is already default value)?
     // could get the id from param in the View comp e.g. const { formId } = match.params

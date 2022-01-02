@@ -14,6 +14,7 @@ import HEEFooter from "../navigation/HEEFooter";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
+import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
 import ErrorPage from "../common/ErrorPage";
 interface IMain {
@@ -36,12 +37,11 @@ const MainRoutes = (): JSX.Element => {
   );
 };
 export const Main = ({ user, signOut, appVersion }: IMain) => {
+  let content;
   const dispatch = useAppDispatch();
-
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
-
   const traineeProfileDataError = useAppSelector(
     state => state.traineeProfile.error
   );
@@ -52,10 +52,24 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
     }
   }, [traineeProfileDataStatus, dispatch]);
 
-  let content;
+  // combined Reference data
+  const referenceStatus = useAppSelector(state => state.reference.status);
+  const referenceError = useAppSelector(state => state.reference.error);
 
-  if (traineeProfileDataStatus === "loading") return <Loading />;
-  else if (traineeProfileDataStatus === "succeeded")
+  useEffect(() => {
+    if (referenceStatus === "idle") {
+      dispatch(fetchReference());
+    }
+  }, [referenceStatus, dispatch]);
+
+  const errors = [traineeProfileDataError, referenceError];
+
+  if (traineeProfileDataStatus === "loading" || referenceStatus === "loading")
+    return <Loading />;
+  else if (
+    traineeProfileDataStatus === "succeeded" &&
+    referenceStatus === "succeeded"
+  )
     content = (
       <>
         <BrowserRouter>
@@ -72,7 +86,10 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
         </BrowserRouter>
       </>
     );
-  else if (traineeProfileDataStatus === "failed")
-    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
+  else if (
+    traineeProfileDataStatus === "failed" ||
+    referenceStatus === "failed"
+  )
+    content = <ErrorPage errors={errors}></ErrorPage>;
   return <div>{content}</div>;
 };

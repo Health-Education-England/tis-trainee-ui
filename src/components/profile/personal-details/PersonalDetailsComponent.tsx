@@ -5,25 +5,21 @@ import { KeyValue } from "../../../models/KeyValue";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 
 interface IProps {
-  personalDetails: PersonalDetails | null;
+  personalDetails: PersonalDetails;
 }
 
 const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
-  if (personalDetails === null) {
-    return <div>Failed to load data.</div>;
-  }
-
   const personalData: KeyValue[] = [
-    { label: "Maiden name", value: personalDetails?.maidenName },
-    { label: "Known As", value: personalDetails?.knownAs },
-    { label: "Gender", value: personalDetails?.gender },
+    { label: "Maiden name", value: personalDetails.maidenName },
+    { label: "Known As", value: personalDetails.knownAs },
+    { label: "Gender", value: personalDetails.gender },
     {
       label: "Date of birth",
-      value: DateUtilities.ToLocalDate(personalDetails?.dateOfBirth)
+      value: DateUtilities.ToLocalDate(personalDetails.dateOfBirth)
     },
-    { label: "Email", value: personalDetails?.email },
-    { label: "Telephone", value: personalDetails?.telephoneNumber },
-    { label: "Mobile", value: personalDetails?.mobileNumber }
+    { label: "Email", value: personalDetails.email },
+    { label: "Telephone", value: personalDetails.telephoneNumber },
+    { label: "Mobile", value: personalDetails.mobileNumber }
   ];
 
   const registrationDetails: KeyValue[] = [
@@ -67,12 +63,13 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
                 {personalDetails.surname}
               </SummaryList.Value>
             </SummaryList.Row>
-            {personalData.map(pd => (
-              <SummaryList.Row key={pd.label}>
-                <SummaryList.Key>{pd.label}</SummaryList.Key>
-                <SummaryList.Value>{pd.value}</SummaryList.Value>
-              </SummaryList.Row>
-            ))}
+            {personalData &&
+              personalData.map(pd => (
+                <SummaryList.Row key={pd.label}>
+                  <SummaryList.Key>{pd.label}</SummaryList.Key>
+                  <SummaryList.Value>{pd.value}</SummaryList.Value>
+                </SummaryList.Row>
+              ))}
 
             <SummaryList.Row>
               <SummaryList.Key>Address</SummaryList.Key>
@@ -86,15 +83,16 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
             <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
               Registration details
             </div>
-            {registrationDetails.map(
-              rd =>
-                rd.value && (
-                  <SummaryList.Row key={rd.label}>
-                    <SummaryList.Key>{rd.label}</SummaryList.Key>
-                    <SummaryList.Value>{rd.value}</SummaryList.Value>
-                  </SummaryList.Row>
-                )
-            )}
+            {registrationDetails &&
+              registrationDetails.map(
+                rd =>
+                  rd.value && (
+                    <SummaryList.Row key={rd.label}>
+                      <SummaryList.Key>{rd.label}</SummaryList.Key>
+                      <SummaryList.Value>{rd.value}</SummaryList.Value>
+                    </SummaryList.Row>
+                  )
+              )}
           </SummaryList>
         </Details.Text>
       </Details>
