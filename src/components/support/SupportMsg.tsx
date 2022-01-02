@@ -1,8 +1,8 @@
 import { ErrorMessage } from "nhsuk-react-components";
 
 interface ISupportMsg {
-  personOwner: string | undefined;
-  mappedContact: string | null;
+  personOwner: string | null | undefined;
+  mappedContact: string | null | undefined;
 }
 
 const SupportMsg = (props: ISupportMsg) => {

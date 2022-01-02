@@ -3,7 +3,7 @@ import { ActionLink, Select } from "nhsuk-react-components";
 import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
 interface ISupportList {
-  mappedContact: string | null;
+  mappedContact: string | null | undefined;
 }
 
 const SupportList = ({ mappedContact }: ISupportList) => {

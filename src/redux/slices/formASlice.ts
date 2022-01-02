@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { FormRPartA } from "../../models/FormRPartA";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormsService } from "../../services/FormsService";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -10,7 +11,7 @@ interface IFormA {
   error: any;
 }
 
-const initialFormState: FormRPartA = {
+export const initialFormState: FormRPartA = {
   forename: "",
   surname: "",
   gmcNumber: "",
@@ -59,7 +60,6 @@ export const loadSavedForm = createAsyncThunk(
     const formsService = new FormsService();
     const response: AxiosResponse<FormRPartA> =
       await formsService.getTraineeFormRPartAByFormId(formId);
-    console.log("returned formrA data: ", response.data);
     return response.data;
   }
 );
@@ -68,11 +68,14 @@ const formASlice = createSlice({
   name: "formA",
   initialState,
   reducers: {
-    resetted() {
+    resetToInit() {
       return initialState;
+    },
+    updatedFormA(state, action: PayloadAction<FormRPartA>) {
+      return { ...state, formAData: action.payload };
     }
   },
-  extraReducers(builder) {
+  extraReducers(builder): void {
     builder
       .addCase(loadSavedForm.pending, (state, _action) => {
         state.status = "loading";
@@ -90,7 +93,7 @@ const formASlice = createSlice({
 
 export default formASlice.reducer;
 
-export const { resetted } = formASlice.actions;
+export const { resetToInit, updatedFormA } = formASlice.actions;
 
 export const selectSavedForm = (state: { formA: IFormA }) =>
   state.formA.formAData;

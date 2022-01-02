@@ -1,9 +1,10 @@
 import { Button } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
-import { resetted } from "../../redux/slices/formASlice";
-import { useAppDispatch } from "../../redux/hooks/hooks";
-// import store from "../../redux/store/store";
-
+import { updatedFormA } from "../../redux/slices/formASlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
+import { useHistory } from "react-router-dom";
 interface IFormsListBtn {
   formRPartAList: IFormR[];
 }
@@ -27,8 +28,10 @@ const btnProps = [
 
 const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
   const dispatch = useAppDispatch();
+  const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: any = null;
   let bFProps: any = btnProps[btnForm?.lifecycleState];
+  let history = useHistory();
 
   for (let form of formRPartAList) {
     if (
@@ -39,12 +42,13 @@ const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
     }
   }
 
-  // mostly temp stuff
+  // TODO WIP
   const loadSavedForm = (id: string) => console.log("load saved form", id);
   const loadNewForm = () => {
-    dispatch(resetted());
-    //todo ProfileToFormRPartAInitialValues
-    //  console.log(store.getState().formA);
+    const formAInitialValues =
+      ProfileToFormRPartAInitialValues(traineeProfileData);
+    dispatch(updatedFormA(formAInitialValues));
+    history.push("/formr-a/create");
   };
 
   return (
