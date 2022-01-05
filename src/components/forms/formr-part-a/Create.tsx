@@ -33,14 +33,14 @@ import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 
-const Create = (props: { history: string[] }) => {
+const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
   const formRAData = useAppSelector(selectSavedForm);
   const combinedReferenceData = useAppSelector(selectAllReference);
 
   const handleSubmit = async (finalFormA: FormRPartA) => {
     dispatch(updatedFormA(finalFormA));
-    props.history.push("/formr-a/confirm");
+    history.push("/formr-a/confirm");
   };
 
   const saveDraft = async (draftFormA: FormRPartA) => {
@@ -57,7 +57,7 @@ const Create = (props: { history: string[] }) => {
       await dispatch(updateForm(updatedFormAData));
     } else await dispatch(saveForm(updatedFormAData));
     dispatch(fetchForms());
-    props.history.push("/formr-a");
+    history.push("/formr-a");
   };
 
   // TODO redirect to forms list if no data via direct url
