@@ -28,10 +28,8 @@ const panelSchemaValidation = yup.array(
     dateOfEntry: yup
       .date()
       .required("Date of entry is required")
-      .test(
-        "dateOfEntry",
-        "The date is outside the allowed date range",
-        value => DateUtilities.IsInsideDateRange(value)
+      .test("dateOfEntry", " please choose a date from the past", value =>
+        DateUtilities.IsPastDate(value)
       )
   })
 );
