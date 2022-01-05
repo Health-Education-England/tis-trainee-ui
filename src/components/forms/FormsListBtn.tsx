@@ -38,7 +38,7 @@ const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
     ) {
       btnForm = form;
       bFProps = btnProps[form.lifecycleState];
-    } else btnForm = null;
+    }
   }
 
   const loadTheSavedForm = (id: any) => {

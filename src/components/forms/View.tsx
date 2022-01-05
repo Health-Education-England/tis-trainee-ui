@@ -15,7 +15,7 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectSavedForm } from "../../redux/slices/formASlice";
 
 interface IView {
-  canEdit: boolean | undefined;
+  canEdit: boolean;
   history: any;
 }
 
@@ -46,7 +46,7 @@ const View = ({ canEdit, history }: IView) => {
             )}
           </Col>
         </Row>
-        {canEdit && (
+        {canEdit === true && (
           <WarningCallout label="Confirmation" data-jest="warningConfirmation">
             <p>
               Check the information entered below is correct and click Submit at

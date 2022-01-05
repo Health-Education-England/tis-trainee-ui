@@ -19,6 +19,7 @@ interface IConfirm {
 }
 
 const Confirm = ({ history }: IConfirm) => {
+  const canEdit: boolean = true;
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedForm);
 
@@ -26,11 +27,17 @@ const Confirm = ({ history }: IConfirm) => {
 
   const saveDraft = async (formData: FormRPartA) => {
     if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
-      formData.submissionDate = null;
-      formData.lifecycleState = LifeCycleState.Draft;
-    }
-    formData.lastModifiedDate = new Date();
-    dispatch(updatedFormA(formData));
+      dispatch(
+        updatedFormA({
+          ...formData,
+          submissionDate: null,
+          lifecycleState: LifeCycleState.Draft,
+          lastModifiedDate: new Date()
+        })
+      );
+    } else
+      dispatch(updatedFormA({ ...formData, lastModifiedDate: new Date() }));
+
     const updatedFormAData = store.getState().formA.formAData;
     await dispatch(updateForm(updatedFormAData));
     dispatch(fetchForms());
@@ -38,10 +45,16 @@ const Confirm = ({ history }: IConfirm) => {
   };
 
   const handleSubmit = async (formData: FormRPartA) => {
-    formData.submissionDate = new Date();
-    formData.lifecycleState = LifeCycleState.Submitted;
-    formData.lastModifiedDate = new Date();
-    await dispatch(updateForm(formData));
+    dispatch(
+      updatedFormA({
+        ...formData,
+        submissionDate: new Date(),
+        lifecycleState: LifeCycleState.Submitted,
+        lastModifiedDate: new Date()
+      })
+    );
+    const updatedFormAData = store.getState().formA.formAData;
+    await dispatch(updateForm(updatedFormAData));
     dispatch(resetToInit());
     dispatch(fetchForms());
     history.push("/formr-a");
@@ -50,7 +63,7 @@ const Confirm = ({ history }: IConfirm) => {
   return (
     <div>
       <ScrollTo />
-      <View canEdit={true} history={history}></View>
+      <View canEdit={canEdit} history={history}></View>
       <WarningCallout data-cy="warningSubmit" label="Warning">
         <p>
           By submitting this form, I confirm that the information above is
