@@ -13,8 +13,13 @@ import MultiChoiceInputField from "../MultiChoiceInputField";
 import SelectInputField from "../SelectInputField";
 import SubmitButton from "../SubmitButton";
 import TextInputField from "../TextInputField";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import { selectSavedForm } from "../../../redux/slices/formASlice";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hooks";
+import {
+  saveForm,
+  selectSavedForm,
+  updatedFormA,
+  updateForm
+} from "../../../redux/slices/formASlice";
 import { ValidationSchema } from "./ValidationSchema";
 import { ReferenceDataUtilities } from "../../../utilities/ReferenceDataUtilities";
 import { FormRPartA } from "../../../models/FormRPartA";
@@ -24,18 +29,39 @@ import {
   IMMIGRATION_STATUS_OTHER_TISIDS
 } from "../../../utilities/Constants";
 import { selectAllReference } from "../../../redux/slices/referenceSlice";
+import { LifeCycleState } from "../../../models/LifeCycleState";
+import store from "../../../redux/store/store";
+import { fetchForms } from "../../../redux/slices/formsSlice";
 
-const Create = () => {
+const Create = (props: { history: string[] }) => {
+  const dispatch = useAppDispatch();
   const formRAData = useAppSelector(selectSavedForm);
   const combinedReferenceData = useAppSelector(selectAllReference);
 
-  const handleSubmit = (finalFormA: FormRPartA) =>
-    console.log("I'm handling submit: ", finalFormA);
+  const handleSubmit = async (finalFormA: FormRPartA) => {
+    dispatch(updatedFormA(finalFormA));
+    props.history.push("/formr-a/confirm");
+  };
 
-  const saveDraft = (draftFormA: FormRPartA) =>
-    console.log("I'm saving draft: ", draftFormA);
+  const saveDraft = async (draftFormA: FormRPartA) => {
+    if (draftFormA.lifecycleState !== LifeCycleState.Unsubmitted) {
+      draftFormA.submissionDate = null;
+      draftFormA.lifecycleState = LifeCycleState.Draft;
+    }
+    // TODO Date type store warning https://github.com/reduxjs/redux-toolkit/issues/456
+    // https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
+    draftFormA.lastModifiedDate = new Date();
+    dispatch(updatedFormA(draftFormA));
+    const updatedFormAData = store.getState().formA.formAData;
+    if (draftFormA.id) {
+      await dispatch(updateForm(updatedFormAData));
+    } else await dispatch(saveForm(updatedFormAData));
+    dispatch(fetchForms());
+    props.history.push("/formr-a");
+  };
 
-  // TODO conditional for redirect to forms list if no data via direct url
+  // TODO redirect to forms list if no data via direct url
+  // and sort better backlink
   return (
     <>
       <BackLink href="/formr-a">Go back</BackLink>

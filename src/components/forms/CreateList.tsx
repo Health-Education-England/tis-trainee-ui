@@ -21,7 +21,6 @@ const CreateList = () => {
   const formRPartAList = useAppSelector(selectAllforms);
   const formRPartAListStatus = useAppSelector(state => state.forms.status);
   const formRPartAListError = useAppSelector(state => state.forms.error);
-  const formRPartAStatus = useAppSelector(state => state.formA.status);
 
   useEffect(() => {
     if (formRPartAListStatus === "idle") {
@@ -30,9 +29,7 @@ const CreateList = () => {
   }, [formRPartAListStatus, dispatch]);
 
   const handleRowClick = (formId: any) => {
-    if (formRPartAStatus === "idle") {
-      dispatch(loadSavedForm(formId));
-    }
+    dispatch(loadSavedForm(formId));
     history.push(`/formr-a/${formId}`);
     // TODO could set canEdit to false here (unless this is already default value)?
     // could get the id from param in the View comp e.g. const { formId } = match.params
