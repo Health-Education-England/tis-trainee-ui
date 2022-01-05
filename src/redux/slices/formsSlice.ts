@@ -33,8 +33,7 @@ const formsSlice = createSlice({
       })
       .addCase(fetchForms.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Add any fetched posts to the array
-        state.forms = state.forms.concat(action.payload);
+        state.forms = action.payload;
       })
       .addCase(fetchForms.rejected, (state, action) => {
         state.status = "failed";

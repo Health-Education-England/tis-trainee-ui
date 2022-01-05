@@ -14,9 +14,15 @@ import ScrollTo from "./ScrollTo";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectSavedForm } from "../../redux/slices/formASlice";
 
-const View = () => {
+interface IView {
+  canEdit: boolean | undefined;
+  history: any;
+}
+
+const View = ({ canEdit, history }: IView) => {
   const formData = useAppSelector(selectSavedForm);
-  let canEdit: boolean = false;
+
+  // TODO go to formr-a if no data via direct url
   return (
     formData && (
       <>
