@@ -15,10 +15,10 @@ import SubmitButton from "../SubmitButton";
 import TextInputField from "../TextInputField";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hooks";
 import {
-  saveForm,
-  selectSavedForm,
+  saveFormA,
+  selectSavedFormA,
   updatedFormA,
-  updateForm
+  updateFormA
 } from "../../../redux/slices/formASlice";
 import { ValidationSchema } from "./ValidationSchema";
 import { ReferenceDataUtilities } from "../../../utilities/ReferenceDataUtilities";
@@ -35,7 +35,7 @@ import { fetchForms } from "../../../redux/slices/formsSlice";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
-  const formRAData = useAppSelector(selectSavedForm);
+  const formRAData = useAppSelector(selectSavedFormA);
   const combinedReferenceData = useAppSelector(selectAllReference);
 
   const handleSubmit = async (finalFormA: FormRPartA) => {
@@ -54,9 +54,9 @@ const Create = ({ history }: { history: string[] }) => {
     dispatch(updatedFormA(draftFormA));
     const updatedFormAData = store.getState().formA.formAData;
     if (draftFormA.id) {
-      await dispatch(updateForm(updatedFormAData));
-    } else await dispatch(saveForm(updatedFormAData));
-    dispatch(fetchForms());
+      await dispatch(updateFormA(updatedFormAData));
+    } else await dispatch(saveFormA(updatedFormAData));
+    dispatch(fetchForms("/formr-a"));
     history.push("/formr-a");
   };
 

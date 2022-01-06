@@ -1,4 +1,5 @@
 import { ActionLink, LedeText, Table } from "nhsuk-react-components";
+import { useEffect } from "react";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import ErrorPage from "../common/ErrorPage";
@@ -8,36 +9,46 @@ import styles from "./FormR.module.scss";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import { selectAllforms, fetchForms } from "../../redux/slices/formsSlice";
-import { useEffect } from "react";
-import { loadSavedForm } from "../../redux/slices/formASlice";
+import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
+import { loadSavedFormA } from "../../redux/slices/formASlice";
 import FormsListBtn from "./FormsListBtn";
-import { useHistory } from "react-router-dom";
+import { loadSavedFormB } from "../../redux/slices/formBSlice";
+import { useHistory, useLocation } from "react-router-dom";
 
 const CreateList = () => {
-  let content;
   let history = useHistory();
+  let pathname = useLocation().pathname;
   const dispatch = useAppDispatch();
+  const formRList = useAppSelector(selectAllforms);
+  const formRListStatus = useAppSelector(state => state.forms.status);
+  const formRListError = useAppSelector(state => state.forms.error);
+  const featFlagStatus = useAppSelector(state => state.featureFlags.status);
+  const featFlagError = useAppSelector(state => state.featureFlags.error);
 
-  const formRPartAList = useAppSelector(selectAllforms);
-  const formRPartAListStatus = useAppSelector(state => state.forms.status);
-  const formRPartAListError = useAppSelector(state => state.forms.error);
+  let content;
+
+  // TODO sort status / data-fetch
+  useEffect(() => {
+    dispatch(fetchForms(pathname));
+  }, [dispatch, pathname]);
 
   useEffect(() => {
-    if (formRPartAListStatus === "idle") {
-      dispatch(fetchForms());
-    }
-  }, [formRPartAListStatus, dispatch]);
+    dispatch(fetchFeatureFlags());
+  }, [dispatch]);
 
-  const handleRowClick = (formId: any) => {
-    dispatch(loadSavedForm(formId));
-    history.push(`/formr-a/${formId}`);
-    // TODO could set canEdit to false here (unless this is already default value)?
-    // could get the id from param in the View comp e.g. const { formId } = match.params
+  const handleRowClick = async (formId: any) => {
+    if (pathname === "/formr-a") {
+      await dispatch(loadSavedFormA(formId));
+    } else if (pathname === "/formr-b") {
+      await dispatch(loadSavedFormB(formId));
+    }
+    history.push(`${pathname}/${formId}`);
   };
 
-  if (formRPartAListStatus === "loading") return <Loading />;
-  else if (formRPartAListStatus === "succeeded") {
-    const submittedForms = formRPartAList.filter(
+  if (formRListStatus === "loading" || featFlagStatus === "loading")
+    return <Loading />;
+  else if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
+    const submittedForms = formRList.filter(
       (form: any) => form.lifecycleState === LifeCycleState.Submitted
     );
 
@@ -58,14 +69,14 @@ const CreateList = () => {
     } else {
       content = <LedeText>No forms submitted yet.</LedeText>;
     }
-  } else if (formRPartAListStatus === "failed") {
-    content = <ErrorPage error={formRPartAListError}></ErrorPage>;
+  } else if (formRListStatus === "failed" || featFlagError === "failed") {
+    content = <ErrorPage error={formRListError}></ErrorPage>;
   }
 
   return (
     <>
       <ScrollTo />
-      <FormsListBtn formRPartAList={formRPartAList} />
+      <FormsListBtn pathName={pathname} formRList={formRList} />
       <Table>
         <Table.Head>
           <Table.Row>

@@ -1,13 +1,13 @@
-import View from "../View";
+import View from "./View";
 import ScrollTo from "../ScrollTo";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import SubmitButton from "../SubmitButton";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
-  selectSavedForm,
+  selectSavedFormA,
   updatedFormA,
-  updateForm,
-  resetToInit
+  updateFormA,
+  resetToInitFormA
 } from "../../../redux/slices/formASlice";
 import { FormRPartA } from "../../../models/FormRPartA";
 import store from "../../../redux/store/store";
@@ -21,7 +21,7 @@ interface IConfirm {
 const Confirm = ({ history }: IConfirm) => {
   const canEdit: boolean = true;
   const dispatch = useAppDispatch();
-  const formData = useAppSelector(selectSavedForm);
+  const formData = useAppSelector(selectSavedFormA);
 
   const handleEdit = () => history.push("/formr-a/create");
 
@@ -39,8 +39,8 @@ const Confirm = ({ history }: IConfirm) => {
       dispatch(updatedFormA({ ...formData, lastModifiedDate: new Date() }));
 
     const updatedFormAData = store.getState().formA.formAData;
-    await dispatch(updateForm(updatedFormAData));
-    dispatch(fetchForms());
+    await dispatch(updateFormA(updatedFormAData));
+    dispatch(fetchForms("/formr-a"));
     history.push("/formr-a");
   };
 
@@ -54,9 +54,9 @@ const Confirm = ({ history }: IConfirm) => {
       })
     );
     const updatedFormAData = store.getState().formA.formAData;
-    await dispatch(updateForm(updatedFormAData));
-    dispatch(resetToInit());
-    dispatch(fetchForms());
+    await dispatch(updateFormA(updatedFormAData));
+    dispatch(resetToInitFormA());
+    dispatch(fetchForms("/formr-a"));
     history.push("/formr-a");
   };
 

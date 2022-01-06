@@ -3,11 +3,14 @@ import { IFormR } from "../../models/IFormR";
 import { updatedFormA } from "../../redux/slices/formASlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { loadSavedForm } from "../../redux/slices/formASlice";
+import { loadSavedFormA } from "../../redux/slices/formASlice";
 import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
+import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
 import { useHistory } from "react-router-dom";
+import { updatedFormB } from "../../redux/slices/formBSlice";
 interface IFormsListBtn {
-  formRPartAList: IFormR[];
+  formRList: IFormR[];
+  pathName: string;
 }
 
 const btnProps = {
@@ -24,14 +27,14 @@ const btnProps = {
 };
 
 // TODO types
-const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
+const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: IFormR | null = null;
   let bFProps: any;
   let history = useHistory();
 
-  for (let form of formRPartAList) {
+  for (let form of formRList) {
     if (
       form.lifecycleState === "DRAFT" ||
       form.lifecycleState === "UNSUBMITTED"
@@ -42,14 +45,21 @@ const FormsListBtn = ({ formRPartAList }: IFormsListBtn) => {
   }
 
   const loadTheSavedForm = (id: any) => {
-    dispatch(loadSavedForm(id)).then(() => history.push("/formr-a/create"));
+    dispatch(loadSavedFormA(id)).then(() => history.push(`${pathName}/create`));
   };
 
   const loadNewForm = () => {
-    const formAInitialValues =
-      ProfileToFormRPartAInitialValues(traineeProfileData);
-    dispatch(updatedFormA(formAInitialValues));
-    history.push("/formr-a/create");
+    if ((pathName = "/formr-a")) {
+      const formAInitialValues =
+        ProfileToFormRPartAInitialValues(traineeProfileData);
+      dispatch(updatedFormA(formAInitialValues));
+    } else if ((pathName = "/formr-b")) {
+      const formBInitialValues =
+        ProfileToFormRPartBInitialValues(traineeProfileData);
+      dispatch(updatedFormB(formBInitialValues));
+    }
+
+    history.push(`${pathName}/create`);
   };
 
   return (

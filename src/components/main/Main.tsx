@@ -2,7 +2,7 @@ import { CognitoUser } from "amazon-cognito-identity-js";
 import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
-// import FormRPartB from "../forms/formr-part-b/FormRPartB";
+import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
 import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
@@ -28,7 +28,7 @@ const MainRoutes = (): JSX.Element => {
     <Switch>
       <Route path="/profile" component={Profile} />
       <Route path="/formr-a" component={FormRPartA} />
-      {/* <Route path="/formr-b" component={FormRPartB} /> */}
+      <Route path="/formr-b" component={FormRPartB} />
       <Route path="/support" component={Support} />
       <Route path="/howtoexport" component={HowToPrintToPDF} />
       <Redirect exact path="/" to="/profile" />

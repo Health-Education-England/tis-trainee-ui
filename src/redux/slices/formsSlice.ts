@@ -15,12 +15,17 @@ export const initialState: IForms = {
   error: ""
 };
 
-export const fetchForms = createAsyncThunk("forms/fetchForms", async () => {
-  const formsService = new FormsService();
-  const response: AxiosResponse<IFormR[]> =
-    await formsService.getTraineeFormRPartAList();
-  return response.data;
-});
+export const fetchForms = createAsyncThunk(
+  "forms/fetchForms",
+  async (path: string) => {
+    const formsService = new FormsService();
+    let response: AxiosResponse<IFormR[]>;
+    if (path === "/formr-a") {
+      response = await formsService.getTraineeFormRPartAList();
+    } else response = await formsService.getTraineeFormRPartBList();
+    return response.data;
+  }
+);
 
 const formsSlice = createSlice({
   name: "forms",
