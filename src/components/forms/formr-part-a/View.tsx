@@ -7,12 +7,12 @@ import {
   SummaryList
 } from "nhsuk-react-components";
 import { Link } from "react-router-dom";
-import { CCT_DECLARATION } from "../../utilities/Constants";
-import { DateUtilities } from "../../utilities/DateUtilities";
-import ScrollTo from "./ScrollTo";
+import { CCT_DECLARATION } from "../../../utilities/Constants";
+import { DateUtilities } from "../../../utilities/DateUtilities";
+import ScrollTo from "../ScrollTo";
 
-import { useAppSelector } from "../../redux/hooks/hooks";
-import { selectSavedForm } from "../../redux/slices/formASlice";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { selectSavedFormA } from "../../../redux/slices/formASlice";
 
 interface IView {
   canEdit: boolean;
@@ -20,7 +20,7 @@ interface IView {
 }
 
 const View = ({ canEdit, history }: IView) => {
-  const formData = useAppSelector(selectSavedForm);
+  const formData = useAppSelector(selectSavedFormA);
 
   // TODO go to formr-a if no data via direct url
   return (

@@ -4,37 +4,48 @@ import { MEDICAL_CURRICULUM } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
 
 export function ProfileToFormRPartBInitialValues(
-  traineeProfile: TraineeProfile | null
-): FormRPartB | null {
-  if (!traineeProfile) {
-    return null;
-  }
-  const pd = traineeProfile.personalDetails;
+  traineeProfileData: TraineeProfile
+): FormRPartB {
+  const pd = traineeProfileData.personalDetails;
 
   const programme =
-    traineeProfile.programmeMemberships.length > 0
-      ? traineeProfile.programmeMemberships.reduce(function (a, b) {
-          return a.startDate > b.startDate ? a : b;
-        })
+    traineeProfileData.programmeMemberships.length > 0
+      ? traineeProfileData.programmeMemberships.reduce((a, b) =>
+          a.startDate > b.startDate ? a : b
+        )
       : null;
 
   const curriculum =
     programme && programme.curricula.length > 0
       ? programme.curricula
-          .filter(c => c.curriculumSubType === MEDICAL_CURRICULUM)
-          .sort((a, b) => {
-            const diff =
-              new Date(b.curriculumStartDate).getTime() -
-              new Date(a.curriculumStartDate).getTime();
+          .filter(
+            (c: { curriculumSubType: string }) =>
+              c.curriculumSubType === MEDICAL_CURRICULUM
+          )
+          .sort(
+            (
+              a: {
+                curriculumStartDate: string | number | Date;
+                curriculumName: string;
+              },
+              b: {
+                curriculumStartDate: string | number | Date;
+                curriculumName: any;
+              }
+            ) => {
+              const diff =
+                new Date(b.curriculumStartDate).getTime() -
+                new Date(a.curriculumStartDate).getTime();
 
-            return diff === 0
-              ? a.curriculumName.localeCompare(b.curriculumName)
-              : diff;
-          })
+              return diff === 0
+                ? a.curriculumName.localeCompare(b.curriculumName)
+                : diff;
+            }
+          )
           .shift()
       : null;
 
-  const work = traineeProfile.placements.map<Work>(placement => ({
+  const work = traineeProfileData.placements.map<Work>(placement => ({
     typeOfWork: `${placement.placementType} ${placement.grade} ${placement.specialty}`,
     startDate: placement.startDate,
     endDate: placement.endDate,
@@ -44,18 +55,18 @@ export function ProfileToFormRPartBInitialValues(
   }));
 
   const model: FormRPartB = {
-    forename: pd?.forenames || "",
-    surname: pd?.surname || "",
-    gmcNumber: pd?.gmcNumber || "",
+    forename: pd?.forenames,
+    surname: pd?.surname,
+    gmcNumber: pd?.gmcNumber,
     email: "",
-    localOfficeName: pd?.personOwner || "",
-    prevRevalBody: pd?.prevRevalBody || "",
-    prevRevalBodyOther: pd?.prevRevalBodyOther || "",
-    currRevalDate: pd?.currRevalDate || undefined,
-    prevRevalDate: pd?.prevRevalDate || undefined,
-    programmeSpecialty: curriculum?.curriculumName || "",
+    localOfficeName: pd?.personOwner,
+    prevRevalBody: pd?.prevRevalBody,
+    prevRevalBodyOther: pd?.prevRevalBodyOther,
+    currRevalDate: pd?.currRevalDate,
+    prevRevalDate: pd?.prevRevalDate,
+    programmeSpecialty: curriculum?.curriculumName,
     dualSpecialty: "",
-    traineeTisId: traineeProfile.traineeTisId,
+    traineeTisId: traineeProfileData.traineeTisId,
     work: work,
     sicknessAbsence: 0,
     parentalLeave: 0,

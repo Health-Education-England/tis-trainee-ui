@@ -54,8 +54,8 @@ export const initialState: IFormA = {
   error: ""
 };
 
-export const loadSavedForm = createAsyncThunk(
-  "formA/fetchForm",
+export const loadSavedFormA = createAsyncThunk(
+  "formA/fetchFormA",
   async (formId: string) => {
     const formsService = new FormsService();
     const response: AxiosResponse<FormRPartA> =
@@ -64,16 +64,16 @@ export const loadSavedForm = createAsyncThunk(
   }
 );
 
-export const saveForm = createAsyncThunk(
-  "formA/saveForm",
+export const saveFormA = createAsyncThunk(
+  "formA/saveFormA",
   async (form: FormRPartA) => {
     const formsService = new FormsService();
     return await formsService.saveTraineeFormRPartA(form);
   }
 );
 
-export const updateForm = createAsyncThunk(
-  "formA/updateForm",
+export const updateFormA = createAsyncThunk(
+  "formA/updateFormA",
   async (form: FormRPartA) => {
     const formsService = new FormsService();
     return await formsService.updateTraineeFormRPartA(form);
@@ -84,7 +84,7 @@ const formASlice = createSlice({
   name: "formA",
   initialState,
   reducers: {
-    resetToInit() {
+    resetToInitFormA() {
       return initialState;
     },
     updatedFormA(state, action: PayloadAction<FormRPartA>) {
@@ -93,34 +93,34 @@ const formASlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(loadSavedForm.pending, (state, _action) => {
+      .addCase(loadSavedFormA.pending, (state, _action) => {
         state.status = "loading";
       })
-      .addCase(loadSavedForm.fulfilled, (state, action) => {
+      .addCase(loadSavedFormA.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.formAData = action.payload;
       })
-      .addCase(loadSavedForm.rejected, (state, action) => {
+      .addCase(loadSavedFormA.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(saveForm.pending, (state, _action) => {
+      .addCase(saveFormA.pending, (state, _action) => {
         state.status = "saving";
       })
-      .addCase(saveForm.fulfilled, (state, _action) => {
+      .addCase(saveFormA.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(saveForm.rejected, (state, action) => {
+      .addCase(saveFormA.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(updateForm.pending, (state, _action) => {
+      .addCase(updateFormA.pending, (state, _action) => {
         state.status = "updating";
       })
-      .addCase(updateForm.fulfilled, (state, _action) => {
+      .addCase(updateFormA.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(updateForm.rejected, (state, action) => {
+      .addCase(updateFormA.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -129,7 +129,7 @@ const formASlice = createSlice({
 
 export default formASlice.reducer;
 
-export const { resetToInit, updatedFormA } = formASlice.actions;
+export const { resetToInitFormA, updatedFormA } = formASlice.actions;
 
-export const selectSavedForm = (state: { formA: IFormA }) =>
+export const selectSavedFormA = (state: { formA: IFormA }) =>
   state.formA.formAData;

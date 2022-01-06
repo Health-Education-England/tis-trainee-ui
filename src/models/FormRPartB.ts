@@ -1,19 +1,20 @@
 import { IFormR } from "./IFormR";
 
-type DateType = Date | string | undefined;
+type DateType = Date | string | null | undefined;
+type ProfileSType = string | null | undefined;
 
 export interface FormRPartB extends IFormR {
   traineeTisId?: string;
-  forename: string;
-  surname: string;
-  gmcNumber: string;
+  forename: ProfileSType;
+  surname: ProfileSType;
+  gmcNumber: ProfileSType;
   email: string;
-  localOfficeName: string;
-  prevRevalBody: string;
-  prevRevalBodyOther: string;
+  localOfficeName: ProfileSType;
+  prevRevalBody: ProfileSType;
+  prevRevalBodyOther: ProfileSType;
   currRevalDate: DateType;
-  prevRevalDate: Date | string | undefined | null;
-  programmeSpecialty: string;
+  prevRevalDate: DateType;
+  programmeSpecialty: ProfileSType;
   dualSpecialty: string;
   work: Work[];
   sicknessAbsence: number;
