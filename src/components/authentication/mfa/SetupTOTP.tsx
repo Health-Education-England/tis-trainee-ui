@@ -34,7 +34,7 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
         const name = "NHS Trainee Self-Service";
         const authCode: string = `otpauth://totp/${encodeURI(
           name
-        )}:${user.getUsername()}?secret=${totpCode}`;
+        )}:${user.getUsername()}?secret=${totpCode}&issuer=${encodeURI(name)}`;
         setCode(totpCode);
         setQRCode(authCode);
         let timeOut = setTimeout(() => setExpired(true), 180000);
