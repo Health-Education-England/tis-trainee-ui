@@ -372,6 +372,20 @@ Cypress.Commands.add("checkAndFillSection5", pastDate => {
     .should("exist")
     .clear()
     .type("declaration location");
+
+  cy.get(".nhsuk-error-summary").should("not.exist");
+
+  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]')
+    .should("exist")
+    .clear()
+    .type("2099-04-24");
+
+  cy.get(".nhsuk-error-summary").should("exist");
+
+  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]')
+    .should("exist")
+    .clear()
+    .type(pastDate);
 });
 
 // ### SECTION 6: CHECK AND FILL
