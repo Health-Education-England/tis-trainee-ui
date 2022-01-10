@@ -1,0 +1,131 @@
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import Section1 from "./sections/Section1";
+import Section2 from "./sections/Section2";
+import Section3 from "./sections/Section3";
+import Section4 from "./sections/Section4";
+import Section5 from "./sections/Section5";
+import Section6 from "./sections/Section6";
+import CovidDeclaration from "./sections/CovidDeclaration";
+import "../formr-part-b/sections/section-styles.scss";
+import React from "react";
+import Loading from "../../common/Loading";
+import { FormRPartB } from "../../../models/FormRPartB";
+import { LifeCycleState } from "../../../models/LifeCycleState";
+import store from "../../../redux/store/store";
+import { saveFormB, updateFormB } from "../../../redux/slices/formBSlice";
+import { fetchForms } from "../../../redux/slices/formsSlice";
+
+interface ISection {
+  component: any;
+  title: string;
+}
+
+const sections: ISection[] = [
+  {
+    component: Section1,
+    title: "Section 1:\nDoctor's details"
+  },
+
+  {
+    component: Section2,
+    title: "Section 2:\nWhole Scope of Practice"
+  },
+
+  {
+    component: Section3,
+    title: "Section 3:\nDeclarations relating to\nGood Medical Practice"
+  },
+  {
+    component: Section4,
+    title: "Section 4:\nUpdate to your previous Form R Part B"
+  },
+  {
+    component: Section5,
+    title: "Section 5:\nDeclarations since your previous Form R Part B"
+  },
+  {
+    component: Section6,
+    title: "Section 6:\nCompliments"
+  }
+];
+
+const Create = ({ history }: { history: string[] }) => {
+  const dispatch = useAppDispatch();
+  const isfeatFlagCovid = useAppSelector(state =>
+    state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
+  );
+  const section = useAppSelector(state => state.formB.sectionNumber);
+
+  // conditional progress bar length for Covid section
+  // TODO needs moving out of Create
+  let finalSections: ISection[];
+  if (isfeatFlagCovid) {
+    finalSections = [
+      ...sections.slice(0, 5),
+      { component: CovidDeclaration, title: "Covid declaration" },
+      ...sections.slice(5)
+    ];
+  } else finalSections = sections;
+  const makeProgressBar = () => {
+    return finalSections.map((_sect, index) => (
+      <div
+        key={index}
+        className={
+          section === index + 1
+            ? "progress-step progress-step-active"
+            : "progress-step"
+        }
+      ></div>
+    ));
+  };
+
+  const saveDraft = async (formData: FormRPartB) => {
+    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+      formData.submissionDate = null;
+      formData.lifecycleState = LifeCycleState.Draft;
+    }
+    formData.lastModifiedDate = new Date();
+    const updatedFormBData = store.getState().formB.formBData;
+    if (formData.id) {
+      await dispatch(updateFormB(updatedFormBData));
+    } else await dispatch(saveFormB(updatedFormBData));
+    dispatch(fetchForms("/formr-b"));
+    // TO check history
+    history.push("/formr-b");
+  };
+
+  const sectionCompProps = {
+    prevSectionLabel: section > 1 ? finalSections[section - 2].title : "",
+    nextSectionLabel:
+      section < finalSections.length ? finalSections[section].title : "",
+    saveDraft: saveDraft
+  };
+
+  let content;
+
+  if (section) {
+    content = (
+      <main>
+        <div className="form-wrapper">
+          <section>
+            <div className="progressbar">{makeProgressBar()}</div>
+            <div className="page-wrapper">
+              {section < finalSections.length + 1 ? (
+                React.createElement(
+                  finalSections[section - 1].component,
+                  sectionCompProps
+                )
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  } else content = <Loading />;
+
+  return <div>{content}</div>;
+};
+
+export default Create;

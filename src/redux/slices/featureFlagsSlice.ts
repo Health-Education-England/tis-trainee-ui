@@ -46,7 +46,3 @@ const featureFlagsSlice = createSlice({
 });
 
 export default featureFlagsSlice.reducer;
-
-export const isCovidFeatureFlag = (state: {
-  featureFlags: { featureFlags: FeatureFlags };
-}) => state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf();

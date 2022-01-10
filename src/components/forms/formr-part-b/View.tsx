@@ -10,7 +10,6 @@ import {
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../redux/slices/formBSlice";
-import { isCovidFeatureFlag } from "../../../redux/slices/featureFlagsSlice";
 import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
 import {
   FORMR_PARTB_ACCEPTANCE,
@@ -29,8 +28,12 @@ interface IView {
 
 const View = ({ canEdit, history }: IView) => {
   const formData = useAppSelector(selectSavedFormB);
-  const enableCovidDeclaration = useAppSelector(isCovidFeatureFlag);
+  const enableCovidDeclaration = useAppSelector(state =>
+    state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
+  );
 
+  // TODO
+  // section edit btn
   const SectionEditButton = (section: number) => {
     return canEdit ? (
       <Button
@@ -43,9 +46,6 @@ const View = ({ canEdit, history }: IView) => {
       </Button>
     ) : null;
   };
-
-  // TODO
-  // section edit btn
 
   return (
     formData && (

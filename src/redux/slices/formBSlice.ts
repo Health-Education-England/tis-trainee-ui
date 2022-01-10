@@ -7,6 +7,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 interface IFormB {
   formBData: FormRPartB;
+  sectionNumber: number;
   status: string;
   error: any;
 }
@@ -54,6 +55,7 @@ export const initialFormState: FormRPartB = {
 
 export const initialState: IFormB = {
   formBData: initialFormState,
+  sectionNumber: 1,
   status: "idle",
   error: ""
 };
@@ -93,6 +95,12 @@ const formBSlice = createSlice({
     },
     updatedFormB(state, action: PayloadAction<FormRPartB>) {
       return { ...state, formBData: action.payload };
+    },
+    decrementFormBSection: state => {
+      state.sectionNumber -= 1;
+    },
+    incrementFormBSection: state => {
+      state.sectionNumber += 1;
     }
   },
   extraReducers(builder): void {
@@ -133,7 +141,12 @@ const formBSlice = createSlice({
 
 export default formBSlice.reducer;
 
-export const { resetToInitFormB, updatedFormB } = formBSlice.actions;
+export const {
+  resetToInitFormB,
+  updatedFormB,
+  decrementFormBSection,
+  incrementFormBSection
+} = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>
   state.formB.formBData;
