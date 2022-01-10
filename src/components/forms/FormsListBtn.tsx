@@ -44,16 +44,17 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     }
   }
 
+  // TODO conditional
   const loadTheSavedForm = (id: any) => {
     dispatch(loadSavedFormA(id)).then(() => history.push(`${pathName}/create`));
   };
 
   const loadNewForm = () => {
-    if ((pathName = "/formr-a")) {
+    if (pathName === "/formr-a") {
       const formAInitialValues =
         ProfileToFormRPartAInitialValues(traineeProfileData);
       dispatch(updatedFormA(formAInitialValues));
-    } else if ((pathName = "/formr-b")) {
+    } else if (pathName === "/formr-b") {
       const formBInitialValues =
         ProfileToFormRPartBInitialValues(traineeProfileData);
       dispatch(updatedFormB(formBInitialValues));

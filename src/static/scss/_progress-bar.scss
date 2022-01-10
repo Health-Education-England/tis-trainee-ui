@@ -1,0 +1,43 @@
+@use '../../static/scss/variables' as *; // * removes need to call namespace
+@use '../../static/scss/mixin' as *; // * removes need to call namespace
+
+.progressbar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  counter-reset: step;
+  margin: $spacing-large 0;
+
+  .progress-step {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: $third-color;
+    border-radius: 50%;
+    border: $border-width-large solid $primary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $primary-color;
+    z-index: 2;
+  }
+
+  // active step
+  .progress-step-active {
+    background-color: $primary-color-background;
+    color: $third-color;
+    border: none;
+  }
+}
+
+// progress bar joining line
+.progressbar::before,
+.progress {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  width: 100%;
+  background-color: $primary-color;
+  z-index: 1;
+}

@@ -36,7 +36,7 @@ const CreateList = () => {
     dispatch(fetchFeatureFlags());
   }, [dispatch]);
 
-  const handleRowClick = async (formId: any) => {
+  const handleRowClick = async (formId: any, pathname: string) => {
     if (pathname === "/formr-a") {
       await dispatch(loadSavedFormA(formId));
     } else if (pathname === "/formr-b") {
@@ -57,7 +57,7 @@ const CreateList = () => {
         <Table.Row key={formData.id} className={styles.listTableRow}>
           <td>
             <ActionLink
-              onClick={() => handleRowClick(formData.id)}
+              onClick={() => handleRowClick(formData.id, pathname)}
               data-cy="submittedForm"
             >
               form submitted on{" "}
