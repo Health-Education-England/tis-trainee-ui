@@ -31,12 +31,10 @@ const SetupTOTP = ({ user, mfaStatus, incrementStep }: ISetupMFA) => {
     const getUser = async () => {
       try {
         const totpCode: string = await Auth.setupTOTP(user);
-        const authCode: string =
-          "otpauth://totp/AWSCognito:" +
-          user.getUsername() +
-          "?secret=" +
-          totpCode +
-          "&issuer=AWSCognito";
+        const name = "NHS Trainee Self-Service";
+        const authCode: string = `otpauth://totp/${encodeURI(
+          name
+        )}:${user.getUsername()}?secret=${totpCode}&issuer=${encodeURI(name)}`;
         setCode(totpCode);
         setQRCode(authCode);
         let timeOut = setTimeout(() => setExpired(true), 180000);
