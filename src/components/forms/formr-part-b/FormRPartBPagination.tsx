@@ -2,7 +2,10 @@ import { Pagination } from "nhsuk-react-components";
 import React from "react";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import { decrementFormBSection } from "../../../redux/slices/formBSlice";
+import {
+  decrementFormBSection,
+  updatedFormB
+} from "../../../redux/slices/formBSlice";
 import classes from "./FormRPartB.module.scss";
 
 interface IFormRPartBPagination {
@@ -13,14 +16,11 @@ interface IFormRPartBPagination {
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
 }
 
-// TODO
-// save draft on nav
-// !nextSectionLabel === "" go to submit?
-
 const FormRPartBPagination = ({
   prevSectionLabel,
   nextSectionLabel,
-  handleSubmit
+  handleSubmit,
+  values
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
@@ -37,7 +37,10 @@ const FormRPartBPagination = ({
       {prevSectionLabel && (
         <Pagination.Link
           previous
-          onClick={() => dispatch(decrementFormBSection())}
+          onClick={() => {
+            dispatch(updatedFormB(values));
+            dispatch(decrementFormBSection());
+          }}
           data-cy="LinkToPreviousSection"
           data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
         >

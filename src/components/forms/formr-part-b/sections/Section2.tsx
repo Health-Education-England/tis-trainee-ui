@@ -16,7 +16,10 @@ import { Section2ValidationSchema } from "../ValidationSchema";
 import classes from "../FormRPartB.module.scss";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import { incrementFormBSection } from "../../../../redux/slices/formBSlice";
+import {
+  incrementFormBSection,
+  updatedFormB
+} from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
 import { NEW_WORK } from "../../../../utilities/Constants";
 
@@ -44,7 +47,7 @@ const Section2 = ({
         initialValues={formData}
         validationSchema={Section2ValidationSchema}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

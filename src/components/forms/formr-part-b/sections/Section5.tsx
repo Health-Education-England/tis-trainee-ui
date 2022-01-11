@@ -14,7 +14,6 @@ import DeclarationPanel from "./DeclarationPanel";
 import { Declaration, FormRPartB } from "../../../../models/FormRPartB";
 import { Section5ValidationSchema } from "../ValidationSchema";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
-import { DeclarationPanelUtilities } from "../../../../utilities/DeclarationPanelUtilities";
 import {
   NEW_DECLARATION,
   YES_NO_OPTIONS
@@ -24,7 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
   selectSavedFormB,
-  updateFormB
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 
 interface ISection5 {
@@ -54,7 +53,7 @@ const Section5 = ({
         initialValues={formData}
         validationSchema={Section5ValidationSchema}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

@@ -35,34 +35,40 @@ const View = ({ canEdit, history }: IView) => {
   // TODO
   // section edit btn
   const SectionEditButton = (section: number) => {
-    return canEdit ? (
-      <Button
-        type="button"
-        className={classes.sectionEditButton}
-        onClick={() => console.log("editSection(section)")}
-        data-cy={`BtnEditSection${section + 1}`}
-      >
-        Edit
-      </Button>
-    ) : null;
+    return (
+      canEdit && (
+        <Button
+          type="button"
+          className={classes.sectionEditButton}
+          onClick={() =>
+            console.log(
+              "TODO dispatch set section number, isReturnBtn to true, clear declarations"
+            )
+          }
+          data-cy={`BtnEditSection${section + 1}`}
+        >
+          Edit
+        </Button>
+      )
+    );
   };
 
   return (
     formData && (
       <>
         <ScrollTo />
-        <Row>
-          <Col width="one-half">
-            <BackLink
-              style={{ cursor: "pointer" }}
-              data-cy="backLink"
-              onClick={() => history.goBack()}
-            >
-              Go back to list
-            </BackLink>
-          </Col>
-          <Col style={{ textAlign: "right" }} width="one-half">
-            {!canEdit && (
+        {!canEdit && (
+          <Row>
+            <Col width="one-half">
+              <BackLink
+                style={{ cursor: "pointer" }}
+                data-cy="backLink"
+                onClick={() => history.goBack()}
+              >
+                Go back to list
+              </BackLink>
+            </Col>
+            <Col style={{ textAlign: "right" }} width="one-half">
               <Link
                 className="hide-from-print"
                 data-jest="linkHowToExport"
@@ -72,9 +78,9 @@ const View = ({ canEdit, history }: IView) => {
               >
                 How to export form as PDF
               </Link>
-            )}
-          </Col>
-        </Row>
+            </Col>
+          </Row>
+        )}
 
         {canEdit && (
           <WarningCallout label="Confirmation" data-jest="warningConfirmation">
@@ -93,7 +99,7 @@ const View = ({ canEdit, history }: IView) => {
             <h2 data-cy="sectionHeader1">Section 1: Doctor's details</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(0)}
+            {SectionEditButton(1)}
           </div>
         </div>
         <Panel label="Personal details" data-cy="personalDetails">
@@ -172,7 +178,7 @@ const View = ({ canEdit, history }: IView) => {
             <h2 data-cy="sectionHeader2">Section 2: Whole Scope of Practice</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(1)}
+            {SectionEditButton(2)}
           </div>
         </div>
         <Panel label="Type of work">
@@ -278,7 +284,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(2)}
+            {SectionEditButton(3)}
           </div>
         </div>
         <Panel label="Declarations">
@@ -340,7 +346,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(3)}
+            {SectionEditButton(4)}
           </div>
         </div>
         <Panel label="Previously declared events">
@@ -438,7 +444,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(4)}
+            {SectionEditButton(5)}
           </div>
         </div>
         <Panel label="New declared events">
@@ -532,7 +538,7 @@ const View = ({ canEdit, history }: IView) => {
             <h2 data-cy="sectionHeader5">Section 6: Compliments</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(5)}
+            {SectionEditButton(6)}
           </div>
         </div>
         <Panel label="Compliments">
@@ -559,7 +565,7 @@ const View = ({ canEdit, history }: IView) => {
                 <h2 data-cy="sectionHeader5">Covid declarations</h2>
               </div>
               <div className="nhsuk-grid-column-one-third">
-                {SectionEditButton(6)}
+                {SectionEditButton(7)}
               </div>
             </div>
             <Panel label="Section 1: Trainee self-assessment of progress">
@@ -714,34 +720,31 @@ const View = ({ canEdit, history }: IView) => {
           </>
         ) : null}
 
-        <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
-            <h2 data-cy="sectionHeader5">Section 7: Declaration</h2>
-          </div>
-          <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(7)}
-          </div>
-        </div>
-        <Panel label="Declaration">
-          <SummaryList>
-            <SummaryList.Row>
-              <SummaryList.Key>I confirm that</SummaryList.Key>
-              <SummaryList.Value data-jest="dec">
-                {FORMR_PARTB_ACCEPTANCE}
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Key>I confirm that</SummaryList.Key>
-              <SummaryList.Value data-jest="dec">
-                {FORMR_PARTB_CONSENT}
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-        </Panel>
+        {!canEdit && (
+          <>
+            <div className="nhsuk-grid-row page-break">
+              <div className="nhs-grid-column-full">
+                <h2 data-cy="sectionHeader5">Section 7: Declaration</h2>
+              </div>
+            </div>
+            <Panel label="Declaration">
+              <SummaryList>
+                <SummaryList.Row>
+                  <SummaryList.Key>I confirm that</SummaryList.Key>
+                  <SummaryList.Value data-jest="dec">
+                    {FORMR_PARTB_ACCEPTANCE}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>I confirm that</SummaryList.Key>
+                  <SummaryList.Value data-jest="dec">
+                    {FORMR_PARTB_CONSENT}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+              </SummaryList>
+            </Panel>
+          </>
+        )}
       </>
     )
   );

@@ -18,6 +18,7 @@ import {
   updateFormB
 } from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
+import Confirm from "./Confirm";
 
 interface ISection {
   component: any;
@@ -60,7 +61,6 @@ const Create = ({ history }: { history: string[] }) => {
   );
   const section = useAppSelector(state => state.formB.sectionNumber);
 
-  // conditional progress bar length for Covid section
   // TODO needs moving out of Create
   let finalSections: ISection[];
   if (isfeatFlagCovid) {
@@ -102,20 +102,20 @@ const Create = ({ history }: { history: string[] }) => {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
     dispatch(fetchForms("/formr-b"));
-    // TODO check history
     history.push("/formr-b");
   };
 
   const sectionCompProps = {
     prevSectionLabel: section > 1 ? finalSections[section - 2].title : "",
     nextSectionLabel:
-      section < finalSections.length ? finalSections[section].title : "",
-    saveDraft: saveDraft
+      section < finalSections.length ? finalSections[section].title : "submit",
+    saveDraft: saveDraft,
+    history: history
   };
 
   let content;
 
-  if (section) {
+  if (section < finalSections.length + 1) {
     content = (
       <main>
         <div className="form-wrapper">
@@ -135,7 +135,7 @@ const Create = ({ history }: { history: string[] }) => {
         </div>
       </main>
     );
-  } else content = <Loading />;
+  } else content = <Confirm {...sectionCompProps} />;
 
   return <div>{content}</div>;
 };

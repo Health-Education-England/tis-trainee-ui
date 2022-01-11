@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
   selectSavedFormB,
-  updateFormB
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 
 interface ISection3 {
@@ -40,7 +40,7 @@ const Section3 = ({
         initialValues={formData}
         validationSchema={Section3ValidationSchema}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

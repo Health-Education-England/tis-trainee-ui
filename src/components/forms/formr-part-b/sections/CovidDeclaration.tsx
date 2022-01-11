@@ -25,7 +25,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
   selectSavedFormB,
-  updateFormB
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
@@ -59,7 +59,7 @@ const CovidDeclaration = ({
         initialValues={formData}
         validationSchema={CovidSectionValidationSchema}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

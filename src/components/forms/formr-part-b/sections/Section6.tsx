@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
   selectSavedFormB,
-  updateFormB
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
 
@@ -15,12 +15,14 @@ interface ISection6 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  history: any;
 }
 
 const Section6 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  history
 }: ISection6) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
@@ -29,7 +31,7 @@ const Section6 = ({
       <Formik
         initialValues={formData}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

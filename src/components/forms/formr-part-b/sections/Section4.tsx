@@ -11,16 +11,15 @@ import {
 } from "nhsuk-react-components";
 import { Form, Formik, FieldArray } from "formik";
 import DeclarationPanel from "./DeclarationPanel";
-import { Declaration, FormRPartB } from "../../../../models/FormRPartB";
+import { FormRPartB } from "../../../../models/FormRPartB";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
   selectSavedFormB,
-  updateFormB
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 import { Section4ValidationSchema } from "../ValidationSchema";
-import { DeclarationPanelUtilities } from "../../../../utilities/DeclarationPanelUtilities";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { NEW_DECLARATION } from "../../../../utilities/Constants";
@@ -44,7 +43,7 @@ const Section4 = ({
         initialValues={formData}
         validationSchema={Section4ValidationSchema}
         onSubmit={values => {
-          // dispatch(updateFormB(values));
+          dispatch(updatedFormB(values));
           dispatch(incrementFormBSection());
         }}
       >

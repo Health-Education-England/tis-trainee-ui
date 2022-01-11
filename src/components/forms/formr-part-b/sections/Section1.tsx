@@ -9,7 +9,8 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   incrementFormBSection,
-  selectSavedFormB
+  selectSavedFormB,
+  updatedFormB
 } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import Autocomplete from "../../Autocomplete";
@@ -40,7 +41,7 @@ const Section1 = ({
       initialValues={formRBData}
       validationSchema={Section1ValidationSchema}
       onSubmit={values => {
-        // dispatch(updateFormB(values));
+        dispatch(updatedFormB(values));
         dispatch(incrementFormBSection());
       }}
     >
