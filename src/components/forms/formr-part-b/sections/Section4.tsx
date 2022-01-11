@@ -23,7 +23,7 @@ import { Section4ValidationSchema } from "../ValidationSchema";
 import { DeclarationPanelUtilities } from "../../../../utilities/DeclarationPanelUtilities";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
-
+import { NEW_DECLARATION } from "../../../../utilities/Constants";
 interface ISection4 {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -37,13 +37,6 @@ const Section4 = ({
 }: ISection4) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
-
-  const newDeclaration: Declaration = {
-    declarationType: undefined,
-    dateOfEntry: undefined,
-    title: "",
-    locationOfEntry: ""
-  };
 
   return (
     formData && (
@@ -101,14 +94,15 @@ const Section4 = ({
                   id="havePreviousDeclarations"
                   name="havePreviousDeclarations"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    // TODO dispatch to update declarations array
-                    // DeclarationPanelUtilities.changeDeclarationsArray(
-                    //   e.target.value,
-                    //   values.previousDeclarations,
-                    //   newDeclaration
-                    // );
-                    console.log("TODO update declarations array");
-
+                    if (BooleanUtilities.ToBoolean(e.target.value) === true) {
+                      setFieldValue(
+                        "previousDeclarations",
+                        [NEW_DECLARATION],
+                        false
+                      );
+                    } else {
+                      setFieldValue("previousDeclarations", [], false);
+                    }
                     setFieldValue("previousDeclarationSummary", null, false);
                   }}
                   type="radios"
@@ -147,7 +141,7 @@ const Section4 = ({
                             type="button"
                             secondary
                             data-jest="btnAddDeclaration"
-                            onClick={() => p.push(newDeclaration)}
+                            onClick={() => p.push(NEW_DECLARATION)}
                           >
                             Add more...
                           </Button>

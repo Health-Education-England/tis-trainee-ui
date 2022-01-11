@@ -12,7 +12,11 @@ import Loading from "../../common/Loading";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
-import { saveFormB, updateFormB } from "../../../redux/slices/formBSlice";
+import {
+  saveFormB,
+  updatedFormB,
+  updateFormB
+} from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 
 interface ISection {
@@ -81,16 +85,24 @@ const Create = ({ history }: { history: string[] }) => {
 
   const saveDraft = async (formData: FormRPartB) => {
     if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
-      formData.submissionDate = null;
-      formData.lifecycleState = LifeCycleState.Draft;
-    }
-    formData.lastModifiedDate = new Date();
+      dispatch(
+        updatedFormB({
+          ...formData,
+          submissionDate: null,
+          lifecycleState: LifeCycleState.Draft,
+          lastModifiedDate: new Date()
+        })
+      );
+    } else
+      dispatch(updatedFormB({ ...formData, lastModifiedDate: new Date() }));
+
     const updatedFormBData = store.getState().formB.formBData;
+
     if (formData.id) {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
     dispatch(fetchForms("/formr-b"));
-    // TO check history
+    // TODO check history
     history.push("/formr-b");
   };
 

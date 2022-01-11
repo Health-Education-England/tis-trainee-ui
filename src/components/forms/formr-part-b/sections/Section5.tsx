@@ -15,7 +15,10 @@ import { Declaration, FormRPartB } from "../../../../models/FormRPartB";
 import { Section5ValidationSchema } from "../ValidationSchema";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { DeclarationPanelUtilities } from "../../../../utilities/DeclarationPanelUtilities";
-import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
+import {
+  NEW_DECLARATION,
+  YES_NO_OPTIONS
+} from "../../../../utilities/Constants";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
@@ -121,13 +124,15 @@ const Section5 = ({
                   name="haveCurrentDeclarations"
                   type="radios"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    // TODO dispatch to update declarations array
-                    // DeclarationPanelUtilities.changeDeclarationsArray(
-                    //   e.target.value,
-                    //   values.currentDeclarations,
-                    //   newDeclaration
-                    // );
-                    console.log("TODO update declarations array");
+                    if (BooleanUtilities.ToBoolean(e.target.value) === true) {
+                      setFieldValue(
+                        "currentDeclarations",
+                        [NEW_DECLARATION],
+                        false
+                      );
+                    } else {
+                      setFieldValue("currentDeclarations", [], false);
+                    }
                     setFieldValue("currentDeclarationSummary", null, false);
                   }}
                   items={YES_NO_OPTIONS}

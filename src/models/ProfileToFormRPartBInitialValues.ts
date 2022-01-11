@@ -2,6 +2,7 @@ import { TraineeProfile } from "./TraineeProfile";
 import { FormRPartB, Work } from "./FormRPartB";
 import { MEDICAL_CURRICULUM } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
+import { NEW_WORK } from "../utilities/Constants";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
@@ -53,6 +54,12 @@ export function ProfileToFormRPartBInitialValues(
     siteLocation: placement.siteLocation,
     trainingPost: placement.placementType === "In Post" ? "Yes" : ""
   }));
+
+  if (work.length > 1) {
+    work.sort(
+      (a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+    );
+  } else if (work.length === 0) work.push(NEW_WORK);
 
   const model: FormRPartB = {
     forename: pd?.forenames,
