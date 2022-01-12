@@ -1,6 +1,6 @@
 import React from "react";
 import { Fieldset, Label } from "nhsuk-react-components";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Create from "./Create";
 import CreateList from "../CreateList";
 import View from "./View";
@@ -21,14 +21,12 @@ const FormRPartB: React.FC = () => {
           Self-declaration for the Revalidation of Doctors in Training
         </Label>
       </Fieldset>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/formr-b/create" component={Create} />
-          <Route path="/formr-b/howtoexport" component={HowToPrintToPDF} />
-          <Route path="/formr-b/:id" component={View} />
-          <Route path="/" component={CreateList} />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route path="/formr-b/create" component={Create} />
+        <Route path="/formr-b/howtoexport" component={HowToPrintToPDF} />
+        <Route path="/formr-b/:id" component={View} />
+        <Route path="/" component={CreateList} />
+      </Switch>
     </div>
   );
 };
