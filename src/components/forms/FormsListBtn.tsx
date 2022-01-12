@@ -7,7 +7,7 @@ import { loadSavedFormA } from "../../redux/slices/formASlice";
 import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
 import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
 import { useHistory } from "react-router-dom";
-import { updatedFormB } from "../../redux/slices/formBSlice";
+import { loadSavedFormB, updatedFormB } from "../../redux/slices/formBSlice";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
@@ -44,9 +44,11 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     }
   }
 
-  // TODO conditional
-  const loadTheSavedForm = (id: any) => {
-    dispatch(loadSavedFormA(id)).then(() => history.push(`${pathName}/create`));
+  const loadTheSavedForm = async (id: any) => {
+    if (pathName === "/form-a") {
+      await dispatch(loadSavedFormA(id));
+    } else await dispatch(loadSavedFormB(id));
+    history.push(`${pathName}/create`);
   };
 
   const loadNewForm = () => {
