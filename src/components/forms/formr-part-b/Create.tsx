@@ -21,6 +21,7 @@ import {
 } from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./Confirm";
+import { Redirect } from "react-router-dom";
 
 interface ISection {
   component: any;
@@ -64,6 +65,9 @@ const Create = ({ history }: { history: string[] }) => {
   const section: number = useAppSelector(state => state.formB.sectionNumber);
   const previousSection: number | null = useAppSelector(
     state => state.formB.previousSectionNumber
+  );
+  const tisId: string | undefined = useAppSelector(
+    state => state.formB.formBData.traineeTisId
   );
 
   // TODO needs moving out of Create
@@ -130,6 +134,10 @@ const Create = ({ history }: { history: string[] }) => {
   };
 
   let content;
+
+  if (!tisId) {
+    return <Redirect to="/formr-b" />;
+  }
 
   if (section < finalSections.length + 1) {
     content = (

@@ -42,7 +42,6 @@ export const initialFormState: FormRPartA = {
   wholeTimeEquivalent: undefined,
   declarationType: "",
   otherImmigrationStatus: "",
-  traineeTisId: "",
   lifecycleState: LifeCycleState.New,
   submissionDate: null,
   lastModifiedDate: null

@@ -32,6 +32,7 @@ import { selectAllReference } from "../../../redux/slices/referenceSlice";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
 import { fetchForms } from "../../../redux/slices/formsSlice";
+import { Redirect } from "react-router-dom";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -60,8 +61,10 @@ const Create = ({ history }: { history: string[] }) => {
     history.push("/formr-a");
   };
 
-  // TODO redirect to forms list if no data via direct url
-  // and sort better backlink
+  if (!formRAData.traineeTisId) {
+    return <Redirect to="/formr-a" />;
+  }
+  // TODO better backlink
   return (
     <>
       <BackLink href="/formr-a">Go back</BackLink>
