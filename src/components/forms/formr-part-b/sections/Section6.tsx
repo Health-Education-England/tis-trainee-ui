@@ -3,12 +3,8 @@ import ScrollTo from "../../ScrollTo";
 import { Fieldset, Panel } from "nhsuk-react-components";
 import { Form, Formik } from "formik";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
 
 interface ISection6 {
@@ -16,23 +12,25 @@ interface ISection6 {
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
   history: any;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section6 = ({
   prevSectionLabel,
   nextSectionLabel,
   saveDraft,
-  history
+  history,
+  previousSection,
+  handleSectionSubmit
 }: ISection6) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
   return (
     formData && (
       <Formik
         initialValues={formData}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, handleSubmit }) => (
@@ -76,6 +74,7 @@ const Section6 = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}

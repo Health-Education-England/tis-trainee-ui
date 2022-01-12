@@ -6,12 +6,8 @@ import {
   Panel,
   WarningCallout
 } from "nhsuk-react-components";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import Autocomplete from "../../Autocomplete";
 import ScrollTo from "../../ScrollTo";
@@ -25,14 +21,17 @@ interface ISection1 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section1 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ISection1) => {
-  const dispatch = useAppDispatch();
   const formRBData = useAppSelector(selectSavedFormB);
   const combinedReferenceData = useAppSelector(selectAllReference);
 
@@ -41,8 +40,7 @@ const Section1 = ({
       initialValues={formRBData}
       validationSchema={Section1ValidationSchema}
       onSubmit={values => {
-        dispatch(updatedFormB(values));
-        dispatch(incrementFormBSection());
+        handleSectionSubmit(values);
       }}
     >
       {({ values, errors, handleSubmit, setFieldValue }) => (
@@ -159,6 +157,7 @@ const Section1 = ({
             values={values}
             saveDraft={saveDraft}
             handleSubmit={handleSubmit}
+            previousSection={previousSection}
           />
         </Form>
       )}

@@ -15,26 +15,23 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import { Section2ValidationSchema } from "../ValidationSchema";
 import classes from "../FormRPartB.module.scss";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
 import { NEW_WORK } from "../../../../utilities/Constants";
-
 interface ISection2 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section2 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ISection2) => {
-  const dispatch = useAppDispatch();
   let formData = store.getState().formB.formBData;
 
   const getNumber = (value: number) => {
@@ -47,8 +44,7 @@ const Section2 = ({
         initialValues={formData}
         validationSchema={Section2ValidationSchema}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, errors, handleSubmit }) => (
@@ -177,6 +173,7 @@ const Section2 = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}

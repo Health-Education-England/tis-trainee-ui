@@ -13,25 +13,24 @@ import { Section3ValidationSchema } from "../ValidationSchema";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 
 interface ISection3 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section3 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ISection3) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
 
   return (
@@ -40,8 +39,7 @@ const Section3 = ({
         initialValues={formData}
         validationSchema={Section3ValidationSchema}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, errors, handleSubmit, setFieldValue }) => (
@@ -171,6 +169,7 @@ const Section3 = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}

@@ -4,8 +4,10 @@ import { FormRPartB } from "../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   decrementFormBSection,
-  updatedFormB
+  updatedFormB,
+  updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
+import SubmitButton from "../SubmitButton";
 import classes from "./FormRPartB.module.scss";
 
 interface IFormRPartBPagination {
@@ -14,20 +16,23 @@ interface IFormRPartBPagination {
   values: FormRPartB;
   saveDraft: (formData: FormRPartB) => Promise<void>;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  previousSection: number | null;
 }
 
 const FormRPartBPagination = ({
   prevSectionLabel,
   nextSectionLabel,
   handleSubmit,
-  values
+  values,
+  saveDraft,
+  previousSection
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
 
   const paginationClasses = [
     classes.heePagination,
-    section === 0 ? classes.twoCol : null
+    section === 1 ? classes.twoCol : null
   ]
     .filter(c => c)
     .join(" ");
@@ -49,10 +54,37 @@ const FormRPartBPagination = ({
           ))}
         </Pagination.Link>
       )}
+      <Pagination.Link>
+        <SubmitButton
+          clickHandler={() => saveDraft(values)}
+          type="button"
+          data-cy="BtnSaveDraft"
+          label="Save & Exit"
+        />
+      </Pagination.Link>
+      {!nextSectionLabel && (
+        <SubmitButton
+          clickHandler={() => handleSubmit()}
+          type="button"
+          data-cy="BtnSubmitForm"
+          label="Submit Form"
+        />
+      )}
+      {previousSection && (
+        <SubmitButton
+          clickHandler={() => handleSubmit()}
+          type="button"
+          data-cy="BtnBackToSubmit"
+          label="Back to Submit Page"
+        />
+      )}
       {nextSectionLabel && (
         <Pagination.Link
           next
-          onClick={() => handleSubmit()}
+          onClick={() => {
+            dispatch(updateFormBPreviousSection(null));
+            handleSubmit();
+          }}
           data-cy="LinkToNextSection"
           data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
         >

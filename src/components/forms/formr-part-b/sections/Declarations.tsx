@@ -16,8 +16,8 @@ import {
 } from "../../../../redux/slices/formBSlice";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import store from "../../../../redux/store/store";
 import { fetchForms } from "../../../../redux/slices/formsSlice";
+import store from "../../../../redux/store/store";
 
 interface IDeclarations {
   prevSectionLabel: string;
@@ -108,6 +108,7 @@ const Declarations = ({
               saveDraft={saveDraft}
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel=""
+              previousSection={null}
             />
           </Form>
         )}

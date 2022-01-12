@@ -13,9 +13,11 @@ import { FormRPartB } from "../../../models/FormRPartB";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
 import {
+  incrementFormBSection,
   saveFormB,
   updatedFormB,
-  updateFormB
+  updateFormB,
+  updateFormBSection
 } from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./Confirm";
@@ -42,11 +44,11 @@ const sections: ISection[] = [
   },
   {
     component: Section4,
-    title: "Section 4:\nUpdate to your previous Form R Part B"
+    title: "Section 4:\nUpdate to your last Form R"
   },
   {
     component: Section5,
-    title: "Section 5:\nDeclarations since your previous Form R Part B"
+    title: "Section 5:\nNew Declarations\nsince your last Form R"
   },
   {
     component: Section6,
@@ -56,10 +58,13 @@ const sections: ISection[] = [
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
-  const isfeatFlagCovid = useAppSelector(state =>
+  const isfeatFlagCovid: boolean = useAppSelector(state =>
     state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
   );
-  const section = useAppSelector(state => state.formB.sectionNumber);
+  const section: number = useAppSelector(state => state.formB.sectionNumber);
+  const previousSection: number | null = useAppSelector(
+    state => state.formB.previousSectionNumber
+  );
 
   // TODO needs moving out of Create
   let finalSections: ISection[];
@@ -105,12 +110,23 @@ const Create = ({ history }: { history: string[] }) => {
     history.push("/formr-b");
   };
 
+  const handleSectionSubmit = (formValues: FormRPartB) => {
+    dispatch(updatedFormB(formValues));
+    if (previousSection) {
+      dispatch(updateFormBSection(previousSection));
+    } else dispatch(incrementFormBSection());
+  };
+
   const sectionCompProps = {
     prevSectionLabel: section > 1 ? finalSections[section - 2].title : "",
     nextSectionLabel:
-      section < finalSections.length ? finalSections[section].title : "submit",
-    saveDraft: saveDraft,
-    history: history
+      section < finalSections.length
+        ? finalSections[section].title
+        : "Review & Submit",
+    saveDraft,
+    history: history,
+    previousSection: previousSection,
+    handleSectionSubmit
   };
 
   let content;

@@ -5,7 +5,6 @@ import View from "./View";
 
 interface IConfirm {
   prevSectionLabel: string;
-  nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
   history: any;
 }

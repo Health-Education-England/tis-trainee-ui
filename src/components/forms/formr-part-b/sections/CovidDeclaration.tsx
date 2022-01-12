@@ -21,12 +21,8 @@ import { CovidSectionValidationSchema } from "../ValidationSchema";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import TextInputField from "../../TextInputField";
 import { KeyValue } from "../../../../models/KeyValue";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
 
@@ -34,14 +30,17 @@ interface ICovidDeclaration {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const CovidDeclaration = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ICovidDeclaration) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
   const combinedReferenceData = useAppSelector(selectAllReference);
   const changeCircumstances = combinedReferenceData[8].map(
@@ -59,8 +58,7 @@ const CovidDeclaration = ({
         initialValues={formData}
         validationSchema={CovidSectionValidationSchema}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, errors, handleSubmit, setFieldValue }) => (
@@ -374,6 +372,7 @@ const CovidDeclaration = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}

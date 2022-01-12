@@ -6,12 +6,8 @@ const ErrorPage = (errors: any) => {
         keeps happening, please contact your local office.
       </p>
       <br />
-      <p>"The error message is: </p>
-      <div>
-        {errors.map((error: any, index: number) => {
-          return <p key={index}>{error}</p>;
-        })}
-      </div>
+      <p>Error message(s): </p>
+      <div>{JSON.stringify(errors, null, 2)}</div>
     </>
   );
 };

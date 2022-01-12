@@ -8,8 +8,12 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import { selectSavedFormB } from "../../../redux/slices/formBSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import {
+  selectSavedFormB,
+  updateFormBSection
+} from "../../../redux/slices/formBSlice";
+import store from "../../../redux/store/store";
 import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
 import {
   FORMR_PARTB_ACCEPTANCE,
@@ -20,6 +24,7 @@ import {
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
+import { updateFormBPreviousSection } from "../../../redux/slices/formBSlice";
 
 interface IView {
   canEdit: boolean;
@@ -27,24 +32,24 @@ interface IView {
 }
 
 const View = ({ canEdit, history }: IView) => {
+  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
   const enableCovidDeclaration = useAppSelector(state =>
     state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
   );
+  const viewCompSection: number = store.getState().formB.sectionNumber;
 
-  // TODO
-  // section edit btn
   const SectionEditButton = (section: number) => {
     return (
       canEdit && (
         <Button
           type="button"
           className={classes.sectionEditButton}
-          onClick={() =>
-            console.log(
-              "TODO dispatch set section number, isReturnBtn to true, clear declarations"
-            )
-          }
+          onClick={() => {
+            dispatch(updateFormBPreviousSection(viewCompSection));
+            dispatch(updateFormBSection(section));
+            //TODO clear declarations onClick so re-declare after edit
+          }}
           data-cy={`BtnEditSection${section + 1}`}
         >
           Edit
@@ -724,10 +729,10 @@ const View = ({ canEdit, history }: IView) => {
           <>
             <div className="nhsuk-grid-row page-break">
               <div className="nhs-grid-column-full">
-                <h2 data-cy="sectionHeader5">Section 7: Declaration</h2>
+                <h2 data-cy="sectionHeader5">Declarations</h2>
               </div>
             </div>
-            <Panel label="Declaration">
+            <Panel label="Declarations">
               <SummaryList>
                 <SummaryList.Row>
                   <SummaryList.Key>I confirm that</SummaryList.Key>

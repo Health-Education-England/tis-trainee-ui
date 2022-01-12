@@ -19,25 +19,24 @@ import {
   YES_NO_OPTIONS
 } from "../../../../utilities/Constants";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 
 interface ISection5 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section5 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ISection5) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
 
   const newDeclaration: Declaration = {
@@ -53,8 +52,7 @@ const Section5 = ({
         initialValues={formData}
         validationSchema={Section5ValidationSchema}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, errors, handleSubmit, setFieldValue }) => (
@@ -220,6 +218,7 @@ const Section5 = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}

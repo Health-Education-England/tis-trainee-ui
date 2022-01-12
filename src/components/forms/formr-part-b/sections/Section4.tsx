@@ -13,12 +13,8 @@ import { Form, Formik, FieldArray } from "formik";
 import DeclarationPanel from "./DeclarationPanel";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  incrementFormBSection,
-  selectSavedFormB,
-  updatedFormB
-} from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { Section4ValidationSchema } from "../ValidationSchema";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
@@ -27,14 +23,17 @@ interface ISection4 {
   prevSectionLabel: string;
   nextSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
+  previousSection: number | null;
+  handleSectionSubmit: (formData: FormRPartB) => void;
 }
 
 const Section4 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft
+  saveDraft,
+  previousSection,
+  handleSectionSubmit
 }: ISection4) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
 
   return (
@@ -43,8 +42,7 @@ const Section4 = ({
         initialValues={formData}
         validationSchema={Section4ValidationSchema}
         onSubmit={values => {
-          dispatch(updatedFormB(values));
-          dispatch(incrementFormBSection());
+          handleSectionSubmit(values);
         }}
       >
         {({ values, errors, handleSubmit, setFieldValue }) => (
@@ -192,6 +190,7 @@ const Section4 = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel={nextSectionLabel}
               handleSubmit={handleSubmit}
+              previousSection={previousSection}
             />
           </Form>
         )}
