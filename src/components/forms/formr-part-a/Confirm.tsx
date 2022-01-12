@@ -13,6 +13,7 @@ import { FormRPartA } from "../../../models/FormRPartA";
 import store from "../../../redux/store/store";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import { fetchForms } from "../../../redux/slices/formsSlice";
+import { Redirect } from "react-router-dom";
 
 interface IConfirm {
   history: any;
@@ -59,6 +60,10 @@ const Confirm = ({ history }: IConfirm) => {
     dispatch(fetchForms("/formr-a"));
     history.push("/formr-a");
   };
+
+  if (!formData.traineeTisId) {
+    return <Redirect to="/formr-a" />;
+  }
 
   return (
     <div>
