@@ -68,7 +68,7 @@ export function ProfileToFormRPartAInitialValues(
     wholeTimeEquivalent: undefined,
     declarationType: "",
     otherImmigrationStatus: "",
-    traineeTisId: traineeProfileData?.traineeTisId,
+    traineeTisId: traineeProfileData.traineeTisId,
     lifecycleState: LifeCycleState.New,
     submissionDate: null,
     lastModifiedDate: null

@@ -45,7 +45,7 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
   }
 
   const loadTheSavedForm = async (id: any) => {
-    if (pathName === "/form-a") {
+    if (pathName === "/formr-a") {
       await dispatch(loadSavedFormA(id));
     } else await dispatch(loadSavedFormB(id));
     history.push(`${pathName}/create`);

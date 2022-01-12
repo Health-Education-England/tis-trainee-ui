@@ -48,7 +48,6 @@ const View = ({ canEdit, history }: IView) => {
           onClick={() => {
             dispatch(updateFormBPreviousSection(viewCompSection));
             dispatch(updateFormBSection(section));
-            //TODO clear declarations onClick so re-declare after edit
           }}
           data-cy={`BtnEditSection${section + 1}`}
         >
