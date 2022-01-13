@@ -75,7 +75,8 @@ const Create = ({ history }: { history: string[] }) => {
   if (isfeatFlagCovid) {
     finalSections = [
       ...sections.slice(0, 6),
-      { component: CovidDeclaration, title: "Covid declaration" }
+      { component: CovidDeclaration, title: "Covid declaration" },
+      ...sections.slice(6)
     ];
   } else finalSections = sections;
   const makeProgressBar = () => {

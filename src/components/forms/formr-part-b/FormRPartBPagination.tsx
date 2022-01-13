@@ -59,6 +59,7 @@ const FormRPartBPagination = ({
       )}
       <Pagination.Link>
         <Button
+          secondary
           onClick={() => saveDraft(values)}
           disabled={isSubmitting}
           data-cy="BtnSaveDraft"
