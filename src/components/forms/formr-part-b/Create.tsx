@@ -20,7 +20,7 @@ import {
   updateFormBSection
 } from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
-import Confirm from "./Confirm";
+import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
 
 interface ISection {
@@ -74,9 +74,8 @@ const Create = ({ history }: { history: string[] }) => {
   let finalSections: ISection[];
   if (isfeatFlagCovid) {
     finalSections = [
-      ...sections.slice(0, 5),
-      { component: CovidDeclaration, title: "Covid declaration" },
-      ...sections.slice(5)
+      ...sections.slice(0, 6),
+      { component: CovidDeclaration, title: "Covid declaration" }
     ];
   } else finalSections = sections;
   const makeProgressBar = () => {

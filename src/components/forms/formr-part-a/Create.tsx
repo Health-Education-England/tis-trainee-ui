@@ -11,7 +11,6 @@ import { KeyValue } from "../../../models/KeyValue";
 import Autocomplete from "../Autocomplete";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import SelectInputField from "../SelectInputField";
-import SubmitButton from "../SubmitButton";
 import TextInputField from "../TextInputField";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hooks";
 import {
@@ -73,7 +72,7 @@ const Create = ({ history }: { history: string[] }) => {
         validationSchema={ValidationSchema}
         onSubmit={values => handleSubmit(values)}
       >
-        {({ values, errors, setFieldValue }) => (
+        {({ values, errors, setFieldValue, isSubmitting }) => (
           <Form>
             <WarningCallout label="Important">
               <p>
@@ -271,11 +270,13 @@ const Create = ({ history }: { history: string[] }) => {
               <div className="nhsuk-grid-column-two-thirds">
                 <div className="nhsuk-grid-row">
                   <div className="nhsuk-grid-column-one-third">
-                    <SubmitButton
-                      label="Save & Exit"
-                      clickHandler={() => saveDraft(values)}
+                    <Button
+                      onClick={() => saveDraft(values)}
+                      disabled={isSubmitting}
                       data-cy="BtnSaveDraft"
-                    />
+                    >
+                      Save & Exit
+                    </Button>
                   </div>
                   <div className="nhsuk-grid-column-two-thirds">
                     <Button type="submit" data-cy="BtnContinue">

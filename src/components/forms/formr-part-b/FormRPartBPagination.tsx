@@ -1,4 +1,4 @@
-import { Pagination } from "nhsuk-react-components";
+import { Button, Pagination } from "nhsuk-react-components";
 import React from "react";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
@@ -7,7 +7,6 @@ import {
   updatedFormB,
   updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
-import SubmitButton from "../SubmitButton";
 import classes from "./FormRPartB.module.scss";
 
 interface IFormRPartBPagination {
@@ -17,6 +16,8 @@ interface IFormRPartBPagination {
   saveDraft: (formData: FormRPartB) => Promise<void>;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   previousSection: number | null;
+  isValid?: boolean;
+  isSubmitting?: boolean;
 }
 
 const FormRPartBPagination = ({
@@ -25,7 +26,9 @@ const FormRPartBPagination = ({
   handleSubmit,
   values,
   saveDraft,
-  previousSection
+  previousSection,
+  isValid,
+  isSubmitting
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
@@ -55,28 +58,31 @@ const FormRPartBPagination = ({
         </Pagination.Link>
       )}
       <Pagination.Link>
-        <SubmitButton
-          clickHandler={() => saveDraft(values)}
-          type="button"
+        <Button
+          onClick={() => saveDraft(values)}
+          disabled={isSubmitting}
           data-cy="BtnSaveDraft"
-          label="Save & Exit"
-        />
+        >
+          Save & Exit
+        </Button>
       </Pagination.Link>
       {!nextSectionLabel && (
-        <SubmitButton
-          clickHandler={() => handleSubmit()}
-          type="button"
+        <Button
+          onClick={() => handleSubmit()}
+          disabled={!isValid && isSubmitting}
           data-cy="BtnSubmitForm"
-          label="Submit Form"
-        />
+        >
+          Submit Form
+        </Button>
       )}
       {previousSection && (
-        <SubmitButton
-          clickHandler={() => handleSubmit()}
-          type="button"
+        <Button
+          onClick={() => handleSubmit()}
+          disabled={!isValid && isSubmitting}
           data-cy="BtnBackToSubmit"
-          label="Back to Submit Page"
-        />
+        >
+          Back to Submit Page
+        </Button>
       )}
       {nextSectionLabel && (
         <Pagination.Link

@@ -1,7 +1,7 @@
-import { FormRPartB } from "../../../models/FormRPartB";
-import ScrollTo from "../ScrollTo";
-import Declarations from "./sections/Declarations";
-import View from "./View";
+import { FormRPartB } from "../../../../models/FormRPartB";
+import ScrollTo from "../../ScrollTo";
+import Declarations from "./Declarations";
+import View from "../View";
 
 interface IConfirm {
   prevSectionLabel: string;

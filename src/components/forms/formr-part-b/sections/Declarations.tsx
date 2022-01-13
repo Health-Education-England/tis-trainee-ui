@@ -58,7 +58,7 @@ const Declarations = ({
           handleFormBSubmit(values);
         }}
       >
-        {({ values, handleSubmit }) => (
+        {({ values, handleSubmit, isValid, isSubmitting }) => (
           <Form>
             <Fieldset
               disableErrorLine={true}
@@ -109,6 +109,8 @@ const Declarations = ({
               prevSectionLabel={prevSectionLabel}
               nextSectionLabel=""
               previousSection={null}
+              isValid={isValid}
+              isSubmitting={isSubmitting}
             />
           </Form>
         )}

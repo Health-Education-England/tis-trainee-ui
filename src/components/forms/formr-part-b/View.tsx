@@ -346,7 +346,7 @@ const View = ({ canEdit, history }: IView) => {
             }
           >
             <h2 data-cy="sectionHeader4">
-              Section 4: Update to previous Form R Part B
+              Section 4: Update to your previous Form R Part B
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
