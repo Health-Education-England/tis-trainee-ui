@@ -16,6 +16,13 @@ const AuthFormFields = () => {
         value="yes"
         label="I agree with the Privacy & Cookies Policy"
       />
+      <CheckboxField
+        errorMessage={validationErrors.yesToPilot}
+        hasError={!!validationErrors.yesToPilot}
+        name="yesToPilot"
+        value="yes"
+        label="I have been invited to partake in Trainee Self-Service pilot"
+      />
     </>
   );
 };

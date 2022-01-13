@@ -58,12 +58,23 @@ const components = {
 };
 
 const services = {
-  async validateCustomSignUp(formData: { yesToPrivacy: string }) {
+  async validateCustomSignUp(formData: {
+    yesToPrivacy: string;
+    yesToPilot: string;
+  }) {
+    const validationMessage: {
+      yesToPrivacy?: string;
+      yesToPilot?: string;
+    } = {};
     if (!formData.yesToPrivacy) {
-      return {
-        yesToPrivacy: YES_TO_PRIVACY
-      };
+      validationMessage.yesToPrivacy = YES_TO_PRIVACY;
     }
+    if (!formData.yesToPilot) {
+      validationMessage.yesToPilot =
+        "Only trainees that have been invited to partake in this pilot should sign up.";
+    }
+    console.log("RETURN", validationMessage);
+    return validationMessage;
   }
 };
 
