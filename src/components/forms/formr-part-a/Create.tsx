@@ -25,7 +25,8 @@ import { FormRPartA } from "../../../models/FormRPartA";
 import {
   CCT_DECLARATION,
   FORMR_PARTA_DECLARATIONS,
-  IMMIGRATION_STATUS_OTHER_TISIDS
+  IMMIGRATION_STATUS_OTHER_TISIDS,
+  MEDICAL_CURRICULUM
 } from "../../../utilities/Constants";
 import { selectAllReference } from "../../../redux/slices/referenceSlice";
 import { LifeCycleState } from "../../../models/LifeCycleState";
@@ -199,7 +200,7 @@ const Create = ({ history }: { history: string[] }) => {
                 id="programmeSpecialty"
                 options={combinedReferenceData[6].filter(
                   (c: { curriculumSubType: string }) =>
-                    c.curriculumSubType === "MEDICAL_CURRICULUM"
+                    c.curriculumSubType === MEDICAL_CURRICULUM
                 )}
                 dataCy="programmeSpecialty"
                 width="75%"
