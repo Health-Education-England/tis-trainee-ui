@@ -96,8 +96,8 @@ const Section1 = ({
               <SelectInputField
                 label="Previous Designated Body for Revalidation (if applicable)"
                 options={[
-                  [...combinedReferenceData[3]].filter(
-                    (db: { internal: boolean }) => db.internal === true
+                  ...combinedReferenceData[2].filter(
+                    (db: { internal: boolean }) => db.internal
                   ),
                   { label: "other", value: "other" }
                 ]}
@@ -112,8 +112,8 @@ const Section1 = ({
                   label="Please Specify 'Other'"
                   name="prevRevalBodyOther"
                   id="prevRevalBodyOther"
-                  options={[...combinedReferenceData[3]].filter(
-                    (db: { internal: boolean }) => db.internal === false
+                  options={[...combinedReferenceData[2]].filter(
+                    (db: { internal: boolean }) => !db.internal
                   )}
                   dataCy="prevRevalBodyOther"
                   width="75%"

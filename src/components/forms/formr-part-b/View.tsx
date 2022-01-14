@@ -550,7 +550,9 @@ const View = ({ canEdit, history }: IView) => {
             <SummaryList.Row>
               <SummaryList.Key>Compliments</SummaryList.Key>
               <SummaryList.Value data-jest="compliments">
-                {formData.compliments}
+                {BooleanUtilities.ToBoolean(formData.compliments)
+                  ? formData.compliments
+                  : "None recorded"}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
