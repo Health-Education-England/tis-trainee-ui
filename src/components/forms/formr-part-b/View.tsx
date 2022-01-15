@@ -49,7 +49,7 @@ const View = ({ canEdit, history }: IView) => {
             dispatch(updateFormBPreviousSection(viewCompSection));
             dispatch(updateFormBSection(section));
           }}
-          data-cy={`BtnEditSection${section + 1}`}
+          data-cy={`BtnEditSection${section}`}
         >
           Edit
         </Button>
@@ -539,7 +539,7 @@ const View = ({ canEdit, history }: IView) => {
               canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
             }
           >
-            <h2 data-cy="sectionHeader5">Section 6: Compliments</h2>
+            <h2 data-cy="sectionHeader6">Section 6: Compliments</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
             {SectionEditButton(6)}
@@ -568,7 +568,7 @@ const View = ({ canEdit, history }: IView) => {
                     : "nhs-grid-column-full"
                 }
               >
-                <h2 data-cy="sectionHeader5">Covid declarations</h2>
+                <h2 data-cy="sectionHeader7">Covid declarations</h2>
               </div>
               <div className="nhsuk-grid-column-one-third">
                 {SectionEditButton(7)}
