@@ -7,6 +7,7 @@ import {
   updatedFormB,
   updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
+import { ISection } from "./Create";
 import classes from "./FormRPartB.module.scss";
 
 interface IFormRPartBPagination {
@@ -18,6 +19,7 @@ interface IFormRPartBPagination {
   previousSection: number | null;
   isValid?: boolean;
   isSubmitting?: boolean;
+  finalSections?: ISection[];
 }
 
 const FormRPartBPagination = ({
@@ -28,7 +30,8 @@ const FormRPartBPagination = ({
   saveDraft,
   previousSection,
   isValid,
-  isSubmitting
+  isSubmitting,
+  finalSections
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
@@ -46,7 +49,9 @@ const FormRPartBPagination = ({
         <Pagination.Link
           previous
           onClick={() => {
-            dispatch(updatedFormB(values));
+            if (!finalSections?.length) {
+              dispatch(updatedFormB(values));
+            }
             dispatch(decrementFormBSection());
           }}
           data-cy="LinkToPreviousSection"

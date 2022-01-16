@@ -14,6 +14,7 @@ import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
 import {
   incrementFormBSection,
+  resetToInitFormB,
   saveFormB,
   updatedFormB,
   updateFormB,
@@ -23,7 +24,7 @@ import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
 
-interface ISection {
+export interface ISection {
   component: any;
   title: string;
 }
@@ -110,6 +111,7 @@ const Create = ({ history }: { history: string[] }) => {
     if (formData.id) {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
+    dispatch(resetToInitFormB());
     dispatch(fetchForms("/formr-b"));
     history.push("/formr-b");
   };
@@ -130,7 +132,8 @@ const Create = ({ history }: { history: string[] }) => {
     saveDraft,
     history: history,
     previousSection: previousSection,
-    handleSectionSubmit
+    handleSectionSubmit,
+    finalSections
   };
 
   let content;
