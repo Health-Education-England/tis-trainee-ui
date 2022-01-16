@@ -73,27 +73,31 @@ const FormRPartBPagination = ({
           Save & Exit
         </Button>
       </Pagination.Link>
-      {!nextSectionLabel && (
-        <Button
-          onClick={() => {
-            dispatch(updatesaveBtnActive());
-            handleSubmit();
-          }}
-          disabled={!isValid && isSubmitting}
-          data-cy="BtnSubmitForm"
-        >
-          Submit Form
-        </Button>
-      )}
-      {previousSection && (
-        <Button
-          onClick={() => handleSubmit()}
-          disabled={!isValid && isSubmitting}
-          data-cy="BtnBackToSubmit"
-        >
-          Back to Submit Page
-        </Button>
-      )}
+      <Pagination.Link>
+        {!nextSectionLabel && (
+          <Button
+            onClick={() => {
+              dispatch(updatesaveBtnActive());
+              handleSubmit();
+            }}
+            disabled={!isValid && isSubmitting}
+            data-cy="BtnSubmitForm"
+          >
+            Submit Form
+          </Button>
+        )}
+      </Pagination.Link>
+      <Pagination.Link>
+        {previousSection && (
+          <Button
+            onClick={() => handleSubmit()}
+            disabled={!isValid && isSubmitting}
+            data-cy="BtnBackToSubmit"
+          >
+            Back to Submit Page
+          </Button>
+        )}
+      </Pagination.Link>
       {nextSectionLabel && (
         <Pagination.Link
           next
