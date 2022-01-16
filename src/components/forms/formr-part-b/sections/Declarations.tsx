@@ -10,6 +10,7 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   resetToInitFormB,
+  selectSaveBtnActive,
   selectSavedFormB,
   updatedFormB,
   updateFormB
@@ -35,21 +36,24 @@ const Declarations = ({
 }: IDeclarations) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
+  const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
   const handleFormBSubmit = async (formData: FormRPartB) => {
-    dispatch(
-      updatedFormB({
-        ...formData,
-        submissionDate: new Date(),
-        lifecycleState: LifeCycleState.Submitted,
-        lastModifiedDate: new Date()
-      })
-    );
-    const updatedFormBData = store.getState().formB.formBData;
-    await dispatch(updateFormB(updatedFormBData));
-    dispatch(resetToInitFormB());
-    dispatch(fetchForms("/formr-b"));
-    history.push("/formr-b");
+    if (!saveBtnActive) {
+      dispatch(
+        updatedFormB({
+          ...formData,
+          submissionDate: new Date(),
+          lifecycleState: LifeCycleState.Submitted,
+          lastModifiedDate: new Date()
+        })
+      );
+      const updatedFormBData = store.getState().formB.formBData;
+      await dispatch(updateFormB(updatedFormBData));
+      dispatch(resetToInitFormB());
+      dispatch(fetchForms("/formr-b"));
+      history.push("/formr-b");
+    }
   };
 
   return (

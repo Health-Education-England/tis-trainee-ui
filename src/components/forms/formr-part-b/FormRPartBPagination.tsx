@@ -5,7 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   decrementFormBSection,
   updatedFormB,
-  updateFormBPreviousSection
+  updateFormBPreviousSection,
+  updatesaveBtnActive
 } from "../../../redux/slices/formBSlice";
 import { ISection } from "./Create";
 import classes from "./FormRPartB.module.scss";
@@ -74,7 +75,10 @@ const FormRPartBPagination = ({
       </Pagination.Link>
       {!nextSectionLabel && (
         <Button
-          onClick={() => handleSubmit()}
+          onClick={() => {
+            dispatch(updatesaveBtnActive());
+            handleSubmit();
+          }}
           disabled={!isValid && isSubmitting}
           data-cy="BtnSubmitForm"
         >
