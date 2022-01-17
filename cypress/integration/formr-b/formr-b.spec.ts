@@ -164,14 +164,12 @@ describe("Form R (Part B)", () => {
       .should("include.text", "Confirmation");
 
     // check if Covid section exists or not depending on flag
-    const covidHeader = cy.get("[data-cy=sectionHeader7]");
-    const covidEditBtn = cy.get("[data-cy=BtnEditSection7]");
     if (isCovid) {
-      covidHeader.should("exist");
-      covidEditBtn.should("exist");
+      cy.get("[data-cy=sectionHeader7]").should("exist");
+      cy.get("[data-cy=BtnEditSection7]").should("exist");
     } else {
-      covidHeader.should("not.exist");
-      covidEditBtn.should("not.exist");
+      cy.get("[data-cy=sectionHeader7]").should("not.exist");
+      cy.get("[data-cy=BtnEditSection7]").should("not.exist");
     }
 
     // Attempt to submit without checking boxes should fail
