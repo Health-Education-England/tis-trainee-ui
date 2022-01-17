@@ -66,7 +66,10 @@ const FormRPartBPagination = ({
       <Pagination.Link>
         <Button
           secondary
-          onClick={() => saveDraft(values)}
+          onClick={() => {
+            dispatch(updatesaveBtnActive());
+            saveDraft(values);
+          }}
           disabled={isSubmitting}
           data-cy="BtnSaveDraft"
         >
@@ -77,7 +80,6 @@ const FormRPartBPagination = ({
         {!nextSectionLabel && (
           <Button
             onClick={() => {
-              dispatch(updatesaveBtnActive());
               handleSubmit();
             }}
             disabled={!isValid && isSubmitting}
@@ -90,7 +92,9 @@ const FormRPartBPagination = ({
       <Pagination.Link>
         {previousSection && (
           <Button
-            onClick={() => handleSubmit()}
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={!isValid && isSubmitting}
             data-cy="BtnBackToSubmit"
           >

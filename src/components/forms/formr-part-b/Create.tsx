@@ -16,9 +16,11 @@ import {
   incrementFormBSection,
   resetToInitFormB,
   saveFormB,
+  selectSaveBtnActive,
   updatedFormB,
   updateFormB,
-  updateFormBSection
+  updateFormBSection,
+  updatesaveBtnActive
 } from "../../../redux/slices/formBSlice";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./sections/Confirm";
@@ -70,6 +72,7 @@ const Create = ({ history }: { history: string[] }) => {
   const tisId: string | undefined = useAppSelector(
     state => state.formB.formBData.traineeTisId
   );
+  const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
   // TODO needs moving out of Create
   let finalSections: ISection[];
@@ -117,10 +120,14 @@ const Create = ({ history }: { history: string[] }) => {
   };
 
   const handleSectionSubmit = (formValues: FormRPartB) => {
-    dispatch(updatedFormB(formValues));
-    if (previousSection) {
-      dispatch(updateFormBSection(previousSection));
-    } else dispatch(incrementFormBSection());
+    if (!saveBtnActive) {
+      dispatch(updatedFormB(formValues));
+      if (previousSection) {
+        dispatch(updateFormBSection(previousSection));
+      } else {
+        dispatch(incrementFormBSection());
+      }
+    }
   };
 
   const sectionCompProps = {

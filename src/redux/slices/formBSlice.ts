@@ -61,7 +61,7 @@ export const initialState: IFormB = {
   previousSectionNumber: null,
   status: "idle",
   error: "",
-  saveBtnActive: true
+  saveBtnActive: false
 };
 
 export const loadSavedFormB = createAsyncThunk(
