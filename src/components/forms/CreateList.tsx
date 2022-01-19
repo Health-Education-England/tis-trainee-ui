@@ -27,7 +27,6 @@ const CreateList = () => {
 
   let content;
 
-  // TODO sort status / data-fetch
   useEffect(() => {
     dispatch(fetchForms(pathname));
   }, [dispatch, pathname]);

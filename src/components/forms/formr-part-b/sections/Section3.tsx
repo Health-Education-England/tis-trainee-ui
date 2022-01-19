@@ -15,6 +15,7 @@ import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
+import ErrorPage from "../../../common/ErrorPage";
 
 interface ISection3 {
   prevSectionLabel: string;
@@ -32,9 +33,11 @@ const Section3 = ({
   handleSectionSubmit
 }: ISection3) => {
   const formData = useAppSelector(selectSavedFormB);
-
-  return (
-    formData && (
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else
+    content = (
       <Formik
         initialValues={formData}
         validationSchema={Section3ValidationSchema}
@@ -174,8 +177,9 @@ const Section3 = ({
           </Form>
         )}
       </Formik>
-    )
-  );
+    );
+
+  return <div>{content}</div>;
 };
 
 export default Section3;

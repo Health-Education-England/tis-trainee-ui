@@ -13,18 +13,20 @@ import ScrollTo from "../ScrollTo";
 
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
+import ErrorPage from "../../common/ErrorPage";
 
 interface IView {
   canEdit: boolean;
   history: any;
 }
 
-const View = ({ canEdit, history }: IView) => {
+const View = ({ canEdit }: IView) => {
   const formData = useAppSelector(selectSavedFormA);
-
-  // TODO go to formr-a if no data via direct url
-  return (
-    formData && (
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else {
+    content = (
       <>
         <ScrollTo />
 
@@ -36,7 +38,7 @@ const View = ({ canEdit, history }: IView) => {
             {!canEdit && (
               <Link
                 className="hide-from-print"
-                data-jest="linkHowToExport"
+                data-cy="linkHowToExport"
                 to={{
                   pathname: "/formr-a/howtoexport"
                 }}
@@ -47,7 +49,7 @@ const View = ({ canEdit, history }: IView) => {
           </Col>
         </Row>
         {canEdit === true && (
-          <WarningCallout label="Confirmation" data-jest="warningConfirmation">
+          <WarningCallout label="Confirmation" data-cy="warningConfirmation">
             <p>
               Check the information entered below is correct and click Submit at
               the bottom of the page.
@@ -214,8 +216,9 @@ const View = ({ canEdit, history }: IView) => {
           </SummaryList>
         </Panel>
       </>
-    )
-  );
+    );
+  }
+  return <div>{content}</div>;
 };
 
 export default View;

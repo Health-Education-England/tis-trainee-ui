@@ -81,7 +81,9 @@ const Confirm = ({ history }: IConfirm) => {
         <div className="nhsuk-grid-column-two-thirds">
           <div className="nhsuk-grid-row">
             <div className="nhsuk-grid-column-one-quarter">
-              <Button onClick={() => handleEdit()}>Edit</Button>
+              <Button data-cy="BtnEdit" onClick={() => handleEdit()}>
+                Edit
+              </Button>
             </div>
             <div className="nhsuk-grid-column-one-third">
               <SubmitButton

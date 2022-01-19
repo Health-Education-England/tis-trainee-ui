@@ -19,6 +19,7 @@ import { Section4ValidationSchema } from "../ValidationSchema";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { NEW_DECLARATION } from "../../../../utilities/Constants";
+import ErrorPage from "../../../common/ErrorPage";
 interface ISection4 {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -35,9 +36,11 @@ const Section4 = ({
   handleSectionSubmit
 }: ISection4) => {
   const formData = useAppSelector(selectSavedFormB);
-
-  return (
-    formData && (
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else
+    content = (
       <Formik
         initialValues={formData}
         validationSchema={Section4ValidationSchema}
@@ -195,8 +198,8 @@ const Section4 = ({
           </Form>
         )}
       </Formik>
-    )
-  );
+    );
+  return <div>{content}</div>;
 };
 
 export default Section4;

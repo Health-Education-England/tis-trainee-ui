@@ -15,8 +15,10 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import { Section2ValidationSchema } from "../ValidationSchema";
 import classes from "../FormRPartB.module.scss";
 import FormRPartBPagination from "../FormRPartBPagination";
-import store from "../../../../redux/store/store";
 import { NEW_WORK } from "../../../../utilities/Constants";
+import ErrorPage from "../../../common/ErrorPage";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 interface ISection2 {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -32,14 +34,17 @@ const Section2 = ({
   previousSection,
   handleSectionSubmit
 }: ISection2) => {
-  let formData = store.getState().formB.formBData;
+  let formData = useAppSelector(selectSavedFormB);
 
   const getNumber = (value: number) => {
     return isNaN(value) ? 0 : Number(value);
   };
 
-  return (
-    formData && (
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else
+    content = (
       <Formik
         initialValues={formData}
         validationSchema={Section2ValidationSchema}
@@ -178,7 +183,8 @@ const Section2 = ({
           </Form>
         )}
       </Formik>
-    )
-  );
+    );
+
+  return <div>{content}</div>;
 };
 export default Section2;

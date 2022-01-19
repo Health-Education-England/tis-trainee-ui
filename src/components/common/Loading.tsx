@@ -3,7 +3,13 @@ import ReactLoading from "react-loading";
 
 class Loading extends React.PureComponent {
   render() {
-    return <ReactLoading type={"bars"} color={"black"}></ReactLoading>;
+    return (
+      <ReactLoading
+        data-cy="loading"
+        type={"bars"}
+        color={"black"}
+      ></ReactLoading>
+    );
   }
 }
 

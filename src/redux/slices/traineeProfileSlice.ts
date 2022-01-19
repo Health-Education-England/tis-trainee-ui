@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
@@ -36,6 +36,12 @@ const traineeProfileSlice = createSlice({
   reducers: {
     resetToInit() {
       return initialState;
+    },
+    updatedTraineeProfileData(state, action: PayloadAction<TraineeProfile>) {
+      return { ...state, traineeProfileData: action.payload };
+    },
+    updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
     }
   },
   extraReducers(builder) {
@@ -56,7 +62,11 @@ const traineeProfileSlice = createSlice({
 
 export default traineeProfileSlice.reducer;
 
-export const { resetToInit } = traineeProfileSlice.actions;
+export const {
+  resetToInit,
+  updatedTraineeProfileData,
+  updatedTraineeProfileStatus
+} = traineeProfileSlice.actions;
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>
   state.traineeProfile.traineeProfileData;

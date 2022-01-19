@@ -12,6 +12,7 @@ import ErrorPage from "../common/ErrorPage";
 
 const Profile = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
+  console.log("trainee profile data: ", traineeProfileData);
 
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
@@ -51,7 +52,10 @@ const Profile = () => {
         </Details.ExpanderGroup>
       </div>
     );
-  else if (traineeProfileDataStatus === "failed")
+  else if (
+    traineeProfileDataStatus === "failed" ||
+    !traineeProfileData.traineeTisId
+  )
     content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
 
   return <div>{content}</div>;

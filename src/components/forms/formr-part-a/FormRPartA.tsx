@@ -17,7 +17,9 @@ const FormRPartA = () => {
         <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
           Form R (Part A)
         </Fieldset.Legend>
-        <Label>Trainee registration for Postgraduate Speciality Training</Label>
+        <Label data-cy="formraLabel">
+          Trainee registration for Postgraduate Speciality Training
+        </Label>
       </Fieldset>
       <Switch>
         <Route path="/formr-a/create" component={Create} />

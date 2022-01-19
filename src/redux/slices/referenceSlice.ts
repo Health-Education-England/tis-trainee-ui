@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { TraineeReferenceService } from "../../services/TraineeReferenceService";
 
 interface IReference {
@@ -25,7 +25,11 @@ export const fetchReference = createAsyncThunk(
 const referenceSlice = createSlice({
   name: "reference",
   initialState,
-  reducers: {},
+  reducers: {
+    updatedReference(state, action: PayloadAction<any[]>) {
+      return { ...state, combinedRef: action.payload };
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchReference.pending, (state, _action) => {
@@ -43,6 +47,7 @@ const referenceSlice = createSlice({
 });
 
 export default referenceSlice.reducer;
+export const { updatedReference } = referenceSlice.actions;
 export const selectAllReference = (state: {
   reference: { combinedRef: any[] };
 }) => state.reference.combinedRef;
