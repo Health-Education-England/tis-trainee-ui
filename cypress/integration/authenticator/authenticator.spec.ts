@@ -40,10 +40,36 @@ describe("Authenticator", () => {
   it("should remove the privacy & cookies error message and show the Sign up button if checkbox checked", () => {
     cy.get(".amplify-tabs-item").last().click();
     cy.get(".amplify-heading").contains("First time sign-up");
-    cy.get(".amplify-field__error-message").should("exist");
+    cy.get("[data-cy='checkboxPrivacy'] p.amplify-field__error-message").should(
+      "exist"
+    );
+    cy.get("[data-cy='checkboxPilot'] p.amplify-field__error-message").should(
+      "exist"
+    );
+
     cy.get(".amplify-button").should("be.disabled");
-    cy.get(".amplify-checkbox > .amplify-flex").click();
-    cy.get(".amplify-field__error-message").should("not.exist");
+    cy.get(
+      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
+    ).click();
+    cy.get(".amplify-button").should("be.disabled");
+    cy.get(
+      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
+    ).click();
+    cy.get(
+      "[data-cy='checkboxPilot'] .amplify-checkbox > .amplify-flex"
+    ).click();
+    cy.get(".amplify-button").should("be.disabled");
+    cy.get(
+      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
+    ).click();
+
+    cy.get("[data-cy='checkboxPrivacy'] .amplify-field__error-message").should(
+      "not.exist"
+    );
+    cy.get("[data-cy='checkboxPilot'] .amplify-field__error-message").should(
+      "not.exist"
+    );
+
     cy.get(".amplify-button").should("not.be.disabled");
   });
 

@@ -19,6 +19,15 @@ const AuthHeader = (): JSX.Element => {
           <h1 data-cy="authTitle">Trainee Self-Service</h1>
         </View>
       </Flex>
+      <Flex>
+        <div className={styles.authMessage}>
+          This application is currently in the pilot phase.{" "}
+          <strong>
+            Only trainees who have been invited to partake in this pilot should
+            sign up and log in.
+          </strong>
+        </div>
+      </Flex>
     </>
   );
 };

@@ -17,6 +17,7 @@ import {
   SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY,
+  YES_TO_PILOT,
   FORM_FIELD_VALUES
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
@@ -58,12 +59,21 @@ const components = {
 };
 
 const services = {
-  async validateCustomSignUp(formData: { yesToPrivacy: string }) {
+  async validateCustomSignUp(formData: {
+    yesToPrivacy: string;
+    yesToPilot: string;
+  }) {
+    const validationMessage: {
+      yesToPrivacy?: string;
+      yesToPilot?: string;
+    } = {};
     if (!formData.yesToPrivacy) {
-      return {
-        yesToPrivacy: YES_TO_PRIVACY
-      };
+      validationMessage.yesToPrivacy = YES_TO_PRIVACY;
     }
+    if (!formData.yesToPilot) {
+      validationMessage.yesToPilot = YES_TO_PILOT;
+    }
+    return validationMessage;
   }
 };
 
