@@ -21,10 +21,10 @@ const AuthHeader = (): JSX.Element => {
       </Flex>
       <Flex>
         <div className={styles.authMessage}>
-          This application is currently in the pilot phase.
+          This application is currently in the pilot phase.{" "}
           <strong>
-            Only trainees that have been invited to partake in this pilot should
-            sign up.
+            Only trainees who have been invited to partake in this pilot should
+            sign up and log in.
           </strong>
         </div>
       </Flex>
