@@ -13,6 +13,14 @@
     }
   }
 
+  .authMessage {
+    border: 1px solid #fff;
+    padding: 12px;
+    color: #fff;
+    background-color: #8a1538;
+    margin-bottom: 20px;
+  }
+
   @media (max-width: 960px) {
     .authLogo {
       .amplify-image {
