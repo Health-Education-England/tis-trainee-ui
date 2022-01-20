@@ -9,20 +9,24 @@ const AuthFormFields = () => {
   return (
     <>
       <Authenticator.SignUp.FormFields />
-      <CheckboxField
-        errorMessage={validationErrors.yesToPrivacy}
-        hasError={!!validationErrors.yesToPrivacy}
-        name="yesToPrivacy"
-        value="yes"
-        label="I agree with the Privacy & Cookies Policy"
-      />
-      <CheckboxField
-        errorMessage={validationErrors.yesToPilot}
-        hasError={!!validationErrors.yesToPilot}
-        name="yesToPilot"
-        value="yes"
-        label="I have been invited to test this application"
-      />
+      <div data-cy="checkboxPrivacy">
+        <CheckboxField
+          errorMessage={validationErrors.yesToPrivacy}
+          hasError={!!validationErrors.yesToPrivacy}
+          name="yesToPrivacy"
+          value="yes"
+          label="I agree with the Privacy & Cookies Policy"
+        />
+      </div>
+      <div data-cy="checkboxPilot">
+        <CheckboxField
+          errorMessage={validationErrors.yesToPilot}
+          hasError={!!validationErrors.yesToPilot}
+          name="yesToPilot"
+          value="yes"
+          label="I have been invited to test this application"
+        />
+      </div>
     </>
   );
 };
