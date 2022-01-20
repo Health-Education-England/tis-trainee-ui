@@ -217,7 +217,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=isDeclarationAccepted0]").should("not.be.checked");
     cy.get("[data-cy=isConsentAccepted0]").should("not.be.checked");
 
-    // Return to submit btn is not available if normal (long way) navigation back to Confirmation / submit page is chosen
+    // 'Back to submit' btn is removed if normal (long way) navigation back to Confirmation / submit page is chosen
 
     cy.get("[data-cy=BtnEditSection5]").click();
     cy.get("[data-cy=BtnBackToSubmit]").should("exist");

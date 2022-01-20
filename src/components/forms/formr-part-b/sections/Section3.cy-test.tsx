@@ -15,9 +15,9 @@ describe("Section3", () => {
           <Section3
             prevSectionLabel=""
             nextSectionLabel=""
-            saveDraft={() => null}
+            saveDraft={() => Promise.resolve()}
             previousSection={null}
-            handleSectionSubmit={() => null}
+            handleSectionSubmit={() => Promise.resolve()}
           />
         </BrowserRouter>
       </Provider>
@@ -34,9 +34,9 @@ describe("Section3", () => {
         <Section3
           prevSectionLabel="Section 2:\nWhole Scope of Practice"
           nextSectionLabel="Section 4:\nUpdate to your last Form R"
-          saveDraft={() => null}
+          saveDraft={() => Promise.resolve()}
           previousSection={null}
-          handleSectionSubmit={() => null}
+          handleSectionSubmit={() => Promise.resolve()}
         />
       );
     };

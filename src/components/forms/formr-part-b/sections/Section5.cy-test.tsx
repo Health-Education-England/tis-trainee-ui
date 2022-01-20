@@ -15,13 +15,37 @@ describe("Section 5", () => {
           <Section5
             prevSectionLabel=""
             nextSectionLabel=""
-            saveDraft={() => null}
+            saveDraft={() => Promise.resolve()}
             previousSection={null}
-            handleSectionSubmit={() => null}
+            handleSectionSubmit={() => Promise.resolve()}
           />
         </BrowserRouter>
       </Provider>
     );
     cy.get("[data-cy=errorAction]").should("exist");
+  });
+  it("should mount section 5", () => {
+    const MockedSection5 = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormB(submittedFormRPartBs[0]));
+
+      return (
+        <Section5
+          prevSectionLabel="Section 4"
+          nextSectionLabel="Section 6"
+          saveDraft={() => Promise.resolve()}
+          previousSection={null}
+          handleSectionSubmit={() => Promise.resolve()}
+        />
+      );
+    };
+    mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <MockedSection5 />
+        </BrowserRouter>
+      </Provider>
+    );
+    //TODO write some tests!!!
   });
 });

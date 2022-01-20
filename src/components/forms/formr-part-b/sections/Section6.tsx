@@ -6,6 +6,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
+import ErrorPage from "../../../common/ErrorPage";
 
 interface ISection6 {
   prevSectionLabel: string;
@@ -20,13 +21,15 @@ const Section6 = ({
   prevSectionLabel,
   nextSectionLabel,
   saveDraft,
-  history,
   previousSection,
   handleSectionSubmit
 }: ISection6) => {
   const formData = useAppSelector(selectSavedFormB);
-  return (
-    formData && (
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else
+    content = (
       <Formik
         initialValues={formData}
         onSubmit={values => {
@@ -79,8 +82,8 @@ const Section6 = ({
           </Form>
         )}
       </Formik>
-    )
-  );
+    );
+  return <div>{content}</div>;
 };
 
 export default Section6;

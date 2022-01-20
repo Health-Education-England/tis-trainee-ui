@@ -8,6 +8,7 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import Loading from "../common/Loading";
 import ErrorPage from "../common/ErrorPage";
+import { useEffect, useState } from "react";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -15,21 +16,22 @@ const Support = () => {
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
-
   const traineeProfileDataError = useAppSelector(
     state => state.traineeProfile.error
   );
+  const personOwner = traineeProfileData.personalDetails?.personOwner;
 
-  const personOwner = traineeProfileData?.personalDetails?.personOwner;
+  const [mappedContact, setIsMappedContact] = useState("");
 
-  let mappedContact;
-  if (personOwner) {
-    for (const localOffice of localOfficeContacts) {
-      if (localOffice.name === personOwner) {
-        mappedContact = localOffice.contact;
+  useEffect(() => {
+    if (personOwner) {
+      for (const localOffice of localOfficeContacts) {
+        if (localOffice.name === personOwner) {
+          setIsMappedContact(localOffice.contact);
+        }
       }
     }
-  }
+  }, [personOwner]);
 
   let content;
   if (traineeProfileDataStatus === "loading") return <Loading />;

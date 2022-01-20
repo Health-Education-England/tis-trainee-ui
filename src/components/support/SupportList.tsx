@@ -46,7 +46,7 @@ const SupportList = ({ mappedContact }: ISupportList) => {
         })()}
       </div>
 
-      <Select data-jest="contactList" onChange={handleChange}>
+      <Select data-cy="contactList" onChange={handleChange}>
         <Select.Option value={mappedContact ? mappedContact : ""}>
           -- Choose an alternative contact --
         </Select.Option>

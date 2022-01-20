@@ -15,9 +15,9 @@ describe("Section2", () => {
           <Section2
             prevSectionLabel=""
             nextSectionLabel=""
-            saveDraft={() => null}
+            saveDraft={() => Promise.resolve()}
             previousSection={null}
-            handleSectionSubmit={() => null}
+            handleSectionSubmit={() => Promise.resolve()}
           />
         </BrowserRouter>
       </Provider>
@@ -34,9 +34,9 @@ describe("Section2", () => {
         <Section2
           prevSectionLabel="Section 1:\nDoctor's details"
           nextSectionLabel="Section 3:\nDeclarations relating to\nGood Medical Practice"
-          saveDraft={() => null}
+          saveDraft={() => Promise.resolve()}
           previousSection={null}
-          handleSectionSubmit={() => null}
+          handleSectionSubmit={() => Promise.resolve()}
         />
       );
     };
@@ -56,6 +56,13 @@ describe("Section2", () => {
     cy.get("[data-cy=sicknessAbsence]")
       .should("exist")
       .should("have.value", "0");
+    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist").click();
+    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("not.exist");
+    cy.get(
+      ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
+    ).should("not.exist");
+    cy.get("[data-cy=BtnAddWorkType]").should("exist").click();
+    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist");
     cy.get(".nhsuk-pagination__page > div")
       .should("exist")
       .should("include.text", "Section 3");

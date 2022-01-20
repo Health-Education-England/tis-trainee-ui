@@ -25,6 +25,7 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
+import ErrorPage from "../../../common/ErrorPage";
 
 interface ICovidDeclaration {
   prevSectionLabel: string;
@@ -43,17 +44,27 @@ const CovidDeclaration = ({
 }: ICovidDeclaration) => {
   const formData = useAppSelector(selectSavedFormB);
   const combinedReferenceData = useAppSelector(selectAllReference);
-  const changeCircumstances = combinedReferenceData[8].map(
-    (d: { label: string }) => {
-      return {
-        label: d.label,
-        value: d.label
-      };
-    }
-  );
 
-  return (
-    formData && (
+  const getChangeCircs = () => {
+    if (combinedReferenceData) {
+      return combinedReferenceData[8].map((d: { label: string }) => {
+        return {
+          label: d.label,
+          value: d.label
+        };
+      });
+    }
+  };
+
+  let content;
+  if (!formData.traineeTisId)
+    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else if (!combinedReferenceData) {
+    content = (
+      <ErrorPage error={"No COVID Decalaration data found"}></ErrorPage>
+    );
+  } else
+    content = (
       <Formik
         initialValues={formData}
         validationSchema={CovidSectionValidationSchema}
@@ -290,7 +301,7 @@ const CovidDeclaration = ({
                           label="Circumstance of change"
                           name="covidDeclarationDto.changeCircumstances"
                           data-jest="changeCircumstances"
-                          options={changeCircumstances}
+                          options={getChangeCircs()}
                           onChange={(
                             e: React.ChangeEvent<HTMLInputElement>
                           ) => {
@@ -377,8 +388,9 @@ const CovidDeclaration = ({
           </Form>
         )}
       </Formik>
-    )
-  );
+    );
+
+  return <div>{content}</div>;
 };
 
 export default CovidDeclaration;

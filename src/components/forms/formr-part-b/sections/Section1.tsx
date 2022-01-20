@@ -39,6 +39,8 @@ const Section1 = ({
   let content;
   if (!formRBData.traineeTisId)
     content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
+  else if (!combinedReferenceData)
+    content = <ErrorPage error={"No Section 1 data found"}></ErrorPage>;
   else
     content = (
       <Formik

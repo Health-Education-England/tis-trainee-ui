@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { FeatureFlags } from "../../models/FeatureFlags";
 import { FormsService } from "../../services/FormsService";
@@ -28,7 +28,11 @@ export const fetchFeatureFlags = createAsyncThunk(
 const featureFlagsSlice = createSlice({
   name: "featureFlags",
   initialState,
-  reducers: {},
+  reducers: {
+    updatedFeatureFlags(state, action: PayloadAction<FeatureFlags>) {
+      return { ...state, featureFlags: action.payload };
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchFeatureFlags.pending, (state, _action) => {
@@ -46,3 +50,5 @@ const featureFlagsSlice = createSlice({
 });
 
 export default featureFlagsSlice.reducer;
+
+export const { updatedFeatureFlags } = featureFlagsSlice.actions;

@@ -73,7 +73,6 @@ const Create = ({ history }: { history: string[] }) => {
   );
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
-  // TODO needs moving out of Create
   let finalSections: ISection[];
   if (isfeatFlagCovid) {
     finalSections = [
@@ -82,6 +81,7 @@ const Create = ({ history }: { history: string[] }) => {
       ...sections.slice(6)
     ];
   } else finalSections = sections;
+
   const makeProgressBar = () => {
     return finalSections.map((_sect, index) => (
       <div

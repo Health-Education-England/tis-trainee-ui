@@ -54,6 +54,7 @@ const FormRPartBPagination = ({
               dispatch(updatedFormB(values));
             }
             dispatch(decrementFormBSection());
+            dispatch(updateFormBPreviousSection(null));
           }}
           data-cy="LinkToPreviousSection"
           data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}

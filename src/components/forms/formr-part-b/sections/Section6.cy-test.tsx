@@ -4,61 +4,60 @@ import { BrowserRouter } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedFormB } from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
-import Section1 from "./Section1";
+import Section6 from "./Section6";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
-import { updatedReference } from "../../../../redux/slices/referenceSlice";
-import { mockedCombinedReference } from "../../../../mock-data/combinedReferenceData";
 
-describe("Section1", () => {
+describe("Section6", () => {
   it("should not render the form it no data", () => {
     mount(
       <Provider store={store}>
         <BrowserRouter>
-          <Section1
+          <Section6
             prevSectionLabel=""
             nextSectionLabel=""
             saveDraft={() => Promise.resolve()}
             previousSection={null}
             handleSectionSubmit={() => Promise.resolve()}
+            history={[]}
           />
         </BrowserRouter>
       </Provider>
     );
-    cy.get("[data-cy=legendFieldset1]").should("not.exist");
     cy.get("[data-cy=errorAction]").should("exist");
   });
-  it("should mount section 1 ", () => {
-    const MockedSection1 = () => {
+
+  it("should mount section 6 ", () => {
+    const MockedSection6 = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormB(submittedFormRPartBs[0]));
-      dispatch(updatedReference(mockedCombinedReference));
 
       return (
-        <Section1
-          prevSectionLabel=""
-          nextSectionLabel="Section 2:\nWhole Scope of Practice"
+        <Section6
+          prevSectionLabel="Section 5:\nNew Declarations\nsince your last Form R"
+          nextSectionLabel="Covid declaration"
           saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
+          history={[]}
         />
       );
     };
     mount(
       <Provider store={store}>
         <BrowserRouter>
-          <MockedSection1 />
+          <MockedSection6 />
         </BrowserRouter>
       </Provider>
     );
-    cy.get("[data-cy=legendFieldset1]")
+    cy.get("[data-cy=legendFieldset6]")
       .should("exist")
-      .should("include.text", "Section 1");
-    cy.get("[data-cy=email]")
-      .should("exist")
-      .should("have.value", "email@email.com");
+      .should("include.text", "Section 6");
     cy.get(".nhsuk-pagination__page > div")
       .should("exist")
-      .should("include.text", "Section 2");
+      .should("include.text", "Covid declaration");
+    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page > div")
+      .should("exist")
+      .should("include.text", "Section 5");
     cy.get("[data-cy=BtnSaveDraft]").should("exist");
   });
 });

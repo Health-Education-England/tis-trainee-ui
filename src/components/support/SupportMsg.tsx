@@ -7,9 +7,9 @@ interface ISupportMsg {
 
 const SupportMsg = (props: ISupportMsg) => {
   const { personOwner, mappedContact } = props;
-  if (mappedContact === null) {
+  if (!mappedContact) {
     return (
-      <div data-jest="matchErrorMsg">
+      <div data-cy="matchErrorMsg">
         <ErrorMessage>
           {`Sorry but your contact ${personOwner} cannot be matched with a support contact. Please choose a contact from the list below (which will provide a new link)`}
         </ErrorMessage>
@@ -17,7 +17,7 @@ const SupportMsg = (props: ISupportMsg) => {
     );
   } else {
     return (
-      <div data-jest="successMsg">
+      <div data-cy="successMsg">
         <p>{`According to our records, your contact is ${personOwner}.`}</p>
         <p>
           {
