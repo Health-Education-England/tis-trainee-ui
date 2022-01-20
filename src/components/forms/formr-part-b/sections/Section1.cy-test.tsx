@@ -26,11 +26,41 @@ describe("Section1", () => {
     );
     cy.get("[data-cy=legendFieldset1]").should("not.exist");
     cy.get("[data-cy=errorAction]").should("exist");
+    cy.get("#__cy_root > :nth-child(1) > div").should(
+      "include.text",
+      "No Trainee Id found"
+    );
+  });
+  it("should show error page if no reference data found", () => {
+    const MockedSectionNoRefData = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormB(submittedFormRPartBs[0]));
+      return (
+        <Section1
+          prevSectionLabel=""
+          nextSectionLabel="Section 2:\nWhole Scope of Practice"
+          saveDraft={() => Promise.resolve()}
+          previousSection={null}
+          handleSectionSubmit={() => Promise.resolve()}
+        />
+      );
+    };
+    mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <MockedSectionNoRefData />
+        </BrowserRouter>
+      </Provider>
+    );
+    cy.get("[data-cy=errorAction]").should("exist");
+    cy.get("#__cy_root > :nth-child(1) > div").should(
+      "include.text",
+      "No Section 1 data found"
+    );
   });
   it("should mount section 1 ", () => {
     const MockedSection1 = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedFormB(submittedFormRPartBs[0]));
       dispatch(updatedReference(mockedCombinedReference));
 
       return (
@@ -60,5 +90,9 @@ describe("Section1", () => {
       .should("exist")
       .should("include.text", "Section 2");
     cy.get("[data-cy=BtnSaveDraft]").should("exist");
+    cy.get("[data-cy=prevRevalBodyOther]").should("not.exist");
+    cy.get("[data-cy=prevRevalBody]").select("other");
+    cy.get("[data-cy=prevRevalBodyOther]").should("exist").type("c");
+    cy.get(".nhsuk-form-group > ul").should("exist");
   });
 });

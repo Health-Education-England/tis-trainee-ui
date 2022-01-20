@@ -111,7 +111,7 @@ const Section4 = ({
                 />
               </Panel>
 
-              {BooleanUtilities.ToBoolean(values.havePreviousDeclarations) ? (
+              {BooleanUtilities.ToBoolean(values.havePreviousDeclarations) && (
                 <>
                   <Panel label="Resolved Declarations">
                     <p>
@@ -174,7 +174,7 @@ const Section4 = ({
                     />
                   </Panel>
                 </>
-              ) : null}
+              )}
             </Fieldset>
 
             {[...Object.values(errors)].length > 0 ? (

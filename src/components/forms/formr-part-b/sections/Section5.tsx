@@ -140,7 +140,7 @@ const Section5 = ({
                 />
               </Panel>
 
-              {values.currentDeclarations.length > 0 && (
+              {BooleanUtilities.ToBoolean(values.haveCurrentDeclarations) && (
                 <>
                   <Panel label="Resolved Declarations">
                     <p>
@@ -154,18 +154,17 @@ const Section5 = ({
                       name="currentDeclarations"
                       render={c => (
                         <div>
-                          {values &&
-                            values.currentDeclarations.map((_, i: number) => (
-                              <DeclarationPanel
-                                section={5}
-                                key={i}
-                                index={i}
-                                removeDeclaration={(index: number) =>
-                                  c.remove(index)
-                                }
-                                data-jest="declarationPanel"
-                              ></DeclarationPanel>
-                            ))}
+                          {values.currentDeclarations.map((_, i: number) => (
+                            <DeclarationPanel
+                              section={5}
+                              key={i}
+                              index={i}
+                              removeDeclaration={(index: number) =>
+                                c.remove(index)
+                              }
+                              data-jest="declarationPanel"
+                            ></DeclarationPanel>
+                          ))}
                           <Button
                             data-cy="btnAddDeclaration"
                             type="button"

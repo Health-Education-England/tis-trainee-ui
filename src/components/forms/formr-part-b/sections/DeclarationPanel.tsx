@@ -1,9 +1,10 @@
-import { FunctionComponent, useState, useEffect } from "react";
+import { FunctionComponent } from "react";
 import TextInputField from "../../TextInputField";
 import { Button, Panel, CloseIcon } from "nhsuk-react-components";
 import classes from "../FormRPartB.module.scss";
 import SelectInputField from "../../SelectInputField";
-import { TraineeReferenceService } from "../../../../services/TraineeReferenceService";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 
 interface IDeclarationPanel {
   index: number;
@@ -14,30 +15,13 @@ interface IDeclarationPanel {
 const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
   props: IDeclarationPanel
 ) => {
-  const [declarationTypes, setDeclarationTypes] = useState([]);
-
-  useEffect(() => {
-    let didCancel = false;
-    const fetchData = async () => {
-      const traineeReferenceService = new TraineeReferenceService();
-      const response = await traineeReferenceService.getDeclarationType();
-      const responseDeclarationTypes = response.data.map(
-        (d: { label: any }) => {
-          return {
-            label: d.label,
-            value: d.label
-          };
-        }
-      );
-      if (!didCancel) {
-        setDeclarationTypes(responseDeclarationTypes);
-      }
+  const combinedReferenceData = useAppSelector(selectAllReference);
+  const declarationTypes = combinedReferenceData[7].map((d: { label: any }) => {
+    return {
+      label: d.label,
+      value: d.label
     };
-    fetchData();
-    return () => {
-      didCancel = true;
-    };
-  }, []);
+  });
 
   const { index, removeDeclaration: removePanel, section } = props;
   return (

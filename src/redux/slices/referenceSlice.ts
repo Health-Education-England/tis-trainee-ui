@@ -28,6 +28,9 @@ const referenceSlice = createSlice({
   reducers: {
     updatedReference(state, action: PayloadAction<any[]>) {
       return { ...state, combinedRef: action.payload };
+    },
+    updatedReferenceStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
     }
   },
   extraReducers(builder) {
@@ -47,7 +50,8 @@ const referenceSlice = createSlice({
 });
 
 export default referenceSlice.reducer;
-export const { updatedReference } = referenceSlice.actions;
+export const { updatedReference, updatedReferenceStatus } =
+  referenceSlice.actions;
 export const selectAllReference = (state: {
   reference: { combinedRef: any[] };
 }) => state.reference.combinedRef;

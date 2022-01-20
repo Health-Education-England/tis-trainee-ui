@@ -130,7 +130,8 @@
       "!**/src/*.{js,ts}",
       "!**/src/index.tsx",
       "!**/src/models/*.ts",
-      "!**/src/redux/reducers/index.ts"
+      "!**/src/redux/reducers/index.ts",
+      "!**/src/**cy-test.tsx"
     ],
     "coverageReporters": [
       "json",
