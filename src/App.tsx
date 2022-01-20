@@ -17,6 +17,7 @@ import {
   SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY,
+  YES_TO_PILOT,
   FORM_FIELD_VALUES
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
@@ -70,10 +71,8 @@ const services = {
       validationMessage.yesToPrivacy = YES_TO_PRIVACY;
     }
     if (!formData.yesToPilot) {
-      validationMessage.yesToPilot =
-        "Only trainees that have been invited to partake in this pilot should sign up.";
+      validationMessage.yesToPilot = YES_TO_PILOT;
     }
-    console.log("RETURN", validationMessage);
     return validationMessage;
   }
 };
