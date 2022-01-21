@@ -1,9 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { FormRPartA } from "../../models/FormRPartA";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormsService } from "../../services/FormsService";
-import { PayloadAction } from "@reduxjs/toolkit";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -67,7 +66,7 @@ export const saveFormA = createAsyncThunk(
   "formA/saveFormA",
   async (form: FormRPartA) => {
     const formsService = new FormsService();
-    return await formsService.saveTraineeFormRPartA(form);
+    return formsService.saveTraineeFormRPartA(form);
   }
 );
 
@@ -75,7 +74,7 @@ export const updateFormA = createAsyncThunk(
   "formA/updateFormA",
   async (form: FormRPartA) => {
     const formsService = new FormsService();
-    return await formsService.updateTraineeFormRPartA(form);
+    return formsService.updateTraineeFormRPartA(form);
   }
 );
 

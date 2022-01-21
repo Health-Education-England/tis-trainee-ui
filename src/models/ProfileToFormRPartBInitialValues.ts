@@ -1,8 +1,7 @@
 import { TraineeProfile } from "./TraineeProfile";
 import { FormRPartB, Work } from "./FormRPartB";
-import { MEDICAL_CURRICULUM } from "../utilities/Constants";
+import { MEDICAL_CURRICULUM, NEW_WORK } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
-import { NEW_WORK } from "../utilities/Constants";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile

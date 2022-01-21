@@ -1,10 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { FormRPartB } from "../../models/FormRPartB";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormsService } from "../../services/FormsService";
-import { PayloadAction } from "@reduxjs/toolkit";
-
 interface IFormB {
   formBData: FormRPartB;
   sectionNumber: number;
@@ -78,7 +76,7 @@ export const saveFormB = createAsyncThunk(
   "formB/saveFormB",
   async (form: FormRPartB) => {
     const formsService = new FormsService();
-    return await formsService.saveTraineeFormRPartB(form);
+    return formsService.saveTraineeFormRPartB(form);
   }
 );
 

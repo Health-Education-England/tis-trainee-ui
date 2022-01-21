@@ -16,9 +16,11 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { Section4ValidationSchema } from "../ValidationSchema";
-import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
+import {
+  YES_NO_OPTIONS,
+  NEW_DECLARATION
+} from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
-import { NEW_DECLARATION } from "../../../../utilities/Constants";
 import ErrorPage from "../../../common/ErrorPage";
 interface ISection4 {
   prevSectionLabel: string;

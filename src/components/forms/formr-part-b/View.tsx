@@ -11,7 +11,8 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   selectSavedFormB,
-  updateFormBSection
+  updateFormBSection,
+  updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
 import store from "../../../redux/store/store";
 import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
@@ -24,7 +25,6 @@ import {
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
-import { updateFormBPreviousSection } from "../../../redux/slices/formBSlice";
 
 interface IView {
   canEdit: boolean;

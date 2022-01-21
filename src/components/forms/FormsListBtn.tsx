@@ -1,9 +1,8 @@
 import { Button } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
-import { updatedFormA } from "../../redux/slices/formASlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { loadSavedFormA } from "../../redux/slices/formASlice";
+import { loadSavedFormA, updatedFormA } from "../../redux/slices/formASlice";
 import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
 import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
 import { useHistory } from "react-router-dom";
