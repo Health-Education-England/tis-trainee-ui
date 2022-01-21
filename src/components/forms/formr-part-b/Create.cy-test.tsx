@@ -120,7 +120,9 @@ describe("Create form B", () => {
     cy.get(
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
-    cy.get("[data-cy=BtnBackToSubmit]").should("exist");
+    cy.get("[data-cy=BtnBackToSubmit]").should("exist").click();
+    cy.get("[data-cy=BtnEditSection3]").click();
+    cy.get(".progress-step").eq(2).should("have.class", "progress-step-active");
     cy.get(
       "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__title"
     ).click();
@@ -130,13 +132,7 @@ describe("Create form B", () => {
     cy.get(
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
-
-    // cy.get("[data-cy=havePreviousDeclarations1]").click();
-    // cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]').should(
-    //   "not.exist"
-    // );
-    // cy.get("[data-cy=BtnBackToSubmit]").should("exist");
-
-    // do edit, see back to submit, then nav forward then back
+    cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
+    cy.get(".progress-step").should("not.exist");
   });
 });

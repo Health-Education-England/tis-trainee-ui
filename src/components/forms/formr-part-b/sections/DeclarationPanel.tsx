@@ -16,12 +16,14 @@ const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
   props: IDeclarationPanel
 ) => {
   const combinedReferenceData = useAppSelector(selectAllReference);
-  const declarationTypes = combinedReferenceData[7].map((d: { label: any }) => {
-    return {
-      label: d.label,
-      value: d.label
-    };
-  });
+  const declarationTypes = combinedReferenceData[7].map(
+    (d: { label: string }) => {
+      return {
+        label: d.label,
+        value: d.label
+      };
+    }
+  );
 
   const { index, removeDeclaration: removePanel, section } = props;
   return (

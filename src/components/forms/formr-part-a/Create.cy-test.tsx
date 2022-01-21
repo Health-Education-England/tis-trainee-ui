@@ -48,7 +48,7 @@ describe("Form R Part A - Create", () => {
 
     cy.get(".nhsuk-error-summary").should("exist");
 
-    cy.get("[data-cy=BtnContinue]").should("exist");
-    cy.get("[data-cy=BtnSaveDraft]").should("exist");
+    cy.get("[data-cy=BtnContinue]").should("exist").click();
+    cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
   });
 });

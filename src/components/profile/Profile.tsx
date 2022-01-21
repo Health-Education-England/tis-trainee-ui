@@ -12,16 +12,12 @@ import ErrorPage from "../common/ErrorPage";
 
 const Profile = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
-  console.log("trainee profile data: ", traineeProfileData);
-
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
-
   const traineeProfileDataError = useAppSelector(
     state => state.traineeProfile.error
   );
-
   let content;
 
   if (traineeProfileDataStatus === "loading") return <Loading />;
