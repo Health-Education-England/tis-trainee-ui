@@ -13,11 +13,23 @@ body {
   font-size: $font-size-base;
   color: $primary-color;
 
-  background-color: $primary-color-background;
-  background: #ae2573;
-  background: -moz-linear-gradient(180deg, #ae2573 0%, #330072 100%);
-  background: -webkit-linear-gradient(180deg, #ae2573 0%, #330072 100%);
-  background: linear-gradient(180deg, #ae2573 0%, 0%, #330072 100%);
+  background: $primary-color-background;
+  background: -moz-linear-gradient(
+    180deg,
+    $primary-color-background 0%,
+    $primary-color-highlight 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    $primary-color-background 0%,
+    $primary-color-highlight 100%
+  );
+  background: linear-gradient(
+    180deg,
+    $primary-color-background 0%,
+    0%,
+    $primary-color-highlight 100%
+  );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d03987",endColorstr="#244aad",GradientType=1);
 }
 
