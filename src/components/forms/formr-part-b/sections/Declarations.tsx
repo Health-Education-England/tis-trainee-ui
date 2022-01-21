@@ -38,11 +38,11 @@ const Declarations = ({
   const formData = useAppSelector(selectSavedFormB);
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
-  const handleFormBSubmit = async (formData: FormRPartB) => {
+  const handleFormBSubmit = async (formDataSubmit: FormRPartB) => {
     if (!saveBtnActive) {
       dispatch(
         updatedFormB({
-          ...formData,
+          ...formDataSubmit,
           submissionDate: new Date(),
           lifecycleState: LifeCycleState.Submitted,
           lastModifiedDate: new Date()

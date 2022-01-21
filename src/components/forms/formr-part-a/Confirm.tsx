@@ -26,11 +26,11 @@ const Confirm = ({ history }: IConfirm) => {
 
   const handleEdit = () => history.push("/formr-a/create");
 
-  const saveDraft = async (formData: FormRPartA) => {
-    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+  const saveDraft = async (formDataSave: FormRPartA) => {
+    if (formDataSave.lifecycleState !== LifeCycleState.Unsubmitted) {
       dispatch(
         updatedFormA({
-          ...formData,
+          ...formDataSave,
           submissionDate: null,
           lifecycleState: LifeCycleState.Draft,
           lastModifiedDate: new Date()
@@ -45,10 +45,10 @@ const Confirm = ({ history }: IConfirm) => {
     history.push("/formr-a");
   };
 
-  const handleSubmit = async (formData: FormRPartA) => {
+  const handleSubmit = async (formDataSubmit: FormRPartA) => {
     dispatch(
       updatedFormA({
-        ...formData,
+        ...formDataSubmit,
         submissionDate: new Date(),
         lifecycleState: LifeCycleState.Submitted,
         lastModifiedDate: new Date()

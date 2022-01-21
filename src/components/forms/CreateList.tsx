@@ -35,13 +35,13 @@ const CreateList = () => {
     dispatch(fetchFeatureFlags());
   }, [dispatch]);
 
-  const handleRowClick = async (formId: any, pathname: string) => {
-    if (pathname === "/formr-a") {
+  const handleRowClick = async (formId: any, pName: string) => {
+    if (pName === "/formr-a") {
       await dispatch(loadSavedFormA(formId));
-    } else if (pathname === "/formr-b") {
+    } else if (pName === "/formr-b") {
       await dispatch(loadSavedFormB(formId));
     }
-    history.push(`${pathname}/${formId}`);
+    history.push(`${pName}/${formId}`);
   };
 
   if (formRListStatus === "loading" || featFlagStatus === "loading")
