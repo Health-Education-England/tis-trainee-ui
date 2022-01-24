@@ -296,7 +296,7 @@ describe("Form R (Part A)", () => {
     cy.log("################ submit form ###################");
 
     cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
-    cy.get("[data-cy=btnSubmitNewForm]").should("exist");
+    cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
 
     // ------------- Check newly-submitted form exists ----------------------------------------------
