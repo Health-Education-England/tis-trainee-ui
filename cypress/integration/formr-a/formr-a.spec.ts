@@ -22,10 +22,10 @@ describe("Form R (Part A)", () => {
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
-      .then((submitButton: JQuery) => {
-        // ---------- New form ------------------------------------------------------------------
-        if (submitButton.attr("data-cy") === "btnSubmitNewForm") {
-          cy.get("#btnOpenForm").click();
+      .then((loadFormAButton: JQuery) => {
+        // ---------- if New form btn ------------------------------------------------------------------
+        if (loadFormAButton.attr("data-cy") === "btnLoadNewForm") {
+          cy.get("[data-cy=btnLoadNewForm]").click();
           cy.log("##################### NEW FORM ##################");
           cy.get(".nhsuk-warning-callout > p").should("exist");
 
@@ -110,41 +110,47 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=cctSpecialty2] + ul").should("exist");
           cy.get("[data-cy=cctSpecialty2] + ul li").eq(1).click();
           cy.get("[data-cy=cctSpecialty2]").should("not.have.value", "");
-
-          cy.get("#college > option")
+          cy.get("[data-cy=college] > option")
             .eq(1)
             .then(element => {
               const selectedItem = element.val().toString();
-              cy.get("#college")
+              cy.get("[data-cy=college]")
                 .select(selectedItem)
                 .should("not.have.value", "--Please select--");
             });
-
-          cy.get("#completionDate").type(completionDate);
+          cy.get("[data-cy=completionDate]").clear().type(completionDate);
 
           //-- Programme section --
-          cy.get("#trainingGrade > option")
+          cy.get("[data-cy=trainingGrade] > option")
             .eq(3)
             .then(element => {
               const selectedItem = element.val().toString();
-              cy.get("#trainingGrade")
+              cy.get("[data-cy=trainingGrade]")
                 .select(selectedItem)
                 .should("not.have.value", "--Please select--");
             });
-          cy.get("#startDate").type(startDate).should("not.have.value", "");
-          cy.get("#programmeMembershipType")
+          cy.get("[data-cy=startDate]")
+            .clear()
+            .type(startDate)
+            .should("not.have.value", "");
+          cy.get("[data-cy=programmeMembershipType]")
             .should("exist")
             .clear()
             .type("LAT");
+
           //-- error msg when FTE not completed
+          cy.log("################ Error msg when no FTE ###################");
           cy.get("[data-cy=BtnContinue]").should("exist").click();
           cy.get(".nhsuk-error-summary").should("exist");
           cy.get("#wholeTimeEquivalent--error-message").should("exist");
-          cy.get("#wholeTimeEquivalent").type("0.99");
+          cy.get("[data-cy=wholeTimeEquivalent]").type("0.99");
         }
 
-        // ------------- Saved form ---------------------------------------------------------------------
-        else if (submitButton.attr("data-cy") === "btnEditSavedForm") {
+        // -------------else Edit Saved form ---------------------------------------------------------------------
+        else if (
+          loadFormAButton.attr("data-cy") === "btnEditSavedForm" ||
+          loadFormAButton.attr("data-cy") === "btnEditUnsubmittedForm"
+        ) {
           cy.log("################ EDIT FORM ###################");
           cy.get("#btnOpenForm").click();
           cy.get(".nhsuk-warning-callout > p").should("exist");
@@ -198,7 +204,10 @@ describe("Form R (Part A)", () => {
 
           cy.get("#mobileNumber").focus();
           cy.get("#mobileNumber").should("exist").clear().type("0777777777777");
-          cy.get("#email").should("exist").type("traineeui.tester@hee.nhs.uk");
+          cy.get("#email")
+            .should("exist")
+            .clear()
+            .type("traineeui.tester@hee.nhs.uk");
 
           //-- Declarations section --
           cy.get("[data-cy=cctSpecialty1]").should("not.exist");
@@ -208,11 +217,11 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=cctSpecialty2]").should("exist");
 
           //- Programme specialty section --
-          cy.get("#programmeSpecialty")
+          cy.get("[data-cy=programmeSpecialty]")
             .should("exist")
             .select("Geriatric Medicine");
           cy.get("[data-cy=cctSpecialty1]").click();
-          cy.get("[data-cy=cctSpecialty1] > ul").should("exists");
+          cy.get("[data-cy=cctSpecialty1] > ul").should("exist");
           cy.get("[data-cy=cctSpecialty1] > ul li").first().click();
           cy.get("[data-cy=cctSpecialty1]").should(
             "have.value",
@@ -245,6 +254,7 @@ describe("Form R (Part A)", () => {
       });
     // ---------------- Check/edit the form -------------------------------------------
     // -- Clicking Continue --
+    cy.log("################ Check/ EDIT FORM ###################");
     cy.get("[data-cy=BtnContinue]").click();
     cy.get(".nhsuk-warning-callout").should("exist");
 
@@ -261,6 +271,7 @@ describe("Form R (Part A)", () => {
     cy.get("#wholeTimeEquivalent").clear().type("1").should("have.value", "1");
 
     // Save draft
+    cy.log("################ save draft form ###################");
     cy.get("[data-cy=BtnSaveDraft]").click();
     cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
     cy.checkFormRAValues(dateAttained, completionDate, startDate, "1");
@@ -282,12 +293,18 @@ describe("Form R (Part A)", () => {
     cy.intercept("GET", "/api/forms/formr-partas").as("getFormrPartAs");
 
     // ------------ submit form ---------------------------------------------------------------------
+    cy.log("################ submit form ###################");
+
     cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
     cy.get("[data-cy=btnSubmitNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
 
     // ------------- Check newly-submitted form exists ----------------------------------------------
     // compare uid to row id
+    cy.log(
+      "################ check submitted form is in forms list ###################"
+    );
+
     cy.wait("@getFormrPartAs").then(interception => {
       const body = interception.response.body;
       const formrasArray: string[] = Object.values(body);
@@ -304,7 +321,7 @@ describe("Form R (Part A)", () => {
           // Navigate back to the list
           cy.get(".nhsuk-back-link__link").should("exist").click();
           cy.contains("Submitted forms").should("exist");
-          cy.get("[data-cy=btnSubmitNewForm]").should("exist");
+          cy.get("[data-cy=btnLoadNewForm]").should("exist");
         }
       });
     });

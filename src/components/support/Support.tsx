@@ -1,127 +1,82 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { Details, Panel } from "nhsuk-react-components";
-import { localOfficeContacts } from "../../models/LocalOfficeContacts";
-import { loadTraineeProfile } from "../../redux/actions/trainee-profile-actions";
-import { RootState } from "../../redux/reducers";
-import { TraineeProfileService } from "../../services/TraineeProfileService";
-import Loading from "../common/Loading";
 import PageTitle from "../common/PageTitle";
-import { SupportList } from "./SupportList";
-import { SupportMsg } from "./SupportMsg";
+import SupportMsg from "./SupportMsg";
+import SupportList from "./SupportList";
+import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
-const mapStateToProps = (state: RootState) => ({
-  traineeProfile: state.profile.traineeProfile,
-  isLoaded: state.profile.isLoaded
-});
+import { useAppSelector } from "../../redux/hooks/hooks";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import Loading from "../common/Loading";
+import ErrorPage from "../common/ErrorPage";
+import { useEffect, useState } from "react";
 
-const mapDispatchToProps = {
-  loadTraineeProfile
-};
+const Support = () => {
+  const traineeProfileData = useAppSelector(selectTraineeProfile);
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type profileProps = ConnectedProps<typeof connector>;
-interface LocalState {
-  contact: string;
-  dataError: boolean;
-  matchError: boolean;
-  personOwner: string | null | undefined;
-}
-export class Support extends React.PureComponent<profileProps, LocalState> {
-  constructor(props: profileProps) {
-    super(props);
-    this.state = {
-      contact: "",
-      dataError: false,
-      matchError: false,
-      personOwner: ""
-    };
-  }
+  const traineeProfileDataStatus = useAppSelector(
+    state => state.traineeProfile.status
+  );
+  const traineeProfileDataError = useAppSelector(
+    state => state.traineeProfile.error
+  );
+  const personOwner = traineeProfileData.personalDetails?.personOwner;
 
-  fetchTraineeProfileProps = () =>
-    this.props.loadTraineeProfile(new TraineeProfileService());
+  const [mappedContact, setIsMappedContact] = useState("");
 
-  fetchPersonOwner = () => {
-    return this.props.traineeProfile?.personalDetails?.personOwner;
-  };
-
-  findMappedContact(loadedPersonOwner: string | null | undefined) {
-    for (const localOffice of localOfficeContacts) {
-      if (localOffice.name === loadedPersonOwner) {
-        return localOffice.contact;
+  useEffect(() => {
+    if (personOwner) {
+      for (const localOffice of localOfficeContacts) {
+        if (localOffice.name === personOwner) {
+          setIsMappedContact(localOffice.contact);
+        }
       }
     }
-    return null;
-  }
+  }, [personOwner]);
 
-  async componentDidMount() {
-    await this.fetchTraineeProfileProps();
-    const fetchedPersonOwner = this.fetchPersonOwner();
-    if (!fetchedPersonOwner) {
-      this.setState({ dataError: true });
-      return;
-    }
-    this.setState({ personOwner: fetchedPersonOwner });
-    const mappedContact = this.findMappedContact(fetchedPersonOwner);
-    if (mappedContact) {
-      this.setState({ contact: mappedContact });
-    } else this.setState({ matchError: true });
-  }
+  let content;
+  if (traineeProfileDataStatus === "loading") return <Loading />;
+  else if (traineeProfileDataStatus === "succeeded")
+    content = (
+      <>
+        <PageTitle title="Support" />
+        <h1 data-cy="pageTitle" style={{ marginBottom: 16, color: "#005EB8" }}>
+          Support
+        </h1>
+        <Details>
+          <Details.Summary>Got a question?</Details.Summary>
+          <Details.Text>
+            <p>
+              If you have a query about completing the Form R or the information
+              we currrently hold for you then please click on the link provided
+              in the Contact section.
+            </p>
+            <p>
+              Clicking on the link will either give you an email address to use
+              or, if you are based in London and South East, forward you to the
+              PGMDE Support Portal to submit your query.
+            </p>
+            <p>
+              Based on your current information, this link should direct your
+              query to someone best placed to help you.
+            </p>
+            <p>
+              However, if you feel another contact than the one given would be
+              more suitable, then please choose an alternative from the
+              drop-down list.
+            </p>
+          </Details.Text>
+        </Details>
 
-  render() {
-    const { traineeProfile, isLoaded } = this.props;
-    const { contact, dataError, matchError, personOwner } = this.state;
+        <Panel label="Contact">
+          <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
+          <SupportList mappedContact={mappedContact} />
+        </Panel>
+      </>
+    );
+  else if (traineeProfileDataStatus === "failed")
+    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
 
-    if (!isLoaded) {
-      return <Loading />;
-    } else {
-      return (
-        traineeProfile && (
-          <>
-            <PageTitle title="Support" />
-            <h1
-              data-cy="pageTitle"
-              style={{ marginBottom: 16, color: "#005EB8" }}
-            >
-              Support
-            </h1>
-            <Details>
-              <Details.Summary>Got a question?</Details.Summary>
-              <Details.Text>
-                <p>
-                  If you have a query about completing the Form R or the
-                  information we currrently hold for you then please click on
-                  the link provided in the Contact section.
-                </p>
-                <p>
-                  Clicking on the link will either give you an email address to
-                  use or, if you are based in London and South East, forward you
-                  to the PGMDE Support Portal to submit your query.
-                </p>
-                <p>
-                  Based on your current information, this link should direct
-                  your query to someone best placed to help you.
-                </p>
-                <p>
-                  However, if you feel another contact than the one given would
-                  be more suitable, then please choose an alternative from the
-                  drop-down list.
-                </p>
-              </Details.Text>
-            </Details>
+  return <div>{content}</div>;
+};
 
-            <Panel label="Contact">
-              <SupportMsg
-                dataError={dataError}
-                matchError={matchError}
-                personOwner={personOwner}
-              />
-              <SupportList contact={contact} />
-            </Panel>
-          </>
-        )
-      );
-    }
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Support);
+export default Support;

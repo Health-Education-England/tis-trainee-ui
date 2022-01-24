@@ -40,8 +40,8 @@ const SelectInputField: React.FC<Props> = props => {
         >
           <Select.Option value="">-- Please select --</Select.Option>
           {props.options
-            ? props.options.map(option => (
-                <Select.Option key={option.value} value={option.value}>
+            ? props.options.map((option, index) => (
+                <Select.Option key={index} value={option.value}>
                   {option.label}
                 </Select.Option>
               ))

@@ -1,63 +1,60 @@
-import React from "react";
-import { connect, ConnectedProps } from "react-redux";
-import { loadTraineeProfile } from "../../redux/actions/trainee-profile-actions";
-import { RootState } from "../../redux/types";
 import PersonalDetailsComponent from "./personal-details/PersonalDetailsComponent";
 import Programmes from "./programmes/Programmes";
 import Placements from "./placements/Placements";
-import Loading from "../common/Loading";
 import { Fieldset, Details } from "nhsuk-react-components";
-import { TraineeProfileService } from "../../services/TraineeProfileService";
-import ScrollTo from "../forms/ScrollTo";
 import PageTitle from "../common/PageTitle";
+import ScrollTo from "../forms/ScrollTo";
 
-const mapStateToProps = (state: RootState) => ({
-  traineeProfile: state.profile.traineeProfile,
-  isLoaded: state.profile.isLoaded
-});
+import { useAppSelector } from "../../redux/hooks/hooks";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import Loading from "../common/Loading";
+import ErrorPage from "../common/ErrorPage";
 
-const mapDispatchToProps = {
-  loadTraineeProfile
+const Profile = () => {
+  const traineeProfileData = useAppSelector(selectTraineeProfile);
+  const traineeProfileDataStatus = useAppSelector(
+    state => state.traineeProfile.status
+  );
+  const traineeProfileDataError = useAppSelector(
+    state => state.traineeProfile.error
+  );
+  let content;
+
+  if (traineeProfileDataStatus === "loading") return <Loading />;
+  else if (traineeProfileDataStatus === "succeeded")
+    content = (
+      <div id="profile">
+        <PageTitle title="Profile" />
+        <ScrollTo />
+        <Fieldset>
+          <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+            Profile
+          </Fieldset.Legend>
+        </Fieldset>
+        <Details.ExpanderGroup>
+          {traineeProfileData.personalDetails && (
+            <PersonalDetailsComponent
+              personalDetails={traineeProfileData.personalDetails}
+            />
+          )}
+          {traineeProfileData.placements && (
+            <Placements placements={traineeProfileData.placements}></Placements>
+          )}
+          {traineeProfileData.programmeMemberships && (
+            <Programmes
+              programmeMemberships={traineeProfileData.programmeMemberships}
+            ></Programmes>
+          )}
+        </Details.ExpanderGroup>
+      </div>
+    );
+  else if (
+    traineeProfileDataStatus === "failed" ||
+    !traineeProfileData.traineeTisId
+  )
+    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
+
+  return <div>{content}</div>;
 };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-type profileProps = ConnectedProps<typeof connector>;
-
-class Profile extends React.PureComponent<profileProps> {
-  componentDidMount() {
-    this.props.loadTraineeProfile(new TraineeProfileService());
-  }
-
-  render() {
-    const { traineeProfile, isLoaded } = this.props;
-
-    if (!isLoaded) {
-      return <Loading />;
-    } else {
-      return (
-        traineeProfile && (
-          <div id="profile">
-            <PageTitle title="Profile" />
-            <ScrollTo />
-            <Fieldset>
-              <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
-                Profile
-              </Fieldset.Legend>
-            </Fieldset>
-            <Details.ExpanderGroup>
-              <PersonalDetailsComponent
-                personalDetails={traineeProfile.personalDetails}
-              />
-              <Placements placements={traineeProfile.placements}></Placements>
-              <Programmes
-                programmeMemberships={traineeProfile.programmeMemberships}
-              ></Programmes>
-            </Details.ExpanderGroup>
-          </div>
-        )
-      );
-    }
-  }
-}
-
-export default connector(Profile);
+export default Profile;

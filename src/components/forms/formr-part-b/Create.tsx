@@ -1,207 +1,176 @@
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import Section1 from "./sections/Section1";
+import Section2 from "./sections/Section2";
+import Section3 from "./sections/Section3";
+import Section4 from "./sections/Section4";
+import Section5 from "./sections/Section5";
+import Section6 from "./sections/Section6";
+import CovidDeclaration from "./sections/CovidDeclaration";
+import "../formr-part-b/sections/section-styles.scss";
 import React from "react";
-import { RootState } from "../../../redux/reducers";
-import { GenericOwnProps } from "../../../redux/types";
-import { connect, ConnectedProps } from "react-redux";
-import {
-  loadForm,
-  moveToSection,
-  saveForm
-} from "../../../redux/actions/formr-partb-actions";
-import { loadReferenceData } from "../../../redux/actions/reference-data-actions";
-import { TraineeReferenceService } from "../../../services/TraineeReferenceService";
-import Section1 from "./Sections/Section1";
-import Section2 from "./Sections/Section2";
-import Section3 from "./Sections/Section3";
-import Section4 from "./Sections/Section4";
-import Section5 from "./Sections/Section5";
-
-import { FormRPartB } from "../../../models/FormRPartB";
-import Section6 from "./Sections/Section6";
-import Section7 from "./Sections/Section7";
-import { SectionProps } from "./Sections/SectionProps";
-import { LifeCycleState } from "../../../models/LifeCycleState";
-import { FormsService } from "../../../services/FormsService";
 import Loading from "../../common/Loading";
-import CovidDeclaration from "./Sections/CovidDeclaration";
+import { FormRPartB } from "../../../models/FormRPartB";
+import { LifeCycleState } from "../../../models/LifeCycleState";
+import store from "../../../redux/store/store";
+import {
+  incrementFormBSection,
+  resetToInitFormB,
+  saveFormB,
+  selectSaveBtnActive,
+  updatedFormB,
+  updateFormB,
+  updateFormBSection
+} from "../../../redux/slices/formBSlice";
+import { fetchForms } from "../../../redux/slices/formsSlice";
+import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
-import { ReferenceDataUtilities } from "../../../utilities/ReferenceDataUtilities";
 
-const mapStateToProps = (state: RootState, ownProps: GenericOwnProps) => ({
-  formData: state.formRPartB.formData,
-  designatedBodies: state.referenceData.designatedBodies,
-  localOffices: state.referenceData.localOffices,
-  curricula: state.referenceData.curricula,
-  isLoaded: state.referenceData.isLoaded,
-  section: state.formRPartB.section,
-  history: ownProps.history,
-  location: ownProps.location,
-  featureFlags: state.featureFlags.featureFlags
-});
-
-const mapDispatchProps = {
-  loadReferenceData,
-  loadForm,
-  moveToSection,
-  saveForm
-};
-
-const connector = connect(mapStateToProps, mapDispatchProps);
-const formsService = new FormsService();
-
-interface ISection {
+export interface ISection {
   component: any;
   title: string;
 }
 
-class Create extends React.PureComponent<
-  ConnectedProps<typeof connector>,
-  ISection
-> {
-  componentDidMount() {
-    const { isLoaded, loadReferenceData } = this.props;
+const sections: ISection[] = [
+  {
+    component: Section1,
+    title: "Section 1:\nDoctor's details"
+  },
 
-    if (!isLoaded) {
-      loadReferenceData(new TraineeReferenceService());
-    }
+  {
+    component: Section2,
+    title: "Section 2:\nWhole Scope of Practice"
+  },
+
+  {
+    component: Section3,
+    title: "Section 3:\nDeclarations relating to\nGood Medical Practice"
+  },
+  {
+    component: Section4,
+    title: "Section 4:\nUpdate to your last Form R"
+  },
+  {
+    component: Section5,
+    title: "Section 5:\nNew Declarations\nsince your last Form R"
+  },
+  {
+    component: Section6,
+    title: "Section 6:\nCompliments"
   }
+];
 
-  nextSection = (formData: FormRPartB, section?: number) => {
-    this.props.loadForm(formData);
-    this.props.moveToSection(section ? section : this.props.section + 1);
-  };
+const Create = ({ history }: { history: string[] }) => {
+  const dispatch = useAppDispatch();
+  const isfeatFlagCovid: boolean = useAppSelector(state =>
+    state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
+  );
+  const section: number = useAppSelector(state => state.formB.sectionNumber);
+  const previousSection: number | null = useAppSelector(
+    state => state.formB.previousSectionNumber
+  );
+  const tisId: string | undefined = useAppSelector(
+    state => state.formB.formBData.traineeTisId
+  );
+  const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
-  previousSection = (formData: FormRPartB, section?: number) => {
-    this.props.loadForm(formData);
-    this.props.moveToSection(section ? section : this.props.section - 1);
-  };
-
-  submitForm = (formData: FormRPartB) => {
-    this.props.loadForm(formData);
-  };
-
-  saveDraft = (formData: FormRPartB) => {
-    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
-      formData.submissionDate = null;
-      formData.lifecycleState = LifeCycleState.Draft;
-    }
-    formData.lastModifiedDate = new Date();
-
-    this.props
-      .saveForm(formsService, formData)
-      .then(_ => {
-        // show success toast / popup
-        this.props.history.push("/formr-b");
-        this.props.loadForm(null);
-      })
-      .catch(_ => {
-        // show failure toast / popup
-      });
-  };
-
-  render() {
-    const {
-      formData,
-      designatedBodies,
-      localOffices,
-      curricula,
-      isLoaded,
-      section,
-      featureFlags
-    } = this.props;
-    const enableCovidDeclaration: boolean =
-      !!featureFlags && featureFlags.formRPartB.covidDeclaration;
-    if (!formData) {
-      return <Redirect to="/formr-b" />;
-    }
-
-    if (!isLoaded) {
-      return <Loading />;
-    }
-
-    if (localOffices.length > 0) {
-      formData.localOfficeName = ReferenceDataUtilities.checkDataProp(
-        localOffices,
-        formData.localOfficeName
-      );
-      formData.prevRevalBody = ReferenceDataUtilities.checkDataProp(
-        [...designatedBodies, { label: "other", value: "other" }],
-        formData.prevRevalBody
-      );
-    }
-
-    if (curricula.length > 0) {
-      formData.programmeSpecialty = ReferenceDataUtilities.checkDataProp(
-        curricula,
-        formData.programmeSpecialty
-      );
-    }
-
-    const sectionProps: SectionProps = {
-      formData: formData,
-      previousSection: this.previousSection,
-      nextSection: this.nextSection,
-      saveDraft: this.saveDraft,
-      showCovidDeclaration: enableCovidDeclaration,
-      section: section
-    };
-
-    const sections: ISection[] = [
-      {
-        component: Section1,
-        title: "Section 1:\nDoctor's details"
-      },
-
-      {
-        component: Section2,
-        title: "Section 2:\nWhole Scope of Practice"
-      },
-
-      {
-        component: Section3,
-        title: "Section 3:\nDeclarations relating to\nGood Medical Practice"
-      },
-      {
-        component: Section4,
-        title: "Section 4:\nUpdate to your previous Form R Part B"
-      },
-      {
-        component: Section5,
-        title: "Section 5:\nDeclarations since your previous Form R Part B"
-      },
-      {
-        component: Section6,
-        title: "Section 6:\nCompliments"
-      },
-
-      {
-        component: Section7,
-        title: "Section 7:\nDeclaration"
-      }
+  let finalSections: ISection[];
+  if (isfeatFlagCovid) {
+    finalSections = [
+      ...sections.slice(0, 6),
+      { component: CovidDeclaration, title: "Covid declaration" },
+      ...sections.slice(6)
     ];
+  } else finalSections = sections;
 
-    const covidSection: ISection = {
-      component: CovidDeclaration,
-      title: "Covid declaration"
-    };
+  const makeProgressBar = () => {
+    return finalSections.map((_sect, index) => (
+      <div
+        key={index}
+        className={
+          section === index + 1
+            ? "progress-step progress-step-active"
+            : "progress-step"
+        }
+      ></div>
+    ));
+  };
 
-    if (enableCovidDeclaration) {
-      sections.splice(6, 0, covidSection);
+  const saveDraft = async (formData: FormRPartB) => {
+    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+      dispatch(
+        updatedFormB({
+          ...formData,
+          submissionDate: null,
+          lifecycleState: LifeCycleState.Draft,
+          lastModifiedDate: new Date()
+        })
+      );
+    } else
+      dispatch(updatedFormB({ ...formData, lastModifiedDate: new Date() }));
+
+    const updatedFormBData = store.getState().formB.formBData;
+
+    if (formData.id) {
+      await dispatch(updateFormB(updatedFormBData));
+    } else await dispatch(saveFormB(updatedFormBData));
+    dispatch(resetToInitFormB());
+    dispatch(fetchForms("/formr-b"));
+    history.push("/formr-b");
+  };
+
+  const handleSectionSubmit = (formValues: FormRPartB) => {
+    if (!saveBtnActive) {
+      dispatch(updatedFormB(formValues));
+      if (previousSection) {
+        dispatch(updateFormBSection(previousSection));
+      } else {
+        dispatch(incrementFormBSection());
+      }
     }
-    if (section < sections.length) {
-      return React.createElement(sections[section].component, {
-        ...sectionProps,
-        designatedBodies: this.props.designatedBodies,
-        localOffices: this.props.localOffices,
-        curricula: curricula,
-        history: this.props.history,
-        prevSectionLabel: section > 0 ? sections[section - 1].title : "",
-        nextSectionLabel:
-          section < sections.length - 1 ? sections[section + 1].title : ""
-      });
-    } else {
-      return <Loading />;
-    }
+  };
+
+  const sectionCompProps = {
+    prevSectionLabel: section > 1 ? finalSections[section - 2].title : "",
+    nextSectionLabel:
+      section < finalSections.length
+        ? finalSections[section].title
+        : "Review & Submit",
+    saveDraft,
+    history: history,
+    previousSection: previousSection,
+    handleSectionSubmit,
+    finalSections
+  };
+
+  let content;
+
+  if (!tisId) {
+    return <Redirect to="/formr-b" />;
   }
-}
 
-export default connector(Create);
+  if (section < finalSections.length + 1) {
+    content = (
+      <main>
+        <div className="form-wrapper">
+          <section>
+            <div className="progressbar">{makeProgressBar()}</div>
+            <div className="page-wrapper">
+              {section < finalSections.length + 1 ? (
+                React.createElement(
+                  finalSections[section - 1].component,
+                  sectionCompProps
+                )
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  } else content = <Confirm {...sectionCompProps} />;
+
+  return <div>{content}</div>;
+};
+
+export default Create;

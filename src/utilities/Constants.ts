@@ -1,3 +1,5 @@
+import { Declaration, Work } from "../models/FormRPartB";
+
 export const CCT_DECLARATION =
   "I have been appointed to a programme leading to award of CCT";
 
@@ -46,3 +48,19 @@ export const CHECK_WHOLE_TIME_EQUIVALENT_REGEX =
   /^((0\.[1-9]{1})?|(0\.([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1}))|1(\.0{1,2})?)$/;
 
 export const VALUE_NOT_GIVEN = "Value not given";
+
+export const NEW_WORK: Work = {
+  typeOfWork: "",
+  startDate: "",
+  endDate: "",
+  trainingPost: "",
+  site: "",
+  siteLocation: ""
+};
+
+export const NEW_DECLARATION: Declaration = {
+  declarationType: undefined,
+  dateOfEntry: undefined,
+  title: "",
+  locationOfEntry: ""
+};

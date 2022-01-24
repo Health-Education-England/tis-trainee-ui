@@ -10,8 +10,8 @@ interface IProgramProps {
 
 const Programmes: React.FC<IProgramProps> = ({ programmeMemberships }) => {
   const columnWidths: any[] = ["full", "full", "one-half"];
-  let columnWidth = columnWidths[programmeMemberships.length]
-    ? columnWidths[programmeMemberships.length]
+  let columnWidth = columnWidths[programmeMemberships?.length]
+    ? columnWidths[programmeMemberships?.length]
     : "one-half";
 
   return (

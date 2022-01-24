@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActionLink, Select } from "nhsuk-react-components";
 import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
-interface Props {
-  contact: string;
+interface ISupportList {
+  mappedContact: string | null | undefined;
 }
 
-export const SupportList = (props: Props) => {
-  const { contact } = props;
-  const [linkContact, updateLinkContact] = useState("");
+const SupportList = ({ mappedContact }: ISupportList) => {
+  const [linkContact, updateLinkContact] = useState(mappedContact);
 
   useEffect(() => {
-    if (contact) {
-      updateLinkContact(contact);
+    if (mappedContact) {
+      updateLinkContact(mappedContact);
     }
-  }, [contact]);
+  }, [mappedContact]);
 
   const handleChange = (event: any) => updateLinkContact(event.target.value);
 
@@ -47,8 +46,8 @@ export const SupportList = (props: Props) => {
         })()}
       </div>
 
-      <Select data-jest="contactList" onChange={handleChange}>
-        <Select.Option value={contact}>
+      <Select data-cy="contactList" onChange={handleChange}>
+        <Select.Option value={mappedContact ? mappedContact : ""}>
           -- Choose an alternative contact --
         </Select.Option>
         {localOfficeContacts.map((contact, index) => (
@@ -60,3 +59,5 @@ export const SupportList = (props: Props) => {
     </>
   );
 };
+
+export default SupportList;

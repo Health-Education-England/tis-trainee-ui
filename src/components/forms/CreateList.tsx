@@ -1,194 +1,93 @@
-import React from "react";
-import { Button, Table, ActionLink, LedeText } from "nhsuk-react-components";
-import { RootState, ActionType } from "../../redux/types";
-import { connect } from "react-redux";
-import { FormsService } from "../../services/FormsService";
-import { DateUtilities } from "../../utilities/DateUtilities";
-import styles from "./FormR.module.scss";
+import { ActionLink, LedeText, Table } from "nhsuk-react-components";
+import { useEffect } from "react";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
+import ErrorPage from "../common/ErrorPage";
 import Loading from "../common/Loading";
-import { TraineeProfileService } from "../../services/TraineeProfileService";
-import { loadFeatureFlags } from "../../redux/actions/formr-partb-actions";
 import ScrollTo from "./ScrollTo";
+import styles from "./FormR.module.scss";
+import { DateUtilities } from "../../utilities/DateUtilities";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
+import { selectAllforms, fetchForms } from "../../redux/slices/formsSlice";
+import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
+import { loadSavedFormA } from "../../redux/slices/formASlice";
+import FormsListBtn from "./FormsListBtn";
+import { loadSavedFormB } from "../../redux/slices/formBSlice";
+import { useHistory, useLocation } from "react-router-dom";
 
-export const CreateList = (
-  loadFormList: (
-    formService: FormsService
-  ) => (dispatch: (action: ActionType) => any) => Promise<void>,
-  updateForm: (
-    data: any | null
-  ) => (dispatch: (action: ActionType) => any) => Promise<any>,
-  loadSavedForm: (
-    formService: FormsService,
-    formId: string
-  ) => (dispatch: (action: ActionType) => any) => Promise<void>,
-  initializeForm: (
-    traineeProfileService: TraineeProfileService
-  ) => (dispatch: (action: ActionType) => any) => Promise<void>,
-  rootPath: string
-) => {
-  interface ListProps {
-    isLoading: boolean;
-    forms: IFormR[];
-    history: any;
-    loadFormList: (service: FormsService) => Promise<void>;
-    loadSavedForm: (service: FormsService, formId: string) => Promise<void>;
-    updateForm: (data: any | null) => Promise<any>;
-    initializeForm: (
-      traineeProfileService: TraineeProfileService
-    ) => Promise<void>;
-    loadFeatureFlags: (service: FormsService) => Promise<void>;
-  }
+const CreateList = () => {
+  let history = useHistory();
+  let pathname = useLocation().pathname;
+  const dispatch = useAppDispatch();
+  const formRList = useAppSelector(selectAllforms);
+  const formRListStatus = useAppSelector(state => state.forms.status);
+  const formRListError = useAppSelector(state => state.forms.error);
+  const featFlagStatus = useAppSelector(state => state.featureFlags.status);
+  const featFlagError = useAppSelector(state => state.featureFlags.error);
 
-  const formsService = new FormsService();
+  let content;
 
-  const mapStateToProps = (state: RootState) => ({
-    isLoading:
-      rootPath === "formr-a"
-        ? state.formRPartAList.isLoading
-        : state.formRPartBList.isLoading,
-    forms:
-      rootPath === "formr-a"
-        ? state.formRPartAList.submittedForms
-        : state.formRPartBList.submittedForms
-  });
+  useEffect(() => {
+    dispatch(fetchForms(pathname));
+  }, [dispatch, pathname]);
 
-  const mapDispatchToProps = {
-    updateForm,
-    loadFormList,
-    loadSavedForm,
-    initializeForm,
-    loadFeatureFlags
+  useEffect(() => {
+    dispatch(fetchFeatureFlags());
+  }, [dispatch]);
+
+  const handleRowClick = async (formId: any, pName: string) => {
+    if (pName === "/formr-a") {
+      await dispatch(loadSavedFormA(formId));
+    } else if (pName === "/formr-b") {
+      await dispatch(loadSavedFormB(formId));
+    }
+    history.push(`${pName}/${formId}`);
   };
 
-  class List extends React.PureComponent<ListProps> {
-    componentDidMount() {
-      this.props.loadFormList(formsService);
-      this.props.loadFeatureFlags(formsService);
+  if (formRListStatus === "loading" || featFlagStatus === "loading")
+    return <Loading />;
+  else if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
+    const submittedForms = formRList.filter(
+      (form: any) => form.lifecycleState === LifeCycleState.Submitted
+    );
+
+    if (submittedForms.length > 0) {
+      content = submittedForms.map((formData: IFormR) => (
+        <Table.Row key={formData.id} className={styles.listTableRow}>
+          <td>
+            <ActionLink
+              onClick={() => handleRowClick(formData.id, pathname)}
+              data-cy="submittedForm"
+            >
+              form submitted on{" "}
+              {DateUtilities.ToLocalDate(formData.submissionDate)}
+            </ActionLink>
+          </td>
+        </Table.Row>
+      ));
+    } else {
+      content = <LedeText>No forms submitted yet.</LedeText>;
     }
-
-    getFormDataByFormId = (formId: string) => {
-      return this.props.loadSavedForm(formsService, formId);
-    };
-
-    handleRowClick = (formId: string | undefined) => {
-      if (formId) {
-        this.props
-          .loadSavedForm(formsService, formId)
-          .then(_ => this.props.history.push(`/${rootPath}/${formId}`));
-      }
-    };
-
-    handleNewFormClick = () => {
-      this.props.initializeForm(new TraineeProfileService()).then(_ =>
-        this.props.history.push({
-          pathname: `/${rootPath}/create`,
-          history: this.props.history
-        })
-      );
-    };
-
-    loadSavedForm = (formId: string | undefined) => {
-      if (formId) {
-        this.props
-          .loadSavedForm(formsService, formId)
-          .then(_ => this.props.history.push(`/${rootPath}/create`));
-      }
-    };
-
-    renderEditFormButton = () => {
-      const { forms } = this.props;
-      const draftForm = forms.filter(
-        form => form.lifecycleState === LifeCycleState.Draft
-      );
-      const unsubmittedForm = forms.filter(
-        form => form.lifecycleState === LifeCycleState.Unsubmitted
-      );
-
-      if (unsubmittedForm.length === 1) {
-        return (
-          <Button
-            id="btnOpenForm"
-            data-cy="btnEditUnsubmittedForm"
-            reverse
-            type="submit"
-            onClick={() => this.loadSavedForm(unsubmittedForm[0].id)}
-          >
-            Edit unsubmitted form
-          </Button>
-        );
-      }
-
-      if (draftForm.length >= 1) {
-        return (
-          <Button
-            id="btnOpenForm"
-            data-cy="btnEditSavedForm"
-            reverse
-            type="submit"
-            onClick={() => this.loadSavedForm(draftForm[0].id)}
-          >
-            Edit saved form
-          </Button>
-        );
-      }
-
-      return (
-        <Button
-          id="btnOpenForm"
-          data-cy="btnSubmitNewForm"
-          reverse
-          type="submit"
-          onClick={this.handleNewFormClick}
-        >
-          Submit new form
-        </Button>
-      );
-    };
-
-    render() {
-      const { forms } = this.props;
-      const submittedForms = forms.filter(
-        form => form.lifecycleState === LifeCycleState.Submitted
-      );
-      if (this.props.isLoading) return <Loading />;
-      return (
-        <div>
-          <ScrollTo />
-          {this.renderEditFormButton()}
-          {submittedForms.length > 0 ? (
-            <Table>
-              <Table.Head>
-                <Table.Row>
-                  <td>
-                    <b>Submitted forms</b>
-                  </td>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {submittedForms.map((formData: IFormR, index: number) => (
-                  <Table.Row key={formData.id} className={styles.listTableRow}>
-                    <td>
-                      <ActionLink
-                        onClick={() => this.handleRowClick(formData.id)}
-                        data-cy="submittedForm"
-                      >
-                        form submitted on{" "}
-                        {DateUtilities.ToLocalDate(formData.submissionDate)}
-                      </ActionLink>
-                    </td>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          ) : (
-            <LedeText>No forms submitted yet.</LedeText>
-          )}
-        </div>
-      );
-    }
+  } else if (formRListStatus === "failed" || featFlagError === "failed") {
+    content = <ErrorPage error={formRListError}></ErrorPage>;
   }
 
-  return connect(mapStateToProps, mapDispatchToProps)(List);
+  return (
+    <>
+      <ScrollTo />
+      <FormsListBtn pathName={pathname} formRList={formRList} />
+      <Table>
+        <Table.Head>
+          <Table.Row>
+            <td>
+              <b>Submitted forms</b>
+            </td>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>{content}</Table.Body>
+      </Table>
+    </>
+  );
 };
+
+export default CreateList;
