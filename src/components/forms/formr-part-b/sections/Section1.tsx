@@ -17,6 +17,7 @@ import { Section1ValidationSchema } from "../ValidationSchema";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
+import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 
 interface ISection1 {
   prevSectionLabel: string;
@@ -34,7 +35,8 @@ const Section1 = ({
   handleSectionSubmit
 }: ISection1) => {
   const formRBData = useAppSelector(selectSavedFormB);
-  const combinedReferenceData = useAppSelector(selectAllReference);
+  const combinedReferenceData: CombinedReferenceData =
+    useAppSelector(selectAllReference);
 
   let content;
   if (!formRBData.traineeTisId)
@@ -96,14 +98,14 @@ const Section1 = ({
                 />
                 <SelectInputField
                   label="Deanery / HEE Local Team"
-                  options={combinedReferenceData[3]}
+                  options={[...combinedReferenceData.localOffice]}
                   name="localOfficeName"
                 />
 
                 <SelectInputField
                   label="Previous Designated Body for Revalidation (if applicable)"
                   options={[
-                    ...combinedReferenceData[2].filter(
+                    ...combinedReferenceData.dbc.filter(
                       (db: { internal: boolean }) => db.internal
                     ),
                     { label: "other", value: "other" }
@@ -119,7 +121,7 @@ const Section1 = ({
                     label="Please Specify 'Other'"
                     name="prevRevalBodyOther"
                     id="prevRevalBodyOther"
-                    options={[...combinedReferenceData[2]].filter(
+                    options={[...combinedReferenceData.dbc].filter(
                       (db: { internal: boolean }) => !db.internal
                     )}
                     dataCy="prevRevalBodyOther"
@@ -139,12 +141,12 @@ const Section1 = ({
                 <SelectInputField
                   label="Programme / Training Specialty"
                   name="programmeSpecialty"
-                  options={combinedReferenceData[6]}
+                  options={combinedReferenceData.curriculum}
                 />
                 <SelectInputField
                   label="Dual Specialty (if applicable)"
                   name="dualSpecialty"
-                  options={combinedReferenceData[6]}
+                  options={combinedReferenceData.curriculum}
                 />
               </Panel>
             </Fieldset>

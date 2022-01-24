@@ -33,11 +33,14 @@ import { LifeCycleState } from "../../../models/LifeCycleState";
 import store from "../../../redux/store/store";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import { Redirect } from "react-router-dom";
+import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
+import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
   const formRAData = useAppSelector(selectSavedFormA);
-  const combinedReferenceData = useAppSelector(selectAllReference);
+  const combinedReferenceData: CombinedReferenceData =
+    useAppSelector(selectAllReference);
 
   const handleSubmit = async (finalFormA: FormRPartA) => {
     dispatch(updatedFormA(finalFormA));
@@ -99,7 +102,7 @@ const Create = ({ history }: { history: string[] }) => {
               <TextInputField label="GMC Number" name="gmcNumber" />
               <SelectInputField
                 label="Deanery / HEE Local Office"
-                options={combinedReferenceData[3]}
+                options={combinedReferenceData.localOffice}
                 name="localOfficeName"
               />
               <TextInputField
@@ -109,18 +112,18 @@ const Create = ({ history }: { history: string[] }) => {
               />
               <SelectInputField
                 label="Gender"
-                options={combinedReferenceData[0]}
+                options={combinedReferenceData.gender}
                 name="gender"
               />
               <SelectInputField
                 label="Immigration Status"
                 name="immigrationStatus"
-                options={combinedReferenceData[5]}
+                options={combinedReferenceData.immigrationStatus}
               />
               {ReferenceDataUtilities.isMatchInReferenceData(
                 IMMIGRATION_STATUS_OTHER_TISIDS,
                 values.immigrationStatus,
-                combinedReferenceData[5]
+                combinedReferenceData.immigrationStatus
               ) ? (
                 <TextInputField
                   name="otherImmigrationStatus"
@@ -198,8 +201,8 @@ const Create = ({ history }: { history: string[] }) => {
                 label="Programme Specialty"
                 name="programmeSpecialty"
                 id="programmeSpecialty"
-                options={combinedReferenceData[6].filter(
-                  (c: { curriculumSubType: string }) =>
+                options={combinedReferenceData.curriculum.filter(
+                  (c: CurriculumKeyValue) =>
                     c.curriculumSubType === MEDICAL_CURRICULUM
                 )}
                 dataCy="programmeSpecialty"
@@ -211,7 +214,7 @@ const Create = ({ history }: { history: string[] }) => {
                     label="Specialty 1 for Award of CCT"
                     name="cctSpecialty1"
                     id="DeclarationSpeciality1"
-                    options={combinedReferenceData[6]}
+                    options={combinedReferenceData.curriculum}
                     dataCy="cctSpecialty1"
                     width="75%"
                   />
@@ -219,7 +222,7 @@ const Create = ({ history }: { history: string[] }) => {
                     label="Specialty 2 for Award of CCT"
                     name="cctSpecialty2"
                     id="DeclarationSpeciality2"
-                    options={combinedReferenceData[6]}
+                    options={combinedReferenceData.curriculum}
                     dataCy="cctSpecialty2"
                     width="75%"
                   />
@@ -229,7 +232,7 @@ const Create = ({ history }: { history: string[] }) => {
                 label="Royal College / Faculty Assessing Training for the Award of
                     CCT"
                 name="college"
-                options={combinedReferenceData[1]}
+                options={combinedReferenceData.college}
               />
               <TextInputField
                 label="Anticipated Completion Date of Current Programme (if known)"
@@ -242,7 +245,7 @@ const Create = ({ history }: { history: string[] }) => {
               <SelectInputField
                 label="Training Grade"
                 name="trainingGrade"
-                options={combinedReferenceData[4]}
+                options={combinedReferenceData.grade}
               />
               <TextInputField label="Start Date" type="date" name="startDate" />
               <TextInputField

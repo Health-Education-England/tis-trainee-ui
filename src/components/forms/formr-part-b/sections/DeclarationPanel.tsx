@@ -5,6 +5,7 @@ import classes from "../FormRPartB.module.scss";
 import SelectInputField from "../../SelectInputField";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
+import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 
 interface IDeclarationPanel {
   index: number;
@@ -15,8 +16,9 @@ interface IDeclarationPanel {
 const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
   props: IDeclarationPanel
 ) => {
-  const combinedReferenceData = useAppSelector(selectAllReference);
-  const declarationTypes = combinedReferenceData[7].map(
+  const combinedReferenceData: CombinedReferenceData =
+    useAppSelector(selectAllReference);
+  const declarationTypes = combinedReferenceData.declarationType.map(
     (d: { label: string }) => {
       return {
         label: d.label,
