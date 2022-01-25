@@ -1,5 +1,7 @@
-export const mockedCombinedReference: any[] = [
-  [
+import { CombinedReferenceData } from "../models/CombinedReferenceData";
+
+export const mockedCombinedReference: any = {
+  gender: [
     { id: "5e7b4bbc2523bc1554f1ce75", tisId: "2", label: "Female" },
     {
       id: "5e7b4bc72523bc1554f1ce76",
@@ -8,7 +10,7 @@ export const mockedCombinedReference: any[] = [
     },
     { id: "5e7b49217408231554ae8f1e", tisId: "1", label: "Male" }
   ],
-  [
+  college: [
     {
       id: "5e7b85192523bc1554f1ce7a",
       tisId: "1",
@@ -25,7 +27,7 @@ export const mockedCombinedReference: any[] = [
       label: "Faculty of Occupational Medicine"
     }
   ],
-  [
+  dbc: [
     {
       id: "5e7c8df62523bc1554f1ce84",
       tisId: "17",
@@ -83,7 +85,7 @@ export const mockedCombinedReference: any[] = [
       internal: false
     }
   ],
-  [
+  localOffice: [
     {
       id: "5e7c8ddb2523bc1554f1ce7e",
       tisId: "2",
@@ -110,7 +112,7 @@ export const mockedCombinedReference: any[] = [
       label: "Northern Ireland Medical and Dental Training Agency"
     }
   ],
-  [
+  grade: [
     {
       id: "5e8a3ea01f96795a081be04e",
       tisId: "282",
@@ -140,7 +142,7 @@ export const mockedCombinedReference: any[] = [
       trainingGrade: false
     }
   ],
-  [
+  immigrationStatus: [
     {
       id: "614b612cdf97ed1355c73a03",
       tisId: "20",
@@ -158,7 +160,7 @@ export const mockedCombinedReference: any[] = [
       label: "You are the partner/civil partner/spouse of a UK/EEA national"
     }
   ],
-  [
+  curriculum: [
     {
       id: "5e9724c1dd7b3ba860ba6533",
       tisId: "33",
@@ -181,16 +183,16 @@ export const mockedCombinedReference: any[] = [
       status: null
     }
   ],
-  [
+  declarationType: [
     { id: "614b6140e0f4f2685df397c0", label: "Complaint" },
     { id: "614b6140e0f4f2685df397c1", label: "Other investigation" },
     { id: "614b6140e0f4f2685df397bf", label: "Significant event" }
   ],
-  [
+  covidChangeCircs: [
     { id: "614b6140e0f4f2685df397ba", label: "Any Period of self-isolation" },
     {
       id: "614b6140e0f4f2685df397bb",
       label: "Limited opportunities to curricula requirements"
     }
   ]
-];
+};
