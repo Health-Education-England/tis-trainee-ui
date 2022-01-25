@@ -68,7 +68,7 @@
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",
-    "test": "react-scripts test --silent --watchAll=true --coverage --coverageDirectory=jest-coverage",
+    "test": "react-scripts test --silent --watchAll=false --coverage --coverageDirectory=jest-coverage",
     "test-cypress": "npm run cypress & npm run ct & npm run coverage:nyc",
     "coverage:nyc": "npx nyc report --reporter=text",
     "cypress": "cypress run",
