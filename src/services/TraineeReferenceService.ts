@@ -1,6 +1,6 @@
 import ApiService from "./apiService";
 import { AxiosResponse } from "axios";
-
+import { CombinedReferenceData } from "../models/CombinedReferenceData";
 export class TraineeReferenceService extends ApiService {
   constructor() {
     super("/api/reference");
@@ -46,18 +46,39 @@ export class TraineeReferenceService extends ApiService {
     return this.get("/covid-change-circs");
   }
 
-  getCombinedReference() {
-    const res: any = Promise.all([
-      this.get("/gender"),
-      this.get("/college"),
-      this.get("/dbc"),
-      this.get("/local-office"),
-      this.get("/grade"),
-      this.get("/immigration-status"),
-      this.get("/curriculum"),
-      this.get("/declaration-type"),
-      this.get("/covid-change-circs")
-    ]);
-    return res;
+  getCombinedReferenceData(): Promise<CombinedReferenceData> {
+    return Promise.all([
+      this.get("/gender").then(response => response.data),
+      this.get("/college").then(response => response.data),
+      this.get("/dbc").then(response => response.data),
+      this.get("/local-office").then(response => response.data),
+      this.get("/grade").then(response => response.data),
+      this.get("/immigration-status").then(response => response.data),
+      this.get("/curriculum").then(response => response.data),
+      this.get("/declaration-type").then(response => response.data),
+      this.get("/covid-change-circs").then(response => response.data)
+    ]).then(
+      ([
+        gender,
+        college,
+        dbc,
+        localOffice,
+        grade,
+        immigrationStatus,
+        curriculum,
+        declarationType,
+        covidChangeCircs
+      ]) => ({
+        gender,
+        college,
+        dbc,
+        localOffice,
+        grade,
+        immigrationStatus,
+        curriculum,
+        declarationType,
+        covidChangeCircs
+      })
+    );
   }
 }

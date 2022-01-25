@@ -26,6 +26,7 @@ import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
+import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 
 interface ICovidDeclaration {
   prevSectionLabel: string;
@@ -43,16 +44,19 @@ const CovidDeclaration = ({
   handleSectionSubmit
 }: ICovidDeclaration) => {
   const formData = useAppSelector(selectSavedFormB);
-  const combinedReferenceData = useAppSelector(selectAllReference);
+  const combinedReferenceData: CombinedReferenceData =
+    useAppSelector(selectAllReference);
 
   const getChangeCircs = () => {
     if (combinedReferenceData) {
-      return combinedReferenceData[8].map((d: { label: string }) => {
-        return {
-          label: d.label,
-          value: d.label
-        };
-      });
+      return combinedReferenceData.covidChangeCircs.map(
+        (d: { label: string }) => {
+          return {
+            label: d.label,
+            value: d.label
+          };
+        }
+      );
     }
   };
 

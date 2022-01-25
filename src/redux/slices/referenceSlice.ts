@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { TraineeReferenceService } from "../../services/TraineeReferenceService";
+import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 
 interface IReference {
   combinedRef: any;
@@ -17,8 +18,9 @@ export const fetchReference = createAsyncThunk(
   "forms/fetchReference",
   async () => {
     const referenceService = new TraineeReferenceService();
-    const response: any = await referenceService.getCombinedReference();
-    return [...response.map((res: { data: any }) => res.data)];
+    const response: CombinedReferenceData =
+      await referenceService.getCombinedReferenceData();
+    return response;
   }
 );
 
@@ -26,7 +28,7 @@ const referenceSlice = createSlice({
   name: "reference",
   initialState,
   reducers: {
-    updatedReference(state, action: PayloadAction<any[]>) {
+    updatedReference(state, action: PayloadAction<CombinedReferenceData>) {
       return { ...state, combinedRef: action.payload };
     },
     updatedReferenceStatus(state, action: PayloadAction<string>) {
@@ -53,5 +55,5 @@ export default referenceSlice.reducer;
 export const { updatedReference, updatedReferenceStatus } =
   referenceSlice.actions;
 export const selectAllReference = (state: {
-  reference: { combinedRef: any[] };
+  reference: { combinedRef: CombinedReferenceData };
 }) => state.reference.combinedRef;
