@@ -25,7 +25,6 @@ const btnProps = {
   }
 };
 
-// TODO types
 const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -43,11 +42,13 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     }
   }
 
-  const loadTheSavedForm = async (id: any) => {
-    if (pathName === "/formr-a") {
-      await dispatch(loadSavedFormA(id));
-    } else await dispatch(loadSavedFormB(id));
-    history.push(`${pathName}/create`);
+  const loadTheSavedForm = async (id: string | undefined) => {
+    if (id) {
+      if (pathName === "/formr-a") {
+        await dispatch(loadSavedFormA(id));
+      } else await dispatch(loadSavedFormB(id));
+      history.push(`${pathName}/create`);
+    }
   };
 
   const loadNewForm = () => {

@@ -109,7 +109,6 @@ const Create = ({ history }: { history: string[] }) => {
       dispatch(updatedFormB({ ...formData, lastModifiedDate: new Date() }));
 
     const updatedFormBData = store.getState().formB.formBData;
-
     if (formData.id) {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
