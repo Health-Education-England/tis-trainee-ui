@@ -1,49 +1,17 @@
 import { TraineeProfile } from "./TraineeProfile";
 import { FormRPartB, Work } from "./FormRPartB";
-import { MEDICAL_CURRICULUM, NEW_WORK } from "../utilities/Constants";
+import { NEW_WORK } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
+import { ProfileUtilities } from "../utilities/ProfileUtilities";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
 ): FormRPartB {
   const pd = traineeProfileData.personalDetails;
-
-  const programme =
-    traineeProfileData.programmeMemberships.length > 0
-      ? traineeProfileData.programmeMemberships.reduce((a, b) =>
-          a.startDate > b.startDate ? a : b
-        )
-      : null;
-
-  const curriculum =
-    programme && programme.curricula.length > 0
-      ? programme.curricula
-          .filter(
-            (c: { curriculumSubType: string }) =>
-              c.curriculumSubType === MEDICAL_CURRICULUM
-          )
-          .sort(
-            (
-              a: {
-                curriculumStartDate: string | number | Date;
-                curriculumName: string;
-              },
-              b: {
-                curriculumStartDate: string | number | Date;
-                curriculumName: any;
-              }
-            ) => {
-              const diff =
-                new Date(b.curriculumStartDate).getTime() -
-                new Date(a.curriculumStartDate).getTime();
-
-              return diff === 0
-                ? a.curriculumName.localeCompare(b.curriculumName)
-                : diff;
-            }
-          )
-          .shift()
-      : null;
+  const programme = ProfileUtilities.getRecentProgramme(
+    traineeProfileData.programmeMemberships
+  );
+  const curriculum = ProfileUtilities.getCurriculum(programme);
 
   const work = traineeProfileData.placements.map<Work>(placement => ({
     typeOfWork: `${placement.placementType} ${placement.grade} ${placement.specialty}`,
@@ -60,7 +28,7 @@ export function ProfileToFormRPartBInitialValues(
     );
   } else if (work.length === 0) work.push(NEW_WORK);
 
-  const model: FormRPartB = {
+  return {
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
@@ -70,7 +38,7 @@ export function ProfileToFormRPartBInitialValues(
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
     prevRevalDate: pd?.prevRevalDate,
-    programmeSpecialty: curriculum?.curriculumName,
+    programmeSpecialty: curriculum?.curriculumName || null,
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
     work: work,
@@ -101,5 +69,4 @@ export function ProfileToFormRPartBInitialValues(
     isDeclarationAccepted: false,
     isConsentAccepted: false
   };
-  return model;
 }

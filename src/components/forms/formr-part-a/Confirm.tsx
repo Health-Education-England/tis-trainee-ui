@@ -37,8 +37,7 @@ const Confirm = ({ history }: IConfirm) => {
         })
       );
     } else
-      dispatch(updatedFormA({ ...formData, lastModifiedDate: new Date() }));
-
+      dispatch(updatedFormA({ ...formDataSave, lastModifiedDate: new Date() }));
     const updatedFormAData = store.getState().formA.formAData;
     await dispatch(updateFormA(updatedFormAData));
     dispatch(fetchForms("/formr-a"));

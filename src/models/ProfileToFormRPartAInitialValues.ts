@@ -1,52 +1,27 @@
 import { FormRPartA } from "./FormRPartA";
 import { LifeCycleState } from "./LifeCycleState";
-import { MEDICAL_CURRICULUM } from "../utilities/Constants";
+import { TraineeProfile } from "./TraineeProfile";
+import { ProfileUtilities } from "../utilities/ProfileUtilities";
 
 export function ProfileToFormRPartAInitialValues(
-  traineeProfileData: any
+  traineeProfileData: TraineeProfile
 ): FormRPartA {
-  const pd = traineeProfileData?.personalDetails;
-  const programme = traineeProfileData?.programmeMemberships.reduce(function (
-    a: { startDate: number },
-    b: { startDate: number }
-  ) {
-    return a.startDate > b.startDate ? a : b;
-  });
+  const pd = traineeProfileData.personalDetails;
+  const programme = ProfileUtilities.getRecentProgramme(
+    traineeProfileData.programmeMemberships
+  );
+  const curriculum = ProfileUtilities.getCurriculum(programme);
 
-  const curriculum = programme?.curricula
-    .filter(
-      (c: { curriculumSubType: string }) =>
-        c.curriculumSubType === MEDICAL_CURRICULUM
-    )
-    .sort(
-      (
-        a: {
-          curriculumStartDate: string | number | Date;
-          curriculumName: string;
-        },
-        b: { curriculumStartDate: string | number | Date; curriculumName: any }
-      ) => {
-        const diff =
-          new Date(b.curriculumStartDate).getTime() -
-          new Date(a.curriculumStartDate).getTime();
-
-        return diff === 0
-          ? a.curriculumName.localeCompare(b.curriculumName)
-          : diff;
-      }
-    )
-    .shift();
-
-  const model: FormRPartA = {
+  return {
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
     localOfficeName: pd?.personOwner,
-    dateOfBirth: pd?.dateOfBirth,
+    dateOfBirth: pd?.dateOfBirth || null,
     gender: pd?.gender,
-    immigrationStatus: pd?.immigrationStatus,
+    immigrationStatus: "",
     qualification: pd?.qualification,
-    dateAttained: pd?.dateAttained,
+    dateAttained: pd?.dateAttained || null,
     medicalSchool: pd?.medicalSchool,
     address1: pd?.address1,
     address2: pd?.address2,
@@ -61,9 +36,9 @@ export function ProfileToFormRPartAInitialValues(
     cctSpecialty1: curriculum?.curriculumName,
     cctSpecialty2: "",
     college: "",
-    completionDate: programme?.programmeCompletionDate,
+    completionDate: programme?.programmeCompletionDate || null,
     trainingGrade: "",
-    startDate: programme?.startDate,
+    startDate: programme?.startDate || null,
     programmeMembershipType: programme?.programmeMembershipType,
     wholeTimeEquivalent: undefined,
     declarationType: "",
@@ -73,5 +48,4 @@ export function ProfileToFormRPartAInitialValues(
     submissionDate: null,
     lastModifiedDate: null
   };
-  return model;
 }

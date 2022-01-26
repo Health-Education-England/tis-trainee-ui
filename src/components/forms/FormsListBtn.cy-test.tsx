@@ -28,7 +28,8 @@ describe("FormsListBtn", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
+    cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
+    cy.url().should("include", "/create");
   });
   it("should render 'Edit saved form ' when a draft form in list", () => {
     mount(
@@ -41,7 +42,8 @@ describe("FormsListBtn", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get("[data-cy=btnEditSavedForm]").should("exist");
+    cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
+    cy.url().should("include", "/create");
   });
   it("should render 'Edit unsubmitted form' when an unsubmitted form in list", () => {
     mount(
@@ -54,6 +56,7 @@ describe("FormsListBtn", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get("[data-cy=btnEditUnsubmittedForm]").should("exist");
+    cy.get("[data-cy=btnEditUnsubmittedForm]").should("exist").click();
+    cy.url().should("include", "/create");
   });
 });
