@@ -84,7 +84,7 @@ export const updateFormB = createAsyncThunk(
   "formB/updateForm",
   async (form: FormRPartB) => {
     const formsService = new FormsService();
-    return await formsService.updateTraineeFormRPartB(form);
+    return formsService.updateTraineeFormRPartB(form);
   }
 );
 

@@ -1,3 +1,4 @@
+type DateType = Date | string | null;
 export interface PersonalDetails {
   surname: string | null;
   forenames: string | null;
@@ -5,10 +6,10 @@ export interface PersonalDetails {
   maidenName: string | null;
   title: string | null;
   personOwner: string | null | undefined;
-  dateOfBirth: Date | string | null;
+  dateOfBirth: DateType;
   gender: string | null;
   qualification: string | null;
-  dateAttained: Date | string | null;
+  dateAttained: DateType;
   medicalSchool: string | null;
   telephoneNumber: string | null;
   mobileNumber: string | null;
@@ -30,8 +31,8 @@ export interface PersonalDetails {
   detailsNumber: string | null;
   prevRevalBody: string | null;
   prevRevalBodyOther: string | null;
-  currRevalDate: Date | string | null;
-  prevRevalDate: Date | string | null;
+  currRevalDate: DateType;
+  prevRevalDate: DateType;
 }
 
 export const initialPersonalDetails: PersonalDetails = {
