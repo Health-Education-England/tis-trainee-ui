@@ -33,7 +33,17 @@ describe("Form R (Part B)", () => {
 
     cy.get(".nhsuk-warning-callout > p").should("exist");
 
-    // -------- Section 1 - Doctor's details -----------
+    // ---- check if form state resets if navigate away from create page ------------
+    cy.get("#email").type("test.reset@hee.nhs.uk");
+    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+    cy.get("[data-cy=BtnMenu]").click();
+    cy.get(":nth-child(2) > .nhsuk-header__navigation-link").click();
+    cy.get("[data-cy=BtnMenu]").click();
+    cy.get(":nth-child(3) > .nhsuk-header__navigation-link").click();
+    cy.get("#btnOpenForm").click();
+    cy.get("[data-cy=email]").should("have.value", "");
+
+    //   // -------- Section 1 - Doctor's details -----------
     cy.get(".progress-step")
       .first()
       .should("have.class", "progress-step-active");

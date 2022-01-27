@@ -6,7 +6,11 @@ import { loadSavedFormA, updatedFormA } from "../../redux/slices/formASlice";
 import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
 import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
 import { useHistory } from "react-router-dom";
-import { loadSavedFormB, updatedFormB } from "../../redux/slices/formBSlice";
+import {
+  loadSavedFormB,
+  resetToInitFormB,
+  updatedFormB
+} from "../../redux/slices/formBSlice";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
@@ -42,13 +46,14 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     }
   }
 
-  const loadTheSavedForm = async (id: string | undefined) => {
-    if (id) {
-      if (pathName === "/formr-a") {
-        await dispatch(loadSavedFormA(id));
-      } else await dispatch(loadSavedFormB(id));
-      history.push(`${pathName}/create`);
-    }
+  const resetForm = (pName: string) =>
+    pName === "/formr-b" && dispatch(resetToInitFormB());
+
+  const loadTheSavedForm = async (id: string) => {
+    if (pathName === "/formr-a") {
+      await dispatch(loadSavedFormA(id));
+    } else await dispatch(loadSavedFormB(id));
+    history.push(`${pathName}/create`);
   };
 
   const loadNewForm = () => {
@@ -61,7 +66,6 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
         ProfileToFormRPartBInitialValues(traineeProfileData);
       dispatch(updatedFormB(formBInitialValues));
     }
-
     history.push(`${pathName}/create`);
   };
 
@@ -71,9 +75,11 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
       data-cy={btnForm ? bFProps["data-cy"] : "btnLoadNewForm"}
       reverse
       type="submit"
-      onClick={
-        btnForm?.id ? () => loadTheSavedForm(btnForm?.id) : () => loadNewForm()
-      }
+      onClick={() => {
+        resetForm(pathName);
+        if (btnForm?.id) loadTheSavedForm(btnForm.id);
+        else loadNewForm();
+      }}
     >
       {btnForm ? bFProps["btn-text"] : "Submit new form"}
     </Button>
