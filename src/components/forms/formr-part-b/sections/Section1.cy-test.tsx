@@ -83,6 +83,17 @@ describe("Section1", () => {
     cy.get("[data-cy=legendFieldset1]")
       .should("exist")
       .should("include.text", "Section 1");
+    cy.get("[data-cy=dataSourceSummary]").should("exist").click();
+    cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
+    cy.get(".nhsuk-action-link__text").should(
+      "contain.text",
+      "My data sources"
+    );
+    cy.get("[data-cy='dataSourceLink']").should(
+      "have.attr",
+      "href",
+      "https://tis-support.hee.nhs.uk/"
+    );
     cy.get("[data-cy=email]")
       .should("exist")
       .should("have.value", "email@email.com");

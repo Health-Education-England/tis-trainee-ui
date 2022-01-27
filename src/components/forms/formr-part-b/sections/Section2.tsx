@@ -19,6 +19,7 @@ import { NEW_WORK } from "../../../../utilities/Constants";
 import ErrorPage from "../../../common/ErrorPage";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
+import DataSourceMsg from "../../../common/DataSourceMsg";
 interface ISection2 {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -79,6 +80,7 @@ const Section2 = ({
                   rows if required.
                 </p>
               </WarningCallout>
+              <DataSourceMsg />
               <Panel label="Type of work">
                 <FieldArray
                   name="work"

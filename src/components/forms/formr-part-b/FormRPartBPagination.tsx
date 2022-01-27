@@ -93,13 +93,14 @@ const FormRPartBPagination = ({
       <Pagination.Link>
         {previousSection && (
           <Button
-            onClick={() => {
+            onClick={(e: { preventDefault: () => void }) => {
+              e.preventDefault();
               handleSubmit();
             }}
             disabled={!isValid && isSubmitting}
             data-cy="BtnBackToSubmit"
           >
-            Back to Submit Page
+            Back to Submit
           </Button>
         )}
       </Pagination.Link>

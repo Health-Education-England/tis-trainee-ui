@@ -18,6 +18,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
+import DataSourceMsg from "../../../common/DataSourceMsg";
 
 interface ISection1 {
   prevSectionLabel: string;
@@ -86,7 +87,7 @@ const Section1 = ({
                   <b>(Please refer to latest edition of the Gold Guide)</b>.
                 </p>
               </WarningCallout>
-
+              <DataSourceMsg />
               <Panel label="Personal details">
                 <TextInputField label="Forename" name="forename" />
                 <TextInputField label="GMC-Registered Surname" name="surname" />
