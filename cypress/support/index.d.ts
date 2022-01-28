@@ -22,6 +22,7 @@ declare namespace Cypress {
     getTotp: any;
     useTotp: any;
     logoutDesktop: any;
+    testDataSourceLink: any;
   }
 
   import dayjs from "dayjs";

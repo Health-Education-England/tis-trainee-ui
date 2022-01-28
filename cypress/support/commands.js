@@ -25,6 +25,20 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // cypress/support/index.js
 
+Cypress.Commands.add("testDataSourceLink", () => {
+  cy.get("[data-cy=dataSourceSummary]").should("exist").click();
+  cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
+  cy.get(".nhsuk-action-link__text").should(
+    "contain.text",
+    "How to update my personal details"
+  );
+  cy.get("[data-cy='dataSourceLink']").should(
+    "have.attr",
+    "href",
+    "https://tis-support.hee.nhs.uk/trainees/how-to-update-personal-data/"
+  );
+});
+
 Cypress.Commands.add("signIn", () => {
   cy.get("[id^=radix-][id$=-0]").first().click();
   cy.get("[id^=radix-][id$=-4]").first().clear().type(Cypress.env("username"));

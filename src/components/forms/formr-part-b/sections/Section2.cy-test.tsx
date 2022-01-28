@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../../cypress/support/index.d.ts" />
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -50,6 +52,7 @@ describe("Section2", () => {
     cy.get("[data-cy=legendFieldset2]")
       .should("exist")
       .should("include.text", "Section 2");
+    cy.testDataSourceLink();
     cy.get('[data-cy="work[0].trainingPost"]')
       .should("exist")
       .should("have.value", "Yes");
