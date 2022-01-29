@@ -3,7 +3,7 @@
 
 describe("Profile", () => {
   before(() => {
-    // cy.wait(30000);
+    cy.wait(30000);
     cy.visit("./profile");
     cy.signIn();
   });
