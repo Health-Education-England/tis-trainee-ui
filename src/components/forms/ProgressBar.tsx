@@ -1,15 +1,15 @@
-import { ISection } from "../../models/ProgressBarSections";
+import { IProgSection } from "../../models/IProgressSection";
 import "./ProgressBar.scss";
 
 interface IProgressBar {
-  sections: ISection[];
+  sections: IProgSection[];
   section: number;
 }
 
 const ProgressBar = ({ sections, section }: IProgressBar) => {
   return (
     <div className="progressbar">
-      {sections.map((_sect: ISection, index: number) => (
+      {sections.map((_sect: IProgSection, index: number) => (
         <div
           key={index}
           className={

@@ -5,17 +5,8 @@ import { Form, Formik } from "formik";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
-
-interface ISection6 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  history: any;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section6 = ({
   prevSectionLabel,
@@ -23,7 +14,7 @@ const Section6 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection6) => {
+}: IFormRPartBSection) => {
   const formData = useAppSelector(selectSavedFormB);
   let content;
   if (!formData.traineeTisId)

@@ -12,18 +12,10 @@ import { Form, Formik } from "formik";
 import { Section3ValidationSchema } from "../ValidationSchema";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import ErrorPage from "../../../common/ErrorPage";
-
-interface ISection3 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section3 = ({
   prevSectionLabel,
@@ -31,7 +23,7 @@ const Section3 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection3) => {
+}: IFormRPartBSection) => {
   const formData = useAppSelector(selectSavedFormB);
   let content;
   if (!formData.traineeTisId)

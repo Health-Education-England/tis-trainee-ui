@@ -24,17 +24,9 @@ import { KeyValue } from "../../../../models/KeyValue";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
-
-interface ICovidDeclaration {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const CovidDeclaration = ({
   prevSectionLabel,
@@ -42,7 +34,7 @@ const CovidDeclaration = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ICovidDeclaration) => {
+}: IFormRPartBSection) => {
   const formData = useAppSelector(selectSavedFormB);
   const combinedReferenceData: CombinedReferenceData =
     useAppSelector(selectAllReference);

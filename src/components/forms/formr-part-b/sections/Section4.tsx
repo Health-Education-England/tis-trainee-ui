@@ -11,7 +11,6 @@ import {
 } from "nhsuk-react-components";
 import { Form, Formik, FieldArray } from "formik";
 import DeclarationPanel from "./DeclarationPanel";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
@@ -22,13 +21,7 @@ import {
 } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import ErrorPage from "../../../common/ErrorPage";
-interface ISection4 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section4 = ({
   prevSectionLabel,
@@ -36,7 +29,7 @@ const Section4 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection4) => {
+}: IFormRPartBSection) => {
   const formData = useAppSelector(selectSavedFormB);
   let content;
   if (!formData.traineeTisId)

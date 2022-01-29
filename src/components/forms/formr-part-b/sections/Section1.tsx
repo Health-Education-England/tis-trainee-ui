@@ -15,18 +15,10 @@ import SelectInputField from "../../SelectInputField";
 import TextInputField from "../../TextInputField";
 import { Section1ValidationSchema } from "../ValidationSchema";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import DataSourceMsg from "../../../common/DataSourceMsg";
-
-interface ISection1 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section1 = ({
   prevSectionLabel,
@@ -34,7 +26,7 @@ const Section1 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection1) => {
+}: IFormRPartBSection) => {
   const formRBData = useAppSelector(selectSavedFormB);
   const combinedReferenceData: CombinedReferenceData =
     useAppSelector(selectAllReference);
