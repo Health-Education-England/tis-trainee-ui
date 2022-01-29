@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import ProgressBar from "../ProgressBar";
 import Section1 from "./sections/Section1";
 import Section2 from "./sections/Section2";
 import Section3 from "./sections/Section3";
@@ -6,7 +7,6 @@ import Section4 from "./sections/Section4";
 import Section5 from "./sections/Section5";
 import Section6 from "./sections/Section6";
 import CovidDeclaration from "./sections/CovidDeclaration";
-import "../formr-part-b/sections/section-styles.scss";
 import React from "react";
 import Loading from "../../common/Loading";
 import { FormRPartB } from "../../../models/FormRPartB";
@@ -82,19 +82,6 @@ const Create = ({ history }: { history: string[] }) => {
     ];
   } else finalSections = sections;
 
-  const makeProgressBar = () => {
-    return finalSections.map((_sect, index) => (
-      <div
-        key={index}
-        className={
-          section === index + 1
-            ? "progress-step progress-step-active"
-            : "progress-step"
-        }
-      ></div>
-    ));
-  };
-
   const saveDraft = async (formData: FormRPartB) => {
     if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
       dispatch(
@@ -152,7 +139,7 @@ const Create = ({ history }: { history: string[] }) => {
       <main>
         <div className="form-wrapper">
           <section>
-            <div className="progressbar">{makeProgressBar()}</div>
+            <ProgressBar sections={finalSections} section={section} />
             <div className="page-wrapper">
               {section < finalSections.length + 1 ? (
                 React.createElement(
