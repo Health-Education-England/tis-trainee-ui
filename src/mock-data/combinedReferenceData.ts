@@ -1,4 +1,6 @@
-export const mockedCombinedReference: any = {
+import { CombinedReferenceData } from "../models/CombinedReferenceData";
+
+export const mockedCombinedReference: CombinedReferenceData = {
   gender: [
     { id: "5e7b4bbc2523bc1554f1ce75", tisId: "2", label: "Female" },
     {

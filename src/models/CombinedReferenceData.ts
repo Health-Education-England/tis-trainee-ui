@@ -1,23 +1,14 @@
 import { KeyValue } from "./KeyValue";
 import { CurriculumKeyValue } from "./CurriculumKeyValue";
-
-export interface Dbc extends KeyValue {
-  internal: boolean;
-  type: string;
-}
-
-export interface Grade extends KeyValue {
-  placementGrade: boolean;
-  status: any;
-  trainingGrade: boolean;
-}
+import { DesignatedBodyKeyValue } from "./DesignatedBodyKeyValue";
+import { GradeKeyValue } from "./GradeKeyValue";
 
 export interface CombinedReferenceData {
   gender: KeyValue[];
   college: KeyValue[];
-  dbc: Dbc[];
+  dbc: DesignatedBodyKeyValue[];
   localOffice: KeyValue[];
-  grade: Grade[];
+  grade: GradeKeyValue[];
   immigrationStatus: KeyValue[];
   curriculum: CurriculumKeyValue[];
   declarationType: KeyValue[];

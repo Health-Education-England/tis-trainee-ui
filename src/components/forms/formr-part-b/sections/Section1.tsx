@@ -19,6 +19,7 @@ import ErrorPage from "../../../common/ErrorPage";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
 
 const Section1 = ({
   prevSectionLabel,
@@ -99,7 +100,7 @@ const Section1 = ({
                   label="Previous Designated Body for Revalidation (if applicable)"
                   options={[
                     ...combinedReferenceData.dbc.filter(
-                      (db: { internal: boolean }) => db.internal
+                      (db: DesignatedBodyKeyValue) => db.internal
                     ),
                     { label: "other", value: "other" }
                   ]}
@@ -115,7 +116,7 @@ const Section1 = ({
                     name="prevRevalBodyOther"
                     id="prevRevalBodyOther"
                     options={[...combinedReferenceData.dbc].filter(
-                      (db: { internal: boolean }) => !db.internal
+                      (db: DesignatedBodyKeyValue) => !db.internal
                     )}
                     dataCy="prevRevalBodyOther"
                     width="75%"

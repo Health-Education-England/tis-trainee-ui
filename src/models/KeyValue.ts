@@ -1,5 +1,6 @@
 export interface KeyValue {
   label: string;
-  value: string | null;
+  id?: string;
+  value?: string | null;
   tisId?: string;
 }
