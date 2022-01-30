@@ -9,16 +9,17 @@ interface IProgressBar {
 const ProgressBar = ({ sections, section }: IProgressBar) => {
   return (
     <div className="progressbar">
-      {sections.map((_sect: IProgSection, index: number) => (
-        <div
-          key={index}
-          className={
-            section === index + 1
-              ? "progress-step progress-step-active"
-              : "progress-step"
-          }
-        ></div>
-      ))}
+      {sections &&
+        sections.map((_sect: IProgSection, index: number) => (
+          <div
+            key={index}
+            className={
+              section === index + 1
+                ? "progress-step progress-step-active"
+                : "progress-step"
+            }
+          ></div>
+        ))}
     </div>
   );
 };
