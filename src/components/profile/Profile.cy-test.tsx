@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../cypress/support/index.d.ts" />
+
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -63,6 +66,7 @@ describe("Profile", () => {
         </BrowserRouter>
       </Provider>
     );
+    cy.testDataSourceLink();
     cy.contains("Personal details").should("exist").click();
     cy.get(
       ".nhsuk-details__text > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"

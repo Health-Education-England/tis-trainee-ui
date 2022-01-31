@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { FormRPartB } from "../../models/FormRPartB";
-import { LifeCycleState } from "../../models/LifeCycleState";
+import {
+  FormRPartB,
+  initialFormRBBeforeProfileData
+} from "../../models/FormRPartB";
 import { FormsService } from "../../services/FormsService";
 interface IFormB {
   formBData: FormRPartB;
@@ -12,49 +14,8 @@ interface IFormB {
   saveBtnActive: boolean;
 }
 
-export const initialFormState: FormRPartB = {
-  forename: "",
-  surname: "",
-  gmcNumber: "",
-  email: "",
-  localOfficeName: "",
-  prevRevalBody: "",
-  prevRevalBodyOther: "",
-  currRevalDate: null,
-  prevRevalDate: null,
-  programmeSpecialty: "",
-  dualSpecialty: "",
-  work: [],
-  sicknessAbsence: 0,
-  parentalLeave: 0,
-  careerBreaks: 0,
-  paidLeave: 0,
-  unauthorisedLeave: 0,
-  otherLeave: 0,
-  totalLeave: 0,
-  isHonest: "",
-  isHealthy: "",
-  isWarned: "",
-  isComplying: "",
-  healthStatement: "",
-  havePreviousDeclarations: "",
-  previousDeclarations: [],
-  previousDeclarationSummary: "",
-  haveCurrentDeclarations: "",
-  currentDeclarations: [],
-  currentDeclarationSummary: "",
-  compliments: "",
-  haveCovidDeclarations: "",
-  covidDeclarationDto: null,
-  lifecycleState: LifeCycleState.New,
-  submissionDate: "",
-  lastModifiedDate: "",
-  isDeclarationAccepted: false,
-  isConsentAccepted: false
-};
-
 export const initialState: IFormB = {
-  formBData: initialFormState,
+  formBData: initialFormRBBeforeProfileData,
   sectionNumber: 1,
   previousSectionNumber: null,
   status: "idle",

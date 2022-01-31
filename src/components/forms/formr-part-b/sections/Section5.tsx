@@ -11,7 +11,7 @@ import {
 } from "nhsuk-react-components";
 import { Form, Formik, FieldArray } from "formik";
 import DeclarationPanel from "./DeclarationPanel";
-import { Declaration, FormRPartB } from "../../../../models/FormRPartB";
+import { Declaration } from "../../../../models/FormRPartB";
 import { Section5ValidationSchema } from "../ValidationSchema";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import {
@@ -22,14 +22,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import ErrorPage from "../../../common/ErrorPage";
-
-interface ISection5 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section5 = ({
   prevSectionLabel,
@@ -37,7 +30,7 @@ const Section5 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection5) => {
+}: IFormRPartBSection) => {
   const formData = useAppSelector(selectSavedFormB);
 
   const newDeclaration: Declaration = {

@@ -9,6 +9,7 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import Loading from "../common/Loading";
 import ErrorPage from "../common/ErrorPage";
+import DataSourceMsg from "../common/DataSourceMsg";
 
 const Profile = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -31,6 +32,7 @@ const Profile = () => {
             Profile
           </Fieldset.Legend>
         </Fieldset>
+        <DataSourceMsg />
         <Details.ExpanderGroup>
           {traineeProfileData.personalDetails && (
             <PersonalDetailsComponent

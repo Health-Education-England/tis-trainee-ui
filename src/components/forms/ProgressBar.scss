@@ -1,30 +1,27 @@
-@use '../../static/scss/variables' as *; // * removes need to call namespace
-@use '../../static/scss/mixin' as *; // * removes need to call namespace
-
 .progressbar {
   position: relative;
   display: flex;
   justify-content: space-between;
   counter-reset: step;
-  margin: $spacing-large 0;
+  margin: 1.5rem 0;
 
   .progress-step {
     width: 2.5rem;
     height: 2.5rem;
-    background-color: $third-color;
+    background-color: #ffffff;
     border-radius: 50%;
-    border: $border-width-large solid $primary-color;
+    border: 3px solid #003087;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $primary-color;
+    color: #003087;
     z-index: 2;
   }
 
   // active step
   .progress-step-active {
-    background-color: $primary-color-background;
-    color: $third-color;
+    background-color: #ae2573;
+    color: #ffffff;
     border: none;
   }
 }
@@ -38,6 +35,6 @@
   transform: translateY(-50%);
   height: 3px;
   width: 100%;
-  background-color: $primary-color;
+  background-color: #003087;
   z-index: 1;
 }

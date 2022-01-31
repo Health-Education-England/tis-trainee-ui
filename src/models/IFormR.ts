@@ -6,5 +6,5 @@ export interface IFormR {
   id?: string;
   submissionDate: DateType;
   lastModifiedDate: DateType;
-  lifecycleState: LifeCycleState;
+  lifecycleState: LifeCycleState | null;
 }

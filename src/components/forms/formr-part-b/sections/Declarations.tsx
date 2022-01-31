@@ -19,13 +19,13 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import { fetchForms } from "../../../../redux/slices/formsSlice";
 import store from "../../../../redux/store/store";
-import { ISection } from "../Create";
+import { IProgSection } from "../../../../models/IProgressSection";
 
 interface IDeclarations {
   prevSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
   history: any;
-  finalSections: ISection[];
+  finalSections: IProgSection[];
 }
 
 const Declarations = ({

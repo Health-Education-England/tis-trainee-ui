@@ -8,7 +8,7 @@ import {
   updateFormBPreviousSection,
   updatesaveBtnActive
 } from "../../../redux/slices/formBSlice";
-import { ISection } from "./Create";
+import { IProgSection } from "../../../models/IProgressSection";
 import classes from "./FormRPartB.module.scss";
 
 interface IFormRPartBPagination {
@@ -20,7 +20,7 @@ interface IFormRPartBPagination {
   previousSection: number | null;
   isValid?: boolean;
   isSubmitting?: boolean;
-  finalSections?: ISection[];
+  finalSections?: IProgSection[];
 }
 
 const FormRPartBPagination = ({
@@ -93,13 +93,14 @@ const FormRPartBPagination = ({
       <Pagination.Link>
         {previousSection && (
           <Button
-            onClick={() => {
+            onClick={(e: { preventDefault: () => void }) => {
+              e.preventDefault();
               handleSubmit();
             }}
             disabled={!isValid && isSubmitting}
             data-cy="BtnBackToSubmit"
           >
-            Back to Submit Page
+            Back to Submit
           </Button>
         )}
       </Pagination.Link>

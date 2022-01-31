@@ -68,7 +68,6 @@ describe("Create form B", () => {
         </BrowserRouter>
       </Provider>
     );
-    //TODO navigate edit etc. It all works!!
     cy.get(".nhsuk-warning-callout__label").should(
       "include.text",
       "Confirmation"

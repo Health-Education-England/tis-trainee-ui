@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../cypress/support/index.d.ts" />
+
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -35,6 +38,7 @@ describe("Form R Part A - Create", () => {
         </BrowserRouter>
       </Provider>
     );
+    cy.testDataSourceLink();
     cy.get("#forename").should("exist").should("have.value", "Anthony Mara");
     cy.get("#immigrationStatus")
       .should("exist")

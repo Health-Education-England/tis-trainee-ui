@@ -1,12 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import Section1 from "./sections/Section1";
-import Section2 from "./sections/Section2";
-import Section3 from "./sections/Section3";
-import Section4 from "./sections/Section4";
-import Section5 from "./sections/Section5";
-import Section6 from "./sections/Section6";
-import CovidDeclaration from "./sections/CovidDeclaration";
-import "../formr-part-b/sections/section-styles.scss";
+import ProgressBar from "../ProgressBar";
 import React from "react";
 import Loading from "../../common/Loading";
 import { FormRPartB } from "../../../models/FormRPartB";
@@ -24,40 +17,7 @@ import {
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
-
-export interface ISection {
-  component: any;
-  title: string;
-}
-
-const sections: ISection[] = [
-  {
-    component: Section1,
-    title: "Section 1:\nDoctor's details"
-  },
-
-  {
-    component: Section2,
-    title: "Section 2:\nWhole Scope of Practice"
-  },
-
-  {
-    component: Section3,
-    title: "Section 3:\nDeclarations relating to\nGood Medical Practice"
-  },
-  {
-    component: Section4,
-    title: "Section 4:\nUpdate to your last Form R"
-  },
-  {
-    component: Section5,
-    title: "Section 5:\nNew Declarations\nsince your last Form R"
-  },
-  {
-    component: Section6,
-    title: "Section 6:\nCompliments"
-  }
-];
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -72,28 +32,7 @@ const Create = ({ history }: { history: string[] }) => {
     state => state.formB.formBData.traineeTisId
   );
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
-
-  let finalSections: ISection[];
-  if (isfeatFlagCovid) {
-    finalSections = [
-      ...sections.slice(0, 6),
-      { component: CovidDeclaration, title: "Covid declaration" },
-      ...sections.slice(6)
-    ];
-  } else finalSections = sections;
-
-  const makeProgressBar = () => {
-    return finalSections.map((_sect, index) => (
-      <div
-        key={index}
-        className={
-          section === index + 1
-            ? "progress-step progress-step-active"
-            : "progress-step"
-        }
-      ></div>
-    ));
-  };
+  const finalSections = FormRUtilities.makeFormRBSections(isfeatFlagCovid);
 
   const saveDraft = async (formData: FormRPartB) => {
     if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
@@ -152,7 +91,7 @@ const Create = ({ history }: { history: string[] }) => {
       <main>
         <div className="form-wrapper">
           <section>
-            <div className="progressbar">{makeProgressBar()}</div>
+            <ProgressBar sections={finalSections} section={section} />
             <div className="page-wrapper">
               {section < finalSections.length + 1 ? (
                 React.createElement(

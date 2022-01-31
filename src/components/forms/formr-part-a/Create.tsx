@@ -35,6 +35,7 @@ import { fetchForms } from "../../../redux/slices/formsSlice";
 import { Redirect } from "react-router-dom";
 import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
+import DataSourceMsg from "../../common/DataSourceMsg";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -67,10 +68,9 @@ const Create = ({ history }: { history: string[] }) => {
   if (!formRAData.traineeTisId) {
     return <Redirect to="/formr-a" />;
   }
-  // TODO better backlink
   return (
     <>
-      <BackLink href="/formr-a">Go back</BackLink>
+      <BackLink href="/formr-a">Go back to forms list</BackLink>
       <Formik
         initialValues={formRAData}
         validationSchema={ValidationSchema}
@@ -96,6 +96,7 @@ const Create = ({ history }: { history: string[] }) => {
                 Revalidation".
               </p>
             </WarningCallout>
+            <DataSourceMsg />
             <Panel label="Personal Details">
               <TextInputField label="Forename" name="forename" />
               <TextInputField label="GMC-Registered Surname" name="surname" />

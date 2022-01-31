@@ -15,17 +15,11 @@ import SelectInputField from "../../SelectInputField";
 import TextInputField from "../../TextInputField";
 import { Section1ValidationSchema } from "../ValidationSchema";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import ErrorPage from "../../../common/ErrorPage";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
-
-interface ISection1 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import DataSourceMsg from "../../../common/DataSourceMsg";
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
 
 const Section1 = ({
   prevSectionLabel,
@@ -33,7 +27,7 @@ const Section1 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection1) => {
+}: IFormRPartBSection) => {
   const formRBData = useAppSelector(selectSavedFormB);
   const combinedReferenceData: CombinedReferenceData =
     useAppSelector(selectAllReference);
@@ -86,7 +80,7 @@ const Section1 = ({
                   <b>(Please refer to latest edition of the Gold Guide)</b>.
                 </p>
               </WarningCallout>
-
+              <DataSourceMsg />
               <Panel label="Personal details">
                 <TextInputField label="Forename" name="forename" />
                 <TextInputField label="GMC-Registered Surname" name="surname" />
@@ -106,7 +100,7 @@ const Section1 = ({
                   label="Previous Designated Body for Revalidation (if applicable)"
                   options={[
                     ...combinedReferenceData.dbc.filter(
-                      (db: { internal: boolean }) => db.internal
+                      (db: DesignatedBodyKeyValue) => db.internal
                     ),
                     { label: "other", value: "other" }
                   ]}
@@ -122,7 +116,7 @@ const Section1 = ({
                     name="prevRevalBodyOther"
                     id="prevRevalBodyOther"
                     options={[...combinedReferenceData.dbc].filter(
-                      (db: { internal: boolean }) => !db.internal
+                      (db: DesignatedBodyKeyValue) => !db.internal
                     )}
                     dataCy="prevRevalBodyOther"
                     width="75%"

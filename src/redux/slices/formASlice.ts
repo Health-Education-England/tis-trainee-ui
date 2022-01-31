@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { FormRPartA } from "../../models/FormRPartA";
-import { LifeCycleState } from "../../models/LifeCycleState";
+import {
+  FormRPartA,
+  initialFormRABeforeProfileData
+} from "../../models/FormRPartA";
 import { FormsService } from "../../services/FormsService";
 
 interface IFormA {
@@ -10,44 +12,8 @@ interface IFormA {
   error: any;
 }
 
-export const initialFormState: FormRPartA = {
-  forename: "",
-  surname: "",
-  gmcNumber: "",
-  localOfficeName: "",
-  dateOfBirth: null,
-  gender: "",
-  immigrationStatus: "",
-  qualification: "",
-  dateAttained: null,
-  medicalSchool: "",
-  address1: "",
-  address2: "",
-  address3: "",
-  address4: "",
-  postCode: "",
-  telephoneNumber: "",
-  mobileNumber: "",
-  email: "",
-  isLeadingToCct: false,
-  programmeSpecialty: "",
-  cctSpecialty1: "",
-  cctSpecialty2: "",
-  college: "",
-  completionDate: null,
-  trainingGrade: "",
-  startDate: null,
-  programmeMembershipType: "",
-  wholeTimeEquivalent: undefined,
-  declarationType: "",
-  otherImmigrationStatus: "",
-  lifecycleState: LifeCycleState.New,
-  submissionDate: null,
-  lastModifiedDate: null
-};
-
 export const initialState: IFormA = {
-  formAData: initialFormState,
+  formAData: initialFormRABeforeProfileData,
   status: "idle",
   error: ""
 };

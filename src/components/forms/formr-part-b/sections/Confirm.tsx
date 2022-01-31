@@ -2,13 +2,13 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import ScrollTo from "../../ScrollTo";
 import Declarations from "./Declarations";
 import View from "../View";
-import { ISection } from "../Create";
+import { IProgSection } from "../../../../models/IProgressSection";
 
 interface IConfirm {
   prevSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
   history: any;
-  finalSections: ISection[];
+  finalSections: IProgSection[];
 }
 
 const Confirm = ({

@@ -1,9 +1,15 @@
 /// <reference types="cypress" />
+/// <reference path="../../support/index.d.ts" />
+
 describe("Profile", () => {
   before(() => {
     cy.wait(30000);
     cy.visit("./profile");
     cy.signIn();
+  });
+
+  it("should click expand to show 'How to update my personal details' link", () => {
+    cy.testDataSourceLink();
   });
 
   it("should click expand to show all personal information then toggle close", () => {

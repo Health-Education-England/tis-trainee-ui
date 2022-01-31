@@ -89,8 +89,8 @@ const View = ({ canEdit, history }: IView) => {
         {canEdit && (
           <WarningCallout label="Confirmation" data-jest="warningConfirmation">
             <p>
-              Check the information entered below is correct and click Submit at
-              the bottom of the page.
+              Check the information entered below is correct, complete the
+              Declarations, then click Submit at the bottom of the page.
             </p>
           </WarningCallout>
         )}

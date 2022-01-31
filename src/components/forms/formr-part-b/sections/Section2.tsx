@@ -11,7 +11,6 @@ import {
 } from "nhsuk-react-components";
 import { Form, Formik, FieldArray } from "formik";
 import WorkPanel from "./WorkPanel";
-import { FormRPartB } from "../../../../models/FormRPartB";
 import { Section2ValidationSchema } from "../ValidationSchema";
 import classes from "../FormRPartB.module.scss";
 import FormRPartBPagination from "../FormRPartBPagination";
@@ -19,13 +18,8 @@ import { NEW_WORK } from "../../../../utilities/Constants";
 import ErrorPage from "../../../common/ErrorPage";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
-interface ISection2 {
-  prevSectionLabel: string;
-  nextSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
-  previousSection: number | null;
-  handleSectionSubmit: (formData: FormRPartB) => void;
-}
+import DataSourceMsg from "../../../common/DataSourceMsg";
+import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 
 const Section2 = ({
   prevSectionLabel,
@@ -33,7 +27,7 @@ const Section2 = ({
   saveDraft,
   previousSection,
   handleSectionSubmit
-}: ISection2) => {
+}: IFormRPartBSection) => {
   let formData = useAppSelector(selectSavedFormB);
 
   const getNumber = (value: number) => {
@@ -79,6 +73,7 @@ const Section2 = ({
                   rows if required.
                 </p>
               </WarningCallout>
+              <DataSourceMsg />
               <Panel label="Type of work">
                 <FieldArray
                   name="work"
