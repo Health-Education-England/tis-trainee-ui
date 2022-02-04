@@ -5,6 +5,7 @@ describe("DateUtilities", () => {
   const now = dayjs();
   const yesterday = now.subtract(1, "day").toDate();
   const tomorrow = now.add(1, "day").toDate();
+  const today = now.toDate();
 
   it("ToLocalDate should return date in DD/MM/YYYY format", () => {
     expect(DateUtilities.ToLocalDate(new Date("2020-04-20"))).toEqual(
@@ -54,6 +55,10 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsPastDate(yesterday)).toEqual(true);
   });
 
+  it("IsPastDate should return true if date is today's date", () => {
+    expect(DateUtilities.IsPastDate(today)).toEqual(true);
+  });
+
   it("IsPastDate should return false if date is future date", () => {
     expect(DateUtilities.IsPastDate(tomorrow)).toEqual(false);
   });
@@ -70,13 +75,15 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsFutureDate(tomorrow)).toEqual(true);
   });
 
+  it("IsFutureDate should return true if date is today's date", () => {
+    expect(DateUtilities.IsFutureDate(today)).toEqual(true);
+  });
+
   it("should accept a date type of ISO_8601", () => {
     expect(DateUtilities.IsFutureDate(tomorrow.toISOString())).toEqual(true);
   });
 
   it("IsInsideDateRange should return true using ISO_8601 format", () => {
-    expect(DateUtilities.IsInsideDateRange(now.toDate().toISOString())).toEqual(
-      true
-    );
+    expect(DateUtilities.IsInsideDateRange(today.toISOString())).toEqual(true);
   });
 });
