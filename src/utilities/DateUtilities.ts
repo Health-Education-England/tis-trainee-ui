@@ -1,8 +1,12 @@
 import day from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
 day.extend(isBetween);
-
+day.extend(isSameOrBefore);
+day.extend(isSameOrAfter);
+const todayDate = day().toDate();
 export class DateUtilities {
   public static ToUTCDate(date: Date | string | null): string {
     let utcDate = "";
@@ -30,7 +34,7 @@ export class DateUtilities {
       const dayDate = day(value);
       return dayDate.isValid() && day().diff(dayDate, "years") >= 18;
     }
-    return false;
+    return true;
   }
 
   public static IsMoreThanMinDate(
@@ -40,7 +44,7 @@ export class DateUtilities {
       const dayDate = day(value);
       return dayDate.isValid() && day().diff(dayDate, "years") < 100;
     }
-    return false;
+    return true;
   }
 
   public static IsLessThanMaxDate(
@@ -51,7 +55,7 @@ export class DateUtilities {
       const maxDate = day().add(50, "y");
       return dayDate.isValid() && dayDate < maxDate;
     }
-    return false;
+    return true;
   }
 
   public static IsInsideDateRange(
@@ -63,22 +67,22 @@ export class DateUtilities {
       const maxDate = day().add(25, "y");
       return dayDate.isValid() && dayDate.isBetween(minDate, maxDate);
     }
-    return false;
+    return true;
   }
 
   public static IsPastDate(value: Date | string | null | undefined): boolean {
     if (value) {
       const dayDate = day(value);
-      return dayDate.isValid() && day().diff(dayDate, "days") >= 1;
+      return dayDate.isValid() && dayDate.isSameOrBefore(todayDate, "day");
     }
-    return false;
+    return true;
   }
 
   public static IsFutureDate(value: Date | string | null | undefined): boolean {
     if (value) {
       const dayDate = day(value);
-      return dayDate.isValid() && day().diff(dayDate, "years") <= 1;
+      return dayDate.isValid() && dayDate.isSameOrAfter(todayDate, "day");
     }
-    return false;
+    return true;
   }
 }

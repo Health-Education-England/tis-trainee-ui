@@ -9,7 +9,7 @@ import {
 } from "../../../utilities/Constants";
 
 const dateValidationSchema = (fieldName: string) =>
-  yup.date().required(`${fieldName} is required`);
+  yup.date().nullable().required(`${fieldName} is required`);
 
 export const ValidationSchema = yup.object({
   forename: StringValidationSchema("Forename"),
@@ -72,7 +72,9 @@ export const ValidationSchema = yup.object({
     then: StringValidationSchema("Specialty 1 for Award of CCT")
   }),
   college: StringValidationSchema("Royal College / Faculty Assessing Training"),
-  completionDate: dateValidationSchema("Anticipated completion date")
+  completionDate: yup
+    .string()
+    .nullable()
     .test(
       "completionDate",
       "Anticipated completion date - please choose a future date",
