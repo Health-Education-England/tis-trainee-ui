@@ -3,7 +3,7 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import { StringValidationSchema } from "../StringValidationSchema";
 
 const dateValidationSchema = (fieldName: string) =>
-  yup.date().required(`${fieldName} is required`);
+  yup.date().nullable().required(`${fieldName} is required`);
 
 const leaveValidation = (fieldName: string) =>
   yup
@@ -25,12 +25,11 @@ const panelSchemaValidation = yup.array(
     declarationType: StringValidationSchema("Delaration type"),
     title: StringValidationSchema("Title"),
     locationOfEntry: StringValidationSchema("Location of entry"),
-    dateOfEntry: yup
-      .date()
-      .required("Date of entry is required")
-      .test("dateOfEntry", " please choose a date from the past", value =>
-        DateUtilities.IsPastDate(value)
-      )
+    dateOfEntry: dateValidationSchema("Date of entry").test(
+      "dateOfEntry",
+      " please choose a date from the past",
+      value => DateUtilities.IsPastDate(value)
+    )
   })
 );
 
@@ -44,7 +43,7 @@ export const Section1ValidationSchema = yup.object({
     .max(255, "Email must be shorter than 255 characters")
     .required("Email is required"),
   localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
-  prevRevalBody: yup.string(),
+  prevRevalBody: yup.string().nullable(),
   prevRevalBodyOther: yup.string().nullable(),
   currRevalDate: dateValidationSchema("Current Revalidation date")
     .test("currRevalDate", "The date has to be on or after today", value =>
@@ -55,7 +54,12 @@ export const Section1ValidationSchema = yup.object({
       "The date is outside the allowed date range",
       value => DateUtilities.IsInsideDateRange(value)
     ),
-  prevRevalDate: yup.string().nullable().notRequired(),
+  prevRevalDate: yup
+    .string()
+    .nullable()
+    .test("prevRevalDate", " please choose a date from the past", value =>
+      DateUtilities.IsPastDate(value)
+    ),
   programmeSpecialty: StringValidationSchema("Programme / Training Specialty"),
   dualSpecialty: yup.string()
 });

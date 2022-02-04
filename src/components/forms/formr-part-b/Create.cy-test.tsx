@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../cypress/support/index.d.ts"/>
+
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -14,6 +17,7 @@ import { updatedReference } from "../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../mock-data/combinedReferenceData";
 
 describe("Create form B", () => {
+  const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
   it("should not render a section if no tisId", () => {
     mount(
       <Provider store={store}>
@@ -86,6 +90,10 @@ describe("Create form B", () => {
     cy.get("#forename--error-message").should("exist");
     cy.get("[data-cy=forename]").type("Tony");
     cy.get("#forename--error-message").should("not.exist");
+    cy.get("[data-cy=currRevalDate]")
+      .should("exist")
+      .clear()
+      .type(currRevalDate);
     cy.get("[data-cy=BtnBackToSubmit]").should("exist").click();
     cy.get(".nhsuk-warning-callout__label").should(
       "include.text",
