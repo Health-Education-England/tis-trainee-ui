@@ -86,4 +86,15 @@ describe("DateUtilities", () => {
   it("IsInsideDateRange should return true using ISO_8601 format", () => {
     expect(DateUtilities.IsInsideDateRange(today.toISOString())).toEqual(true);
   });
+  it("IsInsideDateRange should return true if null value", () => {
+    expect(DateUtilities.IsInsideDateRange(null)).toEqual(true);
+  });
+  it("IsMoreThanMinDate should return true if null value ", () => {
+    expect(DateUtilities.IsMoreThanMinDate(null)).toEqual(true);
+  });
+  it("IsMoreThanMinDate should return true if null value ", () => {
+    expect(DateUtilities.IsLessThanMaxDate(null)).toEqual(true);
+  });
+  // Note: Some test conditions covered by cypress comp tests so tried not to duplicate.
+  // See coverage.json generated on PR or locally via 'npm run local:report-combined' for more info.
 });
