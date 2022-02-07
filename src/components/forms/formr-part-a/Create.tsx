@@ -14,10 +14,8 @@ import SelectInputField from "../SelectInputField";
 import TextInputField from "../TextInputField";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks/hooks";
 import {
-  saveFormA,
   selectSavedFormA,
-  updatedFormA,
-  updateFormA
+  updatedFormA
 } from "../../../redux/slices/formASlice";
 import { ValidationSchema } from "./ValidationSchema";
 import { ReferenceDataUtilities } from "../../../utilities/ReferenceDataUtilities";
@@ -29,13 +27,11 @@ import {
   MEDICAL_CURRICULUM
 } from "../../../utilities/Constants";
 import { selectAllReference } from "../../../redux/slices/referenceSlice";
-import { LifeCycleState } from "../../../models/LifeCycleState";
-import store from "../../../redux/store/store";
-import { fetchForms } from "../../../redux/slices/formsSlice";
 import { Redirect } from "react-router-dom";
 import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -46,23 +42,6 @@ const Create = ({ history }: { history: string[] }) => {
   const handleSubmit = async (finalFormA: FormRPartA) => {
     dispatch(updatedFormA(finalFormA));
     history.push("/formr-a/confirm");
-  };
-
-  const saveDraft = async (draftFormA: FormRPartA) => {
-    if (draftFormA.lifecycleState !== LifeCycleState.Unsubmitted) {
-      draftFormA.submissionDate = null;
-      draftFormA.lifecycleState = LifeCycleState.Draft;
-    }
-    // TODO Date type store warning https://github.com/reduxjs/redux-toolkit/issues/456
-    // https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data
-    draftFormA.lastModifiedDate = new Date();
-    dispatch(updatedFormA(draftFormA));
-    const updatedFormAData = store.getState().formA.formAData;
-    if (draftFormA.id) {
-      await dispatch(updateFormA(updatedFormAData));
-    } else await dispatch(saveFormA(updatedFormAData));
-    dispatch(fetchForms("/formr-a"));
-    history.push("/formr-a");
   };
 
   if (!formRAData.traineeTisId) {
@@ -276,7 +255,9 @@ const Create = ({ history }: { history: string[] }) => {
                 <div className="nhsuk-grid-row">
                   <div className="nhsuk-grid-column-one-third">
                     <Button
-                      onClick={() => saveDraft(values)}
+                      onClick={() => {
+                        FormRUtilities.saveDraftA(values, history);
+                      }}
                       disabled={isSubmitting}
                       data-cy="BtnSaveDraft"
                     >
