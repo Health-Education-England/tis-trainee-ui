@@ -6,6 +6,15 @@ import Section5 from "../components/forms/formr-part-b/sections/Section5";
 import Section6 from "../components/forms/formr-part-b/sections/Section6";
 import CovidDeclaration from "../components/forms/formr-part-b/sections/CovidDeclaration";
 import { IProgSection } from "../models/IProgressSection";
+import { FormRPartA } from "../models/FormRPartA";
+import { LifeCycleState } from "../models/LifeCycleState";
+import store from "../redux/store/store";
+import {
+  saveFormA,
+  updatedFormA,
+  updateFormA
+} from "../redux/slices/formASlice";
+import { fetchForms } from "../redux/slices/formsSlice";
 
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
@@ -16,6 +25,31 @@ export class FormRUtilities {
         covidSection,
         ...defaultSections.slice(6)
       ];
+  }
+
+  public static async saveDraftA(
+    draftFormRA: FormRPartA,
+    history: any
+  ): Promise<void> {
+    if (draftFormRA.lifecycleState !== LifeCycleState.Unsubmitted) {
+      store.dispatch(
+        updatedFormA({
+          ...draftFormRA,
+          submissionDate: null,
+          lifecycleState: LifeCycleState.Draft,
+          lastModifiedDate: new Date()
+        })
+      );
+    } else
+      store.dispatch(
+        updatedFormA({ ...draftFormRA, lastModifiedDate: new Date() })
+      );
+    const updatedFormAData = store.getState().formA.formAData;
+    if (draftFormRA.id) {
+      await store.dispatch(updateFormA(updatedFormAData));
+    } else await store.dispatch(saveFormA(updatedFormAData));
+    store.dispatch(fetchForms("/formr-a"));
+    history.push("/formr-a");
   }
 }
 

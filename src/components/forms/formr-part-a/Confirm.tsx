@@ -14,7 +14,7 @@ import store from "../../../redux/store/store";
 import { LifeCycleState } from "../../../models/LifeCycleState";
 import { fetchForms } from "../../../redux/slices/formsSlice";
 import { Redirect } from "react-router-dom";
-
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 interface IConfirm {
   history: any;
 }
@@ -25,24 +25,6 @@ const Confirm = ({ history }: IConfirm) => {
   const formData = useAppSelector(selectSavedFormA);
 
   const handleEdit = () => history.push("/formr-a/create");
-
-  const saveDraft = async (formDataSave: FormRPartA) => {
-    if (formDataSave.lifecycleState !== LifeCycleState.Unsubmitted) {
-      dispatch(
-        updatedFormA({
-          ...formDataSave,
-          submissionDate: null,
-          lifecycleState: LifeCycleState.Draft,
-          lastModifiedDate: new Date()
-        })
-      );
-    } else
-      dispatch(updatedFormA({ ...formDataSave, lastModifiedDate: new Date() }));
-    const updatedFormAData = store.getState().formA.formAData;
-    await dispatch(updateFormA(updatedFormAData));
-    dispatch(fetchForms("/formr-a"));
-    history.push("/formr-a");
-  };
 
   const handleSubmit = async (formDataSubmit: FormRPartA) => {
     dispatch(
@@ -87,7 +69,9 @@ const Confirm = ({ history }: IConfirm) => {
             <div className="nhsuk-grid-column-one-third">
               <SubmitButton
                 label="Save & Exit"
-                clickHandler={() => saveDraft(formData)}
+                clickHandler={() => {
+                  FormRUtilities.saveDraftA(formData, history);
+                }}
                 data-cy="BtnSaveDraft"
               />
             </div>
