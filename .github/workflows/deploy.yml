@@ -62,14 +62,14 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/task-definition-pre-prod.json
-          container-name: trainee-ui
+          container-name: ${{ github.event.repository.name }}
           image: ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: trainee-ui
+          service: ${{ github.event.repository.name }}
           cluster: trainee-preprod
           wait-for-service-stability: true
 
