@@ -6,30 +6,40 @@ import {
   Panel,
   SummaryList
 } from "nhsuk-react-components";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { CCT_DECLARATION } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
-import ErrorPage from "../../common/ErrorPage";
-
+import { addNotification } from "../../../redux/slices/notificationsSlice";
+import { useEffect } from "react";
 interface IView {
   canEdit: boolean;
   history: any;
 }
 
 const View = ({ canEdit }: IView) => {
+  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormA);
   let content;
-  if (!formData.traineeTisId)
-    content = <ErrorPage error={"No Trainee Id found"}></ErrorPage>;
-  else {
+
+  useEffect(() => {
+    if (!formData.traineeTisId) {
+      dispatch(
+        addNotification({
+          type: "Error",
+          text: " - No form with that Id can be found"
+        })
+      );
+    }
+  }, [dispatch, formData]);
+
+  if (formData.traineeTisId)
     content = (
       <>
         <ScrollTo />
-
         <Row>
           <Col width="one-half">
             <BackLink href="/formr-a">Go back to list</BackLink>
@@ -217,7 +227,8 @@ const View = ({ canEdit }: IView) => {
         </Panel>
       </>
     );
-  }
+  else content = <Redirect to="/formr-b" />;
+
   return <div>{content}</div>;
 };
 

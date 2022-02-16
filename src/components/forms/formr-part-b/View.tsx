@@ -7,13 +7,14 @@ import {
   SummaryList,
   WarningCallout
 } from "nhsuk-react-components";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   selectSavedFormB,
   updateFormBSection,
   updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
+import { addNotification } from "../../../redux/slices/notificationsSlice";
 import store from "../../../redux/store/store";
 import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
 import {
@@ -25,7 +26,7 @@ import {
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
-
+import { useEffect } from "react";
 interface IView {
   canEdit: boolean;
   history: any;
@@ -38,6 +39,18 @@ const View = ({ canEdit, history }: IView) => {
     state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
   );
   const viewCompSection: number = store.getState().formB.sectionNumber;
+  let content;
+
+  useEffect(() => {
+    if (!formData.traineeTisId) {
+      dispatch(
+        addNotification({
+          type: "Error",
+          text: " - No form with that Id can be found"
+        })
+      );
+    }
+  }, [dispatch, formData]);
 
   const SectionEditButton = (section: number) => {
     return (
@@ -57,8 +70,8 @@ const View = ({ canEdit, history }: IView) => {
     );
   };
 
-  return (
-    formData && (
+  if (formData.traineeTisId)
+    content = (
       <>
         <ScrollTo />
         {!canEdit && (
@@ -750,8 +763,10 @@ const View = ({ canEdit, history }: IView) => {
           </>
         )}
       </>
-    )
-  );
+    );
+  else content = <Redirect to="/formr-b" />;
+
+  return <div>{content}</div>;
 };
 
 export default View;

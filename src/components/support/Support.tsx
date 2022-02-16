@@ -3,11 +3,9 @@ import PageTitle from "../common/PageTitle";
 import SupportMsg from "./SupportMsg";
 import SupportList from "./SupportList";
 import { localOfficeContacts } from "../../models/LocalOfficeContacts";
-
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import Loading from "../common/Loading";
-import ErrorPage from "../common/ErrorPage";
 import { useEffect, useState } from "react";
 
 const Support = () => {
@@ -15,9 +13,6 @@ const Support = () => {
 
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
-  );
-  const traineeProfileDataError = useAppSelector(
-    state => state.traineeProfile.error
   );
   const personOwner = traineeProfileData.personalDetails?.personOwner;
 
@@ -73,8 +68,6 @@ const Support = () => {
         </Panel>
       </>
     );
-  else if (traineeProfileDataStatus === "failed")
-    content = <ErrorPage error={traineeProfileDataError}></ErrorPage>;
 
   return <div>{content}</div>;
 };

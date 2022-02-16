@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
+
 interface IProfile {
   traineeProfileData: TraineeProfile;
   status: string;

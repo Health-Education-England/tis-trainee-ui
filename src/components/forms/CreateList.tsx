@@ -2,7 +2,6 @@ import { ActionLink, LedeText, Table } from "nhsuk-react-components";
 import { useEffect } from "react";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
-import ErrorPage from "../common/ErrorPage";
 import Loading from "../common/Loading";
 import ScrollTo from "./ScrollTo";
 import styles from "./FormR.module.scss";
@@ -21,9 +20,7 @@ const CreateList = () => {
   const dispatch = useAppDispatch();
   const formRList = useAppSelector(selectAllforms);
   const formRListStatus = useAppSelector(state => state.forms.status);
-  const formRListError = useAppSelector(state => state.forms.error);
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
-  const featFlagError = useAppSelector(state => state.featureFlags.error);
 
   let content;
 
@@ -68,10 +65,7 @@ const CreateList = () => {
     } else {
       content = <LedeText>No forms submitted yet.</LedeText>;
     }
-  } else if (formRListStatus === "failed" || featFlagError === "failed") {
-    content = <ErrorPage error={formRListError}></ErrorPage>;
   }
-
   return (
     <>
       <ScrollTo />
