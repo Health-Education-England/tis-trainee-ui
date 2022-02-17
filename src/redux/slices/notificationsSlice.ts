@@ -33,6 +33,7 @@ const thunkArrFulfilled = [
     text: "updated Form R (Part B) has been saved"
   }
 ];
+
 interface INotifications {
   notifications: INotification[];
 }

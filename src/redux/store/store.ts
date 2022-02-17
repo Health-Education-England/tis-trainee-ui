@@ -15,15 +15,19 @@ const store = configureStore({
           "formA/updatedFormA",
           "formA/updateFormA/fulfilled",
           "formA/updateFormA/pending",
+          "formA/fetchFormB/fulfilled",
+          "formA/fetchFormB/pending",
           "formB/saveFormB/fulfilled",
           "formB/saveFormB/pending",
           "formB/updatedFormB",
+          "formB/updateFormB/fulfilled",
+          "formB/updateFormB/pending",
           "forms/fetchFeatureFlags/fulfilled",
           "forms/fetchFeatureFlags/pending",
           "forms/fetchForms/fulfilled",
           "forms/fetchForms/pending",
-          "formB/updateForm/fulfilled",
-          "formB/updateForm/pending"
+          "notifications/addNotification",
+          "notifications/removeNotification"
         ]
       }
     })
