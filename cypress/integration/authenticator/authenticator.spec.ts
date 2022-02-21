@@ -8,10 +8,7 @@ describe("Authenticator", () => {
 
   it("Header should show logo and heading", () => {
     cy.get("[data-cy=authLogo]").should("exist");
-    cy.get("[data-cy=authTitle]").should(
-      "contain.text",
-      "Trainee Self-Service"
-    );
+    cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
   });
 
   it("Footer should have the correct links and copyright text", () => {

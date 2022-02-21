@@ -9,7 +9,7 @@ describe("PageTitle", () => {
   it("displays the correct default page title", () => {
     const wrapper = mount(<PageTitle />);
     expect(wrapper.find("NullComponent").prop("title")).toBe(
-      "TIS Self Service"
+      "TIS Self-Service"
     );
   });
 

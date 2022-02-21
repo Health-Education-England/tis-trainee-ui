@@ -1,5 +1,5 @@
 export const YES_TO_PRIVACY =
-  "To use Trainee Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
+  "To use TIS Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
 export const YES_TO_PILOT =
   "Only trainees invited to partake in this pilot should sign-up.";
 export const FORM_FIELD_VALUES = {
@@ -10,7 +10,7 @@ export const FORM_FIELD_VALUES = {
   "Family Name": "Last name",
   "Sign In": "Log in", // Tab header
   "Sign in": "Log in", // Button label
-  "Sign in to your account": "Trainee Self Service Login",
+  "Sign in to your account": "TIS Self-Service Login",
   "Confirm Sign Up": "Check your email for a verification code",
   "Enter your code": "Enter 6-digit code (no spaces)" // Confirm Sign Up input
 };

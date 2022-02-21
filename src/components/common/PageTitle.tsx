@@ -5,7 +5,7 @@ interface PageProps {
   title?: string;
 }
 const PageTitle = (props: PageProps): JSX.Element => {
-  const siteTitle = "TIS Self Service";
+  const siteTitle = "TIS Self-Service";
   let pageTitle: string = props.title
     ? `${siteTitle} | ${props.title}`
     : siteTitle;

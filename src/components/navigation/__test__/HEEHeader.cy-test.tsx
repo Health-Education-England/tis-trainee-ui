@@ -28,7 +28,7 @@ describe("Header", () => {
       .should("have.attr", "href", "/");
     cy.get("[data-cy=headerLogo] > p").should(
       "contain.text",
-      "Trainee Self-Service"
+      "TIS Self-Service"
     );
   });
 
