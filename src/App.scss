@@ -101,6 +101,16 @@
     background-color: #8a1538;
   }
 }
+.centreSpinner {
+  position: fixed;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 @media only screen and (max-width: 900px) {
   .CookieConsent {
