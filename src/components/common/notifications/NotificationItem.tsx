@@ -3,7 +3,6 @@ import "./NotificationItem.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
-  faInfoCircle,
   faClose,
   faExclamationCircle
 } from "@fortawesome/free-solid-svg-icons";
@@ -16,14 +15,8 @@ interface INotificationItem {
 }
 
 const chooseIcon = (notifType: string) => {
-  switch (notifType) {
-    case "Success":
-      return faCheckCircle;
-    case "Error":
-      return faExclamationCircle;
-    default:
-      return faInfoCircle;
-  }
+  if (notifType === "Success") return faCheckCircle;
+  else return faExclamationCircle;
 };
 
 const NotificationItem = ({ notification }: INotificationItem) => {
