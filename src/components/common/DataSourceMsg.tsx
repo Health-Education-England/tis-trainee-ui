@@ -10,9 +10,9 @@ const DataSourceMsg = () => {
         <p>
           During the course of your training programme, you will most likely
           move between Trusts and/or employers several times, each time
-          providing updated information about yourself. For this reason, on
-          Trainee Self-Service we display the most up-to-date information you
-          have provided to your most recent Trust or employer.
+          providing updated information about yourself. For this reason, on TIS
+          Self-Service we display the most up-to-date information you have
+          provided to your most recent Trust or employer.
         </p>
         <p>
           If you do find any inaccuracies, we ask you to update them with your

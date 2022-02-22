@@ -13,7 +13,7 @@
   "url": "https://browser-update.org/update-browser.html",
   "text": {
     "msg": "Your web browser ({brow_name}) is out of date.",
-    "msgmore": "TIS Self Service application has been designed to work with modern web browsers, such as the latest versions of Google Chrome or Microsoft Edge. The site will not display or function correctly using an older browser and it will be necessary to update your browser or use a modern alternative in order to run this application. ",
+    "msgmore": "TIS Self-Service application has been designed to work with modern web browsers, such as the latest versions of Google Chrome or Microsoft Edge. The site will not display or function correctly using an older browser and it will be necessary to update your browser or use a modern alternative in order to run this application. ",
     "bupdate": "Update browser",
     "bignore": "Ignore",
     "remind": "You will be reminded in {days} days.",

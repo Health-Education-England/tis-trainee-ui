@@ -6,13 +6,13 @@ const HEEHeaderLogo = () => {
       <a
         style={{ display: "block" }}
         href="/"
-        aria-label="Trainee Self-Service homepage"
+        aria-label="TIS Self-Service homepage"
       >
         <img
           width="230"
           height="48"
           src={logo}
-          alt="Trainee Self-Service homepage"
+          alt="TIS Self-Service homepage"
         />
       </a>
       <p
@@ -23,7 +23,7 @@ const HEEHeaderLogo = () => {
           fontSize: "24px"
         }}
       >
-        Trainee Self-Service
+        TIS Self-Service
       </p>
     </div>
   );

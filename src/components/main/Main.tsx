@@ -65,7 +65,11 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
   const errors = [traineeProfileDataError, referenceError];
 
   if (traineeProfileDataStatus === "loading" || referenceStatus === "loading")
-    return <Loading />;
+    return (
+      <div className="centreSpinner">
+        <Loading />
+      </div>
+    );
   else if (
     traineeProfileDataStatus === "succeeded" &&
     referenceStatus === "succeeded"

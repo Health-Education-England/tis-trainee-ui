@@ -51,7 +51,7 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
 
   return (
     personalDetails && (
-      <Details expander>
+      <Details expander data-cy="personalDetails">
         <Details.Summary>Personal details</Details.Summary>
         <Details.Text>
           <SummaryList>

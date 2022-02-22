@@ -4,7 +4,7 @@
 
 # trainee-ui
 
-Front-end for TIS Self Service app
+Front-end for TIS Self-Service app
 
 ## Tech Stack and Architecture
 

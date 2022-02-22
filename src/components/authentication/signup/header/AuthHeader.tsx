@@ -9,14 +9,14 @@ const AuthHeader = (): JSX.Element => {
         <Image
           data-cy="authLogo"
           src={logo}
-          alt="NHS Health Education England Trainee Self-Service"
+          alt="NHS Health Education England TIS Self-Service"
           width="230px"
           height="48px"
         ></Image>
       </Flex>
       <Flex className={styles.authTitle}>
         <View>
-          <h1 data-cy="authTitle">Trainee Self-Service</h1>
+          <h1 data-cy="authTitle">TIS Self-Service</h1>
         </View>
       </Flex>
       <Flex>

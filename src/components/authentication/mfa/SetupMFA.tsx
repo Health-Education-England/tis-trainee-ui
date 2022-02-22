@@ -86,10 +86,9 @@ const SetupMFA = ({ user, mfa }: ISetupMFA) => {
         <Step title="Complete" disableBackButton={true}>
           {newMFAStatus === "totp" && (
             <p>
-              Trainee Self-Service has successfully registered on your
-              authenicator app. You will need to enter a 6-digit code each time
-              you login to Trainee Self-Service, which you obtain from the
-              authenticator app.
+              TIS Self-Service has successfully registered on your authenicator
+              app. You will need to enter a 6-digit code each time you login to
+              TIS Self-Service, which you obtain from the authenticator app.
             </p>
           )}
           {newMFAStatus === "sms" && (
@@ -100,9 +99,7 @@ const SetupMFA = ({ user, mfa }: ISetupMFA) => {
               mobile phone number you provided.
             </p>
           )}
-          <ActionLink href="/profile">
-            Continue to Trainee Self-Service
-          </ActionLink>
+          <ActionLink href="/profile">Continue to TIS Self-Service</ActionLink>
         </Step>
       </Stepper>
     </>
