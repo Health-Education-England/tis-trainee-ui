@@ -227,7 +227,7 @@ const View = ({ canEdit }: IView) => {
         </Panel>
       </>
     );
-  else content = <Redirect to="/formr-b" />;
+  else content = <Redirect to="/formr-a" />;
 
   return <div>{content}</div>;
 };
