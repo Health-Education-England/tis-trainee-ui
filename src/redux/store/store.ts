@@ -24,6 +24,7 @@ const store = configureStore({
           "formB/updateFormB/pending",
           "forms/fetchFeatureFlags/fulfilled",
           "forms/fetchFeatureFlags/pending",
+          "forms/fetchFeatureFlags/rejected",
           "forms/fetchForms/fulfilled",
           "forms/fetchForms/pending",
           "notifications/addNotification",

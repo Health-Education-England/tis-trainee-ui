@@ -7,45 +7,37 @@ import ScrollTo from "../forms/ScrollTo";
 
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import Loading from "../common/Loading";
 import DataSourceMsg from "../common/DataSourceMsg";
 
 const Profile = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
-  const traineeProfileDataStatus = useAppSelector(
-    state => state.traineeProfile.status
+  const content = (
+    <div id="profile">
+      <PageTitle title="Profile" />
+      <ScrollTo />
+      <Fieldset>
+        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+          Profile
+        </Fieldset.Legend>
+      </Fieldset>
+      <DataSourceMsg />
+      <Details.ExpanderGroup>
+        {traineeProfileData.personalDetails && (
+          <PersonalDetailsComponent
+            personalDetails={traineeProfileData.personalDetails}
+          />
+        )}
+        {traineeProfileData.placements && (
+          <Placements placements={traineeProfileData.placements}></Placements>
+        )}
+        {traineeProfileData.programmeMemberships && (
+          <Programmes
+            programmeMemberships={traineeProfileData.programmeMemberships}
+          ></Programmes>
+        )}
+      </Details.ExpanderGroup>
+    </div>
   );
-  let content;
-
-  if (traineeProfileDataStatus === "loading") return <Loading />;
-  else if (traineeProfileDataStatus === "succeeded")
-    content = (
-      <div id="profile">
-        <PageTitle title="Profile" />
-        <ScrollTo />
-        <Fieldset>
-          <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
-            Profile
-          </Fieldset.Legend>
-        </Fieldset>
-        <DataSourceMsg />
-        <Details.ExpanderGroup>
-          {traineeProfileData.personalDetails && (
-            <PersonalDetailsComponent
-              personalDetails={traineeProfileData.personalDetails}
-            />
-          )}
-          {traineeProfileData.placements && (
-            <Placements placements={traineeProfileData.placements}></Placements>
-          )}
-          {traineeProfileData.programmeMemberships && (
-            <Programmes
-              programmeMemberships={traineeProfileData.programmeMemberships}
-            ></Programmes>
-          )}
-        </Details.ExpanderGroup>
-      </div>
-    );
   return <div>{content}</div>;
 };
 
