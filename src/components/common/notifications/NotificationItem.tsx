@@ -27,14 +27,16 @@ const NotificationItem = ({ notification }: INotificationItem) => {
     dispatch(removeNotification(id));
   };
   useEffect(() => {
-    const removeNotif = setTimeout(
-      () => dispatch(removeNotification(notification.id)),
-      6000
-    );
-    return () => {
-      clearTimeout(removeNotif);
-    };
-  }, [dispatch, notification.id]);
+    if (notification.type === "Success") {
+      const removeNotif = setTimeout(
+        () => dispatch(removeNotification(notification.id)),
+        6000
+      );
+      return () => {
+        clearTimeout(removeNotif);
+      };
+    }
+  }, [dispatch, notification.id, notification.type]);
 
   return (
     <>

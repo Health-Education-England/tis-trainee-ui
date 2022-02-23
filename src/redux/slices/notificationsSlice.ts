@@ -72,7 +72,7 @@ const notificationsSlice = createSlice({
         state.notifications.push({
           id: nanoid(),
           type: "Error",
-          text: `- Couldn't ${asnycThunk.text}`
+          text: `- Couldn't ${asnycThunk.text}. If problem persists please contact your Local Office.`
         });
       });
     }
