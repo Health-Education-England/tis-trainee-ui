@@ -12,7 +12,7 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import { loadSavedFormA } from "../../redux/slices/formASlice";
 import FormsListBtn from "./FormsListBtn";
 import { loadSavedFormB } from "../../redux/slices/formBSlice";
-import { useHistory, useLocation } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 
 const CreateList = () => {
   let history = useHistory();
@@ -43,7 +43,9 @@ const CreateList = () => {
 
   if (formRListStatus === "loading" || featFlagStatus === "loading")
     return <Loading />;
-  else if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
+  if (formRListStatus === "failed" || featFlagStatus === "failed")
+    return <Redirect to="/support" />;
+  if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
     const submittedForms = formRList.filter(
       (form: any) => form.lifecycleState === LifeCycleState.Submitted
     );
