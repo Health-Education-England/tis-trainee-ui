@@ -18,6 +18,7 @@ import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { addNotification } from "../../../redux/slices/notificationsSlice";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -51,9 +52,12 @@ const Create = ({ history }: { history: string[] }) => {
     if (formData.id) {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
-    dispatch(resetToInitFormB());
-    dispatch(fetchForms("/formr-b"));
-    history.push("/formr-b");
+    const formRBStatus = store.getState().formB.status;
+    if (formRBStatus === "succeeded") {
+      dispatch(resetToInitFormB());
+      dispatch(fetchForms("/formr-b"));
+      history.push("/formr-b");
+    }
   };
 
   const handleSectionSubmit = (formValues: FormRPartB) => {
@@ -83,6 +87,12 @@ const Create = ({ history }: { history: string[] }) => {
   let content;
 
   if (!tisId) {
+    dispatch(
+      addNotification({
+        type: "Error",
+        text: " - Your TIS ID (which is needed to submit a form) cannot be found"
+      })
+    );
     return <Redirect to="/formr-b" />;
   }
 

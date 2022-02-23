@@ -37,9 +37,12 @@ const Confirm = ({ history }: IConfirm) => {
     );
     const updatedFormAData = store.getState().formA.formAData;
     await dispatch(updateFormA(updatedFormAData));
-    dispatch(resetToInitFormA());
-    dispatch(fetchForms("/formr-a"));
-    history.push("/formr-a");
+    const formAStatus = store.getState().formA.status;
+    if (formAStatus === "succeeded") {
+      dispatch(resetToInitFormA());
+      dispatch(fetchForms("/formr-a"));
+      history.push("/formr-a");
+    }
   };
 
   if (!formData.traineeTisId) {

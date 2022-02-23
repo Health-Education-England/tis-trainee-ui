@@ -50,9 +50,12 @@ const Declarations = ({
       );
       const updatedFormBData = store.getState().formB.formBData;
       await dispatch(updateFormB(updatedFormBData));
-      dispatch(resetToInitFormB());
-      dispatch(fetchForms("/formr-b"));
-      history.push("/formr-b");
+      const formBStatus = store.getState().formB.status;
+      if (formBStatus === "succeeded") {
+        dispatch(resetToInitFormB());
+        dispatch(fetchForms("/formr-b"));
+        history.push("/formr-b");
+      }
     }
   };
 

@@ -30,7 +30,7 @@ const View = ({ canEdit }: IView) => {
       dispatch(
         addNotification({
           type: "Error",
-          text: " - No form with that Id can be found"
+          text: " - No form with that ID can be found"
         })
       );
     }

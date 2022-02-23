@@ -48,8 +48,11 @@ export class FormRUtilities {
     if (draftFormRA.id) {
       await store.dispatch(updateFormA(updatedFormAData));
     } else await store.dispatch(saveFormA(updatedFormAData));
-    store.dispatch(fetchForms("/formr-a"));
-    history.push("/formr-a");
+    const formRAStatus = store.getState().formA.status;
+    if (formRAStatus === "succeeded") {
+      store.dispatch(fetchForms("/formr-a"));
+      history.push("/formr-a");
+    }
   }
 }
 
