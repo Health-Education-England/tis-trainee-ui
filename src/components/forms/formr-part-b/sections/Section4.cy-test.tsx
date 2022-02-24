@@ -10,23 +10,6 @@ import { mockedCombinedReference } from "../../../../mock-data/combinedReference
 import { updatedReference } from "../../../../redux/slices/referenceSlice";
 
 describe("Section4", () => {
-  it("should not render the form it no data", () => {
-    mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Section4
-            prevSectionLabel=""
-            nextSectionLabel=""
-            saveDraft={() => Promise.resolve()}
-            previousSection={null}
-            handleSectionSubmit={() => Promise.resolve()}
-          />
-        </BrowserRouter>
-      </Provider>
-    );
-    cy.get("[data-cy=errorAction]").should("exist");
-  });
-
   it("should mount section 4 ", () => {
     const MockedSection4 = () => {
       const dispatch = useAppDispatch();

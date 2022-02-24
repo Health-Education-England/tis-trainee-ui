@@ -44,7 +44,7 @@ const CreateList = () => {
   if (formRListStatus === "loading" || featFlagStatus === "loading")
     return <Loading />;
   if (formRListStatus === "failed" || featFlagStatus === "failed")
-    return <Redirect to="/support" />;
+    content = <Redirect to="/support" />;
   if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
     const submittedForms = formRList.filter(
       (form: any) => form.lifecycleState === LifeCycleState.Submitted

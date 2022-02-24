@@ -54,8 +54,5 @@ describe("Confirm", () => {
     cy.get("[data-cy=BtnEdit]").should("exist").click();
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
     cy.get("[data-cy=BtnSubmit]").should("exist").click();
-    cy.get(
-      ":nth-child(2) > .nhsuk-warning-callout > .nhsuk-warning-callout__label"
-    ).should("not.exist");
   });
 });

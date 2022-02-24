@@ -60,73 +60,71 @@ const Declarations = ({
   };
 
   return (
-    formData && (
-      <Formik
-        initialValues={formData}
-        validationSchema={Section7ValidationSchema}
-        onSubmit={values => {
-          handleFormBSubmit(values);
-        }}
-      >
-        {({ values, handleSubmit, isValid, isSubmitting }) => (
-          <Form>
-            <Fieldset
-              disableErrorLine={true}
-              name="currentDeclarations"
-              data-jest="mainFieldset7"
+    <Formik
+      initialValues={formData}
+      validationSchema={Section7ValidationSchema}
+      onSubmit={values => {
+        handleFormBSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit, isValid, isSubmitting }) => (
+        <Form>
+          <Fieldset
+            disableErrorLine={true}
+            name="currentDeclarations"
+            data-jest="mainFieldset7"
+          >
+            <Fieldset.Legend
+              headingLevel="H2"
+              size="l"
+              data-cy="legendFieldset7"
             >
-              <Fieldset.Legend
-                headingLevel="H2"
-                size="l"
-                data-cy="legendFieldset7"
-              >
-                Declaration & Consent
-              </Fieldset.Legend>
+              Declaration & Consent
+            </Fieldset.Legend>
 
-              <Panel label="Declaration" data-cy="declaration">
-                <MultiChoiceInputField
-                  label="I confirm that,"
-                  id="isDeclarationAccepted"
-                  type="checkbox"
-                  name="isDeclarationAccepted"
-                  items={[
-                    {
-                      label: FORMR_PARTB_ACCEPTANCE,
-                      value: true
-                    }
-                  ]}
-                />
+            <Panel label="Declaration" data-cy="declaration">
+              <MultiChoiceInputField
+                label="I confirm that,"
+                id="isDeclarationAccepted"
+                type="checkbox"
+                name="isDeclarationAccepted"
+                items={[
+                  {
+                    label: FORMR_PARTB_ACCEPTANCE,
+                    value: true
+                  }
+                ]}
+              />
 
-                <MultiChoiceInputField
-                  label="I confirm that,"
-                  id="isConsentAccepted"
-                  type="checkbox"
-                  name="isConsentAccepted"
-                  items={[
-                    {
-                      label: FORMR_PARTB_CONSENT,
-                      value: true
-                    }
-                  ]}
-                />
-              </Panel>
-            </Fieldset>
+              <MultiChoiceInputField
+                label="I confirm that,"
+                id="isConsentAccepted"
+                type="checkbox"
+                name="isConsentAccepted"
+                items={[
+                  {
+                    label: FORMR_PARTB_CONSENT,
+                    value: true
+                  }
+                ]}
+              />
+            </Panel>
+          </Fieldset>
 
-            <FormRPartBPagination
-              values={values}
-              handleSubmit={handleSubmit}
-              saveDraft={saveDraft}
-              prevSectionLabel={prevSectionLabel}
-              nextSectionLabel=""
-              previousSection={null}
-              isValid={isValid}
-              isSubmitting={isSubmitting}
-              finalSections={finalSections}
-            />
-          </Form>
-        )}
-      </Formik>
-    )
+          <FormRPartBPagination
+            values={values}
+            handleSubmit={handleSubmit}
+            saveDraft={saveDraft}
+            prevSectionLabel={prevSectionLabel}
+            nextSectionLabel=""
+            previousSection={null}
+            isValid={isValid}
+            isSubmitting={isSubmitting}
+            finalSections={finalSections}
+          />
+        </Form>
+      )}
+    </Formik>
   );
 };
 
