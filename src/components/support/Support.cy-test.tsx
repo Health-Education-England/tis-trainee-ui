@@ -14,37 +14,7 @@ import {
 import Support from "./Support";
 
 describe("Support", () => {
-  it("should render loading screen if data status is loading ", () => {
-    const MockedSupportLoading = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedTraineeProfileStatus("loading"));
-      return <Support />;
-    };
-    mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MockedSupportLoading />
-        </BrowserRouter>
-      </Provider>
-    );
-    cy.get("[data-cy=errorAction]").should("not.exist");
-  });
-  it("should render the error page if status is failed ", () => {
-    const MockedSupportFailed = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedTraineeProfileStatus("failed"));
-      return <Support />;
-    };
-    mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MockedSupportFailed />
-        </BrowserRouter>
-      </Provider>
-    );
-    cy.get("[data-cy=errorAction]").should("exist");
-  });
-  it("should render the Support page if successful", () => {
+  it("should render the Support page on successful main app load", () => {
     const MockedSupportSucceeded = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("succeeded"));

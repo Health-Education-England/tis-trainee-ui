@@ -18,7 +18,7 @@ import {
 } from "../../mock-data/trainee-profile";
 
 describe("Profile", () => {
-  it("should mount the Profile component on successful page load", () => {
+  it("should mount the Profile component on successful main app load", () => {
     const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
