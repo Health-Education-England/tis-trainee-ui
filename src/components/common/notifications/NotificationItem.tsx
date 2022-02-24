@@ -31,7 +31,7 @@ const NotificationItem = ({ notification }: INotificationItem) => {
     if (notification.type === "Success") {
       const removeNotif = setTimeout(
         () => dispatch(removeNotification(notification.id)),
-        6000
+        8000
       );
       return () => {
         clearTimeout(removeNotif);
@@ -43,11 +43,17 @@ const NotificationItem = ({ notification }: INotificationItem) => {
     <>
       <ScrollTo />
       <div className={`notification ${notification.type}`}>
-        <div className="msg-container">
-          <FontAwesomeIcon className="fa-icon" icon={faIcon} size="lg" />{" "}
-          {`${notification.type} ${notification.text}. `}
+        <div className="msg-container" data-cy="notifContainer">
+          <FontAwesomeIcon
+            data-cy="faIcon"
+            className="fa-icon"
+            icon={faIcon}
+            size="lg"
+          />{" "}
+          <span data-cy="notifText">{`${notification.type} ${notification.text}. `}</span>
         </div>
         <button
+          data-cy="notifCloseBtn"
           className={`closeBtn ${notification.type}`}
           onClick={() => handleClick(notification.id)}
         >
