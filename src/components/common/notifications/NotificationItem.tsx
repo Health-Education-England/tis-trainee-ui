@@ -9,6 +9,7 @@ import {
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { removeNotification } from "../../../redux/slices/notificationsSlice";
 import { useEffect } from "react";
+import ScrollTo from "../../forms/ScrollTo";
 
 interface INotificationItem {
   notification: INotification;
@@ -40,6 +41,7 @@ const NotificationItem = ({ notification }: INotificationItem) => {
 
   return (
     <>
+      <ScrollTo />
       <div className={`notification ${notification.type}`}>
         <div className="msg-container">
           <FontAwesomeIcon className="fa-icon" icon={faIcon} size="lg" />{" "}
