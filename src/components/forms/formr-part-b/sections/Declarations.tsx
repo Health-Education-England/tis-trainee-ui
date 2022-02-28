@@ -13,7 +13,8 @@ import {
   selectSaveBtnActive,
   selectSavedFormB,
   updatedFormB,
-  updateFormB
+  updateFormB,
+  updatesaveBtnActive
 } from "../../../../redux/slices/formBSlice";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
@@ -40,6 +41,7 @@ const Declarations = ({
 
   const handleFormBSubmit = async (formDataSubmit: FormRPartB) => {
     if (!saveBtnActive) {
+      dispatch(updatesaveBtnActive());
       dispatch(
         updatedFormB({
           ...formDataSubmit,
@@ -52,9 +54,9 @@ const Declarations = ({
       await dispatch(updateFormB(updatedFormBData));
       const formBStatus = store.getState().formB.status;
       if (formBStatus === "succeeded") {
-        dispatch(resetToInitFormB());
         dispatch(fetchForms("/formr-b"));
         history.push("/formr-b");
+        dispatch(resetToInitFormB());
       }
     }
   };
