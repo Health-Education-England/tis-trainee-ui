@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../cypress/support/index.d.ts" />
+
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -25,17 +28,7 @@ describe("Notifications", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get(".notification").should(
-      "have.css",
-      "background-color",
-      "rgb(167, 23, 26)"
-    );
-    cy.get("[data-cy=faIcon]")
-      .should("exist")
-      .should("have.class", "fa-circle-exclamation");
-    cy.get("[data-cy=notifText]").should("include.text", "Error");
-    cy.get("[data-cy=notifCloseBtn]").should("exist").click();
-    cy.get(".notification").should("not.exist");
+    cy.checkForErrorNotif("Error");
   });
   it("should display a success notification for a success type", () => {
     const MockedSuccessNotifications = () => {
@@ -55,17 +48,6 @@ describe("Notifications", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get(".notification").should(
-      "have.css",
-      "background-color",
-      "rgb(0, 100, 0)"
-    );
-    cy.get("[data-cy=faIcon]")
-      .should("exist")
-      .should("have.class", "fa-circle-check");
-    cy.get("[data-cy=notifText]").should("include.text", "Success");
-    // Success notifications should be auto removed after 8s
-    cy.wait(8500);
-    cy.get(".notification").should("not.exist");
+    cy.checkForSuccessNotif("Success");
   });
 });
