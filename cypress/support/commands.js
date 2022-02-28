@@ -25,6 +25,38 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // cypress/support/index.js
 
+Cypress.Commands.add("checkForSuccessNotif", successMsg => {
+  cy.get(".notification").should(
+    "have.css",
+    "background-color",
+    "rgb(0, 100, 0)"
+  );
+  cy.get("[data-cy=faIcon]")
+    .should("exist")
+    .should("have.class", "fa-circle-check");
+  cy.get("[data-cy=notifText]").should("include.text", successMsg);
+  // Success notifications should be auto removed after 8s
+  cy.wait(8500);
+  cy.get(".notification").should("not.exist");
+});
+
+Cypress.Commands.add("checkForErrorNotif", errorMsg => {
+  cy.get(".notification").should(
+    "have.css",
+    "background-color",
+    "rgb(167, 23, 26)"
+  );
+  cy.get("[data-cy=faIcon]")
+    .should("exist")
+    .should("have.class", "fa-circle-exclamation");
+  cy.get("[data-cy=notifText]").should("include.text", errorMsg);
+  // check error notification is NOT auto removed
+  cy.wait(8500);
+  cy.get(".notification").should("exist");
+  cy.get("[data-cy=notifCloseBtn]").should("exist").click();
+  cy.get(".notification").should("not.exist");
+});
+
 Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]").should("exist").click();
   cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");

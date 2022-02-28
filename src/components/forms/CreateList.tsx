@@ -2,7 +2,6 @@ import { ActionLink, LedeText, Table } from "nhsuk-react-components";
 import { useEffect } from "react";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
-import ErrorPage from "../common/ErrorPage";
 import Loading from "../common/Loading";
 import ScrollTo from "./ScrollTo";
 import styles from "./FormR.module.scss";
@@ -13,7 +12,7 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import { loadSavedFormA } from "../../redux/slices/formASlice";
 import FormsListBtn from "./FormsListBtn";
 import { loadSavedFormB } from "../../redux/slices/formBSlice";
-import { useHistory, useLocation } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 
 const CreateList = () => {
   let history = useHistory();
@@ -21,9 +20,7 @@ const CreateList = () => {
   const dispatch = useAppDispatch();
   const formRList = useAppSelector(selectAllforms);
   const formRListStatus = useAppSelector(state => state.forms.status);
-  const formRListError = useAppSelector(state => state.forms.error);
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
-  const featFlagError = useAppSelector(state => state.featureFlags.error);
 
   let content;
 
@@ -46,7 +43,9 @@ const CreateList = () => {
 
   if (formRListStatus === "loading" || featFlagStatus === "loading")
     return <Loading />;
-  else if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
+  if (formRListStatus === "failed" || featFlagStatus === "failed")
+    content = <Redirect to="/support" />;
+  if (formRListStatus === "succeeded" && featFlagStatus === "succeeded") {
     const submittedForms = formRList.filter(
       (form: any) => form.lifecycleState === LifeCycleState.Submitted
     );
@@ -68,10 +67,7 @@ const CreateList = () => {
     } else {
       content = <LedeText>No forms submitted yet.</LedeText>;
     }
-  } else if (formRListStatus === "failed" || featFlagError === "failed") {
-    content = <ErrorPage error={formRListError}></ErrorPage>;
   }
-
   return (
     <>
       <ScrollTo />

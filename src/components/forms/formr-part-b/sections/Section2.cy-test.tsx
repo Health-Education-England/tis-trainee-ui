@@ -10,22 +10,12 @@ import Section2 from "./Section2";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 
 describe("Section2", () => {
-  it("should not render the form it no data", () => {
-    mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Section2
-            prevSectionLabel=""
-            nextSectionLabel=""
-            saveDraft={() => Promise.resolve()}
-            previousSection={null}
-            handleSectionSubmit={() => Promise.resolve()}
-          />
-        </BrowserRouter>
-      </Provider>
-    );
-    cy.get("[data-cy=errorAction]").should("exist");
-  });
+  const startDate = Cypress.dayjs()
+    .subtract(Cypress.dayjs.duration({ months: 12 }))
+    .format("YYYY-MM-DD");
+  const endDate = Cypress.dayjs()
+    .subtract(Cypress.dayjs.duration({ months: 6 }))
+    .format("YYYY-MM-DD");
 
   it("should mount section 2 ", () => {
     const MockedSection2 = () => {
@@ -65,7 +55,18 @@ describe("Section2", () => {
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
     cy.get("[data-cy=BtnAddWorkType]").should("exist").click();
+
+    cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("exist");
+    cy.get('[data-cy="work[1].typeOfWork"]').type("type of work test");
+    cy.get('[data-cy="work[1].trainingPost"]').select("Yes");
+    cy.get('[data-cy="work[1].startDate"]').type(startDate);
+    cy.get('[data-cy="work[1].endDate"]').type(endDate);
+    cy.get('[data-cy="work[1].site"]').type("test site");
+    cy.get('[data-cy="work[1].siteLocation"]').type("test site location");
+
+    cy.get("#work[1].typeOfWork--error-message").should("not.exist");
     cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist");
+
     cy.get(".nhsuk-pagination__page > div")
       .should("exist")
       .should("include.text", "Section 3");

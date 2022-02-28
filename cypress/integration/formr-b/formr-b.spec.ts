@@ -28,9 +28,10 @@ describe("Form R (Part B)", () => {
     isCovid = true;
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
+    cy.visit("/formr-b/321");
+    cy.checkForErrorNotif("Error");
 
     cy.get("#btnOpenForm").click();
-
     cy.get(".nhsuk-warning-callout > p").should("exist");
 
     // ---- check if form state resets if navigate away from create page ------------
@@ -273,6 +274,7 @@ describe("Form R (Part B)", () => {
     cy.intercept("GET", "/api/forms/formr-partbs").as("getFormrPartBs");
 
     cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+    cy.checkForSuccessNotif("Success");
     cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
 

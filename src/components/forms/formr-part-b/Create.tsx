@@ -14,7 +14,6 @@ import {
   updateFormB,
   updateFormBSection
 } from "../../../redux/slices/formBSlice";
-import { fetchForms } from "../../../redux/slices/formsSlice";
 import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
@@ -51,9 +50,11 @@ const Create = ({ history }: { history: string[] }) => {
     if (formData.id) {
       await dispatch(updateFormB(updatedFormBData));
     } else await dispatch(saveFormB(updatedFormBData));
-    dispatch(resetToInitFormB());
-    dispatch(fetchForms("/formr-b"));
-    history.push("/formr-b");
+    const formRBStatus = store.getState().formB.status;
+    if (formRBStatus === "succeeded") {
+      dispatch(resetToInitFormB());
+      history.push("/formr-b");
+    }
   };
 
   const handleSectionSubmit = (formValues: FormRPartB) => {

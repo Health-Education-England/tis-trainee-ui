@@ -5,6 +5,7 @@ import formsReducer from "./formsSlice";
 import formAReducer from "./formASlice";
 import formBReducer from "./formBSlice";
 import featureFlagsReducer from "./featureFlagsSlice";
+import notificationsReducer from "./notificationsSlice";
 
 const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   forms: formsReducer,
   formA: formAReducer,
   formB: formBReducer,
-  featureFlags: featureFlagsReducer
+  featureFlags: featureFlagsReducer,
+  notifications: notificationsReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

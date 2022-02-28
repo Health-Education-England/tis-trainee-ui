@@ -13,11 +13,11 @@ import {
   selectSaveBtnActive,
   selectSavedFormB,
   updatedFormB,
-  updateFormB
+  updateFormB,
+  updatesaveBtnActive
 } from "../../../../redux/slices/formBSlice";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import { fetchForms } from "../../../../redux/slices/formsSlice";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 
@@ -40,6 +40,7 @@ const Declarations = ({
 
   const handleFormBSubmit = async (formDataSubmit: FormRPartB) => {
     if (!saveBtnActive) {
+      dispatch(updatesaveBtnActive());
       dispatch(
         updatedFormB({
           ...formDataSubmit,
@@ -50,80 +51,80 @@ const Declarations = ({
       );
       const updatedFormBData = store.getState().formB.formBData;
       await dispatch(updateFormB(updatedFormBData));
-      dispatch(resetToInitFormB());
-      dispatch(fetchForms("/formr-b"));
-      history.push("/formr-b");
+      const formBStatus = store.getState().formB.status;
+      if (formBStatus === "succeeded") {
+        history.push("/formr-b");
+        dispatch(resetToInitFormB());
+      }
     }
   };
 
   return (
-    formData && (
-      <Formik
-        initialValues={formData}
-        validationSchema={Section7ValidationSchema}
-        onSubmit={values => {
-          handleFormBSubmit(values);
-        }}
-      >
-        {({ values, handleSubmit, isValid, isSubmitting }) => (
-          <Form>
-            <Fieldset
-              disableErrorLine={true}
-              name="currentDeclarations"
-              data-jest="mainFieldset7"
+    <Formik
+      initialValues={formData}
+      validationSchema={Section7ValidationSchema}
+      onSubmit={values => {
+        handleFormBSubmit(values);
+      }}
+    >
+      {({ values, handleSubmit, isValid, isSubmitting }) => (
+        <Form>
+          <Fieldset
+            disableErrorLine={true}
+            name="currentDeclarations"
+            data-jest="mainFieldset7"
+          >
+            <Fieldset.Legend
+              headingLevel="H2"
+              size="l"
+              data-cy="legendFieldset7"
             >
-              <Fieldset.Legend
-                headingLevel="H2"
-                size="l"
-                data-cy="legendFieldset7"
-              >
-                Declaration & Consent
-              </Fieldset.Legend>
+              Declaration & Consent
+            </Fieldset.Legend>
 
-              <Panel label="Declaration" data-cy="declaration">
-                <MultiChoiceInputField
-                  label="I confirm that,"
-                  id="isDeclarationAccepted"
-                  type="checkbox"
-                  name="isDeclarationAccepted"
-                  items={[
-                    {
-                      label: FORMR_PARTB_ACCEPTANCE,
-                      value: true
-                    }
-                  ]}
-                />
+            <Panel label="Declaration" data-cy="declaration">
+              <MultiChoiceInputField
+                label="I confirm that,"
+                id="isDeclarationAccepted"
+                type="checkbox"
+                name="isDeclarationAccepted"
+                items={[
+                  {
+                    label: FORMR_PARTB_ACCEPTANCE,
+                    value: true
+                  }
+                ]}
+              />
 
-                <MultiChoiceInputField
-                  label="I confirm that,"
-                  id="isConsentAccepted"
-                  type="checkbox"
-                  name="isConsentAccepted"
-                  items={[
-                    {
-                      label: FORMR_PARTB_CONSENT,
-                      value: true
-                    }
-                  ]}
-                />
-              </Panel>
-            </Fieldset>
+              <MultiChoiceInputField
+                label="I confirm that,"
+                id="isConsentAccepted"
+                type="checkbox"
+                name="isConsentAccepted"
+                items={[
+                  {
+                    label: FORMR_PARTB_CONSENT,
+                    value: true
+                  }
+                ]}
+              />
+            </Panel>
+          </Fieldset>
 
-            <FormRPartBPagination
-              values={values}
-              handleSubmit={handleSubmit}
-              saveDraft={saveDraft}
-              prevSectionLabel={prevSectionLabel}
-              nextSectionLabel=""
-              previousSection={null}
-              isValid={isValid}
-              isSubmitting={isSubmitting}
-              finalSections={finalSections}
-            />
-          </Form>
-        )}
-      </Formik>
-    )
+          <FormRPartBPagination
+            values={values}
+            handleSubmit={handleSubmit}
+            saveDraft={saveDraft}
+            prevSectionLabel={prevSectionLabel}
+            nextSectionLabel=""
+            previousSection={null}
+            isValid={isValid}
+            isSubmitting={isSubmitting}
+            finalSections={finalSections}
+          />
+        </Form>
+      )}
+    </Formik>
   );
 };
 

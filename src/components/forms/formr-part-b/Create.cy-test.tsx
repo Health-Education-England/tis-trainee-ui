@@ -140,6 +140,5 @@ describe("Create form B", () => {
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
-    cy.get(".progress-step").should("not.exist");
   });
 });

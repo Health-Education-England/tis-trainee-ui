@@ -8,24 +8,6 @@ import Section6 from "./Section6";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 
 describe("Section6", () => {
-  it("should not render the form it no data", () => {
-    mount(
-      <Provider store={store}>
-        <BrowserRouter>
-          <Section6
-            prevSectionLabel=""
-            nextSectionLabel=""
-            saveDraft={() => Promise.resolve()}
-            previousSection={null}
-            handleSectionSubmit={() => Promise.resolve()}
-            history={[]}
-          />
-        </BrowserRouter>
-      </Provider>
-    );
-    cy.get("[data-cy=errorAction]").should("exist");
-  });
-
   it("should mount section 6 ", () => {
     const MockedSection6 = () => {
       const dispatch = useAppDispatch();
@@ -38,7 +20,6 @@ describe("Section6", () => {
           saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
-          history={[]}
         />
       );
     };

@@ -14,8 +14,6 @@ import {
   updatedFormA,
   updateFormA
 } from "../redux/slices/formASlice";
-import { fetchForms } from "../redux/slices/formsSlice";
-
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
@@ -48,8 +46,10 @@ export class FormRUtilities {
     if (draftFormRA.id) {
       await store.dispatch(updateFormA(updatedFormAData));
     } else await store.dispatch(saveFormA(updatedFormAData));
-    store.dispatch(fetchForms("/formr-a"));
-    history.push("/formr-a");
+    const formRAStatus = store.getState().formA.status;
+    if (formRAStatus === "succeeded") {
+      history.push("/formr-a");
+    }
   }
 }
 

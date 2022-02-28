@@ -22,6 +22,8 @@ import {
 } from "./components/authentication/signup/constants/AuthConstants";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 import { I18n } from "@aws-amplify/core";
+import Notifications from "./components/common/notifications/Notifications";
+
 const globalAny: any = global;
 globalAny.appVersion = packageJson.version;
 I18n.putVocabulariesForLanguage("en", FORM_FIELD_VALUES);
@@ -108,7 +110,10 @@ const App: React.FunctionComponent = () => {
       className={styles.authAuthenticator}
     >
       {({ signOut, user }) => (
-        <Main user={user} signOut={signOut} appVersion={appVersion} />
+        <>
+          <Notifications />
+          <Main user={user} signOut={signOut} appVersion={appVersion} />
+        </>
       )}
     </Authenticator>
   );

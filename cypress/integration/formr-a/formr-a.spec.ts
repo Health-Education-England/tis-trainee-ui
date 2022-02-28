@@ -19,6 +19,8 @@ describe("Form R (Part A)", () => {
   });
   it("Should complete a new Form R Part A.", () => {
     cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a/123");
+    cy.checkForErrorNotif("Error  - No form with that ID can be found. ");
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
@@ -273,6 +275,7 @@ describe("Form R (Part A)", () => {
     // Save draft
     cy.log("################ save draft form ###################");
     cy.get("[data-cy=BtnSaveDraft]").click();
+    cy.checkForSuccessNotif("Success");
     cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
     cy.checkFormRAValues(dateAttained, completionDate, startDate, "1");
 
