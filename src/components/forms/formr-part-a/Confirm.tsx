@@ -12,7 +12,6 @@ import {
 import { FormRPartA } from "../../../models/FormRPartA";
 import store from "../../../redux/store/store";
 import { LifeCycleState } from "../../../models/LifeCycleState";
-import { fetchForms } from "../../../redux/slices/formsSlice";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 interface IConfirm {
@@ -40,7 +39,6 @@ const Confirm = ({ history }: IConfirm) => {
     const formAStatus = store.getState().formA.status;
     if (formAStatus === "succeeded") {
       dispatch(resetToInitFormA());
-      dispatch(fetchForms("/formr-a"));
       history.push("/formr-a");
     }
   };

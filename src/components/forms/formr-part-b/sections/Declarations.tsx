@@ -18,7 +18,6 @@ import {
 } from "../../../../redux/slices/formBSlice";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import { fetchForms } from "../../../../redux/slices/formsSlice";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 
@@ -54,7 +53,6 @@ const Declarations = ({
       await dispatch(updateFormB(updatedFormBData));
       const formBStatus = store.getState().formB.status;
       if (formBStatus === "succeeded") {
-        dispatch(fetchForms("/formr-b"));
         history.push("/formr-b");
         dispatch(resetToInitFormB());
       }
