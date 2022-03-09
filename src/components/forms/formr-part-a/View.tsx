@@ -1,12 +1,5 @@
-import {
-  Row,
-  Col,
-  BackLink,
-  WarningCallout,
-  Panel,
-  SummaryList
-} from "nhsuk-react-components";
-import { Link, Redirect } from "react-router-dom";
+import { WarningCallout, Panel, SummaryList } from "nhsuk-react-components";
+import { Redirect } from "react-router-dom";
 import { CCT_DECLARATION } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
@@ -15,12 +8,13 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
 import { addNotification } from "../../../redux/slices/notificationsSlice";
 import { useEffect } from "react";
+import FormSavePDF from "../FormSavePDF";
 interface IView {
   canEdit: boolean;
   history: any;
 }
 
-const View = ({ canEdit }: IView) => {
+const View = ({ canEdit, history }: IView) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormA);
   let content;
@@ -40,25 +34,8 @@ const View = ({ canEdit }: IView) => {
     content = (
       <>
         <ScrollTo />
-        <Row>
-          <Col width="one-half">
-            <BackLink href="/formr-a">Go back to list</BackLink>
-          </Col>
-          <Col style={{ textAlign: "right" }} width="one-half">
-            {!canEdit && (
-              <Link
-                className="hide-from-print"
-                data-cy="linkHowToExport"
-                to={{
-                  pathname: "/formr-a/howtoexport"
-                }}
-              >
-                How to export form as PDF
-              </Link>
-            )}
-          </Col>
-        </Row>
-        {canEdit === true && (
+        {!canEdit && <FormSavePDF history={history} formrPath={"/formr-a"} />}
+        {!!canEdit && (
           <WarningCallout label="Confirmation" data-cy="warningConfirmation">
             <p>
               Check the information entered below is correct and click Submit at

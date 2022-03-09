@@ -1,13 +1,10 @@
 import {
-  BackLink,
   Button,
-  Col,
   Panel,
-  Row,
   SummaryList,
   WarningCallout
 } from "nhsuk-react-components";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   selectSavedFormB,
@@ -27,6 +24,7 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
 import { useEffect } from "react";
+import FormSavePDF from "../FormSavePDF";
 interface IView {
   canEdit: boolean;
   history: any;
@@ -46,7 +44,7 @@ const View = ({ canEdit, history }: IView) => {
       dispatch(
         addNotification({
           type: "Error",
-          text: " - No form with that Id can be found"
+          text: " - No form with that ID can be found"
         })
       );
     }
@@ -74,32 +72,8 @@ const View = ({ canEdit, history }: IView) => {
     content = (
       <>
         <ScrollTo />
-        {!canEdit && (
-          <Row>
-            <Col width="one-half">
-              <BackLink
-                style={{ cursor: "pointer" }}
-                data-cy="backLink"
-                onClick={() => history.goBack()}
-              >
-                Go back to list
-              </BackLink>
-            </Col>
-            <Col style={{ textAlign: "right" }} width="one-half">
-              <Link
-                className="hide-from-print"
-                data-jest="linkHowToExport"
-                to={{
-                  pathname: "/formr-b/howtoexport"
-                }}
-              >
-                How to export form as PDF
-              </Link>
-            </Col>
-          </Row>
-        )}
-
-        {canEdit && (
+        {!canEdit && <FormSavePDF history={history} formrPath={"/formr-b"} />}
+        {!!canEdit && (
           <WarningCallout label="Confirmation" data-jest="warningConfirmation">
             <p>
               Check the information entered below is correct, complete the
@@ -108,11 +82,7 @@ const View = ({ canEdit, history }: IView) => {
           </WarningCallout>
         )}
         <div className="nhsuk-grid-row nhsuk-u-margin-top-3">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader1">Section 1: Doctor's details</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
@@ -187,11 +157,7 @@ const View = ({ canEdit, history }: IView) => {
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader2">Section 2: Whole Scope of Practice</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
@@ -291,11 +257,7 @@ const View = ({ canEdit, history }: IView) => {
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader3">
               Section 3: Declarations relating to Good Medical Practice
             </h2>
@@ -353,11 +315,7 @@ const View = ({ canEdit, history }: IView) => {
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader4">
               Section 4: Update to your previous Form R Part B
             </h2>
@@ -451,11 +409,7 @@ const View = ({ canEdit, history }: IView) => {
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader5">
               Section 5: New declarations since your previous Form R Part B
             </h2>
@@ -547,11 +501,7 @@ const View = ({ canEdit, history }: IView) => {
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
-          <div
-            className={
-              canEdit ? "nhsuk-grid-column-two-thirds" : "nhs-grid-column-full"
-            }
-          >
+          <div className="nhsuk-grid-column-two-thirds">
             <h2 data-cy="sectionHeader6">Section 6: Compliments</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
@@ -572,13 +522,7 @@ const View = ({ canEdit, history }: IView) => {
         {enableCovidDeclaration ? (
           <>
             <div className="nhsuk-grid-row page-break">
-              <div
-                className={
-                  canEdit
-                    ? "nhsuk-grid-column-two-thirds"
-                    : "nhs-grid-column-full"
-                }
-              >
+              <div className="nhsuk-grid-column-two-thirds">
                 <h2 data-cy="sectionHeader7">Covid declarations</h2>
               </div>
               <div className="nhsuk-grid-column-one-third">
@@ -740,7 +684,7 @@ const View = ({ canEdit, history }: IView) => {
         {!canEdit && (
           <>
             <div className="nhsuk-grid-row page-break">
-              <div className="nhs-grid-column-full">
+              <div className="nhsuk-grid-column-two-thirds">
                 <h2 data-cy="sectionHeader5">Declarations</h2>
               </div>
             </div>

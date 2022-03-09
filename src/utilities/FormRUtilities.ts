@@ -10,10 +10,13 @@ import { FormRPartA } from "../models/FormRPartA";
 import { LifeCycleState } from "../models/LifeCycleState";
 import store from "../redux/store/store";
 import {
+  loadSavedFormA,
+  resetToInitFormA,
   saveFormA,
   updatedFormA,
   updateFormA
 } from "../redux/slices/formASlice";
+import { loadSavedFormB } from "../redux/slices/formBSlice";
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
@@ -48,8 +51,47 @@ export class FormRUtilities {
     } else await store.dispatch(saveFormA(updatedFormAData));
     const formRAStatus = store.getState().formA.status;
     if (formRAStatus === "succeeded") {
-      history.push("/formr-a");
+      FormRUtilities.historyPush(history, "/formr-a");
     }
+  }
+
+  public static async handleSubmitA(formData: FormRPartA, history: any) {
+    store.dispatch(
+      updatedFormA({
+        ...formData,
+        submissionDate: new Date(),
+        lifecycleState: LifeCycleState.Submitted,
+        lastModifiedDate: new Date()
+      })
+    );
+    const updatedFormAData = store.getState().formA.formAData;
+    await store.dispatch(updateFormA(updatedFormAData));
+    const formAStatus = store.getState().formA.status;
+    if (formAStatus === "succeeded") {
+      store.dispatch(resetToInitFormA());
+      FormRUtilities.historyPush(history, "/formr-a");
+    }
+  }
+
+  public static async handleRowClick(
+    formId: string,
+    path: string,
+    history: string[]
+  ): Promise<void> {
+    if (path === "/formr-a") {
+      await store.dispatch(loadSavedFormA(formId));
+    } else if (path === "/formr-b") {
+      await store.dispatch(loadSavedFormB(formId));
+    }
+    FormRUtilities.historyPush(history, path, formId);
+  }
+
+  public static historyPush(history: any, path: string, id?: string): void {
+    id ? history.push(`${path}/${id}`) : history.push(path);
+  }
+
+  public static windowPrint(): void {
+    window.print();
   }
 }
 

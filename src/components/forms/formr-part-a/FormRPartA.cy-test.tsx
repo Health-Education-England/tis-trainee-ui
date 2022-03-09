@@ -16,6 +16,5 @@ describe("FormRPartA routes page", () => {
     cy.get('[data-cy="formraLabel"]')
       .should("exist")
       .should("include.text", "Trainee registration");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
   });
 });

@@ -277,6 +277,7 @@ describe("Form R (Part B)", () => {
     cy.checkForSuccessNotif("Success");
     cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
+    cy.get("[data-cy=formsTrueHint]").should("exist");
 
     // ------------- Check newly-submitted form exists -------------------
     // compare uid to row id
@@ -287,7 +288,16 @@ describe("Form R (Part B)", () => {
         if (row["id"] === uid) {
           // Open the form just saved
           cy.get("[data-cy=submittedForm]").eq(index).click();
-          // check contents
+          // Check for PDF btn and help link
+          cy.get("[data-cy=savePdfBtn]").should("exist");
+          cy.get("[data-cy=pdfHelpLink]")
+            .should("exist")
+            .should(
+              "have.attr",
+              "href",
+              "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
+            );
+          // Check contents
           cy.get("[data-cy=gmcNumber]")
             .should("exist")
             .should("have.text", "11111111");

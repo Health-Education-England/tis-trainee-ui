@@ -4,7 +4,6 @@ import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
 import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
-import HowToPrintToPDF from "../forms/HowToPrintToPDF";
 import PageNotFound from "../common/PageNotFound";
 import SetupMFA from "../authentication/mfa/SetupMFA";
 import PageTitle from "../common/PageTitle";
@@ -29,7 +28,6 @@ const MainRoutes = (): JSX.Element => {
       <Route path="/formr-a" component={FormRPartA} />
       <Route path="/formr-b" component={FormRPartB} />
       <Route path="/support" component={Support} />
-      <Route path="/howtoexport" component={HowToPrintToPDF} />
       <Redirect exact path="/" to="/profile" />
       <Route path="/*" component={PageNotFound} />
     </Switch>

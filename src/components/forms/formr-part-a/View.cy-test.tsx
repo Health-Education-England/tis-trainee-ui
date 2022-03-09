@@ -19,7 +19,7 @@ describe("View", () => {
     cy.get("[data-cy=linkHowToExport]").should("not.exist");
     cy.get("[data-cy=warningConfirmation]").should("not.exist");
   });
-  it("should mount view component with print PDF export link but no edit/save btns", () => {
+  it("should render view component with save PDF btn/link for submitted form.", () => {
     const MockedView = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormA(submittedFormRPartAs[0]));
@@ -33,8 +33,18 @@ describe("View", () => {
         </BrowserRouter>
       </Provider>
     );
-    cy.get(".nhsuk-back-link__link").should("include.text", "Go back to list");
-    cy.get("[data-cy=linkHowToExport]").should("include.text", "PDF");
+    cy.get("[data-cy=backLink]").should(
+      "include.text",
+      "Go back to forms list"
+    );
+    cy.get("[data-cy=savePdfBtn]").should("exist");
+    cy.get("[data-cy=pdfHelpLink]")
+      .should("include.text", "Click here for help saving form as a PDF")
+      .should(
+        "have.attr",
+        "href",
+        "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
+      );
     cy.get("[data-cy=localOfficeName]").should(
       "include.text",
       "Health Education England Thames Valley"
@@ -42,5 +52,23 @@ describe("View", () => {
     cy.get("[data-cy=BtnEdit]").should("not.exist");
     cy.get("[data-cy=BtnSaveDraft]").should("not.exist");
     cy.get("[data-cy=BtnSubmit]").should("not.exist");
+  });
+  it("should render view component with no save PDF btn/link for unsubmitted form", () => {
+    const MockedViewUnsubmitted = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormA(submittedFormRPartAs[1]));
+
+      return <View canEdit={true} history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <BrowserRouter>
+          <MockedViewUnsubmitted />
+        </BrowserRouter>
+      </Provider>
+    );
+    cy.get("[data-cy=backLink]").should("not.exist");
+    cy.get("[data-cy=savePdfBtn]").should("not.exist");
+    cy.get("[data-cy=pdfHelpLink]").should("not.exist");
   });
 });

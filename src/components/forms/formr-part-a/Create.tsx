@@ -35,25 +35,29 @@ import { FormRUtilities } from "../../../utilities/FormRUtilities";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
-  const formRAData = useAppSelector(selectSavedFormA);
+  const formRAData: FormRPartA = useAppSelector(selectSavedFormA);
   const combinedReferenceData: CombinedReferenceData =
     useAppSelector(selectAllReference);
-
-  const handleSubmit = async (finalFormA: FormRPartA) => {
-    dispatch(updatedFormA(finalFormA));
-    history.push("/formr-a/confirm");
-  };
 
   if (!formRAData.traineeTisId) {
     return <Redirect to="/formr-a" />;
   }
   return (
     <>
-      <BackLink href="/formr-a">Go back to forms list</BackLink>
+      <BackLink
+        data-cy="backLink"
+        style={{ cursor: "pointer" }}
+        onClick={() => FormRUtilities.historyPush(history, "/formr-a")}
+      >
+        Go back to forms list
+      </BackLink>
       <Formik
         initialValues={formRAData}
         validationSchema={ValidationSchema}
-        onSubmit={values => handleSubmit(values)}
+        onSubmit={values => {
+          dispatch(updatedFormA(values));
+          FormRUtilities.historyPush(history, "/formr-a/confirm");
+        }}
       >
         {({ values, errors, setFieldValue, isSubmitting }) => (
           <Form>

@@ -11,6 +11,7 @@ import { mockedCombinedReference } from "../../../mock-data/combinedReferenceDat
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedFormA } from "../../../redux/slices/formASlice";
 import { updatedReference } from "../../../redux/slices/referenceSlice";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 
 describe("Form R Part A - Create", () => {
   it("should not render the form if no tisId", () => {
@@ -25,6 +26,7 @@ describe("Form R Part A - Create", () => {
   });
   it("should mount the Create component", () => {
     const MockedCreate = () => {
+      cy.stub(FormRUtilities, "historyPush").as("NewUrl");
       const dispatch = useAppDispatch();
       dispatch(updatedFormA(submittedFormRPartAs[0]));
       dispatch(updatedReference(mockedCombinedReference));
@@ -39,6 +41,8 @@ describe("Form R Part A - Create", () => {
       </Provider>
     );
     cy.testDataSourceLink();
+    cy.get("[data-cy=backLink]").click();
+    cy.get("@NewUrl").should("have.been.called");
     cy.get("#forename").should("exist").should("have.value", "Anthony Mara");
     cy.get("#immigrationStatus")
       .should("exist")

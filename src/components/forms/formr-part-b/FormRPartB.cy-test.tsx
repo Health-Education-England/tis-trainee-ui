@@ -16,6 +16,5 @@ describe("FormRPartB routes page", () => {
     cy.get(".nhsuk-fieldset__heading")
       .should("exist")
       .should("include.text", "Form R (Part B)");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
   });
 });
