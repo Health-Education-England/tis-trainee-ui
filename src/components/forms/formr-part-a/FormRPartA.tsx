@@ -6,7 +6,6 @@ import CreateList from "../CreateList";
 import View from "./View";
 import Create from "./Create";
 import Confirm from "./Confirm";
-import HowToPrintToPDF from "../HowToPrintToPDF";
 
 const FormRPartA = () => {
   return (
@@ -24,7 +23,6 @@ const FormRPartA = () => {
       <Switch>
         <Route path="/formr-a/create" component={Create} />
         <Route path="/formr-a/confirm" component={Confirm} />
-        <Route path="/formr-a/howtoexport" component={HowToPrintToPDF} />
         <Route path="/formr-a/:id" component={View} />
         <Route path="/" component={CreateList} />
       </Switch>

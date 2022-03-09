@@ -6,7 +6,6 @@ import CreateList from "../CreateList";
 import View from "./View";
 import ScrollTo from "../ScrollTo";
 import PageTitle from "../../common/PageTitle";
-import HowToPrintToPDF from "../HowToPrintToPDF";
 
 const FormRPartB: React.FC = () => {
   return (
@@ -23,7 +22,6 @@ const FormRPartB: React.FC = () => {
       </Fieldset>
       <Switch>
         <Route path="/formr-b/create" component={Create} />
-        <Route path="/formr-b/howtoexport" component={HowToPrintToPDF} />
         <Route path="/formr-b/:id" component={View} />
         <Route path="/" component={CreateList} />
       </Switch>
