@@ -2,46 +2,17 @@ import View from "./View";
 import ScrollTo from "../ScrollTo";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import SubmitButton from "../SubmitButton";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import {
-  selectSavedFormA,
-  updatedFormA,
-  updateFormA,
-  resetToInitFormA
-} from "../../../redux/slices/formASlice";
-import { FormRPartA } from "../../../models/FormRPartA";
-import store from "../../../redux/store/store";
-import { LifeCycleState } from "../../../models/LifeCycleState";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { selectSavedFormA } from "../../../redux/slices/formASlice";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 interface IConfirm {
-  history: any;
+  history: string[];
 }
 
 const Confirm = ({ history }: IConfirm) => {
   const canEdit: boolean = true;
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormA);
-
-  const handleEdit = () => history.push("/formr-a/create");
-
-  const handleSubmit = async (formDataSubmit: FormRPartA) => {
-    dispatch(
-      updatedFormA({
-        ...formDataSubmit,
-        submissionDate: new Date(),
-        lifecycleState: LifeCycleState.Submitted,
-        lastModifiedDate: new Date()
-      })
-    );
-    const updatedFormAData = store.getState().formA.formAData;
-    await dispatch(updateFormA(updatedFormAData));
-    const formAStatus = store.getState().formA.status;
-    if (formAStatus === "succeeded") {
-      dispatch(resetToInitFormA());
-      history.push("/formr-a");
-    }
-  };
 
   if (!formData.traineeTisId) {
     return <Redirect to="/formr-a" />;
@@ -63,7 +34,12 @@ const Confirm = ({ history }: IConfirm) => {
         <div className="nhsuk-grid-column-two-thirds">
           <div className="nhsuk-grid-row">
             <div className="nhsuk-grid-column-one-quarter">
-              <Button data-cy="BtnEdit" onClick={() => handleEdit()}>
+              <Button
+                data-cy="BtnEdit"
+                onClick={() =>
+                  FormRUtilities.historyPush(history, "/formr-a/create")
+                }
+              >
                 Edit
               </Button>
             </div>
@@ -80,7 +56,9 @@ const Confirm = ({ history }: IConfirm) => {
               <SubmitButton
                 type="submit"
                 label="Submit"
-                clickHandler={() => handleSubmit(formData)}
+                clickHandler={() =>
+                  FormRUtilities.handleSubmitA(formData, history)
+                }
                 data-cy="BtnSubmit"
               />
             </div>
