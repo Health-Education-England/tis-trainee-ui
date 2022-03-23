@@ -19,6 +19,7 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { FormRPartB } from "../../../../models/FormRPartB";
 
 const Section2 = ({
   prevSectionLabel,
@@ -33,12 +34,26 @@ const Section2 = ({
     return isNaN(value) ? 0 : Number(value);
   };
 
+  const getTotal = (vals: FormRPartB) => {
+    return (
+      getNumber(vals.sicknessAbsence) +
+      getNumber(vals.parentalLeave) +
+      getNumber(vals.careerBreaks) +
+      getNumber(vals.paidLeave) +
+      getNumber(vals.unauthorisedLeave) +
+      getNumber(vals.otherLeave)
+    );
+  };
+
   return (
     <Formik
       initialValues={formData}
       validationSchema={Section2ValidationSchema}
-      onSubmit={values => {
-        handleSectionSubmit(values);
+      onSubmit={(values, { setValues }) => {
+        const totalLeaveVal: number = getTotal(values);
+        const payload: FormRPartB = { ...values, totalLeave: totalLeaveVal };
+        setValues(payload);
+        handleSectionSubmit(payload);
       }}
     >
       {({ values, errors, handleSubmit }) => (
@@ -139,14 +154,7 @@ const Section2 = ({
               <TextInputField
                 label="Total"
                 name="totalLeave"
-                value={
-                  getNumber(values.sicknessAbsence) +
-                  getNumber(values.parentalLeave) +
-                  getNumber(values.careerBreaks) +
-                  getNumber(values.paidLeave) +
-                  getNumber(values.unauthorisedLeave) +
-                  getNumber(values.otherLeave)
-                }
+                value={getTotal(values)}
                 readOnly
               />
             </Panel>
@@ -163,7 +171,7 @@ const Section2 = ({
           ) : null}
 
           <FormRPartBPagination
-            values={values}
+            values={{ ...values, totalLeave: getTotal(values) }}
             saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
