@@ -305,6 +305,7 @@ describe("Form R (Part B)", () => {
             "have.text",
             "Health Education England Wessex"
           );
+          cy.get("[data-cy=totalLeave]").should("include.text", "21");
           // Navigate back to the list
           cy.get(".nhsuk-back-link__link").should("exist").click();
           cy.contains("Submitted forms").should("exist");
