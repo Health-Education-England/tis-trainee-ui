@@ -39,7 +39,7 @@ describe("Support", () => {
     );
     cy.get(".nhsuk-action-link__text").should(
       "include.text",
-      "tis.wtv@hee.nhs.uk"
+      "Formr.tv@hee.nhs.uk"
     );
     cy.get("[data-cy=contactList]").select("HEE North West London");
     cy.get(".nhsuk-action-link__text").should(
