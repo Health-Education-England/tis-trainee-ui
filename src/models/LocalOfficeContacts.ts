@@ -52,12 +52,12 @@ export const localOfficeContacts: LocalOfficeContact[] = [
   {
     name: "Health Education England Thames Valley",
     abbrevName: "HEE Thames Valley",
-    contact: "tis.wtv@hee.nhs.uk"
+    contact: "Formr.tv@hee.nhs.uk"
   },
   {
     name: "Health Education England Wessex",
     abbrevName: "HEE Wessex",
-    contact: "tis.wtv@hee.nhs.uk"
+    contact: "Formr.wx@hee.nhs.uk "
   },
   {
     name: "Health Education England West Midlands",
