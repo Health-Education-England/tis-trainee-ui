@@ -107,14 +107,14 @@ jobs:
 
       - name: Create report artifact
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-reports
           path: cypress/reports
 
       - name: Create screenshot artifact
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
 
         with:
           name: cypress-screenshots
@@ -123,7 +123,7 @@ jobs:
       - name: Create video artifact
         # Test run video was always captured, so this action uses "always()" condition
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-videos
           path: cypress/videos
