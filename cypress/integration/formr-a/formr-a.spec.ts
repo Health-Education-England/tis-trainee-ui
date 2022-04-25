@@ -196,9 +196,9 @@ describe("Form R (Part A)", () => {
             .type("585-6360 Interdum Street");
 
           cy.get("#address2").should("exist").clear().type("Goulburn");
-          cy.get("#address3").should("exist").clear().type("London");
+          cy.get("#address3").should("exist").clear().type("Mauritius");
 
-          cy.get("#postCode").should("exist").clear().type("SW1A1AA");
+          cy.get("#postCode").should("exist").clear().type("80902");
           cy.get("#telephoneNumber")
             .should("exist")
             .clear()

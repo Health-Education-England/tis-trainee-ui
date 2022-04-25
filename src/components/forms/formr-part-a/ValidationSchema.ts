@@ -4,7 +4,6 @@ import { StringValidationSchema } from "../StringValidationSchema";
 import {
   CCT_DECLARATION,
   CHECK_PHONE_REGEX,
-  CHECK_POSTCODE_REGEX,
   CHECK_WHOLE_TIME_EQUIVALENT_REGEX
 } from "../../../utilities/Constants";
 
@@ -45,10 +44,7 @@ export const ValidationSchema = yup.object({
   address1: StringValidationSchema("Address Line 1"),
   address2: StringValidationSchema("Address Line 2"),
 
-  postCode: StringValidationSchema("Postcode", 8).matches(
-    CHECK_POSTCODE_REGEX,
-    "Please enter a valid postcode"
-  ),
+  postCode: StringValidationSchema("Postcode", 20),
   telephoneNumber: StringValidationSchema("Contact Telephone").matches(
     CHECK_PHONE_REGEX,
     "Contact Telephone - please provide a valid number with prefix (e.g. 0, +44, or 44), at least 10 digits (including area code), a maximum of 15 digits (to allow for your country code), with no dashes or brackets."
