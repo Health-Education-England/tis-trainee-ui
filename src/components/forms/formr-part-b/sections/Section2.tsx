@@ -19,7 +19,7 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
-import { FormRPartB } from "../../../../models/FormRPartB";
+import { FormRPartB, Work } from "../../../../models/FormRPartB";
 
 const Section2 = ({
   prevSectionLabel,
@@ -45,18 +45,28 @@ const Section2 = ({
     );
   };
 
+  const sortWorkDesc = (workArr: Work[]) => {
+    const workArrForSorting = [...workArr];
+    return workArrForSorting.sort(
+      (a: Work, b: Work) =>
+        new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+    );
+  };
+
   return (
     <Formik
       initialValues={formData}
       validationSchema={Section2ValidationSchema}
-      onSubmit={(values, { setValues }) => {
-        const totalLeaveVal: number = getTotal(values);
-        const payload: FormRPartB = { ...values, totalLeave: totalLeaveVal };
-        setValues(payload);
+      onSubmit={values => {
+        const payload: FormRPartB = {
+          ...values,
+          totalLeave: getTotal(values),
+          work: sortWorkDesc(values.work)
+        };
         handleSectionSubmit(payload);
       }}
     >
-      {({ values, errors, handleSubmit }) => (
+      {({ values, errors, handleSubmit, setValues }) => (
         <Form>
           <ScrollTo />
           <Fieldset disableErrorLine={true} name="scopeOfPractice">
@@ -171,7 +181,11 @@ const Section2 = ({
           ) : null}
 
           <FormRPartBPagination
-            values={{ ...values, totalLeave: getTotal(values) }}
+            values={{
+              ...values,
+              totalLeave: getTotal(values),
+              work: sortWorkDesc(values.work)
+            }}
             saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
