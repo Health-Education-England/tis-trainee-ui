@@ -13,6 +13,9 @@ const pastDate = Cypress.dayjs()
 const outOfRangeFutureDate = Cypress.dayjs(futureDate)
   .add(Cypress.dayjs.duration({ years: 20 }))
   .format("YYYY-MM-DD");
+const farFutureDate = Cypress.dayjs()
+  .add(Cypress.dayjs.duration({ years: 5 }))
+  .format("YYYY-MM-DD");
 
 const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
 
@@ -80,7 +83,7 @@ describe("Form R (Part B)", () => {
     cy.get('[data-cy="work[0].startDate"]').clear().type(pastDate);
     cy.get(".nhsuk-error-summary").should("not.exist");
 
-    cy.addWorkPanel(pastDate, currentDate);
+    cy.addWorkPanel(farFutureDate, farFutureDate);
 
     // Navigate back to section 1
     cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
@@ -90,8 +93,8 @@ describe("Form R (Part B)", () => {
 
     // Return to section 2
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
     cy.get(".nhsuk-error-summary").should("not.exist");
+    cy.get('[data-cy="work[0].endDate"]').should("have.value", farFutureDate);
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
     // -------- Section 3 Declarations relating to Good Medical Practice -----------
@@ -173,7 +176,10 @@ describe("Form R (Part B)", () => {
     cy.get(".nhsuk-warning-callout__label")
       .should("exist")
       .should("include.text", "Confirmation");
-
+    cy.get("[data-cy=endDate1]").should(
+      "contain.text",
+      Cypress.dayjs(farFutureDate).format("DD/MM/YYYY")
+    );
     // check if Covid section exists or not depending on flag
     if (isCovid) {
       cy.get("[data-cy=sectionHeader7]").should("exist");
@@ -261,6 +267,11 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=isDeclarationAccepted0]").click();
     cy.get("[data-cy=isConsentAccepted0]").click();
 
+    // check work saved in correct order
+    cy.get("[data-cy=endDate1]").should(
+      "contain.text",
+      Cypress.dayjs(farFutureDate).format("DD/MM/YYYY")
+    );
     // ------------- submit form -----------------------------------------
 
     // intercept formr-partb POST req

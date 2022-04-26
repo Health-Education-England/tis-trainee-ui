@@ -180,16 +180,13 @@ const View = ({ canEdit, history }: IView) => {
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>Start Date</SummaryList.Key>
-                      <SummaryList.Value
-                        data-jest="startDate"
-                        data-cy={`startDate${i + 1}`}
-                      >
+                      <SummaryList.Value data-cy={`startDate${i + 1}`}>
                         {DateUtilities.ToLocalDate(w.startDate || null)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>End Date</SummaryList.Key>
-                      <SummaryList.Value data-jest="endDate">
+                      <SummaryList.Value data-cy={`endDate${i + 1}`}>
                         {DateUtilities.ToLocalDate(w.endDate || null)}
                       </SummaryList.Value>
                     </SummaryList.Row>
