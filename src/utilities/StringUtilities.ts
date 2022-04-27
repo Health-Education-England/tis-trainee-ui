@@ -10,4 +10,8 @@ export class StringUtilities {
     }
     return VALUE_NOT_GIVEN;
   }
+
+  public static argsToString(...args: string[]) {
+    return args.filter(a => a !== null).join(" ");
+  }
 }
