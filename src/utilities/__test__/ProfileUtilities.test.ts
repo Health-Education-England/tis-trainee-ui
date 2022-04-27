@@ -1,5 +1,9 @@
 import { ProfileUtilities } from "../ProfileUtilities";
-import { submittedFormRPartBs } from "../../mock-data/submitted-formr-partb";
+import {
+  draftFormRPartB,
+  draftFormRPartBWithNoLeaveTotal,
+  draftFormRPartBWithNullCareerBreak
+} from "../../mock-data/draft-formr-partb";
 import {
   mockProgrammeMemberships,
   mockProgrammeMembershipNoCurricula,
@@ -9,9 +13,29 @@ import {
 
 describe("DesignatedBodiesUtilities", () => {
   it("should sort work in desc order by end date", () => {
-    const sortedWork = ProfileUtilities.sortWorkDesc(submittedFormRPartBs[0]);
-    expect(sortedWork[0].endDate).toBe("2020-12-31");
+    const sortedWork = ProfileUtilities.sortWorkDesc(draftFormRPartB.work);
+    expect(sortedWork[0].endDate).toBe("2020-12-24");
   });
+  it("should return the total leave", () => {
+    const totLeave = draftFormRPartB.totalLeave;
+    const totalLeaveCalc = ProfileUtilities.getTotal(draftFormRPartB);
+    expect(totalLeaveCalc).toEqual(totLeave);
+  });
+  it("should still return the total leave with null value", () => {
+    const totLeave = draftFormRPartBWithNullCareerBreak.totalLeave;
+    const totalLeaveCalc = ProfileUtilities.getTotal(
+      draftFormRPartBWithNullCareerBreak
+    );
+    expect(totalLeaveCalc).toEqual(totLeave);
+  });
+  it("should return the updated form with totalLeave and sorted work", () => {
+    const sortedAndTotalledForm = ProfileUtilities.updateVals(
+      draftFormRPartBWithNoLeaveTotal
+    );
+    expect(sortedAndTotalledForm.totalLeave).toEqual(6);
+    expect(sortedAndTotalledForm.work[0].endDate).toBe("2020-12-31");
+  });
+
   it("should return null if no Programme Membership in array", () => {
     const progMem = ProfileUtilities.getRecentProgramme([]);
     expect(progMem).toBe(null);

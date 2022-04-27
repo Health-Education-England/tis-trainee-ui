@@ -19,7 +19,8 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
-import { FormRPartB, Work } from "../../../../models/FormRPartB";
+import { FormRPartB } from "../../../../models/FormRPartB";
+import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
 
 const Section2 = ({
   prevSectionLabel,
@@ -30,43 +31,16 @@ const Section2 = ({
 }: IFormRPartBSection) => {
   let formData = useAppSelector(selectSavedFormB);
 
-  const getNumber = (value: number) => {
-    return isNaN(value) ? 0 : Number(value);
-  };
-
-  const getTotal = (vals: FormRPartB) => {
-    return (
-      getNumber(vals.sicknessAbsence) +
-      getNumber(vals.parentalLeave) +
-      getNumber(vals.careerBreaks) +
-      getNumber(vals.paidLeave) +
-      getNumber(vals.unauthorisedLeave) +
-      getNumber(vals.otherLeave)
-    );
-  };
-
-  const sortWorkDesc = (workArr: Work[]) => {
-    const workArrForSorting = [...workArr];
-    return workArrForSorting.sort(
-      (a: Work, b: Work) =>
-        new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
-    );
-  };
-
   return (
     <Formik
       initialValues={formData}
       validationSchema={Section2ValidationSchema}
       onSubmit={values => {
-        const payload: FormRPartB = {
-          ...values,
-          totalLeave: getTotal(values),
-          work: sortWorkDesc(values.work)
-        };
+        const payload: FormRPartB = ProfileUtilities.updateVals(values);
         handleSectionSubmit(payload);
       }}
     >
-      {({ values, errors, handleSubmit, setValues }) => (
+      {({ values, errors, handleSubmit }) => (
         <Form>
           <ScrollTo />
           <Fieldset disableErrorLine={true} name="scopeOfPractice">
@@ -164,7 +138,7 @@ const Section2 = ({
               <TextInputField
                 label="Total"
                 name="totalLeave"
-                value={getTotal(values)}
+                value={ProfileUtilities.getTotal(values)}
                 readOnly
               />
             </Panel>
@@ -181,11 +155,7 @@ const Section2 = ({
           ) : null}
 
           <FormRPartBPagination
-            values={{
-              ...values,
-              totalLeave: getTotal(values),
-              work: sortWorkDesc(values.work)
-            }}
+            values={ProfileUtilities.updateVals(values)}
             saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}

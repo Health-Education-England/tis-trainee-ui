@@ -3,8 +3,9 @@ import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import { MEDICAL_CURRICULUM } from "./Constants";
 
 export class ProfileUtilities {
-  public static sortWorkDesc(formData: FormRPartB) {
-    return formData.work.sort(
+  public static sortWorkDesc(workArr: Work[]) {
+    const workArrForSorting = [...workArr];
+    return workArrForSorting.sort(
       (a: Work, b: Work) =>
         new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
     );
@@ -48,5 +49,28 @@ export class ProfileUtilities {
           )
           .shift()
       : null;
+  }
+
+  private static getNumber(v: number) {
+    return isNaN(v) ? 0 : Number(v);
+  }
+
+  public static getTotal(vals: FormRPartB) {
+    return (
+      this.getNumber(vals.sicknessAbsence) +
+      this.getNumber(vals.parentalLeave) +
+      this.getNumber(vals.careerBreaks) +
+      this.getNumber(vals.paidLeave) +
+      this.getNumber(vals.unauthorisedLeave) +
+      this.getNumber(vals.otherLeave)
+    );
+  }
+
+  public static updateVals(currVals: FormRPartB) {
+    return {
+      ...currVals,
+      totalLeave: this.getTotal(currVals),
+      work: this.sortWorkDesc(currVals.work)
+    };
   }
 }
