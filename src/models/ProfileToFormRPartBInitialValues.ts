@@ -3,6 +3,7 @@ import { FormRPartB, Work } from "./FormRPartB";
 import { NEW_WORK } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
+import { StringUtilities } from "../utilities/StringUtilities";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
@@ -14,7 +15,11 @@ export function ProfileToFormRPartBInitialValues(
   const curriculum = ProfileUtilities.getCurriculum(programme);
 
   const work = traineeProfileData.placements.map<Work>(placement => ({
-    typeOfWork: `${placement.placementType} ${placement.grade} ${placement.specialty}`,
+    typeOfWork: StringUtilities.argsToString(
+      placement.placementType,
+      placement.grade,
+      placement.specialty
+    ),
     startDate: placement.startDate,
     endDate: placement.endDate,
     site: placement.site,

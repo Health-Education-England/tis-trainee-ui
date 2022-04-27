@@ -1,6 +1,6 @@
 import { StringUtilities } from "../StringUtilities";
 
-describe("PlacementUtilities", () => {
+describe("StringUtilities", () => {
   it("should return 'not given' if blank", () => {
     const wte = "";
     expect(StringUtilities.TrimZeros(wte)).toEqual("Value not given");
@@ -28,5 +28,13 @@ describe("PlacementUtilities", () => {
   it("should return 'value not given' for zero plus trailing zero", () => {
     const wte = "0.0";
     expect(StringUtilities.TrimZeros(wte)).toEqual("Value not given");
+  });
+  it("should concat to a single string without the null args", () => {
+    const pType = "Placement Type";
+    const pGrade = null;
+    const pSpec = "Placement Spec";
+    expect(StringUtilities.argsToString(pType, pGrade, pSpec)).toEqual(
+      "Placement Type Placement Spec"
+    );
   });
 });
