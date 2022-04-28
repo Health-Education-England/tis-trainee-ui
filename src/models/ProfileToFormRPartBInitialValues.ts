@@ -24,7 +24,7 @@ export function ProfileToFormRPartBInitialValues(
     endDate: placement.endDate,
     site: placement.site,
     siteLocation: placement.siteLocation,
-    trainingPost: placement.placementType === "In Post" ? "Yes" : ""
+    trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
   }));
 
   if (work.length > 1) {

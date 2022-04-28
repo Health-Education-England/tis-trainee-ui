@@ -2,6 +2,7 @@ import { PersonalDetails } from "../models/PersonalDetails";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { Status } from "../models/Status";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { Placement } from "../models/Placement";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -193,7 +194,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   ]
 };
 
-export const mockPlacements = [
+export const mockPlacements: Placement[] = [
   {
     endDate: new Date("2020-12-31"),
     grade: "ST1",
@@ -207,6 +208,20 @@ export const mockPlacements = [
     employingBody: "Employing body",
     trainingBody: "Training body",
     wholeTimeEquivalent: "0.5"
+  },
+  {
+    endDate: new Date("2021-12-31"),
+    grade: "ST2",
+    tisId: "316",
+    placementType: "Long-term sick",
+    site: "Addenbrookes Hospital",
+    siteLocation: "Site location",
+    specialty: "Dermatology",
+    startDate: new Date("2020-01-01"),
+    status: Status.Current,
+    employingBody: "",
+    trainingBody: "Carmarthenshire NHS Trust",
+    wholeTimeEquivalent: "0.75"
   }
 ];
 

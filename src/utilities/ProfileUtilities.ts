@@ -1,4 +1,5 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
+import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import { MEDICAL_CURRICULUM } from "./Constants";
 
@@ -72,5 +73,10 @@ export class ProfileUtilities {
       totalLeave: this.getTotal(currVals),
       work: this.sortWorkDesc(currVals.work)
     };
+  }
+
+  public static getTrainingPostInitVal(pl: Placement) {
+    if (pl.placementType.toLowerCase().includes("in post")) return "Yes";
+    else return "";
   }
 }
