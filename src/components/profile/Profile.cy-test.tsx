@@ -46,8 +46,8 @@ describe("Profile", () => {
     ).should("include.text", "Gilliam");
     cy.contains("Placements").should("exist").click();
     cy.get(
-      ".nhsuk-grid-column-full > .nhsuk-summary-list > :nth-child(6) > .nhsuk-summary-list__value"
-    ).should("include.text", "Dermatology");
+      ":nth-child(2) > .nhsuk-details__text > .nhsuk-grid-row > :nth-child(2) > .nhsuk-summary-list > :nth-child(6) > .nhsuk-summary-list__value"
+    );
     cy.contains("Programmes").should("exist").click();
     cy.get(
       ":nth-child(1) > .nhsuk-summary-list > :nth-child(6) > .nhsuk-summary-list__value > :nth-child(2) > :nth-child(2)"

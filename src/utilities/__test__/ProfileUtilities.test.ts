@@ -8,10 +8,11 @@ import {
   mockProgrammeMemberships,
   mockProgrammeMembershipNoCurricula,
   mockProgrammeMembershipNoMedicalCurricula,
-  mockProgrammeMembershipDuplicateCurriculaStart
+  mockProgrammeMembershipDuplicateCurriculaStart,
+  mockPlacements
 } from "../../mock-data/trainee-profile";
 
-describe("DesignatedBodiesUtilities", () => {
+describe("ProfileUtilities", () => {
   it("should sort work in desc order by end date", () => {
     const sortedWork = ProfileUtilities.sortWorkDesc(draftFormRPartB.work);
     expect(sortedWork[0].endDate).toBe("2020-12-24");
@@ -34,6 +35,14 @@ describe("DesignatedBodiesUtilities", () => {
     );
     expect(sortedAndTotalledForm.totalLeave).toEqual(6);
     expect(sortedAndTotalledForm.work[0].endDate).toBe("2020-12-31");
+  });
+  it("should return Yes if the placement type includes 'in post'", () => {
+    expect(ProfileUtilities.getTrainingPostInitVal(mockPlacements[0])).toEqual(
+      "Yes"
+    );
+    expect(ProfileUtilities.getTrainingPostInitVal(mockPlacements[1])).toEqual(
+      ""
+    );
   });
 
   it("should return null if no Programme Membership in array", () => {
