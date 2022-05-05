@@ -76,7 +76,7 @@ export class ProfileUtilities {
   }
 
   public static getTrainingPostInitVal(pl: Placement) {
-    if (pl.placementType.toLowerCase().includes("in post")) return "Yes";
+    if (pl.placementType?.toLowerCase().includes("in post")) return "Yes";
     else return "";
   }
 }
