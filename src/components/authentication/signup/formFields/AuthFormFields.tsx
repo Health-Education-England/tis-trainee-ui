@@ -24,7 +24,7 @@ const AuthFormFields = () => {
           hasError={!!validationErrors.yesToPilot}
           name="yesToPilot"
           value="yes"
-          label="I have been invited to test this application"
+          label="I received an email inviting me to sign up"
         />
       </div>
     </>
