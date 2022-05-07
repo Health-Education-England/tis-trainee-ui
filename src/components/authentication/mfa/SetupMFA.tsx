@@ -94,7 +94,7 @@ const SetupMFA = ({ user, mfa }: ISetupMFA) => {
           {newMFAStatus === "sms" && (
             <p>
               Authentication via SMS has been successfully registered. You will
-              need to enter a 6-digit code each time you login to Trainee
+              need to enter a 6-digit code each time you login to TIS
               Self-Service, which you will receive as a text message sent to the
               mobile phone number you provided.
             </p>

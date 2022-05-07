@@ -1,7 +1,6 @@
 export const YES_TO_PRIVACY =
   "To use TIS Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
-export const YES_TO_PILOT =
-  "Only trainees invited to partake in this pilot should sign-up.";
+export const YES_TO_PILOT = "Sign-up is by email invitation only.";
 export const FORM_FIELD_VALUES = {
   "Create Account": "Sign up", //create account tab header
   Email: "Email  (used by HEE)", // email
