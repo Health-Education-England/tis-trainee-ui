@@ -64,6 +64,7 @@ export function ProfileToFormRPartBInitialValues(
     previousDeclarationSummary: "",
     haveCurrentDeclarations: "",
     currentDeclarations: [],
+    havePreviousUnresolvedDeclarations: "",
     currentDeclarationSummary: "",
     compliments: "",
     haveCovidDeclarations: "",

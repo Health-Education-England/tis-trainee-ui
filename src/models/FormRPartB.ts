@@ -31,6 +31,7 @@ export interface FormRPartB extends IFormR {
   healthStatement: string;
   havePreviousDeclarations: boolean | string;
   previousDeclarations: Declaration[];
+  havePreviousUnresolvedDeclarations: boolean | string;
   previousDeclarationSummary: string;
   haveCurrentDeclarations: boolean | string;
   currentDeclarations: Declaration[];
@@ -102,6 +103,7 @@ export const initialFormRBBeforeProfileData: FormRPartB = {
   previousDeclarationSummary: "",
   haveCurrentDeclarations: "",
   currentDeclarations: [],
+  havePreviousUnresolvedDeclarations: "",
   currentDeclarationSummary: "",
   compliments: "",
   haveCovidDeclarations: "",

@@ -130,6 +130,10 @@ export const Section4ValidationSchema = yup.object({
     .boolean()
     .nullable()
     .required("You must select yes or no"),
+  havePreviousUnresolvedDeclarations: yup
+    .boolean()
+    .nullable()
+    .required("You must select yes or no"),
   previousDeclarations: yup
     .array(panelSchema)
     .when("havePreviousDeclarations", {
