@@ -139,6 +139,16 @@ export const Section4ValidationSchema = yup.object({
     .when("havePreviousDeclarations", {
       is: true,
       then: panelSchemaValidation
+    }),
+  previousDeclarationSummary: yup
+    .string()
+    .nullable()
+    .when("havePreviousUnresolvedDeclarations", {
+      is: true,
+      then: yup
+        .string()
+        .nullable()
+        .required("A summary of previous unresolved declarations is required")
     })
 });
 
@@ -154,7 +164,17 @@ export const Section5ValidationSchema = yup.object({
   currentDeclarations: yup.array(panelSchema).when("haveCurrentDeclarations", {
     is: true,
     then: panelSchemaValidation
-  })
+  }),
+  currentDeclarationSummary: yup
+    .string()
+    .nullable()
+    .when("haveCurrentUnresolvedDeclarations", {
+      is: true,
+      then: yup
+        .string()
+        .nullable()
+        .required("A summary of new unresolved declarations is required")
+    })
 });
 
 export const Section7ValidationSchema = yup.object({
