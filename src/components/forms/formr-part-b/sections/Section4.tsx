@@ -80,7 +80,7 @@ const Section4 = ({
             </WarningCallout>
 
             <Panel
-              label="Previous Resolved Declarations"
+              label="Previous resolved declarations"
               data-cy="declarations4"
             >
               <MultiChoiceInputField
@@ -100,51 +100,50 @@ const Section4 = ({
                 }}
                 type="radios"
                 items={YES_NO_OPTIONS}
-                footer="If you wish to make any such declarations in relation to your CURRENT Form R Part B then please do this in SECTION 5"
+                footer="If you wish to make declarations in relation to your CURRENT Form R Part B then please do this in SECTION 5"
               />
-              {values.havePreviousDeclarations &&
-                values.havePreviousDeclarations.toString() === "true" && (
-                  <Panel label="Resolved Declarations">
-                    <p>
-                      If any <strong>previously declared</strong> significant
-                      events, complaints, or other investigations have been{" "}
-                      <strong>RESOLVED</strong> since your last
-                      ARCP/RITA/Appraisal, you are required to have written a
-                      reflection on these in your Portfolio.
-                    </p>
-                    <FieldArray
-                      name="previousDeclarations"
-                      render={p => (
-                        <div>
-                          {values.previousDeclarations.map((_, i: number) => (
-                            <DeclarationPanel
-                              section={4}
-                              key={i}
-                              index={i}
-                              removeDeclaration={(index: number) =>
-                                p.remove(index)
-                              }
-                              data-jest="declarationPanel4"
-                            ></DeclarationPanel>
-                          ))}
-                          <Button
-                            data-cy={`btnAddDeclaration`}
-                            type="button"
-                            secondary
-                            data-jest="btnAddDeclaration"
-                            onClick={() => p.push(NEW_DECLARATION)}
-                          >
-                            Add more...
-                          </Button>
-                        </div>
-                      )}
-                    ></FieldArray>
-                  </Panel>
-                )}
+              {values?.havePreviousDeclarations.toString() === "true" && (
+                <Panel label="Resolved Declarations">
+                  <p>
+                    If any <strong>previously declared</strong> significant
+                    events, complaints, or other investigations have been{" "}
+                    <strong>RESOLVED</strong> since your last
+                    ARCP/RITA/Appraisal, you are required to have written a
+                    reflection on these in your Portfolio.
+                  </p>
+                  <FieldArray
+                    name="previousDeclarations"
+                    render={p => (
+                      <div>
+                        {values.previousDeclarations.map((_, i: number) => (
+                          <DeclarationPanel
+                            section={4}
+                            key={i}
+                            index={i}
+                            removeDeclaration={(index: number) =>
+                              p.remove(index)
+                            }
+                            data-jest="declarationPanel4"
+                          ></DeclarationPanel>
+                        ))}
+                        <Button
+                          data-cy={`btnAddDeclaration`}
+                          type="button"
+                          secondary
+                          data-jest="btnAddDeclaration"
+                          onClick={() => p.push(NEW_DECLARATION)}
+                        >
+                          Add more...
+                        </Button>
+                      </div>
+                    )}
+                  ></FieldArray>
+                </Panel>
+              )}
             </Panel>
 
             <Panel
-              label="Summary of Previous Unresolved Declarations"
+              label="Summary of previous unresolved declarations"
               data-cy="previousDeclarationSummary"
             >
               <MultiChoiceInputField
@@ -157,29 +156,25 @@ const Section4 = ({
                   setFieldValue("previousDeclarationSummary", null, false);
                 }}
               />
-              {values.havePreviousUnresolvedDeclarations &&
-                values.havePreviousUnresolvedDeclarations.toString() ===
-                  "true" && (
-                  <TextInputField
-                    name="previousDeclarationSummary"
-                    rows={15}
-                    label=""
-                    data-cy="previousDeclarationSummaryTextInput"
-                    data-jest="previousDeclarationSummaryTextInput"
-                    hint={
-                      <span>
-                        If any <strong>previously declared</strong> Significant
-                        Events, Complaints, Other investigations remain{" "}
-                        <strong>UNRESOLVED</strong>, please provide a brief
-                        summary below, including where you were working, the
-                        date of the event, and your reflection where
-                        appropriate. If known, please identify what
-                        investigations are pending relating to the event and
-                        which organisation is undertaking the investigation.
-                      </span>
-                    }
-                  />
-                )}
+              {values?.havePreviousUnresolvedDeclarations.toString() ===
+                "true" && (
+                <TextInputField
+                  name="previousDeclarationSummary"
+                  rows={15}
+                  label=""
+                  data-cy="previousDeclarationSummaryTextInput"
+                  data-jest="previousDeclarationSummaryTextInput"
+                  hint={
+                    <span>
+                      Please provide a brief summary below, including where you
+                      were working, the date of the event, and your reflection
+                      where appropriate. If known, please identify what
+                      investigations are pending relating to the event and which
+                      organisation is undertaking the investigation.
+                    </span>
+                  }
+                />
+              )}
             </Panel>
           </Fieldset>
 
