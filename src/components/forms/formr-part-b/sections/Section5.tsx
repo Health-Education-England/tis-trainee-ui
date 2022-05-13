@@ -103,10 +103,9 @@ const Section5 = ({
                 </p>
               </div>
             </WarningCallout>
-
-            <Panel label="New Declarations" data-cy="declarations5">
+            <Panel label="New Resolved Declarations" data-cy="declarations5">
               <MultiChoiceInputField
-                label="Do you have any new Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal?"
+                label="Do you have any new Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal that have since been RESOLVED?"
                 id="haveCurrentDeclarations"
                 name="haveCurrentDeclarations"
                 type="radios"
@@ -120,55 +119,68 @@ const Section5 = ({
                   } else {
                     setFieldValue("currentDeclarations", [], false);
                   }
-                  setFieldValue("currentDeclarationSummary", null, false);
                 }}
                 items={YES_NO_OPTIONS}
-                footer="If you wish to make any such declarations in relation to your previous Form R Part B then please do this in Section 4"
+                footer="If you wish to make any such declarations in relation to your PREVIOUS Form R Part B then please do this in Section 4"
               />
-            </Panel>
 
-            {BooleanUtilities.ToBoolean(values.haveCurrentDeclarations) && (
-              <>
-                <Panel label="Resolved Declarations">
-                  <p>
-                    If you know of any <strong>RESOLVED</strong> significant
-                    events/complaints/other investigations since your last
-                    ARCP/RITA/Appraisal, you are required to have written a
-                    reflection on these in your Portfolio. Please identify where
-                    in your Portfolio the reflection(s) can be found.
-                  </p>
-                  <FieldArray
-                    name="currentDeclarations"
-                    render={c => (
-                      <div>
-                        {values.currentDeclarations.map((_, i: number) => (
-                          <DeclarationPanel
-                            section={5}
-                            key={i}
-                            index={i}
-                            removeDeclaration={(index: number) =>
-                              c.remove(index)
-                            }
-                            data-jest="declarationPanel"
-                          ></DeclarationPanel>
-                        ))}
-                        <Button
-                          data-cy="btnAddDeclaration"
-                          type="button"
-                          secondary
-                          data-jest="btnAddDeclaration"
-                          onClick={() => c.push(newDeclaration)}
-                        >
-                          Add more...
-                        </Button>
-                      </div>
-                    )}
-                  ></FieldArray>
-                </Panel>
-                <Panel
-                  label="Summary of new unresolved declarations"
-                  data-cy="currentDeclarationSummary"
-                >
+              {values.haveCurrentDeclarations &&
+                values.haveCurrentDeclarations.toString() === "true" && (
+                  <Panel label="Resolved Declarations">
+                    <p>
+                      If you know of any <strong>RESOLVED</strong> significant
+                      events/complaints/other investigations since your last
+                      ARCP/RITA/Appraisal, you are required to have written a
+                      reflection on these in your Portfolio. Please identify
+                      where in your Portfolio the reflection(s) can be found.
+                    </p>
+                    <FieldArray
+                      name="currentDeclarations"
+                      render={c => (
+                        <div>
+                          {values.currentDeclarations.map((_, i: number) => (
+                            <DeclarationPanel
+                              section={5}
+                              key={i}
+                              index={i}
+                              removeDeclaration={(index: number) =>
+                                c.remove(index)
+                              }
+                              data-jest="declarationPanel"
+                            ></DeclarationPanel>
+                          ))}
+                          <Button
+                            data-cy="btnAddDeclaration"
+                            type="button"
+                            secondary
+                            data-jest="btnAddDeclaration"
+                            onClick={() => c.push(newDeclaration)}
+                          >
+                            Add more...
+                          </Button>
+                        </div>
+                      )}
+                    ></FieldArray>
+                  </Panel>
+                )}
+            </Panel>
+            <Panel
+              label="Summary of New Unresolved Declarations"
+              data-cy="currentDeclarationSummary"
+            >
+              <MultiChoiceInputField
+                label="Do you have NEW declared Significant Events, Complaints, or other investigations still UNRESOLVED?"
+                id="haveCurrentUnresolvedDeclarations"
+                name="haveCurrentUnresolvedDeclarations"
+                type="radios"
+                items={YES_NO_OPTIONS}
+                onChange={() => {
+                  setFieldValue("currentDeclarationSummary", null, false);
+                }}
+              />
+              {values.haveCurrentUnresolvedDeclarations &&
+                values.haveCurrentUnresolvedDeclarations.toString() ===
+                  "true" && (
                   <TextInputField
                     name="currentDeclarationSummary"
                     rows={15}
@@ -187,9 +199,8 @@ const Section5 = ({
                       </span>
                     }
                   />
-                </Panel>
-              </>
-            )}
+                )}
+            </Panel>
           </Fieldset>
 
           {[...Object.values(errors)].length > 0 ? (

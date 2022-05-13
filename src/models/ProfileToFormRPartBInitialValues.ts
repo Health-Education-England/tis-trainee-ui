@@ -63,6 +63,7 @@ export function ProfileToFormRPartBInitialValues(
     previousDeclarations: [],
     previousDeclarationSummary: "",
     haveCurrentDeclarations: "",
+    haveCurrentUnresolvedDeclarations: "",
     currentDeclarations: [],
     havePreviousUnresolvedDeclarations: "",
     currentDeclarationSummary: "",

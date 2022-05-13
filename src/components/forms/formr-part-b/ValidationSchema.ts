@@ -147,6 +147,10 @@ export const Section5ValidationSchema = yup.object({
     .boolean()
     .nullable()
     .required("You must select yes or no"),
+  haveCurrentUnresolvedDeclarations: yup
+    .boolean()
+    .nullable()
+    .required("You must select yes or no"),
   currentDeclarations: yup.array(panelSchema).when("haveCurrentDeclarations", {
     is: true,
     then: panelSchemaValidation

@@ -84,7 +84,7 @@ const Section4 = ({
               data-cy="declarations4"
             >
               <MultiChoiceInputField
-                label="Did you declare any Significant Events, Complaints, Other investigations on your previous Form R Part B that have since been RESOLVED?"
+                label="Did you declare any Significant Events, Complaints, Other investigations on your PREVIOUS Form R Part B that have since been RESOLVED?"
                 id="havePreviousDeclarations"
                 name="havePreviousDeclarations"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +100,7 @@ const Section4 = ({
                 }}
                 type="radios"
                 items={YES_NO_OPTIONS}
-                footer="If you wish to make any such declarations in relation to your current Form R Part B then please do this in Section 5"
+                footer="If you wish to make any such declarations in relation to your CURRENT Form R Part B then please do this in SECTION 5"
               />
               {values.havePreviousDeclarations &&
                 values.havePreviousDeclarations.toString() === "true" && (
@@ -148,7 +148,7 @@ const Section4 = ({
               data-cy="previousDeclarationSummary"
             >
               <MultiChoiceInputField
-                label="Do you have any previously declared Significant Events, Complaints, or other investigations still UNRESOLVED?"
+                label="Do you have any PREVIOUSLY DECLARED Significant Events, Complaints, or other investigations still UNRESOLVED?"
                 id="havePreviousUnresolvedDeclarations"
                 name="havePreviousUnresolvedDeclarations"
                 type="radios"
