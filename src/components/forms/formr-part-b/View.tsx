@@ -33,8 +33,6 @@ interface IView {
 const View = ({ canEdit, history }: IView) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
-  console.log("formdata: ", formData);
-
   const enableCovidDeclaration = useAppSelector(state =>
     state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
   );
