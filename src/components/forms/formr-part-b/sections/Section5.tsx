@@ -125,7 +125,10 @@ const Section5 = ({
               />
 
               {values.haveCurrentDeclarations?.toString() === "true" && (
-                <Panel label="Resolved Declarations">
+                <Panel
+                  label="Resolved Declarations"
+                  data-cy="haveCurrentDeclarations"
+                >
                   <p>
                     If you know of any <strong>RESOLVED</strong> significant
                     events/complaints/other investigations since your last
@@ -172,6 +175,7 @@ const Section5 = ({
                 id="haveCurrentUnresolvedDeclarations"
                 name="haveCurrentUnresolvedDeclarations"
                 type="radios"
+                data-cy="haveCurrentUnresolvedDeclarations"
                 items={YES_NO_OPTIONS}
                 onChange={() => {
                   setFieldValue("currentDeclarationSummary", null, false);

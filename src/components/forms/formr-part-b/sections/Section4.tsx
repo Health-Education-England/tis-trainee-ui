@@ -87,6 +87,7 @@ const Section4 = ({
                 label="Did you declare any Significant Events, Complaints, Other investigations on your PREVIOUS Form R Part B that have since been RESOLVED?"
                 id="havePreviousDeclarations"
                 name="havePreviousDeclarations"
+                data-cy="havePreviousDeclarations"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   if (BooleanUtilities.ToBoolean(e.target.value) === true) {
                     setFieldValue(
@@ -102,8 +103,11 @@ const Section4 = ({
                 items={YES_NO_OPTIONS}
                 footer="If you wish to make declarations in relation to your CURRENT Form R Part B then please do this in SECTION 5"
               />
-              {values?.havePreviousDeclarations.toString() === "true" && (
-                <Panel label="Resolved Declarations">
+              {values.havePreviousDeclarations?.toString() === "true" && (
+                <Panel
+                  label="Resolved Declarations"
+                  data-cy="havePreviousUnresolvedDeclarations"
+                >
                   <p>
                     If any <strong>previously declared</strong> significant
                     events, complaints, or other investigations have been{" "}
@@ -151,12 +155,13 @@ const Section4 = ({
                 id="havePreviousUnresolvedDeclarations"
                 name="havePreviousUnresolvedDeclarations"
                 type="radios"
+                data-cy="havePreviousUnresolvedDeclarations"
                 items={YES_NO_OPTIONS}
                 onChange={() => {
                   setFieldValue("previousDeclarationSummary", null, false);
                 }}
               />
-              {values?.havePreviousUnresolvedDeclarations.toString() ===
+              {values.havePreviousUnresolvedDeclarations?.toString() ===
                 "true" && (
                 <TextInputField
                   name="previousDeclarationSummary"
@@ -166,11 +171,11 @@ const Section4 = ({
                   data-jest="previousDeclarationSummaryTextInput"
                   hint={
                     <span>
-                      Please provide a brief summary below, including where you
-                      were working, the date of the event, and your reflection
-                      where appropriate. If known, please identify what
-                      investigations are pending relating to the event and which
-                      organisation is undertaking the investigation.
+                      Please provide a brief summary below, including where
+                      working, the date of the event, and your where
+                      appropriate. If known, identify what investigations
+                      investigations are pending relating to the to the event
+                      which organisation is undertaking the investigation.
                     </span>
                   }
                 />
