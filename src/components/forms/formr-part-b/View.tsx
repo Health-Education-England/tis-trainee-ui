@@ -306,7 +306,11 @@ const View = ({ canEdit, history }: IView) => {
 
             <SummaryList.Row>
               <SummaryList.Key>Health Statement</SummaryList.Key>
-              <SummaryList.Value>{formData.healthStatement}</SummaryList.Value>
+              <SummaryList.Value>
+                {formData.healthStatement
+                  ? formData.healthStatement
+                  : "None recorded"}
+              </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
         </Panel>
