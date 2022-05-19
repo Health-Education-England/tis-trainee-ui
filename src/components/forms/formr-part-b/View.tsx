@@ -403,8 +403,8 @@ const View = ({ canEdit, history }: IView) => {
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {formData?.havePreviousUnresolvedDeclarations.toString() ===
-          "true" ? (
+          {formData.havePreviousUnresolvedDeclarations?.toString() ===
+            "true" && (
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>
@@ -419,7 +419,7 @@ const View = ({ canEdit, history }: IView) => {
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-          ) : null}
+          )}
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
@@ -508,7 +508,8 @@ const View = ({ canEdit, history }: IView) => {
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {formData?.haveCurrentUnresolvedDeclarations.toString() === "true" ? (
+          {formData.haveCurrentUnresolvedDeclarations?.toString() ===
+            "true" && (
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>
@@ -523,7 +524,7 @@ const View = ({ canEdit, history }: IView) => {
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-          ) : null}
+          )}
         </Panel>
 
         <div className="nhsuk-grid-row page-break">

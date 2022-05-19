@@ -188,6 +188,50 @@ describe("Form R (Part B)", () => {
       cy.get("[data-cy=sectionHeader7]").should("not.exist");
       cy.get("[data-cy=BtnEditSection7]").should("not.exist");
     }
+    //check sections 4 and 5 display correctly
+    cy.get(
+      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
+    ).should("exist");
+    cy.get(
+      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
+    ).should("contain.text", "test text");
+
+    cy.get(
+      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__key"
+    ).should("exist");
+    cy.get(
+      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
+    ).should("contain.text", "test text");
+
+    //go back to section 4 and click no previous unresolved declarations
+    //check option dissapears from view
+    for (let x = 0; x < 4; x++) {
+      cy.get(
+        "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
+      ).click();
+    }
+    cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
+    for (let x = 0; x < 4; x++) {
+      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
+    }
+    cy.get(
+      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
+    ).should("not.exist");
+
+    //go back to section 5 and click no previous unresolved declarations
+    //check option dissapears from view
+    for (let x = 0; x < 3; x++) {
+      cy.get(
+        "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
+      ).click();
+    }
+    cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
+    for (let x = 0; x < 3; x++) {
+      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
+    }
+    cy.get(
+      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__key"
+    ).should("not.exist");
 
     // Attempt to submit without checking boxes should fail
     cy.get("[data-cy=BtnSubmitForm]").click();
