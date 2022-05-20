@@ -414,7 +414,6 @@ Cypress.Commands.add("checkAndFillSection5", pastDate => {
   cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]').click();
   cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]').type("2021-05-28");
   cy.get('[data-cy="currentDeclarations[0].title"]').type("testTitle");
-  //cy.get("#currentDeclarations[0].title--error-message").should("not.exist");
   cy.get('[data-cy="currentDeclarations[0].locationOfEntry"]').type(
     "testLocation"
   );
