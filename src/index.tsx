@@ -5,7 +5,7 @@ import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import * as Sentry from "@sentry/browser";
-import Amplify from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import config from "./aws-amplify/config";
 import browserUpdate from "browser-update";
 import browserUpdateConfig from "./browser-update-config.json";

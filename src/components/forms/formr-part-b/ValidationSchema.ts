@@ -130,11 +130,25 @@ export const Section4ValidationSchema = yup.object({
     .boolean()
     .nullable()
     .required("You must select yes or no"),
+  havePreviousUnresolvedDeclarations: yup
+    .boolean()
+    .nullable()
+    .required("You must select yes or no"),
   previousDeclarations: yup
     .array(panelSchema)
     .when("havePreviousDeclarations", {
       is: true,
       then: panelSchemaValidation
+    }),
+  previousDeclarationSummary: yup
+    .string()
+    .nullable()
+    .when("havePreviousUnresolvedDeclarations", {
+      is: true,
+      then: yup
+        .string()
+        .nullable()
+        .required("A summary of previous unresolved declarations is required")
     })
 });
 
@@ -143,10 +157,24 @@ export const Section5ValidationSchema = yup.object({
     .boolean()
     .nullable()
     .required("You must select yes or no"),
+  haveCurrentUnresolvedDeclarations: yup
+    .boolean()
+    .nullable()
+    .required("You must select yes or no"),
   currentDeclarations: yup.array(panelSchema).when("haveCurrentDeclarations", {
     is: true,
     then: panelSchemaValidation
-  })
+  }),
+  currentDeclarationSummary: yup
+    .string()
+    .nullable()
+    .when("haveCurrentUnresolvedDeclarations", {
+      is: true,
+      then: yup
+        .string()
+        .nullable()
+        .required("A summary of new unresolved declarations is required")
+    })
 });
 
 export const Section7ValidationSchema = yup.object({

@@ -306,7 +306,11 @@ const View = ({ canEdit, history }: IView) => {
 
             <SummaryList.Row>
               <SummaryList.Key>Health Statement</SummaryList.Key>
-              <SummaryList.Value>{formData.healthStatement}</SummaryList.Value>
+              <SummaryList.Value>
+                {formData.healthStatement
+                  ? formData.healthStatement
+                  : "None recorded"}
+              </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
         </Panel>
@@ -321,27 +325,27 @@ const View = ({ canEdit, history }: IView) => {
             {SectionEditButton(4)}
           </div>
         </div>
-        <Panel label="Previously declared events">
+        <Panel label="Previous resolved declarations">
           <SummaryList>
             <SummaryList.Row>
               <SummaryList.Key>
                 Did you declare any Significant Events, Complaints, Other
-                investigations on your previous Form R Part B?
+                investigations on your PREVIOUS Form R Part B that have since
+                been RESOLVED?
               </SummaryList.Key>
               <SummaryList.Value data-jest="havePreviousDeclarations">
                 {BooleanUtilities.ToYesNo(formData.havePreviousDeclarations)}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {formData.previousDeclarations &&
-          formData.previousDeclarations.length > 0
+          {formData?.previousDeclarations.length > 0
             ? formData.previousDeclarations.map((event, index) => (
                 <Panel
                   key={index}
                   className={classes.previousDeclarationsPanel}
                 >
                   <h3 data-cy={`previousDeclaration${index + 1}`}>
-                    Previous declaration {index + 1}
+                    Declaration {index + 1}
                   </h3>
                   <SummaryList>
                     <SummaryList.Row>
@@ -384,25 +388,38 @@ const View = ({ canEdit, history }: IView) => {
                 </Panel>
               ))
             : null}
-          {formData.previousDeclarations &&
-          formData.previousDeclarations.length > 0 ? (
+        </Panel>
+        <Panel label="Summary of previous unresolved declarations">
+          <SummaryList>
+            <SummaryList.Row>
+              <SummaryList.Key>
+                Do you have any PREVIOUSLY DECLARED Significant Events,
+                Complaints, or other investigations still UNRESOLVED?
+              </SummaryList.Key>
+              <SummaryList.Value data-jest="havePreviousDeclarations">
+                {BooleanUtilities.ToYesNo(
+                  formData.havePreviousUnresolvedDeclarations
+                )}
+              </SummaryList.Value>
+            </SummaryList.Row>
+          </SummaryList>
+          {formData.havePreviousUnresolvedDeclarations?.toString() ===
+            "true" && (
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>
-                  If any previously declared Significant Events, Complaints or
-                  Other Investigations remain unresolved, please provide a brief
-                  summary below, including where you were working, the date of
-                  the event, and your reflection where appropriate. If known,
-                  please identify what investigations are pending relating to
-                  the event and which organisation is undertaking this
-                  investigation.
+                  Please provide a brief summary below, including where you were
+                  working, the date of the event, and your reflection where
+                  appropriate. If known, please identify what investigations are
+                  pending relating to the event and which organisation is
+                  undertaking this investigation.
                 </SummaryList.Key>
                 <SummaryList.Value data-jest="previousDeclarationSummary">
                   {formData.previousDeclarationSummary}
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-          ) : null}
+          )}
         </Panel>
 
         <div className="nhsuk-grid-row page-break">
@@ -415,24 +432,25 @@ const View = ({ canEdit, history }: IView) => {
             {SectionEditButton(5)}
           </div>
         </div>
-        <Panel label="New declared events">
+
+        <Panel label="New resolved declarations">
           <SummaryList>
             <SummaryList.Row>
-              <SummaryList.Key>I confirm that</SummaryList.Key>
+              <SummaryList.Key>
+                Do you have any new Significant Events, Complaints, Other
+                investigations to declare since your previous
+                ARCP/RITA/Appraisal that have since been RESOLVED?
+              </SummaryList.Key>
               <SummaryList.Value data-jest="haveCurrentDeclarations">
-                {BooleanUtilities.ToBoolean(formData.haveCurrentDeclarations)
-                  ? "I have been involved in significant events/complaints/other investigations since my last ARCP/RITA/Appraisal"
-                  : "I do not have anything new to declare since my last ARCP/RITA/Appraisal"}
+                {BooleanUtilities.ToYesNo(formData.haveCurrentDeclarations)}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-
-          {formData.currentDeclarations &&
-          formData.currentDeclarations.length > 0
+          {formData?.currentDeclarations.length > 0
             ? formData.currentDeclarations.map((event, index) => (
                 <Panel key={index} className={classes.currentDeclarationsPanel}>
                   <h3 data-cy={`currentDeclaration${index + 1}`}>
-                    Current declaration {index + 1}
+                    Declaration {index + 1}
                   </h3>
                   <SummaryList>
                     <SummaryList.Row>
@@ -475,26 +493,38 @@ const View = ({ canEdit, history }: IView) => {
                 </Panel>
               ))
             : null}
-
-          {formData.currentDeclarations &&
-          formData.currentDeclarations.length > 0 ? (
+        </Panel>
+        <Panel label="Summary of new unresolved declarations">
+          <SummaryList>
+            <SummaryList.Row>
+              <SummaryList.Key>
+                Do you have NEW declared Significant Events, Complaints, or
+                other investigations still UNRESOLVED?
+              </SummaryList.Key>
+              <SummaryList.Value data-jest="havePreviousDeclarations">
+                {BooleanUtilities.ToYesNo(
+                  formData.haveCurrentUnresolvedDeclarations
+                )}
+              </SummaryList.Value>
+            </SummaryList.Row>
+          </SummaryList>
+          {formData.haveCurrentUnresolvedDeclarations?.toString() ===
+            "true" && (
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>
-                  If you know of any unresolved significant
-                  events/complaints/other investigations since your last
-                  ARCP/RITA/Appraisal, please provide below a brief summary,
-                  including where you were working, the date of the event and
-                  your reflection where appropriate. If known, please identify
-                  what investigations are pending relating to the event and
-                  which organisation is undertaking the investigation.
+                  Please provide a brief summary below, including where you were
+                  working, the date of the event, and your reflection where
+                  appropriate. If known, please identify what investigations are
+                  pending relating to the event and which organisation is
+                  undertaking this investigation.
                 </SummaryList.Key>
-                <SummaryList.Value data-jest="previousDeclarationSummary">
+                <SummaryList.Value data-jest="currentDeclarationSummary">
                   {formData.currentDeclarationSummary}
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-          ) : null}
+          )}
         </Panel>
 
         <div className="nhsuk-grid-row page-break">

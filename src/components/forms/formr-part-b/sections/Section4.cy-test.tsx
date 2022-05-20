@@ -36,21 +36,52 @@ describe("Section4", () => {
     cy.get("[data-cy=legendFieldset4]")
       .should("exist")
       .should("include.text", "Section 4");
-    cy.get("[data-cy=havePreviousDeclarations1]").should("exist").click();
-    cy.get(":nth-child(4) > .nhsuk-panel-with-label__label").should(
+    //click no to check that assosiated panel doen not exist in dom
+    cy.get("[data-cy=havePreviousDeclarations1]").click();
+    cy.get('[data-cy="previousDeclarations[0].declarationType"]').should(
       "not.exist"
     );
-    cy.get("[data-cy=havePreviousDeclarations0]").should("exist").click();
-    cy.get(":nth-child(4) > .nhsuk-panel-with-label__label").should("exist");
-    cy.get("[data-cy=btnAddDeclaration]").click();
-    cy.get(
-      "#declarationPanel1 > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
-    )
-      .should("exist")
-      .should("include.text", "Declaration 2");
+    //click yes and complete panal
+    cy.get("[data-cy=havePreviousDeclarations0]").click();
+    cy.get('[data-cy="previousDeclarations[0].declarationType"]').should(
+      "exist"
+    );
+    cy.get('[data-cy="previousDeclarations[0].declarationType"]').select(
+      "Complaint"
+    );
+    cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]').click();
+    cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]').type(
+      "2022-05-28"
+    );
+    cy.get('[data-cy="previousDeclarations[0].title"]').type("testTitle");
+    cy.get("#previousDeclarations[0].title--error-message").should("not.exist");
+    cy.get('[data-cy="previousDeclarations[0].locationOfEntry"]').type(
+      "testLocation"
+    );
+    cy.get('[data-cy="btnAddDeclaration"]').click();
+    cy.get('[data-cy="previousDeclarations[1].declarationType"]').should(
+      "exist"
+    );
     cy.get("[data-cy=closeIcon1] > .nhsuk-icon").click();
     cy.get(
       "#declarationPanel1 > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
+    ).should("not.exist");
+    //click no on previous unresolved declerations
+    cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
+    cy.get("#previousDeclarationSummary--hint > span").should("not.exist");
+    //click yes on previous unresolved declarations
+    cy.get("[data-cy=havePreviousUnresolvedDeclarations0]").click();
+    cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").should(
+      "exist"
+    );
+    cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").type(
+      "test text"
+    );
+    //click yes on click yes on previous unresolved declarations and
+    // no on Previous resolved declarations
+    cy.get("[data-cy=havePreviousDeclarations1]").click();
+    cy.get(
+      "[data-cy=havePreviousUnresolvedDeclarations] > .nhsuk-panel-with-label__label"
     ).should("not.exist");
     cy.get(".nhsuk-pagination__page > div")
       .should("exist")

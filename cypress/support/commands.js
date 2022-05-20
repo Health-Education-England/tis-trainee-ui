@@ -348,35 +348,49 @@ Cypress.Commands.add("checkAndFillSection4", pastDate => {
     .check("true");
 
   // Fill declaration
-  cy.get("#declarationPanel0").should("exist");
-
-  cy.get('[data-cy="previousDeclarations[0].declarationType"]')
+  cy.get("[data-cy=legendFieldset4]")
     .should("exist")
-    .select("Complaint");
+    .should("include.text", "Section 4");
 
-  cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]')
-    .should("exist")
-    .clear()
-    .type("2099-04-24");
+  //click no previous unresolved declerations and no Previous resolved declarations
+  //submit should be enabled
 
-  cy.get('[data-cy="previousDeclarations[0].title"]')
-    .should("exist")
-    .clear()
-    .type("declaration title");
+  cy.get("[data-cy=havePreviousDeclarations1]").click();
+  cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
+  cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+  cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
 
-  cy.get('[data-cy="previousDeclarations[0].locationOfEntry"]')
-    .should("exist")
-    .clear()
-    .type("declaration location");
+  //click yes Previous resolved declarations and no previous unresolved declerations
 
-  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get("[data-cy=havePreviousDeclarations0]").click();
+  //should not allow navigation to next page and show error
+  cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+  cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("exist");
 
-  cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]')
-    .should("exist")
-    .clear()
-    .type(pastDate);
+  cy.get('[data-cy="previousDeclarations[0].declarationType"]').should("exist");
+  cy.get('[data-cy="previousDeclarations[0].declarationType"]').select(
+    "Complaint"
+  );
+  cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]').click();
+  cy.get('[data-cy="previousDeclarations[0].dateOfEntry"]').type("2000-05-28");
+  cy.get('[data-cy="previousDeclarations[0].title"]').type("testTitle");
+  cy.get("#previousDeclarations[0].title--error-message").should("not.exist");
+  cy.get('[data-cy="previousDeclarations[0].locationOfEntry"]').type(
+    "testLocation"
+  );
+  cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
+  cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+  cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("not.exist");
+  cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
 
-  cy.get(".nhsuk-error-summary").should("not.exist");
+  //click no Previous resolved declarations and yes revious unresolved declerations
+  cy.get("[data-cy=havePreviousDeclarations1]").click();
+  cy.get("[data-cy=havePreviousUnresolvedDeclarations0]").click();
+  cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("exist");
+  cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").type(
+    "test text"
+  );
+  cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("not.exist");
 });
 
 // ### SECTION 5: CHECK AND FILL
@@ -385,53 +399,33 @@ Cypress.Commands.add("checkAndFillSection5", pastDate => {
   cy.get("[data-cy=mainWarning5]").should("exist");
   cy.get("[data-cy=declarations5]").should("exist");
 
-  cy.get("[data-cy=haveCurrentDeclarations1]")
-    .should("exist")
-    .should("contain.value", "")
-    .check("false");
-
-  cy.get("#declarationPanel0").should("not.exist");
-
-  cy.get("[data-cy=haveCurrentDeclarations0]")
-    .should("exist")
-    .should("contain.value", "")
-    .check("true");
-
-  // Fill declaration
-  cy.get("#declarationPanel0").should("exist");
-
-  cy.get('[data-cy="currentDeclarations[0].declarationType"]')
-    .should("exist")
-    .select("Complaint");
-
-  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]')
-    .should("exist")
-    .clear()
-    .type(pastDate);
-
-  cy.get('[data-cy="currentDeclarations[0].title"]')
-    .should("exist")
-    .clear()
-    .type("declaration title");
-
-  cy.get('[data-cy="currentDeclarations[0].locationOfEntry"]')
-    .should("exist")
-    .clear()
-    .type("declaration location");
-
+  cy.get("[data-cy=haveCurrentDeclarations1]").click();
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
   cy.get(".nhsuk-error-summary").should("not.exist");
 
-  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]')
-    .should("exist")
-    .clear()
-    .type("2099-04-24");
-
+  cy.get("[data-cy=haveCurrentDeclarations0]").click();
+  cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
   cy.get(".nhsuk-error-summary").should("exist");
+  //fill
+  cy.get('[data-cy="currentDeclarations[0].declarationType"]').select(
+    "Complaint"
+  );
+  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]').click();
+  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]').type("2021-05-28");
+  cy.get('[data-cy="currentDeclarations[0].title"]').type("testTitle");
+  cy.get('[data-cy="currentDeclarations[0].locationOfEntry"]').type(
+    "testLocation"
+  );
+  cy.get(".nhsuk-error-summary").should("not.exist");
 
-  cy.get('[data-cy="currentDeclarations[0].dateOfEntry"]')
-    .should("exist")
-    .clear()
-    .type(pastDate);
+  cy.get("[data-cy=haveCurrentUnresolvedDeclarations0]").click();
+  cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").type(
+    "test text"
+  );
+  cy.get(".nhsuk-error-summary").should("not.exist");
 });
 
 // ### SECTION 6: CHECK AND FILL

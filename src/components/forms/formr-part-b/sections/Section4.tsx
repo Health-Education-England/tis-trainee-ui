@@ -79,11 +79,15 @@ const Section4 = ({
               </div>
             </WarningCallout>
 
-            <Panel label="Previous Declarations" data-cy="declarations4">
+            <Panel
+              label="Previous resolved declarations"
+              data-cy="declarations4"
+            >
               <MultiChoiceInputField
-                label="Did you declare any Significant Events, Complaints, Other investigations on your previous Form R Part B?"
+                label="Did you declare any Significant Events, Complaints, Other investigations on your PREVIOUS Form R Part B that have since been RESOLVED?"
                 id="havePreviousDeclarations"
                 name="havePreviousDeclarations"
+                data-cy="havePreviousDeclarations"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   if (BooleanUtilities.ToBoolean(e.target.value) === true) {
                     setFieldValue(
@@ -94,17 +98,16 @@ const Section4 = ({
                   } else {
                     setFieldValue("previousDeclarations", [], false);
                   }
-                  setFieldValue("previousDeclarationSummary", null, false);
                 }}
                 type="radios"
                 items={YES_NO_OPTIONS}
-                footer="If you wish to make any such declarations in relation to your current Form R Part B then please do this in Section 5"
+                footer="If you wish to make declarations in relation to your CURRENT Form R Part B then please do this in SECTION 5"
               />
-            </Panel>
-
-            {BooleanUtilities.ToBoolean(values.havePreviousDeclarations) && (
-              <>
-                <Panel label="Resolved Declarations">
+              {values.havePreviousDeclarations?.toString() === "true" && (
+                <Panel
+                  label="Resolved Declarations"
+                  data-cy="havePreviousUnresolvedDeclarations"
+                >
                   <p>
                     If any <strong>previously declared</strong> significant
                     events, complaints, or other investigations have been{" "}
@@ -140,32 +143,44 @@ const Section4 = ({
                     )}
                   ></FieldArray>
                 </Panel>
-                <Panel
-                  label="Summary of previous unresolved declarations"
-                  data-cy="previousDeclarationSummary"
-                >
-                  <TextInputField
-                    name="previousDeclarationSummary"
-                    rows={15}
-                    label=""
-                    data-cy="previousDeclarationSummaryTextInput"
-                    data-jest="previousDeclarationSummaryTextInput"
-                    hint={
-                      <span>
-                        If any <strong>previously declared</strong> Significant
-                        Events, Complaints, Other investigations remain{" "}
-                        <strong>UNRESOLVED</strong>, please provide a brief
-                        summary below, including where you were working, the
-                        date of the event, and your reflection where
-                        appropriate. If known, please identify what
-                        investigations are pending relating to the event and
-                        which organisation is undertaking the investigation.
-                      </span>
-                    }
-                  />
-                </Panel>
-              </>
-            )}
+              )}
+            </Panel>
+
+            <Panel
+              label="Summary of previous unresolved declarations"
+              data-cy="previousDeclarationSummary"
+            >
+              <MultiChoiceInputField
+                label="Do you have any PREVIOUSLY DECLARED Significant Events, Complaints, or other investigations still UNRESOLVED?"
+                id="havePreviousUnresolvedDeclarations"
+                name="havePreviousUnresolvedDeclarations"
+                type="radios"
+                data-cy="havePreviousUnresolvedDeclarations"
+                items={YES_NO_OPTIONS}
+                onChange={() => {
+                  setFieldValue("previousDeclarationSummary", null, false);
+                }}
+              />
+              {values.havePreviousUnresolvedDeclarations?.toString() ===
+                "true" && (
+                <TextInputField
+                  name="previousDeclarationSummary"
+                  rows={15}
+                  label=""
+                  data-cy="previousDeclarationSummaryTextInput"
+                  data-jest="previousDeclarationSummaryTextInput"
+                  hint={
+                    <span>
+                      Please provide a brief summary below, including where
+                      working, the date of the event, and your where
+                      appropriate. If known, identify what investigations
+                      investigations are pending relating to the to the event
+                      which organisation is undertaking the investigation.
+                    </span>
+                  }
+                />
+              )}
+            </Panel>
           </Fieldset>
 
           {[...Object.values(errors)].length > 0 ? (

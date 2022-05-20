@@ -103,10 +103,9 @@ const Section5 = ({
                 </p>
               </div>
             </WarningCallout>
-
-            <Panel label="New Declarations" data-cy="declarations5">
+            <Panel label="New resolved declarations" data-cy="declarations5">
               <MultiChoiceInputField
-                label="Do you have any new Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal?"
+                label="Do you have any NEW Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal that have since been RESOLVED?"
                 id="haveCurrentDeclarations"
                 name="haveCurrentDeclarations"
                 type="radios"
@@ -120,16 +119,16 @@ const Section5 = ({
                   } else {
                     setFieldValue("currentDeclarations", [], false);
                   }
-                  setFieldValue("currentDeclarationSummary", null, false);
                 }}
                 items={YES_NO_OPTIONS}
-                footer="If you wish to make any such declarations in relation to your previous Form R Part B then please do this in Section 4"
+                footer="If you wish to make any such declarations in relation to your PREVIOUS Form R Part B then please do this in Section 4"
               />
-            </Panel>
 
-            {BooleanUtilities.ToBoolean(values.haveCurrentDeclarations) && (
-              <>
-                <Panel label="Resolved Declarations">
+              {values.haveCurrentDeclarations?.toString() === "true" && (
+                <Panel
+                  label="Resolved Declarations"
+                  data-cy="haveCurrentDeclarations"
+                >
                   <p>
                     If you know of any <strong>RESOLVED</strong> significant
                     events/complaints/other investigations since your last
@@ -165,31 +164,45 @@ const Section5 = ({
                     )}
                   ></FieldArray>
                 </Panel>
-                <Panel
-                  label="Summary of new unresolved declarations"
-                  data-cy="currentDeclarationSummary"
-                >
-                  <TextInputField
-                    name="currentDeclarationSummary"
-                    rows={15}
-                    label=""
-                    data-cy="currentDeclarationSummaryTextInput"
-                    hint={
-                      <span>
-                        If you know of any <strong>UNRESOLVED</strong>{" "}
-                        Significant Events, Complaints, Other investigations
-                        since your last ARCP/RITA/Appraisal, please provide a
-                        brief summary, including where you were working, the
-                        date of the event, and your reflection where
-                        appropriate. If known, please identify what
-                        investigations are pending relating to the event and
-                        which organisation is undertaking the investigation.
-                      </span>
-                    }
-                  />
-                </Panel>
-              </>
-            )}
+              )}
+            </Panel>
+            <Panel
+              label="Summary of new unresolved declarations"
+              data-cy="currentDeclarationSummary"
+            >
+              <MultiChoiceInputField
+                label="Do you have NEW declared Significant Events, Complaints, or other investigations still UNRESOLVED?"
+                id="haveCurrentUnresolvedDeclarations"
+                name="haveCurrentUnresolvedDeclarations"
+                type="radios"
+                data-cy="haveCurrentUnresolvedDeclarations"
+                items={YES_NO_OPTIONS}
+                onChange={() => {
+                  setFieldValue("currentDeclarationSummary", null, false);
+                }}
+              />
+              {values.haveCurrentUnresolvedDeclarations?.toString() ===
+                "true" && (
+                <TextInputField
+                  name="currentDeclarationSummary"
+                  rows={15}
+                  label=""
+                  data-cy="currentDeclarationSummaryTextInput"
+                  hint={
+                    <span>
+                      If you know of any <strong>UNRESOLVED</strong> Significant
+                      Events, Complaints, Other investigations since your last
+                      ARCP/RITA/Appraisal, please provide a brief summary,
+                      including where you were working, the date of the event,
+                      and your reflection where appropriate. If known, please
+                      identify what investigations are pending relating to the
+                      event and which organisation is undertaking the
+                      investigation.
+                    </span>
+                  }
+                />
+              )}
+            </Panel>
           </Fieldset>
 
           {[...Object.values(errors)].length > 0 ? (
