@@ -14,4 +14,11 @@ export class StringUtilities {
   public static argsToString(...args: string[]) {
     return args.filter(a => a !== null).join(" ");
   }
+
+  public static validateInteger(val: number) {
+    const strVal: string = val.toString();
+    if (!/^\d+$/.test(strVal)) {
+      return "Whole numbers only. No decimals please";
+    }
+  }
 }

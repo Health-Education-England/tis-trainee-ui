@@ -16,6 +16,7 @@ interface Props {
   readOnly?: boolean;
   value?: any;
   disabled?: boolean;
+  validate?: any;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
