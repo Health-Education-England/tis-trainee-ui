@@ -21,6 +21,7 @@ import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
+import { StringUtilities } from "../../../../utilities/StringUtilities";
 
 const Section2 = ({
   prevSectionLabel,
@@ -103,37 +104,45 @@ const Section2 = ({
                   training should reflect days absent from the training
                   programme and is considered by the ARCP panel/Deanery/HEE in
                   recalculation of the date you should end your current training
-                  programme. Partial days must be rounded up.
+                  programme.
+                </p>
+                <p>
                   <b>
-                    Enter 0 for any reasons where you have not had Time Out Of
-                    Training.
+                    Enter 0 (zero) where you have not had Time Out Of Training.
+                    Partial days must be rounded up.
                   </b>
                 </p>
               </InsetText>
               <TextInputField
                 label="Short and Long-term sickness absence"
                 name="sicknessAbsence"
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Parental leave (incl Maternity / Paternity leave)"
                 name="parentalLeave"
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE)"
                 name="careerBreaks"
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Paid / unpaid leave (e.g. compassionate, jury service)"
                 name="paidLeave"
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Unpaid/unauthorised leave including industrial action"
                 name="unauthorisedLeave"
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Other"
                 name="otherLeave"
                 hint="TOOT does not include study leave, paid annual leave, prospectively approved Out of Programme Training/Research (OOPT/OOPR) or periods of time between training programmes (e.g. between core and higher training)."
+                validate={StringUtilities.validateInteger}
               />
               <TextInputField
                 label="Total"
