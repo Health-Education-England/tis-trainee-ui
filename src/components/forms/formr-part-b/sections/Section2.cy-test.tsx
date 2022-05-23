@@ -87,7 +87,7 @@ describe("Section2", () => {
     cy.get("[data-cy=sicknessAbsence]").clear().type("1");
     cy.get("#sicknessAbsence--error-message").should("not.exist");
     cy.get("[data-cy=otherLeave]").clear().type("1");
-    cy.get("[data-cy=totalLeave]").should("have.value", 2);
+    cy.get("[data-cy=totalLeave]").should("have.value", 12);
 
     cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist").click();
     cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("not.exist");
