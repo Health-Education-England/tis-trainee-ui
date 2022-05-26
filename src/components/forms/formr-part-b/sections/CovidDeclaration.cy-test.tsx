@@ -66,14 +66,14 @@ describe("CovidDeclaration", () => {
     cy.get('[data-cy="covidDeclarationDto.howPlacementAdjusted"]').type(
       "my reason"
     );
+    cy.get("[data-cy=covidErrorSummary] > .nhsuk-error-message").should(
+      "not.exist"
+    );
     cy.get('[data-cy="covidDeclarationDto.educationSupervisorName"]').type(
       "My supervisor's name"
     );
     cy.get('[data-cy="covidDeclarationDto.educationSupervisorEmail"]').type(
       "test@test.com"
-    );
-    cy.get("[data-cy=covidErrorSummary] > .nhsuk-error-message").should(
-      "not.exist"
     );
   });
 });

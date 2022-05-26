@@ -328,7 +328,7 @@ const CovidDeclaration = ({
                       <strong>
                         {" "}
                         A PDF copy of this form will need to be sent to your ES
-                        when you submit this form
+                        when you submit this form (If applicable)
                       </strong>
                       . This will give your ES the opportunity to review the
                       information provided in the self-assessment declaration,
@@ -338,12 +338,12 @@ const CovidDeclaration = ({
                     </p>
                   </Label>
                   <TextInputField
-                    label="Educational Supervisor Name"
+                    label="Educational Supervisor Name (If applicable)"
                     name="covidDeclarationDto.educationSupervisorName"
                     data-jest="educationSupervisorName"
                   />
                   <TextInputField
-                    label="Educational Supervisor Email Address"
+                    label="Educational Supervisor Email Address (If applicable)"
                     name="covidDeclarationDto.educationSupervisorEmail"
                     data-jest="educationSupervisorEmail"
                   />

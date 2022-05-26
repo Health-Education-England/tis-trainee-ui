@@ -215,16 +215,11 @@ export const CovidSectionValidationSchema = yup.object({
             .string()
             .nullable()
             .max(1000, "You have reached the maximum length allowed"),
-          educationSupervisorName: StringValidationSchema(
-            "Education Supervisor Name",
-            300
-          ),
           educationSupervisorEmail: yup
             .string()
             .nullable()
             .email("Email address is invalid")
-            .max(255, "Email must be shorter than 255 characters")
-            .required("Email is required"),
+            .max(255, "Email must be shorter than 255 characters"),
           haveChangesToPlacement: yup
             .boolean()
             .nullable()
