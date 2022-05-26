@@ -690,7 +690,10 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Name
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {formData.covidDeclarationDto?.educationSupervisorName}
+                        {formData.covidDeclarationDto?.educationSupervisorName
+                          ? formData.covidDeclarationDto
+                              ?.educationSupervisorName
+                          : "None provided"}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
@@ -698,7 +701,10 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Email Address
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {formData.covidDeclarationDto?.educationSupervisorEmail}
+                        {formData.covidDeclarationDto?.educationSupervisorEmail
+                          ? formData.covidDeclarationDto
+                              ?.educationSupervisorEmail
+                          : "None provided"}
                       </SummaryList.Value>
                     </SummaryList.Row>
                   </SummaryList>
