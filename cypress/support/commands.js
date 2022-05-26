@@ -487,15 +487,7 @@ Cypress.Commands.add("checkAndFillCovidSection", () => {
   cy.get("[data-cy='covidDeclarationDto.howPlacementAdjusted']")
     .should("exist")
     .type("How your placement was adjusted");
-  cy.get("[data-cy='covidDeclarationDto.educationSupervisorName']")
-    .should("exist")
-    .type("Education Supervisor Name");
-  cy.get("[data-cy='covidDeclarationDto.educationSupervisorEmail']").should(
-    "exist"
-  );
-  cy.get("[data-cy='covidDeclarationDto.educationSupervisorEmail']").type(
-    "Education@Supervisor.Name"
-  );
+  cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("not.exist");
 });
 
 Cypress.Commands.add("addWorkPanel", (startDate, endDate) => {

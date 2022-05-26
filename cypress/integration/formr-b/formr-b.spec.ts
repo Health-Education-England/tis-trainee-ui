@@ -184,6 +184,12 @@ describe("Form R (Part B)", () => {
     if (isCovid) {
       cy.get("[data-cy=sectionHeader7]").should("exist");
       cy.get("[data-cy=BtnEditSection7]").should("exist");
+      cy.get(
+        ":nth-child(22) > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
+      ).should("contain.text", "None provided");
+      cy.get(
+        ":nth-child(22) > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value"
+      ).should("contain.text", "None provided");
     } else {
       cy.get("[data-cy=sectionHeader7]").should("not.exist");
       cy.get("[data-cy=BtnEditSection7]").should("not.exist");
