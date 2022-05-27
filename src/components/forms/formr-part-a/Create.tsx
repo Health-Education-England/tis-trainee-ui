@@ -24,7 +24,8 @@ import {
   CCT_DECLARATION,
   FORMR_PARTA_DECLARATIONS,
   IMMIGRATION_STATUS_OTHER_TISIDS,
-  MEDICAL_CURRICULUM
+  MEDICAL_CURRICULUM,
+  CHECK_POSTCODE_REGEX
 } from "../../../utilities/Constants";
 import { selectAllReference } from "../../../redux/slices/referenceSlice";
 import { Redirect } from "react-router-dom";
@@ -32,7 +33,6 @@ import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
-import { CHECK_POSTCODE_REGEX } from "../../../utilities/Constants";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
