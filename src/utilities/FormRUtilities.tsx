@@ -17,6 +17,9 @@ import {
   updateFormA
 } from "../redux/slices/formASlice";
 import { loadSavedFormB } from "../redux/slices/formBSlice";
+import { ProfileSType } from "../models/FormRPartA";
+import FieldWarningMsg from "../components/forms/FieldWarningMsg";
+
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
@@ -92,6 +95,17 @@ export class FormRUtilities {
 
   public static windowPrint(): void {
     window.print();
+  }
+
+  public static showFieldMatchWarning(
+    field: ProfileSType,
+    matcher: RegExp,
+    warningMsg: string
+  ): JSX.Element | null {
+    if (field && field.length > 0 && !matcher.test(field)) {
+      return <FieldWarningMsg warningMsg={warningMsg} />;
+    }
+    return null;
   }
 }
 

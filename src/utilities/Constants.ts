@@ -44,6 +44,9 @@ export const CHECK_PHONE_REGEX = /^\+?(?:\d\s?){10,15}$/;
 export const CHECK_WHOLE_TIME_EQUIVALENT_REGEX =
   /^((0\.[1-9]{1})?|(0\.([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1}))|1(\.0{1,2})?)$/;
 
+export const CHECK_POSTCODE_REGEX =
+  /[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}/i;
+
 export const VALUE_NOT_GIVEN = "Value not given";
 
 export const NEW_WORK: Work = {

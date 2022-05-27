@@ -32,6 +32,7 @@ import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { CHECK_POSTCODE_REGEX } from "../../../utilities/Constants";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -151,6 +152,11 @@ const Create = ({ history }: { history: string[] }) => {
                 name="postCode"
                 placeholder="postcode"
               />
+              {FormRUtilities.showFieldMatchWarning(
+                values?.postCode,
+                CHECK_POSTCODE_REGEX,
+                "Warning: Non-UK postcode detected. Please continue if valid."
+              )}
               <TextInputField
                 label="Contact Telephone"
                 name="telephoneNumber"
