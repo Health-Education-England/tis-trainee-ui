@@ -56,6 +56,13 @@ describe("Form R Part A - Create", () => {
 
     cy.get(".nhsuk-error-summary").should("exist");
 
+    cy.get("[data-cy=postCode]").should("exist").clear().type("123456");
+    cy.get(".field-warning-msg")
+      .should("exist")
+      .should("include.text", "Warning: Non-UK postcode detected");
+    cy.get("[data-cy=postCode]").should("exist").clear().type("WC1B 5DA");
+    cy.get(".field-warning-msg").should("not.exist");
+
     cy.get("[data-cy=BtnContinue]").should("exist").click();
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
   });

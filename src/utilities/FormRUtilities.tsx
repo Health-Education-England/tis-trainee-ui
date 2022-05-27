@@ -6,7 +6,7 @@ import Section5 from "../components/forms/formr-part-b/sections/Section5";
 import Section6 from "../components/forms/formr-part-b/sections/Section6";
 import CovidDeclaration from "../components/forms/formr-part-b/sections/CovidDeclaration";
 import { IProgSection } from "../models/IProgressSection";
-import { FormRPartA } from "../models/FormRPartA";
+import { FormRPartA, ProfileSType } from "../models/FormRPartA";
 import { LifeCycleState } from "../models/LifeCycleState";
 import store from "../redux/store/store";
 import {
@@ -17,6 +17,8 @@ import {
   updateFormA
 } from "../redux/slices/formASlice";
 import { loadSavedFormB } from "../redux/slices/formBSlice";
+import FieldWarningMsg from "../components/forms/FieldWarningMsg";
+
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
@@ -92,6 +94,17 @@ export class FormRUtilities {
 
   public static windowPrint(): void {
     window.print();
+  }
+
+  public static showFieldMatchWarning(
+    field: ProfileSType,
+    matcher: RegExp,
+    warningMsg: string
+  ): JSX.Element | null {
+    if (field && field.length > 0 && !matcher.test(field)) {
+      return <FieldWarningMsg warningMsg={warningMsg} />;
+    }
+    return null;
   }
 }
 

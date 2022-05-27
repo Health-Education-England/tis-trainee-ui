@@ -24,7 +24,8 @@ import {
   CCT_DECLARATION,
   FORMR_PARTA_DECLARATIONS,
   IMMIGRATION_STATUS_OTHER_TISIDS,
-  MEDICAL_CURRICULUM
+  MEDICAL_CURRICULUM,
+  CHECK_POSTCODE_REGEX
 } from "../../../utilities/Constants";
 import { selectAllReference } from "../../../redux/slices/referenceSlice";
 import { Redirect } from "react-router-dom";
@@ -151,6 +152,11 @@ const Create = ({ history }: { history: string[] }) => {
                 name="postCode"
                 placeholder="postcode"
               />
+              {FormRUtilities.showFieldMatchWarning(
+                values?.postCode,
+                CHECK_POSTCODE_REGEX,
+                "Warning: Non-UK postcode detected. Please continue if valid."
+              )}
               <TextInputField
                 label="Contact Telephone"
                 name="telephoneNumber"
