@@ -33,7 +33,7 @@ const Support = () => {
         <Details.Text>
           <p>
             If you have a query about completing the Form R or the information
-            we currrently hold for you then please click on the link provided in
+            we currently hold for you then please click on the link provided in
             the Contact section.
           </p>
           <p>

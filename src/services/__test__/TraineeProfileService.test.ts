@@ -34,8 +34,8 @@ describe("TraineeProfileService", () => {
     mockService
       .getTraineeProfile()
       .then()
-      .catch(respose => {
-        expect(respose).toEqual(errorResponse);
+      .catch(response => {
+        expect(response).toEqual(errorResponse);
       });
   });
 });

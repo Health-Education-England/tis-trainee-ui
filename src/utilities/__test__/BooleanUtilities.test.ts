@@ -30,7 +30,7 @@ describe("BooleanUtilities", () => {
     expect(BooleanUtilities.ToBoolean("false")).toEqual(false);
   });
 
-  it("ToBoolean should return fasle for undefined or null value", () => {
+  it("ToBoolean should return false for undefined or null value", () => {
     expect(BooleanUtilities.ToBoolean(undefined)).toEqual(false);
     expect(BooleanUtilities.ToBoolean(null)).toEqual(false);
   });

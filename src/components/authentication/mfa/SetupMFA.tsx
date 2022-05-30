@@ -86,7 +86,7 @@ const SetupMFA = ({ user, mfa }: ISetupMFA) => {
         <Step title="Complete" disableBackButton={true}>
           {newMFAStatus === "totp" && (
             <p>
-              TIS Self-Service has successfully registered on your authenicator
+              TIS Self-Service has successfully registered on your authenticator
               app. You will need to enter a 6-digit code each time you login to
               TIS Self-Service, which you obtain from the authenticator app.
             </p>
