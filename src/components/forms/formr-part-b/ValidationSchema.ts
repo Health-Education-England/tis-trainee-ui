@@ -23,7 +23,7 @@ const panelSchema = yup.object({
 
 const panelSchemaValidation = yup.array(
   yup.object({
-    declarationType: StringValidationSchema("Delaration type"),
+    declarationType: StringValidationSchema("Declaration type"),
     title: StringValidationSchema("Title"),
     locationOfEntry: StringValidationSchema("Location of entry"),
     dateOfEntry: dateValidationSchema("Date of entry").test(
