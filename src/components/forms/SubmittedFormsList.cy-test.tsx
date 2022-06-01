@@ -45,5 +45,8 @@ describe("SubmittedFormsList", () => {
       "include.text",
       "form submitted on 22/04/2020"
     );
+    cy.get("[data-cy=formsListWarning]")
+      .should("exist")
+      .should("contain.text", "Need to amend a recently-submitted form?");
   });
 });

@@ -1,4 +1,10 @@
-import { ActionLink, Hint, LedeText, Table } from "nhsuk-react-components";
+import {
+  ActionLink,
+  Hint,
+  LedeText,
+  Table,
+  WarningCallout
+} from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { DateUtilities } from "../../utilities/DateUtilities";
@@ -43,11 +49,25 @@ const SubmittedFormsList = ({
   return (
     <>
       {submittedForms.length > 0 ? (
-        <Hint data-cy="formsTrueHint">
-          To save a PDF copy of your submitted form, please click on a form
-          below and then click the <b>Save a copy as a PDF</b> button at the top
-          of that page.
-        </Hint>
+        <>
+          <Hint data-cy="formsTrueHint">
+            To save a PDF copy of your submitted form, please click on a form
+            below and then click the <b>Save a copy as a PDF</b> button at the
+            top of that page.
+          </Hint>
+          <WarningCallout
+            label="Need to amend a recently-submitted form?"
+            data-cy="formsListWarning"
+          >
+            <p>
+              Please click the <b>Support</b> link (menu or footer link) to
+              contact your Local Office. They will put the specified form back
+              into an 'unsubmitted' state for you to make the necessary
+              amendments and re-submit - rather than you having to complete
+              another form.
+            </p>
+          </WarningCallout>
+        </>
       ) : (
         <Hint data-cy="formsFalseHint">
           After you submit your completed form, instructions on how to{" "}
