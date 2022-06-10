@@ -9,7 +9,7 @@ describe("DateUtilities", () => {
 
   it("ToLocalDate should return date in DD/MM/YYYY format", () => {
     expect(DateUtilities.ToLocalDate(new Date("2020-04-20"))).toEqual(
-      "20/04/2020"
+      "20/04/2020 01:00"
     );
   });
 
