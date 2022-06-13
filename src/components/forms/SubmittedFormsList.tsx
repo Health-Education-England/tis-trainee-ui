@@ -45,7 +45,7 @@ const SubmittedFormsList = ({
               data-cy="submittedForm"
             >
               form submitted on{" "}
-              {DateUtilities.ToLocalDate(formData.submissionDate)}
+              {DateUtilities.ToLocalDateTime(formData.submissionDate)}
             </ActionLink>
           </td>
         </Table.Row>

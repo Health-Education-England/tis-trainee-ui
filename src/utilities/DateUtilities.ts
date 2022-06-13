@@ -23,6 +23,16 @@ export class DateUtilities {
     let localDate = "";
     if (date) {
       const dayDate = day(date);
+      localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY") : "";
+    }
+
+    return localDate;
+  }
+
+  public static ToLocalDateTime(date: Date | string | null): string {
+    let localDate = "";
+    if (date) {
+      const dayDate = day(date);
       localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY HH:mm") : "";
     }
 
