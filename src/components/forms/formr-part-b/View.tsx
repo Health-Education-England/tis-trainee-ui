@@ -33,6 +33,14 @@ interface IView {
 const View = ({ canEdit, history }: IView) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
+  const isEducationSupervisorNameNull = formData.covidDeclarationDto
+    ?.educationSupervisorName
+    ? formData.covidDeclarationDto?.educationSupervisorName
+    : "None provided";
+  const isEducationSupervisorEmailNull = formData.covidDeclarationDto
+    ?.educationSupervisorEmail
+    ? formData.covidDeclarationDto?.educationSupervisorEmail
+    : "None provided";
   const enableCovidDeclaration = useAppSelector(state =>
     state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
   );
@@ -690,10 +698,7 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Name
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {formData.covidDeclarationDto?.educationSupervisorName
-                          ? formData.covidDeclarationDto
-                              ?.educationSupervisorName
-                          : "None provided"}
+                        {isEducationSupervisorNameNull}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
@@ -701,10 +706,7 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Email Address
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {formData.covidDeclarationDto?.educationSupervisorEmail
-                          ? formData.covidDeclarationDto
-                              ?.educationSupervisorEmail
-                          : "None provided"}
+                        {isEducationSupervisorEmailNull}
                       </SummaryList.Value>
                     </SummaryList.Row>
                   </SummaryList>
