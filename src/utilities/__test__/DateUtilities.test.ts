@@ -7,19 +7,13 @@ describe("DateUtilities", () => {
   const tomorrow = now.add(1, "day").toDate();
   const today = now.toDate();
 
-  it("ToLocalDate should return date in DD/MM/YYYY format", () => {
-    expect(DateUtilities.ToLocalDate(new Date("2020-04-20"))).toEqual(
-      "20/04/2020"
-    );
-  });
-
   it("ToLocalDateTime should return date in DD/MM/YYYY HH:mm format", () => {
     expect(DateUtilities.ToLocalDateTime(new Date("2020-04-20 00:00"))).toEqual(
       "20/04/2020 00:00"
     );
   });
 
-  it("ToLocalDate should return date in DD/MM/YYYY HH:mm format", () => {
+  it("ToLocalDate should return date in DD/MM/YYYY format", () => {
     expect(DateUtilities.ToLocalDate(new Date("2020-04-20 00:00"))).toEqual(
       "20/04/2020"
     );
