@@ -106,6 +106,12 @@ export class FormRUtilities {
     }
     return null;
   }
+
+  public static defaultValueIfNull(value: string | undefined) {
+    if (value === "" || value === null) {
+      return "Non recorded";
+    }
+  }
 }
 
 const defaultSections: IProgSection[] = [
