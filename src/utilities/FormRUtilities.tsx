@@ -107,9 +107,9 @@ export class FormRUtilities {
     return null;
   }
 
-  public static defaultValueIfNull(value: string | undefined) {
-    if (value === "" || value === null) {
-      return "Non recorded";
+  public static defaultValueIfNull(value: string | undefined, message: string) {
+    if (value === "" || value === undefined) {
+      return message;
     }
   }
 }

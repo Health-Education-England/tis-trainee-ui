@@ -308,7 +308,10 @@ const View = ({ canEdit, history }: IView) => {
             <SummaryList.Row>
               <SummaryList.Key>Health Statement</SummaryList.Key>
               <SummaryList.Value>
-                {FormRUtilities.defaultValueIfNull(formData.healthStatement)}
+                {FormRUtilities.defaultValueIfEmpty(
+                  formData.healthStatement,
+                  "No health statement recorded"
+                )}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
@@ -539,7 +542,10 @@ const View = ({ canEdit, history }: IView) => {
             <SummaryList.Row>
               <SummaryList.Key>Compliments</SummaryList.Key>
               <SummaryList.Value data-jest="compliments">
-                {FormRUtilities.defaultValueIfNull(formData.compliments)}
+                {FormRUtilities.defaultValueIfEmpty(
+                  formData.compliments,
+                  "No compliments recorded"
+                )}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
@@ -689,8 +695,9 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Name
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {FormRUtilities.defaultValueIfNull(
-                          formData.covidDeclarationDto?.educationSupervisorName
+                        {FormRUtilities.defaultValueIfEmpty(
+                          formData.covidDeclarationDto?.educationSupervisorName,
+                          "No supervisor name provided"
                         )}
                       </SummaryList.Value>
                     </SummaryList.Row>
@@ -699,8 +706,10 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Email Address
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {FormRUtilities.defaultValueIfNull(
-                          formData.covidDeclarationDto?.educationSupervisorEmail
+                        {FormRUtilities.defaultValueIfEmpty(
+                          formData.covidDeclarationDto
+                            ?.educationSupervisorEmail,
+                          "No supervisor email provided"
                         )}
                       </SummaryList.Value>
                     </SummaryList.Row>
