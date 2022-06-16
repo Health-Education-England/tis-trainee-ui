@@ -31,12 +31,6 @@ describe("FormRUtilities", () => {
       "None provided"
     );
   });
-  it("should return message if undefined string detected", () => {
-    const value = undefined;
-    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
-      "None provided"
-    );
-  });
   it("should not return message if string detected", () => {
     const value = "Super Compliment";
     expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(

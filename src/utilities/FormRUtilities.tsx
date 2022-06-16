@@ -107,11 +107,8 @@ export class FormRUtilities {
     return null;
   }
 
-  public static defaultValueIfEmpty(
-    value: string | undefined,
-    message: string
-  ) {
-    if (value === "" || value === undefined) {
+  public static defaultValueIfEmpty(value: string, message: string) {
+    if (value === "") {
       return message;
     }
   }

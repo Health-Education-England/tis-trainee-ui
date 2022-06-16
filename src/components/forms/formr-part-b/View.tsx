@@ -696,7 +696,8 @@ const View = ({ canEdit, history }: IView) => {
                       </SummaryList.Key>
                       <SummaryList.Value>
                         {FormRUtilities.defaultValueIfEmpty(
-                          formData.covidDeclarationDto?.educationSupervisorName,
+                          formData.covidDeclarationDto
+                            ?.educationSupervisorName!,
                           "No supervisor name provided"
                         )}
                       </SummaryList.Value>
@@ -708,7 +709,7 @@ const View = ({ canEdit, history }: IView) => {
                       <SummaryList.Value>
                         {FormRUtilities.defaultValueIfEmpty(
                           formData.covidDeclarationDto
-                            ?.educationSupervisorEmail,
+                            ?.educationSupervisorEmail!,
                           "No supervisor email provided"
                         )}
                       </SummaryList.Value>
