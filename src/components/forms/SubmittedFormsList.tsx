@@ -27,29 +27,22 @@ const SubmittedFormsList = ({
   );
   let content: JSX.Element | JSX.Element[];
   if (submittedForms.length > 0) {
-    content = submittedForms
-      .sort((a: IFormR, b: IFormR) =>
-        a.submissionDate! > b.submissionDate!
-          ? -1
-          : b.submissionDate! > a.submissionDate!
-          ? 1
-          : 0
-      )
-      .map((formData: IFormR) => (
-        <Table.Row key={formData.id} className={styles.listTableRow}>
-          <td>
-            <ActionLink
-              onClick={() =>
-                FormRUtilities.handleRowClick(formData.id!, path, history)
-              }
-              data-cy="submittedForm"
-            >
-              form submitted on{" "}
-              {DateUtilities.ToLocalDateTime(formData.submissionDate)}
-            </ActionLink>
-          </td>
-        </Table.Row>
-      ));
+    DateUtilities.SortDateDecending(submittedForms, "submissionDate");
+    content = submittedForms.map((formData: IFormR) => (
+      <Table.Row key={formData.id} className={styles.listTableRow}>
+        <td>
+          <ActionLink
+            onClick={() =>
+              FormRUtilities.handleRowClick(formData.id!, path, history)
+            }
+            data-cy="submittedForm"
+          >
+            form submitted on{" "}
+            {DateUtilities.ToLocalDateTime(formData.submissionDate)}
+          </ActionLink>
+        </td>
+      </Table.Row>
+    ));
   } else
     content = (
       <LedeText data-cy="noSubmittedFormsMsg">No forms submitted yet.</LedeText>
