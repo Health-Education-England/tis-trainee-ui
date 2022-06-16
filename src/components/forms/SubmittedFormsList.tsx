@@ -27,8 +27,11 @@ const SubmittedFormsList = ({
   );
   let content: JSX.Element | JSX.Element[];
   if (submittedForms.length > 0) {
-    DateUtilities.SortDateDecending(submittedForms, "submissionDate");
-    content = submittedForms.map((formData: IFormR) => (
+    const submittedFormsDec = DateUtilities.SortDateDecending(
+      submittedForms,
+      "submissionDate"
+    );
+    content = submittedFormsDec.map((formData: IFormR) => (
       <Table.Row key={formData.id} className={styles.listTableRow}>
         <td>
           <ActionLink

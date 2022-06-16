@@ -186,10 +186,10 @@ describe("Form R (Part B)", () => {
       cy.get("[data-cy=BtnEditSection7]").should("exist");
       cy.get(
         ":nth-child(22) > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-      ).should("contain.text", "None provided");
+      ).should("contain.text", "No supervisor name provided");
       cy.get(
         ":nth-child(22) > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value"
-      ).should("contain.text", "None provided");
+      ).should("contain.text", "No supervisor email provided");
     } else {
       cy.get("[data-cy=sectionHeader7]").should("not.exist");
       cy.get("[data-cy=BtnEditSection7]").should("not.exist");
@@ -207,7 +207,7 @@ describe("Form R (Part B)", () => {
     }
     cy.get(
       ":nth-child(9) > .nhsuk-summary-list > :nth-child(5) > .nhsuk-summary-list__value"
-    ).should("contain.text", "None recorded");
+    ).should("contain.text", "No health statement recorded");
 
     //check sections 4 and 5 display correctly
     cy.get(
