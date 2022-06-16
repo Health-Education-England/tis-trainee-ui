@@ -27,19 +27,19 @@ describe("FormRUtilities", () => {
   });
   it("should return message if empty string detected", () => {
     const value = "";
-    expect(FormRUtilities.defaultValueIfNull(value, "None provided")).toBe(
+    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
       "None provided"
     );
   });
   it("should return message if undefined string detected", () => {
     const value = undefined;
-    expect(FormRUtilities.defaultValueIfNull(value, "None provided")).toBe(
+    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
       "None provided"
     );
   });
   it("should not return message if string detected", () => {
     const value = "Super Compliment";
-    expect(FormRUtilities.defaultValueIfNull(value, "None provided")).toBe(
+    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
       undefined
     );
   });
