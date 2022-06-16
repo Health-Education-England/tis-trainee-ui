@@ -1,4 +1,8 @@
 import dayjs from "dayjs";
+import {
+  disorderedFormRPartBs,
+  orderedFormRPartBs
+} from "../../mock-data/submitted-formr-list";
 import { DateUtilities } from "../DateUtilities";
 
 describe("DateUtilities", () => {
@@ -25,6 +29,12 @@ describe("DateUtilities", () => {
     expect(DateUtilities.ToUTCDate(new Date("2020-04-20"))).toEqual(
       "2020-04-20"
     );
+  });
+
+  it("SortDateDecending should handle an array without timestamp", () => {
+    expect(
+      DateUtilities.SortDateDecending(disorderedFormRPartBs, "submissionDate")
+    ).toEqual(orderedFormRPartBs);
   });
 
   it("ToUTCDate should return empty string if date is null", () => {
