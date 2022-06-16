@@ -26,8 +26,18 @@ export class DateUtilities {
       const dayDate = day(date);
       localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY") : "";
     }
-
     return localDate;
+  }
+
+  public static SortDateDecending<T, U extends keyof T>(
+    arr: T[],
+    dateFieldName: U
+  ) {
+    return [...arr].sort(
+      (a: any, b: any) =>
+        new Date(b[dateFieldName]).getTime() -
+        new Date(a[dateFieldName]).getTime()
+    );
   }
 
   public static ToLocalDateTime(date: DateType): string {
