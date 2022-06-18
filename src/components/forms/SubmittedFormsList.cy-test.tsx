@@ -22,7 +22,7 @@ describe("SubmittedFormsList", () => {
       );
     cy.get("[data-cy=noSubmittedFormsMsg]").should("be.visible");
   });
-  it("should show a submitted forms in chronological and help hint when submitted forms", () => {
+  it("should show a submitted form and help hint when submitted forms", () => {
     mount(
       <Provider store={store}>
         <BrowserRouter>
@@ -43,11 +43,7 @@ describe("SubmittedFormsList", () => {
     cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
     cy.get(".nhsuk-action-link__text").should(
       "include.text",
-      "form submitted on 22/04/2030 00:00" +
-        "form submitted on 22/04/2016 00:00" +
-        "form submitted on 22/04/2012 00:00" +
-        "form submitted on 22/04/2012 00:00" +
-        "form submitted on 22/04/2010 00:00"
+      "form submitted on 22/04/2020"
     );
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
