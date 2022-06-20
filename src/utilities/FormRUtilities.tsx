@@ -106,12 +106,6 @@ export class FormRUtilities {
     }
     return null;
   }
-
-  public static defaultValueIfEmpty(value: string, message: string) {
-    if (value === "") {
-      return message;
-    }
-  }
 }
 
 const defaultSections: IProgSection[] = [

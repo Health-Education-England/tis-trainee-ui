@@ -1,8 +1,4 @@
 import dayjs from "dayjs";
-import {
-  disorderedFormRPartBs,
-  orderedFormRPartBs
-} from "../../mock-data/submitted-formr-list";
 import { DateUtilities } from "../DateUtilities";
 
 describe("DateUtilities", () => {
@@ -11,9 +7,9 @@ describe("DateUtilities", () => {
   const tomorrow = now.add(1, "day").toDate();
   const today = now.toDate();
 
-  it("ToLocalDateTime should return date in DD/MM/YYYY HH:mm format", () => {
-    expect(DateUtilities.ToLocalDateTime(new Date("2020-04-20 00:00"))).toEqual(
-      "20/04/2020 00:00"
+  it("ToLocalDate should return date in DD/MM/YYYY format", () => {
+    expect(DateUtilities.ToLocalDate(new Date("2020-04-20"))).toEqual(
+      "20/04/2020"
     );
   });
 
@@ -29,12 +25,6 @@ describe("DateUtilities", () => {
     expect(DateUtilities.ToUTCDate(new Date("2020-04-20"))).toEqual(
       "2020-04-20"
     );
-  });
-
-  it("SortDateDecending should handle an array without timestamp", () => {
-    expect(
-      DateUtilities.SortDateDecending(disorderedFormRPartBs, "submissionDate")
-    ).toEqual(orderedFormRPartBs);
   });
 
   it("ToUTCDate should return empty string if date is null", () => {
