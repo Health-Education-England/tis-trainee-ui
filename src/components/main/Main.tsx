@@ -5,40 +5,29 @@ import FormRPartA from "../forms/formr-part-a/FormRPartA";
 import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
 import PageNotFound from "../common/PageNotFound";
-import SetupMFA from "../authentication/mfa/SetupMFA";
 import PageTitle from "../common/PageTitle";
 import HEEHeader from "../navigation/HEEHeader";
 import HEEFooter from "../navigation/HEEFooter";
-
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
 import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
+import MFA from "../authentication/setMfa/MFA";
+
 interface IMain {
   user: CognitoUser | any;
   signOut: any;
   appVersion: string;
 }
 
-const MainRoutes = (): JSX.Element => {
-  return (
-    <Switch>
-      <Route path="/profile" component={Profile} />
-      <Route path="/formr-a" component={FormRPartA} />
-      <Route path="/formr-b" component={FormRPartB} />
-      <Route path="/support" component={Support} />
-      <Redirect exact path="/" to="/profile" />
-      <Route path="/*" component={PageNotFound} />
-    </Switch>
-  );
-};
 export const Main = ({ user, signOut, appVersion }: IMain) => {
-  let content;
+  const mfa = user.preferredMFA;
   const dispatch = useAppDispatch();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
+  let content;
 
   useEffect(() => {
     if (traineeProfileDataStatus === "idle") {
@@ -69,15 +58,19 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
       <>
         <BrowserRouter>
           <PageTitle />
-          <HEEHeader signOut={signOut} mfa={user.preferredMFA} />
+          <HEEHeader signOut={signOut} mfa={mfa} />
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
-            {user.preferredMFA === "NOMFA" ? (
-              <SetupMFA user={user} mfa={user.preferredMFA} />
-            ) : (
-              <MainRoutes />
-            )}
+            <Switch>
+              <Route path="/profile" render={() => <Profile mfa={mfa} />} />
+              <Route path="/formr-a" render={() => <FormRPartA mfa={mfa} />} />
+              <Route path="/formr-b" render={() => <FormRPartB mfa={mfa} />} />
+              <Route path="/support" component={Support} />
+              <Route path="/mfa" render={() => <MFA user={user} mfa={mfa} />} />
+              <Redirect exact path="/" to="/profile" />
+              <Route path="/*" component={PageNotFound} />
+            </Switch>
           </main>
-          <HEEFooter appVersion={appVersion} mfa={user.preferredMFA} />
+          <HEEFooter appVersion={appVersion} mfa={mfa} />
         </BrowserRouter>
       </>
     );

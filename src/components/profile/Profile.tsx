@@ -8,9 +8,14 @@ import ScrollTo from "../forms/ScrollTo";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import DataSourceMsg from "../common/DataSourceMsg";
+import { Redirect } from "react-router-dom";
 
-const Profile = () => {
+const Profile = ({ mfa }: any) => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
+
+  if (mfa === "NOMFA") {
+    return <Redirect to="/mfa" />;
+  }
   const content = (
     <div id="profile">
       <PageTitle title="Profile" />

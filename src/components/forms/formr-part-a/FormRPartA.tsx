@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import ScrollTo from "../ScrollTo";
 import PageTitle from "../../common/PageTitle";
 import { Fieldset, Label } from "nhsuk-react-components";
@@ -7,7 +7,10 @@ import View from "./View";
 import Create from "./Create";
 import Confirm from "./Confirm";
 
-const FormRPartA = () => {
+const FormRPartA = ({ mfa }: any) => {
+  if (mfa === "NOMFA") {
+    return <Redirect to="/mfa" />;
+  }
   return (
     <>
       <PageTitle title="Form R Part-A" />

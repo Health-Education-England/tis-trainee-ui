@@ -11,7 +11,7 @@ const AuthFormFields = () => {
       <Authenticator.SignUp.FormFields />
       <div data-cy="checkboxPrivacy">
         <CheckboxField
-          errorMessage={validationErrors.yesToPrivacy}
+          errorMessage={validationErrors.yesToPrivacy as string}
           hasError={!!validationErrors.yesToPrivacy}
           name="yesToPrivacy"
           value="yes"
@@ -20,7 +20,7 @@ const AuthFormFields = () => {
       </div>
       <div data-cy="checkboxPilot">
         <CheckboxField
-          errorMessage={validationErrors.yesToPilot}
+          errorMessage={validationErrors.yesToPilot as string}
           hasError={!!validationErrors.yesToPilot}
           name="yesToPilot"
           value="yes"
