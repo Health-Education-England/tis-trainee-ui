@@ -11,18 +11,11 @@ import {
 } from "../../../../redux/slices/userSlice";
 import { CognitoUser } from "@aws-amplify/auth";
 import store from "../../../../redux/store/store";
-
-// TODO initial check to see if phone number already been added and verified
-// via useEffect
-// if yes then dispatch(incrementSmsSection()) to move to next section ?
-// or maybe do this check at the beginning?
-
 interface IVerifySms {
   user: CognitoUser;
-  mfa: string;
 }
 
-const VerifySms = ({ user, mfa }: IVerifySms) => {
+const VerifySms = ({ user }: IVerifySms) => {
   const dispatch = useAppDispatch();
 
   const updatePhoneAttrib = async (vals: { mobilePhoneNumber: string }) => {

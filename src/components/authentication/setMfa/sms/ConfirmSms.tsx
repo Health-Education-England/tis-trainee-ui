@@ -14,10 +14,9 @@ import store from "../../../../redux/store/store";
 
 interface IConfirmSms {
   user: CognitoUser;
-  mfa: string;
 }
 
-const ConfirmSms = ({ user, mfa }: IConfirmSms) => {
+const ConfirmSms = ({ user }: IConfirmSms) => {
   const dispatch = useAppDispatch();
   let history = useHistory();
 
@@ -49,9 +48,6 @@ const ConfirmSms = ({ user, mfa }: IConfirmSms) => {
       } else dispatch(decrementSmsSection());
     } else dispatch(decrementSmsSection());
   };
-
-  // TODO could do keep on same page if error msg === "Invalid verification code provided, please try again."
-  // keep track of times tried and then decrement after 2 attempts
 
   return (
     <Formik

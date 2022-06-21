@@ -25,10 +25,9 @@ import { useHistory } from "react-router-dom";
 
 interface IVerifyTotp {
   user: CognitoUser | any;
-  mfa: string;
 }
 
-const VerifyTotp = ({ user, mfa }: IVerifyTotp) => {
+const VerifyTotp = ({ user }: IVerifyTotp) => {
   const dispatch = useAppDispatch();
   let history = useHistory();
   const totpName = "NHS TIS Self-Service";
