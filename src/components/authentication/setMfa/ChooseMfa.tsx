@@ -1,11 +1,5 @@
 import { Formik } from "formik";
-import {
-  ActionLink,
-  Button,
-  Details,
-  Panel,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Button, Details, Panel, WarningCallout } from "nhsuk-react-components";
 import { useHistory } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import {
@@ -59,12 +53,9 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
                     : "SMS for MFA"}{" "}
                 </b>
                 to verify your identity and log in to TIS Self-Service. If you
-                want to redo the process then please continue, otherwise click
-                here to exit the set-up process.
+                want to verify your identity a different way then please
+                continue.
               </p>
-              <ActionLink href="/profile">
-                Continue to TIS Self-Service
-              </ActionLink>
             </WarningCallout>
           )}
           <Details>
