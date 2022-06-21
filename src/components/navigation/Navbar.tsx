@@ -13,7 +13,8 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
     { path: "formr-b", name: "Form R (Part B)" },
-    { path: "support", name: "Support" }
+    { path: "support", name: "Support" },
+    { path: "mfa", name: "MFA set-up" }
   ];
 
   const addLinks = (): JSX.Element[] => {
