@@ -1,13 +1,12 @@
-import { Fieldset } from "nhsuk-react-components";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import Loading from "../../../common/Loading";
 import VerifyTotp from "./VerifyTotp";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import { Redirect } from "react-router-dom";
 import InstallTotp from "./InstallTotp";
 import DecideTotp from "./DecideTotp";
 import { incrementTotpSection } from "../../../../redux/slices/userSlice";
+import SectionGenerator from "../../../common/SectionGenerator";
 
 interface ICreateTotp {
   user: CognitoUser | any;
@@ -66,25 +65,11 @@ const CreateTotp = (
 
   if (totpSection < totpSections.length + 1) {
     content = (
-      <main>
-        <Fieldset.Legend size="l">
-          {totpSections[totpSection - 1].title}
-        </Fieldset.Legend>
-        <div className="form-wrapper">
-          <section>
-            <div className="page-wrapper">
-              {totpSection < totpSections.length + 1 ? (
-                React.createElement(
-                  totpSections[totpSection - 1].component,
-                  totpSectionProps
-                )
-              ) : (
-                <Loading />
-              )}
-            </div>
-          </section>
-        </div>
-      </main>
+      <SectionGenerator
+        section={totpSection}
+        sectionsArr={totpSections}
+        sectionProps={totpSectionProps}
+      />
     );
   }
 
