@@ -1,5 +1,6 @@
 import { Fieldset } from "nhsuk-react-components";
 import React, { FunctionComponent } from "react";
+import ScrollTo from "../forms/ScrollTo";
 import Loading from "./Loading";
 
 interface sectionsArray {
@@ -19,25 +20,28 @@ const SectionGenerator = <U,>({
   sectionProps
 }: ISectionGenerator<U>): JSX.Element => {
   return (
-    <main>
-      <Fieldset.Legend size="l">
-        {sectionsArr[section - 1].title}
-      </Fieldset.Legend>
-      <div className="form-wrapper">
-        <section>
-          <div className="page-wrapper">
-            {section < sectionsArr.length + 1 ? (
-              React.createElement(
-                sectionsArr[section - 1].component,
-                sectionProps
-              )
-            ) : (
-              <Loading />
-            )}
-          </div>
-        </section>
-      </div>
-    </main>
+    <>
+      <ScrollTo />
+      <main>
+        <Fieldset.Legend size="l">
+          {sectionsArr[section - 1].title}
+        </Fieldset.Legend>
+        <div className="form-wrapper">
+          <section>
+            <div className="page-wrapper">
+              {section < sectionsArr.length + 1 ? (
+                React.createElement(
+                  sectionsArr[section - 1].component,
+                  sectionProps
+                )
+              ) : (
+                <Loading />
+              )}
+            </div>
+          </section>
+        </div>
+      </main>
+    </>
   );
 };
 

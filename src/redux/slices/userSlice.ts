@@ -4,7 +4,7 @@ import { Auth } from "aws-amplify";
 
 interface IUser {
   status: string;
-  currentMfa: string;
+  tempMfa: string;
   smsSection: number;
   totpSection: number;
   error: any;
@@ -13,7 +13,7 @@ interface IUser {
 
 const initialState: IUser = {
   status: "idle",
-  currentMfa: "NOMFA",
+  tempMfa: "NOMFA",
   smsSection: 1,
   totpSection: 1,
   error: "",
@@ -67,17 +67,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    resetBothSections(state) {
-      return { ...state, smsSection: 1, totpSection: 1 };
+    resetUser() {
+      return initialState;
     },
     resetError(state) {
       return { ...state, status: "idle", error: "" };
     },
-    updatedUserDetails(state, action: PayloadAction<any>) {
-      return { ...state, details: action.payload };
-    },
-    updatedCurrentMfa(state, action: PayloadAction<string>) {
-      return { ...state, currentMfa: action.payload };
+    updatedtempMfa(state, action: PayloadAction<string>) {
+      return { ...state, tempMfa: action.payload };
     },
     decrementSmsSection: state => {
       state.smsSection -= 1;
@@ -85,20 +82,14 @@ const userSlice = createSlice({
     incrementSmsSection: state => {
       state.smsSection += 1;
     },
-    decrementTotpSection: state => {
-      state.totpSection -= 1;
-    },
     incrementTotpSection: state => {
       state.totpSection += 1;
     },
-    updatedTotpFormsData(state, action: PayloadAction<any>) {
-      return { ...state, totpFormsData: action.payload };
-    },
-    updatedTotpCode(state, action: PayloadAction<string>) {
-      return { ...state, totpCode: action.payload };
-    },
     updatedTotpSection(state, action: PayloadAction<number>) {
       return { ...state, totpSection: action.payload };
+    },
+    resetStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -152,14 +143,11 @@ const userSlice = createSlice({
 export default userSlice.reducer;
 
 export const {
-  resetBothSections,
+  resetUser,
   resetError,
-  updatedUserDetails,
-  updatedCurrentMfa,
+  updatedtempMfa,
   decrementSmsSection,
   incrementSmsSection,
-  decrementTotpSection,
   incrementTotpSection,
-  updatedTotpCode,
   updatedTotpSection
 } = userSlice.actions;

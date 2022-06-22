@@ -28,15 +28,15 @@ const CreateSms = (
   const smsSections: ISmsSection[] = [
     {
       component: VerifySms,
-      title: "Link your mobile number to TIS Self-Service"
+      title: ""
     },
     {
       component: ConfirmSms,
-      title: "Confirm your identity to log in to TIS Self-Service"
+      title: ""
     }
   ];
 
-  const currentMfa = useAppSelector(state => state.user.currentMfa);
+  const tempMfa = useAppSelector(state => state.user.tempMfa);
 
   const smsSectionProps = {
     user,
@@ -46,7 +46,7 @@ const CreateSms = (
 
   let content;
 
-  if (currentMfa === "NOMFA") {
+  if (tempMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
 

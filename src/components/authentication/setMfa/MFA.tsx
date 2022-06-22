@@ -1,5 +1,4 @@
 import { Redirect, Route, Switch } from "react-router-dom";
-import ScrollTo from "../../forms/ScrollTo";
 import PageTitle from "../../common/PageTitle";
 import { Fieldset } from "nhsuk-react-components";
 import ChooseMfa from "./ChooseMfa";
@@ -17,7 +16,6 @@ const MFA = ({ user, mfa }: IMFA) => {
   return (
     <>
       <PageTitle title="MFA" />
-      <ScrollTo />
       <Fieldset>
         <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
           Set up Multi-Factor Authentication (MFA)

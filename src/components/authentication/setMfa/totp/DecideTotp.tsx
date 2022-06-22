@@ -49,7 +49,7 @@ const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
               disabled={isSubmitting}
             >
               {values.appInstalledAlready === "true"
-                ? "Add TIS Self-Service to your Auth App"
+                ? "Add 'NHS TIS Self-Service' to your Authenticator App"
                 : "Install your Authenticator App"}
             </Button>
           )}

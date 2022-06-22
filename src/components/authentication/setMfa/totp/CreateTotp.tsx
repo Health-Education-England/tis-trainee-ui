@@ -32,19 +32,19 @@ const CreateTotp = (
   const totpSections: ITotpSection[] = [
     {
       component: DecideTotp,
-      title: "Already have an Authenticator App?"
+      title: ""
     },
     {
       component: InstallTotp,
-      title: "Downloading & installing your Authenticator App"
+      title: ""
     },
     {
       component: VerifyTotp,
-      title: "Adding TIS Self-Service account to your Authenticator App"
+      title: ""
     }
   ];
 
-  const currentMfa = useAppSelector(state => state.user.currentMfa);
+  const tempMfa = useAppSelector(state => state.user.tempMfa);
 
   const handleSectionSubmit = () => {
     dispatch(incrementTotpSection());
@@ -59,7 +59,7 @@ const CreateTotp = (
 
   let content;
 
-  if (currentMfa === "NOMFA") {
+  if (tempMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
 

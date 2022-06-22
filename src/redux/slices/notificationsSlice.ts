@@ -12,7 +12,8 @@ import {
   verifyPhone,
   verifyUserAttributeSubmit,
   setPreferredMfa,
-  updateTotpCode
+  updateTotpCode,
+  verifyTotp
 } from "./userSlice";
 
 const thunkArrRejected = [
@@ -41,7 +42,11 @@ const thunkArrRejected = [
   },
   {
     thunk: updateTotpCode,
-    text: "configure your Authentication Code. Please navigate back and try again"
+    text: "configure your Authentication Code. Please try again"
+  },
+  {
+    thunk: verifyTotp,
+    text: "verify your identification with that Authentication code. Please try again"
   }
 ];
 
@@ -59,6 +64,10 @@ const thunkArrFulfilled = [
   {
     thunk: verifyPhone,
     text: "phone has been verified. An SMS code from HEE should arrive soon"
+  },
+  {
+    thunk: setPreferredMfa,
+    text: "MFA choice is set"
   }
 ];
 

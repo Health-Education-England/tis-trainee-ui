@@ -28,17 +28,19 @@ const InstallTotp = ({ user, handleSectionSubmit }: IInstallTotp) => {
       {({ values, handleSubmit, isSubmitting }) => (
         <Form>
           <TotpInstructions />
-          {values.appInstalledNow !== null && <ThreeMinMsg />}
           {values.appInstalledNow !== null && (
-            <Button
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSubmit();
-              }}
-              disabled={isSubmitting}
-            >
-              Add TIS Self-Service to your Authenticator App
-            </Button>
+            <>
+              <ThreeMinMsg />
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+                disabled={isSubmitting}
+              >
+                Add 'NHS TIS Self-Service' to your Authenticator App
+              </Button>
+            </>
           )}
         </Form>
       )}
