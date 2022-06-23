@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import store from "../../redux/store/store";
 import { Formik, Form } from "formik";
-import { MobilePhoneValidationSchema } from "../authentication/mfa/ValidationSchema";
+import { MobilePhoneValidationSchema } from "../authentication/setMfa/ValidationSchema";
 import MobilePhoneInputField from "./MobilePhoneInputField";
 
 describe("MobilephoneInputField in Formik form", () => {

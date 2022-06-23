@@ -14,25 +14,13 @@ const HEEFooter = ({ appVersion, mfa }: HEEFooterProps) => {
         <Footer.List>
           <Row>
             <Col width="one-quarter">
-              {mfa !== "NOMFA" ? (
-                <NavLink
-                  className={styles.refLink}
-                  data-cy="linkSupport"
-                  to={"/support"}
-                >
-                  Support
-                </NavLink>
-              ) : (
-                <a
-                  className={styles.refLink}
-                  data-cy="linkSupport"
-                  href="https://tis-support.hee.nhs.uk/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Support
-                </a>
-              )}
+              <NavLink
+                className={styles.refLink}
+                data-cy="linkSupport"
+                to={"/support"}
+              >
+                Support
+              </NavLink>
             </Col>
             <Col width="one-quarter">
               <a

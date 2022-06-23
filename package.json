@@ -80,7 +80,7 @@
     "cypress": "cypress run",
     "cypress:open": "cypress open",
     "cypress:debug": "cross-env-shell DEBUG=code-coverage npx cypress open",
-    "ct:open": "npx cypress open-ct --browser electron",
+    "ct:open": "npx cypress open-ct",
     "ct": "npx cypress run-ct",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts,.tsx,.js --fix",

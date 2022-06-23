@@ -44,15 +44,4 @@ describe("Footer", () => {
   it("should have the correct version shown in the footer", () => {
     cy.get("[data-cy=versionText]").should("contain.text", "0.0.1");
   });
-
-  it("should go to external tis-support when NOMFA", () => {
-    mount(
-      <BrowserRouter>
-        <HEEFooter appVersion={"0.0.1"} mfa={"NOMFA"} />
-      </BrowserRouter>
-    );
-    cy.get("[data-cy=linkSupport]")
-      .should("contain.text", "Support")
-      .should("have.attr", "href", "https://tis-support.hee.nhs.uk/");
-  });
 });
