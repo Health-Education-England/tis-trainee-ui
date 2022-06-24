@@ -88,6 +88,9 @@ const userSlice = createSlice({
     updatedTotpSection(state, action: PayloadAction<number>) {
       return { ...state, totpSection: action.payload };
     },
+    updatedSmsSection(state, action: PayloadAction<number>) {
+      return { ...state, smsSection: action.payload };
+    },
     resetStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
     }
@@ -149,5 +152,6 @@ export const {
   decrementSmsSection,
   incrementSmsSection,
   incrementTotpSection,
-  updatedTotpSection
+  updatedTotpSection,
+  updatedSmsSection
 } = userSlice.actions;
