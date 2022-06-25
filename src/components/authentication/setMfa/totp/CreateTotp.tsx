@@ -2,31 +2,26 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import VerifyTotp from "./VerifyTotp";
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import InstallTotp from "./InstallTotp";
 import DecideTotp from "./DecideTotp";
 import { incrementTotpSection } from "../../../../redux/slices/userSlice";
 import SectionGenerator from "../../../common/SectionGenerator";
-
 interface ICreateTotp {
   user: CognitoUser | any;
   mfa: string;
 }
-
 interface ITotpSection {
   component: React.FunctionComponent<{
     user: any;
     mfa: string;
-    history: string[];
     handleSectionSubmit: () => void;
   }>;
   title: string;
 }
 
-const CreateTotp = (
-  { user, mfa }: ICreateTotp,
-  { history }: { history: string[] }
-) => {
+const CreateTotp = ({ user, mfa }: ICreateTotp) => {
+  let history = useHistory();
   const dispatch = useAppDispatch();
   const totpSection = useAppSelector(state => state.user.totpSection);
   const totpSections: ITotpSection[] = [
@@ -66,6 +61,8 @@ const CreateTotp = (
   if (totpSection < totpSections.length + 1) {
     content = (
       <SectionGenerator
+        history={history}
+        path="/mfa"
         section={totpSection}
         sectionsArr={totpSections}
         sectionProps={totpSectionProps}

@@ -3,7 +3,7 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import VerifySms from "./VerifySms";
 import ConfirmSms from "./ConfirmSms";
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import SectionGenerator from "../../../common/SectionGenerator";
 
 interface ICreateSMS {
@@ -20,10 +20,8 @@ interface ISmsSection {
   title: string;
 }
 
-const CreateSms = (
-  { user, mfa }: ICreateSMS,
-  { history }: { history: string[] }
-) => {
+const CreateSms = ({ user, mfa }: ICreateSMS) => {
+  let history = useHistory();
   const smsSection: number = useAppSelector(state => state.user.smsSection);
   const smsSections: ISmsSection[] = [
     {
@@ -53,6 +51,8 @@ const CreateSms = (
   if (smsSection < smsSections.length + 1) {
     content = (
       <SectionGenerator
+        history={history}
+        path="/mfa"
         section={smsSection}
         sectionsArr={smsSections}
         sectionProps={smsSectionProps}

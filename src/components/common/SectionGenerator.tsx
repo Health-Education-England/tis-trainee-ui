@@ -1,4 +1,4 @@
-import { Fieldset } from "nhsuk-react-components";
+import { BackLink, Fieldset } from "nhsuk-react-components";
 import React, { FunctionComponent } from "react";
 import ScrollTo from "../forms/ScrollTo";
 import Loading from "./Loading";
@@ -9,12 +9,16 @@ interface sectionsArray {
 }
 
 interface ISectionGenerator<U> {
+  history: any;
+  path: string;
   section: number;
   sectionsArr: sectionsArray[];
   sectionProps: U;
 }
 
 const SectionGenerator = <U,>({
+  history,
+  path,
   section,
   sectionsArr,
   sectionProps
@@ -22,6 +26,13 @@ const SectionGenerator = <U,>({
   return (
     <>
       <ScrollTo />
+      <BackLink
+        data-cy="backLink"
+        style={{ cursor: "pointer" }}
+        onClick={() => history.push(path)}
+      >
+        Start over
+      </BackLink>
       <main>
         <Fieldset.Legend size="l">
           {sectionsArr[section - 1].title}
