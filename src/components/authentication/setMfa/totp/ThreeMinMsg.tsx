@@ -2,7 +2,7 @@ import { WarningCallout } from "nhsuk-react-components";
 
 const ThreeMinMsg = () => {
   return (
-    <WarningCallout label="Important">
+    <WarningCallout data-cy="threeMinWarning" label="Important">
       <p>
         On the next screen you will have <strong>3 minutes</strong> to scan a QR
         code using your Authenticator App on your phone before it expires and

@@ -33,9 +33,9 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   let history = useHistory();
   const totpName = "NHS TIS Self-Service";
   const totpStr = useAppSelector(state => state.user.totpCode);
-  const qrCode = `otpauth://totp/${encodeURI(
-    totpName
-  )}:${user.getUsername()}?secret=${totpStr}&issuer=${encodeURI(totpName)}`;
+  const qrCode = `otpauth://totp/${encodeURI(totpName)}:${
+    user.username
+  }?secret=${totpStr}&issuer=${encodeURI(totpName)}`;
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
@@ -81,12 +81,15 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   return (
     <>
       <WarningCallout label="Remember">
-        <p>
+        <p data-cy="threeMinReminderText">
           You have <strong>3 minutes</strong> to scan the QR code below using
           your Authenticator App on your phone before it expires.
         </p>
       </WarningCallout>
-      <Panel label="Add 'NHS TIS-Self-Service' to your Authenticator App">
+      <Panel
+        data-cy="addTssTotpHeader"
+        label="Add 'NHS TIS-Self-Service' to your Authenticator App"
+      >
         <Details>
           <Details.Summary data-cy="msAuthInfoSummary">
             Need help?
@@ -112,16 +115,24 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
             scan the QR Code below.
           </Fieldset.Legend>
           <div style={{ padding: "20px" }}>
-            <QRCodeSVG size={192} value={qrCode} includeMargin={true} />
+            <QRCodeSVG
+              data-cy="tssQrCode"
+              size={192}
+              value={qrCode}
+              includeMargin={true}
+            />
           </div>
           <Details>
-            <Details.Summary>Unable to scan QR code?</Details.Summary>
+            <Details.Summary data-cy="tssQrCodeHelp">
+              Unable to scan QR code?
+            </Details.Summary>
             <Details.Text>
               <p>
                 If you are not using a mobile Authenticator App or are unable to
                 see the QR code, you can enter the following code instead.
               </p>
               <Input
+                data-cy="tssQrCodeStr"
                 onFocus={event => event.target.select()}
                 defaultValue={totpStr}
                 label=""

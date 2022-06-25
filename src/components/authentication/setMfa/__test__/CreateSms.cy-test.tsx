@@ -21,6 +21,7 @@ describe("CreateSms sections", () => {
         </BrowserRouter>
       </Provider>
     );
+    cy.get(".nhsuk-panel-with-label__label").should("not.exist");
   });
   it("should render the verify sms component when section number is 1", () => {
     const MockedVerifySmsSection = () => {

@@ -31,7 +31,10 @@ const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
     >
       {({ values, handleSubmit, isSubmitting }) => (
         <Form>
-          <Panel label="I've already installed an Authenticator App">
+          <Panel
+            data-cy="appInstalledAlreadyChoose"
+            label="I've already installed an Authenticator App"
+          >
             <MultiChoiceInputField
               type="radios"
               id="appInstalledAlready"

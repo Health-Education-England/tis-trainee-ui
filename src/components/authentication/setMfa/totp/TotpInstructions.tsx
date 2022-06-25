@@ -12,13 +12,16 @@ import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 const TotpInstructions = () => {
   return (
     <>
-      <Panel label="Installing the Microsoft Authenticator App on your phone">
+      <Panel
+        data-cy="installTotpPanel"
+        label="Installing the Microsoft Authenticator App on your phone"
+      >
         <Details>
           <Details.Summary data-cy="msAuthInfoSummary">
             More details
           </Details.Summary>
-          <Details.Text data-cy="msAuthInfoText">
-            <p>
+          <Details.Text>
+            <p data-cy="msAuthInfoText">
               Below are instructions to help you install Microsoft Authenticator
               on your Android or iPhone but please choose any combination of
               Authenticator App and device you most prefer.
@@ -28,8 +31,9 @@ const TotpInstructions = () => {
         <Panel
           label="Scan the QR Code with your phone"
           style={{ backgroundColor: "aliceblue" }}
+          data-cy="scanQrPanel"
         >
-          <Fieldset.Legend size="m">
+          <Fieldset.Legend size="m" data-cy="scanQrHeader">
             Using the camera on your phone, scan a QR Code below to download the
             Microsoft Authenticator App.
           </Fieldset.Legend>
@@ -37,6 +41,7 @@ const TotpInstructions = () => {
             <Row>
               <Col width="one-half">
                 <img
+                  data-cy="qrApple"
                   alt="Get it from the App store"
                   src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RWHRpz?ver=9319&q=90&m=2&h=2147483647&w=2147483647&b=%23FFFFFFFF&aim=true"
                   style={{
@@ -48,6 +53,7 @@ const TotpInstructions = () => {
               </Col>
               <Col width="one-half">
                 <img
+                  data-cy="qrAndroid"
                   alt="Get it from the Google Play store"
                   src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RWHRpj?ver=90bf&q=90&m=2&h=2147483647&w=2147483647&b=%23FFFFFFFF&aim=true"
                   style={{
@@ -68,6 +74,7 @@ const TotpInstructions = () => {
             <Row>
               <Col width="one-half">
                 <a
+                  data-cy="appLinkApple"
                   href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458?itsct=apps_box_badge&amp;itscg=30200"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -86,6 +93,7 @@ const TotpInstructions = () => {
               </Col>
               <Col width="one-half">
                 <a
+                  data-cy="appLinkAndroid"
                   target="_blank"
                   rel="noopener noreferrer"
                   href="https://play.google.com/store/apps/details?id=com.azure.authenticator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
@@ -120,6 +128,7 @@ const TotpInstructions = () => {
           </Details.Text>
         </Details>
         <MultiChoiceInputField
+          data-cy="appInstalledNowCheck"
           id="appInstalledNow"
           type="checkbox"
           name="appInstalledNow"
