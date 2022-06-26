@@ -9,16 +9,14 @@ import {
   setPreferredMfa,
   verifyUserAttributeSubmit
 } from "../../../../redux/slices/userSlice";
-import { useHistory } from "react-router-dom";
 import store from "../../../../redux/store/store";
-
+import history from "../../../navigation/history";
 interface IConfirmSms {
   user: CognitoUser;
 }
 
 const ConfirmSms = ({ user }: IConfirmSms) => {
   const dispatch = useAppDispatch();
-  let history = useHistory();
 
   const verifyCodeSub = async (vals: any) => {
     const codeSubObj = {
@@ -44,7 +42,6 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
       const statusAfterMfaUpdate = store.getState().user.status;
       if (statusAfterMfaUpdate === "succeeded") {
         history.push("/profile");
-        window.location.reload();
       } else dispatch(decrementSmsSection());
     } else dispatch(decrementSmsSection());
   };

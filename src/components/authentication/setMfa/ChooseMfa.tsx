@@ -1,6 +1,5 @@
 import { Formik } from "formik";
 import { Button, Details, Panel, WarningCallout } from "nhsuk-react-components";
-import { useHistory } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { resetUser, updatedtempMfa } from "../../../redux/slices/userSlice";
 import { MFA_OPTIONS } from "../../../utilities/Constants";
@@ -8,6 +7,7 @@ import MultiChoiceInputField from "../../forms/MultiChoiceInputField";
 import * as Yup from "yup";
 import { useEffect } from "react";
 import ScrollTo from "../../forms/ScrollTo";
+import history from "../../navigation/history";
 
 interface IChooseMfa {
   mfa: string;
@@ -15,7 +15,6 @@ interface IChooseMfa {
 
 const ChooseMfa = ({ mfa }: IChooseMfa) => {
   const dispatch = useAppDispatch();
-  let history = useHistory();
 
   useEffect(() => {
     dispatch(resetUser());

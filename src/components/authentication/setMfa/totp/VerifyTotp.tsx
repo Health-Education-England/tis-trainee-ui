@@ -22,7 +22,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../../forms/TextInputField";
 import store from "../../../../redux/store/store";
-import { useHistory } from "react-router-dom";
+import history from "../../../navigation/history";
 
 interface IVerifyTotp {
   user: CognitoUser | any;
@@ -30,7 +30,6 @@ interface IVerifyTotp {
 
 const VerifyTotp = ({ user }: IVerifyTotp) => {
   const dispatch = useAppDispatch();
-  let history = useHistory();
   const totpName = "NHS TIS Self-Service";
   const totpStr = useAppSelector(state => state.user.totpCode);
   const qrCode = `otpauth://totp/${encodeURI(totpName)}:${
@@ -73,7 +72,6 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
       const statusAfterMfaUpdate = store.getState().user.status;
       if (statusAfterMfaUpdate === "succeeded") {
         history.push("/profile");
-        window.location.reload();
       }
     }
   };

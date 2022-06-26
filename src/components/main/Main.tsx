@@ -1,5 +1,5 @@
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
+import { Switch, Route, Redirect, Router } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
 import FormRPartB from "../forms/formr-part-b/FormRPartB";
@@ -14,6 +14,7 @@ import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice"
 import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
+import history from "../navigation/history";
 
 interface IMain {
   user: CognitoUser | any;
@@ -56,7 +57,7 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
   )
     content = (
       <>
-        <BrowserRouter>
+        <Router history={history}>
           <PageTitle />
           <HEEHeader signOut={signOut} mfa={mfa} />
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
@@ -71,7 +72,7 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
             </Switch>
           </main>
           <HEEFooter appVersion={appVersion} mfa={mfa} />
-        </BrowserRouter>
+        </Router>
       </>
     );
   return <div>{content}</div>;
