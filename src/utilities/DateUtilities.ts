@@ -7,8 +7,9 @@ day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
 const todayDate = day().toDate();
+type DateType = Date | string | null;
 export class DateUtilities {
-  public static ToUTCDate(date: Date | string | null): string {
+  public static ToUTCDate(date: DateType): string {
     let utcDate = "";
 
     if (date) {
@@ -19,17 +20,34 @@ export class DateUtilities {
     return utcDate;
   }
 
-  public static ToLocalDate(date: Date | string | null): string {
+  public static ToLocalDate(date: DateType): string {
     let localDate = "";
     if (date) {
       const dayDate = day(date);
       localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY") : "";
     }
+    return localDate;
+  }
+
+  public static SortDateDecending<T>(arr: T[], dateFieldName: string) {
+    return [...arr].sort(
+      (a: any, b: any) =>
+        new Date(b[dateFieldName]).getTime() -
+        new Date(a[dateFieldName]).getTime()
+    );
+  }
+
+  public static ToLocalDateTime(date: DateType): string {
+    let localDate = "";
+    if (date) {
+      const dayDate = day(date);
+      localDate = dayDate.isValid() ? dayDate.format("DD/MM/YYYY HH:mm") : "";
+    }
 
     return localDate;
   }
 
-  public static IsLegalAge(value: Date | string | null | undefined): boolean {
+  public static IsLegalAge(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       return dayDate.isValid() && day().diff(dayDate, "years") >= 18;
@@ -37,9 +55,7 @@ export class DateUtilities {
     return true;
   }
 
-  public static IsMoreThanMinDate(
-    value: Date | string | null | undefined
-  ): boolean {
+  public static IsMoreThanMinDate(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       return dayDate.isValid() && day().diff(dayDate, "years") < 100;
@@ -47,9 +63,7 @@ export class DateUtilities {
     return true;
   }
 
-  public static IsLessThanMaxDate(
-    value: Date | string | null | undefined
-  ): boolean {
+  public static IsLessThanMaxDate(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       const maxDate = day().add(50, "y");
@@ -58,9 +72,7 @@ export class DateUtilities {
     return true;
   }
 
-  public static IsInsideDateRange(
-    value: Date | string | null | undefined
-  ): boolean {
+  public static IsInsideDateRange(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       const minDate = day().subtract(25, "y");
@@ -70,7 +82,7 @@ export class DateUtilities {
     return true;
   }
 
-  public static IsPastDate(value: Date | string | null | undefined): boolean {
+  public static IsPastDate(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       return dayDate.isValid() && dayDate.isSameOrBefore(todayDate, "day");
@@ -78,7 +90,7 @@ export class DateUtilities {
     return true;
   }
 
-  public static IsFutureDate(value: Date | string | null | undefined): boolean {
+  public static IsFutureDate(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
       return dayDate.isValid() && dayDate.isSameOrAfter(todayDate, "day");
