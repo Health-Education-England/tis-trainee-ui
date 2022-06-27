@@ -85,8 +85,8 @@ const TotpInstructions = () => {
                     style={{
                       height: 90,
                       width: 175,
-                      marginLeft: 10,
-                      marginRight: 10
+                      marginLeft: 12,
+                      marginRight: 12
                     }}
                   />
                 </a>
@@ -102,7 +102,7 @@ const TotpInstructions = () => {
                     alt="Get it on Google Play"
                     src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
                     style={{
-                      height: 85,
+                      height: 89,
                       width: 200
                     }}
                   />

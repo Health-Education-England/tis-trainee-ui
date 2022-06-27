@@ -3,7 +3,6 @@ import { useAppSelector } from "../../../../redux/hooks/hooks";
 import VerifySms from "./VerifySms";
 import ConfirmSms from "./ConfirmSms";
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { Redirect } from "react-router-dom";
 import SectionGenerator from "../../../common/SectionGenerator";
 import history from "../../../navigation/history";
 interface ICreateSMS {
@@ -15,7 +14,6 @@ interface ISmsSection {
   component: React.FunctionComponent<{
     user: CognitoUser | any;
     mfa: string;
-    history: string[];
   }>;
   title: string;
 }
@@ -37,14 +35,13 @@ const CreateSms = ({ user, mfa }: ICreateSMS) => {
 
   const smsSectionProps = {
     user,
-    mfa,
-    history
+    mfa
   };
 
   let content;
 
   if (tempMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
+    history.push("/mfa");
   }
 
   if (smsSection < smsSections.length + 1) {

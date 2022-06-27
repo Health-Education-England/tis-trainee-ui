@@ -2,7 +2,6 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import VerifyTotp from "./VerifyTotp";
 import { CognitoUser } from "amazon-cognito-identity-js";
-import { Redirect } from "react-router-dom";
 import InstallTotp from "./InstallTotp";
 import DecideTotp from "./DecideTotp";
 import { incrementTotpSection } from "../../../../redux/slices/userSlice";
@@ -54,7 +53,7 @@ const CreateTotp = ({ user, mfa }: ICreateTotp) => {
   let content;
 
   if (tempMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
+    history.push("/mfa");
   }
 
   if (totpSection < totpSections.length + 1) {

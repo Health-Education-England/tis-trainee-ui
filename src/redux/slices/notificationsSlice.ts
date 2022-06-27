@@ -67,7 +67,7 @@ const thunkArrFulfilled = [
   },
   {
     thunk: setPreferredMfa,
-    text: "MFA choice is set"
+    text: "MFA choice is set. You will be prompted for a new 6-digit code each time you log in"
   }
 ];
 
@@ -109,7 +109,7 @@ const notificationsSlice = createSlice({
         state.notifications.push({
           id: nanoid(),
           type: "Error",
-          text: `- Couldn't ${asnycThunk.text}. If problem persists please email Support`
+          text: `- Couldn't ${asnycThunk.text}. If problem persists please take a screenshot and email Support`
         });
       });
     }
