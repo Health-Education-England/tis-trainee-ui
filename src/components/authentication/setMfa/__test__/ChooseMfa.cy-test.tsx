@@ -3,17 +3,18 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import ChooseMfa from "../ChooseMfa";
+import history from "../../../navigation/history";
 
 describe("ChooseMfa", () => {
   it("should render the MFA options and error if no selection made", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <ChooseMfa mfa="NOMFA" />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnSubmitMfaChoice]").should("exist").click();

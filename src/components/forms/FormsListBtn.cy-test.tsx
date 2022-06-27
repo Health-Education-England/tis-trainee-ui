@@ -1,6 +1,6 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import store from "../../redux/store/store";
 import { mockTraineeProfile } from "../../mock-data/trainee-profile";
@@ -11,6 +11,7 @@ import {
 } from "../../mock-data/submitted-formr-partb";
 import FormsListBtn from "./FormsListBtn";
 import { updatedTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
+import history from "../navigation/history";
 
 describe("FormsListBtn", () => {
   it("should render 'Submit new form' button when all forms status is 'submitted'.", () => {
@@ -23,9 +24,9 @@ describe("FormsListBtn", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedFormsListBtnAllSubs />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
@@ -34,12 +35,12 @@ describe("FormsListBtn", () => {
   it("should render 'Edit saved form ' when a draft form in list", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <FormsListBtn
             formRList={submittedFormRPartBsWithDraft}
             pathName="/formr-b"
           />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
@@ -48,12 +49,12 @@ describe("FormsListBtn", () => {
   it("should render 'Edit unsubmitted form' when an unsubmitted form in list", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <FormsListBtn
             formRList={submittedFormRPartBsWithUnsubmitted}
             pathName="/formr-b"
           />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=btnEditUnsubmittedForm]").should("exist").click();

@@ -1,20 +1,21 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { submittedFormRPartAs } from "../../../mock-data/submitted-formr-parta";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedFormA } from "../../../redux/slices/formASlice";
 import store from "../../../redux/store/store";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import Confirm from "./Confirm";
+import history from "../../navigation/history";
 
 describe("Confirm", () => {
   it("should not render the page if no tisId", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <Confirm history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=warningSubmit]").should("not.exist");
@@ -28,9 +29,9 @@ describe("Confirm", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedConfirm />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(

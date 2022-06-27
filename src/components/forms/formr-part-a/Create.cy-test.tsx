@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import Create from "./Create";
 import { submittedFormRPartAs } from "../../../mock-data/submitted-formr-parta";
@@ -12,14 +12,15 @@ import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedFormA } from "../../../redux/slices/formASlice";
 import { updatedReference } from "../../../redux/slices/referenceSlice";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import history from "../../navigation/history";
 
 describe("Form R Part A - Create", () => {
   it("should not render the form if no tisId", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <Create history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnContinue]").should("not.exist");
@@ -35,9 +36,9 @@ describe("Form R Part A - Create", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedCreate />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.testDataSourceLink();

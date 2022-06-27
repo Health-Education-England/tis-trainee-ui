@@ -3,19 +3,20 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedtempMfa } from "../../../../redux/slices/userSlice";
 import store from "../../../../redux/store/store";
 import CreateTotp from "../totp/CreateTotp";
+import history from "../../../navigation/history";
 
 describe("CreateTotp sections", () => {
   it("should not render a totp section if NOMFA", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <CreateTotp user={{ username: "Fred" }} mfa="NOMFA" />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-panel-with-label__label").should("not.exist");
@@ -29,9 +30,9 @@ describe("CreateTotp sections", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedDecideTotpSection />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-panel-with-label__label")

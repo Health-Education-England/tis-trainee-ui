@@ -55,9 +55,7 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
               </WarningCallout>
             )}
             <Details>
-              <Details.Summary data-cy="mfaSummary">
-                What is MFA?
-              </Details.Summary>
+              <Details.Summary data-cy="mfaSummary">Why MFA?</Details.Summary>
               <Details.Text data-cy="mfaText">
                 <p>
                   Multi factor authentication (MFA) provides a second layer of
@@ -66,13 +64,25 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
                   a new <b>6-digit code to verify your identity</b> using either
                   of the following:
                 </p>
-                <p>1. An Authenticator App (recommended)</p>
-                <p>2. SMS to your mobile phone</p>
+                <p>
+                  <b>An Authenticator App (recommended)</b>
+                </p>
+                <p>
+                  <b>or SMS to your mobile phone</b>
+                </p>
               </Details.Text>
               <Details.Text data-cy="whyTotpText">
                 <p>
-                  We recommend installing an Authenticator App to generate the
-                  6-digit code as this is more secure and reliable than SMS.{" "}
+                  <b>We recommend installing an Authenticator App</b> to
+                  generate the 6-digit code as this is{" "}
+                  <b>more secure and reliable than SMS</b>. It is particularly
+                  useful when working in places with no phone signal.
+                </p>
+                <p>
+                  Your Authenticator App can be used to securely sign in to lots
+                  of other applications not just TIS Self-Service.
+                </p>
+                <p>
                   <b>
                     Full instructions on how to install and use an Authenticator
                     app on your phone will be given if you choose to verify your

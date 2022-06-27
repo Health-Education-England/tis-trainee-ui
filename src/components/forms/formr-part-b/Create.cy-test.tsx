@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedFeatureFlags } from "../../../redux/slices/featureFlagsSlice";
 import {
@@ -15,15 +15,16 @@ import Create from "./Create";
 import { submittedFormRPartBs } from "../../../mock-data/submitted-formr-partb";
 import { updatedReference } from "../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../mock-data/combinedReferenceData";
+import history from "../../navigation/history";
 
 describe("Create form B", () => {
   const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
   it("should not render a section if no tisId", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <Create history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
   });
@@ -40,9 +41,9 @@ describe("Create form B", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedCreate />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".progress-step").eq(6).should("have.class", "progress-step-active");
@@ -67,9 +68,9 @@ describe("Create form B", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedCreateNoFlag />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-warning-callout__label").should(
@@ -116,9 +117,9 @@ describe("Create form B", () => {
   it("should show 'get back to submit' btn after editing but hide after choosing normal section navigation", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <Create history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnEditSection2]").click();

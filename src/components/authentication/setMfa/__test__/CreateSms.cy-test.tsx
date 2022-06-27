@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   updatedSmsSection,
@@ -11,14 +11,15 @@ import {
 } from "../../../../redux/slices/userSlice";
 import store from "../../../../redux/store/store";
 import CreateSms from "../sms/CreateSms";
+import history from "../../../navigation/history";
 
 describe("CreateSms sections", () => {
   it("should not render an sms section if NOMFA", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <CreateSms user={{ username: "stan" }} mfa="NOMFA" />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-panel-with-label__label").should("not.exist");
@@ -31,9 +32,9 @@ describe("CreateSms sections", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedVerifySmsSection />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-panel-with-label__label").should(
@@ -55,9 +56,9 @@ describe("CreateSms sections", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedConfirmSmsSection />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-panel-with-label__label")

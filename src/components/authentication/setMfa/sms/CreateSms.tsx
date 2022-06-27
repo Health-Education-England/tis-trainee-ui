@@ -5,6 +5,7 @@ import ConfirmSms from "./ConfirmSms";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import SectionGenerator from "../../../common/SectionGenerator";
 import history from "../../../navigation/history";
+import { Redirect } from "react-router-dom";
 interface ICreateSMS {
   user: CognitoUser | any;
   mfa: string;
@@ -41,7 +42,7 @@ const CreateSms = ({ user, mfa }: ICreateSMS) => {
   let content;
 
   if (tempMfa === "NOMFA") {
-    history.push("/mfa");
+    return <Redirect to="/mfa" />;
   }
 
   if (smsSection < smsSections.length + 1) {

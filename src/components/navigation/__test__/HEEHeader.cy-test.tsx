@@ -1,7 +1,10 @@
 import { mount } from "@cypress/react";
 import { beforeEach, describe } from "mocha";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import HEEHeader from "../HEEHeader";
+import history from "../../navigation/history";
+import { Provider } from "react-redux";
+import store from "../../../redux/store/store";
 
 const navLinks = [
   { name: "Profile", href: "/profile" },
@@ -18,9 +21,11 @@ describe("Header with MFA set up", () => {
       mfa: "SMS"
     };
     mount(
-      <BrowserRouter>
-        <HEEHeader {...props} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <Router history={history}>
+          <HEEHeader {...props} />
+        </Router>
+      </Provider>
     );
   });
 
@@ -57,9 +62,11 @@ describe("Header with NOMFA", () => {
       mfa: "NOMFA"
     };
     mount(
-      <BrowserRouter>
-        <HEEHeader {...props} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <Router history={history}>
+          <HEEHeader {...props} />
+        </Router>
+      </Provider>
     );
   });
   const noMfaNavLinks = [

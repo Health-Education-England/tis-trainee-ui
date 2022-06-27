@@ -1,10 +1,11 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../redux/store/store";
 import { Formik, Form } from "formik";
 import { MobilePhoneValidationSchema } from "../authentication/setMfa/ValidationSchema";
 import MobilePhoneInputField from "./MobilePhoneInputField";
+import history from "../navigation/history";
 
 describe("MobilephoneInputField in Formik form", () => {
   it("should ", () => {
@@ -27,9 +28,9 @@ describe("MobilephoneInputField in Formik form", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedForm />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-label")

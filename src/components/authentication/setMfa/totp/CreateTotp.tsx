@@ -7,6 +7,7 @@ import DecideTotp from "./DecideTotp";
 import { incrementTotpSection } from "../../../../redux/slices/userSlice";
 import SectionGenerator from "../../../common/SectionGenerator";
 import history from "../../../navigation/history";
+import { Redirect } from "react-router-dom";
 interface ICreateTotp {
   user: CognitoUser | any;
   mfa: string;
@@ -53,7 +54,7 @@ const CreateTotp = ({ user, mfa }: ICreateTotp) => {
   let content;
 
   if (tempMfa === "NOMFA") {
-    history.push("/mfa");
+    return <Redirect to="/mfa" />;
   }
 
   if (totpSection < totpSections.length + 1) {

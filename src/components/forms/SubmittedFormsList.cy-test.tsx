@@ -1,17 +1,18 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import SubmittedFormsList from "./SubmittedFormsList";
 import store from "../../redux/store/store";
 import { submittedFormRPartAs } from "../../mock-data/submitted-formr-parta";
+import history from "../navigation/history";
 
 describe("SubmittedFormsList", () => {
   it("should show no forms submitted msg if no submitted forms", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <SubmittedFormsList formRList={[]} path="/formr-a" history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=formsFalseHint]")
@@ -25,13 +26,13 @@ describe("SubmittedFormsList", () => {
   it("should show a submitted forms in chronological and help hint when submitted forms", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <SubmittedFormsList
             formRList={submittedFormRPartAs}
             path="/formr-a"
             history={[]}
           />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=formsFalseHint]").should("not.exist");

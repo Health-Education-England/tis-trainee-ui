@@ -1,14 +1,15 @@
 import { mount } from "@cypress/react";
 import { beforeEach } from "mocha";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import HEEFooter from "../HEEFooter";
+import history from "../../navigation/history";
 
 describe("Footer", () => {
   beforeEach(() => {
     mount(
-      <BrowserRouter>
+      <Router history={history}>
         <HEEFooter appVersion={"0.0.1"} mfa={"SMS"} />
-      </BrowserRouter>
+      </Router>
     );
   });
 

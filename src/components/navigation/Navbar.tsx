@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
+import { useAppDispatch } from "../../redux/hooks/hooks";
+import { resetUser } from "../../redux/slices/userSlice";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
@@ -9,6 +11,7 @@ interface NavProps {
 }
 
 const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
+  const dispatch = useAppDispatch();
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
@@ -48,13 +51,18 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
     updateMenuStatus(false);
   };
 
+  const doSignOut = () => {
+    dispatch(resetUser());
+    signOut();
+  };
+
   return (
     <Header.Nav open={open} title="Menu">
       {addLinks()}
       <li>
         <Button
           data-cy="logoutBtn"
-          onClick={signOut}
+          onClick={doSignOut}
           style={{ margin: "6px 0 8px 8px", padding: "4px 6px" }}
         >
           Logout

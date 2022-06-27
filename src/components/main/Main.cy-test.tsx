@@ -1,11 +1,12 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import store from "../../redux/store/store";
 import { Main } from "./Main";
 import { updatedTraineeProfileStatus } from "../../redux/slices/traineeProfileSlice";
 import { updatedReferenceStatus } from "../../redux/slices/referenceSlice";
+import history from "../navigation/history";
 
 describe("Main", () => {
   it("should return Loading comp if data loading ", () => {
@@ -22,9 +23,9 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainLoading />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnMenu]").should("not.exist");
@@ -44,9 +45,9 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainNOMFA />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=Support]").should("exist");
@@ -68,9 +69,9 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainSuccessSMS />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=Support]").should("exist");
@@ -95,9 +96,9 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainFailed />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnMenu]").should("not.exist");

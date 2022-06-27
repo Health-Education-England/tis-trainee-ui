@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../redux/store/store";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import Profile from "../profile/Profile";
@@ -16,6 +16,7 @@ import {
   mockProgrammeMemberships,
   mockPlacements
 } from "../../mock-data/trainee-profile";
+import history from "../navigation/history";
 
 describe("Profile", () => {
   it("should mount the Profile component on successful main app load", () => {
@@ -34,9 +35,9 @@ describe("Profile", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedProfileSuccess />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.testDataSourceLink();

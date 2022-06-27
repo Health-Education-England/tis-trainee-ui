@@ -66,51 +66,6 @@ const TotpInstructions = () => {
             </Row>
           </Container>
         </Panel>
-        <Panel
-          label="OR click on a logo to download"
-          style={{ backgroundColor: "aliceblue" }}
-        >
-          <Container>
-            <Row>
-              <Col width="one-half">
-                <a
-                  data-cy="appLinkApple"
-                  href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458?itsct=apps_box_badge&amp;itscg=30200"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1432944000&h=39686e6a537b2c44ff7ce60f6287e68f"
-                    alt="Download on the App Store"
-                    style={{
-                      height: 90,
-                      width: 175,
-                      marginLeft: 12,
-                      marginRight: 12
-                    }}
-                  />
-                </a>
-              </Col>
-              <Col width="one-half">
-                <a
-                  data-cy="appLinkAndroid"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://play.google.com/store/apps/details?id=com.azure.authenticator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-                >
-                  <img
-                    alt="Get it on Google Play"
-                    src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-                    style={{
-                      height: 89,
-                      width: 200
-                    }}
-                  />
-                </a>
-              </Col>
-            </Row>
-          </Container>
-        </Panel>
         <Details style={{ marginBottom: 40 }}>
           <Details.Summary data-cy="moreHelpSummary">
             Need more help?
@@ -125,6 +80,54 @@ const TotpInstructions = () => {
               Click here for help installing the Microsoft Authenticator App on
               your phone (opens in a new tab/window)
             </ActionLink>
+          </Details.Text>
+          <Details.Text data-cy="altTotpDownloadText">
+            <p>
+              If you need an alternative to a QR code then please click a link
+              below to download an Authenticator App:
+            </p>
+          </Details.Text>
+          <Details.Text data-cy="altTotpDownloadLinks">
+            <Container>
+              <Row>
+                <Col width="one-half">
+                  <a
+                    data-cy="appLinkApple"
+                    href="https://apps.apple.com/us/app/microsoft-authenticator/id983156458?itsct=apps_box_badge&amp;itscg=30200"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1432944000&h=39686e6a537b2c44ff7ce60f6287e68f"
+                      alt="Download on the App Store"
+                      style={{
+                        height: 90,
+                        width: 175,
+                        marginLeft: 12,
+                        marginRight: 12
+                      }}
+                    />
+                  </a>
+                </Col>
+                <Col width="one-half">
+                  <a
+                    data-cy="appLinkAndroid"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://play.google.com/store/apps/details?id=com.azure.authenticator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+                  >
+                    <img
+                      alt="Get it on Google Play"
+                      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                      style={{
+                        height: 89,
+                        width: 200
+                      }}
+                    />
+                  </a>
+                </Col>
+              </Row>
+            </Container>
           </Details.Text>
         </Details>
         <MultiChoiceInputField

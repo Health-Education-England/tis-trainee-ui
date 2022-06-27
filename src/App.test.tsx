@@ -4,7 +4,8 @@ import { MemoryRouter } from "react-router";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import history from "./components/navigation/history";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -26,9 +27,9 @@ beforeEach(() => {
   mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/"]}>
-        <BrowserRouter>
+        <Router history={history}>
           <App />
-        </BrowserRouter>
+        </Router>
       </MemoryRouter>
     </Provider>
   );

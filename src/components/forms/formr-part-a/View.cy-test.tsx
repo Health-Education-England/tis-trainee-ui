@@ -1,19 +1,20 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { submittedFormRPartAs } from "../../../mock-data/submitted-formr-parta";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedFormA } from "../../../redux/slices/formASlice";
 import store from "../../../redux/store/store";
 import View from "./View";
+import history from "../../navigation/history";
 
 describe("View", () => {
   it("should not render View if no tisId", () => {
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <View canEdit={false} history={[]} />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=linkHowToExport]").should("not.exist");
@@ -28,9 +29,9 @@ describe("View", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedView />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=backLink]").should(
@@ -62,9 +63,9 @@ describe("View", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedViewUnsubmitted />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=backLink]").should("not.exist");
