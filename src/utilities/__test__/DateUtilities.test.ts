@@ -12,8 +12,8 @@ describe("DateUtilities", () => {
   const today = now.toDate();
 
   it("ToLocalDateTime should return date in DD/MM/YYYY HH:mm format", () => {
-    expect(DateUtilities.ToLocalDateTime(new Date("2020-04-20 00:00"))).toEqual(
-      "20/04/2020 00:00"
+    expect(DateUtilities.ToLocalDateTime(new Date("2020-04-20 12:42"))).toEqual(
+      "20/04/2020 12:42"
     );
   });
 
