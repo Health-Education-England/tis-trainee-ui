@@ -26,11 +26,11 @@ const SubmittedFormsList = ({
     (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
   );
   let content: JSX.Element | JSX.Element[];
-  const SUBMISSION_DATE: string = "submissionDate";
+
   if (submittedForms.length > 0) {
     const submittedFormsDec = DateUtilities.SortDateDecending(
       submittedForms,
-      SUBMISSION_DATE
+      "submissionDate"
     );
     content = submittedFormsDec.map((formData: IFormR) => (
       <Table.Row key={formData.id} className={styles.listTableRow}>
