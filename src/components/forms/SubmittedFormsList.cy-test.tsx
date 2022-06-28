@@ -45,8 +45,8 @@ describe("SubmittedFormsList", () => {
       "include.text",
       "form submitted on 22/04/2030 00:00" +
         "form submitted on 22/04/2016 00:00" +
-        "form submitted on 22/04/2012 00:00" +
-        "form submitted on 22/04/2012 00:00" +
+        "form submitted on 22/04/2012 13:12" +
+        "form submitted on 22/04/2012 11:22" +
         "form submitted on 22/04/2010 00:00"
     );
     cy.get("[data-cy=formsListWarning]")

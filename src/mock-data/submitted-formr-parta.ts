@@ -36,7 +36,7 @@ export const submittedFormRPartAs: FormRPartA[] = [
     programmeMembershipType: "General Practice",
     wholeTimeEquivalent: 0.69,
     lifecycleState: LifeCycleState.Submitted,
-    submissionDate: "2012-04-22",
+    submissionDate: "2012-04-22 13:12",
     lastModifiedDate: "2020-04-15",
     otherImmigrationStatus: "Other status"
   },
@@ -492,7 +492,7 @@ export const submittedFormRPartAs: FormRPartA[] = [
     programmeMembershipType: "General Practice",
     wholeTimeEquivalent: 0.69,
     lifecycleState: LifeCycleState.Submitted,
-    submissionDate: "2012-04-22",
+    submissionDate: "2012-04-22 11:22",
     lastModifiedDate: "2020-04-15",
     otherImmigrationStatus: "Other status"
   },
