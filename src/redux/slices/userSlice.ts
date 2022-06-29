@@ -23,7 +23,7 @@ const initialState: IUser = {
 export const updateTotpCode = createAsyncThunk(
   "user/updateTotpCode",
   async (user: any) => {
-    return await Auth.setupTOTP(user);
+    return Auth.setupTOTP(user);
   }
 );
 
@@ -31,19 +31,19 @@ export const updateUserAttributes = createAsyncThunk(
   "user/updateUserAttributes",
   async (userAttribdata: any) => {
     const { user, attrib } = userAttribdata;
-    return await Auth.updateUserAttributes(user, attrib);
+    return Auth.updateUserAttributes(user, attrib);
   }
 );
 
 export const verifyPhone = createAsyncThunk("user/verifyPhone", async () => {
-  await Auth.verifyCurrentUserAttribute("phone_number");
+  return Auth.verifyCurrentUserAttribute("phone_number");
 });
 
 export const verifyTotp = createAsyncThunk(
   "user/verifyTotp",
   async (totpParamsData: { user: CognitoUser | any; totpInput: string }) => {
     const { user, totpInput } = totpParamsData;
-    await Auth.verifyTotpToken(user, totpInput);
+    return Auth.verifyTotpToken(user, totpInput);
   }
 );
 
@@ -51,7 +51,7 @@ export const verifyUserAttributeSubmit = createAsyncThunk(
   "user/verifyUserAttributeSubmit",
   async (userAttribSubData: any) => {
     const { attrib, code } = userAttribSubData;
-    return await Auth.verifyCurrentUserAttributeSubmit(attrib, code);
+    return Auth.verifyCurrentUserAttributeSubmit(attrib, code);
   }
 );
 
@@ -59,7 +59,7 @@ export const setPreferredMfa = createAsyncThunk(
   "user/setPreferredMfa",
   async (userPrefMfaData: { user: CognitoUser | any; pref: any }) => {
     const { user, pref } = userPrefMfaData;
-    return await Auth.setPreferredMFA(user, pref);
+    return Auth.setPreferredMFA(user, pref);
   }
 );
 

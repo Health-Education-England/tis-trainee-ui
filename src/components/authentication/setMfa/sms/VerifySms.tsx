@@ -27,7 +27,7 @@ const VerifySms = ({ user }: IVerifySms) => {
   };
 
   const verifPhone = async () => {
-    return await dispatch(verifyPhone());
+    await dispatch(verifyPhone());
   };
 
   const handleSmsVerify = async (formVals: { mobilePhoneNumber: string }) => {
