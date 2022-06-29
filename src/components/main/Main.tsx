@@ -71,7 +71,7 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
               <Route path="/*" component={PageNotFound} />
             </Switch>
           </main>
-          <HEEFooter appVersion={appVersion} mfa={mfa} />
+          <HEEFooter appVersion={appVersion} />
         </Router>
       </>
     );

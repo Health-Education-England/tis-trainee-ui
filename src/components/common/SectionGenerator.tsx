@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import ScrollTo from "../forms/ScrollTo";
 import Loading from "./Loading";
 
-interface sectionsArray {
+interface SectionsArray {
   component: FunctionComponent<any>;
   title: string;
 }
@@ -12,7 +12,7 @@ interface ISectionGenerator<U> {
   history: any;
   path: string;
   section: number;
-  sectionsArr: sectionsArray[];
+  sectionsArr: SectionsArray[];
   sectionProps: U;
 }
 

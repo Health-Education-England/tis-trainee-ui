@@ -4,10 +4,9 @@ import styles from "./HEEFooter.module.scss";
 
 interface HEEFooterProps {
   appVersion: string;
-  mfa: string;
 }
 
-const HEEFooter = ({ appVersion, mfa }: HEEFooterProps) => {
+const HEEFooter = ({ appVersion }: HEEFooterProps) => {
   return (
     <>
       <Footer>
