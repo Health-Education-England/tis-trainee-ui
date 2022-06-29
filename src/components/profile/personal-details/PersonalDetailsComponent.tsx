@@ -51,7 +51,7 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
 
   return (
     personalDetails && (
-      <Details expander data-cy="personalDetails">
+      <Details expander data-cy="personalDetailsExpander">
         <Details.Summary>Personal details</Details.Summary>
         <Details.Text>
           <SummaryList>
@@ -65,19 +65,29 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
             </SummaryList.Row>
             {personalData &&
               personalData.map(pd => (
-                <SummaryList.Row key={pd.label}>
-                  <SummaryList.Key>{pd.label}</SummaryList.Key>
-                  <SummaryList.Value>{pd.value}</SummaryList.Value>
+                <SummaryList.Row key={pd.label} data-cy={pd.label}>
+                  <SummaryList.Key data-cy={pd.label}>
+                    {pd.label}
+                  </SummaryList.Key>
+                  <SummaryList.Value data-cy={pd.value}>
+                    {pd.value}
+                  </SummaryList.Value>
                 </SummaryList.Row>
               ))}
 
             <SummaryList.Row>
               <SummaryList.Key>Address</SummaryList.Key>
               <SummaryList.Value>
-                <p>{personalDetails.address1}</p>
+                <p>
+                  {personalDetails.address1} data-cy=
+                  {personalDetails.address1}
+                </p>
                 <p>{personalDetails.address2}</p>
                 <p>{personalDetails.address3}</p>
-                <p>{personalDetails.postCode}</p>
+                <p>
+                  {personalDetails.postCode} data-cy=
+                  {personalDetails.postCode}
+                </p>
               </SummaryList.Value>
             </SummaryList.Row>
             <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
@@ -87,7 +97,7 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
               registrationDetails.map(
                 rd =>
                   rd.value && (
-                    <SummaryList.Row key={rd.label}>
+                    <SummaryList.Row key={rd.label} data-cy={rd.label}>
                       <SummaryList.Key>{rd.label}</SummaryList.Key>
                       <SummaryList.Value>{rd.value}</SummaryList.Value>
                     </SummaryList.Row>

@@ -58,7 +58,10 @@ Cypress.Commands.add("checkForErrorNotif", errorMsg => {
 });
 
 Cypress.Commands.add("testDataSourceLink", () => {
-  cy.get("[data-cy=dataSourceSummary]").should("exist").click();
+  cy.get("[data-cy=dataSourceSummary]")
+    .should("exist")
+    .should("include.text", "My details are wrong")
+    .click();
   cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
   cy.get(".nhsuk-action-link__text").should(
     "contain.text",
@@ -72,22 +75,22 @@ Cypress.Commands.add("testDataSourceLink", () => {
 });
 
 Cypress.Commands.add("signIn", () => {
-  cy.get("[id^=radix-][id$=-0]").first().click();
-  cy.get("[id^=radix-][id$=-4]").first().clear().type(Cypress.env("username"));
-  cy.get("[id^=radix-][id$=-5]").first().clear().type(Cypress.env("password"));
-  cy.get('[data-fullwidth="true"]').click();
+  cy.get("#radix-2-trigger-0").click();
+  cy.get("#amplify-id-0").clear().type(Cypress.env("username"));
+  cy.get("#amplify-id-2").clear().type(Cypress.env("password"));
+  cy.get(".amplify-button--primary").click();
   cy.task("generateOTP").then(token => {
-    cy.get("[id^=radix-][id$=-6]").first().clear().type(`${token}{enter}`);
+    cy.get("#amplify-id-6").clear().type(`${token}{enter}`);
   });
 });
 
 Cypress.Commands.add("signBackIn", () => {
-  cy.get("[id^=radix-][id$=-0]").first().click();
-  cy.get("[id^=radix-][id$=-10]").first().clear().type(Cypress.env("username"));
-  cy.get("[id^=radix-][id$=-11]").first().clear().type(Cypress.env("password"));
-  cy.get('[data-fullwidth="true"]').click();
+  cy.get("#radix-5-trigger-0").click();
+  cy.get("#amplify-id-9").clear().type(Cypress.env("username"));
+  cy.get("#amplify-id-11").clear().type(Cypress.env("password"));
+  cy.get(".amplify-button--primary").click();
   cy.task("generateOTP").then(token => {
-    cy.get("[id^=radix-][id$=-12]").first().clear().type(`${token}{enter}`);
+    cy.get("#amplify-id-15").clear().type(`${token}{enter}`);
   });
 });
 

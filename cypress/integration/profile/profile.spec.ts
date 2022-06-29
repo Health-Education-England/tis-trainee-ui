@@ -12,28 +12,27 @@ describe("Profile", () => {
     cy.testDataSourceLink();
   });
 
-  it("should click expand to show all personal information then toggle close", () => {
-    cy.contains("Personal details").should("exist").click();
-    cy.contains("Gender").should("exist");
-    cy.contains("Registration details").should("exist");
-    cy.contains("Personal details").click();
-    cy.contains("Gender").should("not.be.visible");
-    cy.contains("Registration details").should("not.be.visible");
+  it("should toggle open and close a profile section", () => {
+    const expanderPD =
+      "[data-cy=personalDetailsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
+    cy.get(expanderPD).should("exist").click();
+    cy.get("[data-cy=Telephone]").should("exist");
+    cy.get(expanderPD).click();
+    cy.get(
+      '[data-cy="General Medical Council (GMC)"] > .nhsuk-summary-list__key'
+    ).should("not.be.visible");
   });
 
-  it("should click expand to show placement information then toggle close", () => {
-    cy.contains("Placements").should("exist").click();
-    cy.contains("Site").should("exist");
-    cy.contains("Specialty").should("exist");
-    cy.contains("Placements").click();
-    cy.contains("Grade").should("exist");
-    cy.contains("Placement Type").should("exist");
-    cy.contains("Site").should("not.be.visible");
-    cy.contains("Specialty").should("not.be.visible");
+  it("should show placement information", () => {
+    const expanderPl = "[data-cy=placementsExpander]";
+    cy.get(expanderPl).should("exist").click();
+    cy.get("[data-cy=siteKey]").should("exist");
+    cy.get("[data-cy=specialtyKey]").should("exist");
   });
 
-  it("should click expand to show placement information then toggle close", () => {
-    cy.contains("Programmes").should("exist").click();
+  it("should click expand to show programme section", () => {
+    const expanderPr = "[data-cy=programmesExpander]";
+    cy.get(expanderPr).should("exist").click();
     cy.get(".nhsuk-details__text").should("exist");
   });
 });

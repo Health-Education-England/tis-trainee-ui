@@ -21,7 +21,11 @@ const Profile = ({ mfa }: any) => {
       <PageTitle title="Profile" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+        <Fieldset.Legend
+          isPageHeading
+          style={{ color: "#005EB8" }}
+          data-cy="profileHeading"
+        >
           Profile
         </Fieldset.Legend>
       </Fieldset>

@@ -4,10 +4,8 @@ import { CCT_DECLARATION } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import ScrollTo from "../ScrollTo";
 
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
-import { addNotification } from "../../../redux/slices/notificationsSlice";
-import { useEffect } from "react";
 import FormSavePDF from "../FormSavePDF";
 interface IView {
   canEdit: boolean;
@@ -15,20 +13,8 @@ interface IView {
 }
 
 const View = ({ canEdit, history }: IView) => {
-  const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormA);
   let content;
-
-  useEffect(() => {
-    if (!formData.traineeTisId) {
-      dispatch(
-        addNotification({
-          type: "Error",
-          text: " - No form with that ID can be found"
-        })
-      );
-    }
-  }, [dispatch, formData]);
 
   if (formData.traineeTisId)
     content = (

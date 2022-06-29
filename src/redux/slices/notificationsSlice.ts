@@ -42,7 +42,7 @@ const thunkArrRejected = [
   },
   {
     thunk: updateTotpCode,
-    text: "configure your Authentication Code. Please try again"
+    text: "continue. MFA set-up session has expired. Please refresh the page and try again"
   },
   {
     thunk: verifyTotp,

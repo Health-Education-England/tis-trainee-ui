@@ -31,9 +31,7 @@ describe("Form R (Part B)", () => {
     isCovid = true;
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
-    cy.visit("/formr-b/321");
-    cy.checkForErrorNotif("Error");
-
+    cy.visit("/formr-b");
     cy.get("#btnOpenForm").click();
     cy.get(".nhsuk-warning-callout > p").should("exist");
 

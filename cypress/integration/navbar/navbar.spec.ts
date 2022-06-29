@@ -31,6 +31,9 @@ describe("Desktop/ tablet header", () => {
       cy.get(".nhsuk-header__navigation-link")
         .should("exist")
         .contains(/Support/);
+      cy.get(".nhsuk-header__navigation-link")
+        .should("exist")
+        .contains(/MFA set-up/);
       cy.get(".nhsuk-button")
         .should("exist")
         .contains(/Logout/);

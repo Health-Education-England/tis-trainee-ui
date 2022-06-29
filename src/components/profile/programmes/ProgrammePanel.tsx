@@ -17,8 +17,12 @@ export const ProgrammePanel = (props: IProgrammePanelProps) => {
     <>
       <SummaryList>
         <SummaryList.Row>
-          <SummaryList.Key>Programme Name</SummaryList.Key>
-          <SummaryList.Value>{data.programmeName}</SummaryList.Value>
+          <SummaryList.Key data-cy="progNameKey">
+            Programme Name
+          </SummaryList.Key>
+          <SummaryList.Value data-cy="progNameValue">
+            {data.programmeName}
+          </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>

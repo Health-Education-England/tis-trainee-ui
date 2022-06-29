@@ -43,43 +43,27 @@ describe("Authenticator", () => {
     cy.get("[data-cy='checkboxPilot'] p.amplify-field__error-message").should(
       "exist"
     );
-
-    cy.get(".amplify-button").should("be.disabled");
+    cy.get(".amplify-button--primary").should("be.disabled");
     cy.get(
-      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
+      "[data-cy=checkboxPrivacy] > .amplify-field > .amplify-checkbox > .amplify-flex"
     ).click();
-    cy.get(".amplify-button").should("be.disabled");
-    cy.get(
-      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
-    ).click();
-    cy.get(
-      "[data-cy='checkboxPilot'] .amplify-checkbox > .amplify-flex"
-    ).click();
-    cy.get(".amplify-button").should("be.disabled");
-    cy.get(
-      "[data-cy='checkboxPrivacy'] .amplify-checkbox > .amplify-flex"
-    ).click();
-
-    cy.get("[data-cy='checkboxPrivacy'] .amplify-field__error-message").should(
+    cy.get("[data-cy='checkboxPrivacy'] p.amplify-field__error-message").should(
       "not.exist"
     );
-    cy.get("[data-cy='checkboxPilot'] .amplify-field__error-message").should(
-      "not.exist"
-    );
-
-    cy.get(".amplify-button").should("not.be.disabled");
+    cy.get(".amplify-button").should("be.disabled");
+    cy.get(
+      "[data-cy=checkboxPilot] > .amplify-field > .amplify-checkbox > .amplify-flex"
+    ).click();
   });
 
   it("should show the error and disable Sign up btn when passwords don't match", () => {
     cy.get(".amplify-tabs-item").last().click();
     cy.get('input[name="password"]').clear().type("WaterfallRules1");
     cy.get('input[name="confirm_password"]').clear().type("WaterfallRules");
-    cy.get('[style="flex-direction: column;"] > p.amplify-text').should(
-      "exist"
-    );
+    cy.get("#amplify-id-11 > .amplify-text").should("exist");
     cy.get('[data-fullwidth="true"]').should("be.disabled");
     cy.get(".amplify-passwordfield").last().type("1");
-    cy.get('[data-fullwidth="true"]').should("not.be.disabled");
+    cy.get(".amplify-button--primary").should("not.be.disabled");
   });
 
   it("should toggle show and hide the password when clicking the 'show password' btn", () => {

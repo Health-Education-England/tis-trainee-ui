@@ -1,4 +1,3 @@
-import React from "react";
 import { Placement } from "../../../models/Placement";
 import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
@@ -8,18 +7,18 @@ interface IPlacementPanelProps {
   placement: Placement;
 }
 
-export const PlacementPanel = (props: IPlacementPanelProps) => {
-  const data = props.placement;
-
+export const PlacementPanel = ({ placement }: IPlacementPanelProps) => {
   return (
     <SummaryList>
       <SummaryList.Row>
-        <SummaryList.Key>Site</SummaryList.Key>
-        <SummaryList.Value>{data.site}</SummaryList.Value>
+        <SummaryList.Key data-cy="siteKey">Site</SummaryList.Key>
+        <SummaryList.Value data-cy="siteValue">
+          {placement.site}
+        </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
         <SummaryList.Key>Site Location</SummaryList.Key>
-        <SummaryList.Value>{data.siteLocation}</SummaryList.Value>
+        <SummaryList.Value>{placement.siteLocation}</SummaryList.Value>
       </SummaryList.Row>
 
       <SummaryList.Row>
@@ -27,50 +26,56 @@ export const PlacementPanel = (props: IPlacementPanelProps) => {
           <span className="noWrap">Starts</span>
         </SummaryList.Key>
         <SummaryList.Value>
-          {DateUtilities.ToLocalDate(data.startDate)}
+          {DateUtilities.ToLocalDate(placement.startDate)}
         </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
         <SummaryList.Key>Ends</SummaryList.Key>
         <SummaryList.Value>
-          {DateUtilities.ToLocalDate(data.endDate)}
+          {DateUtilities.ToLocalDate(placement.endDate)}
         </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
         <SummaryList.Key>Whole Time Equivalent</SummaryList.Key>
-        <SummaryList.Value>
-          {StringUtilities.TrimZeros(data.wholeTimeEquivalent)}
+        <SummaryList.Value data-cy="wteValue">
+          {StringUtilities.TrimZeros(placement.wholeTimeEquivalent)}
         </SummaryList.Value>
       </SummaryList.Row>
 
       <SummaryList.Row>
         <SummaryList.Key>
-          <span className="noWrap">Specialty</span>
+          <span className="noWrap" data-cy="specialtyKey">
+            Specialty
+          </span>
         </SummaryList.Key>
-        <SummaryList.Value>{data.specialty}</SummaryList.Value>
+        <SummaryList.Value>{placement.specialty}</SummaryList.Value>
       </SummaryList.Row>
 
       <SummaryList.Row>
         <SummaryList.Key>
-          <span className="noWrap">Grade</span>
+          <span className="noWrap" data-cy="grade">
+            Grade
+          </span>
         </SummaryList.Key>
-        <SummaryList.Value>{data.grade}</SummaryList.Value>
+        <SummaryList.Value>{placement.grade}</SummaryList.Value>
       </SummaryList.Row>
 
       <SummaryList.Row>
         <SummaryList.Key>
-          <span className="noWrap">Placement Type</span>
+          <span className="noWrap" data-cy="placementType">
+            Placement Type
+          </span>
         </SummaryList.Key>
-        <SummaryList.Value>{data.placementType}</SummaryList.Value>
+        <SummaryList.Value>{placement.placementType}</SummaryList.Value>
       </SummaryList.Row>
 
       <SummaryList.Row>
-        <SummaryList.Key>Employing Body</SummaryList.Key>
-        <SummaryList.Value>{data.employingBody}</SummaryList.Value>
+        <SummaryList.Key data-cy="empBodyKey">Employing Body</SummaryList.Key>
+        <SummaryList.Value>{placement.employingBody}</SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
-        <SummaryList.Key>Training Body</SummaryList.Key>
-        <SummaryList.Value>{data.trainingBody}</SummaryList.Value>
+        <SummaryList.Key data-cy="traBodyKey">Training Body</SummaryList.Key>
+        <SummaryList.Value>{placement.trainingBody}</SummaryList.Value>
       </SummaryList.Row>
     </SummaryList>
   );

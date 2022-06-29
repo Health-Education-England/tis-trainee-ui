@@ -16,7 +16,7 @@ const Programmes: React.FC<IProgramProps> = ({ programmeMemberships }) => {
 
   return (
     programmeMemberships && (
-      <Details expander>
+      <Details expander data-cy="programmesExpander">
         <Details.Summary>Programmes</Details.Summary>
         <Details.Text>
           <Row className={styles.flexRow}>
