@@ -5,12 +5,12 @@ import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { loadSavedFormA, updatedFormA } from "../../redux/slices/formASlice";
 import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
 import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
-import { useHistory } from "react-router-dom";
 import {
   loadSavedFormB,
   resetToInitFormB,
   updatedFormB
 } from "../../redux/slices/formBSlice";
+import history from "../navigation/history";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
@@ -34,7 +34,6 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: IFormR | null = null;
   let bFProps: any;
-  let history = useHistory();
 
   for (let form of formRList) {
     if (

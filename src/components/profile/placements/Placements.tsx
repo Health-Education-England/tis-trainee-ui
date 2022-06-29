@@ -16,7 +16,7 @@ const Placements: React.FC<IPlacementProps> = ({ placements }) => {
 
   return (
     placements && (
-      <Details expander>
+      <Details expander data-cy="placementsExpander">
         <Details.Summary>Placements</Details.Summary>
         <Details.Text>
           <Row className={styles.flexRow}>

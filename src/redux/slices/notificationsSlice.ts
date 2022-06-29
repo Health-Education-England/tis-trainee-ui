@@ -7,6 +7,14 @@ import { fetchFeatureFlags } from "./featureFlagsSlice";
 import { loadSavedFormA, saveFormA, updateFormA } from "./formASlice";
 import { loadSavedFormB, saveFormB, updateFormB } from "./formBSlice";
 import { fetchForms } from "./formsSlice";
+import {
+  updateUserAttributes,
+  verifyPhone,
+  verifyUserAttributeSubmit,
+  setPreferredMfa,
+  updateTotpCode,
+  verifyTotp
+} from "./userSlice";
 
 const thunkArrRejected = [
   { thunk: fetchFeatureFlags, text: " - load some of your new form data" },
@@ -18,7 +26,28 @@ const thunkArrRejected = [
   { thunk: updateFormA, text: "save your updated Form R (Part A)" },
   { thunk: loadSavedFormB, text: "load your saved Form R (Part B)" },
   { thunk: saveFormB, text: "save your Form R (Part B)" },
-  { thunk: updateFormB, text: "save your updated Form R (Part B)" }
+  { thunk: updateFormB, text: "save your updated Form R (Part B)" },
+  { thunk: updateUserAttributes, text: "update your MFA information" },
+  {
+    thunk: verifyPhone,
+    text: "send you an SMS code to sign in. Please try again"
+  },
+  {
+    thunk: verifyUserAttributeSubmit,
+    text: "verify your identification with that code. Please try again"
+  },
+  {
+    thunk: setPreferredMfa,
+    text: "set your preferred MFA and log in. Please try again"
+  },
+  {
+    thunk: updateTotpCode,
+    text: "continue. MFA set-up session has expired. Please refresh the page and try again"
+  },
+  {
+    thunk: verifyTotp,
+    text: "verify your identification with that Authentication code. Please try again"
+  }
 ];
 
 const thunkArrFulfilled = [
@@ -31,6 +60,14 @@ const thunkArrFulfilled = [
   {
     thunk: updateFormB,
     text: "updated Form R (Part B) has been saved"
+  },
+  {
+    thunk: verifyPhone,
+    text: "phone has been verified. An SMS code from HEE should arrive soon"
+  },
+  {
+    thunk: setPreferredMfa,
+    text: "MFA choice is set. You will be prompted for a new 6-digit code each time you log in"
   }
 ];
 
@@ -72,7 +109,7 @@ const notificationsSlice = createSlice({
         state.notifications.push({
           id: nanoid(),
           type: "Error",
-          text: `- Couldn't ${asnycThunk.text}. If problem persists please contact your Local Office`
+          text: `- Couldn't ${asnycThunk.text}. If problem persists please take a screenshot and email Support`
         });
       });
     }

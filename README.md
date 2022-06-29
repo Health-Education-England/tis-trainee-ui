@@ -16,12 +16,12 @@ This single page application (SPA) is written in [TypeScript](https://www.typesc
 ## Core Libraries
 
 1. [React Router](https://reactrouter.com/) for Routing
-2. [React Redux](https://react-redux.js.org/) for State Management
+2. [Redux Toolkit](https://redux-toolkit.js.org/) for State Management
 3. [Redux-Thunk](https://github.com/reduxjs/redux-thunk) middleware (for e.g. handling asynchronous redux actions)
 4. [Axios](https://github.com/axios/axios) for HTTP communication
 5. [nhsuk react components](https://github.com/NHSDigital/nhsuk-react-components/releases/tag/v1.2.0) for UI design
 6. [Jest](https://jestjs.io/) for unit and snapshot testing
-7. [Cypress](https://www.cypress.io/) for E2E testing
+7. [Cypress](https://www.cypress.io/) for E2E testing amd Component Testing (CT)
 
 ### Initial decision-making/conversation
 
@@ -47,12 +47,13 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 ### configurating e2e tests
 
-Before you can run the e2e tests you will need to add a `cypress.env.json` file to the root of your project folder:
+Before you can run the e2e tests (logging in as an authorised user using a One Time Pass Code), you will need to add a `cypress.env.json` file to the root of your project folder:
 
 ```
 {
   "username": "end.tester@hee.nhs.uk",
-  "password": "xxxxxxxx"
+  "password": "xxxxxxxx",
+  "secret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
 

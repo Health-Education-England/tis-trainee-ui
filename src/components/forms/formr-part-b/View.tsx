@@ -11,7 +11,6 @@ import {
   updateFormBSection,
   updateFormBPreviousSection
 } from "../../../redux/slices/formBSlice";
-import { addNotification } from "../../../redux/slices/notificationsSlice";
 import store from "../../../redux/store/store";
 import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
 import {
@@ -24,7 +23,6 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
-import { useEffect } from "react";
 import FormSavePDF from "../FormSavePDF";
 interface IView {
   canEdit: boolean;
@@ -39,17 +37,6 @@ const View = ({ canEdit, history }: IView) => {
   );
   const viewCompSection: number = store.getState().formB.sectionNumber;
   let content;
-
-  useEffect(() => {
-    if (!formData.traineeTisId) {
-      dispatch(
-        addNotification({
-          type: "Error",
-          text: " - No form with that ID can be found"
-        })
-      );
-    }
-  }, [dispatch, formData]);
 
   const SectionEditButton = (section: number) => {
     return (

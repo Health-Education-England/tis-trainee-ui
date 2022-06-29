@@ -1,14 +1,15 @@
 import { mount } from "@cypress/react";
 import { beforeEach } from "mocha";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import HEEFooter from "../HEEFooter";
+import history from "../../navigation/history";
 
 describe("Footer", () => {
   beforeEach(() => {
     mount(
-      <BrowserRouter>
+      <Router history={history}>
         <HEEFooter appVersion={"0.0.1"} mfa={"SMS"} />
-      </BrowserRouter>
+      </Router>
     );
   });
 
@@ -43,16 +44,5 @@ describe("Footer", () => {
 
   it("should have the correct version shown in the footer", () => {
     cy.get("[data-cy=versionText]").should("contain.text", "0.0.1");
-  });
-
-  it("should go to external tis-support when NOMFA", () => {
-    mount(
-      <BrowserRouter>
-        <HEEFooter appVersion={"0.0.1"} mfa={"NOMFA"} />
-      </BrowserRouter>
-    );
-    cy.get("[data-cy=linkSupport]")
-      .should("contain.text", "Support")
-      .should("have.attr", "href", "https://tis-support.hee.nhs.uk/");
   });
 });

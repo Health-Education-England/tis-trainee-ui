@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedFormB } from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
@@ -11,6 +11,7 @@ import Section1 from "./Section1";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import { updatedReference } from "../../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../mock-data/combinedReferenceData";
+import history from "../../../navigation/history";
 
 describe("Section1", () => {
   it("should mount section 1 ", () => {
@@ -31,9 +32,9 @@ describe("Section1", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedSection1 />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=legendFieldset1]")

@@ -4,7 +4,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 export const VerifyCodeValidationSchema = () =>
   yup
     .string()
-    .required("TOTP code required")
+    .required("6-digit SMS code required")
     .min(6, "Code must be min 6 characters in length")
     .max(6, "Code must be max 6 characters in length");
 
@@ -20,5 +20,5 @@ export const MobilePhoneValidationSchema = yup.object().shape({
 });
 
 export const VerifySMSCodeValidationSchema = yup.object().shape({
-  verifySMSCode: VerifyCodeValidationSchema()
+  smsCode: VerifyCodeValidationSchema()
 });

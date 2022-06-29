@@ -1,26 +1,33 @@
 import { mount } from "@cypress/react";
-import { beforeEach } from "mocha";
-import { BrowserRouter } from "react-router-dom";
+import { beforeEach, describe } from "mocha";
+import { Router } from "react-router-dom";
 import HEEHeader from "../HEEHeader";
+import history from "../../navigation/history";
+import { Provider } from "react-redux";
+import store from "../../../redux/store/store";
 
-describe("Header", () => {
+const navLinks = [
+  { name: "Profile", href: "/profile" },
+  { name: "Form R (Part A)", href: "/formr-a" },
+  { name: "Form R (Part B)", href: "/formr-b" },
+  { name: "Support", href: "/support" },
+  { name: "MFA set-up", href: "/mfa" }
+];
+
+describe("Header with MFA set up", () => {
   beforeEach(() => {
     const props = {
       signOut: cy.stub(),
       mfa: "SMS"
     };
     mount(
-      <BrowserRouter>
-        <HEEHeader {...props} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <Router history={history}>
+          <HEEHeader {...props} />
+        </Router>
+      </Provider>
     );
   });
-  const navLinks = [
-    { name: "Profile", href: "/profile" },
-    { name: "Form R (Part A)", href: "/formr-a" },
-    { name: "Form R (Part B)", href: "/formr-b" },
-    { name: "Support", href: "/support" }
-  ];
 
   it("should contain header logo", () => {
     cy.get("[data-cy=headerLogo] > a")
@@ -32,34 +39,55 @@ describe("Header", () => {
     );
   });
 
-  navLinks.forEach((link, index) => {
+  navLinks.forEach(link => {
     it(`should show the ${link.name} link in the nav menu`, () => {
-      cy.get(`:nth-child(${index + 1}) > .nhsuk-header__navigation-link`)
+      cy.get(`[data-cy="${link.name}"]`)
+        .should("exist")
         .should("contain.text", `${link.name}`)
         .should("have.attr", "href", `${link.href}`);
     });
   });
   it("should contain menu and logout buttons", () => {
-    cy.get("[data-cy=BtnMenu]").should("exist").should("contain.text", "Menu");
+    cy.get(`[data-cy=BtnMenu]`).should("exist").should("contain.text", "Menu");
     cy.get("[data-cy=logoutBtn]")
       .should("exist")
       .should("contain.text", "Logout");
   });
+});
 
-  navLinks.forEach((link, index) => {
-    it(`should hide the ${link.name} link when NOMFA`, () => {
-      const props = {
-        signOut: cy.stub(),
-        mfa: "NOMFA"
-      };
-      mount(
-        <BrowserRouter>
+describe("Header with NOMFA", () => {
+  beforeEach(() => {
+    const props = {
+      signOut: cy.stub(),
+      mfa: "NOMFA"
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
           <HEEHeader {...props} />
-        </BrowserRouter>
-      );
-      cy.get(
-        `:nth-child(${index + 1}) > .nhsuk-header__navigation-link`
-      ).should("not.exist");
+        </Router>
+      </Provider>
+    );
+  });
+  const noMfaNavLinks = [
+    { name: "Support", href: "/support" },
+    { name: "MFA set-up", href: "/mfa" }
+  ];
+
+  const mfaOnlyLinks = navLinks.slice(0, 2);
+
+  noMfaNavLinks.forEach(link => {
+    it(`should show the ${link.name} link in the nav menu`, () => {
+      cy.get(`[data-cy="${link.name}"]`)
+        .should("exist")
+        .should("contain.text", `${link.name}`)
+        .should("have.attr", "href", `${link.href}`);
+    });
+  });
+
+  mfaOnlyLinks.forEach(link => {
+    it(`should show the ${link.name} link in the nav menu`, () => {
+      cy.get(`[data-cy="${link.name}"]`).should("not.exist");
     });
   });
 });

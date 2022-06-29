@@ -7,15 +7,13 @@ interface ICurriculumPanelProps {
   curriculum: Curriculum;
 }
 
-export const CurriculumPanel = (props: ICurriculumPanelProps) => {
-  const curricData = props.curriculum;
-
+export const CurriculumPanel = ({ curriculum }: ICurriculumPanelProps) => {
   return (
     <div className={styles.cItems}>
-      <div>{curricData.curriculumName}</div>
-      <div>
-        {DateUtilities.ToLocalDate(curricData.curriculumStartDate)} -{" "}
-        {DateUtilities.ToLocalDate(curricData.curriculumEndDate)}
+      <div data-cy={curriculum.curriculumName}>{curriculum.curriculumName}</div>
+      <div data-cy="currDates">
+        {DateUtilities.ToLocalDate(curriculum.curriculumStartDate)} -{" "}
+        {DateUtilities.ToLocalDate(curriculum.curriculumEndDate)}
       </div>
     </div>
   );

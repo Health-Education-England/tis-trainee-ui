@@ -1,9 +1,10 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../redux/store/store";
 import FormSavePDF from "./FormSavePDF";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
+import history from "../navigation/history";
 
 describe("FormSavePDF", () => {
   it("should mount without crashing", () => {
@@ -12,9 +13,9 @@ describe("FormSavePDF", () => {
 
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <FormSavePDF history={[]} formrPath="/formr-b" />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=backLink]").click();

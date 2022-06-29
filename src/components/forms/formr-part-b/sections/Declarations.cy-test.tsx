@@ -1,12 +1,13 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedFormB } from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
 import Declarations from "./Declarations";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import Section6 from "./Section6";
+import history from "../../../navigation/history";
 
 it("should mount section 6 ", () => {
   const MockedDeclarations = () => {
@@ -29,9 +30,9 @@ it("should mount section 6 ", () => {
   };
   mount(
     <Provider store={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <MockedDeclarations />
-      </BrowserRouter>
+      </Router>
     </Provider>
   );
   cy.get(".nhsuk-panel-with-label__label")

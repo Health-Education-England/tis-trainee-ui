@@ -1,6 +1,6 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import store from "../../redux/store/store";
 import {
@@ -12,6 +12,7 @@ import {
   updatedTraineeProfileStatus
 } from "../../redux/slices/traineeProfileSlice";
 import Support from "./Support";
+import history from "../navigation/history";
 
 describe("Support", () => {
   it("should render the Support page on successful main app load", () => {
@@ -23,9 +24,9 @@ describe("Support", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedSupportSucceeded />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=pageTitle]")
@@ -55,9 +56,9 @@ describe("Support", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedSupportNoMatch />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get(".nhsuk-error-message").should(

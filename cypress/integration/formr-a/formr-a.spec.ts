@@ -19,8 +19,7 @@ describe("Form R (Part A)", () => {
   });
   it("Should complete a new Form R Part A.", () => {
     cy.contains("Form R (Part A)").click();
-    cy.visit("/formr-a/123");
-    cy.checkForErrorNotif("Error  - No form with that ID can be found. ");
+    cy.visit("/formr-a");
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
@@ -115,7 +114,7 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=college] > option")
             .eq(1)
             .then(element => {
-              const selectedItem = element.val().toString();
+              const selectedItem = element.val()!.toString();
               cy.get("[data-cy=college]")
                 .select(selectedItem)
                 .should("not.have.value", "--Please select--");
@@ -126,7 +125,7 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=trainingGrade] > option")
             .eq(3)
             .then(element => {
-              const selectedItem = element.val().toString();
+              const selectedItem = element.val()!.toString();
               cy.get("[data-cy=trainingGrade]")
                 .select(selectedItem)
                 .should("not.have.value", "--Please select--");
@@ -309,7 +308,7 @@ describe("Form R (Part A)", () => {
     );
 
     cy.wait("@getFormrPartAs").then(interception => {
-      const body = interception.response.body;
+      const body = interception.response!.body;
       const formrasArray: string[] = Object.values(body);
       formrasArray.forEach((row, index) => {
         if (row["id"] === uid) {

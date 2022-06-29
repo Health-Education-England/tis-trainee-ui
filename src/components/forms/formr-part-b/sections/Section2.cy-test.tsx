@@ -2,12 +2,13 @@
 /// <reference path="../../../../../cypress/support/index.d.ts" />
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedFormB } from "../../../../redux/slices/formBSlice";
 import store from "../../../../redux/store/store";
 import Section2 from "./Section2";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
+import history from "../../../navigation/history";
 
 describe("Section2", () => {
   const startDate = Cypress.dayjs()
@@ -34,9 +35,9 @@ describe("Section2", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedSection2 />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=legendFieldset2]")

@@ -1,11 +1,12 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import store from "../../redux/store/store";
 import { Main } from "./Main";
 import { updatedTraineeProfileStatus } from "../../redux/slices/traineeProfileSlice";
 import { updatedReferenceStatus } from "../../redux/slices/referenceSlice";
+import history from "../navigation/history";
 
 describe("Main", () => {
   it("should return Loading comp if data loading ", () => {
@@ -22,14 +23,14 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainLoading />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnMenu]").should("not.exist");
   });
-  it("should load the MFA setup page if NOMFA set", () => {
+  it("should show only support and MFA set-up nav if NOMFA set", () => {
     const MockedMainNOMFA = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("succeeded"));
@@ -44,18 +45,16 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainNOMFA />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
-    cy.get("h1")
-      .should("exist")
-      .should("include.text", "Set up multi-factor authentication");
-    cy.get("#selectMFA-1--label").should("exist");
-    cy.get("#selectMFA-2--label").should("exist");
+    cy.get("[data-cy=Support]").should("exist");
+    cy.get('[data-cy="MFA set-up"]').should("exist");
+    cy.get("[data-cy=Profile]").should("not.exist");
   });
-  it("should load the Menu page if preferred MFA is not NOMFA", () => {
+  it("should load the full nav menu if preferred MFA is not NOMFA", () => {
     const MockedMainSuccessSMS = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("succeeded"));
@@ -70,17 +69,16 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainSuccessSMS />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
-    cy.get("[data-cy=BtnMenu]").should("exist");
-    cy.get(":nth-child(1) > .nhsuk-header__navigation-link").should(
-      "include.text",
-      "Profile"
-    );
-    cy.get("[data-cy=linkSupport]").should("include.text", "Support");
+    cy.get("[data-cy=Support]").should("exist");
+    cy.get('[data-cy="MFA set-up"]').should("exist");
+    cy.get("[data-cy=Profile]").should("exist");
+    cy.get('[data-cy="Form R (Part A)"]').should("exist");
+    cy.get('[data-cy="Form R (Part B)"]').should("exist");
     cy.get("[data-cy=versionText]").should("include.text", "version: 1.0.0");
   });
   it("should not load the Menu page if Reference status is failed", () => {
@@ -98,9 +96,9 @@ describe("Main", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedMainFailed />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.get("[data-cy=BtnMenu]").should("not.exist");

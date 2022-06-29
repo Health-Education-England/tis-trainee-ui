@@ -3,7 +3,7 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import store from "../../redux/store/store";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import Profile from "../profile/Profile";
@@ -16,9 +16,10 @@ import {
   mockProgrammeMemberships,
   mockPlacements
 } from "../../mock-data/trainee-profile";
+import history from "../navigation/history";
 
 describe("Profile", () => {
-  it("should mount the Profile component on successful main app load", () => {
+  it("should display user details, placement and programme data in the profile section", () => {
     const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
@@ -34,23 +35,45 @@ describe("Profile", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedProfileSuccess />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.testDataSourceLink();
-    cy.contains("Personal details").should("exist").click();
-    cy.get(
-      ".nhsuk-details__text > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-    ).should("include.text", "Gilliam");
-    cy.contains("Placements").should("exist").click();
-    cy.get(
-      ":nth-child(2) > .nhsuk-details__text > .nhsuk-grid-row > :nth-child(2) > .nhsuk-summary-list > :nth-child(6) > .nhsuk-summary-list__value"
-    );
-    cy.contains("Programmes").should("exist").click();
-    cy.get(
-      ":nth-child(1) > .nhsuk-summary-list > :nth-child(6) > .nhsuk-summary-list__value > :nth-child(2) > :nth-child(2)"
-    ).should("include.text", "01/06/2020 - 01/06/2024");
+    cy.get("[data-cy=profileHeading]")
+      .should("exist")
+      .should("contain.text", "Profile");
+
+    //personal details section
+    const expanderPD =
+      "[data-cy=personalDetailsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
+    cy.get(expanderPD).should("exist").click();
+    cy.get("[data-cy=Gender]").should("exist").should("contain.text", "Male");
+    cy.get("[data-cy=Email]")
+      .should("exist")
+      .should("contain.text", "email@email.com");
+    cy.get(expanderPD).click();
+
+    // placements section
+    const expanderPl = "[data-cy=placementsExpander]";
+    cy.get(expanderPl).should("exist").click();
+    cy.get("[data-cy=siteKey]")
+      .first()
+      .should("exist")
+      .should("contain.text", "Site");
+    cy.get("[data-cy=wteValue]")
+      .last()
+      .should("exist")
+      .should("contain.text", "0.75");
+    cy.get(expanderPl).click();
+
+    // programmes section
+    const expanderPr = "[data-cy=programmesExpander]";
+    cy.get(expanderPr).should("exist").click();
+    cy.get("[data-cy=ST6]").should("exist");
+    cy.get("[data-cy=currDates]")
+      .last()
+      .should("contain.text", "01/08/2022 - 01/08/2025");
   });
 });

@@ -3,11 +3,12 @@
 
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { addNotification } from "../../../redux/slices/notificationsSlice";
 import store from "../../../redux/store/store";
 import Notifications from "./Notifications";
+import history from "../../navigation/history";
 
 describe("Notifications", () => {
   it("should display an error notification for an error type.", () => {
@@ -23,9 +24,9 @@ describe("Notifications", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedErrorNotifications />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.checkForErrorNotif("Error");
@@ -43,9 +44,9 @@ describe("Notifications", () => {
     };
     mount(
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <MockedSuccessNotifications />
-        </BrowserRouter>
+        </Router>
       </Provider>
     );
     cy.checkForSuccessNotif("Success");
