@@ -11,6 +11,7 @@ import {
 } from "../../../../redux/slices/userSlice";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
+import { MFAType } from "../../../../models/MFAStatus";
 interface IConfirmSms {
   user: CognitoUser;
 }
@@ -27,9 +28,10 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
   };
 
   const updateMfa = async () => {
+    const pref: MFAType = "SMS";
     const upMfaObj = {
       user,
-      pref: "SMS"
+      pref
     };
     await dispatch(setPreferredMfa(upMfaObj));
   };

@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import TextInputField from "../../../forms/TextInputField";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
+import { MFAType } from "../../../../models/MFAStatus";
 
 interface IVerifyTotp {
   user: CognitoUser | any;
@@ -57,9 +58,10 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   };
 
   const updateMfa = async () => {
+    const pref: MFAType = "TOTP";
     const upMfaObj = {
       user,
-      pref: "TOTP"
+      pref
     };
     await dispatch(setPreferredMfa(upMfaObj));
   };

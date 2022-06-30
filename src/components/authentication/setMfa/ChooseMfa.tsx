@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import { useEffect } from "react";
 import ScrollTo from "../../forms/ScrollTo";
 import history from "../../navigation/history";
-
+import { MFAStatus } from "../../../models/MFAStatus";
 interface IChooseMfa {
   mfa: string;
 }
@@ -44,7 +44,7 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
                   You have already set up
                   <b>
                     {" "}
-                    {mfa === "SOFTWARE_TOKEN_MFA"
+                    {mfa === MFAStatus.TOTP
                       ? "your Authenticator App for MFA"
                       : "SMS for MFA"}{" "}
                   </b>
