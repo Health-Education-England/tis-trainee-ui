@@ -7,6 +7,7 @@ import { CognitoUser } from "@aws-amplify/auth";
 import {
   decrementSmsSection,
   resetError,
+  resetUser,
   setPreferredMfa,
   verifyUserAttributeSubmit
 } from "../../../../redux/slices/userSlice";
@@ -21,14 +22,12 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
   const dispatch = useAppDispatch();
 
   const verifyCodeSub = async (code: string) => {
-    dispatch(resetError);
     const attrib: string = "phone_number";
     await dispatch(verifyUserAttributeSubmit({ attrib, code }));
     return store.getState().user.status;
   };
 
   const updateMfa = async () => {
-    dispatch(resetError);
     const pref: MFAType = "SMS";
     await dispatch(setPreferredMfa({ user, pref }));
     return store.getState().user.status;
@@ -43,6 +42,7 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
     if (res === "succeeded") {
       const res = await updateMfa();
       if (res === "succeeded") {
+        dispatch(resetUser());
         history.push("/profile");
       } else {
         stepBack();

@@ -13,8 +13,10 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   resetError,
+  resetUser,
   setPreferredMfa,
   updatedTotpSection,
+  updateUserAttributes,
   verifyTotp
 } from "../../../../redux/slices/userSlice";
 import { QRCodeSVG } from "qrcode.react";
@@ -50,28 +52,38 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   }, [expired, dispatch]);
 
   const verifyTotpInput = async (totpInput: string) => {
-    dispatch(resetError);
     await dispatch(verifyTotp({ user, totpInput }));
     return store.getState().user.status;
   };
 
   const updateMfa = async () => {
-    dispatch(resetError);
     const pref: MFAType = "TOTP";
     await dispatch(setPreferredMfa({ user, pref }));
     return store.getState().user.status;
   };
 
+  const removePhoneNo = async () => {
+    dispatch(resetError());
+    const attrib = { phone_number: "" };
+    await dispatch(updateUserAttributes({ user, attrib }));
+    return store.getState().user.status;
+  };
+
   const handleTotpSub = async (totp: string) => {
+    const getBack = () => {
+      dispatch(updatedTotpSection(1));
+      dispatch(resetError());
+    };
     const res = await verifyTotpInput(totp);
     if (res === "succeeded") {
-      const res = await updateMfa();
+      const res = await removePhoneNo();
       if (res === "succeeded") {
-        history.push("/profile");
-      } else {
-        dispatch(updatedTotpSection(1));
-        dispatch(resetError());
-      }
+        const res = await updateMfa();
+        if (res === "succeeded") {
+          dispatch(resetUser());
+          history.push("/profile");
+        } else getBack();
+      } else getBack();
     }
   };
 
