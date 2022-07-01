@@ -14,6 +14,7 @@ import {
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
+import { addNotification } from "../../../../redux/slices/notificationsSlice";
 interface IConfirmSms {
   user: CognitoUser;
 }
@@ -44,6 +45,12 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
       if (res === "succeeded") {
         dispatch(resetUser());
         history.push("/profile");
+        dispatch(
+          addNotification({
+            type: "Success",
+            text: "- SMS authentication is now set up. You will be asked for a new 6-digit (sent to your phone) each time you log in"
+          })
+        );
       } else {
         stepBack();
       }

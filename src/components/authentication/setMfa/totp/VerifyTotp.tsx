@@ -26,6 +26,7 @@ import TextInputField from "../../../forms/TextInputField";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
+import { addNotification } from "../../../../redux/slices/notificationsSlice";
 
 interface IVerifyTotp {
   user: CognitoUser | any;
@@ -63,7 +64,6 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   };
 
   const removePhoneNo = async () => {
-    dispatch(resetError());
     const attrib = { phone_number: "" };
     await dispatch(updateUserAttributes({ user, attrib }));
     return store.getState().user.status;
@@ -76,12 +76,18 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
     };
     const res = await verifyTotpInput(totp);
     if (res === "succeeded") {
-      const res = await removePhoneNo();
+      const res = await updateMfa();
       if (res === "succeeded") {
-        const res = await updateMfa();
+        const res = await removePhoneNo();
         if (res === "succeeded") {
           dispatch(resetUser());
           history.push("/profile");
+          dispatch(
+            addNotification({
+              type: "Success",
+              text: "- Your Authenticator App is now set up. You will be asked for a new 6-digit code each time you log in"
+            })
+          );
         } else getBack();
       } else getBack();
     }
