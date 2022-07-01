@@ -6,6 +6,7 @@ import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
 import { CognitoUser } from "@aws-amplify/auth";
 import {
   decrementSmsSection,
+  resetError,
   setPreferredMfa,
   verifyUserAttributeSubmit
 } from "../../../../redux/slices/userSlice";
@@ -19,40 +20,43 @@ interface IConfirmSms {
 const ConfirmSms = ({ user }: IConfirmSms) => {
   const dispatch = useAppDispatch();
 
-  const verifyCodeSub = async (vals: any) => {
-    const codeSubObj = {
-      attrib: "phone_number",
-      code: vals["smsCode"]
-    };
-    await dispatch(verifyUserAttributeSubmit(codeSubObj));
+  const verifyCodeSub = async (code: string) => {
+    dispatch(resetError);
+    const attrib: string = "phone_number";
+    await dispatch(verifyUserAttributeSubmit({ attrib, code }));
+    return store.getState().user.status;
   };
 
   const updateMfa = async () => {
+    dispatch(resetError);
     const pref: MFAType = "SMS";
-    const upMfaObj = {
-      user,
-      pref
-    };
-    await dispatch(setPreferredMfa(upMfaObj));
+    await dispatch(setPreferredMfa({ user, pref }));
+    return store.getState().user.status;
   };
 
-  const handleCodeSub = async (formVals: any) => {
-    await verifyCodeSub(formVals);
-    const statusAfterCodeVerif = store.getState().user.status;
-    if (statusAfterCodeVerif === "succeeded") {
-      await updateMfa();
-      const statusAfterMfaUpdate = store.getState().user.status;
-      if (statusAfterMfaUpdate === "succeeded") {
+  const handleSmsSub = async (smsCode: string) => {
+    const res = await verifyCodeSub(smsCode);
+    const stepBack = () => {
+      dispatch(resetError());
+      dispatch(decrementSmsSection());
+    };
+    if (res === "succeeded") {
+      const res = await updateMfa();
+      if (res === "succeeded") {
         history.push("/profile");
-      } else dispatch(decrementSmsSection());
-    } else dispatch(decrementSmsSection());
+      } else {
+        stepBack();
+      }
+    } else {
+      stepBack();
+    }
   };
 
   return (
     <Formik
       initialValues={{ smsCode: "" }}
       onSubmit={values => {
-        handleCodeSub(values);
+        handleSmsSub(values.smsCode);
       }}
       validationSchema={VerifySMSCodeValidationSchema}
     >

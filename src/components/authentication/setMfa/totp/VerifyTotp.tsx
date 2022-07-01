@@ -50,30 +50,27 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   }, [expired, dispatch]);
 
   const verifyTotpInput = async (totpInput: string) => {
-    const totpObj = {
-      user,
-      totpInput
-    };
-    await dispatch(verifyTotp(totpObj));
+    dispatch(resetError);
+    await dispatch(verifyTotp({ user, totpInput }));
+    return store.getState().user.status;
   };
 
   const updateMfa = async () => {
+    dispatch(resetError);
     const pref: MFAType = "TOTP";
-    const upMfaObj = {
-      user,
-      pref
-    };
-    await dispatch(setPreferredMfa(upMfaObj));
+    await dispatch(setPreferredMfa({ user, pref }));
+    return store.getState().user.status;
   };
 
-  const handleCodeSub = async (totp: string) => {
-    await verifyTotpInput(totp);
-    const statusAfterCodeVerif = store.getState().user.status;
-    if (statusAfterCodeVerif === "succeeded") {
-      await updateMfa();
-      const statusAfterMfaUpdate = store.getState().user.status;
-      if (statusAfterMfaUpdate === "succeeded") {
+  const handleTotpSub = async (totp: string) => {
+    const res = await verifyTotpInput(totp);
+    if (res === "succeeded") {
+      const res = await updateMfa();
+      if (res === "succeeded") {
         history.push("/profile");
+      } else {
+        dispatch(updatedTotpSection(1));
+        dispatch(resetError());
       }
     }
   };
@@ -148,7 +145,7 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
                 .min(6, "Code must be min 6 characters in length")
                 .max(6, "Code must be max 6 characters in length")
             })}
-            onSubmit={values => handleCodeSub(values.confirmTOTPCode)}
+            onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
           >
             {({ isValid, isSubmitting, handleSubmit }) => (
               <Form>
