@@ -39,8 +39,8 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
           <>
             <ScrollTo />
             {mfa !== "NOMFA" && (
-              <WarningCallout label="Important">
-                <p>
+              <WarningCallout label="Important" data-cy="mfaAlreadyWarning">
+                <p data-cy="mfaAlreadyText">
                   You have already set up
                   <b>
                     {" "}

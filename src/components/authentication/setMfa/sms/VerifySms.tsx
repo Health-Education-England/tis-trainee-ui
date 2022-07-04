@@ -51,10 +51,7 @@ const VerifySms = ({ user }: IVerifySms) => {
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel
-            label="I want to receive codes sent by SMS to this mobile"
-            style={{ backgroundColor: "aliceblue" }}
-          >
+          <Panel label="I want to receive codes sent by SMS to this mobile">
             <MobilePhoneInputField name="mobilePhoneNumber" />
           </Panel>
 

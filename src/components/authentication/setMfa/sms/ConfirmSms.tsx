@@ -69,10 +69,7 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel
-            label="Enter the 6-digit code sent to your phone"
-            style={{ backgroundColor: "aliceblue" }}
-          >
+          <Panel label="Enter the 6-digit code sent to your phone">
             <TextInputField
               footer="It may take a minute to arrive."
               name="smsCode"

@@ -64,10 +64,6 @@ const thunkArrFulfilled = [
   {
     thunk: verifyPhone,
     text: "phone has been verified. An SMS code from HEE should arrive soon"
-  },
-  {
-    thunk: setPreferredMfa,
-    text: "MFA type has been updated"
   }
 ];
 
