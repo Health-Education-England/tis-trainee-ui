@@ -13,8 +13,10 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   resetError,
+  resetUser,
   setPreferredMfa,
   updatedTotpSection,
+  updateUserAttributes,
   verifyTotp
 } from "../../../../redux/slices/userSlice";
 import { QRCodeSVG } from "qrcode.react";
@@ -23,7 +25,9 @@ import * as Yup from "yup";
 import TextInputField from "../../../forms/TextInputField";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
-
+import { MFAType } from "../../../../models/MFAStatus";
+import { addNotification } from "../../../../redux/slices/notificationsSlice";
+import "../MFA.scss";
 interface IVerifyTotp {
   user: CognitoUser | any;
 }
@@ -49,30 +53,43 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   }, [expired, dispatch]);
 
   const verifyTotpInput = async (totpInput: string) => {
-    const totpObj = {
-      user,
-      totpInput
-    };
-    await dispatch(verifyTotp(totpObj));
+    await dispatch(verifyTotp({ user, totpInput }));
+    return store.getState().user.status;
   };
 
   const updateMfa = async () => {
-    const upMfaObj = {
-      user,
-      pref: "TOTP"
-    };
-    await dispatch(setPreferredMfa(upMfaObj));
+    const pref: MFAType = "TOTP";
+    await dispatch(setPreferredMfa({ user, pref }));
+    return store.getState().user.status;
   };
 
-  const handleCodeSub = async (totp: string) => {
-    await verifyTotpInput(totp);
-    const statusAfterCodeVerif = store.getState().user.status;
-    if (statusAfterCodeVerif === "succeeded") {
-      await updateMfa();
-      const statusAfterMfaUpdate = store.getState().user.status;
-      if (statusAfterMfaUpdate === "succeeded") {
-        history.push("/profile");
-      }
+  const removePhoneNo = async () => {
+    const attrib = { phone_number: "" };
+    await dispatch(updateUserAttributes({ user, attrib }));
+    return store.getState().user.status;
+  };
+
+  const handleTotpSub = async (totp: string) => {
+    const getBack = () => {
+      dispatch(updatedTotpSection(1));
+      dispatch(resetError());
+    };
+    const res = await verifyTotpInput(totp);
+    if (res === "succeeded") {
+      const resU = await updateMfa();
+      if (resU === "succeeded") {
+        const resR = await removePhoneNo();
+        if (resR === "succeeded") {
+          dispatch(resetUser());
+          history.push("/profile");
+          dispatch(
+            addNotification({
+              type: "Success",
+              text: "- Your Authenticator App is now set up. You will be asked for a new 6-digit code each time you log in"
+            })
+          );
+        } else getBack();
+      } else getBack();
     }
   };
 
@@ -104,15 +121,12 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
             </ActionLink>
           </Details.Text>
         </Details>
-        <Panel
-          label="using your phone"
-          style={{ backgroundColor: "aliceblue" }}
-        >
+        <Panel className="panelBack" label="using your phone">
           <Fieldset.Legend size="m">
             Open your Authenticator App, click 'add a new account' button then
             scan the QR Code below.
           </Fieldset.Legend>
-          <div style={{ padding: "20px" }}>
+          <div className="qrTss">
             <QRCodeSVG
               data-cy="tssQrCode"
               size={192}
@@ -146,7 +160,7 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
                 .min(6, "Code must be min 6 characters in length")
                 .max(6, "Code must be max 6 characters in length")
             })}
-            onSubmit={values => handleCodeSub(values.confirmTOTPCode)}
+            onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
           >
             {({ isValid, isSubmitting, handleSubmit }) => (
               <Form>

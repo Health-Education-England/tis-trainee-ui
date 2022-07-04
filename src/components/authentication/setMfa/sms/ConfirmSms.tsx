@@ -6,11 +6,15 @@ import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
 import { CognitoUser } from "@aws-amplify/auth";
 import {
   decrementSmsSection,
+  resetError,
+  resetUser,
   setPreferredMfa,
   verifyUserAttributeSubmit
 } from "../../../../redux/slices/userSlice";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
+import { MFAType } from "../../../../models/MFAStatus";
+import { addNotification } from "../../../../redux/slices/notificationsSlice";
 interface IConfirmSms {
   user: CognitoUser;
 }
@@ -18,48 +22,54 @@ interface IConfirmSms {
 const ConfirmSms = ({ user }: IConfirmSms) => {
   const dispatch = useAppDispatch();
 
-  const verifyCodeSub = async (vals: any) => {
-    const codeSubObj = {
-      attrib: "phone_number",
-      code: vals["smsCode"]
-    };
-    await dispatch(verifyUserAttributeSubmit(codeSubObj));
+  const verifyCodeSub = async (code: string) => {
+    const attrib: string = "phone_number";
+    await dispatch(verifyUserAttributeSubmit({ attrib, code }));
+    return store.getState().user.status;
   };
 
   const updateMfa = async () => {
-    const upMfaObj = {
-      user,
-      pref: "SMS"
-    };
-    await dispatch(setPreferredMfa(upMfaObj));
+    const pref: MFAType = "SMS";
+    await dispatch(setPreferredMfa({ user, pref }));
+    return store.getState().user.status;
   };
 
-  const handleCodeSub = async (formVals: any) => {
-    await verifyCodeSub(formVals);
-    const statusAfterCodeVerif = store.getState().user.status;
-    if (statusAfterCodeVerif === "succeeded") {
-      await updateMfa();
-      const statusAfterMfaUpdate = store.getState().user.status;
-      if (statusAfterMfaUpdate === "succeeded") {
+  const handleSmsSub = async (smsCode: string) => {
+    const res = await verifyCodeSub(smsCode);
+    const stepBack = () => {
+      dispatch(resetError());
+      dispatch(decrementSmsSection());
+    };
+    if (res === "succeeded") {
+      const resU = await updateMfa();
+      if (resU === "succeeded") {
+        dispatch(resetUser());
         history.push("/profile");
-      } else dispatch(decrementSmsSection());
-    } else dispatch(decrementSmsSection());
+        dispatch(
+          addNotification({
+            type: "Success",
+            text: "- SMS authentication is now set up. You will be asked for a new 6-digit (sent to your phone) each time you log in"
+          })
+        );
+      } else {
+        stepBack();
+      }
+    } else {
+      stepBack();
+    }
   };
 
   return (
     <Formik
       initialValues={{ smsCode: "" }}
       onSubmit={values => {
-        handleCodeSub(values);
+        handleSmsSub(values.smsCode);
       }}
       validationSchema={VerifySMSCodeValidationSchema}
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel
-            label="Enter the 6-digit code sent to your phone"
-            style={{ backgroundColor: "aliceblue" }}
-          >
+          <Panel label="Enter the 6-digit code sent to your phone">
             <TextInputField
               footer="It may take a minute to arrive."
               name="smsCode"

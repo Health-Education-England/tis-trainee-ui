@@ -6,6 +6,7 @@ import { Button, Panel } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   incrementSmsSection,
+  resetError,
   updateUserAttributes,
   verifyPhone
 } from "../../../../redux/slices/userSlice";
@@ -18,25 +19,23 @@ interface IVerifySms {
 const VerifySms = ({ user }: IVerifySms) => {
   const dispatch = useAppDispatch();
 
-  const updatePhoneAttrib = async (vals: { mobilePhoneNumber: string }) => {
-    const updatePhoneAttribObj = {
-      user,
-      attrib: { phone_number: vals.mobilePhoneNumber }
-    };
-    await dispatch(updateUserAttributes(updatePhoneAttribObj));
+  const updatePhoneAttrib = async (mobNo: string) => {
+    const attrib = { phone_number: mobNo };
+    await dispatch(updateUserAttributes({ user, attrib }));
+    return store.getState().user.status;
   };
 
   const verifPhone = async () => {
     await dispatch(verifyPhone());
+    return store.getState().user.status;
   };
 
-  const handleSmsVerify = async (formVals: { mobilePhoneNumber: string }) => {
-    await updatePhoneAttrib(formVals);
-    const statusAfterphoneUpdate = store.getState().user.status;
-    if (statusAfterphoneUpdate === "succeeded") {
-      await verifPhone();
-      const statusAfterVerifyphone = store.getState().user.status;
-      if (statusAfterVerifyphone === "succeeded") {
+  const handleSmsVerify = async (mobilePhoneNumber: string) => {
+    const res = await updatePhoneAttrib(mobilePhoneNumber);
+    if (res === "succeeded") {
+      const resV = await verifPhone();
+      if (resV === "succeeded") {
+        dispatch(resetError());
         dispatch(incrementSmsSection());
       }
     }
@@ -46,16 +45,13 @@ const VerifySms = ({ user }: IVerifySms) => {
     <Formik
       initialValues={{ mobilePhoneNumber: "" }}
       onSubmit={values => {
-        handleSmsVerify(values);
+        handleSmsVerify(values.mobilePhoneNumber);
       }}
       validationSchema={MobilePhoneValidationSchema}
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel
-            label="I want to receive codes sent by SMS to this mobile"
-            style={{ backgroundColor: "aliceblue" }}
-          >
+          <Panel label="I want to receive codes sent by SMS to this mobile">
             <MobilePhoneInputField name="mobilePhoneNumber" />
           </Panel>
 

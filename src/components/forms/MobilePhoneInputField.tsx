@@ -9,9 +9,7 @@ interface IMobilePhoneInputField {
   hidelabel?: boolean;
   id?: string;
   placeholder?: string;
-
   footer?: any;
-
   value?: any;
   disabled?: boolean;
 }

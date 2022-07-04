@@ -27,7 +27,7 @@ const thunkArrRejected = [
   { thunk: loadSavedFormB, text: "load your saved Form R (Part B)" },
   { thunk: saveFormB, text: "save your Form R (Part B)" },
   { thunk: updateFormB, text: "save your updated Form R (Part B)" },
-  { thunk: updateUserAttributes, text: "update your MFA information" },
+  { thunk: updateUserAttributes, text: "update all your user information" },
   {
     thunk: verifyPhone,
     text: "send you an SMS code to sign in. Please try again"
@@ -64,10 +64,6 @@ const thunkArrFulfilled = [
   {
     thunk: verifyPhone,
     text: "phone has been verified. An SMS code from HEE should arrive soon"
-  },
-  {
-    thunk: setPreferredMfa,
-    text: "MFA choice is set. You will be prompted for a new 6-digit code each time you log in"
   }
 ];
 

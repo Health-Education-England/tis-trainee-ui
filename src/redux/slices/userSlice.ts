@@ -1,6 +1,7 @@
 import { CognitoUser } from "@aws-amplify/auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "aws-amplify";
+import { MFAType } from "../../models/MFAStatus";
 
 interface IUser {
   status: string;
@@ -57,7 +58,7 @@ export const verifyUserAttributeSubmit = createAsyncThunk(
 
 export const setPreferredMfa = createAsyncThunk(
   "user/setPreferredMfa",
-  async (userPrefMfaData: { user: CognitoUser | any; pref: any }) => {
+  async (userPrefMfaData: { user: CognitoUser | any; pref: MFAType }) => {
     const { user, pref } = userPrefMfaData;
     return Auth.setPreferredMFA(user, pref);
   }
