@@ -41,8 +41,8 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
       dispatch(decrementSmsSection());
     };
     if (res === "succeeded") {
-      const res = await updateMfa();
-      if (res === "succeeded") {
+      const resU = await updateMfa();
+      if (resU === "succeeded") {
         dispatch(resetUser());
         history.push("/profile");
         dispatch(

@@ -76,10 +76,10 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
     };
     const res = await verifyTotpInput(totp);
     if (res === "succeeded") {
-      const res = await updateMfa();
-      if (res === "succeeded") {
-        const res = await removePhoneNo();
-        if (res === "succeeded") {
+      const resU = await updateMfa();
+      if (resU === "succeeded") {
+        const resR = await removePhoneNo();
+        if (resR === "succeeded") {
           dispatch(resetUser());
           history.push("/profile");
           dispatch(

@@ -33,8 +33,8 @@ const VerifySms = ({ user }: IVerifySms) => {
   const handleSmsVerify = async (mobilePhoneNumber: string) => {
     const res = await updatePhoneAttrib(mobilePhoneNumber);
     if (res === "succeeded") {
-      const res = await verifPhone();
-      if (res === "succeeded") {
+      const resV = await verifPhone();
+      if (resV === "succeeded") {
         dispatch(resetError());
         dispatch(incrementSmsSection());
       }
