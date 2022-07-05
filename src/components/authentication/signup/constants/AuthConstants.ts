@@ -11,7 +11,9 @@ export const FORM_FIELD_VALUES = {
   "Sign in": "Log in", // Button label
   "Sign in to your account": "TIS Self-Service Login",
   "Confirm Sign Up": "Check your email for a verification code",
-  "Enter your code": "Enter 6-digit code (no spaces)" // Confirm Sign Up input
+  "Enter your code": "Enter 6-digit code (no spaces)", // Confirm Sign Up input
+  "Confirm TOTP Code": "Enter Authenticator App Code",
+  "Confirm SMS Code": "Enter SMS Code"
 };
 
 export const SIGN_UP_HEADING_TEXT = "First time sign-up";

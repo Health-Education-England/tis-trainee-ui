@@ -1,4 +1,4 @@
-import { Details, Panel } from "nhsuk-react-components";
+import { ActionLink, Details, Panel } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import SupportMsg from "./SupportMsg";
 import SupportList from "./SupportList";
@@ -52,8 +52,15 @@ const Support = () => {
           </p>
         </Details.Text>
       </Details>
-
-      <Panel label="Contact">
+      <Panel label="Technical issues" data-cy="techSupportLabel">
+        <ActionLink
+          data-cy="techSupportLink"
+          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query`}
+        >
+          Please click here to email TIS Support
+        </ActionLink>
+      </Panel>
+      <Panel label="Form R & Personal Details queries" data-cy="loSupportLabel">
         <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
         <SupportList mappedContact={mappedContact} />
       </Panel>

@@ -27,7 +27,7 @@ const SupportList = ({ mappedContact }: ISupportList) => {
             case "PGMDE support portal":
               return (
                 <ActionLink
-                  data-jest="pgdmeLink"
+                  data-cy="pgdmeLink"
                   href="https://lasepgmdesupport.hee.nhs.uk/support/tickets/new?form_7=true"
                 >
                   PGMDE Support Portal
@@ -36,7 +36,7 @@ const SupportList = ({ mappedContact }: ISupportList) => {
             default:
               return (
                 <ActionLink
-                  data-jest="loLink"
+                  data-cy="loLink"
                   href={`mailto:${linkContact}?subject=Form R support query`}
                 >
                   {linkContact}
