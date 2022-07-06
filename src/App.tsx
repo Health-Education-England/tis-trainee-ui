@@ -79,6 +79,22 @@ const services = {
   }
 };
 
+const formFields = {
+  confirmSignUp: {
+    confirmation_code: {
+      labelHidden: false,
+      label: "Email verification code is valid for 1 hour"
+    }
+  },
+  confirmResetPassword: {
+    confirmation_code: {
+      labelHidden: false,
+      label:
+        "Enter your Password Reset Code ('No Reply' email from no-reply@tis-selfservice.nhs.uk) "
+    }
+  }
+};
+
 const loginMechanisms: LoginMechanism[] = ["email"];
 const signUpAttributes: SignUpAttribute[] = [
   "given_name",
@@ -108,6 +124,7 @@ const App: React.FunctionComponent = () => {
       services={services}
       variation="default"
       className={styles.authAuthenticator}
+      formFields={formFields}
     >
       {({ signOut, user }) => (
         <>
