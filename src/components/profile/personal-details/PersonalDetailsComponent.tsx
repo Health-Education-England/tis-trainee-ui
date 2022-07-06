@@ -78,16 +78,10 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
             <SummaryList.Row>
               <SummaryList.Key>Address</SummaryList.Key>
               <SummaryList.Value>
-                <p>
-                  {personalDetails.address1} data-cy=
-                  {personalDetails.address1}
-                </p>
+                <p>{personalDetails.address1}</p>
                 <p>{personalDetails.address2}</p>
                 <p>{personalDetails.address3}</p>
-                <p>
-                  {personalDetails.postCode} data-cy=
-                  {personalDetails.postCode}
-                </p>
+                <p data-cy="postCode">{personalDetails.postCode}</p>
               </SummaryList.Value>
             </SummaryList.Row>
             <div className="nhsuk-heading-m nhsuk-u-margin-top-4">

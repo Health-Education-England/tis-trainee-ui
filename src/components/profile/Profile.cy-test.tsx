@@ -53,6 +53,9 @@ describe("Profile", () => {
     cy.get("[data-cy=Email]")
       .should("exist")
       .should("contain.text", "email@email.com");
+    cy.get("[data-cy=postCode")
+      .should("exist")
+      .should("contain.text", "WC1B 5DN");
     cy.get(expanderPD).click();
 
     // placements section
