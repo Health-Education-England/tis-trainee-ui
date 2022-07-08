@@ -16,6 +16,7 @@ import {
   DateUnitType,
   DateUtilities
 } from "../../utilities/DateUtilities";
+import { useConfirm } from "material-ui-confirm";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
@@ -40,6 +41,7 @@ const FormsListBtn = ({
   pathName,
   latestSubDate
 }: IFormsListBtn) => {
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: IFormR | null = null;
@@ -57,8 +59,6 @@ const FormsListBtn = ({
 
   const hasRecentSub = (date: DateType, period: number, unit: DateUnitType) =>
     !!DateUtilities.isInsideLimit(date, period, unit);
-
-  // console.log("hasRecentSub: ", hasRecentSub(latestSubDate, 31, "d"));
 
   const resetForm = (pName: string) =>
     pName === "/formr-b" && dispatch(resetToInitFormB());
@@ -83,6 +83,17 @@ const FormsListBtn = ({
     history.push(`${pathName}/create`);
   };
 
+  const handleNewClick = () => {
+    if (hasRecentSub(latestSubDate, 31, "d")) {
+      confirm({
+        description:
+          "You have recently submitted a form within the last month. Are you sure you want to submit another?"
+      })
+        .then(() => loadNewForm())
+        .catch(() => console.log("action cancelled"));
+    }
+  };
+
   return (
     <Button
       id="btnOpenForm"
@@ -93,12 +104,7 @@ const FormsListBtn = ({
         resetForm(pathName);
         if (btnForm?.id) loadTheSavedForm(btnForm.id);
         else {
-          // TODO dialog box could go here
-
-          if (hasRecentSub(latestSubDate, 31, "d")) {
-            alert("you have recently submitted a form in the last 30 days!! ");
-          }
-          loadNewForm();
+          handleNewClick();
         }
       }}
     >

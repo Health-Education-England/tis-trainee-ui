@@ -15,6 +15,7 @@ import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
+import { ConfirmProvider } from "material-ui-confirm";
 
 interface IMain {
   user: CognitoUser | any;
@@ -75,5 +76,5 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
         </Router>
       </>
     );
-  return <div>{content}</div>;
+  return <ConfirmProvider>{content}</ConfirmProvider>;
 };
