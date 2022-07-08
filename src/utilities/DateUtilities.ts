@@ -7,7 +7,34 @@ day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
 const todayDate = day().toDate();
-type DateType = Date | string | null;
+const dateToday = day();
+export type DateType = Date | string | null;
+export type DateUnitType =
+  | "millisecond"
+  | "second"
+  | "minute"
+  | "hour"
+  | "day"
+  | "month"
+  | "year"
+  | "date"
+  | "milliseconds"
+  | "seconds"
+  | "minutes"
+  | "hours"
+  | "days"
+  | "months"
+  | "years"
+  | "dates"
+  | "d"
+  | "w"
+  | "Q"
+  | "M"
+  | "y"
+  | "h"
+  | "m"
+  | "s"
+  | "ms";
 export class DateUtilities {
   public static ToUTCDate(date: DateType): string {
     let utcDate = "";
@@ -29,7 +56,7 @@ export class DateUtilities {
     return localDate;
   }
 
-  public static SortDateDecending<T>(arr: T[], dateFieldName: string) {
+  public static SortDateDecending<T>(arr: T[] = [], dateFieldName: string) {
     return [...arr].sort(
       (a: any, b: any) =>
         new Date(b[dateFieldName]).getTime() -
@@ -96,5 +123,15 @@ export class DateUtilities {
       return dayDate.isValid() && dayDate.isSameOrAfter(todayDate, "day");
     }
     return true;
+  }
+
+  public static isInsideLimit(
+    value: DateType | undefined,
+    num: number = 1,
+    unit: DateUnitType = "d"
+  ) {
+    if (value) {
+      return dateToday.diff(value, unit) < num;
+    }
   }
 }

@@ -8,11 +8,21 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "./FormsListBtn";
 import { Redirect, useLocation } from "react-router-dom";
 import SubmittedFormsList from "./SubmittedFormsList";
+import { DateUtilities } from "../../utilities/DateUtilities";
+import { LifeCycleState } from "../../models/LifeCycleState";
 
 const CreateList = ({ history }: { history: string[] }) => {
   let pathname: string = useLocation().pathname;
   const dispatch = useAppDispatch();
-  const formRList: IFormR[] = useAppSelector(selectAllforms);
+  const formRList = useAppSelector(selectAllforms);
+  const formRListDesc: IFormR[] = DateUtilities.SortDateDecending(
+    formRList,
+    "submissionDate"
+  );
+  const submittedListDesc = formRListDesc.filter(
+    (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
+  );
+  const latestSubDate = submittedListDesc[0]?.submissionDate;
   const formRListStatus: string = useAppSelector(state => state.forms.status);
   const featFlagStatus: string = useAppSelector(
     state => state.featureFlags.status
@@ -37,9 +47,13 @@ const CreateList = ({ history }: { history: string[] }) => {
       <>
         <ScrollTo />
         <br />
-        <FormsListBtn pathName={pathname} formRList={formRList} />
+        <FormsListBtn
+          pathName={pathname}
+          formRList={formRListDesc}
+          latestSubDate={latestSubDate}
+        />
         <SubmittedFormsList
-          formRList={formRList}
+          formRList={submittedListDesc}
           path={pathname}
           history={history}
         />

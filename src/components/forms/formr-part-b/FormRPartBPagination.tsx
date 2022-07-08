@@ -83,7 +83,7 @@ const FormRPartBPagination = ({
             onClick={() => {
               handleSubmit();
             }}
-            disabled={!isValid && isSubmitting}
+            disabled={!isValid || isSubmitting}
             data-cy="BtnSubmitForm"
           >
             Submit Form
@@ -97,7 +97,7 @@ const FormRPartBPagination = ({
               e.preventDefault();
               handleSubmit();
             }}
-            disabled={!isValid && isSubmitting}
+            disabled={!isValid || isSubmitting}
             data-cy="BtnBackToSubmit"
           >
             Back to Submit
