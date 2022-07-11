@@ -85,9 +85,9 @@ const FormsListBtn = ({
 
   const handleNewClick = () => {
     if (hasRecentSub(latestSubDate, 31, "d")) {
+      const localDate = DateUtilities.ToLocalDate(latestSubDate);
       confirm({
-        description:
-          "You have recently submitted a form within the last month. Are you sure you want to submit another?"
+        description: `You recently submitted a form on ${localDate}. Are you sure you want to submit another?`
       })
         .then(() => loadNewForm())
         .catch(() => console.log("action cancelled"));

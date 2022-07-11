@@ -20,6 +20,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
+import { useConfirm } from "material-ui-confirm";
 
 interface IDeclarations {
   prevSectionLabel: string;
@@ -34,6 +35,7 @@ const Declarations = ({
   history,
   finalSections
 }: IDeclarations) => {
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
@@ -59,12 +61,28 @@ const Declarations = ({
     }
   };
 
+  const handleSubClick = (
+    vals: FormRPartB,
+    setSubmitting: (arg: boolean) => void
+  ) => {
+    confirm({
+      description:
+        "The current process of deleting and/or re-submitting a new Form R isn't quick! You can save a draft copy if needed. But if you are ready to submit then please click 'OK'."
+    })
+      .then(() => handleFormBSubmit(vals))
+      .catch(() => {
+        console.log("form b sub cancelled");
+      })
+      .finally(() => setSubmitting(false));
+  };
+
   return (
     <Formik
       initialValues={formData}
       validationSchema={Section7ValidationSchema}
-      onSubmit={values => {
-        handleFormBSubmit(values);
+      onSubmit={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        handleSubClick(values, setSubmitting);
       }}
     >
       {({ values, handleSubmit, isValid, isSubmitting }) => (
