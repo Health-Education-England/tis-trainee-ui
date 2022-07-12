@@ -3,7 +3,11 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import SubmittedFormsList from "./SubmittedFormsList";
 import store from "../../redux/store/store";
-import { submittedFormRPartAs } from "../../mock-data/submitted-formr-parta";
+import {
+  submittedFormRPartAs,
+  recentSubmittedFormRPartAs,
+  recentSubmitDate
+} from "../../mock-data/submitted-formr-parta";
 import history from "../navigation/history";
 
 describe("SubmittedFormsList", () => {
@@ -22,6 +26,7 @@ describe("SubmittedFormsList", () => {
         "After you submit your completed form, instructions on how to save a copy as a PDF will appear here."
       );
     cy.get("[data-cy=noSubmittedFormsMsg]").should("be.visible");
+    cy.get("[data-cy=formsListWarning]").should("not.exist");
   });
   it("should show a submitted forms in chronological and help hint when submitted forms", () => {
     mount(
@@ -42,16 +47,28 @@ describe("SubmittedFormsList", () => {
       "To save a PDF copy of your submitted form, please click on a form below and then click the Save a copy as a PDF button at the top of that page."
     );
     cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
-    cy.get(".nhsuk-action-link__text").should(
-      "include.text",
-      "form submitted on 22/04/2030 00:00" +
-        "form submitted on 22/04/2016 00:00" +
-        "form submitted on 22/04/2012 13:12" +
-        "form submitted on 22/04/2012 11:22" +
-        "form submitted on 22/04/2010 00:00"
-    );
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
+      .should("contain.text", "Important!")
       .should("contain.text", "Need to amend a recently-submitted form?");
+  });
+  it("should show warning when there is recent submitted form", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <SubmittedFormsList
+            formRList={recentSubmittedFormRPartAs}
+            path="/formr-a"
+            history={[]}
+            latestSubDate={recentSubmitDate}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
+    cy.get("[data-cy=formsListWarning]")
+      .should("exist")
+      .should("contain.text", "Your previous form was submitted recently on");
   });
 });

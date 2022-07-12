@@ -56,6 +56,7 @@ const CreateList = ({ history }: { history: string[] }) => {
           formRList={submittedListDesc}
           path={pathname}
           history={history}
+          latestSubDate={latestSubDate}
         />
       </>
     );
