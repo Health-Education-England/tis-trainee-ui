@@ -52,6 +52,13 @@ const Support = () => {
           </p>
         </Details.Text>
       </Details>
+      <Panel
+        label="Form R (including unsubmitting a form) & Personal Details queries"
+        data-cy="loSupportLabel"
+      >
+        <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
+        <SupportList mappedContact={mappedContact} />
+      </Panel>
       <Panel label="Technical issues" data-cy="techSupportLabel">
         <ActionLink
           data-cy="techSupportLink"
@@ -59,10 +66,6 @@ const Support = () => {
         >
           Please click here to email TIS Support
         </ActionLink>
-      </Panel>
-      <Panel label="Form R & Personal Details queries" data-cy="loSupportLabel">
-        <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
-        <SupportList mappedContact={mappedContact} />
       </Panel>
     </>
   );

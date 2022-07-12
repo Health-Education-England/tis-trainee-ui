@@ -47,7 +47,7 @@ describe("Support", () => {
     );
     cy.get("[data-cy=loSupportLabel] > .nhsuk-panel-with-label__label")
       .should("exist")
-      .should("include.text", "Form R");
+      .should("include.text", "Form R (including unsubmitting a form");
     cy.get("[data-cy=loLink]").should(
       "have.attr",
       "href",
