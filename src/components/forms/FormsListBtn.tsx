@@ -11,9 +11,16 @@ import {
   updatedFormB
 } from "../../redux/slices/formBSlice";
 import history from "../navigation/history";
+import {
+  DateType,
+  DateUtilities,
+  isWithinRange
+} from "../../utilities/DateUtilities";
+import { useConfirm } from "material-ui-confirm";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
+  latestSubDate: DateType;
 }
 
 const btnProps = {
@@ -29,7 +36,12 @@ const btnProps = {
   }
 };
 
-const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
+const FormsListBtn = ({
+  formRList,
+  pathName,
+  latestSubDate
+}: IFormsListBtn) => {
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: IFormR | null = null;
@@ -68,6 +80,17 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     history.push(`${pathName}/create`);
   };
 
+  const handleNewClick = () => {
+    if (isWithinRange(latestSubDate, 31, "d")) {
+      const localDate = DateUtilities.ToLocalDate(latestSubDate);
+      confirm({
+        description: `You recently submitted a form on ${localDate}. Are you sure you want to submit another?`
+      })
+        .then(() => loadNewForm())
+        .catch(() => console.log("action cancelled"));
+    }
+  };
+
   return (
     <Button
       id="btnOpenForm"
@@ -77,7 +100,7 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
       onClick={() => {
         resetForm(pathName);
         if (btnForm?.id) loadTheSavedForm(btnForm.id);
-        else loadNewForm();
+        else handleNewClick();
       }}
     >
       {btnForm ? bFProps["btn-text"] : "Submit new form"}
