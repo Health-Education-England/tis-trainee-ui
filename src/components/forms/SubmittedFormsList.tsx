@@ -1,12 +1,10 @@
 import {
   ActionLink,
   Hint,
-  LedeText,
   Table,
   WarningCallout
 } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
-import { LifeCycleState } from "../../models/LifeCycleState";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import styles from "./FormR.module.scss";
@@ -22,17 +20,10 @@ const SubmittedFormsList = ({
   path,
   history
 }: ISubmittedFormsList) => {
-  const submittedForms: IFormR[] = formRList.filter(
-    (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
-  );
   let content: JSX.Element | JSX.Element[];
 
-  if (submittedForms.length > 0) {
-    const submittedFormsDec = DateUtilities.SortDateDecending(
-      submittedForms,
-      "submissionDate"
-    );
-    content = submittedFormsDec.map((formData: IFormR) => (
+  if (formRList.length) {
+    content = formRList.map((formData: IFormR) => (
       <Table.Row key={formData.id} className={styles.listTableRow}>
         <td>
           <ActionLink
@@ -49,11 +40,15 @@ const SubmittedFormsList = ({
     ));
   } else
     content = (
-      <LedeText data-cy="noSubmittedFormsMsg">No forms submitted yet.</LedeText>
+      <Table.Row>
+        <td>
+          <p data-cy="noSubmittedFormsMsg">No forms submitted yet.</p>
+        </td>
+      </Table.Row>
     );
   return (
     <>
-      {submittedForms.length > 0 ? (
+      {formRList.length ? (
         <>
           <Hint data-cy="formsTrueHint">
             To save a PDF copy of your submitted form, please click on a form
