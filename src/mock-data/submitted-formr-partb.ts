@@ -47,6 +47,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     isComplying: true,
     healthStatement: "I feel great etc.",
     havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
     previousDeclarations: [
       {
         declarationType: "Significant Event",
@@ -57,6 +58,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     ],
     previousDeclarationSummary: "",
     haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
     currentDeclarations: [
       {
         declarationType: "Complaint",
@@ -122,6 +124,7 @@ export const submittedFormRPartBsWithDraft: FormRPartB[] = [
     isComplying: true,
     healthStatement: "I feel great etc.",
     havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
     previousDeclarations: [
       {
         declarationType: "Significant Event",
@@ -132,6 +135,7 @@ export const submittedFormRPartBsWithDraft: FormRPartB[] = [
     ],
     previousDeclarationSummary: "",
     haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
     currentDeclarations: [
       {
         declarationType: "Complaint",

@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
+import day from "dayjs";
+
 import {
   disorderedFormRPartBs,
   orderedFormRPartBs
 } from "../../mock-data/submitted-formr-list";
-import { DateUtilities } from "../DateUtilities";
+import { DateUtilities, isWithinRange } from "../DateUtilities";
 
 describe("DateUtilities", () => {
   const now = dayjs();
@@ -104,6 +106,35 @@ describe("DateUtilities", () => {
   });
   it("IsMoreThanMinDate should return true if null value ", () => {
     expect(DateUtilities.IsLessThanMaxDate(null)).toEqual(true);
+  });
+  // isWithinRange
+  it("isWithinRange should return false if given date is undefined", () => {
+    expect(isWithinRange(undefined)).toEqual(false);
+  });
+  it("isWithinRange should return false if given date is null", () => {
+    expect(isWithinRange(null)).toEqual(false);
+  });
+  it("isWithinRange should return false if given date is empty string", () => {
+    expect(isWithinRange("")).toEqual(false);
+  });
+  it("isWithinRange should return false if given date is non-date string", () => {
+    expect(isWithinRange("nodate")).toEqual(false);
+  });
+  it("isWithinRange should return false if given date is outside range", () => {
+    const outsideDate = day().subtract(31, "d").toDate();
+    expect(isWithinRange(outsideDate, 31, "d")).toEqual(false);
+  });
+  it("isWithinRange should return true if given date is inside range", () => {
+    const insideDate = day().subtract(30, "d").toDate();
+    expect(isWithinRange(insideDate, 31, "d")).toEqual(true);
+  });
+  it("isWithinRange should still return true if given date is inside range and value passed for dateToCompare is undefined", () => {
+    const insideDate = day().subtract(30, "d").toDate();
+    expect(isWithinRange(insideDate, 31, "d", undefined)).toEqual(true);
+  });
+  it("isWithinRange should still return false if given date is outside range and value passed for dateToCompare is null", () => {
+    const insideDate = day().subtract(31, "d").toDate();
+    expect(isWithinRange(insideDate, 31, "d", null)).toEqual(false);
   });
   // Note: Some test conditions covered by cypress comp tests so tried not to duplicate.
   // See coverage.json generated on PR or locally via 'npm run local:report-combined' for more info.
