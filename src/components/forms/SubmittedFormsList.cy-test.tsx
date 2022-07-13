@@ -23,7 +23,7 @@ describe("SubmittedFormsList", () => {
       );
     cy.get("[data-cy=noSubmittedFormsMsg]").should("be.visible");
   });
-  it("should show a submitted forms in chronological and help hint when submitted forms", () => {
+  it("should show the help hint for unsubmitting forms when there are submitted forms in the list", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -42,14 +42,12 @@ describe("SubmittedFormsList", () => {
       "To save a PDF copy of your submitted form, please click on a form below and then click the Save a copy as a PDF button at the top of that page."
     );
     cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
-    cy.get(".nhsuk-action-link__text").should(
-      "include.text",
-      "form submitted on 22/04/2030 00:00" +
-        "form submitted on 22/04/2016 00:00" +
-        "form submitted on 22/04/2012 13:12" +
-        "form submitted on 22/04/2012 11:22" +
-        "form submitted on 22/04/2010 00:00"
-    );
+    cy.get(
+      ":nth-child(1) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
+    ).should("contain.text", "form submitted on 02/07/2022 13:12");
+    cy.get(
+      ":nth-child(4) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
+    ).should("contain.text", "form submitted on 22/04/2020 00:00");
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
       .should("contain.text", "Need to amend a recently-submitted form?");
