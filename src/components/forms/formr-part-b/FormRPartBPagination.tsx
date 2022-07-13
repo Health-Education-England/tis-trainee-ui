@@ -10,7 +10,6 @@ import {
 } from "../../../redux/slices/formBSlice";
 import { IProgSection } from "../../../models/IProgressSection";
 import classes from "./FormRPartB.module.scss";
-
 interface IFormRPartBPagination {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -80,10 +79,11 @@ const FormRPartBPagination = ({
       <Pagination.Link>
         {!nextSectionLabel && (
           <Button
-            onClick={() => {
+            onClick={(e: { preventDefault: () => void }) => {
+              e.preventDefault();
               handleSubmit();
             }}
-            disabled={!isValid && isSubmitting}
+            disabled={!isValid || isSubmitting}
             data-cy="BtnSubmitForm"
           >
             Submit Form
@@ -97,7 +97,7 @@ const FormRPartBPagination = ({
               e.preventDefault();
               handleSubmit();
             }}
-            disabled={!isValid && isSubmitting}
+            disabled={!isValid || isSubmitting}
             data-cy="BtnBackToSubmit"
           >
             Back to Submit
