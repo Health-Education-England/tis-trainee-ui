@@ -73,7 +73,7 @@ const FormRPartBPagination = ({
           disabled={isSubmitting}
           data-cy="BtnSaveDraft"
         >
-          Save & Exit
+          Save for later
         </Button>
       </Pagination.Link>
       <Pagination.Link>

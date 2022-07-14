@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import MultiChoiceInputField from "../../MultiChoiceInputField";
 import { Section7ValidationSchema } from "../ValidationSchema";
 import {
+  dialogBoxWarnings,
   FORMR_PARTB_ACCEPTANCE,
   FORMR_PARTB_CONSENT
 } from "../../../../utilities/Constants";
@@ -67,8 +68,7 @@ const Declarations = ({
   ) => {
     setSubmitting(false);
     confirm({
-      description:
-        "Please think carefully before submitting as the current process for deleting or re-submitting a new form isn't straightforward. You can save a draft copy if needed. But if you are ready to submit then please click OK."
+      description: dialogBoxWarnings.formSubMsg
     })
       .then(() => handleFormBSubmit(vals))
       .catch(() => {

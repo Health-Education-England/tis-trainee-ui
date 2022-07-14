@@ -265,13 +265,14 @@ const Create = ({ history }: { history: string[] }) => {
                 <div className="nhsuk-grid-row">
                   <div className="nhsuk-grid-column-one-third">
                     <Button
+                      secondary
                       onClick={() => {
                         FormRUtilities.saveDraftA(values, history);
                       }}
                       disabled={isSubmitting}
                       data-cy="BtnSaveDraft"
                     >
-                      Save & Exit
+                      Save for later
                     </Button>
                   </div>
                   <div className="nhsuk-grid-column-two-thirds">
