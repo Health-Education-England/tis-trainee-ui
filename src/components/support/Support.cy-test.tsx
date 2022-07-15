@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../redux/hooks/hooks";
 import store from "../../redux/store/store";
 import {
   mockTraineeProfile,
+  mockTraineeProfileNoGMC,
   mockTraineeProfileNoMatch
 } from "../../mock-data/trainee-profile";
 import {
@@ -39,7 +40,7 @@ describe("Support", () => {
     cy.get("[data-cy=techSupportLink]").should(
       "have.attr",
       "href",
-      "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query"
+      "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (GMC no. 11111111, TIS ID 123)"
     );
     cy.get("[data-cy=techSupportLink] > .nhsuk-action-link__text").should(
       "include.text",
@@ -51,7 +52,7 @@ describe("Support", () => {
     cy.get("[data-cy=loLink]").should(
       "have.attr",
       "href",
-      "mailto:Formr.tv@hee.nhs.uk?subject=Form R support query"
+      "mailto:Formr.tv@hee.nhs.uk?subject=Form R support query (GMC no. 11111111, TIS ID 123)"
     );
     cy.get(".nhsuk-details__text > :nth-child(1)").should("be.visible");
     cy.get("[data-cy=successMsg] > :nth-child(1)").should(
@@ -96,6 +97,30 @@ describe("Support", () => {
     cy.get(".nhsuk-action-link__text").should(
       "include.text",
       "TIS.yh@hee.nhs.uk"
+    );
+  });
+  it("should only show tisId if no GMC number", () => {
+    const MockedSupportNoGmc = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedTraineeProfileData(mockTraineeProfileNoGMC));
+      return <Support />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedSupportNoGmc />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=loLink]").should(
+      "have.attr",
+      "href",
+      "mailto:Formr.tv@hee.nhs.uk?subject=Form R support query (TIS ID 789)"
+    );
+    cy.get("[data-cy=techSupportLink]").should(
+      "have.attr",
+      "href",
+      "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (TIS ID 789)"
     );
   });
 });
