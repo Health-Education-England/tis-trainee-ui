@@ -10,6 +10,11 @@ import { useEffect, useState } from "react";
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   const personOwner = traineeProfileData.personalDetails?.personOwner;
+  const gmcNo = traineeProfileData.personalDetails?.gmcNumber;
+  const tisId = traineeProfileData.traineeTisId;
+  const emailIds = gmcNo
+    ? `GMC no. ${gmcNo}, TIS ID ${tisId}`
+    : `TIS ID ${tisId}`;
   const [mappedContact, setIsMappedContact] = useState("");
 
   useEffect(() => {
@@ -57,12 +62,12 @@ const Support = () => {
         data-cy="loSupportLabel"
       >
         <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
-        <SupportList mappedContact={mappedContact} />
+        <SupportList mappedContact={mappedContact} emailIds={emailIds} />
       </Panel>
       <Panel label="Technical issues" data-cy="techSupportLabel">
         <ActionLink
           data-cy="techSupportLink"
-          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query`}
+          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})`}
         >
           Please click here to email TIS Support
         </ActionLink>

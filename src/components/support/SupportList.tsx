@@ -4,9 +4,10 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
 interface ISupportList {
   mappedContact: string | null | undefined;
+  emailIds: String;
 }
 
-const SupportList = ({ mappedContact }: ISupportList) => {
+const SupportList = ({ mappedContact, emailIds }: ISupportList) => {
   const [linkContact, updateLinkContact] = useState(mappedContact);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const SupportList = ({ mappedContact }: ISupportList) => {
               return (
                 <ActionLink
                   data-cy="loLink"
-                  href={`mailto:${linkContact}?subject=Form R support query`}
+                  href={`mailto:${linkContact}?subject=Form R support query (${emailIds})`}
                 >
                   {linkContact}
                 </ActionLink>

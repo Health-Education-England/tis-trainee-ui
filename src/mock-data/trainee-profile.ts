@@ -238,3 +238,10 @@ export const mockTraineeProfileNoMatch: TraineeProfile = {
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
+
+export const mockTraineeProfileNoGMC: TraineeProfile = {
+  traineeTisId: "789",
+  personalDetails: { ...mockPersonalDetails, gmcNumber: "" },
+  programmeMemberships: mockProgrammeMemberships,
+  placements: mockPlacements
+};
