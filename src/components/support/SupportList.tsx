@@ -4,7 +4,7 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 
 interface ISupportList {
   mappedContact: string | null | undefined;
-  emailIds: String;
+  emailIds: string;
 }
 
 const SupportList = ({ mappedContact, emailIds }: ISupportList) => {
