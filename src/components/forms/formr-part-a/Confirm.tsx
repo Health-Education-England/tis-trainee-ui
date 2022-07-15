@@ -49,8 +49,9 @@ const Confirm = ({ history }: IConfirm) => {
       <div className="nhsuk-grid-row">
         <div className="nhsuk-grid-column-two-thirds">
           <div className="nhsuk-grid-row">
-            <div className="nhsuk-grid-column-one-quarter">
+            <div className="nhsuk-grid-column-one-third">
               <Button
+                reverse
                 data-cy="BtnEdit"
                 onClick={() =>
                   FormRUtilities.historyPush(history, "/formr-a/create")
@@ -72,7 +73,7 @@ const Confirm = ({ history }: IConfirm) => {
                 Save for later
               </Button>
             </div>
-            <div className="nhsuk-grid-column-one-quarter">
+            <div className="nhsuk-grid-column-one-third">
               <Button
                 onClick={(e: { preventDefault: () => void }) => {
                   e.preventDefault();

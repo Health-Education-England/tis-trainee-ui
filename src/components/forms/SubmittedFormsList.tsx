@@ -61,7 +61,7 @@ const SubmittedFormsList = ({
             below and then click the <b>Save a copy as a PDF</b> button at the
             top of that page.
           </Hint>
-          <WarningCallout label="Important!" data-cy="formsListWarning">
+          <WarningCallout label="Important" data-cy="formsListWarning">
             {isWithinRange(latestSubDate, 31, "d") && (
               <p>
                 Your previous form was submitted recently on{" "}

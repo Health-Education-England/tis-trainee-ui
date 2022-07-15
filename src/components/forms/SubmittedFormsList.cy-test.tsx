@@ -15,7 +15,12 @@ describe("SubmittedFormsList", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <SubmittedFormsList formRList={[]} path="/formr-a" history={[]} />
+          <SubmittedFormsList
+            formRList={[]}
+            path="/formr-a"
+            history={[]}
+            latestSubDate={""}
+          />
         </Router>
       </Provider>
     );
@@ -36,6 +41,7 @@ describe("SubmittedFormsList", () => {
             formRList={submittedFormRPartAs}
             path="/formr-a"
             history={[]}
+            latestSubDate={""}
           />
         </Router>
       </Provider>
@@ -55,7 +61,7 @@ describe("SubmittedFormsList", () => {
     ).should("contain.text", "form submitted on 22/04/2020 00:00");
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
-      .should("contain.text", "Important!")
+      .should("contain.text", "Important")
       .should("contain.text", "Need to amend a recently-submitted form?");
   });
   it("should show warning when there is recent submitted form", () => {
