@@ -97,7 +97,6 @@ const FormRPartBPagination = ({
               e.preventDefault();
               handleSubmit();
             }}
-            disabled={!isValid || isSubmitting}
             data-cy="BtnBackToSubmit"
           >
             Back to Submit

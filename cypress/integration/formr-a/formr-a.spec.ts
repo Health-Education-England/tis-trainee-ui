@@ -27,6 +27,13 @@ describe("Form R (Part A)", () => {
         // ---------- if New form btn ------------------------------------------------------------------
         if (loadFormAButton.attr("data-cy") === "btnLoadNewForm") {
           cy.get("[data-cy=btnLoadNewForm]").click();
+          cy.get(".MuiDialog-container").should("exist");
+          cy.get(".MuiDialogContentText-root").should(
+            "include.text",
+            "You recently submitted a form"
+          );
+          cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+
           cy.log("##################### NEW FORM ##################");
           cy.get(".nhsuk-warning-callout > p").should("exist");
 
@@ -298,6 +305,10 @@ describe("Form R (Part A)", () => {
     cy.log("################ submit form ###################");
 
     cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
+    cy.get(".MuiDialog-container")
+      .should("exist")
+      .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
 
