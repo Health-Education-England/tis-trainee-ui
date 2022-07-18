@@ -55,7 +55,7 @@ export class DateUtilities {
     return localDate;
   }
 
-  public static SortDateDecending<T>(arr: T[] = [], dateFieldName: string) {
+  public static SortDateDecending<T>(arr: T[], dateFieldName: string) {
     return [...arr].sort(
       (a: any, b: any) =>
         new Date(b[dateFieldName]).getTime() -
