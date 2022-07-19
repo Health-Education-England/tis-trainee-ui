@@ -88,7 +88,7 @@ const FormsListBtn = ({
       })
         .then(() => loadNewForm())
         .catch(() => console.log("action cancelled"));
-    }
+    } else loadNewForm();
   };
 
   return (
