@@ -2,18 +2,23 @@ import { Button } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { loadSavedFormA, updatedFormA } from "../../redux/slices/formASlice";
-import { ProfileToFormRPartAInitialValues } from "../../models/ProfileToFormRPartAInitialValues";
-import { ProfileToFormRPartBInitialValues } from "../../models/ProfileToFormRPartBInitialValues";
+import { loadSavedFormA } from "../../redux/slices/formASlice";
 import {
   loadSavedFormB,
-  resetToInitFormB,
-  updatedFormB
+  resetToInitFormB
 } from "../../redux/slices/formBSlice";
 import history from "../navigation/history";
+import {
+  DateType,
+  DateUtilities,
+  isWithinRange
+} from "../../utilities/DateUtilities";
+import { FormRUtilities } from "../../utilities/FormRUtilities";
+import { useConfirm } from "material-ui-confirm";
 interface IFormsListBtn {
   formRList: IFormR[];
   pathName: string;
+  latestSubDate: DateType;
 }
 
 const btnProps = {
@@ -29,7 +34,12 @@ const btnProps = {
   }
 };
 
-const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
+const FormsListBtn = ({
+  formRList,
+  pathName,
+  latestSubDate
+}: IFormsListBtn) => {
+  const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   let btnForm: IFormR | null = null;
@@ -55,17 +65,17 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
     history.push(`${pathName}/create`);
   };
 
-  const loadNewForm = () => {
-    if (pathName === "/formr-a") {
-      const formAInitialValues =
-        ProfileToFormRPartAInitialValues(traineeProfileData);
-      dispatch(updatedFormA(formAInitialValues));
-    } else if (pathName === "/formr-b") {
-      const formBInitialValues =
-        ProfileToFormRPartBInitialValues(traineeProfileData);
-      dispatch(updatedFormB(formBInitialValues));
-    }
-    history.push(`${pathName}/create`);
+  const handleNewClick = () => {
+    if (isWithinRange(latestSubDate, 31, "d")) {
+      const localDate = DateUtilities.ToLocalDate(latestSubDate);
+      confirm({
+        description: `You recently submitted a form on ${localDate}. Are you sure you want to submit another?`
+      })
+        .then(() =>
+          FormRUtilities.loadNewForm(pathName, history, traineeProfileData)
+        )
+        .catch(() => console.log("action cancelled"));
+    } else FormRUtilities.loadNewForm(pathName, history, traineeProfileData);
   };
 
   return (
@@ -77,7 +87,7 @@ const FormsListBtn = ({ formRList, pathName }: IFormsListBtn) => {
       onClick={() => {
         resetForm(pathName);
         if (btnForm?.id) loadTheSavedForm(btnForm.id);
-        else loadNewForm();
+        else handleNewClick();
       }}
     >
       {btnForm ? bFProps["btn-text"] : "Submit new form"}

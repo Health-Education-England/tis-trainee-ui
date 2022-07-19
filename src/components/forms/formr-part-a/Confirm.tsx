@@ -1,18 +1,34 @@
 import View from "./View";
 import ScrollTo from "../ScrollTo";
 import { Button, WarningCallout } from "nhsuk-react-components";
-import SubmitButton from "../SubmitButton";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { useConfirm } from "material-ui-confirm";
+import { FormRPartA } from "../../../models/FormRPartA";
+import { useState } from "react";
+import { dialogBoxWarnings } from "../../../utilities/Constants";
 interface IConfirm {
   history: string[];
 }
 
 const Confirm = ({ history }: IConfirm) => {
+  const confirm = useConfirm();
   const canEdit: boolean = true;
   const formData = useAppSelector(selectSavedFormA);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubClick = (vals: FormRPartA) => {
+    setIsSubmitting(false);
+    confirm({
+      description: dialogBoxWarnings.formSubMsg
+    })
+      .then(() => FormRUtilities.handleSubmitA(vals, history))
+      .catch(() => {
+        console.log("form a submit cancelled");
+      });
+  };
 
   if (!formData.traineeTisId) {
     return <Redirect to="/formr-a" />;
@@ -33,34 +49,42 @@ const Confirm = ({ history }: IConfirm) => {
       <div className="nhsuk-grid-row">
         <div className="nhsuk-grid-column-two-thirds">
           <div className="nhsuk-grid-row">
-            <div className="nhsuk-grid-column-one-quarter">
+            <div className="nhsuk-grid-column-one-third">
               <Button
+                reverse
                 data-cy="BtnEdit"
                 onClick={() =>
                   FormRUtilities.historyPush(history, "/formr-a/create")
                 }
               >
-                Edit
+                Edit Form
               </Button>
             </div>
             <div className="nhsuk-grid-column-one-third">
-              <SubmitButton
-                label="Save & Exit"
-                clickHandler={() => {
+              <Button
+                secondary
+                onClick={() => {
+                  setIsSubmitting(true);
                   FormRUtilities.saveDraftA(formData, history);
                 }}
+                disabled={isSubmitting}
                 data-cy="BtnSaveDraft"
-              />
+              >
+                Save for later
+              </Button>
             </div>
-            <div className="nhsuk-grid-column-one-quarter">
-              <SubmitButton
-                type="submit"
-                label="Submit"
-                clickHandler={() =>
-                  FormRUtilities.handleSubmitA(formData, history)
-                }
+            <div className="nhsuk-grid-column-one-third">
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  setIsSubmitting(true);
+                  handleSubClick(formData);
+                }}
+                disabled={isSubmitting}
                 data-cy="BtnSubmit"
-              />
+              >
+                Submit Form
+              </Button>
             </div>
           </div>
         </div>

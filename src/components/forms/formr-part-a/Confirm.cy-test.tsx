@@ -8,6 +8,7 @@ import store from "../../../redux/store/store";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import Confirm from "./Confirm";
 import history from "../../navigation/history";
+import { ConfirmProvider } from "material-ui-confirm";
 
 describe("Confirm", () => {
   it("should not render the page if no tisId", () => {
@@ -30,7 +31,9 @@ describe("Confirm", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedConfirm />
+          <ConfirmProvider>
+            <MockedConfirm />
+          </ConfirmProvider>
         </Router>
       </Provider>
     );
@@ -49,6 +52,15 @@ describe("Confirm", () => {
       "include.text",
       "By submitting this form, I confirm that the information above is correct"
     );
+
+    cy.stub(FormRUtilities, "handleSubmitA").as("Submit");
+    cy.get("[data-cy=BtnSubmit]").should("exist").click();
+    cy.get(".MuiDialog-container")
+      .should("exist")
+      .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get("@Submit").should("have.been.called");
+
     cy.stub(FormRUtilities, "historyPush").as("EditViaLink");
     cy.get("[data-cy=BtnEdit]").should("exist").click();
     cy.get("@EditViaLink").should("have.been.called");
@@ -56,9 +68,5 @@ describe("Confirm", () => {
     cy.stub(FormRUtilities, "saveDraftA").as("SaveDraft");
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
     cy.get("@SaveDraft").should("have.been.called");
-
-    cy.stub(FormRUtilities, "handleSubmitA").as("Submit");
-    cy.get("[data-cy=BtnSubmit]").should("exist").click();
-    cy.get("@Submit").should("have.been.called");
   });
 });

@@ -7,7 +7,33 @@ day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
 const todayDate = day().toDate();
-type DateType = Date | string | null;
+export type DateType = Date | string | null;
+export type DateUnitType =
+  | "millisecond"
+  | "second"
+  | "minute"
+  | "hour"
+  | "day"
+  | "month"
+  | "year"
+  | "date"
+  | "milliseconds"
+  | "seconds"
+  | "minutes"
+  | "hours"
+  | "days"
+  | "months"
+  | "years"
+  | "dates"
+  | "d"
+  | "w"
+  | "Q"
+  | "M"
+  | "y"
+  | "h"
+  | "m"
+  | "s"
+  | "ms";
 export class DateUtilities {
   public static ToUTCDate(date: DateType): string {
     let utcDate = "";
@@ -98,3 +124,12 @@ export class DateUtilities {
     return true;
   }
 }
+
+export const isWithinRange = (
+  date: DateType = null,
+  range: number = 1,
+  unit: DateUnitType = "d",
+  dateToCompare: DateType = day().toDate()
+): boolean => {
+  return date ? day(dateToCompare).diff(date, unit) < range : false;
+};

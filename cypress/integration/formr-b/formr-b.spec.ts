@@ -32,7 +32,13 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
     cy.visit("/formr-b");
-    cy.get("#btnOpenForm").click();
+    cy.get("[data-cy=btnLoadNewForm]").click();
+    cy.get(".MuiDialog-container").should("exist");
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "You recently submitted a form"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.get(".nhsuk-warning-callout > p").should("exist");
 
     // ---- check if form state resets if navigate away from create page ------------
@@ -42,7 +48,8 @@ describe("Form R (Part B)", () => {
     cy.get(":nth-child(2) > .nhsuk-header__navigation-link").click();
     cy.get("[data-cy=BtnMenu]").click();
     cy.get(":nth-child(3) > .nhsuk-header__navigation-link").click();
-    cy.get("#btnOpenForm").click();
+    cy.get("[data-cy=btnLoadNewForm]").click();
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.get("[data-cy=email]").should("have.value", "");
 
     //   // -------- Section 1 - Doctor's details -----------
@@ -348,6 +355,10 @@ describe("Form R (Part B)", () => {
     cy.intercept("GET", "/api/forms/formr-partbs").as("getFormrPartBs");
 
     cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+    cy.get(".MuiDialog-container")
+      .should("exist")
+      .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.checkForSuccessNotif("Success");
     cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");

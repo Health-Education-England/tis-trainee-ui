@@ -1,22 +1,27 @@
 import { useEffect } from "react";
-import { IFormR } from "../../models/IFormR";
 import Loading from "../common/Loading";
 import ScrollTo from "./ScrollTo";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
-import { selectAllforms, fetchForms } from "../../redux/slices/formsSlice";
+import {
+  selectAllforms,
+  fetchForms,
+  selectAllSubmittedforms
+} from "../../redux/slices/formsSlice";
 import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "./FormsListBtn";
 import { Redirect, useLocation } from "react-router-dom";
 import SubmittedFormsList from "./SubmittedFormsList";
 
 const CreateList = ({ history }: { history: string[] }) => {
-  let pathname: string = useLocation().pathname;
+  let pathname = useLocation().pathname;
   const dispatch = useAppDispatch();
-  const formRList: IFormR[] = useAppSelector(selectAllforms);
-  const formRListStatus: string = useAppSelector(state => state.forms.status);
-  const featFlagStatus: string = useAppSelector(
-    state => state.featureFlags.status
-  );
+  const formRListDesc = useAppSelector(selectAllforms);
+  const submittedListDesc = useAppSelector(selectAllSubmittedforms);
+  const latestSubDate = submittedListDesc.length
+    ? submittedListDesc[0].submissionDate
+    : null;
+  const formRListStatus = useAppSelector(state => state.forms.status);
+  const featFlagStatus = useAppSelector(state => state.featureFlags.status);
 
   useEffect(() => {
     dispatch(fetchForms(pathname));
@@ -37,11 +42,16 @@ const CreateList = ({ history }: { history: string[] }) => {
       <>
         <ScrollTo />
         <br />
-        <FormsListBtn pathName={pathname} formRList={formRList} />
+        <FormsListBtn
+          pathName={pathname}
+          formRList={formRListDesc}
+          latestSubDate={latestSubDate}
+        />
         <SubmittedFormsList
-          formRList={formRList}
+          formRList={submittedListDesc}
           path={pathname}
           history={history}
+          latestSubDate={latestSubDate}
         />
       </>
     );

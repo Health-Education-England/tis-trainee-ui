@@ -8,6 +8,7 @@ import Declarations from "./Declarations";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import Section6 from "./Section6";
 import history from "../../../navigation/history";
+import { ConfirmProvider } from "material-ui-confirm";
 
 it("should mount section 6 ", () => {
   const MockedDeclarations = () => {
@@ -31,7 +32,9 @@ it("should mount section 6 ", () => {
   mount(
     <Provider store={store}>
       <Router history={history}>
-        <MockedDeclarations />
+        <ConfirmProvider>
+          <MockedDeclarations />
+        </ConfirmProvider>
       </Router>
     </Provider>
   );
@@ -41,4 +44,21 @@ it("should mount section 6 ", () => {
   cy.get("[data-cy=isDeclarationAccepted0]").should("exist").click();
   cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
   cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+  cy.get(".MuiDialog-container")
+    .should("exist")
+    .should("include.text", "Please think carefully before submitting");
+  cy.get(".MuiDialogActions-root > :nth-child(1)").click();
+  cy.get(".MuiDialog-container").should("not.exist");
+  cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+  cy.get(".MuiDialog-scrollPaper ").should("exist").click(1, 1);
+  cy.get(".MuiDialog-container").should("not.exist");
+  cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
+  cy.get("#isConsentAccepted--error-message")
+    .should("exist")
+    .should("contain.text", "Error: You must confirm your acceptance");
+  cy.get("[data-cy=BtnSubmitForm]").should("be.disabled");
+  cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
+  cy.get("[data-cy=BtnSubmitForm]").should("not.be.disabled").click();
+  cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+  cy.get(".MuiDialog-container").should("not.exist");
 });

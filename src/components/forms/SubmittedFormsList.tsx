@@ -1,13 +1,15 @@
 import {
   ActionLink,
   Hint,
-  LedeText,
   Table,
   WarningCallout
 } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
-import { LifeCycleState } from "../../models/LifeCycleState";
-import { DateUtilities } from "../../utilities/DateUtilities";
+import {
+  DateUtilities,
+  DateType,
+  isWithinRange
+} from "../../utilities/DateUtilities";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import styles from "./FormR.module.scss";
 
@@ -15,24 +17,19 @@ interface ISubmittedFormsList {
   formRList: IFormR[];
   path: string;
   history: string[];
+  latestSubDate: DateType;
 }
 
 const SubmittedFormsList = ({
   formRList,
   path,
-  history
+  history,
+  latestSubDate
 }: ISubmittedFormsList) => {
-  const submittedForms: IFormR[] = formRList.filter(
-    (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
-  );
   let content: JSX.Element | JSX.Element[];
 
-  if (submittedForms.length > 0) {
-    const submittedFormsDec = DateUtilities.SortDateDecending(
-      submittedForms,
-      "submissionDate"
-    );
-    content = submittedFormsDec.map((formData: IFormR) => (
+  if (formRList.length) {
+    content = formRList.map((formData: IFormR) => (
       <Table.Row key={formData.id} className={styles.listTableRow}>
         <td>
           <ActionLink
@@ -49,21 +46,29 @@ const SubmittedFormsList = ({
     ));
   } else
     content = (
-      <LedeText data-cy="noSubmittedFormsMsg">No forms submitted yet.</LedeText>
+      <Table.Row>
+        <td>
+          <p data-cy="noSubmittedFormsMsg">No forms submitted yet.</p>
+        </td>
+      </Table.Row>
     );
   return (
     <>
-      {submittedForms.length > 0 ? (
+      {formRList.length ? (
         <>
           <Hint data-cy="formsTrueHint">
             To save a PDF copy of your submitted form, please click on a form
             below and then click the <b>Save a copy as a PDF</b> button at the
             top of that page.
           </Hint>
-          <WarningCallout
-            label="Need to amend a recently-submitted form?"
-            data-cy="formsListWarning"
-          >
+          <WarningCallout label="Important" data-cy="formsListWarning">
+            {isWithinRange(latestSubDate, 31, "d") && (
+              <p>
+                Your previous form was submitted recently on{" "}
+                {DateUtilities.ToLocalDateTime(latestSubDate)}.
+              </p>
+            )}
+            <h4>Need to amend a recently-submitted form?</h4>
             <p>
               Please click the <b>Support</b> link (menu or footer link) to
               contact your Local Office. They will put the specified form back
