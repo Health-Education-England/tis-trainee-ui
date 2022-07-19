@@ -14,6 +14,7 @@ import { updatedTraineeProfileData } from "../../redux/slices/traineeProfileSlic
 import history from "../navigation/history";
 import day from "dayjs";
 import { ConfirmProvider } from "material-ui-confirm";
+import { FormRUtilities } from "../../utilities/FormRUtilities";
 
 describe("FormsListBtn", () => {
   it("should render the 'Submit new form' button if no submitted forms ", () => {
@@ -98,6 +99,7 @@ describe("FormsListBtn", () => {
         </Router>
       </Provider>
     );
+    cy.stub(FormRUtilities, "loadNewForm").as("newForm");
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
     cy.get(".MuiDialog-container").should("exist");
     cy.get("#mui-1").should("include.text", "Are you sure?");
@@ -106,8 +108,9 @@ describe("FormsListBtn", () => {
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.url().should("include", "/create");
+    cy.get("@newForm").should("have.been.called");
   });
-  it("should NOT render the modal warning if a form has NOT been submitted within 31 days from today", () => {
+  it("should NOT render the modal warning if a form has NOT been submitted within 31 days from today but should still loadNewForm", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -121,8 +124,10 @@ describe("FormsListBtn", () => {
         </Router>
       </Provider>
     );
+    cy.stub(FormRUtilities, "loadNewForm").as("newForm");
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
     cy.get(".MuiDialog-container").should("not.exist");
     cy.url().should("include", "/create");
+    cy.get("@newForm").should("have.been.called");
   });
 });

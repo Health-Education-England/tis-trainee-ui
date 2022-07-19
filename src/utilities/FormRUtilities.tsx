@@ -16,8 +16,11 @@ import {
   updatedFormA,
   updateFormA
 } from "../redux/slices/formASlice";
-import { loadSavedFormB } from "../redux/slices/formBSlice";
+import { loadSavedFormB, updatedFormB } from "../redux/slices/formBSlice";
 import FieldWarningMsg from "../components/forms/FieldWarningMsg";
+import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAInitialValues";
+import { TraineeProfile } from "../models/TraineeProfile";
+import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
 
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
@@ -111,6 +114,23 @@ export class FormRUtilities {
     if (value === "") {
       return message;
     }
+  }
+
+  public static loadNewForm(
+    pathName: string,
+    history: any,
+    traineeProfileData: TraineeProfile
+  ) {
+    if (pathName === "/formr-a") {
+      const formAInitialValues =
+        ProfileToFormRPartAInitialValues(traineeProfileData);
+      store.dispatch(updatedFormA(formAInitialValues));
+    } else if (pathName === "/formr-b") {
+      const formBInitialValues =
+        ProfileToFormRPartBInitialValues(traineeProfileData);
+      store.dispatch(updatedFormB(formBInitialValues));
+    }
+    history.push(`${pathName}/create`);
   }
 }
 
