@@ -355,6 +355,10 @@ describe("Form R (Part B)", () => {
     cy.intercept("GET", "/api/forms/formr-partbs").as("getFormrPartBs");
 
     cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+    cy.get(".MuiDialog-container")
+      .should("exist")
+      .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.checkForSuccessNotif("Success");
     cy.get("[data-cy=btnLoadNewForm]").should("exist");
     cy.contains("Submitted forms").should("exist");
