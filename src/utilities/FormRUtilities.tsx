@@ -110,10 +110,11 @@ export class FormRUtilities {
     return null;
   }
 
-  public static defaultValueIfEmpty(value: string, message: string) {
-    if (value === "") {
-      return message;
-    }
+  public static showMsgIfEmpty(
+    value: string,
+    message: string = "None recorded"
+  ) {
+    return value ? value : message;
   }
 
   public static loadNewForm(

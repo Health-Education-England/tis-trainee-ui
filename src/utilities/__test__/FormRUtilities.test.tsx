@@ -25,16 +25,17 @@ describe("FormRUtilities", () => {
       <FieldWarningMsg warningMsg="Warning. Non-UK Postcode (Please ignore if you meant it.)" />
     );
   });
-  it("should return message if empty string detected", () => {
-    const value = "";
-    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
-      "None provided"
-    );
-  });
-  it("should not return message if string detected", () => {
+  it("should return value if data (string) provided", () => {
     const value = "Super Compliment";
-    expect(FormRUtilities.defaultValueIfEmpty(value, "None provided")).toBe(
-      undefined
-    );
+    expect(FormRUtilities.showMsgIfEmpty(value)).toBe(value);
+  });
+  it("should return given message if no data (empty string) provided", () => {
+    const value = "";
+    const message = "This is my message if no data";
+    expect(FormRUtilities.showMsgIfEmpty(value, message)).toBe(message);
+  });
+  it("should return default message if no value (empty string) and no message provided", () => {
+    const value = "";
+    expect(FormRUtilities.showMsgIfEmpty(value)).toBe("None recorded");
   });
 });
