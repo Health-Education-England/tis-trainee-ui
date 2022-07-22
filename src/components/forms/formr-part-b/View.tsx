@@ -295,7 +295,7 @@ const View = ({ canEdit, history }: IView) => {
             <SummaryList.Row>
               <SummaryList.Key>Health Statement</SummaryList.Key>
               <SummaryList.Value>
-                {FormRUtilities.defaultValueIfEmpty(
+                {FormRUtilities.showMsgIfEmpty(
                   formData.healthStatement,
                   "No health statement recorded"
                 )}
@@ -529,7 +529,7 @@ const View = ({ canEdit, history }: IView) => {
             <SummaryList.Row>
               <SummaryList.Key>Compliments</SummaryList.Key>
               <SummaryList.Value data-jest="compliments">
-                {FormRUtilities.defaultValueIfEmpty(
+                {FormRUtilities.showMsgIfEmpty(
                   formData.compliments,
                   "No compliments recorded"
                 )}
@@ -682,7 +682,7 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Name
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {FormRUtilities.defaultValueIfEmpty(
+                        {FormRUtilities.showMsgIfEmpty(
                           formData.covidDeclarationDto
                             ?.educationSupervisorName!,
                           "No supervisor name provided"
@@ -694,7 +694,7 @@ const View = ({ canEdit, history }: IView) => {
                         Education Supervisor Email Address
                       </SummaryList.Key>
                       <SummaryList.Value>
-                        {FormRUtilities.defaultValueIfEmpty(
+                        {FormRUtilities.showMsgIfEmpty(
                           formData.covidDeclarationDto
                             ?.educationSupervisorEmail!,
                           "No supervisor email provided"
