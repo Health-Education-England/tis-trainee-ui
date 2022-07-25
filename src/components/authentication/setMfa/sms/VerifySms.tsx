@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import "react-phone-number-input/style.css";
 import { MobilePhoneValidationSchema } from "../ValidationSchema";
 import MobilePhoneInputField from "../../../forms/MobilePhoneInputField";
-import { Button, Panel } from "nhsuk-react-components";
+import { Button } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   incrementSmsSection,
@@ -12,6 +12,7 @@ import {
 } from "../../../../redux/slices/userSlice";
 import { CognitoUser } from "@aws-amplify/auth";
 import store from "../../../../redux/store/store";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IVerifySms {
   user: CognitoUser;
 }

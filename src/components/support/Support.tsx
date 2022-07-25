@@ -1,4 +1,4 @@
-import { ActionLink, Details, Panel } from "nhsuk-react-components";
+import { ActionLink, Details } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import SupportMsg from "./SupportMsg";
 import SupportList from "./SupportList";
@@ -6,6 +6,7 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { useEffect, useState } from "react";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);

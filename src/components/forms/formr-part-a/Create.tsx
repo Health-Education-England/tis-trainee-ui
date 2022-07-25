@@ -4,7 +4,6 @@ import {
   Button,
   ErrorMessage,
   ErrorSummary,
-  Panel,
   WarningCallout
 } from "nhsuk-react-components";
 import { KeyValue } from "../../../models/KeyValue";
@@ -33,6 +32,7 @@ import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();

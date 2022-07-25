@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { Button, Details, Panel, WarningCallout } from "nhsuk-react-components";
+import { Button, Details, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { resetUser, updatedtempMfa } from "../../../redux/slices/userSlice";
 import { MFA_OPTIONS } from "../../../utilities/Constants";
@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import ScrollTo from "../../forms/ScrollTo";
 import history from "../../navigation/history";
 import { MFAStatus } from "../../../models/MFAStatus";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IChooseMfa {
   mfa: string;
 }

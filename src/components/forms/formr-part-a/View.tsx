@@ -1,4 +1,4 @@
-import { WarningCallout, Panel, SummaryList } from "nhsuk-react-components";
+import { WarningCallout, SummaryList } from "nhsuk-react-components";
 import { Redirect } from "react-router-dom";
 import { CCT_DECLARATION } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
@@ -7,6 +7,7 @@ import ScrollTo from "../ScrollTo";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
 import FormSavePDF from "../FormSavePDF";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IView {
   canEdit: boolean;
   history: any;

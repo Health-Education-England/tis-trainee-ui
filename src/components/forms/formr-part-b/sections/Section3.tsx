@@ -4,7 +4,6 @@ import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
   WarningCallout,
-  Panel,
   ErrorSummary,
   ErrorMessage
 } from "nhsuk-react-components";
@@ -15,6 +14,7 @@ import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section3 = ({
   prevSectionLabel,

@@ -1,6 +1,6 @@
 import { CognitoUser } from "@aws-amplify/auth";
 import { Formik } from "formik";
-import { Button, Form, Panel } from "nhsuk-react-components";
+import { Button, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   updatedTotpSection,
@@ -9,7 +9,7 @@ import {
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import ThreeMinMsg from "./ThreeMinMsg";
-
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IDecideTotp {
   user: CognitoUser | any;
   handleSectionSubmit: () => void;

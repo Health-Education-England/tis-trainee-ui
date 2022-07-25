@@ -3,7 +3,6 @@ import {
   ErrorMessage,
   ErrorSummary,
   Fieldset,
-  Panel,
   WarningCallout
 } from "nhsuk-react-components";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
@@ -19,6 +18,7 @@ import { CombinedReferenceData } from "../../../../models/CombinedReferenceData"
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section1 = ({
   prevSectionLabel,

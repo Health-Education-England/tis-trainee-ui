@@ -4,7 +4,6 @@ import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
   WarningCallout,
-  Panel,
   Button,
   ErrorSummary,
   ErrorMessage
@@ -21,6 +20,7 @@ import {
 } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section4 = ({
   prevSectionLabel,

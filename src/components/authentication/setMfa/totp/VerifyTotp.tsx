@@ -6,7 +6,6 @@ import {
   Fieldset,
   Form,
   Input,
-  Panel,
   WarningCallout
 } from "nhsuk-react-components";
 import { useEffect, useState } from "react";
@@ -28,6 +27,7 @@ import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
 import "../MFA.scss";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IVerifyTotp {
   user: CognitoUser | any;
 }

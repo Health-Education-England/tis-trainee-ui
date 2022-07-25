@@ -1,7 +1,6 @@
 import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
-  Panel,
   Label,
   WarningCallout,
   ErrorSummary,
@@ -26,6 +25,7 @@ import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const CovidDeclaration = ({
   prevSectionLabel,

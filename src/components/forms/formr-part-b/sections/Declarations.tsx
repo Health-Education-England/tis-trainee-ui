@@ -1,4 +1,4 @@
-import { Fieldset, Panel } from "nhsuk-react-components";
+import { Fieldset } from "nhsuk-react-components";
 import { Form, Formik } from "formik";
 import MultiChoiceInputField from "../../MultiChoiceInputField";
 import { Section7ValidationSchema } from "../ValidationSchema";
@@ -22,7 +22,7 @@ import { LifeCycleState } from "../../../../models/LifeCycleState";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 import { useConfirm } from "material-ui-confirm";
-
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IDeclarations {
   prevSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;

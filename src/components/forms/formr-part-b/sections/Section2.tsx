@@ -3,7 +3,6 @@ import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
   WarningCallout,
-  Panel,
   InsetText,
   Button,
   ErrorSummary,
@@ -22,6 +21,7 @@ import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
 import { StringUtilities } from "../../../../utilities/StringUtilities";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section2 = ({
   prevSectionLabel,
