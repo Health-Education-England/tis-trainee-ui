@@ -52,7 +52,10 @@ const Section2 = ({
             >
               Section 2: Whole Scope of Practice
             </Fieldset.Legend>
-            <WarningCallout label="Important" data-cy="mainWarning2">
+            <WarningCallout data-cy="mainWarning2">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <p>
                 Read these instructions carefully! Please list all placements in
                 your capacity as a registered medical practitioner since last

@@ -62,7 +62,10 @@ const Create = ({ history }: { history: string[] }) => {
       >
         {({ values, errors, setFieldValue, isSubmitting }) => (
           <Form>
-            <WarningCallout label="Important">
+            <WarningCallout>
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <p>
                 This form has been pre-populated using the information available
                 against your records within the Trainee Information System

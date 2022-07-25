@@ -58,7 +58,10 @@ const View = ({ canEdit, history }: IView) => {
         <ScrollTo />
         {!canEdit && <FormSavePDF history={history} formrPath={"/formr-b"} />}
         {!!canEdit && (
-          <WarningCallout label="Confirmation" data-jest="warningConfirmation">
+          <WarningCallout data-jest="warningConfirmation">
+            <WarningCallout.Label visuallyHiddenText={false}>
+              Confirmation
+            </WarningCallout.Label>
             <p>
               Check the information entered below is correct, complete the
               Declarations, then click Submit at the bottom of the page.

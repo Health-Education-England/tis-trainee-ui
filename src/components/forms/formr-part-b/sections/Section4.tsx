@@ -54,7 +54,10 @@ const Section4 = ({
             >
               Section 4: Update to your previous Form R Part B
             </Fieldset.Legend>
-            <WarningCallout label="Important" data-cy="mainWarning4">
+            <WarningCallout data-cy="mainWarning4">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <div>
                 <p>
                   If you have previously declared any Significant Events,

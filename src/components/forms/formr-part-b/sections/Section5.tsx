@@ -61,7 +61,10 @@ const Section5 = ({
             >
               Section 5: New declarations since your previous Form R Part B
             </Fieldset.Legend>
-            <WarningCallout label="Important" data-cy="mainWarning5">
+            <WarningCallout data-cy="mainWarning5">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <div>
                 <p>
                   <b>Significant Event:</b> The GMC states that a significant

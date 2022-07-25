@@ -51,7 +51,10 @@ const Section1 = ({
               Section 1: Doctor's details
             </Fieldset.Legend>
 
-            <WarningCallout label="Important" data-cy="mainWarning1">
+            <WarningCallout data-cy="mainWarning1">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <p>
                 This form has been pre-populated using the information available
                 against your records within the Trainee Information System

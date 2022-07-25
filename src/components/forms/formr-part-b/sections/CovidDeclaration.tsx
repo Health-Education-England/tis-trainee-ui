@@ -115,7 +115,10 @@ const CovidDeclaration = ({
 
             {BooleanUtilities.ToBoolean(values.haveCovidDeclarations) ? (
               <div data-jest="covidForm" data-cy="covidForm">
-                <WarningCallout label="Important" data-cy="mainWarningCovid">
+                <WarningCallout data-cy="mainWarningCovid">
+                  <WarningCallout.Label visuallyHiddenText={false}>
+                    Important
+                  </WarningCallout.Label>
                   <div>
                     <p>
                       <b>IMPORTANT:</b> Please complete this form with the

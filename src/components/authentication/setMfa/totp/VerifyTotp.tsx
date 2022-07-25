@@ -95,7 +95,10 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
 
   return (
     <>
-      <WarningCallout label="Remember">
+      <WarningCallout>
+        <WarningCallout.Label visuallyHiddenText={false}>
+          Remember
+        </WarningCallout.Label>
         <p data-cy="threeMinReminderText">
           You have <strong>3 minutes</strong> to scan the QR code below using
           your Authenticator App on your phone before it expires.
