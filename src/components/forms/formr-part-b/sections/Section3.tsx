@@ -48,11 +48,10 @@ const Section3 = ({
             >
               Section 3: Declarations relating to Good Medical Practice
             </Fieldset.Legend>
-            <WarningCallout
-              data-jest="mainWarning"
-              data-cy="mainWarning3"
-              label="Important"
-            >
+            <WarningCallout data-jest="mainWarning" data-cy="mainWarning3">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <p>
                 These declarations are compulsory and relate to the Good Medical
                 Practice guidance issued by the GMC. Honesty & Integrity are at
