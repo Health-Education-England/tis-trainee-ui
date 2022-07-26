@@ -38,7 +38,10 @@ const Confirm = ({ history }: IConfirm) => {
     <div>
       <ScrollTo />
       <View canEdit={canEdit} history={history}></View>
-      <WarningCallout data-cy="warningSubmit" label="Warning">
+      <WarningCallout data-cy="warningSubmit">
+        <WarningCallout.Label visuallyHiddenText={false}>
+          Warning
+        </WarningCallout.Label>
         <p>
           By submitting this form, I confirm that the information above is
           correct and I will keep my Designated Body and the GMC informed as

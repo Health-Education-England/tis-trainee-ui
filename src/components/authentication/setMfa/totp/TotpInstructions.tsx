@@ -4,11 +4,11 @@ import {
   Container,
   Details,
   Fieldset,
-  Panel,
   Row
 } from "nhsuk-react-components";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import "../MFA.scss";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const TotpInstructions = () => {
   return (

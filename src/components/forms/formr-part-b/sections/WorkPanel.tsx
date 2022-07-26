@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
 import TextInputField from "../../TextInputField";
-import { Button, Panel, CloseIcon } from "nhsuk-react-components";
+import { Button, CloseIcon } from "nhsuk-react-components";
 import classes from "../FormRPartB.module.scss";
 import SelectInputField from "../../SelectInputField";
-
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface Props {
   index: number;
   removeWork: any;

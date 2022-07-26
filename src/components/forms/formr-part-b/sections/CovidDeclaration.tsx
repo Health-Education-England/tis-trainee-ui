@@ -1,7 +1,6 @@
 import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
-  Panel,
   Label,
   WarningCallout,
   ErrorSummary,
@@ -26,6 +25,7 @@ import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const CovidDeclaration = ({
   prevSectionLabel,
@@ -115,7 +115,10 @@ const CovidDeclaration = ({
 
             {BooleanUtilities.ToBoolean(values.haveCovidDeclarations) ? (
               <div data-jest="covidForm" data-cy="covidForm">
-                <WarningCallout label="Important" data-cy="mainWarningCovid">
+                <WarningCallout data-cy="mainWarningCovid">
+                  <WarningCallout.Label visuallyHiddenText={false}>
+                    Important
+                  </WarningCallout.Label>
                   <div>
                     <p>
                       <b>IMPORTANT:</b> Please complete this form with the

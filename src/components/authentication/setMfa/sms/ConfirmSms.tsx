@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import { Button, Panel } from "nhsuk-react-components";
+import { Button } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import TextInputField from "../../../forms/TextInputField";
 import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
@@ -15,6 +15,7 @@ import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IConfirmSms {
   user: CognitoUser;
 }

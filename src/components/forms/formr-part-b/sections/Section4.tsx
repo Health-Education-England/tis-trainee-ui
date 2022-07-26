@@ -4,7 +4,6 @@ import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
   WarningCallout,
-  Panel,
   Button,
   ErrorSummary,
   ErrorMessage
@@ -21,6 +20,7 @@ import {
 } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section4 = ({
   prevSectionLabel,
@@ -54,7 +54,10 @@ const Section4 = ({
             >
               Section 4: Update to your previous Form R Part B
             </Fieldset.Legend>
-            <WarningCallout label="Important" data-cy="mainWarning4">
+            <WarningCallout data-cy="mainWarning4">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <div>
                 <p>
                   If you have previously declared any Significant Events,

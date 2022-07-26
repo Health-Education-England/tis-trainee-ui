@@ -6,7 +6,6 @@ import {
   Fieldset,
   Form,
   Input,
-  Panel,
   WarningCallout
 } from "nhsuk-react-components";
 import { useEffect, useState } from "react";
@@ -28,6 +27,7 @@ import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
 import "../MFA.scss";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IVerifyTotp {
   user: CognitoUser | any;
 }
@@ -95,7 +95,10 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
 
   return (
     <>
-      <WarningCallout label="Remember">
+      <WarningCallout>
+        <WarningCallout.Label visuallyHiddenText={false}>
+          Remember
+        </WarningCallout.Label>
         <p data-cy="threeMinReminderText">
           You have <strong>3 minutes</strong> to scan the QR code below using
           your Authenticator App on your phone before it expires.

@@ -1,12 +1,12 @@
 import { FunctionComponent } from "react";
 import TextInputField from "../../TextInputField";
-import { Button, Panel, CloseIcon } from "nhsuk-react-components";
+import { Button, CloseIcon } from "nhsuk-react-components";
 import classes from "../FormRPartB.module.scss";
 import SelectInputField from "../../SelectInputField";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
-
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IDeclarationPanel {
   index: number;
   removeDeclaration: any;

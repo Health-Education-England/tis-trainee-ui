@@ -1,9 +1,4 @@
-import {
-  Button,
-  Panel,
-  SummaryList,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Button, SummaryList, WarningCallout } from "nhsuk-react-components";
 import { Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
@@ -24,6 +19,7 @@ import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import ScrollTo from "../ScrollTo";
 import classes from "./FormRPartB.module.scss";
 import FormSavePDF from "../FormSavePDF";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IView {
   canEdit: boolean;
   history: any;
@@ -62,7 +58,10 @@ const View = ({ canEdit, history }: IView) => {
         <ScrollTo />
         {!canEdit && <FormSavePDF history={history} formrPath={"/formr-b"} />}
         {!!canEdit && (
-          <WarningCallout label="Confirmation" data-jest="warningConfirmation">
+          <WarningCallout data-jest="warningConfirmation">
+            <WarningCallout.Label visuallyHiddenText={false}>
+              Confirmation
+            </WarningCallout.Label>
             <p>
               Check the information entered below is correct, complete the
               Declarations, then click Submit at the bottom of the page.

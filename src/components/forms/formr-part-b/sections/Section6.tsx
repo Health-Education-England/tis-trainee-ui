@@ -1,11 +1,12 @@
 import TextInputField from "../../TextInputField";
 import ScrollTo from "../../ScrollTo";
-import { Fieldset, Panel } from "nhsuk-react-components";
+import { Fieldset } from "nhsuk-react-components";
 import { Form, Formik } from "formik";
 import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section6 = ({
   prevSectionLabel,

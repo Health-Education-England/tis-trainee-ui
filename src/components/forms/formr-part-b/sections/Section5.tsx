@@ -4,7 +4,6 @@ import ScrollTo from "../../ScrollTo";
 import {
   Fieldset,
   WarningCallout,
-  Panel,
   Button,
   ErrorSummary,
   ErrorMessage
@@ -22,6 +21,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section5 = ({
   prevSectionLabel,
@@ -61,7 +61,10 @@ const Section5 = ({
             >
               Section 5: New declarations since your previous Form R Part B
             </Fieldset.Legend>
-            <WarningCallout label="Important" data-cy="mainWarning5">
+            <WarningCallout data-cy="mainWarning5">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Important
+              </WarningCallout.Label>
               <div>
                 <p>
                   <b>Significant Event:</b> The GMC states that a significant
