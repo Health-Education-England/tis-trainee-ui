@@ -37,17 +37,14 @@ describe("Confirm", () => {
         </Router>
       </Provider>
     );
-    cy.get(
-      ":nth-child(2) > .nhsuk-warning-callout > .nhsuk-warning-callout__label"
-    ).should("include.text", "Confirmation");
-    cy.get(
-      ":nth-child(3) > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value"
-    ).should("have.text", "Gilliam");
+    cy.get("[data-cy=warningConfirmation]").should(
+      "include.text",
+      "Confirmation"
+    );
+    cy.get("[data-cy=surname]").should("have.text", "Gilliam");
     cy.contains("Declarations").should("exist");
-    cy.get(
-      ".page-break > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-    ).should("include.text", "CESR CP");
-    cy.contains("Warning").should("exist");
+    cy.get("[data-cy=declarationTypeVal]").should("include.text", "CESR CP");
+    cy.contains("Important").should("exist");
     cy.get("[data-cy=warningSubmit] > p").should(
       "include.text",
       "By submitting this form, I confirm that the information above is correct"

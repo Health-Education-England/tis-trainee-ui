@@ -40,7 +40,7 @@ const Confirm = ({ history }: IConfirm) => {
       <View canEdit={canEdit} history={history}></View>
       <WarningCallout data-cy="warningSubmit">
         <WarningCallout.Label visuallyHiddenText={false}>
-          Warning
+          Important
         </WarningCallout.Label>
         <p>
           By submitting this form, I confirm that the information above is
