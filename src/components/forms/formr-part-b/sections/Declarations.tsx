@@ -1,4 +1,4 @@
-import { Fieldset } from "nhsuk-react-components";
+import { Card, Fieldset } from "nhsuk-react-components";
 import { Form, Formik } from "formik";
 import MultiChoiceInputField from "../../MultiChoiceInputField";
 import { Section7ValidationSchema } from "../ValidationSchema";
@@ -22,7 +22,6 @@ import { LifeCycleState } from "../../../../models/LifeCycleState";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 import { useConfirm } from "material-ui-confirm";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IDeclarations {
   prevSectionLabel: string;
   saveDraft: (formData: FormRPartB) => Promise<void>;
@@ -99,34 +98,36 @@ const Declarations = ({
             >
               Declaration & Consent
             </Fieldset.Legend>
+            <Card feature data-cy="declaration">
+              <Card.Content>
+                <Card.Heading>Declaration</Card.Heading>
+                <MultiChoiceInputField
+                  label="I confirm that,"
+                  id="isDeclarationAccepted"
+                  type="checkbox"
+                  name="isDeclarationAccepted"
+                  items={[
+                    {
+                      label: FORMR_PARTB_ACCEPTANCE,
+                      value: true
+                    }
+                  ]}
+                />
 
-            <Panel label="Declaration" data-cy="declaration">
-              <MultiChoiceInputField
-                label="I confirm that,"
-                id="isDeclarationAccepted"
-                type="checkbox"
-                name="isDeclarationAccepted"
-                items={[
-                  {
-                    label: FORMR_PARTB_ACCEPTANCE,
-                    value: true
-                  }
-                ]}
-              />
-
-              <MultiChoiceInputField
-                label="I confirm that,"
-                id="isConsentAccepted"
-                type="checkbox"
-                name="isConsentAccepted"
-                items={[
-                  {
-                    label: FORMR_PARTB_CONSENT,
-                    value: true
-                  }
-                ]}
-              />
-            </Panel>
+                <MultiChoiceInputField
+                  label="I confirm that,"
+                  id="isConsentAccepted"
+                  type="checkbox"
+                  name="isConsentAccepted"
+                  items={[
+                    {
+                      label: FORMR_PARTB_CONSENT,
+                      value: true
+                    }
+                  ]}
+                />
+              </Card.Content>
+            </Card>
           </Fieldset>
 
           <FormRPartBPagination

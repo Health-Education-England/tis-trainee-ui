@@ -124,7 +124,7 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        <Card feature>
+        <Card className="page-break" feature>
           <Card.Content>
             <Card.Heading>Declarations</Card.Heading>
             <SummaryList>
