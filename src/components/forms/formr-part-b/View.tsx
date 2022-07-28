@@ -385,7 +385,7 @@ const View = ({ canEdit, history }: IView) => {
               ) : null}
               <SummaryList.Row>
                 <SummaryList.Key>Health Statement</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="healthStatement">
                   {FormRUtilities.showMsgIfEmpty(
                     formData.healthStatement,
                     "No health statement recorded"
@@ -502,7 +502,7 @@ const View = ({ canEdit, history }: IView) => {
                     investigations are pending relating to the event and which
                     organisation is undertaking this investigation.
                   </SummaryList.Key>
-                  <SummaryList.Value data-jest="previousDeclarationSummary">
+                  <SummaryList.Value data-cy="previousDeclarationSummary">
                     {formData.previousDeclarationSummary}
                   </SummaryList.Value>
                 </SummaryList.Row>
@@ -615,7 +615,7 @@ const View = ({ canEdit, history }: IView) => {
                     investigations are pending relating to the event and which
                     organisation is undertaking this investigation.
                   </SummaryList.Key>
-                  <SummaryList.Value data-jest="currentDeclarationSummary">
+                  <SummaryList.Value data-cy="currentDeclarationSummary">
                     {formData.currentDeclarationSummary}
                   </SummaryList.Value>
                 </SummaryList.Row>
@@ -810,7 +810,7 @@ const View = ({ canEdit, history }: IView) => {
                         <SummaryList.Key>
                           Education Supervisor Name
                         </SummaryList.Key>
-                        <SummaryList.Value>
+                        <SummaryList.Value data-cy="covidSupName">
                           {FormRUtilities.showMsgIfEmpty(
                             formData.covidDeclarationDto
                               ?.educationSupervisorName!,
@@ -822,7 +822,7 @@ const View = ({ canEdit, history }: IView) => {
                         <SummaryList.Key>
                           Education Supervisor Email Address
                         </SummaryList.Key>
-                        <SummaryList.Value>
+                        <SummaryList.Value data-cy="covidSupEmail">
                           {FormRUtilities.showMsgIfEmpty(
                             formData.covidDeclarationDto
                               ?.educationSupervisorEmail!,

@@ -11,7 +11,7 @@ interface Props {
 const WorkPanel: FunctionComponent<Props> = (props: Props) => {
   const { index, removeWork: removePlacement } = props;
   return (
-    <Card>
+    <Card data-cy="workPanel">
       <Card.Content>
         <div className="nhsuk-grid-row">
           <div className="nhsuk-grid-column-one-quarter">

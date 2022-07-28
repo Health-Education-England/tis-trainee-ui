@@ -270,7 +270,7 @@ Cypress.Commands.add("checkAndFillSection2", (workStartDate, endDate) => {
   cy.contains("TOOT").should("exist");
 
   // Delete all other work panels except default work panel
-  Cypress.$('[data-jest="removePanel"]').each(() =>
+  cy.get('[data-jest="removePanel"]').each(() =>
     cy.get('[data-cy="closeIcon1"]').click()
   );
 
@@ -496,7 +496,7 @@ Cypress.Commands.add("checkAndFillCovidSection", () => {
 Cypress.Commands.add("addWorkPanel", (startDate, endDate) => {
   cy.get("[data-cy=BtnAddWorkType]").click();
 
-  const workPanels = Cypress.$(".nhsuk-panel").length;
+  const workPanels = Cypress.$("[data-cy=workPanel]").length;
 
   cy.get(`[data-cy="work[${workPanels}].typeOfWork"]`)
     .should("exist")
