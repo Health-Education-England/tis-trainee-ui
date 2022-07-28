@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import { Button } from "nhsuk-react-components";
+import { Button, Card } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import TextInputField from "../../../forms/TextInputField";
 import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
@@ -15,7 +15,6 @@ import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IConfirmSms {
   user: CognitoUser;
 }
@@ -70,15 +69,19 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel label="Enter the 6-digit code sent to your phone">
-            <TextInputField
-              footer="It may take a minute to arrive."
-              name="smsCode"
-              placeholder="Enter code"
-              label={""}
-            />
-          </Panel>
-
+          <Card feature>
+            <Card.Content>
+              <Card.Heading>
+                Enter the 6-digit code sent to your phone
+              </Card.Heading>
+              <TextInputField
+                footer="It may take a minute to arrive."
+                name="smsCode"
+                placeholder="Enter code"
+                label={""}
+              />
+            </Card.Content>
+          </Card>
           <Button
             disabled={!isValid || isSubmitting}
             type="submit"

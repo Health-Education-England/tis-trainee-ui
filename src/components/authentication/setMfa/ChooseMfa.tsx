@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { Button, Details, WarningCallout } from "nhsuk-react-components";
+import { Button, Card, Details, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { resetUser, updatedtempMfa } from "../../../redux/slices/userSlice";
 import { MFA_OPTIONS } from "../../../utilities/Constants";
@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import ScrollTo from "../../forms/ScrollTo";
 import history from "../../navigation/history";
 import { MFAStatus } from "../../../models/MFAStatus";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IChooseMfa {
   mfa: string;
 }
@@ -95,14 +94,19 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
                 </p>
               </Details.Text>
             </Details>
-            <Panel label="When I log in, I want to verify my identity with a code ">
-              <MultiChoiceInputField
-                type="radios"
-                id="mfaChoice"
-                name="mfaChoice"
-                items={MFA_OPTIONS}
-              ></MultiChoiceInputField>
-            </Panel>
+            <Card feature>
+              <Card.Content>
+                <Card.Heading>
+                  When I log in, I want to verify my identity with a code
+                </Card.Heading>
+                <MultiChoiceInputField
+                  type="radios"
+                  id="mfaChoice"
+                  name="mfaChoice"
+                  items={MFA_OPTIONS}
+                ></MultiChoiceInputField>
+              </Card.Content>
+            </Card>
             <Button
               onClick={() => {
                 handleSubmit();

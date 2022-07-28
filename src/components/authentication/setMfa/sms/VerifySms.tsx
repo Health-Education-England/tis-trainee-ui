@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import "react-phone-number-input/style.css";
 import { MobilePhoneValidationSchema } from "../ValidationSchema";
 import MobilePhoneInputField from "../../../forms/MobilePhoneInputField";
-import { Button } from "nhsuk-react-components";
+import { Button, Card } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   incrementSmsSection,
@@ -12,7 +12,6 @@ import {
 } from "../../../../redux/slices/userSlice";
 import { CognitoUser } from "@aws-amplify/auth";
 import store from "../../../../redux/store/store";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IVerifySms {
   user: CognitoUser;
 }
@@ -52,10 +51,15 @@ const VerifySms = ({ user }: IVerifySms) => {
     >
       {({ isValid, isSubmitting }) => (
         <Form>
-          <Panel label="I want to receive codes sent by SMS to this mobile">
-            <MobilePhoneInputField name="mobilePhoneNumber" />
-          </Panel>
-
+          {" "}
+          <Card feature>
+            <Card.Content>
+              <Card.Heading>
+                I want to receive codes sent by SMS to this mobile
+              </Card.Heading>
+              <MobilePhoneInputField name="mobilePhoneNumber" />
+            </Card.Content>
+          </Card>
           <Button
             disabled={!isValid || isSubmitting}
             type="submit"
