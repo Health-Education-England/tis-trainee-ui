@@ -34,7 +34,9 @@ describe("Support", () => {
       .should("exist")
       .should("include.text", "Support");
     cy.get(".nhsuk-details__summary-text").click();
-    cy.get("[data-cy=techSupportLabel] > .nhsuk-panel-with-label__label")
+    cy.get(
+      "[data-cy=techSupportLabel] > .nhsuk-card__content > .nhsuk-card__heading"
+    )
       .should("exist")
       .should("include.text", "Technical");
     cy.get("[data-cy=techSupportLink]").should(
@@ -46,7 +48,9 @@ describe("Support", () => {
       "include.text",
       "email TIS Support"
     );
-    cy.get("[data-cy=loSupportLabel] > .nhsuk-panel-with-label__label")
+    cy.get(
+      "[data-cy=loSupportLabel] > .nhsuk-card__content > .nhsuk-card__heading"
+    )
       .should("exist")
       .should("include.text", "Form R (including unsubmitting a form");
     cy.get("[data-cy=loLink]").should(
