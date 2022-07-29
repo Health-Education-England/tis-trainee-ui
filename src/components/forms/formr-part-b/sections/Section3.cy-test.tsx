@@ -34,10 +34,14 @@ describe("Section3", () => {
     cy.get("[data-cy=legendFieldset3]")
       .should("exist")
       .should("include.text", "Section 3");
-    cy.get("[data-cy=declarations] > .nhsuk-panel-with-label__label")
+    cy.get(
+      "[data-cy=declarations] > .nhsuk-card__content > .nhsuk-card__heading"
+    )
       .should("exist")
       .should("include.text", "Declarations");
-    cy.get('div[data-cy="healthStatement"] > .nhsuk-panel-with-label__label')
+    cy.get(
+      'div[data-cy="healthStatement"] > .nhsuk-card__content > .nhsuk-card__heading'
+    )
       .should("exist")
       .should("include.text", "Health statement");
     cy.get("[data-cy=isWarned1]").should("exist").click();

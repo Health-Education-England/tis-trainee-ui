@@ -1,4 +1,4 @@
-import { ActionLink, Details } from "nhsuk-react-components";
+import { ActionLink, Card, Details } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import SupportMsg from "./SupportMsg";
 import SupportList from "./SupportList";
@@ -6,7 +6,6 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { useEffect, useState } from "react";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -58,24 +57,28 @@ const Support = () => {
           </p>
         </Details.Text>
       </Details>
-      <Panel
-        label="Form R (including unsubmitting a form) & Personal Details queries"
-        data-cy="loSupportLabel"
-      >
-        <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
-        <SupportList mappedContact={mappedContact} emailIds={emailIds} />
-      </Panel>
-      <Panel label="Technical issues" data-cy="techSupportLabel">
-        <ActionLink
-          data-cy="techSupportLink"
-          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})`}
-        >
-          Please click here to email TIS Support
-        </ActionLink>
-      </Panel>
+      <Card feature data-cy="loSupportLabel">
+        <Card.Content>
+          <Card.Heading>
+            Form R (including unsubmitting a form) & Personal Details queries
+          </Card.Heading>
+          <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
+          <SupportList mappedContact={mappedContact} emailIds={emailIds} />
+        </Card.Content>
+      </Card>
+      <Card feature data-cy="techSupportLabel">
+        <Card.Content>
+          <Card.Heading>Technical issues</Card.Heading>
+          <ActionLink
+            data-cy="techSupportLink"
+            href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})`}
+          >
+            Please click here to email TIS Support
+          </ActionLink>
+        </Card.Content>
+      </Card>
     </>
   );
-
   return <div>{content}</div>;
 };
 

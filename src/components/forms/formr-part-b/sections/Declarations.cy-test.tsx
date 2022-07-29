@@ -38,7 +38,7 @@ it("should mount section 6 ", () => {
       </Router>
     </Provider>
   );
-  cy.get(".nhsuk-panel-with-label__label")
+  cy.get(".nhsuk-card__heading")
     .should("exist")
     .should("include.text", "Declaration");
   cy.get("[data-cy=isDeclarationAccepted0]").should("exist").click();

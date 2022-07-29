@@ -152,7 +152,7 @@ const defaultSections: IProgSection[] = [
   },
   {
     component: Section4,
-    title: "Section 4:\nUpdate to your last Form R"
+    title: "Section 4:\nUpdate to your last\n Form R"
   },
   {
     component: Section5,

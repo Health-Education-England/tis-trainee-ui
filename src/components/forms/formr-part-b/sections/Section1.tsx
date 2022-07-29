@@ -1,5 +1,6 @@
 import { Form, Formik } from "formik";
 import {
+  Card,
   ErrorMessage,
   ErrorSummary,
   Fieldset,
@@ -18,7 +19,6 @@ import { CombinedReferenceData } from "../../../../models/CombinedReferenceData"
 import DataSourceMsg from "../../../common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const Section1 = ({
   prevSectionLabel,
@@ -77,70 +77,72 @@ const Section1 = ({
               </p>
             </WarningCallout>
             <DataSourceMsg />
-            <Panel label="Personal details">
-              <TextInputField label="Forename" name="forename" />
-              <TextInputField label="GMC-Registered Surname" name="surname" />
-              <TextInputField label="GMC Number" name="gmcNumber" />
-              <TextInputField
-                label="Primary contact email address"
-                name="email"
-                hint="For reasons of security and due to frequent system failures with internet email accounts, you are strongly advised to provide an NHS.net email address."
-              />
-              <SelectInputField
-                label="Deanery / HEE Local Team"
-                options={[...combinedReferenceData.localOffice]}
-                name="localOfficeName"
-              />
-
-              <SelectInputField
-                label="Previous Designated Body for Revalidation (if applicable)"
-                options={[
-                  ...combinedReferenceData.dbc.filter(
-                    (db: DesignatedBodyKeyValue) => db.internal
-                  ),
-                  { label: "other", value: "other" }
-                ]}
-                name="prevRevalBody"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setFieldValue("prevRevalBody", e.target.value, false);
-                  setFieldValue("prevRevalBodyOther", "", false);
-                }}
-              />
-              {values.prevRevalBody === "other" && (
-                <Autocomplete
-                  label="Please Specify 'Other'"
-                  name="prevRevalBodyOther"
-                  id="prevRevalBodyOther"
-                  options={[...combinedReferenceData.dbc].filter(
-                    (db: DesignatedBodyKeyValue) => !db.internal
-                  )}
-                  dataCy="prevRevalBodyOther"
-                  width="75%"
+            <Card feature>
+              <Card.Content>
+                <Card.Heading>Personal details</Card.Heading>
+                <TextInputField label="Forename" name="forename" />
+                <TextInputField label="GMC-Registered Surname" name="surname" />
+                <TextInputField label="GMC Number" name="gmcNumber" />
+                <TextInputField
+                  label="Primary contact email address"
+                  name="email"
+                  hint="For reasons of security and due to frequent system failures with internet email accounts, you are strongly advised to provide an NHS.net email address."
                 />
-              )}
-              <TextInputField
-                label="Current Revalidation Date"
-                type="date"
-                name="currRevalDate"
-              />
-              <TextInputField
-                label="Date of Previous Revalidation (if applicable)"
-                type="date"
-                name="prevRevalDate"
-              />
-              <SelectInputField
-                label="Programme / Training Specialty"
-                name="programmeSpecialty"
-                options={combinedReferenceData.curriculum}
-              />
-              <SelectInputField
-                label="Dual Specialty (if applicable)"
-                name="dualSpecialty"
-                options={combinedReferenceData.curriculum}
-              />
-            </Panel>
-          </Fieldset>
+                <SelectInputField
+                  label="Deanery / HEE Local Team"
+                  options={[...combinedReferenceData.localOffice]}
+                  name="localOfficeName"
+                />
 
+                <SelectInputField
+                  label="Previous Designated Body for Revalidation (if applicable)"
+                  options={[
+                    ...combinedReferenceData.dbc.filter(
+                      (db: DesignatedBodyKeyValue) => db.internal
+                    ),
+                    { label: "other", value: "other" }
+                  ]}
+                  name="prevRevalBody"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFieldValue("prevRevalBody", e.target.value, false);
+                    setFieldValue("prevRevalBodyOther", "", false);
+                  }}
+                />
+                {values.prevRevalBody === "other" && (
+                  <Autocomplete
+                    label="Please Specify 'Other'"
+                    name="prevRevalBodyOther"
+                    id="prevRevalBodyOther"
+                    options={[...combinedReferenceData.dbc].filter(
+                      (db: DesignatedBodyKeyValue) => !db.internal
+                    )}
+                    dataCy="prevRevalBodyOther"
+                    width="75%"
+                  />
+                )}
+                <TextInputField
+                  label="Current Revalidation Date"
+                  type="date"
+                  name="currRevalDate"
+                />
+                <TextInputField
+                  label="Date of Previous Revalidation (if applicable)"
+                  type="date"
+                  name="prevRevalDate"
+                />
+                <SelectInputField
+                  label="Programme / Training Specialty"
+                  name="programmeSpecialty"
+                  options={combinedReferenceData.curriculum}
+                />
+                <SelectInputField
+                  label="Dual Specialty (if applicable)"
+                  name="dualSpecialty"
+                  options={combinedReferenceData.curriculum}
+                />
+              </Card.Content>
+            </Card>
+          </Fieldset>
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"

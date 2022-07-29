@@ -189,12 +189,14 @@ describe("Form R (Part B)", () => {
     if (isCovid) {
       cy.get("[data-cy=sectionHeader7]").should("exist");
       cy.get("[data-cy=BtnEditSection7]").should("exist");
-      cy.get(
-        ":nth-child(22) > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-      ).should("contain.text", "No supervisor name provided");
-      cy.get(
-        ":nth-child(22) > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value"
-      ).should("contain.text", "No supervisor email provided");
+      cy.get("[data-cy=covidSupName]").should(
+        "contain.text",
+        "No supervisor name provided"
+      );
+      cy.get("[data-cy=covidSupEmail]").should(
+        "contain.text",
+        "No supervisor email provided"
+      );
     } else {
       cy.get("[data-cy=sectionHeader7]").should("not.exist");
       cy.get("[data-cy=BtnEditSection7]").should("not.exist");
@@ -210,24 +212,18 @@ describe("Form R (Part B)", () => {
     for (let x = 0; x < 5; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
-    cy.get(
-      ":nth-child(9) > .nhsuk-summary-list > :nth-child(5) > .nhsuk-summary-list__value"
-    ).should("contain.text", "No health statement recorded");
+    cy.get("[data-cy=healthStatement]").should(
+      "contain.text",
+      "No health statement recorded"
+    );
 
     //check sections 4 and 5 display correctly
-    cy.get(
-      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
-    ).should("exist");
-    cy.get(
-      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
-    ).should("contain.text", "test text");
-
-    cy.get(
-      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__key"
-    ).should("exist");
-    cy.get(
-      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
-    ).should("contain.text", "test text");
+    cy.get("[data-cy=previousDeclarationSummary]")
+      .should("exist")
+      .should("contain.text", "test text");
+    cy.get("[data-cy=currentDeclarationSummary]")
+      .should("exist")
+      .should("contain.text", "test text");
 
     //go back to section 4 and click no previous unresolved declarations
     //check option dissapears from view

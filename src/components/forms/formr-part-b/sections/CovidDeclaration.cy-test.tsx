@@ -37,10 +37,7 @@ describe("CovidDeclaration", () => {
     cy.get("[data-cy=legendFieldsetCovid]")
       .should("exist")
       .should("include.text", "Pandemic");
-    cy.get(".nhsuk-panel-with-label__label").should(
-      "include.text",
-      "Covid declarations"
-    );
+    cy.get(".nhsuk-card__heading").should("include.text", "Covid declarations");
     cy.get("[data-cy=haveCovidDeclarations0]").should("exist").click();
     cy.get(".nhsuk-warning-callout__label")
       .should("exist")
@@ -75,6 +72,10 @@ describe("CovidDeclaration", () => {
     );
     cy.get('[data-cy="covidDeclarationDto.educationSupervisorEmail"]').type(
       "test@test.com"
+    );
+    cy.get("[data-cy=haveCovidDeclarations1]").click();
+    cy.get("[data-cy=mainWarningCovid] > :nth-child(2) > p").should(
+      "not.exist"
     );
   });
 });

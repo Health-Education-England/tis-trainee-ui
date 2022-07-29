@@ -19,7 +19,7 @@ describe("CreateTotp sections", () => {
         </Router>
       </Provider>
     );
-    cy.get(".nhsuk-panel-with-label__label").should("not.exist");
+    cy.get(".nhsuk-card__heading").should("not.exist");
   });
 
   it("should render the decide totp component when section number is 1 ", () => {
@@ -35,7 +35,7 @@ describe("CreateTotp sections", () => {
         </Router>
       </Provider>
     );
-    cy.get(".nhsuk-panel-with-label__label")
+    cy.get(".nhsuk-card__heading")
       .should("exist")
       .should("include.text", "I've already installed an Authenticator App");
     cy.get("#appInstalledAlready-1--label")
@@ -70,7 +70,9 @@ describe("CreateTotp sections", () => {
         "include.text",
         "Below are instructions to help you install Microsoft Authenticator"
       );
-    cy.get("[data-cy=scanQrPanel] > .nhsuk-panel-with-label__label")
+    cy.get(
+      "[data-cy=scanQrPanel] > .nhsuk-card__content > .nhsuk-card__heading"
+    )
       .should("exist")
       .should("contain.text", "Scan the QR Code with your phone");
     cy.get("[data-cy=qrApple]").should("exist");

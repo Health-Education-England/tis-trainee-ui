@@ -2,6 +2,7 @@ import { CognitoUser } from "@aws-amplify/auth";
 import {
   ActionLink,
   Button,
+  Card,
   Details,
   Fieldset,
   Form,
@@ -27,7 +28,6 @@ import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
 import "../MFA.scss";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IVerifyTotp {
   user: CognitoUser | any;
 }
@@ -104,90 +104,96 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
           your Authenticator App on your phone before it expires.
         </p>
       </WarningCallout>
-      <Panel
-        data-cy="addTssTotpHeader"
-        label="Add 'NHS TIS-Self-Service' to your Authenticator App"
-      >
-        <Details>
-          <Details.Summary data-cy="msAuthInfoSummary">
-            Need help?
-          </Details.Summary>
-          <Details.Text data-cy="msAuthInfoText">
-            <ActionLink
-              data-cy="dataSourceLink"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://tis-support.hee.nhs.uk/trainees/how-to-set-up-an-authenticator-app-on-your-phone/"
-            >
-              Click here for help adding the 'NHS TIS Self-Service' account to
-              your Authenticator App on your phone (opens in a new tab/window)
-            </ActionLink>
-          </Details.Text>
-        </Details>
-        <Panel className="panelBack" label="using your phone">
-          <Fieldset.Legend size="m">
-            Open your Authenticator App, click 'add a new account' button then
-            scan the QR Code below.
-          </Fieldset.Legend>
-          <div className="qrTss">
-            <QRCodeSVG
-              data-cy="tssQrCode"
-              size={192}
-              value={qrCode}
-              includeMargin={true}
-            />
-          </div>
+      <Card feature data-cy="addTssTotpHeader">
+        <Card.Content>
+          <Card.Heading>
+            Add 'NHS TIS-Self-Service' to your Authenticator App
+          </Card.Heading>
           <Details>
-            <Details.Summary data-cy="tssQrCodeHelp">
-              Unable to scan QR code?
+            <Details.Summary data-cy="msAuthInfoSummary">
+              Need help?
             </Details.Summary>
-            <Details.Text>
-              <p>
-                If you are not using a mobile Authenticator App or are unable to
-                see the QR code, you can enter the following code instead.
-              </p>
-              <Input
-                data-cy="tssQrCodeStr"
-                onFocus={event => event.target.select()}
-                defaultValue={totpStr}
-                label=""
-                readOnly
-              />
+            <Details.Text data-cy="msAuthInfoText">
+              <ActionLink
+                data-cy="dataSourceLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://tis-support.hee.nhs.uk/trainees/how-to-set-up-an-authenticator-app-on-your-phone/"
+              >
+                Click here for help adding the 'NHS TIS Self-Service' account to
+                your Authenticator App on your phone (opens in a new tab/window)
+              </ActionLink>
             </Details.Text>
           </Details>
-          <Formik
-            initialValues={{ confirmTOTPCode: "" }}
-            validationSchema={Yup.object({
-              confirmTOTPCode: Yup.string()
-                .required("TOTP code required")
-                .min(6, "Code must be min 6 characters in length")
-                .max(6, "Code must be max 6 characters in length")
-            })}
-            onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
-          >
-            {({ isValid, isSubmitting, handleSubmit }) => (
-              <Form>
-                <TextInputField
-                  width={10}
-                  name="confirmTOTPCode"
-                  label="Enter the 6-digit code from the 'NHS TIS Self-Service' account installed on your phone."
-                  placeholder="6-digit code"
+          <Card feature className="panelBack">
+            <Card.Content>
+              <Card.Heading>using your phone</Card.Heading>
+              <Fieldset.Legend size="m">
+                Open your Authenticator App, click 'add a new account' button
+                then scan the QR Code below.
+              </Fieldset.Legend>
+              <div className="qrTss">
+                <QRCodeSVG
+                  data-cy="tssQrCode"
+                  size={192}
+                  value={qrCode}
+                  includeMargin={true}
                 />
-                <Button
-                  onClick={(e: { preventDefault: () => void }) => {
-                    e.preventDefault();
-                    handleSubmit();
-                  }}
-                  disabled={!isValid || isSubmitting}
-                  data-cy="BtnTotpCodeSub"
-                >
-                  {isSubmitting ? "Verifying..." : " Verify code & Log in"}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Panel>
-      </Panel>
+              </div>
+              <Details>
+                <Details.Summary data-cy="tssQrCodeHelp">
+                  Unable to scan QR code?
+                </Details.Summary>
+                <Details.Text>
+                  <p>
+                    If you are not using a mobile Authenticator App or are
+                    unable to see the QR code, you can enter the following code
+                    instead.
+                  </p>
+                  <Input
+                    data-cy="tssQrCodeStr"
+                    onFocus={event => event.target.select()}
+                    defaultValue={totpStr}
+                    label=""
+                    readOnly
+                  />
+                </Details.Text>
+              </Details>
+              <Formik
+                initialValues={{ confirmTOTPCode: "" }}
+                validationSchema={Yup.object({
+                  confirmTOTPCode: Yup.string()
+                    .required("TOTP code required")
+                    .min(6, "Code must be min 6 characters in length")
+                    .max(6, "Code must be max 6 characters in length")
+                })}
+                onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
+              >
+                {({ isValid, isSubmitting, handleSubmit }) => (
+                  <Form>
+                    <TextInputField
+                      width={10}
+                      name="confirmTOTPCode"
+                      label="Enter the 6-digit code from the 'NHS TIS Self-Service' account installed on your phone."
+                      placeholder="6-digit code"
+                    />
+                    <Button
+                      onClick={(e: { preventDefault: () => void }) => {
+                        e.preventDefault();
+                        handleSubmit();
+                      }}
+                      disabled={!isValid || isSubmitting}
+                      data-cy="BtnTotpCodeSub"
+                    >
+                      {isSubmitting ? "Verifying..." : " Verify code & Log in"}
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </Card.Content>
+          </Card>
+        </Card.Content>
+      </Card>
     </>
   );
 };

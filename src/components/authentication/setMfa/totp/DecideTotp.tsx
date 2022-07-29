@@ -1,6 +1,6 @@
 import { CognitoUser } from "@aws-amplify/auth";
 import { Formik } from "formik";
-import { Button, Form } from "nhsuk-react-components";
+import { Button, Card, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   updatedTotpSection,
@@ -9,7 +9,6 @@ import {
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import ThreeMinMsg from "./ThreeMinMsg";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 interface IDecideTotp {
   user: CognitoUser | any;
   handleSectionSubmit: () => void;
@@ -31,17 +30,19 @@ const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
     >
       {({ values, handleSubmit, isSubmitting }) => (
         <Form>
-          <Panel
-            data-cy="appInstalledAlreadyChoose"
-            label="I've already installed an Authenticator App"
-          >
-            <MultiChoiceInputField
-              type="radios"
-              id="appInstalledAlready"
-              name="appInstalledAlready"
-              items={YES_NO_OPTIONS}
-            ></MultiChoiceInputField>
-          </Panel>
+          <Card feature data-cy="appInstalledAlreadyChoose">
+            <Card.Content>
+              <Card.Heading>
+                I've already installed an Authenticator App
+              </Card.Heading>
+              <MultiChoiceInputField
+                type="radios"
+                id="appInstalledAlready"
+                name="appInstalledAlready"
+                items={YES_NO_OPTIONS}
+              ></MultiChoiceInputField>
+            </Card.Content>
+          </Card>
           {values.appInstalledAlready === "true" && <ThreeMinMsg />}
           {values.appInstalledAlready !== null && (
             <Button

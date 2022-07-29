@@ -1,5 +1,6 @@
 import ScrollTo from "../../ScrollTo";
 import {
+  Card,
   Fieldset,
   Label,
   WarningCallout,
@@ -25,7 +26,6 @@ import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
-import { Panel } from "nhsuk-react-components/dist/deprecated";
 
 const CovidDeclaration = ({
   prevSectionLabel,
@@ -79,40 +79,41 @@ const CovidDeclaration = ({
               Self-declaration and Educational supervisor validation for the
               Doctors in Training ARCPs during COVID 19 Pandemic
             </Label>
-
-            <Panel label="Covid declarations" data-cy="complimentsPanel">
-              <MultiChoiceInputField
-                label="Do you wish to complete the Covid 19 self declaration?"
-                id="haveCovidDeclarations"
-                name="haveCovidDeclarations"
-                type="radios"
-                items={YES_NO_OPTIONS}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  if (BooleanUtilities.ToBoolean(e.target.value)) {
-                    setFieldValue(
-                      "covidDeclarationDto",
-                      {
-                        selfRateForCovid: "",
-                        reasonOfSelfRate: "",
-                        otherInformationForPanel: "",
-                        discussWithSupervisorChecked: false,
-                        discussWithSomeoneChecked: false,
-                        haveChangesToPlacement: "",
-                        changeCircumstances: "",
-                        changeCircumstanceOther: "",
-                        howPlacementAdjusted: "",
-                        educationSupervisorName: "",
-                        educationSupervisorEmail: ""
-                      },
-                      false
-                    );
-                  } else {
-                    setFieldValue("covidDeclarationDto", null, false);
-                  }
-                }}
-              />
-            </Panel>
-
+            <Card feature data-cy="complimentsPanel">
+              <Card.Content>
+                <Card.Heading>Covid declarations</Card.Heading>
+                <MultiChoiceInputField
+                  label="Do you wish to complete the Covid 19 self declaration?"
+                  id="haveCovidDeclarations"
+                  name="haveCovidDeclarations"
+                  type="radios"
+                  items={YES_NO_OPTIONS}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    if (BooleanUtilities.ToBoolean(e.target.value)) {
+                      setFieldValue(
+                        "covidDeclarationDto",
+                        {
+                          selfRateForCovid: "",
+                          reasonOfSelfRate: "",
+                          otherInformationForPanel: "",
+                          discussWithSupervisorChecked: false,
+                          discussWithSomeoneChecked: false,
+                          haveChangesToPlacement: "",
+                          changeCircumstances: "",
+                          changeCircumstanceOther: "",
+                          howPlacementAdjusted: "",
+                          educationSupervisorName: "",
+                          educationSupervisorEmail: ""
+                        },
+                        false
+                      );
+                    } else {
+                      setFieldValue("covidDeclarationDto", null, false);
+                    }
+                  }}
+                />
+              </Card.Content>
+            </Card>
             {BooleanUtilities.ToBoolean(values.haveCovidDeclarations) ? (
               <div data-jest="covidForm" data-cy="covidForm">
                 <WarningCallout data-cy="mainWarningCovid">
@@ -155,202 +156,219 @@ const CovidDeclaration = ({
                     </p>
                   </div>
                 </WarningCallout>
-                <Panel label="Section 1: Trainee self-assessment of progress">
-                  <Label>
-                    <b>
-                      1. Please self-rate your progress in your training since
-                      your last ARCP using the three-point rating scale
-                    </b>
-                  </Label>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>
+                      Section 1: Trainee self-assessment of progress
+                    </Card.Heading>
+                    <Label>
+                      <b>
+                        1. Please self-rate your progress in your training since
+                        your last ARCP using the three-point rating scale
+                      </b>
+                    </Label>
 
-                  <MultiChoiceInputField
-                    label=""
-                    id="covidDeclarationDto.selfRateForCovid"
-                    type="radios"
-                    name="covidDeclarationDto.selfRateForCovid"
-                    data-jest="selfRateForCovid"
-                    hint=""
-                    items={COVID_RESULT_DECLARATIONS.map<KeyValue>(d => {
-                      return {
-                        label: d,
-                        value: d
-                      };
-                    })}
-                    onChange={() => {
-                      setFieldValue(
-                        "covidDeclarationDto.reasonOfSelfRate",
-                        null,
-                        false
-                      );
-                    }}
-                  />
-                  {values.covidDeclarationDto?.selfRateForCovid &&
-                    values.covidDeclarationDto?.selfRateForCovid !==
-                      COVID_RESULT_DECLARATIONS[2] && (
-                      <TextInputField
-                        label="Please explain your reason for your progress self-rating."
-                        name="covidDeclarationDto.reasonOfSelfRate"
-                        rows={5}
-                      />
-                    )}
-
-                  <Label>
-                    <b>
-                      2. Please add other information you wish to provide for
-                      the ARCP panel below
-                    </b>
-                  </Label>
-                  <TextInputField
-                    label=""
-                    name="covidDeclarationDto.otherInformationForPanel"
-                    data-jest="covidDeclarationDto.otherInformationForPanel"
-                    rows={10}
-                  />
-                </Panel>
-
-                <Panel label="Section 2: Trainee Check-In">
-                  <Label>
-                    <b>Please indicate in response to the following</b>
-                  </Label>
-                  <MultiChoiceInputField
-                    id="covidDeclarationDto.discussWithSupervisorChecked"
-                    type="checkbox"
-                    name="covidDeclarationDto.discussWithSupervisorChecked"
-                    hint=""
-                    items={[
-                      {
-                        label: NEED_DISCUSSION_WITH_SUPERVISOR,
-                        value: true
-                      }
-                    ]}
-                  />
-                  <MultiChoiceInputField
-                    id="covidDeclarationDto.discussWithSomeoneChecked"
-                    type="checkbox"
-                    name="covidDeclarationDto.discussWithSomeoneChecked"
-                    hint=""
-                    items={[
-                      {
-                        label: NEED_DISCUSSION_WITH_SOMEONE,
-                        value: true
-                      }
-                    ]}
-                  />
-                </Panel>
-
-                <Panel label="Section 3: Trainee placement changes">
-                  <Label>
-                    <p>
-                      Please indicate any changes to your placement caused by
-                      your individual circumstances e.g. moving from frontline
-                      services for those in high-risk groups. Include as much
-                      information as possible including details of any periods
-                      of self-isolation with dates
-                    </p>
-                  </Label>
-
-                  <MultiChoiceInputField
-                    label="Changes were made to my placement due to my individual circumstances?"
-                    id="covidDeclarationDto.haveChangesToPlacement"
-                    name="covidDeclarationDto.haveChangesToPlacement"
-                    type="radios"
-                    items={YES_NO_OPTIONS}
-                    data-jest="haveChangesToPlacement"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setFieldValue(
-                        "covidDeclarationDto.haveChangesToPlacement",
-                        e.target.value,
-                        false
-                      );
-                      setFieldValue(
-                        "covidDeclarationDto.changeCircumstances",
-                        null,
-                        false
-                      );
-                      setFieldValue(
-                        "covidDeclarationDto.changeCircumstanceOther",
-                        null,
-                        false
-                      );
-                      setFieldValue(
-                        "covidDeclarationDto.howPlacementAdjusted",
-                        null,
-                        false
-                      );
-                    }}
-                  />
-
-                  {BooleanUtilities.ToBoolean(
-                    values.covidDeclarationDto?.haveChangesToPlacement
-                  ) && (
-                    <div
-                      data-jest="placementChanges"
-                      data-cy="placementChanges"
-                    >
-                      <SelectInputField
-                        label="Circumstance of change"
-                        name="covidDeclarationDto.changeCircumstances"
-                        data-jest="changeCircumstances"
-                        options={getChangeCircs()}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setFieldValue(
-                            "covidDeclarationDto.changeCircumstances",
-                            e.target.value
-                          );
-                          setFieldValue(
-                            "covidDeclarationDto.changeCircumstanceOther",
-                            null,
-                            false
-                          );
-                        }}
-                      />
-                      {values.covidDeclarationDto?.changeCircumstances ===
-                        "Other" && (
+                    <MultiChoiceInputField
+                      label=""
+                      id="covidDeclarationDto.selfRateForCovid"
+                      type="radios"
+                      name="covidDeclarationDto.selfRateForCovid"
+                      data-jest="selfRateForCovid"
+                      hint=""
+                      items={COVID_RESULT_DECLARATIONS.map<KeyValue>(d => {
+                        return {
+                          label: d,
+                          value: d
+                        };
+                      })}
+                      onChange={() => {
+                        setFieldValue(
+                          "covidDeclarationDto.reasonOfSelfRate",
+                          null,
+                          false
+                        );
+                      }}
+                    />
+                    {values.covidDeclarationDto?.selfRateForCovid &&
+                      values.covidDeclarationDto?.selfRateForCovid !==
+                        COVID_RESULT_DECLARATIONS[2] && (
                         <TextInputField
-                          label="If other, please explain"
-                          name="covidDeclarationDto.changeCircumstanceOther"
-                          data-jest="changeCircumstanceOther"
+                          label="Please explain your reason for your progress self-rating."
+                          name="covidDeclarationDto.reasonOfSelfRate"
+                          rows={5}
                         />
                       )}
 
-                      <TextInputField
-                        label="Please explain further how your placement was adjusted"
-                        name="covidDeclarationDto.howPlacementAdjusted"
-                        rows={5}
-                        data-jest="howPlacementAdjusted"
-                      />
-                    </div>
-                  )}
-                </Panel>
+                    <Label>
+                      <b>
+                        2. Please add other information you wish to provide for
+                        the ARCP panel below
+                      </b>
+                    </Label>
+                    <TextInputField
+                      label=""
+                      name="covidDeclarationDto.otherInformationForPanel"
+                      data-jest="covidDeclarationDto.otherInformationForPanel"
+                      rows={10}
+                    />
+                  </Card.Content>
+                </Card>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>Section 2: Trainee Check-In</Card.Heading>
+                    <Label>
+                      <b>Please indicate in response to the following</b>
+                    </Label>
+                    <MultiChoiceInputField
+                      id="covidDeclarationDto.discussWithSupervisorChecked"
+                      type="checkbox"
+                      name="covidDeclarationDto.discussWithSupervisorChecked"
+                      hint=""
+                      items={[
+                        {
+                          label: NEED_DISCUSSION_WITH_SUPERVISOR,
+                          value: true
+                        }
+                      ]}
+                    />
+                    <MultiChoiceInputField
+                      id="covidDeclarationDto.discussWithSomeoneChecked"
+                      type="checkbox"
+                      name="covidDeclarationDto.discussWithSomeoneChecked"
+                      hint=""
+                      items={[
+                        {
+                          label: NEED_DISCUSSION_WITH_SOMEONE,
+                          value: true
+                        }
+                      ]}
+                    />
+                  </Card.Content>
+                </Card>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>
+                      Section 3: Trainee placement changes
+                    </Card.Heading>
+                    <Label>
+                      <p>
+                        Please indicate any changes to your placement caused by
+                        your individual circumstances e.g. moving from frontline
+                        services for those in high-risk groups. Include as much
+                        information as possible including details of any periods
+                        of self-isolation with dates
+                      </p>
+                    </Label>
 
-                <Panel label="Section 4: Educational Supervisor (ES) Report / Validation">
-                  <Label>
-                    <p>
-                      Please provide details of your Educational Supervisor in
-                      this section.
-                      <strong>
-                        {" "}
-                        A PDF copy of this form will need to be sent to your ES
-                        when you submit this form (If applicable)
-                      </strong>
-                      . This will give your ES the opportunity to review the
-                      information provided in the self-assessment declaration,
-                      comment and confirm / validate them and make a
-                      recommendation for the ARCP during COVID 19. This will be
-                      completed by the ES in your ePortfolio.
-                    </p>
-                  </Label>
-                  <TextInputField
-                    label="Educational Supervisor Name (If applicable)"
-                    name="covidDeclarationDto.educationSupervisorName"
-                    data-jest="educationSupervisorName"
-                  />
-                  <TextInputField
-                    label="Educational Supervisor Email Address (If applicable)"
-                    name="covidDeclarationDto.educationSupervisorEmail"
-                    data-jest="educationSupervisorEmail"
-                  />
-                </Panel>
+                    <MultiChoiceInputField
+                      label="Changes were made to my placement due to my individual circumstances?"
+                      id="covidDeclarationDto.haveChangesToPlacement"
+                      name="covidDeclarationDto.haveChangesToPlacement"
+                      type="radios"
+                      items={YES_NO_OPTIONS}
+                      data-jest="haveChangesToPlacement"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setFieldValue(
+                          "covidDeclarationDto.haveChangesToPlacement",
+                          e.target.value,
+                          false
+                        );
+                        setFieldValue(
+                          "covidDeclarationDto.changeCircumstances",
+                          null,
+                          false
+                        );
+                        setFieldValue(
+                          "covidDeclarationDto.changeCircumstanceOther",
+                          null,
+                          false
+                        );
+                        setFieldValue(
+                          "covidDeclarationDto.howPlacementAdjusted",
+                          null,
+                          false
+                        );
+                      }}
+                    />
+
+                    {BooleanUtilities.ToBoolean(
+                      values.covidDeclarationDto?.haveChangesToPlacement
+                    ) && (
+                      <div
+                        data-jest="placementChanges"
+                        data-cy="placementChanges"
+                      >
+                        <SelectInputField
+                          label="Circumstance of change"
+                          name="covidDeclarationDto.changeCircumstances"
+                          data-jest="changeCircumstances"
+                          options={getChangeCircs()}
+                          onChange={(
+                            e: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setFieldValue(
+                              "covidDeclarationDto.changeCircumstances",
+                              e.target.value
+                            );
+                            setFieldValue(
+                              "covidDeclarationDto.changeCircumstanceOther",
+                              null,
+                              false
+                            );
+                          }}
+                        />
+                        {values.covidDeclarationDto?.changeCircumstances ===
+                          "Other" && (
+                          <TextInputField
+                            label="If other, please explain"
+                            name="covidDeclarationDto.changeCircumstanceOther"
+                            data-jest="changeCircumstanceOther"
+                          />
+                        )}
+
+                        <TextInputField
+                          label="Please explain further how your placement was adjusted"
+                          name="covidDeclarationDto.howPlacementAdjusted"
+                          rows={5}
+                          data-jest="howPlacementAdjusted"
+                        />
+                      </div>
+                    )}
+                  </Card.Content>
+                </Card>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>
+                      Section 4: Educational Supervisor (ES) Report / Validation
+                    </Card.Heading>
+                    <Label>
+                      <p>
+                        Please provide details of your Educational Supervisor in
+                        this section.
+                        <strong>
+                          {" "}
+                          A PDF copy of this form will need to be sent to your
+                          ES when you submit this form (If applicable)
+                        </strong>
+                        . This will give your ES the opportunity to review the
+                        information provided in the self-assessment declaration,
+                        comment and confirm / validate them and make a
+                        recommendation for the ARCP during COVID 19. This will
+                        be completed by the ES in your ePortfolio.
+                      </p>
+                    </Label>
+                    <TextInputField
+                      label="Educational Supervisor Name (If applicable)"
+                      name="covidDeclarationDto.educationSupervisorName"
+                      data-jest="educationSupervisorName"
+                    />
+                    <TextInputField
+                      label="Educational Supervisor Email Address (If applicable)"
+                      name="covidDeclarationDto.educationSupervisorEmail"
+                      data-jest="educationSupervisorEmail"
+                    />
+                  </Card.Content>
+                </Card>
               </div>
             ) : null}
           </Fieldset>
