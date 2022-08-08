@@ -12,7 +12,7 @@ const dateValidationSchema = (fieldName: string) =>
 
 export const ValidationSchema = yup.object({
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("GMC-Registered Surname", 30),
+  surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   dateOfBirth: dateValidationSchema("Your date of birth")

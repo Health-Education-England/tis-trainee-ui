@@ -36,7 +36,7 @@ const panelSchemaValidation = yup.array(
 
 export const Section1ValidationSchema = yup.object({
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("GMC-Registered Surname", 30),
+  surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   email: yup
     .string()
