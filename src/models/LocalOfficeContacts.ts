@@ -32,7 +32,7 @@ export const localOfficeContacts: LocalOfficeContact[] = [
   {
     name: "Health Education England North West",
     abbrevName: "HEE North West",
-    contact: "medicine.nw@hee.nhs.uk"
+    contact: "tissupport.north@hee.nhs.uk"
   },
   {
     name: "Health Education England North West London",
