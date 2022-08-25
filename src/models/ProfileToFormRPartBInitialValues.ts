@@ -5,6 +5,13 @@ import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
 
+const year = '' + new Date().getFullYear();
+const month = ('0' + (new Date().getMonth() + 1)).slice(-2);
+const day = ('0' + new Date().getDate()).slice(-2);
+const today = year + '-' + month + '-' + day;
+//onlyFutureDateToDisplay = work.filter(p => p.startDate > today).sortbyStartDateAsc().first().startDate()
+
+
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
 ): FormRPartB {
@@ -14,7 +21,15 @@ export function ProfileToFormRPartBInitialValues(
   );
   const curriculum = ProfileUtilities.getCurriculum(programme);
 
-  const work = traineeProfileData.placements.map<Work>(placement => ({
+  const includeAllPlacementsDate = '9999-99-99';
+  const firstFuturePlacements = traineeProfileData.placements
+  .filter(placement => placement.startDate.toString() > today)
+  .sort((a, b) => a.startDate > b.startDate? 1 : -1);
+  const nextFutureDate = firstFuturePlacements[0] ? firstFuturePlacements[0].startDate.toString() : includeAllPlacementsDate;
+  
+  const work = traineeProfileData.placements
+  .filter(placement => placement.startDate.toString() <= nextFutureDate)
+  .map<Work>(placement => ({
     typeOfWork: StringUtilities.argsToString(
       placement.placementType,
       placement.grade,
