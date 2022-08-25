@@ -71,8 +71,9 @@ const Section2 = ({
                 if required.
               </p>
               <p>
-                If applicable, only your next upcoming placement is listed below.
-                It is not necessary to include any future placements beyond that.
+                If applicable, only your next upcoming placement is listed
+                below. It is not necessary to include any future placements
+                beyond that.
               </p>
             </WarningCallout>
             <DataSourceMsg />
