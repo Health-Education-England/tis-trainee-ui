@@ -79,4 +79,20 @@ export class ProfileUtilities {
     if (pl.placementType?.toLowerCase().includes("in post")) return "Yes";
     else return "";
   }
+
+  public static getPlacementsExcludingFuturePlacementsAfterNext(pls: Placement[]) {
+    const year = "" + new Date().getFullYear();
+    const month = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    const day = ("0" + new Date().getDate()).slice(-2);
+    const today = year + "-" + month + "-" + day;
+    const includeAllPlacementsDate = "9999-99-99";
+
+    const firstFuturePlacements = pls
+      .filter(placement => placement.startDate.toString() > today)
+      .sort((a, b) => a.startDate > b.startDate ? 1 : -1);
+    const nextFutureDate = firstFuturePlacements[0]
+      ? firstFuturePlacements[0].startDate.toString() : includeAllPlacementsDate;
+      
+    return pls.filter(placement => placement.startDate.toString() <= nextFutureDate);
+  }
 }
