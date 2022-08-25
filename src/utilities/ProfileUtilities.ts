@@ -3,6 +3,7 @@ import { NEW_WORK } from "../utilities/Constants";
 import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import { MEDICAL_CURRICULUM } from "./Constants";
+import dayjs from "dayjs";
 
 export class ProfileUtilities {
   public static sortWorkDesc(workArr: Work[]) {
@@ -82,7 +83,7 @@ export class ProfileUtilities {
   }
 
   public static trimmedFutureWork(works: Work[]) {
-    const today = new Date().toISOString().split("T")[0];
+    const today = dayjs(new Date()).format("yyyy-mm-dd");
 
     const firstFutureWorks = works
       .filter(w => w.startDate > today)
@@ -95,11 +96,9 @@ export class ProfileUtilities {
   }
 
   public static sortedTrimmedWork(work: Work[]) {
-    const trimmedWork = ProfileUtilities.trimmedFutureWork(work);
+    const trimmedWork = this.trimmedFutureWork(work);
     if (trimmedWork.length > 1) {
-      trimmedWork.sort(
-        (a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
-      );
+      return this.sortWorkDesc(trimmedWork);
     } else if (trimmedWork.length === 0) trimmedWork.push(NEW_WORK);
 
     return trimmedWork;
