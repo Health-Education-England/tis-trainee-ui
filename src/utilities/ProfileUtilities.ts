@@ -1,4 +1,5 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
+import { NEW_WORK } from "../utilities/Constants";
 import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import { MEDICAL_CURRICULUM } from "./Constants";
@@ -80,19 +81,29 @@ export class ProfileUtilities {
     else return "";
   }
 
-  public static getPlacementsExcludingFuturePlacementsAfterNext(pls: Placement[]) {
+  public static trimmedFutureWork(works: Work[]) {
     const year = "" + new Date().getFullYear();
     const month = ("0" + (new Date().getMonth() + 1)).slice(-2);
     const day = ("0" + new Date().getDate()).slice(-2);
     const today = year + "-" + month + "-" + day;
-    const includeAllPlacementsDate = "9999-99-99";
 
-    const firstFuturePlacements = pls
-      .filter(placement => placement.startDate.toString() > today)
+    const firstFutureWorks = works
+      .filter(w => w.startDate > today)
       .sort((a, b) => a.startDate > b.startDate ? 1 : -1);
-    const nextFutureDate = firstFuturePlacements[0]
-      ? firstFuturePlacements[0].startDate.toString() : includeAllPlacementsDate;
-      
-    return pls.filter(placement => placement.startDate.toString() <= nextFutureDate);
+    const nextFutureDate = firstFutureWorks[0]
+      ? firstFutureWorks[0].startDate : today;
+
+    return works.filter(w => w.startDate <= nextFutureDate);
+  }
+
+  public static sortedTrimmedWork(work: Work[]) {
+    const trimmedWork = ProfileUtilities.trimmedFutureWork(work);
+    if (trimmedWork.length > 1) {
+      trimmedWork.sort(
+        (a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+      );
+    } else if (trimmedWork.length === 0) trimmedWork.push(NEW_WORK);
+
+    return trimmedWork;
   }
 }

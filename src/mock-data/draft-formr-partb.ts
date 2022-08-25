@@ -53,6 +53,7 @@ export const draftFormRPartB: FormRPartB = {
   isWarned: true,
   isComplying: true,
   healthStatement: "I feel great etc.",
+  havePreviousUnresolvedDeclarations: false,
   havePreviousDeclarations: true,
   previousDeclarations: [
     {
@@ -63,6 +64,7 @@ export const draftFormRPartB: FormRPartB = {
     }
   ],
   previousDeclarationSummary: "",
+  haveCurrentUnresolvedDeclarations: false,
   haveCurrentDeclarations: true,
   currentDeclarations: [
     {
@@ -125,6 +127,7 @@ export const draftFormRPartBWithNullCareerBreak: FormRPartB = {
   isWarned: true,
   isComplying: true,
   healthStatement: "I feel great etc.",
+  havePreviousUnresolvedDeclarations: false,
   havePreviousDeclarations: true,
   previousDeclarations: [
     {
@@ -135,6 +138,7 @@ export const draftFormRPartBWithNullCareerBreak: FormRPartB = {
     }
   ],
   previousDeclarationSummary: "",
+  haveCurrentUnresolvedDeclarations: false,
   haveCurrentDeclarations: true,
   currentDeclarations: [
     {
@@ -197,6 +201,7 @@ export const draftFormRPartBWithNoLeaveTotal = {
   isWarned: true,
   isComplying: true,
   healthStatement: "I feel great etc.",
+  havePreviousUnresolvedDeclarations: false,
   havePreviousDeclarations: true,
   previousDeclarations: [
     {
@@ -207,6 +212,7 @@ export const draftFormRPartBWithNoLeaveTotal = {
     }
   ],
   previousDeclarationSummary: "",
+  haveCurrentUnresolvedDeclarations: false,
   haveCurrentDeclarations: true,
   currentDeclarations: [
     {

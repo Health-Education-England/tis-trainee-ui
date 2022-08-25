@@ -1,6 +1,5 @@
 import { TraineeProfile } from "./TraineeProfile";
 import { FormRPartB, Work } from "./FormRPartB";
-import { NEW_WORK } from "../utilities/Constants";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
@@ -14,8 +13,7 @@ export function ProfileToFormRPartBInitialValues(
   );
   const curriculum = ProfileUtilities.getCurriculum(programme);
   
-  const work = ProfileUtilities.getPlacementsExcludingFuturePlacementsAfterNext(traineeProfileData.placements)
-    .map<Work>(placement => ({
+  const work = traineeProfileData.placements.map<Work>(placement => ({
     typeOfWork: StringUtilities.argsToString(
       placement.placementType,
       placement.grade,
@@ -28,11 +26,7 @@ export function ProfileToFormRPartBInitialValues(
     trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
   }));
 
-  if (work.length > 1) {
-    work.sort(
-      (a, b) => new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
-    );
-  } else if (work.length === 0) work.push(NEW_WORK);
+  const workFilteredSorted = ProfileUtilities.sortedTrimmedWork(work);
 
   return {
     forename: pd?.forenames,
@@ -47,7 +41,7 @@ export function ProfileToFormRPartBInitialValues(
     programmeSpecialty: curriculum?.curriculumName || null,
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
-    work: work,
+    work: workFilteredSorted,
     sicknessAbsence: 0,
     parentalLeave: 0,
     careerBreaks: 0,
