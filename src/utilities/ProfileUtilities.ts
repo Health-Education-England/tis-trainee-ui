@@ -1,7 +1,9 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
+import { NEW_WORK } from "../utilities/Constants";
 import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import { MEDICAL_CURRICULUM } from "./Constants";
+import dayjs from "dayjs";
 
 export class ProfileUtilities {
   public static sortWorkDesc(workArr: Work[]) {
@@ -78,5 +80,27 @@ export class ProfileUtilities {
   public static getTrainingPostInitVal(pl: Placement) {
     if (pl.placementType?.toLowerCase().includes("in post")) return "Yes";
     else return "";
+  }
+
+  public static trimmedFutureWork(works: Work[]) {
+    const today = dayjs(new Date()).format("YYYY-MM-DD");
+
+    const firstFutureWorks = works
+      .filter(w => w.startDate > today)
+      .sort((a, b) => (a.startDate > b.startDate ? 1 : -1));
+    const nextFutureDate = firstFutureWorks[0]
+      ? firstFutureWorks[0].startDate
+      : today;
+
+    return works.filter(w => w.startDate <= nextFutureDate);
+  }
+
+  public static sortedTrimmedWork(work: Work[]) {
+    const trimmedWork = this.trimmedFutureWork(work);
+    if (trimmedWork.length > 1) {
+      return this.sortWorkDesc(trimmedWork);
+    } else if (trimmedWork.length === 0) trimmedWork.push(NEW_WORK);
+
+    return trimmedWork;
   }
 }
