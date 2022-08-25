@@ -83,7 +83,7 @@ export class ProfileUtilities {
   }
 
   public static trimmedFutureWork(works: Work[]) {
-    const today = dayjs(new Date()).format("yyyy-mm-dd");
+    const today = dayjs(new Date()).format("YYYY-MM-DD");
 
     const firstFutureWorks = works
       .filter(w => w.startDate > today)
