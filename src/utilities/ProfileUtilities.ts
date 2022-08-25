@@ -86,9 +86,10 @@ export class ProfileUtilities {
 
     const firstFutureWorks = works
       .filter(w => w.startDate > today)
-      .sort((a, b) => a.startDate > b.startDate ? 1 : -1);
+      .sort((a, b) => (a.startDate > b.startDate ? 1 : -1));
     const nextFutureDate = firstFutureWorks[0]
-      ? firstFutureWorks[0].startDate : today;
+      ? firstFutureWorks[0].startDate
+      : today;
 
     return works.filter(w => w.startDate <= nextFutureDate);
   }

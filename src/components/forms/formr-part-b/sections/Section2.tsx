@@ -70,6 +70,10 @@ const Section2 = ({
                 shifts worked in each locum employer-entry. Please add more rows
                 if required.
               </p>
+              <p>
+                If applicable, only your next upcoming placement is listed below.
+                It is not necessary to include any future placements beyond that.
+              </p>
             </WarningCallout>
             <DataSourceMsg />
             <Card feature>
