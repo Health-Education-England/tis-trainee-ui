@@ -82,10 +82,7 @@ export class ProfileUtilities {
   }
 
   public static trimmedFutureWork(works: Work[]) {
-    const year = "" + new Date().getFullYear();
-    const month = ("0" + (new Date().getMonth() + 1)).slice(-2);
-    const day = ("0" + new Date().getDate()).slice(-2);
-    const today = year + "-" + month + "-" + day;
+    const today = new Date().toISOString().split("T")[0];
 
     const firstFutureWorks = works
       .filter(w => w.startDate > today)

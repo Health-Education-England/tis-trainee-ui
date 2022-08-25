@@ -94,7 +94,7 @@ export const trimmedAndSortedArr = [
     }
   ];
 
-export const workArr2 = [
+export const workArrWithTwoFutureOnSameDay = [
     ...workArr,
     {
       endDate: "2023-04-30",
@@ -106,7 +106,7 @@ export const workArr2 = [
     }
   ];
 
-export const trimmedAndSortedArr2 = [
+export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     {
       endDate: "2024-03-31",
       site: "London",

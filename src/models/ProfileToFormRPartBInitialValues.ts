@@ -12,7 +12,6 @@ export function ProfileToFormRPartBInitialValues(
     traineeProfileData.programmeMemberships
   );
   const curriculum = ProfileUtilities.getCurriculum(programme);
-  
   const work = traineeProfileData.placements.map<Work>(placement => ({
     typeOfWork: StringUtilities.argsToString(
       placement.placementType,

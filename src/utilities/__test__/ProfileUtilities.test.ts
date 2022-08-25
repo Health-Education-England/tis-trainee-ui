@@ -16,8 +16,8 @@ import { NEW_WORK } from "../Constants";
 import {
   workArr,
   trimmedAndSortedArr,
-  workArr2,
-  trimmedAndSortedArr2
+  workArrWithTwoFutureOnSameDay,
+  trimmedAndSortedWorkArrWithTwoFutureOnSameDay
 } from "../../mock-data/work-placements-list";
 
 describe("ProfileUtilities", () => {
@@ -116,8 +116,8 @@ describe("ProfileUtilities", () => {
 
   it("should return 2 most recent future placements if they have the same start date and put all placements in desc order by end date", () => {
     const trimmedAndSorted2 = ProfileUtilities.sortedTrimmedWork(
-      workArr2
+      workArrWithTwoFutureOnSameDay
     );
-    expect(trimmedAndSorted2).toEqual(trimmedAndSortedArr2);
+    expect(trimmedAndSorted2).toEqual(trimmedAndSortedWorkArrWithTwoFutureOnSameDay);
   });
 });
