@@ -5,12 +5,12 @@ updates:
     schedule:
       interval: weekly
     reviewers:
-      - Health-Education-England/frontend
+      - Health-Education-England/trainee-frontend
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
     reviewers:
-      - Health-Education-England/frontend
-      - Health-Education-England/operations
+      - Health-Education-England/trainee-frontend
+      - Health-Education-England/trainee-devops
