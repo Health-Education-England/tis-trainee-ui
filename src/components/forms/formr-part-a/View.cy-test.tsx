@@ -73,4 +73,21 @@ describe("View", () => {
     cy.get("[data-cy=savePdfBtn]").should("not.exist");
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
   });
+  it("should render view component with submission date on a submitted form", () => {
+    const MockedView = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormA(submittedFormRPartAs[0]));
+
+      return <View canEdit={false} history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedView />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=dateSubmitted]").should("exist");
+    cy.get("[data-cy=dateSubmitted]").should("include.text", "02/07/2022");
+  });
 });
