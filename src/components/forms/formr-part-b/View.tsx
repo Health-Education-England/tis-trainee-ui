@@ -837,7 +837,6 @@ const View = ({ canEdit, history }: IView) => {
             ) : null}
           </>
         ) : null}
-
         {!canEdit && (
           <>
             <div className="nhsuk-grid-row page-break">
@@ -864,6 +863,10 @@ const View = ({ canEdit, history }: IView) => {
                 </SummaryList>
               </Card.Content>
             </Card>
+            <h3>
+              Form Submitted on:&nbsp;
+              {DateUtilities.ToUTCDate(formData.submissionDate)}
+            </h3>
           </>
         )}
       </>
