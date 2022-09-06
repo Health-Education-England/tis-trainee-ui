@@ -53,6 +53,7 @@ describe("View", () => {
     cy.get("[data-cy=BtnEdit]").should("not.exist");
     cy.get("[data-cy=BtnSaveDraft]").should("not.exist");
     cy.get("[data-cy=BtnSubmit]").should("not.exist");
+    cy.get("[data-cy=dateSubmitted]").should("exist");
   });
   it("should render view component with no save PDF btn/link for unsubmitted form", () => {
     const MockedViewUnsubmitted = () => {

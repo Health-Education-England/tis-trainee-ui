@@ -205,7 +205,7 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        <h3>
+        <h3 data-cy="dateSubmitted">
           Form Submitted on:&nbsp;
           {DateUtilities.ToUTCDate(formData.submissionDate)}
         </h3>
