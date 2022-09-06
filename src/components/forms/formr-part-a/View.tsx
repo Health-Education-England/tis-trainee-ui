@@ -205,6 +205,10 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
+        <h3 data-cy="dateSubmitted">
+          Form Submitted on:&nbsp;
+          {DateUtilities.ToLocalDate(formData.submissionDate)}
+        </h3>
       </>
     );
   else content = <Redirect to="/formr-a" />;
