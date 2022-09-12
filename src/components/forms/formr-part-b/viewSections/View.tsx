@@ -22,7 +22,7 @@ import {
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 import ScrollTo from "../../ScrollTo";
-import classes from "./FormRPartB.module.scss";
+import classes from "../FormRPartB.module.scss";
 import FormSavePDF from "../../FormSavePDF";
 
 import ViewSection1 from "./ViewSection1";
