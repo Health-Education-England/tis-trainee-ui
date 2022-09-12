@@ -5,27 +5,27 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import { Redirect } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   selectSavedFormB,
   updateFormBSection,
   updateFormBPreviousSection
-} from "../../../redux/slices/formBSlice";
-import store from "../../../redux/store/store";
-import { BooleanUtilities } from "../../../utilities/BooleanUtilities";
+} from "../../../../redux/slices/formBSlice";
+import store from "../../../../redux/store/store";
+import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import {
   FORMR_PARTB_ACCEPTANCE,
   FORMR_PARTB_CONSENT,
   NEED_DISCUSSION_WITH_SOMEONE,
   NEED_DISCUSSION_WITH_SUPERVISOR
-} from "../../../utilities/Constants";
-import { DateUtilities } from "../../../utilities/DateUtilities";
-import { FormRUtilities } from "../../../utilities/FormRUtilities";
-import ScrollTo from "../ScrollTo";
+} from "../../../../utilities/Constants";
+import { DateUtilities } from "../../../../utilities/DateUtilities";
+import { FormRUtilities } from "../../../../utilities/FormRUtilities";
+import ScrollTo from "../../ScrollTo";
 import classes from "./FormRPartB.module.scss";
-import FormSavePDF from "../FormSavePDF";
+import FormSavePDF from "../../FormSavePDF";
 
-import ViewSection1 from "./viewSections/ViewSection1";
+import ViewSection1 from "./ViewSection1";
 
 interface IView {
   canEdit: boolean;
@@ -41,7 +41,7 @@ const View = ({ canEdit, history }: IView) => {
   const viewCompSection: number = store.getState().formB.sectionNumber;
   let content;
 
-  const SectionEditButton = (section: number) => {
+  const makeSectionEditButton = (section: number) => {
     return (
       canEdit && (
         <Button
@@ -59,7 +59,7 @@ const View = ({ canEdit, history }: IView) => {
     );
   };
 
-  const viewSectionProps = { SectionEditButton, formData };
+  const viewSectionProps = { makeSectionEditButton, formData };
 
   if (formData.traineeTisId)
     content = (
@@ -83,7 +83,7 @@ const View = ({ canEdit, history }: IView) => {
             <h2 data-cy="sectionHeader2">Section 2: Whole Scope of Practice</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(2)}
+            {makeSectionEditButton(2)}
           </div>
         </div>
         <Card feature>
@@ -197,7 +197,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(3)}
+            {makeSectionEditButton(3)}
           </div>
         </div>
         <Card feature>
@@ -263,7 +263,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(4)}
+            {makeSectionEditButton(4)}
           </div>
         </div>
         <Card feature>
@@ -378,7 +378,7 @@ const View = ({ canEdit, history }: IView) => {
             </h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(5)}
+            {makeSectionEditButton(5)}
           </div>
         </div>
         <Card feature>
@@ -489,7 +489,7 @@ const View = ({ canEdit, history }: IView) => {
             <h2 data-cy="sectionHeader6">Section 6: Compliments</h2>
           </div>
           <div className="nhsuk-grid-column-one-third">
-            {SectionEditButton(6)}
+            {makeSectionEditButton(6)}
           </div>
         </div>
         <Card feature>
@@ -515,7 +515,7 @@ const View = ({ canEdit, history }: IView) => {
                 <h2 data-cy="sectionHeader7">Covid declarations</h2>
               </div>
               <div className="nhsuk-grid-column-one-third">
-                {SectionEditButton(7)}
+                {makeSectionEditButton(7)}
               </div>
             </div>
             <Card feature>

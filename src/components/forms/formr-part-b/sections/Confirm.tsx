@@ -1,7 +1,7 @@
 import { FormRPartB } from "../../../../models/FormRPartB";
 import ScrollTo from "../../ScrollTo";
 import Declarations from "./Declarations";
-import View from "../View";
+import View from "../viewSections/View";
 import { IProgSection } from "../../../../models/IProgressSection";
 
 interface IConfirm {

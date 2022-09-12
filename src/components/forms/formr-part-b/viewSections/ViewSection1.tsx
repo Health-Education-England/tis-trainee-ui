@@ -4,10 +4,15 @@ import {
   SummaryList,
   WarningCallout
 } from "nhsuk-react-components";
+import { FormRPartB } from "../../../../models/FormRPartB";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 
-const ViewSection1 = (props: { SectionEditButton: any; formData: any }) => {
-  const { SectionEditButton, formData } = props;
+interface IViewSection1 {
+  makeSectionEditButton: (section: number) => false | JSX.Element;
+  formData: FormRPartB;
+}
+
+const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
   return (
     <div>
       <div className="nhsuk-grid-row nhsuk-u-margin-top-3">
@@ -15,7 +20,7 @@ const ViewSection1 = (props: { SectionEditButton: any; formData: any }) => {
           <h2 data-cy="sectionHeader1">Section 1: Doctor's details</h2>
         </div>
         <div className="nhsuk-grid-column-one-third">
-          {SectionEditButton(1)}
+          {makeSectionEditButton(1)}
         </div>
       </div>
       <Card feature>
