@@ -11,17 +11,21 @@ const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay = [
-  "forename",
-  "surname",
-  "gmcNumber",
-  "email",
-  "localOfficeName",
-  //   "currRevalDate",
-  //   "prevRevalDate",
-  //FIXME: ignoring these for now, since they are actually strings not Date objects, and are formatted as LocalDates on the form
-  "programmeSpecialty",
-  "dualSpecialty"
+interface ISectionDataField {
+  fieldName: string;
+  format: string;
+}
+
+const formDataToDisplay: ISectionDataField[] = [
+  { fieldName: "forename", format: "" },
+  { fieldName: "surname", format: "" },
+  { fieldName: "gmcNumber", format: "" },
+  { fieldName: "email", format: "" },
+  { fieldName: "localOfficeName", format: "" },
+  { fieldName: "currRevalDate", format: "LocalDate" },
+  { fieldName: "prevRevalDate", format: "LocalDate" },
+  { fieldName: "programmeSpecialty", format: "" },
+  { fieldName: "dualSpecialty", format: "" }
 ];
 
 describe("View", () => {
@@ -51,8 +55,16 @@ describe("View", () => {
       </Provider>
     );
     formDataToDisplay.forEach(formDataItem => {
-      const dataValue = formData[formDataItem];
-      cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
+      const dataValue = formData[formDataItem.fieldName];
+      if (formDataItem.format === "LocalDate") {
+        const formattedDate = DateUtilities.ToLocalDate(dataValue);
+        cy.get(".nhsuk-summary-list__value").should(
+          "include.text",
+          formattedDate
+        );
+      } else {
+        cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
+      }
     });
   });
 });
