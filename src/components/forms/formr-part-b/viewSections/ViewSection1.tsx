@@ -1,9 +1,4 @@
-import {
-  Button,
-  Card,
-  SummaryList,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Card, SummaryList } from "nhsuk-react-components";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 
@@ -89,7 +84,7 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
               <SummaryList.Key>Dual Specialty</SummaryList.Key>
               <SummaryList.Value>{formData.dualSpecialty}</SummaryList.Value>
             </SummaryList.Row>
-          </SummaryList>{" "}
+          </SummaryList>
         </Card.Content>
       </Card>
     </div>
