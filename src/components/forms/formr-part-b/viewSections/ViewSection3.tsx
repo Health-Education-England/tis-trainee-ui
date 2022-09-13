@@ -4,7 +4,7 @@ import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 interface IViewSection3 {
-  makeSectionEditButton: (section: number) => false | JSX.Element;
+  makeSectionEditButton: (section: number) => boolean | JSX.Element;
   formData: FormRPartB;
 }
 

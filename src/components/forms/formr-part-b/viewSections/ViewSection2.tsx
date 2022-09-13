@@ -3,7 +3,7 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 
 interface IViewSection2 {
-  makeSectionEditButton: (section: number) => false | JSX.Element;
+  makeSectionEditButton: (section: number) => boolean | JSX.Element;
   formData: FormRPartB;
 }
 
