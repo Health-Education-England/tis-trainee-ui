@@ -36,55 +36,54 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {formData?.currentDeclarations.length > 0
-            ? formData.currentDeclarations.map((event, index) => (
-                <Card key={index}>
-                  <Card.Content>
-                    <h3 data-cy={`currentDeclaration${index + 1}`}>
-                      Declaration {index + 1}
-                    </h3>
-                    <SummaryList>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Declaration type</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`currentDeclarationType${index + 1}`}
-                          data-jest="currentDeclarationType"
-                        >
-                          {event.declarationType}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Date of entry</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`currentDateOfEntry${index + 1}`}
-                          data-jest="currentDateOfEntry"
-                        >
-                          {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Title</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`currentDeclarationTitle${index + 1}`}
-                          data-jest="currentDeclarationTitle"
-                        >
-                          {event.title}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Location of entry</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`currentLocationOfEntry${index + 1}`}
-                          data-jest="currentLocationOfEntry"
-                        >
-                          {event.locationOfEntry}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                    </SummaryList>
-                  </Card.Content>
-                </Card>
-              ))
-            : null}
+          {formData?.currentDeclarations.length > 0 &&
+            formData.currentDeclarations.map((event, index) => (
+              <Card key={index}>
+                <Card.Content>
+                  <h3 data-cy={`currentDeclaration${index + 1}`}>
+                    Declaration {index + 1}
+                  </h3>
+                  <SummaryList>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Declaration type</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`currentDeclarationType${index + 1}`}
+                        data-jest="currentDeclarationType"
+                      >
+                        {event.declarationType}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Date of entry</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`currentDateOfEntry${index + 1}`}
+                        data-jest="currentDateOfEntry"
+                      >
+                        {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Title</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`currentDeclarationTitle${index + 1}`}
+                        data-jest="currentDeclarationTitle"
+                      >
+                        {event.title}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Location of entry</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`currentLocationOfEntry${index + 1}`}
+                        data-jest="currentLocationOfEntry"
+                      >
+                        {event.locationOfEntry}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                  </SummaryList>
+                </Card.Content>
+              </Card>
+            ))}
         </Card.Content>
       </Card>
       <Card feature>

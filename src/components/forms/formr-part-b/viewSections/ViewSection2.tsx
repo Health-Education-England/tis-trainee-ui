@@ -21,45 +21,44 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
       <Card feature>
         <Card.Content>
           <Card.Heading>Type of work</Card.Heading>
-          {formData.work.length > 0
-            ? formData.work.map((w, i) => (
-                <Card key={i}>
-                  <Card.Content>
-                    <h3 data-cy={`typeOfWork${i + 1}`}>Type of work {i + 1}</h3>
-                    <SummaryList>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Type of Work</SummaryList.Key>
-                        <SummaryList.Value>{w.typeOfWork}</SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Training post</SummaryList.Key>
-                        <SummaryList.Value>{w.trainingPost}</SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Start Date</SummaryList.Key>
-                        <SummaryList.Value data-cy={`startDate${i + 1}`}>
-                          {DateUtilities.ToLocalDate(w.startDate || null)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>End Date</SummaryList.Key>
-                        <SummaryList.Value data-cy={`endDate${i + 1}`}>
-                          {DateUtilities.ToLocalDate(w.endDate || null)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Site Name</SummaryList.Key>
-                        <SummaryList.Value>{w.site}</SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Site Location</SummaryList.Key>
-                        <SummaryList.Value>{w.siteLocation}</SummaryList.Value>
-                      </SummaryList.Row>
-                    </SummaryList>
-                  </Card.Content>
-                </Card>
-              ))
-            : null}
+          {formData.work.length > 0 &&
+            formData.work.map((w, i) => (
+              <Card key={i}>
+                <Card.Content>
+                  <h3 data-cy={`typeOfWork${i + 1}`}>Type of work {i + 1}</h3>
+                  <SummaryList>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Type of Work</SummaryList.Key>
+                      <SummaryList.Value>{w.typeOfWork}</SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Training post</SummaryList.Key>
+                      <SummaryList.Value>{w.trainingPost}</SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Start Date</SummaryList.Key>
+                      <SummaryList.Value data-cy={`startDate${i + 1}`}>
+                        {DateUtilities.ToLocalDate(w.startDate || null)}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>End Date</SummaryList.Key>
+                      <SummaryList.Value data-cy={`endDate${i + 1}`}>
+                        {DateUtilities.ToLocalDate(w.endDate || null)}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Site Name</SummaryList.Key>
+                      <SummaryList.Value>{w.site}</SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Site Location</SummaryList.Key>
+                      <SummaryList.Value>{w.siteLocation}</SummaryList.Value>
+                    </SummaryList.Row>
+                  </SummaryList>
+                </Card.Content>
+              </Card>
+            ))}
         </Card.Content>
       </Card>
       <Card feature>

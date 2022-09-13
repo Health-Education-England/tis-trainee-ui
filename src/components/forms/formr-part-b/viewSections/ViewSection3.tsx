@@ -52,7 +52,7 @@ const ViewSection3 = ({ makeSectionEditButton, formData }: IViewSection3) => {
                 {BooleanUtilities.ToYesNo(formData.isWarned)}
               </SummaryList.Value>
             </SummaryList.Row>
-            {BooleanUtilities.ToBoolean(formData.isWarned) ? (
+            {BooleanUtilities.ToBoolean(formData.isWarned) && (
               <SummaryList.Row>
                 <SummaryList.Key>
                   If yes, are you complying with these conditions /
@@ -62,7 +62,7 @@ const ViewSection3 = ({ makeSectionEditButton, formData }: IViewSection3) => {
                   {BooleanUtilities.ToYesNo(formData.isComplying)}
                 </SummaryList.Value>
               </SummaryList.Row>
-            ) : null}
+            )}
             <SummaryList.Row>
               <SummaryList.Key>Health Statement</SummaryList.Key>
               <SummaryList.Value data-cy="healthStatement">

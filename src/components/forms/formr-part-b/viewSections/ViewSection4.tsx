@@ -36,55 +36,54 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {formData?.previousDeclarations.length > 0
-            ? formData.previousDeclarations.map((event, index) => (
-                <Card key={index}>
-                  <Card.Content>
-                    <h3 data-cy={`previousDeclaration${index + 1}`}>
-                      Declaration {index + 1}
-                    </h3>
-                    <SummaryList>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Declaration type</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`previousDeclarationType${index + 1}`}
-                          data-jest="previousDeclarationType"
-                        >
-                          {event.declarationType}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Date of entry</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`previousDateOfEntry${index + 1}`}
-                          data-jest="previousDateOfEntry"
-                        >
-                          {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Title</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`previousDeclarationTitle${index + 1}`}
-                          data-jest="previousDeclarationTitle"
-                        >
-                          {event.title}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Location of entry</SummaryList.Key>
-                        <SummaryList.Value
-                          data-cy={`previousLocationOfEntry${index + 1}`}
-                          data-jest="previousLocationOfEntry"
-                        >
-                          {event.locationOfEntry}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                    </SummaryList>
-                  </Card.Content>
-                </Card>
-              ))
-            : null}
+          {formData?.previousDeclarations.length > 0 &&
+            formData.previousDeclarations.map((event, index) => (
+              <Card key={index}>
+                <Card.Content>
+                  <h3 data-cy={`previousDeclaration${index + 1}`}>
+                    Declaration {index + 1}
+                  </h3>
+                  <SummaryList>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Declaration type</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`previousDeclarationType${index + 1}`}
+                        data-jest="previousDeclarationType"
+                      >
+                        {event.declarationType}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Date of entry</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`previousDateOfEntry${index + 1}`}
+                        data-jest="previousDateOfEntry"
+                      >
+                        {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Title</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`previousDeclarationTitle${index + 1}`}
+                        data-jest="previousDeclarationTitle"
+                      >
+                        {event.title}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Location of entry</SummaryList.Key>
+                      <SummaryList.Value
+                        data-cy={`previousLocationOfEntry${index + 1}`}
+                        data-jest="previousLocationOfEntry"
+                      >
+                        {event.locationOfEntry}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                  </SummaryList>
+                </Card.Content>
+              </Card>
+            ))}
         </Card.Content>
       </Card>
       <Card feature>

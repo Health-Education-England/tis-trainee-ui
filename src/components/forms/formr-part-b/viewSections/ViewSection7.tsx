@@ -37,7 +37,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
             </SummaryList.Row>
           </SummaryList>
 
-          {BooleanUtilities.ToBoolean(formData.haveCovidDeclarations) ? (
+          {BooleanUtilities.ToBoolean(formData.haveCovidDeclarations) && (
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>Covid Training Progress</SummaryList.Key>
@@ -45,7 +45,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   {formData.covidDeclarationDto?.selfRateForCovid}
                 </SummaryList.Value>
               </SummaryList.Row>
-              {formData.covidDeclarationDto?.reasonOfSelfRate ? (
+              {formData.covidDeclarationDto?.reasonOfSelfRate && (
                 <SummaryList.Row>
                   <SummaryList.Key>
                     Covid Training Progress Reason
@@ -54,7 +54,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                     {formData.covidDeclarationDto?.reasonOfSelfRate}
                   </SummaryList.Value>
                 </SummaryList.Row>
-              ) : null}
+              )}
               <SummaryList.Row>
                 <SummaryList.Key>
                   Other Information for ARCP Panel
@@ -64,10 +64,10 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-          ) : null}
+          )}
         </Card.Content>
       </Card>
-      {BooleanUtilities.ToBoolean(formData.haveCovidDeclarations) ? (
+      {BooleanUtilities.ToBoolean(formData.haveCovidDeclarations) && (
         <>
           <Card feature>
             <Card.Content>
@@ -114,7 +114,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
 
                 {BooleanUtilities.ToBoolean(
                   formData.covidDeclarationDto?.haveChangesToPlacement
-                ) ? (
+                ) && (
                   <>
                     <SummaryList.Row>
                       <SummaryList.Key>Circumstance of change</SummaryList.Key>
@@ -124,7 +124,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                     </SummaryList.Row>
 
                     {formData.covidDeclarationDto?.changeCircumstances ===
-                    "Other" ? (
+                      "Other" && (
                       <SummaryList.Row>
                         <SummaryList.Key>Other circumstance</SummaryList.Key>
                         <SummaryList.Value>
@@ -134,7 +134,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                           }
                         </SummaryList.Value>
                       </SummaryList.Row>
-                    ) : null}
+                    )}
 
                     <SummaryList.Row>
                       <SummaryList.Key>
@@ -145,7 +145,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                       </SummaryList.Value>
                     </SummaryList.Row>
                   </>
-                ) : null}
+                )}
               </SummaryList>
             </Card.Content>
           </Card>
@@ -179,7 +179,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
             </Card.Content>
           </Card>
         </>
-      ) : null}
+      )}
     </div>
   );
 };
