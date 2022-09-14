@@ -5,16 +5,13 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import store from "../../../../redux/store/store";
 import ViewSection1 from "./ViewSection1";
 import history from "../../../navigation/history";
-import { DateUtilities } from "../../../../utilities/DateUtilities";
+import ViewSectionShouldIncludeThisData, {
+  ISectionDataField
+} from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
-
-interface ISectionDataField {
-  fieldName: string;
-  format: string;
-}
 
 const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "forename", format: "" },
@@ -54,17 +51,6 @@ describe("View", () => {
         </Router>
       </Provider>
     );
-    formDataToDisplay.forEach(formDataItem => {
-      const dataValue = formData[formDataItem.fieldName];
-      if (formDataItem.format === "LocalDate") {
-        const formattedDate = DateUtilities.ToLocalDate(dataValue);
-        cy.get(".nhsuk-summary-list__value").should(
-          "include.text",
-          formattedDate
-        );
-      } else {
-        cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
-      }
-    });
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
   });
 });

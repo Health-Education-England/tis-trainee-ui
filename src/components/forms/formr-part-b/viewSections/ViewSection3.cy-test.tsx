@@ -7,15 +7,13 @@ import ViewSection3 from "./ViewSection3";
 import history from "../../../navigation/history";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
+import ViewSectionShouldIncludeThisData, {
+  ISectionDataField
+} from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
-
-interface ISectionDataField {
-  fieldName: string;
-  format: string;
-}
 
 const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "isHonest", format: "YesNo" },
@@ -51,23 +49,6 @@ describe("View", () => {
         </Router>
       </Provider>
     );
-    formDataToDisplay.forEach(formDataItem => {
-      const dataValue = formData[formDataItem.fieldName];
-      if (formDataItem.format === "LocalDate") {
-        const formattedDate = DateUtilities.ToLocalDate(dataValue);
-        cy.get(".nhsuk-summary-list__value").should(
-          "include.text",
-          formattedDate
-        );
-      } else if (formDataItem.format === "YesNo") {
-        const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
-        cy.get(".nhsuk-summary-list__value").should(
-          "include.text",
-          formattedBoolean
-        );
-      } else {
-        cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
-      }
-    });
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
   });
 });

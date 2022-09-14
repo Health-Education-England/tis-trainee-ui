@@ -6,15 +6,13 @@ import store from "../../../../redux/store/store";
 import ViewSection2 from "./ViewSection2";
 import history from "../../../navigation/history";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
+import ViewSectionShouldIncludeThisData, {
+    ISectionDataField, ISectionWorkDataField, ViewSectionWorkShouldIncludeThisData
+  } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
-
-interface ISectionDataField {
-  fieldName: string;
-  format: string;
-}
 
 const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "sicknessAbsence", format: "" },
@@ -27,7 +25,7 @@ const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "dualSpecialty", format: "" }
 ];
 
-const formDataWorkToDisplay: ISectionDataField[] = [
+const formDataWorkToDisplay: ISectionWorkDataField[] = [
   { fieldName: "typeOfWork", format: "" },
   { fieldName: "trainingPost", format: "" },
   { fieldName: "startDate", format: "LocalDate" },
@@ -62,34 +60,10 @@ describe("View", () => {
         </Router>
       </Provider>
     );
-    formDataToDisplay.forEach(formDataItem => {
-      const dataValue = formData[formDataItem.fieldName];
-      if (formDataItem.format === "LocalDate") {
-        const formattedDate = DateUtilities.ToLocalDate(dataValue);
-        cy.get(".nhsuk-summary-list__value").should(
-          "include.text",
-          formattedDate
-        );
-      } else {
-        cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
-      }
-    });
-    formDataWorkToDisplay.forEach(formDataItem => {
-      formData.work.map((w, i) => {
-        const dataValue = w[formDataItem.fieldName];
-        if (formDataItem.format === "LocalDate") {
-          const formattedDate = DateUtilities.ToLocalDate(dataValue);
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            formattedDate
-          );
-        } else {
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            dataValue
-          );
-        }
-      });
+    
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    formData.work.map((w, i) => {
+        ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);
     });
   });
 });
