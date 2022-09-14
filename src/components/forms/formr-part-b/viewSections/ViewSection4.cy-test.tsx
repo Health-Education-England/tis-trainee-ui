@@ -3,12 +3,12 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
-import ViewSection2 from "./ViewSection2";
+import ViewSection4 from "./ViewSection4";
 import history from "../../../navigation/history";
 import ViewSectionShouldIncludeThisData, {
   ISectionDataField,
-  ISectionWorkDataField,
-  ViewSectionWorkShouldIncludeThisData
+  ISectionDeclarationDataField,
+  ViewSectionDeclarationShouldIncludeThisData
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
@@ -16,23 +16,15 @@ const makeSectionEditButton = (section: number) => {
 };
 
 const formDataToDisplay: ISectionDataField[] = [
-  { fieldName: "sicknessAbsence", format: "" },
-  { fieldName: "parentalLeave", format: "" },
-  { fieldName: "careerBreaks", format: "" },
-  { fieldName: "paidLeave", format: "" },
-  { fieldName: "unauthorisedLeave", format: "" },
-  { fieldName: "otherLeave", format: "" },
-  { fieldName: "totalLeave", format: "" },
-  { fieldName: "dualSpecialty", format: "" }
+  { fieldName: "havePreviousDeclarations", format: "YesNo" },
+  { fieldName: "havePreviousUnresolvedDeclarations", format: "YesNo" },
+  { fieldName: "previousDeclarationSummary", format: "" }
 ];
 
-const formDataWorkToDisplay: ISectionWorkDataField[] = [
-  { fieldName: "typeOfWork", format: "" },
-  { fieldName: "trainingPost", format: "" },
-  { fieldName: "startDate", format: "LocalDate" },
-  { fieldName: "endDate", format: "LocalDate" },
-  { fieldName: "site", format: "" },
-  { fieldName: "siteLocation", format: "" }
+const formDataDeclarationToDisplay: ISectionDeclarationDataField[] = [
+  { fieldName: "declarationType", format: "" },
+  { fieldName: "title", format: "" },
+  { fieldName: "locationOfEntry", format: "" }
 ];
 
 describe("View", () => {
@@ -42,13 +34,13 @@ describe("View", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <ViewSection2 {...viewSectionProps} />
+          <ViewSection4 {...viewSectionProps} />
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=sectionHeader2]")
+    cy.get("[data-cy=sectionHeader4]")
       .should("exist")
-      .should("include.text", "Section 2:");
+      .should("include.text", "Section 4:");
   });
 
   it("should render correct form data", () => {
@@ -57,14 +49,16 @@ describe("View", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <ViewSection2 {...viewSectionProps} />
+          <ViewSection4 {...viewSectionProps} />
         </Router>
       </Provider>
     );
-
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-    formData.work.map((w, i) => {
-      ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);
+    formData.previousDeclarations.map((e, i) => {
+      ViewSectionDeclarationShouldIncludeThisData(
+        formDataDeclarationToDisplay,
+        e
+      );
     });
   });
 });

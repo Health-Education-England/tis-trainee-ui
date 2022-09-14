@@ -1,10 +1,11 @@
 import { mount } from "@cypress/react";
-import { FormRPartB, Work } from "../../../../models/FormRPartB";
+import { FormRPartB, Work, Declaration } from "../../../../models/FormRPartB";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 
 type FormRPartBField = keyof FormRPartB;
 type FormRPartBWorkField = keyof Work;
+type FormRPartBDeclarationField = keyof Declaration;
 
 export interface ISectionDataField {
   fieldName: FormRPartBField;
@@ -16,65 +17,69 @@ export interface ISectionWorkDataField {
   format: string;
 }
 
+export interface ISectionDeclarationDataField {
+  fieldName: FormRPartBDeclarationField;
+  format: string;
+}
+
+function CheckDataIsDisplayed(dataValue: any, format: string) {
+  if (typeof dataValue !== "undefined" && dataValue) {
+    if (format === "LocalDate") {
+      const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
+      cy.get(".nhsuk-summary-list__value").should(
+        "include.text",
+        formattedDate
+      );
+    } else if (format === "YesNo") {
+      const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
+      cy.get(".nhsuk-summary-list__value").should(
+        "include.text",
+        formattedBoolean
+      );
+    } else {
+      cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
+    }
+  }
+}
+
 export function ViewSectionShouldIncludeThisData(
   formDataToDisplay: ISectionDataField[],
   formData: FormRPartB
 ) {
   formDataToDisplay.forEach(formDataItem => {
     if (formDataItem.fieldName in formData) {
-      const dataValue = formData[formDataItem.fieldName];
-      if (typeof dataValue !== "undefined" && dataValue) {
-        if (formDataItem.format === "LocalDate") {
-          const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            formattedDate
-          );
-        } else if (formDataItem.format === "YesNo") {
-          const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            formattedBoolean
-          );
-        } else {
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            dataValue
-          );
-        }
-      }
+      CheckDataIsDisplayed(
+        formData[formDataItem.fieldName],
+        formDataItem.format
+      );
     }
   });
 }
 
-//FIXME fixme fixme
 export function ViewSectionWorkShouldIncludeThisData(
   formDataToDisplay: ISectionWorkDataField[],
   formData: Work
 ) {
   formDataToDisplay.forEach(formDataItem => {
     if (formDataItem.fieldName in formData) {
-      const dataValue = formData[formDataItem.fieldName];
-      if (typeof dataValue !== "undefined" && dataValue) {
-        if (formDataItem.format === "LocalDate") {
-          const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            formattedDate
-          );
-        } else if (formDataItem.format === "YesNo") {
-          const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            formattedBoolean
-          );
-        } else {
-          cy.get(".nhsuk-summary-list__value").should(
-            "include.text",
-            dataValue
-          );
-        }
-      }
+      CheckDataIsDisplayed(
+        formData[formDataItem.fieldName],
+        formDataItem.format
+      );
+    }
+  });
+}
+
+export function ViewSectionDeclarationShouldIncludeThisData(
+  formDataToDisplay: ISectionDeclarationDataField[],
+  formData: Declaration
+) {
+  formDataToDisplay.forEach(formDataItem => {
+    if (formDataItem.fieldName in formData) {
+      CheckDataIsDisplayed(
+        formData[formDataItem.fieldName],
+        formDataItem.format
+      );
     }
   });
 }

@@ -5,8 +5,6 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import store from "../../../../redux/store/store";
 import ViewSection3 from "./ViewSection3";
 import history from "../../../navigation/history";
-import { DateUtilities } from "../../../../utilities/DateUtilities";
-import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import ViewSectionShouldIncludeThisData, {
   ISectionDataField
 } from "./ViewSectionTestHelper";
