@@ -1,11 +1,17 @@
 import { mount } from "@cypress/react";
-import { FormRPartB, Work, Declaration } from "../../../../models/FormRPartB";
+import {
+  FormRPartB,
+  Work,
+  Declaration,
+  CovidDeclaration
+} from "../../../../models/FormRPartB";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 
 type FormRPartBField = keyof FormRPartB;
 type FormRPartBWorkField = keyof Work;
 type FormRPartBDeclarationField = keyof Declaration;
+type FormRPartBCovidDeclarationField = keyof CovidDeclaration;
 
 export interface ISectionDataField {
   fieldName: FormRPartBField;
@@ -19,6 +25,11 @@ export interface ISectionWorkDataField {
 
 export interface ISectionDeclarationDataField {
   fieldName: FormRPartBDeclarationField;
+  format: string;
+}
+
+export interface ISectionCovidDeclarationDataField {
+  fieldName: FormRPartBCovidDeclarationField;
   format: string;
 }
 
@@ -73,6 +84,20 @@ export function ViewSectionWorkShouldIncludeThisData(
 export function ViewSectionDeclarationShouldIncludeThisData(
   formDataToDisplay: ISectionDeclarationDataField[],
   formData: Declaration
+) {
+  formDataToDisplay.forEach(formDataItem => {
+    if (formDataItem.fieldName in formData) {
+      CheckDataIsDisplayed(
+        formData[formDataItem.fieldName],
+        formDataItem.format
+      );
+    }
+  });
+}
+
+export function ViewSectionCovidDeclarationShouldIncludeThisData(
+  formDataToDisplay: ISectionCovidDeclarationDataField[],
+  formData: CovidDeclaration
 ) {
   formDataToDisplay.forEach(formDataItem => {
     if (formDataItem.fieldName in formData) {

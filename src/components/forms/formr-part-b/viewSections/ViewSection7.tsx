@@ -8,7 +8,7 @@ import {
 import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 interface IViewSection7 {
-  makeSectionEditButton: (section: number) => false | JSX.Element;
+  makeSectionEditButton: (section: number) => boolean | JSX.Element;
   formData: FormRPartB;
 }
 

@@ -3,7 +3,7 @@ import { FormRPartB } from "../../../../models/FormRPartB";
 import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 interface IViewSection6 {
-  makeSectionEditButton: (section: number) => false | JSX.Element;
+  makeSectionEditButton: (section: number) => boolean | JSX.Element;
   formData: FormRPartB;
 }
 

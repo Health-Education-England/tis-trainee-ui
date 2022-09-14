@@ -15,7 +15,7 @@ const ViewSection8 = ({ formData }: IViewSection8) => {
     <div>
       <div className="nhsuk-grid-row page-break">
         <div className="nhsuk-grid-column-two-thirds">
-          <h2 data-cy="sectionHeader5">Declarations</h2>
+          <h2 data-cy="sectionHeader8">Declarations</h2>
         </div>
       </div>
       <Card feature>
