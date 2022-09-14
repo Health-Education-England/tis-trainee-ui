@@ -7,8 +7,10 @@ import ViewSection2 from "./ViewSection2";
 import history from "../../../navigation/history";
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import ViewSectionShouldIncludeThisData, {
-    ISectionDataField, ISectionWorkDataField, ViewSectionWorkShouldIncludeThisData
-  } from "./ViewSectionTestHelper";
+  ISectionDataField,
+  ISectionWorkDataField,
+  ViewSectionWorkShouldIncludeThisData
+} from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
@@ -60,10 +62,10 @@ describe("View", () => {
         </Router>
       </Provider>
     );
-    
+
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
     formData.work.map((w, i) => {
-        ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);
+      ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);
     });
   });
 });
