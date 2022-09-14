@@ -22,8 +22,7 @@ const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "paidLeave", format: "" },
   { fieldName: "unauthorisedLeave", format: "" },
   { fieldName: "otherLeave", format: "" },
-  { fieldName: "totalLeave", format: "" },
-  { fieldName: "dualSpecialty", format: "" }
+  { fieldName: "totalLeave", format: "" }
 ];
 
 const formDataWorkToDisplay: ISectionWorkDataField[] = [
