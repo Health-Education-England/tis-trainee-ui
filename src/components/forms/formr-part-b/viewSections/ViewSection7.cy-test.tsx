@@ -34,9 +34,9 @@ const formDataCovidDeclarationToDisplay: ISectionCovidDeclarationDataField[] = [
 ];
 
 describe("View", () => {
-  it("should render View section heading", () => {
-    const formData = submittedFormRPartBwithCovid[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
+  const formData = submittedFormRPartBwithCovid[0];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -44,21 +44,14 @@ describe("View", () => {
         </Router>
       </Provider>
     );
+  });
+  it("should render View section heading", () => {
     cy.get("[data-cy=sectionHeader7]")
       .should("exist")
       .should("include.text", "Covid declarations");
   });
 
   it("should render correct form data", () => {
-    const formData = submittedFormRPartBwithCovid[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <ViewSection7 {...viewSectionProps} />
-        </Router>
-      </Provider>
-    );
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
     ViewSectionCovidDeclarationShouldIncludeThisData(
       formDataCovidDeclarationToDisplay,

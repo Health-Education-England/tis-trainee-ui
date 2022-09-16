@@ -1,4 +1,5 @@
-import { mount } from "@cypress/react";
+// load type definitions that come with Cypress module
+/// <reference types="cypress" />
 import {
   FormRPartB,
   Work,

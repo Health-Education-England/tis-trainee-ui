@@ -35,9 +35,9 @@ const formDataWorkToDisplay: ISectionWorkDataField[] = [
 ];
 
 describe("View", () => {
-  it("should render View section heading", () => {
-    const formData = submittedFormRPartBs[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
+  const formData = submittedFormRPartBs[0];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -45,22 +45,14 @@ describe("View", () => {
         </Router>
       </Provider>
     );
+  });
+  it("should render View section heading", () => {
     cy.get("[data-cy=sectionHeader2]")
       .should("exist")
       .should("include.text", "Section 2:");
   });
 
   it("should render correct form data", () => {
-    const formData = submittedFormRPartBs[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <ViewSection2 {...viewSectionProps} />
-        </Router>
-      </Provider>
-    );
-
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
     formData.work.map((w, i) => {
       ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);

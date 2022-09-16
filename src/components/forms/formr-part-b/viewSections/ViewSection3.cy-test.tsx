@@ -22,9 +22,9 @@ const formDataToDisplay: ISectionDataField[] = [
 ];
 
 describe("View", () => {
-  it("should render View section heading", () => {
-    const formData = submittedFormRPartBs[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
+  const formData = submittedFormRPartBs[0];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -32,21 +32,14 @@ describe("View", () => {
         </Router>
       </Provider>
     );
+  });
+  it("should render View section heading", () => {
     cy.get("[data-cy=sectionHeader3]")
       .should("exist")
       .should("include.text", "Section 3:");
   });
 
   it("should render correct form data", () => {
-    const formData = submittedFormRPartBs[0];
-    const viewSectionProps = { makeSectionEditButton, formData };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <ViewSection3 {...viewSectionProps} />
-        </Router>
-      </Provider>
-    );
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
   });
 });
