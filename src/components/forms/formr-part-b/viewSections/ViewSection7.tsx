@@ -38,7 +38,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
           </SummaryList>
 
           {BooleanUtilities.ToBoolean(formData.haveCovidDeclarations) && (
-            <SummaryList>
+            <SummaryList data-cy="covidTrainingProgress">
               <SummaryList.Row>
                 <SummaryList.Key>Covid Training Progress</SummaryList.Key>
                 <SummaryList.Value>
@@ -71,7 +71,9 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
         <>
           <Card feature>
             <Card.Content>
-              <Card.Heading>Section 2: Trainee Check-In</Card.Heading>
+              <Card.Heading data-cy="covidTrainingSection2">
+                Section 2: Trainee Check-In
+              </Card.Heading>
               <SummaryList>
                 <SummaryList.Row>
                   <SummaryList.Key>
@@ -98,7 +100,9 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
           </Card>
           <Card feature>
             <Card.Content>
-              <Card.Heading>Section 3: Trainee placement changes</Card.Heading>
+              <Card.Heading data-cy="covidTrainingSection3">
+                Section 3: Trainee placement changes
+              </Card.Heading>
               <SummaryList>
                 <SummaryList.Row>
                   <SummaryList.Key>
@@ -151,7 +155,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
           </Card>
           <Card feature>
             <Card.Content>
-              <Card.Heading>
+              <Card.Heading data-cy="covidTrainingSection4">
                 Section 4: Educational Supervisor (ES) Report / Validation
               </Card.Heading>
               <SummaryList>
