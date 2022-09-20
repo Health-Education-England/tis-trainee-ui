@@ -47,7 +47,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
               </SummaryList.Row>
               {formData.covidDeclarationDto?.reasonOfSelfRate && (
                 <SummaryList.Row>
-                  <SummaryList.Key>
+                  <SummaryList.Key data-cy="covidTrainingReason">
                     Covid Training Progress Reason
                   </SummaryList.Key>
                   <SummaryList.Value>
@@ -121,7 +121,9 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                 ) && (
                   <>
                     <SummaryList.Row>
-                      <SummaryList.Key>Circumstance of change</SummaryList.Key>
+                      <SummaryList.Key data-cy="circumstanceOfChange">
+                        Circumstance of change
+                      </SummaryList.Key>
                       <SummaryList.Value>
                         {formData.covidDeclarationDto?.changeCircumstances}
                       </SummaryList.Value>
@@ -130,7 +132,9 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                     {formData.covidDeclarationDto?.changeCircumstances ===
                       "Other" && (
                       <SummaryList.Row>
-                        <SummaryList.Key>Other circumstance</SummaryList.Key>
+                        <SummaryList.Key data-cy="otherCircumstance">
+                          Other circumstance
+                        </SummaryList.Key>
                         <SummaryList.Value>
                           {
                             formData.covidDeclarationDto

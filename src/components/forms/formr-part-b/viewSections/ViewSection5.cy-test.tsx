@@ -55,4 +55,44 @@ describe("View", () => {
       );
     });
   });
+
+  it("should show current declaration summary", () => {
+    cy.get("[data-cy=currentDeclarationSummary]").should("exist");
+  });
+});
+
+describe("View with null dates value", () => {
+  const formData = submittedFormRPartBs[1];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection5 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should render correct form data", () => {
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+  });
+});
+
+describe("View without current unresolved declarations", () => {
+  const formData = submittedFormRPartBs[1];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection5 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show current declaration summary", () => {
+    cy.get("[data-cy=currentDeclarationSummary]").should("not.exist");
+  });
 });
