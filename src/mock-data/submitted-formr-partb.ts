@@ -74,6 +74,79 @@ export const submittedFormRPartBs: FormRPartB[] = [
     lifecycleState: LifeCycleState.Submitted,
     submissionDate: "2020-04-22",
     lastModifiedDate: "2020-05-15"
+  },
+  {
+    id: "5e972ec9b9b5781b94eb1271",
+    traineeTisId: "123",
+    forename: "Anthony Mara",
+    surname: "Gilliam",
+    gmcNumber: "11111111",
+    email: "email@email.com",
+    localOfficeName: "Health Education England Thames Valley",
+    prevRevalBody: "Health Education England Midlands",
+    prevRevalBodyOther: "",
+    prevRevalDate: null,
+    currRevalDate: null,
+    programmeSpecialty: "ST3",
+    dualSpecialty: "DS",
+    work: [
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: null,
+        endDate: null,
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      },
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: null,
+        endDate: null,
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      }
+    ],
+    sicknessAbsence: 0,
+    parentalLeave: 0,
+    careerBreaks: 0,
+    paidLeave: 0,
+    unauthorisedLeave: 10,
+    otherLeave: 0,
+    totalLeave: 10,
+    isHonest: true,
+    isHealthy: true,
+    isWarned: true,
+    isComplying: true,
+    healthStatement: "I feel great etc.",
+    havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
+    previousDeclarations: [
+      {
+        declarationType: "Significant Event",
+        dateOfEntry: null,
+        title: "Previous declaration title",
+        locationOfEntry: "Previous declaration location of entry"
+      }
+    ],
+    previousDeclarationSummary: "",
+    haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
+    currentDeclarations: [
+      {
+        declarationType: "Complaint",
+        dateOfEntry: "2020-06-12",
+        title: "Current declaration title",
+        locationOfEntry: "Current declaration location of entry"
+      }
+    ],
+    currentDeclarationSummary: "",
+    compliments: "",
+    haveCovidDeclarations: null,
+    covidDeclarationDto: null,
+    lifecycleState: LifeCycleState.Submitted,
+    submissionDate: "2020-04-22",
+    lastModifiedDate: "2020-05-15"
   }
 ];
 

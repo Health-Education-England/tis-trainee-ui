@@ -55,3 +55,21 @@ describe("View", () => {
     });
   });
 });
+
+describe("View with null dates value", () => {
+  const formData = submittedFormRPartBs[1];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection4 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should render correct form data", () => {
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+  });
+});
