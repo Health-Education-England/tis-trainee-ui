@@ -54,3 +54,55 @@ describe("View", () => {
     });
   });
 });
+
+describe("View with current unresolved declarations", () => {
+  const formDataWithCurrentUnresolved = {
+    ...formData,
+    haveCurrentUnresolvedDeclarations: true
+  };
+  const viewSectionProps = {
+    makeSectionEditButton,
+    formDataWithCurrentUnresolved
+  };
+
+  it("should show current declaration summary", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection5
+            formData={formDataWithCurrentUnresolved}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=currentDeclarationSummary]").should("exist");
+  });
+});
+
+describe("View without current unresolved declarations", () => {
+  const formDataWithoutCurrentUnresolved = {
+    ...formData,
+    haveCurrentUnresolvedDeclarations: false
+  };
+  const viewSectionProps = {
+    makeSectionEditButton,
+    formDataWithoutCurrentUnresolved
+  };
+
+  it("should not show current declaration summary", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection5
+            formData={formDataWithoutCurrentUnresolved}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=currentDeclarationSummary]").should("not.exist");
+  });
+});

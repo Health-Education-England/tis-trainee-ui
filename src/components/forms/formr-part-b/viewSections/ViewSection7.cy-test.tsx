@@ -9,16 +9,15 @@ import history from "../../../navigation/history";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { testData, makeSectionEditButton } from "./ViewSectionTestHelper";
 
-const formData = submittedFormRPartBwithCovid[0];
-const covidDeclaration = formData.covidDeclarationDto;
+let formData = submittedFormRPartBwithCovid[0];
 
 type formRBSub7 = Pick<FormRPartB, "haveCovidDeclarations">;
 
-const formDataToDisplay: formRBSub7 = {
-  haveCovidDeclarations: formData.haveCovidDeclarations
-};
-
 describe("View", () => {
+  const covidDeclaration = formData.covidDeclarationDto;
+  const formDataToDisplay: formRBSub7 = {
+    haveCovidDeclarations: formData.haveCovidDeclarations
+  };
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -43,79 +42,117 @@ describe("View", () => {
     testData(covidDeclaration);
   });
 
-  // it("should show Covid training progress details", () => {
-  // cy.get("[data-cy=covidTrainingProgress]").should("exist");
-  // cy.get("[data-cy=covidTrainingSection2]").should("exist");
-  // cy.get("[data-cy=covidTrainingSection3]").should("exist");
-  // cy.get("[data-cy=covidTrainingSection4]").should("exist");
-  // });
+  it("should show Covid training progress details", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("exist");
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+  });
 });
 
-// describe("View with no reason of self rate and other circumstance", () => {
-//   const formData = submittedFormRPartBwithCovid[1];
-//   const viewSectionProps = { makeSectionEditButton, formData };
-//   beforeEach(() => {
-//     mount(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ViewSection7 {...viewSectionProps} />
-//         </Router>
-//       </Provider>
-//     );
-//   });
+describe("View with no reason of self rate", () => {
+  let formDataCovidDeclarationDto = formData.covidDeclarationDto;
+  formDataCovidDeclarationDto = {
+    ...formDataCovidDeclarationDto,
+    reasonOfSelfRate: null
+  };
+  formData = { ...formData, covidDeclarationDto: formDataCovidDeclarationDto };
 
-//   it("should not show Covid training progress reason", () => {
-//     cy.get("[data-cy=covidTrainingProgress]").should("exist");
-//     cy.get("[data-cy=covidTrainingReason]").should("not.exist");
-//   });
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
 
-//   it("should not show other circumstance", () => {
-//     cy.get("[data-cy=covidTrainingSection2]").should("exist");
-//     cy.get("[data-cy=covidTrainingSection3]").should("exist");
-//     cy.get("[data-cy=covidTrainingSection4]").should("exist");
-//     cy.get("[data-cy=otherCircumstance]").should("not.exist");
-//   });
-// });
+  it("should not show Covid training progress reason", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("exist");
+    cy.get("[data-cy=reasonOfSelfRate]").should("not.exist");
+  });
+});
 
-// describe("View with no circumstance of change", () => {
-//   const formData = submittedFormRPartBwithCovid[2];
-//   const viewSectionProps = { makeSectionEditButton, formData };
-//   beforeEach(() => {
-//     mount(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ViewSection7 {...viewSectionProps} />
-//         </Router>
-//       </Provider>
-//     );
-//   });
+describe("View with no other circumstance", () => {
+  let formDataCovidDeclarationDto = formData.covidDeclarationDto;
+  formDataCovidDeclarationDto = {
+    ...formDataCovidDeclarationDto,
+    changeCircumstances: "Any Period of self-isolation",
+    changeCircumstanceOther: ""
+  };
+  formData = { ...formData, covidDeclarationDto: formDataCovidDeclarationDto };
 
-//   it("should not show circumstance of change", () => {
-//     cy.get("[data-cy=covidTrainingSection2]").should("exist");
-//     cy.get("[data-cy=covidTrainingSection3]").should("exist");
-//     cy.get("[data-cy=covidTrainingSection4]").should("exist");
-//     cy.get("[data-cy=circumstanceOfChange]").should("not.exist");
-//     cy.get("[data-cy=otherCircumstance]").should("not.exist");
-//   });
-// });
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
 
-// describe("View with Covid declaration null", () => {
-//   const formData = submittedFormRPartBs[0];
-//   const viewSectionProps = { makeSectionEditButton, formData };
-//   beforeEach(() => {
-//     mount(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ViewSection7 {...viewSectionProps} />
-//         </Router>
-//       </Provider>
-//     );
-//   });
+  it("should not show other circumstance", () => {
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+    cy.get("[data-cy=changeCircumstances]").should("exist");
+    cy.get("[data-cy=changeCircumstanceOther]").should("not.exist");
+  });
+});
 
-//   it("should not show Covid training progress details", () => {
-//     cy.get("[data-cy=covidTrainingProgress]").should("not.exist");
-//     cy.get("[data-cy=covidTrainingSection2]").should("not.exist");
-//     cy.get("[data-cy=covidTrainingSection3]").should("not.exist");
-//     cy.get("[data-cy=covidTrainingSection4]").should("not.exist");
-//   });
-// });
+describe("View with no circumstance of change", () => {
+  let formDataCovidDeclarationDto = formData.covidDeclarationDto;
+  formDataCovidDeclarationDto = {
+    ...formDataCovidDeclarationDto,
+    haveChangesToPlacement: false
+  };
+  formData = { ...formData, covidDeclarationDto: formDataCovidDeclarationDto };
+
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show circumstance of change", () => {
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+    cy.get("[data-cy=changeCircumstances]").should("not.exist");
+    cy.get("[data-cy=changeCircumstanceOther]").should("not.exist");
+  });
+});
+
+describe("View with Covid declaration null", () => {
+  formData = {
+    ...formData,
+    haveCovidDeclarations: null,
+    covidDeclarationDto: null
+  };
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show Covid training progress details", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection2]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("not.exist");
+  });
+});

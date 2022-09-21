@@ -56,20 +56,54 @@ describe("View", () => {
   });
 });
 
-// describe("View with null dates value", () => {
-//   const formData = submittedFormRPartBs[1];
-//   const viewSectionProps = { makeSectionEditButton, formData };
-//   beforeEach(() => {
-//     mount(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ViewSection4 {...viewSectionProps} />
-//         </Router>
-//       </Provider>
-//     );
-//   });
+describe("View with previous unresolved declaration", () => {
+  const formDataWithPrevUnresolved = {
+    ...formData,
+    havePreviousUnresolvedDeclarations: true
+  };
+  const viewSectionProps = {
+    makeSectionEditButton,
+    formDataWithPrevUnresolved
+  };
 
-//   it("should render correct form data", () => {
-//     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-//   });
-// });
+  it("should show previous declaration summary", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection4
+            formData={formDataWithPrevUnresolved}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=previousDeclarationSummary]").should("exist");
+  });
+});
+
+describe("View without previous unresolved declaration", () => {
+  const formDataWithoutPrevUnresolved = {
+    ...formData,
+    havePreviousUnresolvedDeclarations: false
+  };
+  const viewSectionProps = {
+    makeSectionEditButton,
+    formDataWithoutPrevUnresolved
+  };
+
+  it("should not show previous declaration summary", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection4
+            formData={formDataWithoutPrevUnresolved}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=previousDeclarationSummary]").should("not.exist");
+  });
+});

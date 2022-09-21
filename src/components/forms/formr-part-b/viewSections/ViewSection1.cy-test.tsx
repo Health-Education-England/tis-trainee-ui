@@ -59,20 +59,72 @@ describe("View1", () => {
   });
 });
 
-// describe("View with null dates value", () => {
-//   const formData = submittedFormRPartBs[1];
-//   const viewSectionProps = { makeSectionEditButton, formData };
-//   beforeEach(() => {
-//     mount(
-//       <Provider store={store}>
-//         <Router history={history}>
-//           <ViewSection1 {...viewSectionProps} />
-//         </Router>
-//       </Provider>
-//     );
-//   });
+describe("View with null currRevalDate and prevRevalDate value", () => {
+  const formDataWithNullDate = {
+    ...formData,
+    prevRevalDate: null,
+    currRevalDate: null
+  };
+  const viewSectionProps = { makeSectionEditButton, formDataWithNullDate };
 
-//   it("should render correct form data", () => {
-//     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-//   });
-// });
+  const formDataToDisplayNullDate = {
+    ...formDataToDisplay,
+    prevRevalDate: null,
+    currRevalDate: null
+  };
+
+  it("should render correct form data", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection1 formData={formDataWithNullDate} {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+
+    testData(formDataToDisplayNullDate);
+  });
+});
+
+describe("View with other previous revalidation body", () => {
+  const formDataWithPrevReval = {
+    ...formData,
+    prevRevalBodyOther: "Sarnia Yachts Management (UK) Limited"
+  };
+  const viewSectionProps = { makeSectionEditButton, formDataWithPrevReval };
+
+  it("should not show other previous revalidation body", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection1
+            formData={formDataWithPrevReval}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=prevRevalBodyOther]").should("exist");
+  });
+});
+
+describe("View with no other previous revalidation body", () => {
+  const formDataWithoutPrevReval = { ...formData, prevRevalBodyOther: "" };
+  const viewSectionProps = { makeSectionEditButton, formDataWithoutPrevReval };
+
+  it("should not show other previous revalidation body", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection1
+            formData={formDataWithoutPrevReval}
+            {...viewSectionProps}
+          />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=prevRevalBodyOther]").should("not.exist");
+  });
+});
