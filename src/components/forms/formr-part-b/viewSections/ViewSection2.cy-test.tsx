@@ -6,14 +6,15 @@ import store from "../../../../redux/store/store";
 import ViewSection2 from "./ViewSection2";
 import history from "../../../navigation/history";
 import CheckDataIsDisplayed, {
-  ISectionSomeDataField
+  ISectionDataField,
+  ISectionWorkDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionSomeDataField[] = [
+const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "sicknessAbsence", format: "" },
   { fieldName: "parentalLeave", format: "" },
   { fieldName: "careerBreaks", format: "" },
@@ -23,7 +24,7 @@ const formDataToDisplay: ISectionSomeDataField[] = [
   { fieldName: "totalLeave", format: "" }
 ];
 
-const formDataWorkToDisplay: ISectionSomeDataField[] = [
+const formDataWorkToDisplay: ISectionWorkDataField[] = [
   { fieldName: "typeOfWork", format: "" },
   { fieldName: "trainingPost", format: "" },
   { fieldName: "startDate", format: "LocalDate" },

@@ -6,14 +6,14 @@ import store from "../../../../redux/store/store";
 import ViewSection6 from "./ViewSection6";
 import history from "../../../navigation/history";
 import CheckDataIsDisplayed, {
-  ISectionSomeDataField
+  ISectionDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionSomeDataField[] = [
+const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "compliments", format: "" }
 ];
 

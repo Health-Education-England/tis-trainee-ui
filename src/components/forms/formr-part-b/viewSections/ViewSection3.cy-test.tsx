@@ -6,14 +6,14 @@ import store from "../../../../redux/store/store";
 import ViewSection3 from "./ViewSection3";
 import history from "../../../navigation/history";
 import CheckDataIsDisplayed, {
-  ISectionSomeDataField
+  ISectionDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionSomeDataField[] = [
+const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "isHonest", format: "YesNo" },
   { fieldName: "isHealthy", format: "YesNo" },
   { fieldName: "isWarned", format: "YesNo" },

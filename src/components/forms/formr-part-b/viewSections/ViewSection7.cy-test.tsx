@@ -9,18 +9,19 @@ import store from "../../../../redux/store/store";
 import ViewSection7 from "./ViewSection7";
 import history from "../../../navigation/history";
 import CheckDataIsDisplayed, {
-  ISectionSomeDataField
+  ISectionDataField,
+  ISectionCovidDeclarationDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionSomeDataField[] = [
+const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "haveCovidDeclarations", format: "YesNo" }
 ];
 
-const formDataCovidDeclarationToDisplay: ISectionSomeDataField[] = [
+const formDataCovidDeclarationToDisplay: ISectionCovidDeclarationDataField[] = [
   { fieldName: "selfRateForCovid", format: "" },
   { fieldName: "reasonOfSelfRate", format: "" },
   { fieldName: "otherInformationForPanel", format: "" },

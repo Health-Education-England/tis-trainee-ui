@@ -6,20 +6,21 @@ import store from "../../../../redux/store/store";
 import ViewSection5 from "./ViewSection5";
 import history from "../../../navigation/history";
 import CheckDataIsDisplayed, {
-  ISectionSomeDataField
+  ISectionDataField,
+  ISectionDeclarationDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionSomeDataField[] = [
+const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "haveCurrentDeclarations", format: "YesNo" },
   { fieldName: "haveCurrentUnresolvedDeclarations", format: "YesNo" },
   { fieldName: "currentDeclarationSummary", format: "" }
 ];
 
-const formDataDeclarationToDisplay: ISectionSomeDataField[] = [
+const formDataDeclarationToDisplay: ISectionDeclarationDataField[] = [
   { fieldName: "declarationType", format: "" },
   { fieldName: "dateOfEntry", format: "LocalDate" },
   { fieldName: "title", format: "" },

@@ -14,39 +14,29 @@ type FormRPartBWorkKeys = keyof Work;
 type FormRPartBDeclarationKeys = keyof Declaration;
 type FormRPartBCovidDeclarationKeys = keyof CovidDeclaration;
 
-interface ISectionDataField {
+export interface ISectionDataField {
   fieldName: FormRPartBKeys;
   format: string;
 }
 
-interface ISectionWorkDataField {
+export interface ISectionWorkDataField {
   fieldName: FormRPartBWorkKeys;
   format: string;
 }
 
-interface ISectionDeclarationDataField {
+export interface ISectionDeclarationDataField {
   fieldName: FormRPartBDeclarationKeys;
   format: string;
 }
 
-interface ISectionCovidDeclarationDataField {
+export interface ISectionCovidDeclarationDataField {
   fieldName: FormRPartBCovidDeclarationKeys;
   format: string;
 }
 
-export interface ISectionSomeDataField {
-  fieldName:
-    | FormRPartBKeys
-    | FormRPartBWorkKeys
-    | FormRPartBDeclarationKeys
-    | FormRPartBCovidDeclarationKeys;
-  format: string;
-}
-
-export default function CheckDataIsDisplayed(
-  formDataToDisplay: ISectionSomeDataField[],
-  formData: any
-) {
+export default function CheckDataIsDisplayed<
+  T extends { fieldName: string; format: string }
+>(formDataToDisplay: T[], formData: any) {
   formDataToDisplay.forEach(formDataItem => {
     if (formDataItem.fieldName in formData) {
       const dataValue = formData[formDataItem.fieldName];
