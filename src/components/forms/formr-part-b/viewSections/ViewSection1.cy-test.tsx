@@ -5,7 +5,7 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import store from "../../../../redux/store/store";
 import ViewSection1 from "./ViewSection1";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
+import CheckDataIsDisplayed, {
   ISectionSomeDataField
 } from "./ViewSectionTestHelper";
 
@@ -44,7 +44,7 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    CheckDataIsDisplayed(formDataToDisplay, formData);
   });
 });
 
@@ -62,7 +62,7 @@ describe("View with null dates value", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    CheckDataIsDisplayed(formDataToDisplay, formData);
   });
 
   it("should show other previous revalidation body", () => {
