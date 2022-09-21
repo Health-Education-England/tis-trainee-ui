@@ -72,6 +72,6 @@ describe("View with null dates value", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    CheckDataIsDisplayed(formDataToDisplay, formData);
   });
 });
