@@ -6,14 +6,14 @@ import store from "../../../../redux/store/store";
 import ViewSection1 from "./ViewSection1";
 import history from "../../../navigation/history";
 import ViewSectionShouldIncludeThisData, {
-  ISectionDataField
+  ISectionSomeDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionDataField[] = [
+const formDataToDisplay: ISectionSomeDataField[] = [
   { fieldName: "forename", format: "" },
   { fieldName: "surname", format: "" },
   { fieldName: "gmcNumber", format: "" },

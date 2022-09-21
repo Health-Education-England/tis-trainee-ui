@@ -5,21 +5,19 @@ import { submittedFormRPartBwithCovid } from "../../../../mock-data/submitted-fo
 import store from "../../../../redux/store/store";
 import ViewSection7 from "./ViewSection7";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionCovidDeclarationDataField,
-  ISectionDataField,
-  ViewSectionCovidDeclarationShouldIncludeThisData
+import CheckDataIsDisplayed, {
+  ISectionSomeDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionDataField[] = [
+const formDataToDisplay: ISectionSomeDataField[] = [
   { fieldName: "haveCovidDeclarations", format: "YesNo" }
 ];
 
-const formDataCovidDeclarationToDisplay: ISectionCovidDeclarationDataField[] = [
+const formDataCovidDeclarationToDisplay: ISectionSomeDataField[] = [
   { fieldName: "selfRateForCovid", format: "" },
   { fieldName: "reasonOfSelfRate", format: "" },
   { fieldName: "otherInformationForPanel", format: "" },
@@ -52,8 +50,8 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-    ViewSectionCovidDeclarationShouldIncludeThisData(
+    CheckDataIsDisplayed(formDataToDisplay, formData);
+    CheckDataIsDisplayed(
       formDataCovidDeclarationToDisplay,
       formData.covidDeclarationDto
     );

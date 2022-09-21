@@ -5,23 +5,21 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import store from "../../../../redux/store/store";
 import ViewSection4 from "./ViewSection4";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField,
-  ISectionDeclarationDataField,
-  ViewSectionDeclarationShouldIncludeThisData
+import CheckDataIsDisplayed, {
+  ISectionSomeDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionDataField[] = [
+const formDataToDisplay: ISectionSomeDataField[] = [
   { fieldName: "havePreviousDeclarations", format: "YesNo" },
   { fieldName: "havePreviousUnresolvedDeclarations", format: "YesNo" },
   { fieldName: "previousDeclarationSummary", format: "" }
 ];
 
-const formDataDeclarationToDisplay: ISectionDeclarationDataField[] = [
+const formDataDeclarationToDisplay: ISectionSomeDataField[] = [
   { fieldName: "declarationType", format: "" },
   { fieldName: "title", format: "" },
   { fieldName: "locationOfEntry", format: "" }
@@ -46,12 +44,9 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    CheckDataIsDisplayed(formDataToDisplay, formData);
     formData.previousDeclarations.map((e, i) => {
-      ViewSectionDeclarationShouldIncludeThisData(
-        formDataDeclarationToDisplay,
-        e
-      );
+      CheckDataIsDisplayed(formDataDeclarationToDisplay, e);
     });
   });
 });

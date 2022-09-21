@@ -5,17 +5,15 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import store from "../../../../redux/store/store";
 import ViewSection2 from "./ViewSection2";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField,
-  ISectionWorkDataField,
-  ViewSectionWorkShouldIncludeThisData
+import CheckDataIsDisplayed, {
+  ISectionSomeDataField
 } from "./ViewSectionTestHelper";
 
 const makeSectionEditButton = (section: number) => {
   return false;
 };
 
-const formDataToDisplay: ISectionDataField[] = [
+const formDataToDisplay: ISectionSomeDataField[] = [
   { fieldName: "sicknessAbsence", format: "" },
   { fieldName: "parentalLeave", format: "" },
   { fieldName: "careerBreaks", format: "" },
@@ -25,7 +23,7 @@ const formDataToDisplay: ISectionDataField[] = [
   { fieldName: "totalLeave", format: "" }
 ];
 
-const formDataWorkToDisplay: ISectionWorkDataField[] = [
+const formDataWorkToDisplay: ISectionSomeDataField[] = [
   { fieldName: "typeOfWork", format: "" },
   { fieldName: "trainingPost", format: "" },
   { fieldName: "startDate", format: "LocalDate" },
@@ -53,9 +51,9 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    CheckDataIsDisplayed(formDataToDisplay, formData);
     formData.work.map((w, i) => {
-      ViewSectionWorkShouldIncludeThisData(formDataWorkToDisplay, w);
+      CheckDataIsDisplayed(formDataWorkToDisplay, w);
     });
   });
 });

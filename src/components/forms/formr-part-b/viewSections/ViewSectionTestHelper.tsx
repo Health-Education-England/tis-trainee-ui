@@ -9,37 +9,42 @@ import {
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 
-type FormRPartBField = keyof FormRPartB;
-type FormRPartBWorkField = keyof Work;
-type FormRPartBDeclarationField = keyof Declaration;
-type FormRPartBCovidDeclarationField = keyof CovidDeclaration;
+type FormRPartBKeys = keyof FormRPartB;
+type FormRPartBWorkKeys = keyof Work;
+type FormRPartBDeclarationKeys = keyof Declaration;
+type FormRPartBCovidDeclarationKeys = keyof CovidDeclaration;
 
-export interface ISectionDataField {
-  fieldName: FormRPartBField;
+interface ISectionDataField {
+  fieldName: FormRPartBKeys;
   format: string;
 }
 
-export interface ISectionWorkDataField {
-  fieldName: FormRPartBWorkField;
+interface ISectionWorkDataField {
+  fieldName: FormRPartBWorkKeys;
   format: string;
 }
 
-export interface ISectionDeclarationDataField {
-  fieldName: FormRPartBDeclarationField;
+interface ISectionDeclarationDataField {
+  fieldName: FormRPartBDeclarationKeys;
   format: string;
 }
 
-export interface ISectionCovidDeclarationDataField {
-  fieldName: FormRPartBCovidDeclarationField;
+interface ISectionCovidDeclarationDataField {
+  fieldName: FormRPartBCovidDeclarationKeys;
+  format: string;
+}
+
+export interface ISectionSomeDataField {
+  fieldName:
+    | FormRPartBKeys
+    | FormRPartBWorkKeys
+    | FormRPartBDeclarationKeys
+    | FormRPartBCovidDeclarationKeys;
   format: string;
 }
 
 export default function CheckDataIsDisplayed(
-  formDataToDisplay:
-    | ISectionDataField[]
-    | ISectionWorkDataField[]
-    | ISectionDeclarationDataField[]
-    | ISectionCovidDeclarationDataField[],
+  formDataToDisplay: ISectionSomeDataField[],
   formData: any
 ) {
   formDataToDisplay.forEach(formDataItem => {
@@ -68,32 +73,3 @@ export default function CheckDataIsDisplayed(
     }
   });
 }
-
-export function ViewSectionShouldIncludeThisData(
-  formDataToDisplay: ISectionDataField[],
-  formData: FormRPartB
-) {
-  CheckDataIsDisplayed(formDataToDisplay, formData);
-}
-
-export function ViewSectionWorkShouldIncludeThisData(
-  formDataToDisplay: ISectionWorkDataField[],
-  formData: Work
-) {
-  CheckDataIsDisplayed(formDataToDisplay, formData);
-}
-
-export function ViewSectionDeclarationShouldIncludeThisData(
-  formDataToDisplay: ISectionDeclarationDataField[],
-  formData: Declaration
-) {
-  CheckDataIsDisplayed(formDataToDisplay, formData);
-}
-
-export function ViewSectionCovidDeclarationShouldIncludeThisData(
-  formDataToDisplay: ISectionCovidDeclarationDataField[],
-  formData: CovidDeclaration
-) {
-  CheckDataIsDisplayed(formDataToDisplay, formData);
-}
-
