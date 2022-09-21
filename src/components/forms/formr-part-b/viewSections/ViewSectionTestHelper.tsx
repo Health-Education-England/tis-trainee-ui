@@ -34,80 +34,66 @@ export interface ISectionCovidDeclarationDataField {
   format: string;
 }
 
-function CheckDataIsDisplayed(dataValue: any, format: string) {
-  if (typeof dataValue !== "undefined" && dataValue) {
-    if (format === "LocalDate") {
-      const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
-      cy.get(".nhsuk-summary-list__value").should(
-        "include.text",
-        formattedDate
-      );
-    } else if (format === "YesNo") {
-      const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
-      cy.get(".nhsuk-summary-list__value").should(
-        "include.text",
-        formattedBoolean
-      );
-    } else {
-      cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
+export default function CheckDataIsDisplayed(
+  formDataToDisplay:
+    | ISectionDataField[]
+    | ISectionWorkDataField[]
+    | ISectionDeclarationDataField[]
+    | ISectionCovidDeclarationDataField[],
+  formData: any
+) {
+  formDataToDisplay.forEach(formDataItem => {
+    if (formDataItem.fieldName in formData) {
+      const dataValue = formData[formDataItem.fieldName];
+      if (typeof dataValue !== "undefined" && dataValue) {
+        if (formDataItem.format === "LocalDate") {
+          const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
+          cy.get(".nhsuk-summary-list__value").should(
+            "include.text",
+            formattedDate
+          );
+        } else if (formDataItem.format === "YesNo") {
+          const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
+          cy.get(".nhsuk-summary-list__value").should(
+            "include.text",
+            formattedBoolean
+          );
+        } else {
+          cy.get(".nhsuk-summary-list__value").should(
+            "include.text",
+            dataValue
+          );
+        }
+      }
     }
-  }
+  });
 }
 
 export function ViewSectionShouldIncludeThisData(
   formDataToDisplay: ISectionDataField[],
   formData: FormRPartB
 ) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
+  CheckDataIsDisplayed(formDataToDisplay, formData);
 }
 
 export function ViewSectionWorkShouldIncludeThisData(
   formDataToDisplay: ISectionWorkDataField[],
   formData: Work
 ) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
+  CheckDataIsDisplayed(formDataToDisplay, formData);
 }
 
 export function ViewSectionDeclarationShouldIncludeThisData(
   formDataToDisplay: ISectionDeclarationDataField[],
   formData: Declaration
 ) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
+  CheckDataIsDisplayed(formDataToDisplay, formData);
 }
 
 export function ViewSectionCovidDeclarationShouldIncludeThisData(
   formDataToDisplay: ISectionCovidDeclarationDataField[],
   formData: CovidDeclaration
 ) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
+  CheckDataIsDisplayed(formDataToDisplay, formData);
 }
 
-export default ViewSectionShouldIncludeThisData;
