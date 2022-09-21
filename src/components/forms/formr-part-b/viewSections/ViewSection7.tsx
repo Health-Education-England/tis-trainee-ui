@@ -31,7 +31,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
           <SummaryList>
             <SummaryList.Row>
               <SummaryList.Key>Has covid effected placement?</SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="haveCovidDeclarations">
                 {BooleanUtilities.ToYesNo(formData.haveCovidDeclarations)}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -41,7 +41,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
             <SummaryList data-cy="covidTrainingProgress">
               <SummaryList.Row>
                 <SummaryList.Key>Covid Training Progress</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="selfRateForCovid">
                   {formData.covidDeclarationDto?.selfRateForCovid}
                 </SummaryList.Value>
               </SummaryList.Row>
@@ -50,7 +50,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   <SummaryList.Key>
                     Covid Training Progress Reason
                   </SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="reasonOfSelfRate">
                     {formData.covidDeclarationDto?.reasonOfSelfRate}
                   </SummaryList.Value>
                 </SummaryList.Row>
@@ -59,7 +59,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                 <SummaryList.Key>
                   Other Information for ARCP Panel
                 </SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="otherInformationForPanel">
                   {formData.covidDeclarationDto?.otherInformationForPanel}
                 </SummaryList.Value>
               </SummaryList.Row>
@@ -79,7 +79,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   <SummaryList.Key>
                     {NEED_DISCUSSION_WITH_SUPERVISOR}
                   </SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="discussWithSupervisorChecked">
                     {BooleanUtilities.ToYesNo(
                       formData.covidDeclarationDto?.discussWithSupervisorChecked
                     )}
@@ -89,7 +89,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   <SummaryList.Key>
                     {NEED_DISCUSSION_WITH_SOMEONE}
                   </SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="discussWithSomeoneChecked">
                     {BooleanUtilities.ToYesNo(
                       formData.covidDeclarationDto?.discussWithSomeoneChecked
                     )}
@@ -109,7 +109,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                     Changes were made to my placement due to my individual
                     circumstances
                   </SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="haveChangesToPlacement">
                     {BooleanUtilities.ToYesNo(
                       formData.covidDeclarationDto?.haveChangesToPlacement
                     )}
@@ -122,7 +122,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   <>
                     <SummaryList.Row>
                       <SummaryList.Key>Circumstance of change</SummaryList.Key>
-                      <SummaryList.Value>
+                      <SummaryList.Value data-cy="changeCircumstances">
                         {formData.covidDeclarationDto?.changeCircumstances}
                       </SummaryList.Value>
                     </SummaryList.Row>
@@ -131,7 +131,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                       "Other" && (
                       <SummaryList.Row>
                         <SummaryList.Key>Other circumstance</SummaryList.Key>
-                        <SummaryList.Value>
+                        <SummaryList.Value data-cy="changeCircumstanceOther">
                           {
                             formData.covidDeclarationDto
                               ?.changeCircumstanceOther
@@ -144,7 +144,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                       <SummaryList.Key>
                         Please explain further how your placement was adjusted
                       </SummaryList.Key>
-                      <SummaryList.Value>
+                      <SummaryList.Value data-cy="howPlacementAdjusted">
                         {formData.covidDeclarationDto?.howPlacementAdjusted}
                       </SummaryList.Value>
                     </SummaryList.Row>
@@ -161,7 +161,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
               <SummaryList>
                 <SummaryList.Row>
                   <SummaryList.Key>Education Supervisor Name</SummaryList.Key>
-                  <SummaryList.Value data-cy="covidSupName">
+                  <SummaryList.Value data-cy="educationSupervisorName">
                     {FormRUtilities.showMsgIfEmpty(
                       formData.covidDeclarationDto?.educationSupervisorName!,
                       "No supervisor name provided"
@@ -172,7 +172,7 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
                   <SummaryList.Key>
                     Education Supervisor Email Address
                   </SummaryList.Key>
-                  <SummaryList.Value data-cy="covidSupEmail">
+                  <SummaryList.Value data-cy="educationSupervisorEmail">
                     {FormRUtilities.showMsgIfEmpty(
                       formData.covidDeclarationDto?.educationSupervisorEmail!,
                       "No supervisor email provided"

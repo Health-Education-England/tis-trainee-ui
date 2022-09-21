@@ -1,24 +1,24 @@
+import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection6 from "./ViewSection6";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField
+import { FormRPartB } from "../../../../models/FormRPartB";
+import {
+  testData,
+  makeSectionEditButton,
+  formData
 } from "./ViewSectionTestHelper";
 
-const makeSectionEditButton = (section: number) => {
-  return false;
+type formRBSub6 = Pick<FormRPartB, "compliments">;
+
+const formDataToDisplay: formRBSub6 = {
+  compliments: formData.compliments
 };
 
-const formDataToDisplay: ISectionDataField[] = [
-  { fieldName: "compliments", format: "" }
-];
-
 describe("View", () => {
-  const formData = submittedFormRPartBs[0];
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -36,6 +36,6 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    testData(formDataToDisplay);
   });
 });

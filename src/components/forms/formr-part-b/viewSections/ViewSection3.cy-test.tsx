@@ -1,28 +1,31 @@
+import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection3 from "./ViewSection3";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField
+import {
+  testData,
+  makeSectionEditButton,
+  formData
 } from "./ViewSectionTestHelper";
+import { FormRPartB } from "../../../../models/FormRPartB";
 
-const makeSectionEditButton = (section: number) => {
-  return false;
+type formRBSub3 = Pick<
+  FormRPartB,
+  "isHonest" | "isHealthy" | "isWarned" | "isComplying" | "healthStatement"
+>;
+
+const formDataToDisplay: formRBSub3 = {
+  isHonest: formData.isHonest,
+  isHealthy: formData.isHealthy,
+  isWarned: formData.isWarned,
+  isComplying: formData.isComplying,
+  healthStatement: formData.healthStatement
 };
 
-const formDataToDisplay: ISectionDataField[] = [
-  { fieldName: "isHonest", format: "YesNo" },
-  { fieldName: "isHealthy", format: "YesNo" },
-  { fieldName: "isWarned", format: "YesNo" },
-  { fieldName: "isComplying", format: "YesNo" },
-  { fieldName: "healthStatement", format: "" }
-];
-
 describe("View", () => {
-  const formData = submittedFormRPartBs[0];
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -40,6 +43,6 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    testData(formDataToDisplay);
   });
 });

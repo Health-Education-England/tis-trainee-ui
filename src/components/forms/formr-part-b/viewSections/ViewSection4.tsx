@@ -31,7 +31,10 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                 investigations on your PREVIOUS Form R Part B that have since
                 been RESOLVED?
               </SummaryList.Key>
-              <SummaryList.Value data-jest="havePreviousDeclarations">
+              <SummaryList.Value
+                data-jest="havePreviousDeclarations"
+                data-cy="havePreviousDeclarations"
+              >
                 {BooleanUtilities.ToYesNo(formData.havePreviousDeclarations)}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -47,7 +50,7 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Declaration type</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`previousDeclarationType${index + 1}`}
+                        data-cy={`declarationType${index + 1}`}
                         data-jest="previousDeclarationType"
                       >
                         {event.declarationType}
@@ -56,7 +59,7 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Date of entry</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`previousDateOfEntry${index + 1}`}
+                        data-cy={`dateOfEntry${index + 1}`}
                         data-jest="previousDateOfEntry"
                       >
                         {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
@@ -65,7 +68,7 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Title</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`previousDeclarationTitle${index + 1}`}
+                        data-cy={`title${index + 1}`}
                         data-jest="previousDeclarationTitle"
                       >
                         {event.title}
@@ -74,7 +77,7 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Location of entry</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`previousLocationOfEntry${index + 1}`}
+                        data-cy={`locationOfEntry${index + 1}`}
                         data-jest="previousLocationOfEntry"
                       >
                         {event.locationOfEntry}
@@ -97,7 +100,7 @@ const ViewSection4 = ({ makeSectionEditButton, formData }: IViewSection4) => {
                 Do you have any PREVIOUSLY DECLARED Significant Events,
                 Complaints, or other investigations still UNRESOLVED?
               </SummaryList.Key>
-              <SummaryList.Value data-jest="havePreviousDeclarations">
+              <SummaryList.Value data-cy="havePreviousUnresolvedDeclarations">
                 {BooleanUtilities.ToYesNo(
                   formData.havePreviousUnresolvedDeclarations
                 )}

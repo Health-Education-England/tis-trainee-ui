@@ -1,113 +1,35 @@
 // load type definitions that come with Cypress module
 /// <reference types="cypress" />
-import {
-  FormRPartB,
-  Work,
-  Declaration,
-  CovidDeclaration
-} from "../../../../models/FormRPartB";
-import { DateUtilities } from "../../../../utilities/DateUtilities";
+
+import day from "dayjs";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
+import { DateUtilities } from "../../../../utilities/DateUtilities";
+import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 
-type FormRPartBField = keyof FormRPartB;
-type FormRPartBWorkField = keyof Work;
-type FormRPartBDeclarationField = keyof Declaration;
-type FormRPartBCovidDeclarationField = keyof CovidDeclaration;
+const isDateType = (value: any) =>
+  !!value && day(value).isValid() && value.toString().indexOf("-") > -1;
 
-export interface ISectionDataField {
-  fieldName: FormRPartBField;
-  format: string;
-}
-
-export interface ISectionWorkDataField {
-  fieldName: FormRPartBWorkField;
-  format: string;
-}
-
-export interface ISectionDeclarationDataField {
-  fieldName: FormRPartBDeclarationField;
-  format: string;
-}
-
-export interface ISectionCovidDeclarationDataField {
-  fieldName: FormRPartBCovidDeclarationField;
-  format: string;
-}
-
-function CheckDataIsDisplayed(dataValue: any, format: string) {
-  if (typeof dataValue !== "undefined" && dataValue) {
-    if (format === "LocalDate") {
-      const formattedDate = DateUtilities.ToLocalDate(dataValue.toString());
-      cy.get(".nhsuk-summary-list__value").should(
-        "include.text",
-        formattedDate
-      );
-    } else if (format === "YesNo") {
-      const formattedBoolean = BooleanUtilities.ToYesNo(dataValue);
-      cy.get(".nhsuk-summary-list__value").should(
-        "include.text",
-        formattedBoolean
-      );
-    } else {
-      cy.get(".nhsuk-summary-list__value").should("include.text", dataValue);
-    }
-  }
-}
-
-export function ViewSectionShouldIncludeThisData(
-  formDataToDisplay: ISectionDataField[],
-  formData: FormRPartB
-) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
+export const testData = (dataToTest: any, index?: number) =>
+  Object.entries(dataToTest).map(([key, val]) => {
+    const cyDataRef = index && index >= 0 ? `${key}${index}` : key;
+    if (val && isDateType(val)) {
+      const formattedDate = DateUtilities.ToLocalDate(val.toString());
+      cy.get(`[data-cy=${cyDataRef}]`).contains(formattedDate);
+    } else if (typeof val === "number") {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(val);
+    } else if (typeof val === "boolean") {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(BooleanUtilities.ToYesNo(val));
+    } else if (val) {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(val.toString());
     }
   });
-}
 
-export function ViewSectionWorkShouldIncludeThisData(
-  formDataToDisplay: ISectionWorkDataField[],
-  formData: Work
-) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
-}
+export const makeSectionEditButton = (_section: number) => false;
+export const formData = submittedFormRPartBs[0];
 
-export function ViewSectionDeclarationShouldIncludeThisData(
-  formDataToDisplay: ISectionDeclarationDataField[],
-  formData: Declaration
-) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
-}
+// NOTE can't use these because of overlapping string types
+// const isDateType = (val: any): val is DateType =>
+//   (val as DateType) !== undefined;
 
-export function ViewSectionCovidDeclarationShouldIncludeThisData(
-  formDataToDisplay: ISectionCovidDeclarationDataField[],
-  formData: CovidDeclaration
-) {
-  formDataToDisplay.forEach(formDataItem => {
-    if (formDataItem.fieldName in formData) {
-      CheckDataIsDisplayed(
-        formData[formDataItem.fieldName],
-        formDataItem.format
-      );
-    }
-  });
-}
-
-export default ViewSectionShouldIncludeThisData;
+// const isProfileSType = (val: any): val is ProfileSType =>
+//   (val as ProfileSType) !== undefined;

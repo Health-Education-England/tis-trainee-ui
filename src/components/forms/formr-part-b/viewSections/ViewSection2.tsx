@@ -29,11 +29,15 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
                   <SummaryList>
                     <SummaryList.Row>
                       <SummaryList.Key>Type of Work</SummaryList.Key>
-                      <SummaryList.Value>{w.typeOfWork}</SummaryList.Value>
+                      <SummaryList.Value data-cy={`typeOfWork${i + 1}`}>
+                        {w.typeOfWork}
+                      </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>Training post</SummaryList.Key>
-                      <SummaryList.Value>{w.trainingPost}</SummaryList.Value>
+                      <SummaryList.Value data-cy={`trainingPost${i + 1}`}>
+                        {w.trainingPost}
+                      </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>Start Date</SummaryList.Key>
@@ -49,11 +53,15 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>Site Name</SummaryList.Key>
-                      <SummaryList.Value>{w.site}</SummaryList.Value>
+                      <SummaryList.Value data-cy={`site${i + 1}`}>
+                        {w.site}
+                      </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>Site Location</SummaryList.Key>
-                      <SummaryList.Value>{w.siteLocation}</SummaryList.Value>
+                      <SummaryList.Value data-cy={`siteLocation${i + 1}`}>
+                        {w.siteLocation}
+                      </SummaryList.Value>
                     </SummaryList.Row>
                   </SummaryList>
                 </Card.Content>
@@ -69,38 +77,48 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
               <SummaryList.Key>
                 Short and Long-term sickness absence
               </SummaryList.Key>
-              <SummaryList.Value>{formData.sicknessAbsence}</SummaryList.Value>
+              <SummaryList.Value data-cy="sicknessAbsence">
+                {formData.sicknessAbsence}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
                 Parental leave (incl Maternity / Paternity leave)
               </SummaryList.Key>
-              <SummaryList.Value>{formData.parentalLeave}</SummaryList.Value>
+              <SummaryList.Value data-cy="parentalLeave">
+                {formData.parentalLeave}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
                 Career breaks within a Programme (OOPC) and non-training
                 placements for experience (OOPE)
               </SummaryList.Key>
-              <SummaryList.Value>{formData.careerBreaks}</SummaryList.Value>
+              <SummaryList.Value data-cy="careerBreaks">
+                {formData.careerBreaks}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
                 Paid / unpaid leave (e.g. compassionate, jury service)
               </SummaryList.Key>
-              <SummaryList.Value>{formData.paidLeave}</SummaryList.Value>
+              <SummaryList.Value data-cy="paidLeave">
+                {formData.paidLeave}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
                 Unpaid/unauthorised leave including industrial action
               </SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="unauthorisedLeave">
                 {formData.unauthorisedLeave}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Other</SummaryList.Key>
-              <SummaryList.Value>{formData.otherLeave}</SummaryList.Value>
+              <SummaryList.Value data-cy="otherLeave">
+                {formData.otherLeave}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>

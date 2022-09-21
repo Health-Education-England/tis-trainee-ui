@@ -31,7 +31,10 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                 investigations to declare since your previous
                 ARCP/RITA/Appraisal that have since been RESOLVED?
               </SummaryList.Key>
-              <SummaryList.Value data-jest="haveCurrentDeclarations">
+              <SummaryList.Value
+                data-jest="haveCurrentDeclarations"
+                data-cy="haveCurrentDeclarations"
+              >
                 {BooleanUtilities.ToYesNo(formData.haveCurrentDeclarations)}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -47,7 +50,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Declaration type</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`currentDeclarationType${index + 1}`}
+                        data-cy={`declarationType${index + 1}`}
                         data-jest="currentDeclarationType"
                       >
                         {event.declarationType}
@@ -56,7 +59,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Date of entry</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`currentDateOfEntry${index + 1}`}
+                        data-cy={`dateOfEntry${index + 1}`}
                         data-jest="currentDateOfEntry"
                       >
                         {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
@@ -65,7 +68,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Title</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`currentDeclarationTitle${index + 1}`}
+                        data-cy={`title${index + 1}`}
                         data-jest="currentDeclarationTitle"
                       >
                         {event.title}
@@ -74,7 +77,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Location of entry</SummaryList.Key>
                       <SummaryList.Value
-                        data-cy={`currentLocationOfEntry${index + 1}`}
+                        data-cy={`locationOfEntry${index + 1}`}
                         data-jest="currentLocationOfEntry"
                       >
                         {event.locationOfEntry}
@@ -95,7 +98,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                 Do you have NEW declared Significant Events, Complaints, or
                 other investigations still UNRESOLVED?
               </SummaryList.Key>
-              <SummaryList.Value data-jest="havePreviousDeclarations">
+              <SummaryList.Value data-cy="haveCurrentUnresolvedDeclarations">
                 {BooleanUtilities.ToYesNo(
                   formData.haveCurrentUnresolvedDeclarations
                 )}

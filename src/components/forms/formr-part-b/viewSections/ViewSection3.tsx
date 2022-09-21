@@ -30,7 +30,7 @@ const ViewSection3 = ({ makeSectionEditButton, formData }: IViewSection3) => {
                 I declare that I accept the professional obligations placed on
                 me in Good Medical Practice in relation to honesty and integrity
               </SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="isHonest">
                 {BooleanUtilities.ToYesNo(formData.isHonest)}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -39,7 +39,7 @@ const ViewSection3 = ({ makeSectionEditButton, formData }: IViewSection3) => {
                 I declare that I accept the professional obligations placed on
                 me in Good Medical Practice about my personal health
               </SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="isHealthy">
                 {BooleanUtilities.ToYesNo(formData.isHealthy)}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -48,7 +48,7 @@ const ViewSection3 = ({ makeSectionEditButton, formData }: IViewSection3) => {
                 Do you have any GMC conditions, warnings or undertakings placed
                 on you by the GMC, employing Trust or other organisation?
               </SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="isWarned">
                 {BooleanUtilities.ToYesNo(formData.isWarned)}
               </SummaryList.Value>
             </SummaryList.Row>

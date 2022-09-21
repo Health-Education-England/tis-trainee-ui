@@ -24,11 +24,15 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
           <SummaryList>
             <SummaryList.Row>
               <SummaryList.Key>Forename</SummaryList.Key>
-              <SummaryList.Value>{formData.forename}</SummaryList.Value>
+              <SummaryList.Value data-cy="forename">
+                {formData.forename}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>GMC-Registered Surname</SummaryList.Key>
-              <SummaryList.Value>{formData.surname}</SummaryList.Value>
+              <SummaryList.Value data-cy="surname">
+                {formData.surname}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>GMC Number</SummaryList.Key>
@@ -38,7 +42,9 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Email Address</SummaryList.Key>
-              <SummaryList.Value>{formData.email}</SummaryList.Value>
+              <SummaryList.Value data-cy="email">
+                {formData.email}
+              </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Deanery / HEE Local Team</SummaryList.Key>
@@ -50,39 +56,43 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
               <SummaryList.Key>
                 Previous Designated Revalidation Body
               </SummaryList.Key>
-              <SummaryList.Value>{formData.prevRevalBody}</SummaryList.Value>
+              <SummaryList.Value data-cy="prevRevalBody">
+                {formData.prevRevalBody}
+              </SummaryList.Value>
             </SummaryList.Row>
             {formData.prevRevalBodyOther && (
               <SummaryList.Row>
                 <SummaryList.Key>
                   Other Previous Revalidation Body
                 </SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="prevRevalBodyOther">
                   {formData.prevRevalBodyOther}
                 </SummaryList.Value>
               </SummaryList.Row>
             )}
             <SummaryList.Row>
               <SummaryList.Key>Current Revalidation Date</SummaryList.Key>
-              <SummaryList.Value data-jest="currRevalDate">
+              <SummaryList.Value data-cy="currRevalDate">
                 {DateUtilities.ToLocalDate(formData.currRevalDate || null)}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Date of Previous Revalidation</SummaryList.Key>
-              <SummaryList.Value data-jest="prevRevalDate">
+              <SummaryList.Value data-cy="prevRevalDate">
                 {DateUtilities.ToLocalDate(formData.prevRevalDate || null)}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Programme / Training Specialty</SummaryList.Key>
-              <SummaryList.Value>
+              <SummaryList.Value data-cy="programmeSpecialty">
                 {formData.programmeSpecialty}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Dual Specialty</SummaryList.Key>
-              <SummaryList.Value>{formData.dualSpecialty}</SummaryList.Value>
+              <SummaryList.Value data-cy="dualSpecialty">
+                {formData.dualSpecialty}
+              </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
         </Card.Content>

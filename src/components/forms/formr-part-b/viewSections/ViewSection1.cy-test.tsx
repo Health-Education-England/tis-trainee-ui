@@ -1,32 +1,43 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection1 from "./ViewSection1";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField
+import {
+  testData,
+  makeSectionEditButton,
+  formData
 } from "./ViewSectionTestHelper";
+import React from "react";
+import { FormRPartB } from "../../../../models/FormRPartB";
 
-const makeSectionEditButton = (section: number) => {
-  return false;
+type formRBSub = Pick<
+  FormRPartB,
+  | "forename"
+  | "surname"
+  | "gmcNumber"
+  | "email"
+  | "localOfficeName"
+  | "currRevalDate"
+  | "prevRevalDate"
+  | "programmeSpecialty"
+  | "dualSpecialty"
+>;
+
+const formDataToDisplay: formRBSub = {
+  forename: formData.forename,
+  surname: formData.surname,
+  gmcNumber: formData.gmcNumber,
+  email: formData.email,
+  localOfficeName: formData.localOfficeName,
+  currRevalDate: formData.currRevalDate,
+  prevRevalDate: formData.prevRevalDate,
+  programmeSpecialty: formData.programmeSpecialty,
+  dualSpecialty: formData.dualSpecialty
 };
 
-const formDataToDisplay: ISectionDataField[] = [
-  { fieldName: "forename", format: "" },
-  { fieldName: "surname", format: "" },
-  { fieldName: "gmcNumber", format: "" },
-  { fieldName: "email", format: "" },
-  { fieldName: "localOfficeName", format: "" },
-  { fieldName: "currRevalDate", format: "LocalDate" },
-  { fieldName: "prevRevalDate", format: "LocalDate" },
-  { fieldName: "programmeSpecialty", format: "" },
-  { fieldName: "dualSpecialty", format: "" }
-];
-
-describe("View", () => {
-  const formData = submittedFormRPartBs[0];
+describe("View1", () => {
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -44,7 +55,7 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    testData(formDataToDisplay);
   });
 });
 

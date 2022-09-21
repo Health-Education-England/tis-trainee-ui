@@ -24,7 +24,7 @@ const ViewSection6 = ({ makeSectionEditButton, formData }: IViewSection6) => {
           <SummaryList>
             <SummaryList.Row>
               <SummaryList.Key>Compliments</SummaryList.Key>
-              <SummaryList.Value data-jest="compliments">
+              <SummaryList.Value data-cy="compliments">
                 {FormRUtilities.showMsgIfEmpty(
                   formData.compliments,
                   "No compliments recorded"

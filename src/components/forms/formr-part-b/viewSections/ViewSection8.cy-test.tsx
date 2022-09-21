@@ -1,22 +1,24 @@
+import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection8 from "./ViewSection8";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField
+import { FormRPartB } from "../../../../models/FormRPartB";
+import {
+  testData,
+  makeSectionEditButton,
+  formData
 } from "./ViewSectionTestHelper";
 
-const makeSectionEditButton = (section: number) => {
-  return false;
+type formRBSub8 = Pick<FormRPartB, "submissionDate">;
+
+const formDataToDisplay: formRBSub8 = {
+  submissionDate: formData.submissionDate
 };
 
-const formDataToDisplay: ISectionDataField[] = [];
-
 describe("View", () => {
-  const formData = submittedFormRPartBs[0];
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -34,6 +36,14 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+    testData(formDataToDisplay);
+    cy.get("[data-cy=declarationAccept]").should(
+      "include.text",
+      "This form is a true and accurate declaration"
+    );
+    cy.get("[data-cy=consentAccept]").should(
+      "include.text",
+      "I give permission for my past and present ARCP/RITA portfolios"
+    );
   });
 });

@@ -24,20 +24,20 @@ const ViewSection8 = ({ formData }: IViewSection8) => {
           <SummaryList>
             <SummaryList.Row>
               <SummaryList.Key>I confirm that</SummaryList.Key>
-              <SummaryList.Value data-jest="dec">
+              <SummaryList.Value data-cy="declarationAccept">
                 {FORMR_PARTB_ACCEPTANCE}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>I confirm that</SummaryList.Key>
-              <SummaryList.Value data-jest="dec">
+              <SummaryList.Value data-cy="consentAccept">
                 {FORMR_PARTB_CONSENT}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
         </Card.Content>
       </Card>
-      <h3 data-cy="dateSubmitted">
+      <h3 data-cy="submissionDate">
         Form Submitted on:&nbsp;
         {DateUtilities.ToLocalDate(formData.submissionDate)}
       </h3>

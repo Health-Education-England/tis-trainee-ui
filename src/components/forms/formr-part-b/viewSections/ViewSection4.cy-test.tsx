@@ -1,34 +1,34 @@
+import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection4 from "./ViewSection4";
 import history from "../../../navigation/history";
-import ViewSectionShouldIncludeThisData, {
-  ISectionDataField,
-  ISectionDeclarationDataField,
-  ViewSectionDeclarationShouldIncludeThisData
+import { FormRPartB } from "../../../../models/FormRPartB";
+import {
+  testData,
+  makeSectionEditButton,
+  formData
 } from "./ViewSectionTestHelper";
 
-const makeSectionEditButton = (section: number) => {
-  return false;
+const prevDecs = formData.previousDeclarations;
+
+type formRBSub4 = Pick<
+  FormRPartB,
+  | "havePreviousDeclarations"
+  | "havePreviousUnresolvedDeclarations"
+  | "previousDeclarationSummary"
+>;
+
+const formDataToDisplay: formRBSub4 = {
+  havePreviousDeclarations: formData.havePreviousDeclarations,
+  havePreviousUnresolvedDeclarations:
+    formData.havePreviousUnresolvedDeclarations,
+  previousDeclarationSummary: formData.previousDeclarationSummary
 };
 
-const formDataToDisplay: ISectionDataField[] = [
-  { fieldName: "havePreviousDeclarations", format: "YesNo" },
-  { fieldName: "havePreviousUnresolvedDeclarations", format: "YesNo" },
-  { fieldName: "previousDeclarationSummary", format: "" }
-];
-
-const formDataDeclarationToDisplay: ISectionDeclarationDataField[] = [
-  { fieldName: "declarationType", format: "" },
-  { fieldName: "title", format: "" },
-  { fieldName: "locationOfEntry", format: "" }
-];
-
 describe("View", () => {
-  const formData = submittedFormRPartBs[0];
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
     mount(
@@ -46,30 +46,30 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-    formData.previousDeclarations.map((e, i) => {
-      ViewSectionDeclarationShouldIncludeThisData(
-        formDataDeclarationToDisplay,
-        e
-      );
+    testData(formDataToDisplay);
+  });
+
+  it("should render the correct declaration data", () => {
+    prevDecs.map((decObj, index) => {
+      testData(decObj, index + 1);
     });
   });
 });
 
-describe("View with null dates value", () => {
-  const formData = submittedFormRPartBs[1];
-  const viewSectionProps = { makeSectionEditButton, formData };
-  beforeEach(() => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <ViewSection4 {...viewSectionProps} />
-        </Router>
-      </Provider>
-    );
-  });
+// describe("View with null dates value", () => {
+//   const formData = submittedFormRPartBs[1];
+//   const viewSectionProps = { makeSectionEditButton, formData };
+//   beforeEach(() => {
+//     mount(
+//       <Provider store={store}>
+//         <Router history={history}>
+//           <ViewSection4 {...viewSectionProps} />
+//         </Router>
+//       </Provider>
+//     );
+//   });
 
-  it("should render correct form data", () => {
-    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
-  });
-});
+//   it("should render correct form data", () => {
+//     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+//   });
+// });
