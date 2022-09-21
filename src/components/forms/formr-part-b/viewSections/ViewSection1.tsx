@@ -57,7 +57,7 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
                 <SummaryList.Key>
                   Other Previous Revalidation Body
                 </SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="prevRevalBodyOther">
                   {formData.prevRevalBodyOther}
                 </SummaryList.Value>
               </SummaryList.Row>

@@ -47,3 +47,43 @@ describe("View", () => {
     ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
   });
 });
+
+describe("View with null dates value", () => {
+  const formData = submittedFormRPartBs[1];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection1 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should render correct form data", () => {
+    ViewSectionShouldIncludeThisData(formDataToDisplay, formData);
+  });
+
+  it("should show other previous revalidation body", () => {
+    cy.get("[data-cy=prevRevalBodyOther]").should("exist");
+  });
+});
+
+describe("View with no other previous revalidation body", () => {
+  const formData = submittedFormRPartBs[0];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection1 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show other previous revalidation body", () => {
+    cy.get("[data-cy=prevRevalBodyOther]").should("not.exist");
+  });
+});

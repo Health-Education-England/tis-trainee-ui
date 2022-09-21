@@ -37,7 +37,7 @@ const ViewSection8 = ({ formData }: IViewSection8) => {
           </SummaryList>
         </Card.Content>
       </Card>
-      <h3>
+      <h3 data-cy="dateSubmitted">
         Form Submitted on:&nbsp;
         {DateUtilities.ToLocalDate(formData.submissionDate)}
       </h3>

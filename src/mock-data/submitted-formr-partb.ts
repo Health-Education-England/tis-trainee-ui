@@ -47,7 +47,7 @@ export const submittedFormRPartBs: FormRPartB[] = [
     isComplying: true,
     healthStatement: "I feel great etc.",
     havePreviousDeclarations: true,
-    havePreviousUnresolvedDeclarations: false,
+    havePreviousUnresolvedDeclarations: true,
     previousDeclarations: [
       {
         declarationType: "Significant Event",
@@ -58,11 +58,84 @@ export const submittedFormRPartBs: FormRPartB[] = [
     ],
     previousDeclarationSummary: "",
     haveCurrentDeclarations: true,
-    haveCurrentUnresolvedDeclarations: false,
+    haveCurrentUnresolvedDeclarations: true,
     currentDeclarations: [
       {
         declarationType: "Complaint",
         dateOfEntry: "2020-06-12",
+        title: "Current declaration title",
+        locationOfEntry: "Current declaration location of entry"
+      }
+    ],
+    currentDeclarationSummary: "",
+    compliments: "",
+    haveCovidDeclarations: null,
+    covidDeclarationDto: null,
+    lifecycleState: LifeCycleState.Submitted,
+    submissionDate: "2020-04-22",
+    lastModifiedDate: "2020-05-15"
+  },
+  {
+    id: "5e972ec9b9b5781b94eb1271",
+    traineeTisId: "123",
+    forename: "Anthony Mara",
+    surname: "Gilliam",
+    gmcNumber: "11111111",
+    email: "email@email.com",
+    localOfficeName: "Health Education England Thames Valley",
+    prevRevalBody: "other",
+    prevRevalBodyOther: "Sarnia Yachts Management (UK) Limited",
+    prevRevalDate: null,
+    currRevalDate: null,
+    programmeSpecialty: "ST3",
+    dualSpecialty: "DS",
+    work: [
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: null,
+        endDate: null,
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      },
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: null,
+        endDate: null,
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      }
+    ],
+    sicknessAbsence: 0,
+    parentalLeave: 0,
+    careerBreaks: 0,
+    paidLeave: 0,
+    unauthorisedLeave: 10,
+    otherLeave: 0,
+    totalLeave: 10,
+    isHonest: true,
+    isHealthy: true,
+    isWarned: true,
+    isComplying: true,
+    healthStatement: "I feel great etc.",
+    havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
+    previousDeclarations: [
+      {
+        declarationType: "Significant Event",
+        dateOfEntry: null,
+        title: "Previous declaration title",
+        locationOfEntry: "Previous declaration location of entry"
+      }
+    ],
+    previousDeclarationSummary: "",
+    haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
+    currentDeclarations: [
+      {
+        declarationType: "Complaint",
+        dateOfEntry: "null",
         title: "Current declaration title",
         locationOfEntry: "Current declaration location of entry"
       }
@@ -305,6 +378,176 @@ export const submittedFormRPartBwithCovid: FormRPartB[] = [
       discussWithSupervisorChecked: true,
       discussWithSomeoneChecked: true,
       haveChangesToPlacement: true,
+      changeCircumstances: "Other",
+      changeCircumstanceOther: "I may be slower still in future",
+      howPlacementAdjusted: "They gave me more time",
+      educationSupervisorName: "Dr Ed",
+      educationSupervisorEmail: "ed@ed.com"
+    },
+    lifecycleState: LifeCycleState.Submitted,
+    submissionDate: "2020-04-22",
+    lastModifiedDate: "2020-05-15"
+  },
+  {
+    id: "5e972ec9b9b5781b94eb1271",
+    traineeTisId: "123",
+    forename: "Anthony Mara",
+    surname: "Gilliam",
+    gmcNumber: "11111111",
+    email: "email@email.com",
+    localOfficeName: "Health Education England Thames Valley",
+    prevRevalBody: "Health Education England Midlands",
+    prevRevalBodyOther: "",
+    prevRevalDate: "2020-04-22",
+    currRevalDate: "2020-04-22",
+    programmeSpecialty: "ST3",
+    dualSpecialty: "DS",
+    work: [
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: "2019-01-12",
+        endDate: "2019-12-21",
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      },
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: "2020-01-01",
+        endDate: "2020-12-31",
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      }
+    ],
+    sicknessAbsence: 0,
+    parentalLeave: 0,
+    careerBreaks: 0,
+    paidLeave: 0,
+    unauthorisedLeave: 10,
+    otherLeave: 0,
+    totalLeave: 10,
+    isHonest: true,
+    isHealthy: true,
+    isWarned: true,
+    isComplying: true,
+    healthStatement: "I feel great etc.",
+    havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
+    previousDeclarations: [
+      {
+        declarationType: "Significant Event",
+        dateOfEntry: "2020-03-07",
+        title: "Previous declaration title",
+        locationOfEntry: "Previous declaration location of entry"
+      }
+    ],
+    previousDeclarationSummary: "",
+    haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
+    currentDeclarations: [
+      {
+        declarationType: "Complaint",
+        dateOfEntry: "2020-06-12",
+        title: "Current declaration title",
+        locationOfEntry: "Current declaration location of entry"
+      }
+    ],
+    currentDeclarationSummary: "",
+    compliments: "",
+    haveCovidDeclarations: true,
+    covidDeclarationDto: {
+      selfRateForCovid: "Ok",
+      reasonOfSelfRate: null,
+      otherInformationForPanel: "Some other information",
+      discussWithSupervisorChecked: true,
+      discussWithSomeoneChecked: true,
+      haveChangesToPlacement: true,
+      changeCircumstances: "Any Period of self-isolation",
+      changeCircumstanceOther: "",
+      howPlacementAdjusted: "They gave me more time",
+      educationSupervisorName: "Dr Ed",
+      educationSupervisorEmail: "ed@ed.com"
+    },
+    lifecycleState: LifeCycleState.Submitted,
+    submissionDate: "2020-04-22",
+    lastModifiedDate: "2020-05-15"
+  },
+  {
+    id: "5e972ec9b9b5781b94eb1272",
+    traineeTisId: "123",
+    forename: "Anthony Mara",
+    surname: "Gilliam",
+    gmcNumber: "11111111",
+    email: "email@email.com",
+    localOfficeName: "Health Education England Thames Valley",
+    prevRevalBody: "Health Education England Midlands",
+    prevRevalBodyOther: "",
+    prevRevalDate: "2020-04-22",
+    currRevalDate: "2020-04-22",
+    programmeSpecialty: "ST3",
+    dualSpecialty: "DS",
+    work: [
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: "2019-01-12",
+        endDate: "2019-12-21",
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      },
+      {
+        typeOfWork: "In Post ST1 Dermatology",
+        startDate: "2020-01-01",
+        endDate: "2020-12-31",
+        trainingPost: "Yes",
+        site: "Addenbrookes Hospital",
+        siteLocation: "Hills Road Cambridge Cambridgeshire"
+      }
+    ],
+    sicknessAbsence: 0,
+    parentalLeave: 0,
+    careerBreaks: 0,
+    paidLeave: 0,
+    unauthorisedLeave: 10,
+    otherLeave: 0,
+    totalLeave: 10,
+    isHonest: true,
+    isHealthy: true,
+    isWarned: true,
+    isComplying: true,
+    healthStatement: "I feel great etc.",
+    havePreviousDeclarations: true,
+    havePreviousUnresolvedDeclarations: false,
+    previousDeclarations: [
+      {
+        declarationType: "Significant Event",
+        dateOfEntry: "2020-03-07",
+        title: "Previous declaration title",
+        locationOfEntry: "Previous declaration location of entry"
+      }
+    ],
+    previousDeclarationSummary: "",
+    haveCurrentDeclarations: true,
+    haveCurrentUnresolvedDeclarations: false,
+    currentDeclarations: [
+      {
+        declarationType: "Complaint",
+        dateOfEntry: "2020-06-12",
+        title: "Current declaration title",
+        locationOfEntry: "Current declaration location of entry"
+      }
+    ],
+    currentDeclarationSummary: "",
+    compliments: "",
+    haveCovidDeclarations: true,
+    covidDeclarationDto: {
+      selfRateForCovid: "Ok",
+      reasonOfSelfRate: "I made some progress",
+      otherInformationForPanel: "Some other information",
+      discussWithSupervisorChecked: true,
+      discussWithSomeoneChecked: true,
+      haveChangesToPlacement: false,
       changeCircumstances: "Other",
       changeCircumstanceOther: "I may be slower still in future",
       howPlacementAdjusted: "They gave me more time",

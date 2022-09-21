@@ -1,7 +1,10 @@
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { submittedFormRPartBwithCovid } from "../../../../mock-data/submitted-formr-partb";
+import {
+  submittedFormRPartBs,
+  submittedFormRPartBwithCovid
+} from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import ViewSection7 from "./ViewSection7";
 import history from "../../../navigation/history";
@@ -55,5 +58,81 @@ describe("View", () => {
       formDataCovidDeclarationToDisplay,
       formData.covidDeclarationDto
     );
+  });
+
+  it("should show Covid training progress details", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("exist");
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+  });
+});
+
+describe("View with no reason of self rate and other circumstance", () => {
+  const formData = submittedFormRPartBwithCovid[1];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show Covid training progress reason", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("exist");
+    cy.get("[data-cy=covidTrainingReason]").should("not.exist");
+  });
+
+  it("should not show other circumstance", () => {
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+    cy.get("[data-cy=otherCircumstance]").should("not.exist");
+  });
+});
+
+describe("View with no circumstance of change", () => {
+  const formData = submittedFormRPartBwithCovid[2];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show circumstance of change", () => {
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("exist");
+    cy.get("[data-cy=circumstanceOfChange]").should("not.exist");
+    cy.get("[data-cy=otherCircumstance]").should("not.exist");
+  });
+});
+
+describe("View with Covid declaration null", () => {
+  const formData = submittedFormRPartBs[0];
+  const viewSectionProps = { makeSectionEditButton, formData };
+  beforeEach(() => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ViewSection7 {...viewSectionProps} />
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should not show Covid training progress details", () => {
+    cy.get("[data-cy=covidTrainingProgress]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection2]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection3]").should("not.exist");
+    cy.get("[data-cy=covidTrainingSection4]").should("not.exist");
   });
 });
