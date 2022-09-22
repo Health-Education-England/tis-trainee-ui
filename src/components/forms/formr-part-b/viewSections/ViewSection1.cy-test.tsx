@@ -59,18 +59,16 @@ describe("View1", () => {
   });
 });
 
-describe("View with null currRevalDate and prevRevalDate value", () => {
+describe("View with null prevRevalDate value", () => {
   const formDataWithNullDate = {
     ...formData,
-    prevRevalDate: null,
-    currRevalDate: null
+    prevRevalDate: null
   };
   const viewSectionProps = { makeSectionEditButton, formDataWithNullDate };
 
   const formDataToDisplayNullDate = {
     ...formDataToDisplay,
-    prevRevalDate: null,
-    currRevalDate: null
+    prevRevalDate: null
   };
 
   it("should render correct form data", () => {
