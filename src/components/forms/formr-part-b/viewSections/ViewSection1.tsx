@@ -73,13 +73,13 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
             <SummaryList.Row>
               <SummaryList.Key>Current Revalidation Date</SummaryList.Key>
               <SummaryList.Value data-cy="currRevalDate">
-                {DateUtilities.ToLocalDate(formData.currRevalDate || null)}
+                {DateUtilities.ToLocalDate(formData.currRevalDate as string)}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>Date of Previous Revalidation</SummaryList.Key>
               <SummaryList.Value data-cy="prevRevalDate">
-                {DateUtilities.ToLocalDate(formData.prevRevalDate || null)}
+                {DateUtilities.ToLocalDate(formData.prevRevalDate as string)}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>

@@ -42,13 +42,13 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
                     <SummaryList.Row>
                       <SummaryList.Key>Start Date</SummaryList.Key>
                       <SummaryList.Value data-cy={`startDate${i + 1}`}>
-                        {DateUtilities.ToLocalDate(w.startDate || null)}
+                        {DateUtilities.ToLocalDate(w.startDate)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
                       <SummaryList.Key>End Date</SummaryList.Key>
                       <SummaryList.Value data-cy={`endDate${i + 1}`}>
-                        {DateUtilities.ToLocalDate(w.endDate || null)}
+                        {DateUtilities.ToLocalDate(w.endDate)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>

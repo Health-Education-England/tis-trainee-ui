@@ -62,7 +62,7 @@ const ViewSection5 = ({ makeSectionEditButton, formData }: IViewSection5) => {
                         data-cy={`dateOfEntry${index + 1}`}
                         data-jest="currentDateOfEntry"
                       >
-                        {DateUtilities.ToLocalDate(event.dateOfEntry || null)}
+                        {DateUtilities.ToLocalDate(event.dateOfEntry as string)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                     <SummaryList.Row>
