@@ -189,11 +189,11 @@ describe("Form R (Part B)", () => {
     if (isCovid) {
       cy.get("[data-cy=sectionHeader7]").should("exist");
       cy.get("[data-cy=BtnEditSection7]").should("exist");
-      cy.get("[data-cy=covidSupName]").should(
+      cy.get("[data-cy=educationSupervisorName]").should(
         "contain.text",
         "No supervisor name provided"
       );
-      cy.get("[data-cy=covidSupEmail]").should(
+      cy.get("[data-cy=educationSupervisorEmail]").should(
         "contain.text",
         "No supervisor email provided"
       );
@@ -292,7 +292,7 @@ describe("Form R (Part B)", () => {
 
     // return to Confirm / submit page to check edited summary
     cy.get("[data-cy=BtnBackToSubmit]").click();
-    cy.get("[data-cy=currentDeclarationType1]").should(
+    cy.get("[data-cy=declarationType1]").should(
       "contain.text",
       "Significant event"
     );

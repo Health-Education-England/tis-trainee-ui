@@ -3,7 +3,7 @@ import { Fieldset, Label } from "nhsuk-react-components";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Create from "./Create";
 import CreateList from "../CreateList";
-import View from "./View";
+import View from "./viewSections/View";
 import ScrollTo from "../ScrollTo";
 import PageTitle from "../../common/PageTitle";
 
