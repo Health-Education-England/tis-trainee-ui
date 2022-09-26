@@ -31,6 +31,10 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
+        <h3 data-cy="dateSubmitted">
+          Form Submitted on:&nbsp;
+          {DateUtilities.ToLocalDate(formData.submissionDate)}
+        </h3>
         <Card feature>
           <Card.Content>
             <Card.Heading>Personal Details</Card.Heading>
