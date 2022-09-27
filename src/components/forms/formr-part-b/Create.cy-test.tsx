@@ -81,9 +81,7 @@ describe("Create form B", () => {
       "include.text",
       "Section 1: Doctor's details"
     );
-    cy.get(
-      ":nth-child(3) > .nhsuk-card > .nhsuk-card__content > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-    ).should("have.text", "Anthony Mara");
+    cy.get("[data-cy=forename]").should("have.text", "Anthony Mara");
     cy.get("[data-cy=BtnEditSection1]").should("exist").click();
     cy.get(".progress-step").eq(0).should("have.class", "progress-step-active");
     cy.get("[data-cy=forename]").click().clear();
@@ -100,9 +98,7 @@ describe("Create form B", () => {
       "include.text",
       "Confirmation"
     );
-    cy.get(
-      ":nth-child(3) > .nhsuk-card > .nhsuk-card__content > .nhsuk-summary-list > :nth-child(1) > .nhsuk-summary-list__value"
-    ).should("have.text", "Tony");
+    cy.get("[data-cy=forename]").should("have.text", "Tony");
     cy.get(
       "[data-cy=declaration] > .nhsuk-card__content > .nhsuk-card__heading"
     ).should("exist");

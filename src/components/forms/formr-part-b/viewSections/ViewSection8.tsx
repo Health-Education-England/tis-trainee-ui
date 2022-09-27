@@ -4,7 +4,6 @@ import {
   FORMR_PARTB_ACCEPTANCE,
   FORMR_PARTB_CONSENT
 } from "../../../../utilities/Constants";
-import { DateUtilities } from "../../../../utilities/DateUtilities";
 
 interface IViewSection8 {
   formData: FormRPartB;
@@ -37,10 +36,6 @@ const ViewSection8 = ({ formData }: IViewSection8) => {
           </SummaryList>
         </Card.Content>
       </Card>
-      <h3 data-cy="submissionDate">
-        Form Submitted on:&nbsp;
-        {DateUtilities.ToLocalDate(formData.submissionDate)}
-      </h3>
     </div>
   );
 };

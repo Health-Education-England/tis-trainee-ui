@@ -15,6 +15,9 @@ const View = ({ canEdit, history }: IView) => {
   const formData = useAppSelector(selectSavedFormA);
   let content;
 
+  const subDateContent = `Form Submitted on:
+  ${DateUtilities.ToLocalDate(formData.submissionDate)}`;
+
   if (formData.traineeTisId)
     content = (
       <>
@@ -31,6 +34,7 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
+        <h3 data-cy="submissionDateTop">{subDateContent}</h3>
         <Card feature>
           <Card.Content>
             <Card.Heading>Personal Details</Card.Heading>
@@ -205,10 +209,7 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        <h3 data-cy="dateSubmitted">
-          Form Submitted on:&nbsp;
-          {DateUtilities.ToLocalDate(formData.submissionDate)}
-        </h3>
+        <h3 data-cy="submissionDate">{subDateContent}</h3>
       </>
     );
   else content = <Redirect to="/formr-a" />;
