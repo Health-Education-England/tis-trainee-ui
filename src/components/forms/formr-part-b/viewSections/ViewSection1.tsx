@@ -18,10 +18,6 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
           {makeSectionEditButton(1)}
         </div>
       </div>
-      <h3 data-cy="submissionDate">
-        Form Submitted on:&nbsp;
-        {DateUtilities.ToLocalDate(formData.submissionDate)}
-      </h3>
       <Card feature>
         <Card.Content>
           <Card.Heading>Personal details</Card.Heading>

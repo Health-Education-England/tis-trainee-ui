@@ -12,12 +12,6 @@ import {
   formData
 } from "./ViewSectionTestHelper";
 
-type formRBSub8 = Pick<FormRPartB, "submissionDate">;
-
-const formDataToDisplay: formRBSub8 = {
-  submissionDate: formData.submissionDate
-};
-
 describe("View", () => {
   const viewSectionProps = { makeSectionEditButton, formData };
   beforeEach(() => {
@@ -36,7 +30,6 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
     cy.get("[data-cy=declarationAccept]").should(
       "include.text",
       "This form is a true and accurate declaration"
