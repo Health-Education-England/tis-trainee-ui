@@ -56,12 +56,12 @@ describe("View", () => {
     cy.get("#__cy_root > :nth-child(1) > :nth-child(3)").should("exist");
     cy.get("#__cy_root > :nth-child(1) > :nth-child(3)").should(
       "include.text",
-      "Form Submitted on: 22/04/2020"
+      "Form Submitted on: 02/07/2022"
     );
     cy.get("#__cy_root > :nth-child(1) > :nth-child(7)").should("exist");
     cy.get("#__cy_root > :nth-child(1) > :nth-child(7)").should(
       "include.text",
-      "Form Submitted on: 22/04/2020"
+      "Form Submitted on: 02/07/2022"
     );
   });
   it("should render view component with no save PDF btn/link for unsubmitted form", () => {
