@@ -22,8 +22,6 @@ import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAI
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
 import { DateType, DateUtilities } from "./DateUtilities";
-import { formData } from "../components/forms/formr-part-b/viewSections/ViewSectionTestHelper";
-
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
