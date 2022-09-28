@@ -32,7 +32,7 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
-        {FormRUtilities.dispaySubmissionDate(formData.submissionDate)}
+        {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
         <Card feature>
           <Card.Content>
             <Card.Heading>Personal Details</Card.Heading>
@@ -207,7 +207,7 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        {FormRUtilities.dispaySubmissionDate(formData.submissionDate)}
+        {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
       </>
     );
   else content = <Redirect to="/formr-a" />;
