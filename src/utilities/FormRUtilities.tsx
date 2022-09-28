@@ -21,6 +21,8 @@ import FieldWarningMsg from "../components/forms/FieldWarningMsg";
 import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAInitialValues";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
+import { DateType, DateUtilities } from "./DateUtilities";
+import { formData } from "../components/forms/formr-part-b/viewSections/ViewSectionTestHelper";
 
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
@@ -115,6 +117,17 @@ export class FormRUtilities {
     message: string = "None recorded"
   ) {
     return value ? value : message;
+  }
+
+  public static dispaySubmissionDate(date: DateType) {
+    const message = (
+      <h3>
+        {"Form Submitted on: " +
+          DateUtilities.ToLocalDate(formData.submissionDate)}
+      </h3>
+    );
+
+    return message;
   }
 
   public static loadNewForm(

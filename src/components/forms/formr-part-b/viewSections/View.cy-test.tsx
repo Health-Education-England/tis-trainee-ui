@@ -55,10 +55,16 @@ describe("View", () => {
     cy.get("[data-cy=BtnEdit]").should("not.exist");
     cy.get("[data-cy=BtnSaveDraft]").should("not.exist");
     cy.get("[data-cy=BtnSubmit]").should("not.exist");
-    cy.get("[data-cy=submissionDateTop]").should("exist");
-    cy.get("[data-cy=submissionDateTop]").should("include.text", "22/04/2020");
-    cy.get("[data-cy=submissionDate]").should("exist");
-    cy.get("[data-cy=submissionDate]").should("include.text", "22/04/2020");
+    cy.get("#__cy_root > :nth-child(1) > :nth-child(3)").should("exist");
+    cy.get("#__cy_root > :nth-child(1) > :nth-child(3)").should(
+      "include.text",
+      "Form Submitted on: 22/04/2020"
+    );
+    cy.get("#__cy_root > :nth-child(1) > :nth-child(11)").should("exist");
+    cy.get("#__cy_root > :nth-child(1) > :nth-child(11)").should(
+      "include.text",
+      "Form Submitted on: 22/04/2020"
+    );
     cy.get("[data-cy=sectionHeader8]")
       .should("exist")
       .should("include.text", "Declarations");

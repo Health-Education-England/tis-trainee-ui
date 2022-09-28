@@ -6,6 +6,7 @@ import ScrollTo from "../ScrollTo";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectSavedFormA } from "../../../redux/slices/formASlice";
 import FormSavePDF from "../FormSavePDF";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 interface IView {
   canEdit: boolean;
   history: any;
@@ -14,9 +15,6 @@ interface IView {
 const View = ({ canEdit, history }: IView) => {
   const formData = useAppSelector(selectSavedFormA);
   let content;
-
-  const subDateContent = `Form Submitted on:
-  ${DateUtilities.ToLocalDate(formData.submissionDate)}`;
 
   if (formData.traineeTisId)
     content = (
@@ -34,7 +32,7 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
-        <h3 data-cy="submissionDateTop">{subDateContent}</h3>
+        {FormRUtilities.dispaySubmissionDate(formData.submissionDate)}
         <Card feature>
           <Card.Content>
             <Card.Heading>Personal Details</Card.Heading>
@@ -209,7 +207,7 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        <h3 data-cy="submissionDate">{subDateContent}</h3>
+        {FormRUtilities.dispaySubmissionDate(formData.submissionDate)}
       </>
     );
   else content = <Redirect to="/formr-a" />;
