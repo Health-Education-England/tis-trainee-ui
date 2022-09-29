@@ -32,9 +32,10 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
-        <h3 data-cy="submissionDateTop">
-          {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
-        </h3>
+        {FormRUtilities.displaySubmissionDate(
+          formData.submissionDate,
+          "submissionDateTop"
+        )}
         <Card feature>
           <Card.Content>
             <Card.Heading>Personal Details</Card.Heading>
@@ -209,9 +210,10 @@ const View = ({ canEdit, history }: IView) => {
             </SummaryList>
           </Card.Content>
         </Card>
-        <h3 data-cy="submissionDate">
-          {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
-        </h3>
+        {FormRUtilities.displaySubmissionDate(
+          formData.submissionDate,
+          "submissionDate"
+        )}
       </>
     );
   else content = <Redirect to="/formr-a" />;

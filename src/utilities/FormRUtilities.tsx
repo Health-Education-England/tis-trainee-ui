@@ -117,10 +117,12 @@ export class FormRUtilities {
     return value ? value : message;
   }
 
-  public static displaySubmissionDate(date: DateType) {
-    const message = "Form Submitted on: " + DateUtilities.ToLocalDate(date);
-
-    return message;
+  public static displaySubmissionDate(date: DateType, cyTag: string) {
+    return (
+      <h3 data-cy={cyTag}>
+        Form Submitted on: {DateUtilities.ToLocalDate(date)}
+      </h3>
+    );
   }
 
   public static loadNewForm(
