@@ -54,9 +54,15 @@ describe("View", () => {
     cy.get("[data-cy=BtnSaveDraft]").should("not.exist");
     cy.get("[data-cy=BtnSubmit]").should("not.exist");
     cy.get("[data-cy=submissionDateTop]").should("exist");
-    cy.get("[data-cy=submissionDateTop]").should("include.text", "02/07/2022");
+    cy.get("[data-cy=submissionDateTop]").should(
+      "include.text",
+      "Form Submitted on: 02/07/2022"
+    );
     cy.get("[data-cy=submissionDate]").should("exist");
-    cy.get("[data-cy=submissionDate]").should("include.text", "02/07/2022");
+    cy.get("[data-cy=submissionDate]").should(
+      "include.text",
+      "Form Submitted on: 02/07/2022"
+    );
   });
   it("should render view component with no save PDF btn/link for unsubmitted form", () => {
     const MockedViewUnsubmitted = () => {

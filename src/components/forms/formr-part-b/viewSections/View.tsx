@@ -19,7 +19,7 @@ import ViewSection5 from "./ViewSection5";
 import ViewSection6 from "./ViewSection6";
 import ViewSection7 from "./ViewSection7";
 import ViewSection8 from "./ViewSection8";
-import { DateUtilities } from "../../../../utilities/DateUtilities";
+import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 interface IView {
   canEdit: boolean;
@@ -55,9 +55,6 @@ const View = ({ canEdit, history }: IView) => {
 
   const viewSectionProps = { makeSectionEditButton, formData };
 
-  const subDateContent = `Form Submitted on:
-  ${DateUtilities.ToLocalDate(formData.submissionDate)}`;
-
   if (formData.traineeTisId)
     content = (
       <>
@@ -74,7 +71,10 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
-        <h3 data-cy="submissionDateTop">{subDateContent}</h3>
+        {FormRUtilities.displaySubmissionDate(
+          formData.submissionDate,
+          "submissionDateTop"
+        )}
         <ViewSection1 {...viewSectionProps} />
         <ViewSection2 {...viewSectionProps} />
         <ViewSection3 {...viewSectionProps} />
@@ -83,7 +83,10 @@ const View = ({ canEdit, history }: IView) => {
         <ViewSection6 {...viewSectionProps} />
         {enableCovidDeclaration ? <ViewSection7 {...viewSectionProps} /> : null}
         {!canEdit && <ViewSection8 {...viewSectionProps} />}
-        <h3 data-cy="submissionDate">{subDateContent}</h3>
+        {FormRUtilities.displaySubmissionDate(
+          formData.submissionDate,
+          "submissionDate"
+        )}
       </>
     );
   else content = <Redirect to="/formr-b" />;
