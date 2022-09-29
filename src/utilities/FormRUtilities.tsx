@@ -118,9 +118,7 @@ export class FormRUtilities {
   }
 
   public static displaySubmissionDate(date: DateType) {
-    const message = (
-      <h3>{"Form Submitted on: " + DateUtilities.ToLocalDate(date)}</h3>
-    );
+    const message = "Form Submitted on: " + DateUtilities.ToLocalDate(date);
 
     return message;
   }

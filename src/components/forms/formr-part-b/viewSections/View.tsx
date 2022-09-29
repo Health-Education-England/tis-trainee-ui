@@ -71,7 +71,9 @@ const View = ({ canEdit, history }: IView) => {
             </p>
           </WarningCallout>
         )}
-        {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
+        <h3 data-cy="submissionDateTop">
+          {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
+        </h3>
         <ViewSection1 {...viewSectionProps} />
         <ViewSection2 {...viewSectionProps} />
         <ViewSection3 {...viewSectionProps} />
@@ -80,7 +82,9 @@ const View = ({ canEdit, history }: IView) => {
         <ViewSection6 {...viewSectionProps} />
         {enableCovidDeclaration ? <ViewSection7 {...viewSectionProps} /> : null}
         {!canEdit && <ViewSection8 {...viewSectionProps} />}
-        {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
+        <h3 data-cy="submissionDate">
+          {FormRUtilities.displaySubmissionDate(formData.submissionDate)}
+        </h3>
       </>
     );
   else content = <Redirect to="/formr-b" />;
