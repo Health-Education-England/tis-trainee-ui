@@ -4,11 +4,7 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import ViewSection1 from "./ViewSection1";
 import history from "../../../navigation/history";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 import React from "react";
 import { FormRPartB } from "../../../../models/FormRPartB";
 
@@ -55,7 +51,7 @@ describe("View1", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 });
 
@@ -80,7 +76,7 @@ describe("View with null prevRevalDate value", () => {
       </Provider>
     );
 
-    testData(formDataToDisplayNullDate);
+    cy.testData(formDataToDisplayNullDate);
   });
 });
 

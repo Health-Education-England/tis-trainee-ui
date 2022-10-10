@@ -5,11 +5,7 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import ViewSection3 from "./ViewSection3";
 import history from "../../../navigation/history";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 import { FormRPartB } from "../../../../models/FormRPartB";
 
 type formRBSub3 = Pick<
@@ -43,6 +39,6 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 });

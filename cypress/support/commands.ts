@@ -25,6 +25,10 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 // cypress/support/index.js
 
+import day from "dayjs";
+import { DateUtilities } from "../../src/utilities/DateUtilities";
+import { BooleanUtilities } from "../../src/utilities/BooleanUtilities";
+
 Cypress.Commands.add("checkForSuccessNotif", successMsg => {
   cy.get(".notification").should(
     "have.css",
@@ -562,4 +566,23 @@ Cypress.Commands.add("checkFlags", name => {
       expect(data.length).to.eq(1);
       return data[0].enabled;
     });
+});
+
+Cypress.Commands.add("testData", (dataToTest, index?) => {
+  const isDateType = (value: any) =>
+    !!value && day(value).isValid() && value.toString().indexOf("-") > -1;
+
+  Object.entries(dataToTest).map(([key, val]: [key: string, val: any]) => {
+    const cyDataRef = index && index >= 0 ? `${key}${index}` : key;
+    if (val && isDateType(val)) {
+      const formattedDate = DateUtilities.ToLocalDate(val.toString());
+      cy.get(`[data-cy=${cyDataRef}]`).contains(formattedDate);
+    } else if (typeof val === "number") {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(val);
+    } else if (typeof val === "boolean") {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(BooleanUtilities.ToYesNo(val));
+    } else if (val) {
+      cy.get(`[data-cy=${cyDataRef}]`).contains(val.toString());
+    }
+  });
 });

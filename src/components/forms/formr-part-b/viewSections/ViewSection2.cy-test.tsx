@@ -6,11 +6,7 @@ import store from "../../../../redux/store/store";
 import ViewSection2 from "./ViewSection2";
 import history from "../../../navigation/history";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 
 const workData = formData.work;
 
@@ -53,12 +49,12 @@ describe("View", () => {
   });
 
   it("should render the correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 
   it("should render the correct work data", () => {
     workData.map((workObj, index) => {
-      testData(workObj, index + 1);
+      cy.testData(workObj, index + 1);
     });
   });
 });
