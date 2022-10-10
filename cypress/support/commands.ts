@@ -572,7 +572,7 @@ Cypress.Commands.add("testData", (dataToTest, index?) => {
   const isDateType = (value: any) =>
     !!value && day(value).isValid() && value.toString().indexOf("-") > -1;
 
-  Object.entries(dataToTest).map(([key, val]: [key: string, val: any]) => {
+  Object.entries(dataToTest).forEach(([key, val]: [key: string, val: any]) => {
     const cyDataRef = index && index >= 0 ? `${key}${index}` : key;
     if (val && isDateType(val)) {
       const formattedDate = DateUtilities.ToLocalDate(val.toString());
