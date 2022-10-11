@@ -29,7 +29,7 @@ import day from "dayjs";
 import { DateUtilities } from "../../src/utilities/DateUtilities";
 import { BooleanUtilities } from "../../src/utilities/BooleanUtilities";
 
-Cypress.Commands.add("checkForSuccessNotif", successMsg => {
+Cypress.Commands.add("checkForSuccessNotif", (successMsg: string) => {
   cy.get(".notification").should(
     "have.css",
     "background-color",
@@ -44,7 +44,7 @@ Cypress.Commands.add("checkForSuccessNotif", successMsg => {
   cy.get(".notification").should("not.exist");
 });
 
-Cypress.Commands.add("checkForErrorNotif", errorMsg => {
+Cypress.Commands.add("checkForErrorNotif", (errorMsg: string) => {
   cy.get(".notification").should(
     "have.css",
     "background-color",
@@ -100,7 +100,12 @@ Cypress.Commands.add("signBackIn", () => {
 
 Cypress.Commands.add(
   "checkFormRAValues",
-  (dateAttained, completionDate, startDate, wholeTimeEquivalent) => {
+  (
+    dateAttained: string,
+    completionDate: string,
+    startDate: string,
+    wholeTimeEquivalent: number
+  ) => {
     cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
     cy.get("#surname").should("exist").invoke("val").should("not.be.empty");
     cy.get("#gmcNumber").should("exist").invoke("val").should("not.be.empty");
@@ -178,134 +183,140 @@ Cypress.Commands.add(
 );
 
 // ### SECTION 1: CHECK AND FILL
-Cypress.Commands.add("checkAndFillSection1", (currRevalDate, prevRevalDate) => {
-  cy.contains("Section 1: Doctor's details").should("exist");
-  cy.get("[data-cy=mainWarning1]").should("exist");
-  cy.get("[data-cy=legendFieldset1]").should("exist");
-  cy.get(".nhsuk-warning-callout > p").should("exist");
+Cypress.Commands.add(
+  "checkAndFillSection1",
+  (currRevalDate: string, prevRevalDate: string) => {
+    cy.contains("Section 1: Doctor's details").should("exist");
+    cy.get("[data-cy=mainWarning1]").should("exist");
+    cy.get("[data-cy=legendFieldset1]").should("exist");
+    cy.get(".nhsuk-warning-callout > p").should("exist");
 
-  cy.get("#prevRevalBody").should("exist");
-  cy.get("#prevRevalBodyOther").should("not.exist");
+    cy.get("#prevRevalBody").should("exist");
+    cy.get("#prevRevalBodyOther").should("not.exist");
 
-  cy.get("#forename").should("exist").invoke("val");
-  cy.get("#forename").focus();
-  cy.get("#forename").clear();
-  cy.get("#forename").type("Fore name");
-  cy.get("#surname").should("exist").invoke("val");
-  cy.get("#surname").clear();
-  cy.get("#surname").type("Last name");
+    cy.get("#forename").should("exist").invoke("val");
+    cy.get("#forename").focus();
+    cy.get("#forename").clear();
+    cy.get("#forename").type("Fore name");
+    cy.get("#surname").should("exist").invoke("val");
+    cy.get("#surname").clear();
+    cy.get("#surname").type("Last name");
 
-  cy.get("#gmcNumber").should("exist").invoke("val");
-  cy.get("#gmcNumber").clear();
-  cy.get("#gmcNumber").type("11111111");
+    cy.get("#gmcNumber").should("exist").invoke("val");
+    cy.get("#gmcNumber").clear();
+    cy.get("#gmcNumber").type("11111111");
 
-  cy.get("#email").should("exist").invoke("val");
-  cy.get("#email").clear();
-  cy.get("#email").type("traineeui.tester@hee.nhs.uk");
+    cy.get("#email").should("exist").invoke("val");
+    cy.get("#email").clear();
+    cy.get("#email").type("traineeui.tester@hee.nhs.uk");
 
-  cy.get("[data-cy='localOfficeName']")
-    .should("exist")
-    .focus()
-    .select("Health Education England Wessex");
-  cy.get("#prevRevalBody > option")
-    .last()
-    .then(element => {
-      const selectedItem = element.val().toString();
-      cy.get("#prevRevalBody")
-        .select(selectedItem)
-        .should("have.value", "other");
-    });
-  cy.get("#currRevalDate").should("exist").clear().type(currRevalDate);
-  cy.get("#prevRevalDate").should("exist").clear().type(prevRevalDate);
-  cy.get("#programmeSpecialty > option")
-    .eq(1)
-    .then(element => {
-      const selectedItem = element.val().toString();
-      cy.get("#programmeSpecialty")
-        .select(selectedItem)
-        .should("not.have.value", "--Please select--");
-    });
-  cy.get("#dualSpecialty > option")
-    .eq(1)
-    .then(element => {
-      const selectedItem = element.val().toString();
-      cy.get("#dualSpecialty")
-        .select(selectedItem)
-        .should("not.have.value", "--Please select--");
-    });
-  cy.get("#prevRevalBody").select(
-    "Northern Ireland Medical and Dental Training Agency"
-  );
-  cy.get("#prevRevalBody").should(
-    "have.value",
-    "Northern Ireland Medical and Dental Training Agency"
-  );
-  cy.get("#prevRevalBody").should(
-    "not.have.value",
-    "Health Education England Wessex"
-  );
-  cy.get("#prevRevalBody").select("other");
-  cy.get("#prevRevalBodyOther").should("exist");
+    cy.get("[data-cy='localOfficeName']")
+      .should("exist")
+      .focus()
+      .select("Health Education England Wessex");
+    cy.get("#prevRevalBody > option")
+      .last()
+      .then(element => {
+        const selectedItem = element.val()!.toString();
+        cy.get("#prevRevalBody")
+          .select(selectedItem)
+          .should("have.value", "other");
+      });
+    cy.get("#currRevalDate").should("exist").clear().type(currRevalDate);
+    cy.get("#prevRevalDate").should("exist").clear().type(prevRevalDate);
+    cy.get("#programmeSpecialty > option")
+      .eq(1)
+      .then(element => {
+        const selectedItem = element.val()!.toString();
+        cy.get("#programmeSpecialty")
+          .select(selectedItem)
+          .should("not.have.value", "--Please select--");
+      });
+    cy.get("#dualSpecialty > option")
+      .eq(1)
+      .then(element => {
+        const selectedItem = element.val()!.toString();
+        cy.get("#dualSpecialty")
+          .select(selectedItem)
+          .should("not.have.value", "--Please select--");
+      });
+    cy.get("#prevRevalBody").select(
+      "Northern Ireland Medical and Dental Training Agency"
+    );
+    cy.get("#prevRevalBody").should(
+      "have.value",
+      "Northern Ireland Medical and Dental Training Agency"
+    );
+    cy.get("#prevRevalBody").should(
+      "not.have.value",
+      "Health Education England Wessex"
+    );
+    cy.get("#prevRevalBody").select("other");
+    cy.get("#prevRevalBodyOther").should("exist");
 
-  cy.get("#prevRevalBodyOther").clear().type("Health ");
-  cy.get("#prevRevalBodyOther + ul li").should("exist");
+    cy.get("#prevRevalBodyOther").clear().type("Health ");
+    cy.get("#prevRevalBodyOther + ul li").should("exist");
 
-  cy.get("#prevRevalBodyOther").clear().type("Dental Training Agency");
-  cy.get("#prevRevalBodyOther + ul li").should("not.exist");
+    cy.get("#prevRevalBodyOther").clear().type("Dental Training Agency");
+    cy.get("#prevRevalBodyOther + ul li").should("not.exist");
 
-  cy.get('[data-cy="currRevalDate"]').click();
-  cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
-  cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
-  cy.get("#prevRevalBodyOther + ul li").should("exist");
-  cy.get("#prevRevalBodyOther + ul li").eq(0).click();
+    cy.get('[data-cy="currRevalDate"]').click();
+    cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
+    cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
+    cy.get("#prevRevalBodyOther + ul li").should("exist");
+    cy.get("#prevRevalBodyOther + ul li").eq(0).click();
 
-  cy.get("#prevRevalBody").select("other");
-  cy.get("#prevRevalBodyOther").should("have.value", "");
-});
+    cy.get("#prevRevalBody").select("other");
+    cy.get("#prevRevalBodyOther").should("have.value", "");
+  }
+);
 
 // ### SECTION 2: CHECK AND FILL
-Cypress.Commands.add("checkAndFillSection2", (workStartDate, endDate) => {
-  // This command fills the section with default work panel only
+Cypress.Commands.add(
+  "checkAndFillSection2",
+  (workStartDate: string, endDate: string) => {
+    // This command fills the section with default work panel only
 
-  cy.contains("Whole Scope of Practice").should("exist");
-  cy.get(".nhsuk-warning-callout > p").should("exist");
-  cy.contains("Type of work").should("exist");
-  cy.contains("Add more").should("exist");
-  cy.contains("TOOT").should("exist");
+    cy.contains("Whole Scope of Practice").should("exist");
+    cy.get(".nhsuk-warning-callout > p").should("exist");
+    cy.contains("Type of work").should("exist");
+    cy.contains("Add more").should("exist");
+    cy.contains("TOOT").should("exist");
 
-  // Delete all other work panels except default work panel
-  cy.get('[data-jest="removePanel"]').each(() =>
-    cy.get('[data-cy="closeIcon1"]').click()
-  );
+    // Delete all other work panels except default work panel
+    cy.get('[data-jest="removePanel"]').each(() =>
+      cy.get('[data-cy="closeIcon1"]').click()
+    );
 
-  // Fill default work panel
-  cy.get('[data-cy="work[0].trainingPost"]').select("Yes");
-  cy.get('[data-cy="work[0].typeOfWork"]')
-    .should("exist")
-    .clear()
-    .type("In Post Doing Something");
-  cy.get('[data-cy="work[0].startDate"]')
-    .should("exist")
-    .clear()
-    .type(workStartDate);
+    // Fill default work panel
+    cy.get('[data-cy="work[0].trainingPost"]').select("Yes");
+    cy.get('[data-cy="work[0].typeOfWork"]')
+      .should("exist")
+      .clear()
+      .type("In Post Doing Something");
+    cy.get('[data-cy="work[0].startDate"]')
+      .should("exist")
+      .clear()
+      .type(workStartDate);
 
-  cy.get(`[data-cy="work[0].endDate"]`).should("exist").clear().type(endDate);
-  cy.get(`[data-cy="work[0].site"]`).should("exist").clear().type("Site");
-  cy.get(`[data-cy="work[0].siteLocation"]`)
-    .should("exist")
-    .clear()
-    .type("Location");
+    cy.get(`[data-cy="work[0].endDate"]`).should("exist").clear().type(endDate);
+    cy.get(`[data-cy="work[0].site"]`).should("exist").clear().type("Site");
+    cy.get(`[data-cy="work[0].siteLocation"]`)
+      .should("exist")
+      .clear()
+      .type("Location");
 
-  cy.get("#sicknessAbsence").should("exist").clear().type("1");
-  cy.get("#paidLeave").should("exist").clear().type("2");
-  cy.get("#parentalLeave").should("exist").clear().type("3");
-  cy.get("#careerBreaks").should("exist").clear().type("4");
-  cy.get("#unauthorisedLeave").should("exist").clear().type("5");
-  cy.get("#otherLeave").should("exist").clear().type("6");
-  cy.get("#totalLeave").should("have.value", "21");
+    cy.get("#sicknessAbsence").should("exist").clear().type("1");
+    cy.get("#paidLeave").should("exist").clear().type("2");
+    cy.get("#parentalLeave").should("exist").clear().type("3");
+    cy.get("#careerBreaks").should("exist").clear().type("4");
+    cy.get("#unauthorisedLeave").should("exist").clear().type("5");
+    cy.get("#otherLeave").should("exist").clear().type("6");
+    cy.get("#totalLeave").should("have.value", "21");
 
-  cy.get("[data-cy=BtnAddWorkType]").should("exist");
-});
+    cy.get("[data-cy=BtnAddWorkType]").should("exist");
+  }
+);
 
 // ### SECTION 3: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection3", () => {
@@ -337,7 +348,7 @@ Cypress.Commands.add("checkAndFillSection3", () => {
 });
 
 // ### SECTION 4: CHECK AND FILL
-Cypress.Commands.add("checkAndFillSection4", pastDate => {
+Cypress.Commands.add("checkAndFillSection4", (pastDate: string) => {
   cy.get("[data-cy=legendFieldset4]").should("include.text", "Section 4");
   cy.get("[data-cy=mainWarning4]").should("exist");
   cy.get("[data-cy=declarations4]").should("exist");
@@ -401,7 +412,7 @@ Cypress.Commands.add("checkAndFillSection4", pastDate => {
 });
 
 // ### SECTION 5: CHECK AND FILL
-Cypress.Commands.add("checkAndFillSection5", pastDate => {
+Cypress.Commands.add("checkAndFillSection5", (pastDate: string) => {
   cy.get("[data-cy=legendFieldset5]").should("include.text", "Section 5");
   cy.get("[data-cy=mainWarning5]").should("exist");
   cy.get("[data-cy=declarations5]").should("exist");
@@ -436,7 +447,7 @@ Cypress.Commands.add("checkAndFillSection5", pastDate => {
 });
 
 // ### SECTION 6: CHECK AND FILL
-Cypress.Commands.add("checkAndFillSection6", compliments => {
+Cypress.Commands.add("checkAndFillSection6", (compliments: string) => {
   cy.get("[data-cy=legendFieldset6]").should("include.text", "Section 6");
 
   cy.get("[data-cy=compliments]")
@@ -497,7 +508,7 @@ Cypress.Commands.add("checkAndFillCovidSection", () => {
   cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("not.exist");
 });
 
-Cypress.Commands.add("addWorkPanel", (startDate, endDate) => {
+Cypress.Commands.add("addWorkPanel", (startDate: string, endDate: string) => {
   cy.get("[data-cy=BtnAddWorkType]").click();
 
   const workPanels = Cypress.$("[data-cy=workPanel]").length;
@@ -553,7 +564,7 @@ Cypress.Commands.add("logoutDesktop", () => {
   cy.get("[data-cy=logoutBtn]").click();
 });
 
-Cypress.Commands.add("checkFlags", name => {
+Cypress.Commands.add("checkFlags", (name: string) => {
   return cy
     .request({
       method: "GET",
@@ -562,13 +573,15 @@ Cypress.Commands.add("checkFlags", name => {
     .then(response => {
       expect(response.status).to.eq(200);
       expect(response.body.length).to.be.greaterThan(0);
-      const data = response.body.filter(flag => flag.name === name);
+      const data = response.body.filter(
+        (flag: { name: string }) => flag.name === name
+      );
       expect(data.length).to.eq(1);
       return data[0].enabled;
     });
 });
 
-Cypress.Commands.add("testData", (dataToTest, index?) => {
+Cypress.Commands.add("testData", (dataToTest: any, index?: number) => {
   const isDateType = (value: any) =>
     !!value && day(value).isValid() && value.toString().indexOf("-") > -1;
 
