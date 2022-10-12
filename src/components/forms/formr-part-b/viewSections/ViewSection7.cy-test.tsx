@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../../cypress/support/index.d.ts" />
+
 import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
@@ -7,7 +10,7 @@ import store from "../../../../redux/store/store";
 import ViewSection7 from "./ViewSection7";
 import history from "../../../navigation/history";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import { testData, makeSectionEditButton } from "./ViewSectionTestHelper";
+import { makeSectionEditButton } from "./ViewSectionTestHelper";
 
 let formData = submittedFormRPartBwithCovid[0];
 
@@ -35,11 +38,11 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 
   it("should render correct covid declaration data", () => {
-    testData(covidDeclaration);
+    cy.testData(covidDeclaration);
   });
 
   it("should show Covid training progress details", () => {

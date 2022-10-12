@@ -5,12 +5,7 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import ViewSection8 from "./ViewSection8";
 import history from "../../../navigation/history";
-import { FormRPartB } from "../../../../models/FormRPartB";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 
 describe("View", () => {
   const viewSectionProps = { makeSectionEditButton, formData };

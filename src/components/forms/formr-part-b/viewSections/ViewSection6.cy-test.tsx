@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../../../../../cypress/support/index.d.ts" />
+
 import React from "react";
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
@@ -6,11 +9,7 @@ import store from "../../../../redux/store/store";
 import ViewSection6 from "./ViewSection6";
 import history from "../../../navigation/history";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 
 type formRBSub6 = Pick<FormRPartB, "compliments">;
 
@@ -36,6 +35,6 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 });

@@ -1,4 +1,7 @@
 import React from "react";
+/// <reference types="cypress" />
+/// <reference path="../../../../../cypress/support/index.d.ts" />
+
 import { mount } from "@cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
@@ -6,11 +9,7 @@ import store from "../../../../redux/store/store";
 import ViewSection4 from "./ViewSection4";
 import history from "../../../navigation/history";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import {
-  testData,
-  makeSectionEditButton,
-  formData
-} from "./ViewSectionTestHelper";
+import { makeSectionEditButton, formData } from "./ViewSectionTestHelper";
 
 const prevDecs = formData.previousDeclarations;
 
@@ -46,12 +45,12 @@ describe("View", () => {
   });
 
   it("should render correct form data", () => {
-    testData(formDataToDisplay);
+    cy.testData(formDataToDisplay);
   });
 
   it("should render the correct declaration data", () => {
     prevDecs.map((decObj, index) => {
-      testData(decObj, index + 1);
+      cy.testData(decObj, index + 1);
     });
   });
 });

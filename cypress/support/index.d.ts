@@ -25,6 +25,7 @@ declare namespace Cypress {
     testDataSourceLink: any;
     checkForSuccessNotif: any;
     checkForErrorNotif: any;
+    testData: any;
   }
 
   import dayjs from "dayjs";
