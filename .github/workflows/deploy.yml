@@ -77,7 +77,9 @@ jobs:
     needs: [deploy-pre-prod]
     name: Run Cypress E2E tests
     runs-on: ubuntu-latest
-    container: cypress/browsers:node18.6.0-chrome105-ff104
+    container: 
+      image: cypress/browsers:node18.6.0-chrome105-ff104
+      options: --user 1001
 
     steps:
       - uses: actions/checkout@v3
