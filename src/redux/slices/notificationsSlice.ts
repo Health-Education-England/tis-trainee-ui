@@ -79,6 +79,9 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
+    resetNotifications() {
+      return initialState;
+    },
     addNotification: (
       state,
       { payload }: PayloadAction<Omit<INotification, "id">>
@@ -125,4 +128,5 @@ const { actions, reducer } = notificationsSlice;
 
 export default reducer;
 
-export const { addNotification, removeNotification } = actions;
+export const { addNotification, removeNotification, resetNotifications } =
+  actions;

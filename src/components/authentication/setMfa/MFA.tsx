@@ -6,6 +6,10 @@ import CreateSms from "./sms/CreateSms";
 import CreateTotp from "./totp/CreateTotp";
 import { CognitoUser } from "amazon-cognito-identity-js";
 import PageNotFound from "../../common/PageNotFound";
+import { useEffect } from "react";
+import { dispatchCojNotif } from "../../../utilities/CojUtilities";
+import store from "../../../redux/store/store";
+import { resetNotifications } from "../../../redux/slices/notificationsSlice";
 
 interface IMFA {
   user: CognitoUser | any;
@@ -13,6 +17,13 @@ interface IMFA {
 }
 
 const MFA = ({ user, mfa }: IMFA) => {
+  useEffect(() => {
+    dispatchCojNotif();
+    return () => {
+      store.dispatch(resetNotifications());
+    };
+  }, []);
+
   return (
     <>
       <PageTitle title="MFA" />

@@ -3,11 +3,13 @@ import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
+import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
   status: string;
   error: any;
+  viewedCojProg: ProgrammeMembership | null;
 }
 
 export const initialState: IProfile = {
@@ -18,7 +20,8 @@ export const initialState: IProfile = {
     placements: []
   },
   status: "idle",
-  error: ""
+  error: "",
+  viewedCojProg: null
 };
 
 export const fetchTraineeProfileData = createAsyncThunk(
@@ -43,6 +46,9 @@ const traineeProfileSlice = createSlice({
     },
     updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
+    },
+    updatedViewedCojProg(state, action: PayloadAction<ProgrammeMembership>) {
+      return { ...state, viewedCojProg: action.payload };
     }
   },
   extraReducers(builder) {
@@ -66,7 +72,8 @@ export default traineeProfileSlice.reducer;
 export const {
   resetToInit,
   updatedTraineeProfileData,
-  updatedTraineeProfileStatus
+  updatedTraineeProfileStatus,
+  updatedViewedCojProg
 } = traineeProfileSlice.actions;
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>

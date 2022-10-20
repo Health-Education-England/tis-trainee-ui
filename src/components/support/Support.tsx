@@ -6,6 +6,9 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { useEffect, useState } from "react";
+import { dispatchCojNotif } from "../../utilities/CojUtilities";
+import { resetNotifications } from "../../redux/slices/notificationsSlice";
+import store from "../../redux/store/store";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -18,6 +21,7 @@ const Support = () => {
   const [mappedContact, setIsMappedContact] = useState("");
 
   useEffect(() => {
+    dispatchCojNotif();
     if (personOwner) {
       for (const localOffice of localOfficeContacts) {
         if (localOffice.name === personOwner) {
@@ -25,6 +29,9 @@ const Support = () => {
         }
       }
     }
+    return () => {
+      store.dispatch(resetNotifications());
+    };
   }, [personOwner]);
 
   const content = (

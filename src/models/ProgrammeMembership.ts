@@ -1,3 +1,4 @@
+import { DateType } from "../utilities/DateUtilities";
 import { Status } from "./Status";
 
 export interface ProgrammeMembership {
@@ -11,6 +12,9 @@ export interface ProgrammeMembership {
   endDate: Date;
   programmeCompletionDate: Date;
   curricula: Curriculum[];
+  hasSignedCoj?: boolean;
+  signedCojDate?: DateType;
+  signedCojVersion?: string | null;
 }
 
 export interface Curriculum {

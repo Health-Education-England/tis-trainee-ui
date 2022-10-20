@@ -10,6 +10,7 @@ interface IUser {
   totpSection: number;
   error: any;
   totpCode: string;
+  hasSignedCoj: boolean;
 }
 
 const initialState: IUser = {
@@ -18,7 +19,8 @@ const initialState: IUser = {
   smsSection: 1,
   totpSection: 1,
   error: "",
-  totpCode: ""
+  totpCode: "",
+  hasSignedCoj: false
 };
 
 export const updateTotpCode = createAsyncThunk(
@@ -94,6 +96,9 @@ const userSlice = createSlice({
     },
     resetStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
+    },
+    updatedHasSignedCoj(state, action: PayloadAction<boolean>) {
+      return { ...state, hasSignedCoj: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -154,5 +159,6 @@ export const {
   incrementSmsSection,
   incrementTotpSection,
   updatedTotpSection,
-  updatedSmsSection
+  updatedSmsSection,
+  updatedHasSignedCoj
 } = userSlice.actions;

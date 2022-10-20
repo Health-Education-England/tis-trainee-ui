@@ -5,9 +5,13 @@ import { StringUtilities } from "../../../utilities/StringUtilities";
 
 interface IPlacementPanelProps {
   placement: Placement;
+  panelKey: number;
 }
 
-export const PlacementPanel = ({ placement }: IPlacementPanelProps) => {
+export const PlacementPanel = ({
+  placement,
+  panelKey
+}: IPlacementPanelProps) => {
   return (
     <SummaryList>
       <SummaryList.Row>

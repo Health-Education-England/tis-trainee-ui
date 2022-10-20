@@ -23,6 +23,8 @@ import {
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 import { I18n } from "@aws-amplify/core";
 import Notifications from "./components/common/notifications/Notifications";
+import { Router } from "react-router-dom";
+import history from "./components/navigation/history";
 
 const globalAny: any = global;
 globalAny.appVersion = packageJson.version;
@@ -116,23 +118,26 @@ const App: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <Authenticator
-      components={components}
-      initialState="signIn"
-      loginMechanisms={loginMechanisms}
-      signUpAttributes={signUpAttributes}
-      services={services}
-      variation="default"
-      className={styles.authAuthenticator}
-      formFields={formFields}
-    >
-      {({ signOut, user }) => (
-        <>
-          <Notifications />
-          <Main user={user} signOut={signOut} appVersion={appVersion} />
-        </>
-      )}
-    </Authenticator>
+    <Router history={history}>
+      <Authenticator
+        components={components}
+        initialState="signIn"
+        loginMechanisms={loginMechanisms}
+        signUpAttributes={signUpAttributes}
+        services={services}
+        variation="default"
+        className={styles.authAuthenticator}
+        formFields={formFields}
+      >
+        {({ signOut, user }) => (
+          <>
+            <Notifications />
+
+            <Main user={user} signOut={signOut} appVersion={appVersion} />
+          </>
+        )}
+      </Authenticator>
+    </Router>
   );
 };
 

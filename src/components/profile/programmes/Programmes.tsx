@@ -1,47 +1,81 @@
 import React from "react";
-import { Col, Details, Row } from "nhsuk-react-components";
+import { Card, Details } from "nhsuk-react-components";
 import { ProgrammePanel } from "./ProgrammePanel";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
-import styles from "../placements/Placements.module.scss";
+import dayjs from "dayjs";
+import COJ from "../../forms/coj/COJ";
 
 interface IProgramProps {
   programmeMemberships: ProgrammeMembership[];
 }
 
 const Programmes: React.FC<IProgramProps> = ({ programmeMemberships }) => {
-  const columnWidths: any[] = ["full", "full", "one-half"];
-  let columnWidth = columnWidths[programmeMemberships?.length]
-    ? columnWidths[programmeMemberships?.length]
-    : "one-half";
+  const sortedProgrammes = [...programmeMemberships].sort(
+    (a: ProgrammeMembership, b: ProgrammeMembership) =>
+      a.startDate > b.startDate ? -1 : b.startDate > a.startDate ? 1 : 0
+  );
+
+  const filteredProgrammesArr = [
+    {
+      key: "Current Programmes",
+      value: sortedProgrammes.filter(
+        pr => dayjs(pr.endDate) >= dayjs() && dayjs(pr.startDate) <= dayjs()
+      )
+    },
+    {
+      key: "Future Programmes",
+      value: sortedProgrammes.filter(pr => dayjs(pr.startDate) > dayjs())
+    },
+    {
+      key: "Past Programmes",
+      value: sortedProgrammes.filter(pr => dayjs(pr.endDate) < dayjs())
+    }
+  ];
 
   return (
-    programmeMemberships && (
-      <Details expander data-cy="programmesExpander">
-        <Details.Summary>Programmes</Details.Summary>
-        <Details.Text>
-          <Row className={styles.flexRow}>
-            {programmeMemberships.length === 0 ? (
-              <div>You are not assigned to any programme</div>
-            ) : (
-              programmeMemberships.map(
-                (
-                  programmeMembership: ProgrammeMembership,
-                  index: string | number | undefined
-                ) => (
-                  <Col key={index} width={columnWidth}>
-                    <ProgrammePanel
-                      key={index}
-                      programmeMembership={programmeMembership}
-                    />
-                  </Col>
-                )
-              )
-            )}
-          </Row>
-        </Details.Text>
-      </Details>
-    )
+    <>
+      <COJ sortedProgrammes={sortedProgrammes} />
+      <Card feature>
+        <Card.Content>
+          <Card.Heading>Programmes</Card.Heading>
+          <Details.ExpanderGroup>
+            {filteredProgrammesArr.map(({ key, value }, index) => (
+              <Details key={index} expander data-cy="">
+                <Details.Summary>{key}</Details.Summary>
+                <Details.Text>
+                  <Card.Group>
+                    {value.length > 0 ? (
+                      value.map(
+                        (
+                          programmeMembership: ProgrammeMembership,
+                          index: number
+                        ) => (
+                          <Card.GroupItem key={index} width="one-half">
+                            <Card>
+                              <ProgrammePanel
+                                key={index}
+                                programmeMembership={programmeMembership}
+                              />{" "}
+                            </Card>
+                          </Card.GroupItem>
+                        )
+                      )
+                    ) : (
+                      <NoPl />
+                    )}
+                  </Card.Group>
+                </Details.Text>
+              </Details>
+            ))}
+          </Details.ExpanderGroup>
+        </Card.Content>
+      </Card>
+    </>
   );
 };
+
+function NoPl() {
+  return <Details.Text>You have no Programmes.</Details.Text>;
+}
 
 export default Programmes;
