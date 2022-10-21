@@ -78,7 +78,7 @@ jobs:
     strategy:
       matrix:
         browser: [chrome, firefox]
-        experimental: true
+        experimental: [true]
         include:
           - browser: electron
             experimental: false
