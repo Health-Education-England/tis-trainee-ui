@@ -7,17 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  testing_matrix:
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      matrix:
-        browser: [chrome, firefox]
-        experimental: true
-        include:
-          - browser: electron
-            experimental: false
-
-
   dockerize:
     name: Dockerize
     runs-on: ubuntu-latest
@@ -85,6 +74,14 @@ jobs:
           wait-for-service-stability: true
 
   cypress-e2e:
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        browser: [chrome, firefox]
+        experimental: true
+        include:
+          - browser: electron
+            experimental: false
     needs: [deploy-pre-prod]
     name: Run Cypress E2E tests
     runs-on: ubuntu-latest
