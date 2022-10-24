@@ -15,7 +15,7 @@ const TestForm = ({ mfa }: any) => {
       data={Data}
       renderers={materialRenderers}
       cells={materialCells}
-      //onChange={({ errors, data }) => setData(data)}
+      //      onChange={({ errors, data }) => setData(data)}
     />
   );
 };

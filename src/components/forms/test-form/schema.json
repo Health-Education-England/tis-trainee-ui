@@ -24,6 +24,12 @@
       "enum": ["foo", "bar"],
       "enumNames": ["Foo", "Bar"]
     },
+    "Specialty_2_for_Award_of_CCT": {
+      "type": "string",
+      "title": "Type",
+      "enum": ["foo", "bar"],
+      "enumNames": ["Foo", "Bar"]
+    },
     "Royal_College_&_Faculty_Assessing_Training_for_the_Award_of_CCT": {
       "type": "string",
       "title": "Type",

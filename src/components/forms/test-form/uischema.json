@@ -12,14 +12,32 @@
       "type": "Control",
       "label": "Program Speciality",
       "ui:widget": "select",
-      "scope": "#/properties/Program_speciality"
+      "scope": "#/properties/Program_speciality",
+      "ui:placeholder": "Foo"
     },
     {
       "type": "Control",
       "label": "Specialty 1 for Award of CCT",
       "ui:widget": "select",
       "scope": "#/properties/Specialty_1_for_Award_of_CCT",
-      "ui:placeholder": "",
+      "effect": "HIDE",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/I_confirm_that",
+          "schema": {
+            "enum": [
+              "I have been appointed to a programme leading to award of CCT"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Control",
+      "label": "Specialty 2 for Award of CCT",
+      "ui:widget": "select",
+      "scope": "#/properties/Specialty_2_for_Award_of_CCT",
       "effect": "HIDE",
       "rule": {
         "effect": "SHOW",
