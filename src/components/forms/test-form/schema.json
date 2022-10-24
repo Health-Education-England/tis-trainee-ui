@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "properties": {
+    "I_confirm_that": {
+      "type": "string",
+      "enum": [
+        "I have been appointed to a programme leading to award of CCT",
+        "I will be seeking specialist registration by application for a CESR",
+        "I will be seeking specialist registration by application for a CESR CP",
+        "I will be seeking specialist registration by application for a CEGPR",
+        "I will be seeking specialist registration by application for a CEGPR CP",
+        "I am a CORE trainee, not yet eligible for CCT"
+      ]
+    },
+    "Program_speciality": {
+      "type": "string",
+      "title": "Type",
+      "enum": ["foo", "bar"],
+      "enumNames": ["Foo", "Bar"]
+    },
+    "Specialty_1_for_Award_of_CCT": {
+      "type": "string",
+      "title": "Type",
+      "enum": ["foo", "bar"],
+      "enumNames": ["Foo", "Bar"]
+    },
+    "Royal_College_&_Faculty_Assessing_Training_for_the_Award_of_CCT": {
+      "type": "string",
+      "title": "Type",
+      "enum": ["foo", "bar"],
+      "enumNames": ["Foo", "Bar"]
+    },
+    "Anticipated_Completion_Date_of_Current_Programme_(if_known)": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

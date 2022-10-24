@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, Router } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
 import FormRPartB from "../forms/formr-part-b/FormRPartB";
+import TestForm from "../forms/test-form/TestForm";
 import Support from "../support/Support";
 import PageNotFound from "../common/PageNotFound";
 import PageTitle from "../common/PageTitle";
@@ -66,6 +67,7 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
               <Route path="/profile" render={() => <Profile mfa={mfa} />} />
               <Route path="/formr-a" render={() => <FormRPartA mfa={mfa} />} />
               <Route path="/formr-b" render={() => <FormRPartB mfa={mfa} />} />
+              <Route path="/TestForm" render={() => <TestForm mfa={mfa} />} />
               <Route path="/support" component={Support} />
               <Route path="/mfa" render={() => <MFA user={user} mfa={mfa} />} />
               <Redirect exact path="/" to="/profile" />

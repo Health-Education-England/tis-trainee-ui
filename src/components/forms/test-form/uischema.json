@@ -1,0 +1,48 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/I_confirm_that",
+      "options": {
+        "format": "radio"
+      }
+    },
+    {
+      "type": "Control",
+      "label": "Program Speciality",
+      "ui:widget": "select",
+      "scope": "#/properties/Program_speciality"
+    },
+    {
+      "type": "Control",
+      "label": "Specialty 1 for Award of CCT",
+      "ui:widget": "select",
+      "scope": "#/properties/Specialty_1_for_Award_of_CCT",
+      "ui:placeholder": "",
+      "effect": "HIDE",
+      "rule": {
+        "effect": "SHOW",
+        "condition": {
+          "scope": "#/properties/I_confirm_that",
+          "schema": {
+            "enum": [
+              "I have been appointed to a programme leading to award of CCT"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Control",
+      "label": "Royal College/Faculty Assessing Training for the Award of CCT",
+      "ui:widget": "select",
+      "scope": "#/properties/Royal_College_&_Faculty_Assessing_Training_for_the_Award_of_CCT"
+    },
+    {
+      "type": "Control",
+      "label": "Anticipated Completion Date of CUrrent Program (if Known)",
+      "scope": "#/properties/Anticipated_Completion_Date_of_Current_Programme_(if_known)"
+    }
+  ]
+}
