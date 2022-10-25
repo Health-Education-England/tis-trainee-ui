@@ -2,12 +2,14 @@ import { Placement } from "../../../models/Placement";
 import { Button, SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { StringUtilities } from "../../../utilities/StringUtilities";
+import store from "../../../redux/store/store";
+import { makeParRequest } from "../../../redux/slices/traineeProfileSlice";
 
 interface IDSPSection {
   children: React.ReactNode;
 }
 
-const DSPBtnSection = ({ children }: IDSPSection) => {
+const DSPSection = ({ children }: IDSPSection) => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>{children}</div>
   );
@@ -34,7 +36,7 @@ const DSPBtn = ({ placement, panelKey }: IDspBtn) => {
       secondary
       onClick={(e: { preventDefault: () => void }) => {
         e.preventDefault();
-        console.dir(placement);
+        store.dispatch(makeParRequest(placement));
       }}
       disabled={isBtnDisabled}
       data-cy={cyTag}
@@ -123,9 +125,9 @@ export const PlacementPanel = ({
           <SummaryList.Value>{placement.trainingBody}</SummaryList.Value>
         </SummaryList.Row>
       </SummaryList>
-      <DSPBtnSection>
+      <DSPSection>
         <DSPBtn placement={placement} panelKey={panelKey} />
-      </DSPBtnSection>
+      </DSPSection>
     </>
   );
 };
