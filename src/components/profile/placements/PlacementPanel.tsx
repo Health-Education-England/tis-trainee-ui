@@ -1,50 +1,11 @@
 import { Placement } from "../../../models/Placement";
-import { Button, SummaryList } from "nhsuk-react-components";
+import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { StringUtilities } from "../../../utilities/StringUtilities";
-import store from "../../../redux/store/store";
-import { makeParRequest } from "../../../redux/slices/traineeProfileSlice";
-
-interface IDSPSection {
-  children: React.ReactNode;
-}
-
-const DSPSection = ({ children }: IDSPSection) => {
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>{children}</div>
-  );
-};
-
-interface IDspBtn {
-  placement: Placement;
-  panelKey: number;
-}
-
-const DSPBtn = ({ placement, panelKey }: IDspBtn) => {
-  const cyTag = `btnDSPIssue${panelKey}`;
-  let btnTxt: string = "";
-  let isBtnDisabled: boolean = false;
-  if (DateUtilities.IsPastDate(placement.endDate)) {
-    btnTxt = "Past placements can't be added to your Digital Staff Passport";
-    isBtnDisabled = true;
-  } else
-    btnTxt = "Click here to add this credential to your Digital Staff Passport";
-
-  return (
-    <Button
-      style={{ minWidth: "90%", maxWidth: "90%" }}
-      secondary
-      onClick={(e: { preventDefault: () => void }) => {
-        e.preventDefault();
-        store.dispatch(makeParRequest(placement));
-      }}
-      disabled={isBtnDisabled}
-      data-cy={cyTag}
-    >
-      {btnTxt}
-    </Button>
-  );
-};
+import { DspIssueBtn } from "../dsp/DspIssueBtn";
+import { PanelName } from "../../../models/TraineeProfile";
+import style from "../placements/Placements.module.scss";
+import DspMsg from "../dsp/DspMsg";
 interface IPlacementPanelProps {
   placement: Placement;
   panelKey: number;
@@ -54,8 +15,10 @@ export const PlacementPanel = ({
   placement,
   panelKey
 }: IPlacementPanelProps) => {
+  const isPastDate = DateUtilities.IsPastDate(placement.endDate);
+
   return (
-    <>
+    <div className={style.panelDiv}>
       <SummaryList>
         <SummaryList.Row>
           <SummaryList.Key data-cy="siteKey">Site</SummaryList.Key>
@@ -124,11 +87,15 @@ export const PlacementPanel = ({
           <SummaryList.Key data-cy="traBodyKey">Training Body</SummaryList.Key>
           <SummaryList.Value>{placement.trainingBody}</SummaryList.Value>
         </SummaryList.Row>
+        <DspMsg panelName={PanelName.Placement} />
       </SummaryList>
-      <DSPSection>
-        <DSPBtn placement={placement} panelKey={panelKey} />
-      </DSPSection>
-    </>
+      <DspIssueBtn
+        panelName={PanelName.Placement}
+        panelId={placement.tisId}
+        panelKey={panelKey}
+        isPastDate={isPastDate}
+      ></DspIssueBtn>
+    </div>
   );
 };
 

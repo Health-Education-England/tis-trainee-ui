@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
 import ApiService from "./apiService";
-import { TraineeProfile } from "../models/TraineeProfile";
-import { Placement } from "../models/Placement";
+import { PanelName, TraineeProfile } from "../models/TraineeProfile";
 export class TraineeProfileService extends ApiService {
   constructor() {
     super("/api/trainee");
@@ -11,12 +10,13 @@ export class TraineeProfileService extends ApiService {
     return this.get<TraineeProfile>("/profile");
   }
 
-  async makeDspPlacementParRequest(
-    plParData: Placement
-  ): Promise<AxiosResponse<Placement>> {
-    return this.post<Placement>(
-      `/placementcredential/par/${plParData.tisId}`,
-      plParData
-    );
+  async issueDspCred(
+    panelId: string,
+    panelName: string
+  ): Promise<AxiosResponse<any>> {
+    const panelN =
+      panelName === PanelName.Programme ? "programmemembership" : panelName;
+    const parRes = await this.get<any>(`/credential/par/${panelN}/${panelId}`);
+    return await this.get<any>(parRes.headers.location);
   }
 }

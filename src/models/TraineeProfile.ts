@@ -8,3 +8,8 @@ export interface TraineeProfile {
   programmeMemberships: ProgrammeMembership[];
   placements: Placement[];
 }
+
+export enum PanelName {
+  Placement = "placement",
+  Programme = "programme"
+}

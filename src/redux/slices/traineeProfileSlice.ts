@@ -1,15 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
-import { Placement } from "../../models/Placement";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
   status: string;
   error: any;
-  parRes: any;
+  dspIssueRes: any;
 }
 
 export const initialState: IProfile = {
@@ -21,7 +20,7 @@ export const initialState: IProfile = {
   },
   status: "idle",
   error: "",
-  parRes: null
+  dspIssueRes: null
 };
 
 export const fetchTraineeProfileData = createAsyncThunk(
@@ -35,44 +34,14 @@ export const fetchTraineeProfileData = createAsyncThunk(
 );
 
 // TODO CORS error if addCredential made via localhost
-
-// const addCredential = createAsyncThunk(
-//   "traineeProfile/issueCredential",
-//   async (reqUri: string) => {
-//     const response = await axios.get(
-//       "https://nhsappdevdidgw.azurewebsites.net/issuing/authorize",
-//       {
-//         params: {
-//           client_id: "4973e006-9f07-4a95-a1bf-d4fca61eef73",
-//           request_uri: reqUri
-//         }
-//       }
-//     );
-//     return response.data;
-//   }
-// );
-
-// export const issueDspPlacementCredential = createAsyncThunk(
-//   "traineeProfile/makeParRequest",
-//   async (pl: Placement, { dispatch }) => {
-//     const traineeProfileService = new TraineeProfileService();
-//     const response: AxiosResponse<any> =
-//       await traineeProfileService.makeDspPlacementParRequest(pl);
-//     const finalRes = dispatch(addCredential(response.data.request_uri));
-//     console.log("par req final response: ", finalRes);
-//     return finalRes;
-//   }
-// );
-
-// Placeholder thunk to test the PAR request
-export const makeParRequest = createAsyncThunk(
-  "traineeProfile/makeParRequest",
-  async (pl: Placement) => {
+export const issueDspCredential = createAsyncThunk(
+  "traineeProfile/issueDspCredential",
+  async (parData: { panelId: string; panelName: string }) => {
+    let { panelId, panelName } = parData;
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<any> =
-      await traineeProfileService.makeDspPlacementParRequest(pl);
-    console.log("makeParRequest res: ", response.data);
-    return response.data;
+      await traineeProfileService.issueDspCred(panelId, panelName);
+    return response;
   }
 );
 
@@ -103,14 +72,14 @@ const traineeProfileSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(makeParRequest.pending, (state, _action) => {
+      .addCase(issueDspCredential.pending, (state, _action) => {
         state.status = "loading";
       })
-      .addCase(makeParRequest.fulfilled, (state, action) => {
+      .addCase(issueDspCredential.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.parRes = action.payload;
+        state.dspIssueRes = action.payload;
       })
-      .addCase(makeParRequest.rejected, (state, action) => {
+      .addCase(issueDspCredential.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
