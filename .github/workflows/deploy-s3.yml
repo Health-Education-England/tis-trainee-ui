@@ -22,127 +22,127 @@ jobs:
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./build/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
 
-  cypress-e2e:
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      matrix:
-        browser: [electron, firefox]
-        experimental: [true]
-        include:
-          - browser: chrome
-            experimental: false
-    needs: [deploy-pre-prod]
-    name: Run Cypress E2E tests
-    runs-on: ubuntu-latest
-    container:
-      image: cypress/browsers:node18.6.0-chrome105-ff104
-      options: --user 1001
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Get workflow
-        run: |
-          echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        env:
-          CYPRESS_baseUrl: https://trainee.tis.nhs.uk
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
-          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-          CYPRESS_coverage: false
-          NODE_OPTIONS: --max_old_space_size=4096
-        with:
-          browser: ${{ matrix.browser }}
-
-      - name: Merge test results into one
-        if: always()
-        run: npm run report:merge
-
-      - name: Generate HTML report
-        if: always()
-        run: npm run report:generate
-
-      - name: Create report artifact
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.browser }}/cypress-reports
-          path: cypress/reports
-
-      - name: Create screenshot artifact
-        if: failure()
-        uses: actions/upload-artifact@v3
-
-        with:
-          name: ${{ matrix.browser }}/cypress-screenshots
-          path: cypress/screenshots
-
-      - name: Create video artifact
-        # Test run video was always captured, so this action uses "always()" condition
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.browser }}/cypress-videos
-          path: cypress/videos
-
-      - name: Slack Notify - Test Fails
-        if: failure()
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_USERNAME: TIS-Self-Service
-          SLACK_TITLE: "TISSS E2E TESTS FAILED."
-          SLACK_CHANNEL: notifications-e2e-test-results
-          SLACK_ICON_EMOJI: ":test_tube_red:"
-          SLACK_MESSAGE: Cypress reports for TIS Self-Service tested on ${{ matrix.browser }} available at https://tis-build-artifacts/${{ github.event.repository.name }}/${{env.workflow}}/${{ github.run_number }}/${{ matrix.browser }}/cypress-reports
-          SLACK_COLOR: FF0000
-          SLACK_FOOTER: I have not failed. I have just found 10,000 ways that won't work.
-          MSG_MINIMAL: true
-
-      - name: Slack Notify - Tests Pass
-        if: success()
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_USERNAME: TIS-Self-Service
-          SLACK_TITLE: "TISSS E2E TESTS PASSED."
-          SLACK_CHANNEL: notifications-e2e-test-results
-          SLACK_ICON_EMOJI: ":test_tube:"
-          SLACK_MESSAGE: Cypress reports for TIS Self-Service tested on ${{ matrix.browser }} available at https://tis-build-artifacts/${{ github.event.repository.name }}/${{env.workflow}}/${{ github.run_number }}/${{ matrix.browser }}/cypress-reports
-          SLACK_COLOR: 00CC00
-          SLACK_FOOTER: It's impossible to be unhappy in a poncho.
-          MSG_MINIMAL: true
-
-  backup-artifacts:
-    needs: [cypress-e2e]
-    name: Backup build artifacts
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: build-artifacts
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2
-
-      - name: Backup build artifacts
-        run: |
-          workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')
-          aws s3 sync build-artifacts s3://tis-build-artifacts/${{ github.event.repository.name }}/$workflow/${{ github.run_number }}
+  # cypress-e2e:
+  #   continue-on-error: ${{ matrix.experimental }}
+  #   strategy:
+  #     matrix:
+  #       browser: [electron, firefox]
+  #       experimental: [true]
+  #       include:
+  #         - browser: chrome
+  #           experimental: false
+  #   needs: [deploy-pre-prod]
+  #   name: Run Cypress E2E tests
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: cypress/browsers:node18.6.0-chrome105-ff104
+  #     options: --user 1001
+  #
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #
+  #     - name: Get workflow
+  #       run: |
+  #         echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
+  #
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v2
+  #       env:
+  #         CYPRESS_baseUrl: https://trainee.tis.nhs.uk
+  #         CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+  #         CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+  #         CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+  #         CYPRESS_coverage: false
+  #         NODE_OPTIONS: --max_old_space_size=4096
+  #       with:
+  #         browser: ${{ matrix.browser }}
+  #
+  #     - name: Merge test results into one
+  #       if: always()
+  #       run: npm run report:merge
+  #
+  #     - name: Generate HTML report
+  #       if: always()
+  #       run: npm run report:generate
+  #
+  #     - name: Create report artifact
+  #       if: always()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ matrix.browser }}-cypress-reports
+  #         path: cypress/reports
+  #
+  #     - name: Create screenshot artifact
+  #       if: failure()
+  #       uses: actions/upload-artifact@v3
+  #
+  #       with:
+  #         name: ${{ matrix.browser }}-cypress-screenshots
+  #         path: cypress/screenshots
+  #
+  #     - name: Create video artifact
+  #       # Test run video was always captured, so this action uses "always()" condition
+  #       if: always()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ matrix.browser }}-cypress-videos
+  #         path: cypress/videos
+  #
+  #     - name: Slack Notify - Test Fails
+  #       if: failure()
+  #       uses: rtCamp/action-slack-notify@v2.2.0
+  #       env:
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #         SLACK_USERNAME: TIS-Self-Service
+  #         SLACK_TITLE: "TISSS E2E TESTS FAILED."
+  #         SLACK_CHANNEL: notifications-e2e-test-results
+  #         SLACK_ICON_EMOJI: ":test_tube_red:"
+  #         SLACK_MESSAGE: Cypress reports for TIS Self-Service tested on ${{ matrix.browser }} available at https://tis-build-artifacts/${{ github.event.repository.name }}/${{env.workflow}}/${{ github.run_number }}/${{ matrix.browser }}-cypress-reports
+  #         SLACK_COLOR: FF0000
+  #         SLACK_FOOTER: I have not failed. I have just found 10,000 ways that won't work.
+  #         MSG_MINIMAL: true
+  #
+  #     - name: Slack Notify - Tests Pass
+  #       if: success()
+  #       uses: rtCamp/action-slack-notify@v2.2.0
+  #       env:
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #         SLACK_USERNAME: TIS-Self-Service
+  #         SLACK_TITLE: "TISSS E2E TESTS PASSED."
+  #         SLACK_CHANNEL: notifications-e2e-test-results
+  #         SLACK_ICON_EMOJI: ":test_tube:"
+  #         SLACK_MESSAGE: Cypress reports for TIS Self-Service tested on ${{ matrix.browser }} available at https://tis-build-artifacts/${{ github.event.repository.name }}/${{env.workflow}}/${{ github.run_number }}/${{ matrix.browser }}-cypress-reports
+  #         SLACK_COLOR: 00CC00
+  #         SLACK_FOOTER: It's impossible to be unhappy in a poncho.
+  #         MSG_MINIMAL: true
+  #
+  # backup-artifacts:
+  #   needs: [cypress-e2e]
+  #   name: Backup build artifacts
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     - name: Download build artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         path: build-artifacts
+  #
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: eu-west-2
+  #
+  #     - name: Backup build artifacts
+  #       run: |
+  #         workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')
+  #         aws s3 sync build-artifacts s3://tis-build-artifacts/${{ github.event.repository.name }}/$workflow/${{ github.run_number }}
 
   deploy-prod:
     runs-on: ubuntu-latest
     environment: prod
-    needs: [cypress-e2e]
+    needs: [build-and-deploy-preprod] #[cypress-e2e]
 
     steps:
       - uses: actions/checkout@v3
