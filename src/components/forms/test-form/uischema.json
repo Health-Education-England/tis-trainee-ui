@@ -3,10 +3,14 @@
   "elements": [
     {
       "type": "Control",
-      "scope": "#/properties/I_confirm_that",
+      "scope": "#/properties/testType2",
       "options": {
         "format": "radio"
       }
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/testType"
     },
     {
       "type": "Control",

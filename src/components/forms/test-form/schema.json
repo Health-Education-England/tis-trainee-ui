@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "I_confirm_that": {
+    "testType2": {
       "type": "string",
       "enum": [
         "I have been appointed to a programme leading to award of CCT",
@@ -11,6 +11,9 @@
         "I will be seeking specialist registration by application for a CEGPR CP",
         "I am a CORE trainee, not yet eligible for CCT"
       ]
+    },
+    "testType": {
+      "type": "string"
     },
     "Program_speciality": {
       "type": "string",
