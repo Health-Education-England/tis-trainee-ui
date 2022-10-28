@@ -23,7 +23,7 @@ const prevRevalDate = Cypress.dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B)", () => {
   before(() => {
-    cy.visit("./");
+    cy.visit("/");
     cy.viewport("iphone-6");
     cy.signIn();
   });
@@ -31,7 +31,7 @@ describe("Form R (Part B)", () => {
     isCovid = true;
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
-    cy.visit("/formr-b");
+    cy.visit("/formr-b", {failOnStatusCode: false});
     cy.get("[data-cy=btnLoadNewForm]").click();
     cy.get(".MuiDialog-container").should("exist");
     cy.get(".MuiDialogContentText-root").should(

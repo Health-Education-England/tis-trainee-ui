@@ -4,7 +4,7 @@
 describe("MFA set-up", () => {
   before(() => {
     cy.wait(30000);
-    cy.visit("./profile");
+    cy.visit("/");
     cy.signIn();
   });
   it("should render the Choose MFA page", () => {
