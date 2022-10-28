@@ -40,6 +40,8 @@ jobs:
       matrix:
         browser: [electron, firefox]
         experimental: [true]
+        exclude:
+          - experimental: true
         include:
           - browser: chrome
             experimental: false
