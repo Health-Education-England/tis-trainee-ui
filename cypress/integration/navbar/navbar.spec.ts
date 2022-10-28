@@ -7,7 +7,7 @@ describe("Desktop/ tablet header", () => {
   const sizes = [mobileView, desktopView];
 
   before(() => {
-    cy.visit("./profile");
+    cy.visit("/");
     cy.signIn();
   });
 

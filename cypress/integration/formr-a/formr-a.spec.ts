@@ -14,12 +14,12 @@ const startDate = Cypress.dayjs()
 describe("Form R (Part A)", () => {
   before(() => {
     cy.wait(30000);
-    cy.visit("./profile");
+    cy.visit("/");
     cy.signIn();
   });
   it("Should complete a new Form R Part A.", () => {
     cy.contains("Form R (Part A)").click();
-    cy.visit("/formr-a");
+    cy.visit("/formr-a", {failOnStatusCode: false});
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()

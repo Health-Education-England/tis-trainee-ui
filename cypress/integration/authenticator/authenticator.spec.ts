@@ -3,7 +3,7 @@
 
 describe("Authenticator", () => {
   before(() => {
-    cy.visit("./");
+    cy.visit("/");
   });
 
   it("Header should show logo and heading", () => {

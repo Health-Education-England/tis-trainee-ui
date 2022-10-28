@@ -4,7 +4,7 @@
 describe("Profile", () => {
   before(() => {
     cy.wait(30000);
-    cy.visit("./profile");
+    cy.visit("/profile", {failOnStatusCode: false});
     cy.signIn();
   });
 
