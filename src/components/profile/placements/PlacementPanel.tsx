@@ -58,7 +58,9 @@ export const PlacementPanel = ({
               Specialty
             </span>
           </SummaryList.Key>
-          <SummaryList.Value>{placement.specialty}</SummaryList.Value>
+          <SummaryList.Value data-cy="specialtyValue">
+            {placement.specialty}
+          </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
@@ -67,7 +69,9 @@ export const PlacementPanel = ({
               Grade
             </span>
           </SummaryList.Key>
-          <SummaryList.Value>{placement.grade}</SummaryList.Value>
+          <SummaryList.Value data-cy="gradeValue">
+            {placement.grade}
+          </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
@@ -76,16 +80,22 @@ export const PlacementPanel = ({
               Placement Type
             </span>
           </SummaryList.Key>
-          <SummaryList.Value>{placement.placementType}</SummaryList.Value>
+          <SummaryList.Value data-cy="placementTypeValue">
+            {placement.placementType}
+          </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key data-cy="empBodyKey">Employing Body</SummaryList.Key>
-          <SummaryList.Value>{placement.employingBody}</SummaryList.Value>
+          <SummaryList.Value data-cy="empBodyValue">
+            {placement.employingBody}
+          </SummaryList.Value>
         </SummaryList.Row>
         <SummaryList.Row>
           <SummaryList.Key data-cy="traBodyKey">Training Body</SummaryList.Key>
-          <SummaryList.Value>{placement.trainingBody}</SummaryList.Value>
+          <SummaryList.Value data-cy="traBodyValue">
+            {placement.trainingBody}
+          </SummaryList.Value>
         </SummaryList.Row>
         <DspMsg panelName={PanelName.Placement} />
       </SummaryList>

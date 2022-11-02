@@ -21,7 +21,9 @@ const DspMsg: React.FC<IDspMsg> = ({ panelName }) => {
               {DateUtilities.ToLocalDateTime(msgDate)}.
             </span>
           ) : (
-            <span>You have yet to add this {panelName} to your wallet. </span>
+            <span data-cy="noIssueDateMsg">
+              You have yet to add this {panelName} to your wallet.{" "}
+            </span>
           )}
         </SummaryList.Value>
       </SummaryList.Row>

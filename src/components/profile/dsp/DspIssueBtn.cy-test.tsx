@@ -6,7 +6,7 @@ import history from "../../navigation/history";
 import { DspIssueBtn } from "./DspIssueBtn";
 
 describe("DSP issue button", () => {
-  it("should enable digital staff passport button", () => {
+  it("should enable digital staff passport button if date is not past", () => {
     mount(
       <Router history={history}>
         <DspIssueBtn
@@ -25,7 +25,7 @@ describe("DSP issue button", () => {
       );
   });
 
-  it("should disable digital staff passport button", () => {
+  it("should disable digital staff passport button if date is past", () => {
     mount(
       <Router history={history}>
         <DspIssueBtn
