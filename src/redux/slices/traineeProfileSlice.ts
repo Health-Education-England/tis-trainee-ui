@@ -43,7 +43,7 @@ export const issueDspCredential = createAsyncThunk(
       panelId,
       panelName
     );
-    window.location.href = `https://nhsappdevdidgw.azurewebsites.net/issuing/authorize${response.headers.location}`;
+    window.location.href = response.headers.location;
   }
 );
 
