@@ -71,10 +71,6 @@ const thunkArrFulfilled = [
   {
     thunk: verifyPhone,
     text: "phone has been verified. An SMS code from HEE should arrive soon"
-  },
-  {
-    thunk: issueDspCredential,
-    text: "credential has been added to your wallet"
   }
 ];
 

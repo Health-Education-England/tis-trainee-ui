@@ -39,9 +39,11 @@ export const issueDspCredential = createAsyncThunk(
   async (parData: { panelId: string; panelName: string }) => {
     let { panelId, panelName } = parData;
     const traineeProfileService = new TraineeProfileService();
-    const response: AxiosResponse<any> =
-      await traineeProfileService.issueDspCred(panelId, panelName);
-    return response;
+    const response = await traineeProfileService.issueDspCred(
+      panelId,
+      panelName
+    );
+    window.location.href = `https://nhsappdevdidgw.azurewebsites.net/issuing/authorize${response.headers.location}`;
   }
 );
 

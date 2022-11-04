@@ -16,6 +16,7 @@ import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
+import { addNotification } from "../../redux/slices/notificationsSlice";
 
 interface IMain {
   user: CognitoUser | any;
@@ -45,6 +46,27 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
       dispatch(fetchReference());
     }
   }, [referenceStatus, dispatch]);
+
+  useEffect(() => {
+    const codeStuff = window.location.href.split("?")[1];
+    if (codeStuff && codeStuff.includes("code=")) {
+      dispatch(
+        addNotification({
+          type: "Success",
+          text: " - DSP credential has been added to your wallet"
+        })
+      );
+      history.push("/");
+    } else if (codeStuff && codeStuff.includes("error=access_denied")) {
+      dispatch(
+        addNotification({
+          type: "Error",
+          text: " - Couldn't add DSP credential to your wallet"
+        })
+      );
+      history.push("/");
+    }
+  });
 
   if (traineeProfileDataStatus === "loading" || referenceStatus === "loading")
     return (
