@@ -18,8 +18,8 @@ export class ApiService {
     });
   }
 
-  get<T = any>(endpoint: string): Promise<AxiosResponse<T>> {
-    return this.axiosInstance.get(endpoint);
+  get<T = any>(endpoint: string, params?: any): Promise<AxiosResponse<T>> {
+    return this.axiosInstance.get(endpoint, params);
   }
 
   post<T = any>(endpoint: string, formData: T): Promise<AxiosResponse<T>> {

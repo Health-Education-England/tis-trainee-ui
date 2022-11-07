@@ -210,7 +210,7 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.5"
   },
   {
-    endDate: new Date("2021-12-31"),
+    endDate: new Date("2023-12-31"),
     grade: "ST2",
     tisId: "316",
     placementType: "Long-term sick",
