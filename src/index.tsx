@@ -35,7 +35,7 @@ async function fetchData(): Promise<any> {
 }
 
 (async function initApp(): Promise<void> {
-  if (process.env.NODE_ENV !== "development") {
+  if (import.meta.env.PROD) {
     const theFetchedData = await fetchData();
     Amplify.configure({ Auth: theFetchedData.auth });
   } else {

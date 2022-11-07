@@ -1,5 +1,6 @@
-@import "~nhsuk-frontend/packages/nhsuk";
-@import "~nhsuk-frontend/packages/core/all";
+// https://github.com/vitejs/vite/issues/382
+@import "nhsuk-frontend/packages/nhsuk";
+@import "nhsuk-frontend/packages/core/all";
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 
