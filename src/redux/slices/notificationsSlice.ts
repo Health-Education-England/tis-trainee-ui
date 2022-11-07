@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { INotification } from "../../models/INotification";
 import { nanoid } from "nanoid";
-import { fetchTraineeProfileData } from "./traineeProfileSlice";
+import {
+  fetchTraineeProfileData,
+  issueDspCredential
+} from "./traineeProfileSlice";
 import { fetchReference } from "./referenceSlice";
 import { fetchFeatureFlags } from "./featureFlagsSlice";
 import { loadSavedFormA, saveFormA, updateFormA } from "./formASlice";
@@ -47,6 +50,10 @@ const thunkArrRejected = [
   {
     thunk: verifyTotp,
     text: "verify your identification with that Authentication code. Please try again"
+  },
+  {
+    thunk: issueDspCredential,
+    text: "add this credential to your DSP wallet"
   }
 ];
 

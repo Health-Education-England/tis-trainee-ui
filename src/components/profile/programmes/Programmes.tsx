@@ -1,43 +1,36 @@
 import React from "react";
-import { Col, Details, Row } from "nhsuk-react-components";
+import { BodyText, Card, Details } from "nhsuk-react-components";
 import { ProgrammePanel } from "./ProgrammePanel";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
-import styles from "../placements/Placements.module.scss";
-
+import style from "../programmes/Programmes.module.scss";
 interface IProgramProps {
   programmeMemberships: ProgrammeMembership[];
 }
 
 const Programmes: React.FC<IProgramProps> = ({ programmeMemberships }) => {
-  const columnWidths: any[] = ["full", "full", "one-half"];
-  let columnWidth = columnWidths[programmeMemberships?.length]
-    ? columnWidths[programmeMemberships?.length]
-    : "one-half";
-
   return (
     programmeMemberships && (
       <Details expander data-cy="programmesExpander">
         <Details.Summary>Programmes</Details.Summary>
         <Details.Text>
-          <Row className={styles.flexRow}>
-            {programmeMemberships.length === 0 ? (
-              <div>You are not assigned to any programme</div>
-            ) : (
+          <Card.Group>
+            {programmeMemberships.length > 0 ? (
               programmeMemberships.map(
-                (
-                  programmeMembership: ProgrammeMembership,
-                  index: string | number | undefined
-                ) => (
-                  <Col key={index} width={columnWidth}>
-                    <ProgrammePanel
-                      key={index}
-                      programmeMembership={programmeMembership}
-                    />
-                  </Col>
+                (programme: ProgrammeMembership, index: number) => (
+                  <Card.GroupItem key={index} width="one-half">
+                    <Card className={style.cardContainer}>
+                      <ProgrammePanel
+                        panelKey={index}
+                        programmeMembership={programme}
+                      />
+                    </Card>
+                  </Card.GroupItem>
                 )
               )
+            ) : (
+              <BodyText>You are not assigned to any programme</BodyText>
             )}
-          </Row>
+          </Card.Group>
         </Details.Text>
       </Details>
     )

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Curriculum,
   ProgrammeMembership
@@ -6,66 +5,87 @@ import {
 import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { CurriculumPanel } from "./CurriculumPanel";
+import { DspIssueBtn } from "../dsp/DspIssueBtn";
+import { PanelName } from "../../../models/TraineeProfile";
+import style from "../programmes/Programmes.module.scss";
+import DspMsg from "../dsp/DspMsg";
 
 interface IProgrammePanelProps {
+  panelKey: number;
   programmeMembership: ProgrammeMembership;
 }
 
-export const ProgrammePanel = (props: IProgrammePanelProps) => {
-  const data = props.programmeMembership;
+export const ProgrammePanel = ({
+  panelKey,
+  programmeMembership
+}: IProgrammePanelProps) => {
+  const {
+    programmeName,
+    programmeNumber,
+    startDate,
+    endDate,
+    managingDeanery,
+    curricula,
+    tisId
+  } = programmeMembership;
+  const isPastDate = DateUtilities.IsPastDate(programmeMembership.endDate);
   return (
-    <>
+    <div className={style.panelDiv}>
       <SummaryList>
         <SummaryList.Row>
           <SummaryList.Key data-cy="progNameKey">
             Programme Name
           </SummaryList.Key>
           <SummaryList.Value data-cy="progNameValue">
-            {data.programmeName}
+            {programmeName}
           </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key>Programme Number</SummaryList.Key>
-          <SummaryList.Value>{data.programmeNumber}</SummaryList.Value>
+          <SummaryList.Value>{programmeNumber}</SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key>Programme Start date</SummaryList.Key>
           <SummaryList.Value>
-            {DateUtilities.ToLocalDate(data.startDate)}
+            {DateUtilities.ToLocalDate(startDate)}
           </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key>Programme End date</SummaryList.Key>
           <SummaryList.Value>
-            {DateUtilities.ToLocalDate(data.endDate)}
+            {DateUtilities.ToLocalDate(endDate)}
           </SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key>Owner</SummaryList.Key>
-          <SummaryList.Value>{data.managingDeanery}</SummaryList.Value>
+          <SummaryList.Value>{managingDeanery}</SummaryList.Value>
         </SummaryList.Row>
 
         <SummaryList.Row>
           <SummaryList.Key>Curricula</SummaryList.Key>
           <SummaryList.Value>
-            {data.curricula.length === 0 ? (
+            {curricula.length === 0 ? (
               <div>N/A</div>
             ) : (
-              data.curricula.map(
-                (
-                  curriculum: Curriculum,
-                  index: string | number | undefined
-                ) => <CurriculumPanel key={index} curriculum={curriculum} />
-              )
+              curricula.map((curriculum: Curriculum, index: number) => (
+                <CurriculumPanel key={index} curriculum={curriculum} />
+              ))
             )}
           </SummaryList.Value>
         </SummaryList.Row>
+        <DspMsg panelName={PanelName.Programme} />
       </SummaryList>
-    </>
+      <DspIssueBtn
+        panelName={PanelName.Programme}
+        panelId={tisId}
+        panelKey={panelKey}
+        isPastDate={isPastDate}
+      ></DspIssueBtn>
+    </div>
   );
 };
 
