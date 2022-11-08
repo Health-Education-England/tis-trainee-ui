@@ -4,6 +4,7 @@ import { ProgrammePanel } from "./ProgrammePanel";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import dayjs from "dayjs";
 import COJ from "../../forms/coj/COJ";
+import style from "../programmes/Programmes.module.scss";
 
 interface IProgramProps {
   programmeMemberships: ProgrammeMembership[];
@@ -51,7 +52,7 @@ const Programmes: React.FC<IProgramProps> = ({ programmeMemberships }) => {
                           index: number
                         ) => (
                           <Card.GroupItem key={index} width="one-half">
-                            <Card>
+                            <Card className={style.cardContainer}>
                               <ProgrammePanel
                                 key={index}
                                 programmeMembership={programmeMembership}

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Curriculum,
   ProgrammeMembership
@@ -6,7 +5,7 @@ import {
 import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { CurriculumPanel } from "./CurriculumPanel";
-
+import style from "../programmes/Programmes.module.scss";
 interface IProgrammePanelProps {
   programmeMembership: ProgrammeMembership;
 }
@@ -14,7 +13,7 @@ interface IProgrammePanelProps {
 export const ProgrammePanel = (props: IProgrammePanelProps) => {
   const data = props.programmeMembership;
   return (
-    <>
+    <div className={style.panelDiv}>
       <SummaryList>
         <SummaryList.Row>
           <SummaryList.Key data-cy="progNameKey">
@@ -65,7 +64,7 @@ export const ProgrammePanel = (props: IProgrammePanelProps) => {
           </SummaryList.Value>
         </SummaryList.Row>
       </SummaryList>
-    </>
+    </div>
   );
 };
 

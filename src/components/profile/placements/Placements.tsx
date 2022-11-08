@@ -3,6 +3,7 @@ import { Details, Card } from "nhsuk-react-components";
 import { PlacementPanel } from "./PlacementPanel";
 import { Placement } from "../../../models/Placement";
 import dayjs from "dayjs";
+import style from "../placements/Placements.module.scss";
 
 interface IPlacementProps {
   placements: Placement[];
@@ -40,13 +41,8 @@ const Placements: React.FC<IPlacementProps> = ({ placements }) => {
               {value.length > 0 ? (
                 value.map((placement: Placement, index: number) => (
                   <Card.GroupItem key={index} width="one-half">
-                    <Card>
-                      <Card.Content>
-                        <PlacementPanel
-                          panelKey={index}
-                          placement={placement}
-                        />
-                      </Card.Content>
+                    <Card className={style.cardContainer}>
+                      <PlacementPanel key={index} placement={placement} />
                     </Card>
                   </Card.GroupItem>
                 ))

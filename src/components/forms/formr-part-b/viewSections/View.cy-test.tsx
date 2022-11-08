@@ -10,6 +10,7 @@ import history from "../../../navigation/history";
 import View from "./View";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedFormB } from "../../../../redux/slices/formBSlice";
+import React from "react";
 
 describe("View", () => {
   it("should not render View if no tisId", () => {
