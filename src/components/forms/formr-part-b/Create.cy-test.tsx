@@ -99,6 +99,8 @@ describe("Create form B", () => {
       "Confirmation"
     );
     cy.get("[data-cy=forename]").should("have.text", "Tony");
+    cy.get("[data-cy=submissionDateTop]").should("not.exist");
+    cy.get("[data-cy=submissionDate]").should("not.exist");
     cy.get(
       "[data-cy=declaration] > .nhsuk-card__content > .nhsuk-card__heading"
     ).should("exist");
