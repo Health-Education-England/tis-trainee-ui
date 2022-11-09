@@ -14,5 +14,8 @@
       }
     ],
     "cypress/no-unnecessary-waiting": "warn"
+  },
+  "globals": {
+    "vi": true
   }
 }
