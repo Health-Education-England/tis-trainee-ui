@@ -65,5 +65,8 @@ describe("Confirm", () => {
     cy.stub(FormRUtilities, "saveDraftA").as("SaveDraft");
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
     cy.get("@SaveDraft").should("have.been.called");
+
+    cy.get("[data-cy=submissionDateTop]").should("not.exist");
+    cy.get("[data-cy=submissionDate]").should("not.exist");
   });
 });
