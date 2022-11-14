@@ -1,11 +1,13 @@
-/// <reference types="vitest" />
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import envCompatible from "vite-plugin-env-compatible";
-import { resolve } from "path";
+import svgr from "vite-plugin-svgr";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import tsconfigPaths from "vite-tsconfig-paths";
+import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
+import { resolve } from "path";
 
+// https://vitejs.dev/config/
 export default defineConfig({
   build: {
     rollupOptions: {
@@ -17,7 +19,10 @@ export default defineConfig({
     // https://github.com/vitejs/vite/issues/8909
     global: "globalThis"
   },
-  envPrefix: "REACT_APP_",
+  server: {
+    origin: "http://local.tis.com",
+    port: 3000
+  },
   resolve: {
     alias: [
       {
@@ -30,31 +35,14 @@ export default defineConfig({
       { find: "./runtimeConfig", replacement: "./runtimeConfig.browser" }
     ]
   },
-  server: {
-    origin: "http://local.tis.com",
-    port: 3000
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: "globalThis"
+      },
+      plugins: [NodeGlobalsPolyfillPlugin({ buffer: true })]
+    }
   },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-    coverage: {
-      reporter: ["text", "lcov", "html"]
-      // exclude: [
-      //   "node_modules/",
-      //   "src/setupTests.ts",
-      //   "!**/src/mock-data/*.{js,jsx,ts,tsx}",
-      //   "!**/src/redux/store/*.{js,jsx,ts,tsx}",
-      //   "!**/src/redux/types.ts",
-      //   "!**/src/components/forms/formr-part-b/Sections/SectionProps.ts",
-      //   "!**/src/*.{js,ts}",
-      //   "!**/src/index.tsx",
-      //   "!**/src/models/*.ts",
-      //   "!**/src/redux/reducers/index.ts",
-      //   "!**/src/**cy-test.tsx"
-      // ]
-    },
-    restoreMocks: false
-  },
-  plugins: [react(), envCompatible(), tsconfigPaths()]
+
+  plugins: [react(), svgr(), tsconfigPaths()]
 });

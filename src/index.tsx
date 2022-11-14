@@ -13,12 +13,12 @@ import TagManager from "react-gtm-module";
 // The styles.css import below is needed for Authenticator default theme https://ui.docs.amplify.aws/components/authenticator
 import "@aws-amplify/ui-react/styles.css";
 
-const tagManagerArgs = {
-  gtmId: "GTM-5PWDC87"
-};
+// const tagManagerArgs = {
+//   gtmId: "GTM-5PWDC87"
+// };
 
-TagManager.initialize(tagManagerArgs);
-browserUpdate(browserUpdateConfig);
+// TagManager.initialize(tagManagerArgs);
+// browserUpdate(browserUpdateConfig);
 
 async function fetchData(): Promise<any> {
   return fetch("/api/environment")
@@ -59,7 +59,7 @@ async function fetchData(): Promise<any> {
   serviceWorker.unregister();
 })();
 
-Sentry.init({
-  dsn: "https://abba1f8a43dd4da4a00277b34beaaf59@sentry.io/1882746",
-  environment: process.env.NODE_ENV
-});
+// Sentry.init({
+//   dsn: "https://abba1f8a43dd4da4a00277b34beaaf59@sentry.io/1882746",
+//   environment: process.env.NODE_ENV
+// });
