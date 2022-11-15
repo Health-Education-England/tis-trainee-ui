@@ -17,6 +17,7 @@ import {
   mockPlacements
 } from "../../mock-data/trainee-profile";
 import history from "../navigation/history";
+import React from "react";
 
 describe("Profile", () => {
   it("should display user details, placement and programme data in the profile section", () => {

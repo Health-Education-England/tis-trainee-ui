@@ -2,7 +2,7 @@ import { Placement } from "../../../models/Placement";
 import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { StringUtilities } from "../../../utilities/StringUtilities";
-import style from "../placements/Placements.module.scss";
+import style from "../Profile.module.scss";
 
 interface IPlacementPanelProps {
   placement: Placement;

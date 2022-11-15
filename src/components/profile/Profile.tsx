@@ -1,6 +1,4 @@
 import PersonalDetailsComponent from "./personal-details/PersonalDetailsComponent";
-import Programmes from "./programmes/Programmes";
-import Placements from "./placements/Placements";
 import {
   BackLink,
   Card,
@@ -23,6 +21,40 @@ import {
 import PageNotFound from "../common/PageNotFound";
 import history from "../navigation/history";
 import store from "../../redux/store/store";
+import { ProfilePanelsCreator } from "./ProfilePanelsCreator";
+import style from "./Profile.module.scss";
+
+const handleClick = (route: string) => history.push(route);
+
+type ProfileCardProps = {
+  isClickable: boolean;
+  route: string;
+  linkHeader: string;
+};
+
+const ProfileCard: React.FC<ProfileCardProps> = ({
+  isClickable,
+  route,
+  linkHeader,
+  children
+}) => {
+  return (
+    <Card
+      clickable={isClickable}
+      onClick={(e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        handleClick(route);
+      }}
+    >
+      <Card.Content>
+        <Card.Heading className="nhsuk-heading-m">
+          <Card.Link href="">{linkHeader}</Card.Link>
+        </Card.Heading>
+        <ul className={style.ul}>{children}</ul>
+      </Card.Content>
+    </Card>
+  );
+};
 
 const Profile = ({ mfa }: any) => {
   const { personalDetails, placements, programmeMemberships } =
@@ -98,12 +130,20 @@ const Profile = ({ mfa }: any) => {
           />
           <Route
             path="/profile/placements"
-            render={() => <Placements placements={placements} />}
+            render={() => (
+              <ProfilePanelsCreator
+                profileArr={placements}
+                profileArrName="Placements"
+              />
+            )}
           />
           <Route
             path="/profile/programmes"
             render={() => (
-              <Programmes programmeMemberships={programmeMemberships} />
+              <ProfilePanelsCreator
+                profileArr={programmeMemberships}
+                profileArrName="Programmes"
+              />
             )}
           />
           <Route path="/profile" render={() => <ProfileSummary />} />
@@ -121,48 +161,33 @@ function ProfileSummary() {
     <>
       <Card.Group>
         <Card.GroupItem width="one-third">
-          <Card>
-            <Card.Content>
-              <Card.Heading className="nhsuk-heading-m">
-                <NavLink data-cy="pdLink" to="/profile/details">
-                  Personal details
-                </NavLink>
-              </Card.Heading>
-              <ul>
-                <li>your personal information</li>
-                <li>registration details</li>
-              </ul>
-            </Card.Content>
-          </Card>
+          <ProfileCard
+            isClickable={true}
+            route="/profile/details"
+            linkHeader="Personal details"
+          >
+            <li>your personal information</li>
+            <li>registration details</li>
+          </ProfileCard>
         </Card.GroupItem>
         <Card.GroupItem width="one-third">
-          <Card>
-            <Card.Content>
-              <Card.Heading className="nhsuk-heading-m">
-                <NavLink data-cy="plLink" to="/profile/placements">
-                  Placements
-                </NavLink>
-              </Card.Heading>
-              <ul>
-                <li>a list of your Placements (past, current and future)</li>
-              </ul>
-            </Card.Content>
-          </Card>
+          <ProfileCard
+            isClickable={true}
+            route="/profile/placements"
+            linkHeader="Placements"
+          >
+            <li>your Placements (past, current and future)</li>
+          </ProfileCard>
         </Card.GroupItem>
         <Card.GroupItem width="one-third">
-          <Card>
-            <Card.Content>
-              <Card.Heading className="nhsuk-heading-m">
-                <NavLink data-cy="prLink" to="/profile/programmes">
-                  Programmes
-                </NavLink>
-              </Card.Heading>
-              <ul>
-                <li>a list of your Programmes (past, current and future)</li>
-                <li>your Conditions of Joining agreement</li>
-              </ul>
-            </Card.Content>
-          </Card>
+          <ProfileCard
+            isClickable={true}
+            route="/profile/programmes"
+            linkHeader="Programmes"
+          >
+            <li>a list of your Programmes (past, current and future)</li>
+            <li>your Conditions of Joining agreement</li>
+          </ProfileCard>
         </Card.GroupItem>
       </Card.Group>
     </>

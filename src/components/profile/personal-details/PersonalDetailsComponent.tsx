@@ -99,57 +99,6 @@ const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
         </Details.Text>
       </Details>
     </Details.ExpanderGroup>
-
-    // <Details expander data-cy="personalDetailsExpander">
-    //   <Details.Summary>Personal details</Details.Summary>
-    //   <Details.Text>
-    //     <SummaryList>
-    //       <SummaryList.Row>
-    //         <SummaryList.Key>Fullname</SummaryList.Key>
-    //         <SummaryList.Value>
-    //           {personalDetails.title && `${personalDetails.title} `}
-    //           {personalDetails.forenames && `${personalDetails.forenames} `}
-    //           {personalDetails.surname}
-    //         </SummaryList.Value>
-    //       </SummaryList.Row>
-    //       {personalData &&
-    //         personalData.map(pd => (
-    //           <SummaryList.Row key={pd.label} data-cy={pd.label}>
-    //             <SummaryList.Key data-cy={pd.label}>
-    //               {pd.label}
-    //             </SummaryList.Key>
-    //             <SummaryList.Value data-cy={pd.value}>
-    //               {pd.value}
-    //             </SummaryList.Value>
-    //           </SummaryList.Row>
-    //         ))}
-
-    //       <SummaryList.Row>
-    //         <SummaryList.Key>Address</SummaryList.Key>
-    //         <SummaryList.Value>
-    //           <p>{personalDetails.address1}</p>
-    //           <p>{personalDetails.address2}</p>
-    //           <p>{personalDetails.address3}</p>
-    //           <p data-cy="postCode">{personalDetails.postCode}</p>
-    //         </SummaryList.Value>
-
-    //       </SummaryList.Row>
-    //       <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
-    //         Registration details
-    //       </div>
-    //       {registrationDetails &&
-    //         registrationDetails.map(
-    //           rd =>
-    //             rd.value && (
-    //               <SummaryList.Row key={rd.label} data-cy={rd.label}>
-    //                 <SummaryList.Key>{rd.label}</SummaryList.Key>
-    //                 <SummaryList.Value>{rd.value}</SummaryList.Value>
-    //               </SummaryList.Row>
-    //             )
-    //         )}
-    //     </SummaryList>
-    //   </Details.Text>
-    // </Details>
   );
 };
 

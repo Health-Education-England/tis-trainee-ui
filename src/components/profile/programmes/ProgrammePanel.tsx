@@ -5,7 +5,7 @@ import {
 import { SummaryList } from "nhsuk-react-components";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { CurriculumPanel } from "./CurriculumPanel";
-import style from "../programmes/Programmes.module.scss";
+import style from "../Profile.module.scss";
 interface IProgrammePanelProps {
   programmeMembership: ProgrammeMembership;
 }
