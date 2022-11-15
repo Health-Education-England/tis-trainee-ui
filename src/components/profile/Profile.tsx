@@ -121,6 +121,7 @@ const Profile = ({ mfa }: any) => {
             </div>
           </WarningCallout>
         )}
+        <DataSourceMsg />
         <Switch>
           <Route
             path="/profile/details"
@@ -150,7 +151,6 @@ const Profile = ({ mfa }: any) => {
           <Redirect exact path="/" to="/profile" />
           <Route path="/*" component={PageNotFound} />
         </Switch>
-        <DataSourceMsg />
       </div>
     </>
   );
@@ -166,7 +166,7 @@ function ProfileSummary() {
             route="/profile/details"
             linkHeader="Personal details"
           >
-            <li>your personal information</li>
+            <li>view your personal information</li>
             <li>registration details</li>
           </ProfileCard>
         </Card.GroupItem>
@@ -176,7 +176,8 @@ function ProfileSummary() {
             route="/profile/placements"
             linkHeader="Placements"
           >
-            <li>your Placements (past, current and future)</li>
+            <li>view your Placements (past, current and future)</li>
+            <li>add a Placement to your DSP (Digital Staff Passport)</li>
           </ProfileCard>
         </Card.GroupItem>
         <Card.GroupItem width="one-third">
@@ -185,8 +186,9 @@ function ProfileSummary() {
             route="/profile/programmes"
             linkHeader="Programmes"
           >
-            <li>a list of your Programmes (past, current and future)</li>
-            <li>your Conditions of Joining agreement</li>
+            <li>view your Programmes (past, current and future)</li>
+            <li>sign & view your Conditions of Joining agreement(s)</li>
+            <li>add a Programme to your DSP (Digital Staff Passport)</li>
           </ProfileCard>
         </Card.GroupItem>
       </Card.Group>
