@@ -83,5 +83,3 @@ export const PlacementPanel = ({ placement }: IPlacementPanelProps) => {
     </div>
   );
 };
-
-export default PlacementPanel;
