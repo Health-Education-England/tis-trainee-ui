@@ -4,7 +4,7 @@
 describe("Profile", () => {
   before(() => {
     cy.wait(30000);
-    cy.visit("/profile", {failOnStatusCode: false});
+    cy.visit("/profile", { failOnStatusCode: false });
     cy.signIn();
   });
 
@@ -13,26 +13,23 @@ describe("Profile", () => {
   });
 
   it("should toggle open and close a profile section", () => {
-    const expanderPD =
-      "[data-cy=personalDetailsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
+    const expanderPD = "[data-cy=personalDetailsExpander]";
     cy.get(expanderPD).should("exist").click();
     cy.get("[data-cy=Telephone]").should("exist");
     cy.get(expanderPD).click();
-    // TODO: Sort out "not visible" assertion failure with Cypress working on new Chrome
-    // cy.get(
-    //   '[data-cy="General Medical Council (GMC)"] > .nhsuk-summary-list__key'
-    // ).should("not.be.visible");
+    // TODO: "not visible" assertion still fails with Cypress v8 on Chrome 104
+    // cy.get("[data-cy=Male]").should("not.be.visible");
   });
 
   it("should show placement information", () => {
     const expanderPl = "[data-cy=placementsExpander]";
     cy.get(expanderPl).should("exist").click();
-    cy.get("[data-cy=siteKey]").should("exist");
-    cy.get("[data-cy=specialtyKey]").should("exist");
+    cy.get("[data-cy=site0Key]").first().should("exist");
+    cy.get("[data-cy=site0Val]").first().should("exist");
   });
 
   it("should click expand to show programme section", () => {
-    const expanderPr = "[data-cy=programmesExpander]";
+    const expanderPr = "[data-cy=programmeMembershipsExpander]";
     cy.get(expanderPr).should("exist").click();
     cy.get(".nhsuk-details__text").should("exist");
   });
