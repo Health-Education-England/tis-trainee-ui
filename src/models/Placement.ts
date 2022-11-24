@@ -1,16 +1,29 @@
 import { Status } from "./Status";
 
 export interface Placement {
-  tisId: string;
-  startDate: Date;
-  endDate: Date;
+  tisId?: string;
   site: string;
   siteLocation: string;
-  grade: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  wholeTimeEquivalent: string;
   specialty: string;
+  grade: string;
   placementType: string;
   employingBody: string;
   trainingBody: string;
-  wholeTimeEquivalent: string;
-  status: Status;
+  status?: Status;
 }
+
+export const placementPanelTemplate: Placement = {
+  site: "",
+  siteLocation: "",
+  startDate: "",
+  endDate: "",
+  wholeTimeEquivalent: "",
+  specialty: "",
+  grade: "",
+  placementType: "",
+  employingBody: "",
+  trainingBody: ""
+};

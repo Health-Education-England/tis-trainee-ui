@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
+import { Placement } from "../../models/Placement";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
@@ -52,7 +53,15 @@ const traineeProfileSlice = createSlice({
       })
       .addCase(fetchTraineeProfileData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.traineeProfileData = action.payload;
+        state.traineeProfileData.traineeTisId = action.payload.traineeTisId;
+        state.traineeProfileData.personalDetails =
+          action.payload.personalDetails;
+        state.traineeProfileData.programmeMemberships =
+          action.payload.programmeMemberships;
+        state.traineeProfileData.placements = action.payload.placements.sort(
+          (a: Placement, b: Placement) =>
+            a.startDate > b.startDate ? -1 : b.startDate > a.startDate ? 1 : 0
+        );
       })
       .addCase(fetchTraineeProfileData.rejected, (state, action) => {
         state.status = "failed";
