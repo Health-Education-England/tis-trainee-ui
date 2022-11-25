@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
+import { DateUtilities } from "../../utilities/DateUtilities";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
@@ -57,8 +58,10 @@ const traineeProfileSlice = createSlice({
           action.payload.personalDetails;
         state.traineeProfileData.programmeMemberships =
           action.payload.programmeMemberships;
-        const sortedPlacements = [...action.payload.placements].sort((a, b) =>
-          a.startDate < b.startDate ? 1 : -1
+        const sortedPlacements = DateUtilities.genericSort(
+          action.payload.placements,
+          "startDate",
+          true
         );
         state.traineeProfileData.placements = sortedPlacements;
       })

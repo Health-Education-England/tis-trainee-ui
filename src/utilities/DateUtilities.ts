@@ -123,8 +123,25 @@ export class DateUtilities {
     }
     return true;
   }
-}
 
+  private static gSorter<T>(
+    a: T,
+    b: T,
+    objKey: Extract<keyof T, string | Date>,
+    isDesc: boolean
+  ) {
+    const result = a[objKey] > b[objKey] ? 1 : -1;
+    return isDesc ? result * -1 : result;
+  }
+
+  public static genericSort<T>(
+    arr: T[],
+    prop: Extract<keyof T, string | Date>,
+    desc: boolean
+  ) {
+    return arr.sort((a, b) => DateUtilities.gSorter(a, b, prop, desc));
+  }
+}
 export const isWithinRange = (
   date: DateType = null,
   range: number = 1,
