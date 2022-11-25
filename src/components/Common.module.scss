@@ -13,3 +13,26 @@ $nhsBlue: #005eb8;
     }
   }
 }
+
+// profile
+.fieldLegHeader {
+  color: $nhsBlue;
+}
+
+.cardContainer {
+  border: none;
+}
+
+.panelDiv {
+  background-color: #f0f4f5;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
+// curric panel
+.cItems {
+  padding-bottom: 10px;
+  &:last-child {
+    padding-bottom: 0;
+  }
+}

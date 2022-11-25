@@ -14,9 +14,11 @@ import {
 import {
   mockPersonalDetails,
   mockProgrammeMemberships,
-  mockPlacements
+  mockPlacements,
+  mockProgrammeMembershipNoCurricula
 } from "../../mock-data/trainee-profile";
 import history from "../navigation/history";
+import React from "react";
 
 describe("Profile", () => {
   it("should display user details, placement and programme data in the profile section", () => {
@@ -49,6 +51,12 @@ describe("Profile", () => {
     const expanderPD =
       "[data-cy=personalDetailsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
     cy.get(expanderPD).should("exist").click();
+    cy.get("[data-cy=fullNameKey]")
+      .should("exist")
+      .should("contain.text", "Full name");
+    cy.get("[data-cy=fullNameValue]")
+      .should("exist")
+      .should("contain.text", "Mr Anthony Mara Gilliam");
     cy.get("[data-cy=Gender]").should("exist").should("contain.text", "Male");
     cy.get("[data-cy=Email]")
       .should("exist")
@@ -61,22 +69,85 @@ describe("Profile", () => {
     // placements section
     const expanderPl = "[data-cy=placementsExpander]";
     cy.get(expanderPl).should("exist").click();
-    cy.get("[data-cy=siteKey]")
+    cy.get("[data-cy=site0Key]")
       .first()
       .should("exist")
       .should("contain.text", "Site");
-    cy.get("[data-cy=wteValue]")
+    cy.get("[data-cy=wholeTimeEquivalent4Val]")
       .last()
       .should("exist")
       .should("contain.text", "0.75");
+    cy.get("[data-cy=employingBody8Val]")
+      .last()
+      .should("exist")
+      .should("contain.text", "None provided");
     cy.get(expanderPl).click();
 
     // programmes section
-    const expanderPr = "[data-cy=programmesExpander]";
+    const expanderPr = "[data-cy=programmeMembershipsExpander]";
     cy.get(expanderPr).should("exist").click();
+    cy.get("[data-cy=programmeName0Val]")
+      .first()
+      .should("exist")
+      .should("contain.text", "Cardiology");
     cy.get("[data-cy=ST6]").should("exist");
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");
+  });
+  it("should show alternative text when no panel data available", () => {
+    const MockedProfileSomeEmpty = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileSomeEmpty />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=placementsExpander]").should("exist").click();
+    cy.get("[data-cy=notAssignedplacements]")
+      .should("exist")
+      .should("contain.text", "You are not assigned to any Placements");
+    cy.get("[data-cy=notAssignedprogrammeMemberships]")
+      .should("exist")
+      .should("contain.text", "You are not assigned to any Programmes");
+  });
+  it("should show alternative text when no Curricula", () => {
+    const MockedProfileNoCurricula = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipNoCurricula],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileNoCurricula />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=programmeMembershipsExpander]").should("exist").click();
+    cy.get("[data-cy=curricula5Val]")
+      .should("exist")
+      .should("contain.text", "N/A");
   });
 });

@@ -1,15 +1,14 @@
-type DateType = Date | string | null;
 export interface PersonalDetails {
   surname: string | null;
   forenames: string | null;
   knownAs: string | null;
   maidenName: string | null;
   title: string | null;
-  personOwner: string | null | undefined;
-  dateOfBirth: DateType;
+  personOwner: string | null;
+  dateOfBirth: Date | null;
   gender: string | null;
   qualification: string | null;
-  dateAttained: DateType;
+  dateAttained: Date | null;
   medicalSchool: string | null;
   telephoneNumber: string | null;
   mobileNumber: string | null;
@@ -17,7 +16,7 @@ export interface PersonalDetails {
   address1: string | null;
   address2: string | null;
   address3: string | null;
-  address4?: string | null;
+  address4: string | null;
   postCode: string | null;
   gmcNumber: string | null;
   gmcStatus: string | null;
@@ -31,8 +30,8 @@ export interface PersonalDetails {
   detailsNumber: string | null;
   prevRevalBody: string | null;
   prevRevalBodyOther: string | null;
-  currRevalDate: DateType;
-  prevRevalDate: DateType;
+  currRevalDate: Date | null;
+  prevRevalDate: Date | null;
 }
 
 export const initialPersonalDetails: PersonalDetails = {

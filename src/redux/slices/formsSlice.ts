@@ -27,7 +27,7 @@ export const fetchForms = createAsyncThunk(
     if (path === "/formr-a") {
       response = await formsService.getTraineeFormRPartAList();
     } else response = await formsService.getTraineeFormRPartBList();
-    return DateUtilities.SortDateDecending(response.data, "submissionDate");
+    return DateUtilities.genericSort(response.data, "submissionDate", true);
   }
 );
 

@@ -3,104 +3,123 @@ import { PersonalDetails } from "../../../models/PersonalDetails";
 import { SummaryList, Details } from "nhsuk-react-components";
 import { KeyValue } from "../../../models/KeyValue";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice";
 
-interface IProps {
-  personalDetails: PersonalDetails;
-}
-
-const PersonalDetailsComponent: React.FC<IProps> = ({ personalDetails }) => {
+const PersonalDetailsComponent: React.FC = () => {
+  const {
+    maidenName,
+    knownAs,
+    gender,
+    dateOfBirth,
+    email,
+    telephoneNumber,
+    mobileNumber,
+    gmcNumber,
+    gdcNumber,
+    publicHealthNumber,
+    gmcStatus,
+    gdcStatus,
+    permitToWork,
+    settled,
+    visaIssued,
+    detailsNumber,
+    title,
+    forenames,
+    surname,
+    address1,
+    address2,
+    address3,
+    postCode
+  }: PersonalDetails = useAppSelector(selectTraineeProfile).personalDetails;
   const personalData: KeyValue[] = [
-    { label: "Maiden name", value: personalDetails.maidenName },
-    { label: "Known As", value: personalDetails.knownAs },
-    { label: "Gender", value: personalDetails.gender },
+    { label: "Maiden name", value: maidenName },
+    { label: "Known As", value: knownAs },
+    { label: "Gender", value: gender },
     {
       label: "Date of birth",
-      value: DateUtilities.ToLocalDate(personalDetails.dateOfBirth)
+      value: DateUtilities.ToLocalDate(dateOfBirth)
     },
-    { label: "Email", value: personalDetails.email },
-    { label: "Telephone", value: personalDetails.telephoneNumber },
-    { label: "Mobile", value: personalDetails.mobileNumber }
+    { label: "Email", value: email },
+    { label: "Telephone", value: telephoneNumber },
+    { label: "Mobile", value: mobileNumber }
   ];
 
   const registrationDetails: KeyValue[] = [
     {
       label: "General Medical Council (GMC)",
-      value: personalDetails?.gmcNumber
+      value: gmcNumber
     },
     {
       label: "General Dental Council (GDC)",
-      value: personalDetails?.gdcNumber
+      value: gdcNumber
     },
     {
       label: "Public Health Number",
-      value: personalDetails?.publicHealthNumber
+      value: publicHealthNumber
     },
     {
       label: "GMC status",
-      value: personalDetails?.gmcStatus
+      value: gmcStatus
     },
     {
       label: "GDC status",
-      value: personalDetails?.gdcStatus
+      value: gdcStatus
     },
-    { label: "Permit to Work", value: personalDetails?.permitToWork },
-    { label: "Settled", value: personalDetails?.settled },
-    { label: "Visa Issued", value: personalDetails?.visaIssued },
-    { label: "Details/Number", value: personalDetails?.detailsNumber }
+    { label: "Permit to Work", value: permitToWork },
+    { label: "Settled", value: settled },
+    { label: "Visa Issued", value: visaIssued },
+    { label: "Details/Number", value: detailsNumber }
   ];
 
   return (
-    personalDetails && (
-      <Details expander data-cy="personalDetailsExpander">
-        <Details.Summary>Personal details</Details.Summary>
-        <Details.Text>
-          <SummaryList>
-            <SummaryList.Row>
-              <SummaryList.Key>Fullname</SummaryList.Key>
-              <SummaryList.Value>
-                {personalDetails.title && `${personalDetails.title} `}
-                {personalDetails.forenames && `${personalDetails.forenames} `}
-                {personalDetails.surname}
-              </SummaryList.Value>
-            </SummaryList.Row>
-            {personalData &&
-              personalData.map(pd => (
-                <SummaryList.Row key={pd.label} data-cy={pd.label}>
-                  <SummaryList.Key data-cy={pd.label}>
-                    {pd.label}
-                  </SummaryList.Key>
-                  <SummaryList.Value data-cy={pd.value}>
-                    {pd.value}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-              ))}
+    <Details expander data-cy="personalDetailsExpander">
+      <Details.Summary>Personal details</Details.Summary>
+      <Details.Text>
+        <SummaryList>
+          <SummaryList.Row>
+            <SummaryList.Key data-cy="fullNameKey">Full name</SummaryList.Key>
+            <SummaryList.Value data-cy="fullNameValue">
+              {title && `${title} `}
+              {forenames && `${forenames} `}
+              {surname}
+            </SummaryList.Value>
+          </SummaryList.Row>
+          {personalData &&
+            personalData.map(pd => (
+              <SummaryList.Row key={pd.label} data-cy={pd.label}>
+                <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
+                <SummaryList.Value data-cy={pd.value}>
+                  {pd.value}
+                </SummaryList.Value>
+              </SummaryList.Row>
+            ))}
 
-            <SummaryList.Row>
-              <SummaryList.Key>Address</SummaryList.Key>
-              <SummaryList.Value>
-                <p>{personalDetails.address1}</p>
-                <p>{personalDetails.address2}</p>
-                <p>{personalDetails.address3}</p>
-                <p data-cy="postCode">{personalDetails.postCode}</p>
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
-              Registration details
-            </div>
-            {registrationDetails &&
-              registrationDetails.map(
-                rd =>
-                  rd.value && (
-                    <SummaryList.Row key={rd.label} data-cy={rd.label}>
-                      <SummaryList.Key>{rd.label}</SummaryList.Key>
-                      <SummaryList.Value>{rd.value}</SummaryList.Value>
-                    </SummaryList.Row>
-                  )
-              )}
-          </SummaryList>
-        </Details.Text>
-      </Details>
-    )
+          <SummaryList.Row>
+            <SummaryList.Key>Address</SummaryList.Key>
+            <SummaryList.Value>
+              <p>{address1}</p>
+              <p>{address2}</p>
+              <p>{address3}</p>
+              <p data-cy="postCode">{postCode}</p>
+            </SummaryList.Value>
+          </SummaryList.Row>
+          <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
+            Registration details
+          </div>
+          {registrationDetails &&
+            registrationDetails.map(
+              rd =>
+                rd.value && (
+                  <SummaryList.Row key={rd.label} data-cy={rd.label}>
+                    <SummaryList.Key>{rd.label}</SummaryList.Key>
+                    <SummaryList.Value>{rd.value}</SummaryList.Value>
+                  </SummaryList.Row>
+                )
+            )}
+        </SummaryList>
+      </Details.Text>
+    </Details>
   );
 };
 

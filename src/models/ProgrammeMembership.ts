@@ -1,15 +1,15 @@
 import { Status } from "./Status";
 
 export interface ProgrammeMembership {
-  programmeTisId: string;
+  programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
+  startDate: Date | string;
+  endDate: Date | string;
   managingDeanery: string;
-  programmeMembershipType: string;
-  status: Status;
-  startDate: Date;
-  endDate: Date;
-  programmeCompletionDate: Date;
+  programmeMembershipType?: string;
+  status?: Status;
+  programmeCompletionDate?: Date;
   curricula: Curriculum[];
 }
 
@@ -20,3 +20,12 @@ export interface Curriculum {
   curriculumStartDate: Date;
   curriculumEndDate: Date;
 }
+
+export const programmePanelTemplate: ProgrammeMembership = {
+  programmeName: "",
+  programmeNumber: "",
+  startDate: "",
+  endDate: "",
+  managingDeanery: "",
+  curricula: []
+};

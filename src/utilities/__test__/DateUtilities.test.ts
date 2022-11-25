@@ -5,6 +5,7 @@ import {
   disorderedFormRPartBs,
   orderedFormRPartBs
 } from "../../mock-data/submitted-formr-list";
+import { mockPlacements } from "../../mock-data/trainee-profile";
 import { DateUtilities, isWithinRange } from "../DateUtilities";
 
 describe("DateUtilities", () => {
@@ -31,12 +32,6 @@ describe("DateUtilities", () => {
     expect(DateUtilities.ToUTCDate(new Date("2020-04-20"))).toEqual(
       "2020-04-20"
     );
-  });
-
-  it("SortDateDecending should handle an array without timestamp", () => {
-    expect(
-      DateUtilities.SortDateDecending(disorderedFormRPartBs, "submissionDate")
-    ).toEqual(orderedFormRPartBs);
   });
 
   it("ToUTCDate should return empty string if date is null", () => {
@@ -135,6 +130,17 @@ describe("DateUtilities", () => {
   it("isWithinRange should still return false if given date is outside range and value passed for dateToCompare is null", () => {
     const insideDate = day().subtract(31, "d").toDate();
     expect(isWithinRange(insideDate, 31, "d", null)).toEqual(false);
+  });
+  it("should order array in desc order when genericSort desc prop is true", () => {
+    const descMockPl = [...mockPlacements].reverse();
+    expect(
+      DateUtilities.genericSort(mockPlacements, "startDate", true)
+    ).toEqual(descMockPl);
+  });
+  it("should order array in asc order when genericSort desc prop is false", () => {
+    expect(
+      DateUtilities.genericSort(mockPlacements, "startDate", false)
+    ).toEqual(mockPlacements);
   });
   // Note: Some test conditions covered by cypress comp tests so tried not to duplicate.
   // See coverage.json generated on PR or locally via 'npm run local:report-combined' for more info.
