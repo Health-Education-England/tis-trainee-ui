@@ -80,7 +80,9 @@ const PersonalDetailsComponent: React.FC = () => {
           <SummaryList.Row>
             <SummaryList.Key data-cy="fullNameKey">Full name</SummaryList.Key>
             <SummaryList.Value data-cy="fullNameValue">
-              {title && title} {forenames && forenames} {surname}
+              {title && `${title} `}
+              {forenames && `${forenames} `}
+              {surname}
             </SummaryList.Value>
           </SummaryList.Row>
           {personalData &&
