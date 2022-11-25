@@ -56,8 +56,12 @@ const traineeProfileSlice = createSlice({
         state.traineeProfileData.traineeTisId = action.payload.traineeTisId;
         state.traineeProfileData.personalDetails =
           action.payload.personalDetails;
-        state.traineeProfileData.programmeMemberships =
-          action.payload.programmeMemberships;
+        const sortedProgrammes = DateUtilities.genericSort(
+          action.payload.programmeMemberships,
+          "startDate",
+          true
+        );
+        state.traineeProfileData.programmeMemberships = sortedProgrammes;
         const sortedPlacements = DateUtilities.genericSort(
           action.payload.placements,
           "startDate",
