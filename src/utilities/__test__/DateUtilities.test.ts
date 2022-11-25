@@ -34,12 +34,6 @@ describe("DateUtilities", () => {
     );
   });
 
-  it("SortDateDecending should handle an array without timestamp", () => {
-    expect(
-      DateUtilities.SortDateDecending(disorderedFormRPartBs, "submissionDate")
-    ).toEqual(orderedFormRPartBs);
-  });
-
   it("ToUTCDate should return empty string if date is null", () => {
     expect(DateUtilities.ToUTCDate(null)).toEqual("");
   });

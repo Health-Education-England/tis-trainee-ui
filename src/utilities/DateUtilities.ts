@@ -55,14 +55,6 @@ export class DateUtilities {
     return localDate;
   }
 
-  public static SortDateDecending<T>(arr: T[], dateFieldName: string) {
-    return [...arr].sort(
-      (a: any, b: any) =>
-        new Date(b[dateFieldName]).getTime() -
-        new Date(a[dateFieldName]).getTime()
-    );
-  }
-
   public static ToLocalDateTime(date: DateType): string {
     let localDate = "";
     if (date) {
