@@ -36,3 +36,17 @@ $nhsBlue: #005eb8;
     padding-bottom: 0;
   }
 }
+
+// AutocompleteSelect
+
+.react-select {
+  margin: 1rem;
+  position: absolute;
+  width: 10rem;
+}
+
+.react-select
+  .react-select__control--is-focused.react-select__control--menu-is-open {
+  border-color: red;
+  box-shadow: 0 0 10px 1px pink;
+}

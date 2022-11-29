@@ -1,6 +1,8 @@
 {
   "extends": [
-    "react-app",
+    //Fix issue with extending react-app
+    // https://stackoverflow.com/questions/73811319/eslint-failed-to-load-config-react-app-to-extend-from-when-making-changes-in
+    // "react-app", // had to delete this
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
     "plugin:cypress/recommended"

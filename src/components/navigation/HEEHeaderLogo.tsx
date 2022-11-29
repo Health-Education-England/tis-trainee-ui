@@ -1,4 +1,4 @@
-import logo from "../../static/images/nhs-hee-logo-rev.svg";
+import { NHSHEELogoRev } from "../../static/images/NHSHEELogoRev";
 
 const HEEHeaderLogo = () => {
   return (
@@ -8,12 +8,7 @@ const HEEHeaderLogo = () => {
         href="/"
         aria-label="TIS Self-Service homepage"
       >
-        <img
-          width="230"
-          height="48"
-          src={logo}
-          alt="TIS Self-Service homepage"
-        />
+        <NHSHEELogoRev title="TIS Self-Service homepage" />
       </a>
       <p
         style={{

@@ -1,18 +1,19 @@
 import { Flex, Image, View } from "@aws-amplify/ui-react";
-import logo from "../../../../static/images/nhs-hee-logo-rev.svg";
+import { NHSHEELogoRev } from "../../../../static/images/NHSHEELogoRev";
 import styles from "../Auth.module.scss";
 
 const AuthHeader = (): JSX.Element => {
   return (
     <>
       <Flex className={styles.authLogo}>
-        <Image
+        {/* <Image
           data-cy="authLogo"
           src={logo}
           alt="NHS Health Education England TIS Self-Service"
           width="230px"
           height="48px"
-        ></Image>
+        ></Image> */}
+        <NHSHEELogoRev className={styles.authLogo} data-cy="authLogo" />
       </Flex>
       <Flex className={styles.authTitle}>
         <View>
