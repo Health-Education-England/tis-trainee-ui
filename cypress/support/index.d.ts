@@ -34,7 +34,7 @@ declare global {
       testData: Chainable<Element>;
     }
     interface Cypress {
-      dayjs: dayjs.Dayjs;
+      dayjs(): dayjs.Dayjs;
     }
   }
 }
