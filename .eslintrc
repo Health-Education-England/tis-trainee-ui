@@ -4,17 +4,15 @@
     // https://stackoverflow.com/questions/73811319/eslint-failed-to-load-config-react-app-to-extend-from-when-making-changes-in
     // "react-app", // had to delete this
     "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
-    "plugin:cypress/recommended"
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["jsx-a11y", "prettier", "cypress"],
+  "plugins": ["jsx-a11y", "prettier"],
   "rules": {
     "prettier/prettier": [
       "error",
       {
         "endOfLine": "auto"
       }
-    ],
-    "cypress/no-unnecessary-waiting": "warn"
+    ]
   }
 }
