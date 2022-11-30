@@ -59,7 +59,7 @@
     "cypress": "cypress run",
     "cypress:open": "cypress open",
     "cypress:debug": "cross-env-shell DEBUG=code-coverage npx cypress open",
-    "ct:open": "npx cypress open-ct",
+    "ct:open": "cypress open --component",
     "ct": "npx cypress run-ct",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts,.tsx,.js --fix",
@@ -92,6 +92,7 @@
   "devDependencies": {
     "@types/jest": "^29.1.2",
     "@types/react-test-renderer": "^17.0.1",
+    "cypress": "^11.2.0",
     "enzyme": "^3.11.0",
     "eslint": "^8.28.0",
     "husky": "^8.0.2",
