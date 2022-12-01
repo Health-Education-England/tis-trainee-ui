@@ -31,7 +31,7 @@ declare global {
       testDataSourceLink: Chainable<Element>;
       checkForSuccessNotif(notifType: string): Chainable<Element>;
       checkForErrorNotif(notifType: string): Chainable<Element>;
-      testData: Chainable<Element>;
+      testData(dataToTest: any, index?: number): Chainable<Element>;
     }
     interface Cypress {
       dayjs(): dayjs.Dayjs;
