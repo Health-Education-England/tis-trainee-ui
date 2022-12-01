@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import * as Sentry from "@sentry/browser";
 import { Auth } from "aws-amplify";
 
 export class ApiService {
@@ -16,9 +17,22 @@ export class ApiService {
 
       return config;
     });
+
+    this.axiosInstance.interceptors.response.use(
+      async function (response) {
+        // Any status code that lie within the range of 2xx
+        return response;
+      },
+      async function (error) {
+        // Any status codes that falls outside the range of 2xx
+        Sentry.captureException(error);
+        return Promise.reject(error);
+      }
+    );
   }
 
   get<T = any>(endpoint: string): Promise<AxiosResponse<T>> {
+    console.log(this.axiosInstance.interceptors);
     return this.axiosInstance.get(endpoint);
   }
 
