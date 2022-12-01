@@ -9,6 +9,7 @@ export default defineConfig({
       framework: "create-react-app",
       bundler: "webpack"
     },
+    specPattern: "cypress/component/**/*.cy.{ts,tsx}",
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
       return config;

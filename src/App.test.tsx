@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 import { Router } from "react-router-dom";
 import history from "./components/navigation/history";
+import React from "react";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

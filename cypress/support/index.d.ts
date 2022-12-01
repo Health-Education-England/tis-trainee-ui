@@ -10,18 +10,29 @@ declare global {
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
        */
-      checkFormRAValues(): Chainable<Element>;
-      checkAndFillSection1(): Chainable<Element>;
-      checkAndFillSection2(): Chainable<Element>;
+      checkFormRAValues(
+        dateAttained: string,
+        completionDate: string,
+        startDate: string,
+        wholeTimeEquivalent: string
+      ): Chainable<Element>;
+      checkAndFillSection1(
+        currRevalDate: string,
+        prevRevalDate: string
+      ): Chainable<Element>;
+      checkAndFillSection2(
+        workStartDate: string,
+        endDate: string
+      ): Chainable<Element>;
       checkAndFillSection3(): Chainable<Element>;
-      checkAndFillSection4(): Chainable<Element>;
-      checkAndFillSection5(): Chainable<Element>;
-      checkAndFillSection6(): Chainable<Element>;
+      checkAndFillSection4(pastDate: string): Chainable<Element>;
+      checkAndFillSection5(pastDate: string): Chainable<Element>;
+      checkAndFillSection6(compliments: string): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
-      addWorkPanel(): Chainable<Element>;
+      addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       logout(): Chainable<Element>;
       login(): Chainable<Element>;
-      checkFlags(): Chainable<Element>;
+      checkFlags(name: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
       signIn(): Chainable<Element>;
       getTotp(): Chainable<Element>;
