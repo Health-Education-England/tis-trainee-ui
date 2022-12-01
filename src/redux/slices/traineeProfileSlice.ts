@@ -27,8 +27,6 @@ export const fetchTraineeProfileData = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<TraineeProfile> =
       await traineeProfileService.getTraineeProfile();
-    console.log("response:");
-    console.log(response);
     return response.data;
   }
 );

@@ -32,7 +32,6 @@ export class ApiService {
   }
 
   get<T = any>(endpoint: string): Promise<AxiosResponse<T>> {
-    console.log(this.axiosInstance.interceptors);
     return this.axiosInstance.get(endpoint);
   }
 
