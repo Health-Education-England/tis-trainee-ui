@@ -48,7 +48,7 @@ describe("Section2", () => {
     cy.get("[data-cy=legendFieldset2]")
       .should("exist")
       .should("include.text", "Section 2");
-    cy.testDataSourceLink;
+    cy.testDataSourceLink();
     cy.get('[data-cy="work[0].trainingPost"]')
       .should("exist")
       .should("have.value", "Yes");

@@ -42,7 +42,7 @@ describe("Profile", () => {
         </Router>
       </Provider>
     );
-    cy.testDataSourceLink;
+    cy.testDataSourceLink();
     cy.get("[data-cy=profileHeading]")
       .should("exist")
       .should("contain.text", "Profile");

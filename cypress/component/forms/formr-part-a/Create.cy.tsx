@@ -42,7 +42,7 @@ describe("Form R Part A - Create", () => {
         </Router>
       </Provider>
     );
-    cy.testDataSourceLink;
+    cy.testDataSourceLink();
     cy.get("[data-cy=backLink]").click();
     cy.get("@NewUrl").should("have.been.called");
     cy.get("#forename").should("exist").should("have.value", "Anthony Mara");
