@@ -12,7 +12,8 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
       return config;
-    }
+    },
+    supportFile: "cypress/support/component.ts"
   },
   e2e: {
     baseUrl: "http://local.tis-selfservice.com",
@@ -26,6 +27,7 @@ export default defineConfig({
       on("task", { generateOTP: cypressOtp });
       codeCoverageTask(on, config);
       return config;
-    }
+    },
+    supportFile: "cypress/support/e2e.ts"
   }
 });
