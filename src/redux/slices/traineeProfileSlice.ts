@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
+import * as Sentry from "@sentry/browser";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
@@ -57,6 +58,10 @@ const traineeProfileSlice = createSlice({
       .addCase(fetchTraineeProfileData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+        Sentry.captureException(action.error, {
+          tags: { profile: "Profile request rejected" },
+          level: Sentry.Severity.Warning
+        });
       });
   }
 });
