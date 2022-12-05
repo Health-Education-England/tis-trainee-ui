@@ -19,7 +19,7 @@ const tagManagerArgs = {
 
 TagManager.initialize(tagManagerArgs);
 
-// browserUpdate(browserUpdateConfig);
+browserUpdate(browserUpdateConfig);
 
 async function fetchData(): Promise<any> {
   return fetch("/api/environment")
