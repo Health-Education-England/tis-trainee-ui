@@ -52,7 +52,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",
-    "react-select": "^5.6.1",
+    "react-select": "^5.7.0",
     "react-test-renderer": "^18.2.0",
     "redux": "^4.2.0",
     "redux-mock-store": "^1.5.4",
