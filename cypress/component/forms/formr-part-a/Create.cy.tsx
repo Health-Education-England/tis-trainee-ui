@@ -65,6 +65,52 @@ describe("Form R Part A - Create", () => {
     cy.get("[data-cy=postCode]").should("exist").clear().type("WC1B 5DA");
     cy.get(".field-warning-msg").should("not.exist");
 
+    // test AutocompleteSelect dropdown
+    cy.get('[data-cy="programmeSpecialty"]')
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").contains("Geriatric Medicine");
+    cy.get(".react-select__clear-indicator").first().click();
+    cy.get(".react-select__value-container").should(
+      "include.text",
+      "Select or start typing..."
+    );
+    cy.get('[data-cy="programmeSpecialty"] > .nhsuk-error-message').should(
+      "contain.text",
+      "Error: Programme specialty is required"
+    );
+
+    // test AutocompleteSelect autocomplete
+    cy.get('[data-cy="programmeSpecialty"]')
+      .click()
+      .type("ger")
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").contains("Geriatric Medicine");
+    cy.get('[data-cy="programmeSpecialty"] > .nhsuk-error-message').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="cctSpecialty1"] > .nhsuk-error-message').should(
+      "contain.text",
+      "Error: Specialty 1 for Award of CCT is required"
+    );
+    cy.get('[data-cy="cctSpecialty1"]')
+      .click()
+      .type("na")
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").contains("ACCS - Anaesthetics");
+    cy.get('[data-cy="cctSpecialty1"] > .nhsuk-error-message').should(
+      "not.exist"
+    );
+
     cy.get("[data-cy=BtnContinue]").should("exist").click();
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
   });
