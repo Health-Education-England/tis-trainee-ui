@@ -2,6 +2,17 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import * as Sentry from "@sentry/browser";
 import { Auth } from "aws-amplify";
 
+export const onFulfilled = async function (response: any) {
+  // Any status code that lie within the range of 2xx.
+  return response;
+}
+
+export const onRejected = async function (error: any) {
+  // Any status codes that falls outside the range of 2xx.
+  Sentry.captureException(error);
+  return Promise.reject(error);
+}
+
 export class ApiService {
   axiosInstance: AxiosInstance;
 
@@ -18,17 +29,7 @@ export class ApiService {
       return config;
     });
 
-    this.axiosInstance.interceptors.response.use(
-      async function (response) {
-        // Any status code that lie within the range of 2xx
-        return response;
-      },
-      async function (error) {
-        // Any status codes that falls outside the range of 2xx
-        Sentry.captureException(error);
-        return Promise.reject(error);
-      }
-    );
+    this.axiosInstance.interceptors.response.use(onFulfilled, onRejected);
   }
 
   get<T = any>(endpoint: string): Promise<AxiosResponse<T>> {
