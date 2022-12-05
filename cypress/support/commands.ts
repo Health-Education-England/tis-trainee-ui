@@ -39,7 +39,7 @@ Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]")
     .should("exist")
     .should("include.text", "My details are wrong")
-    .click();
+    .click({ force: true });
   cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
   cy.get(".nhsuk-action-link__text").should(
     "contain.text",
@@ -67,7 +67,7 @@ Cypress.Commands.add(
     dateAttained: string,
     completionDate: string,
     startDate: string,
-    wholeTimeEquivalent: number
+    wholeTimeEquivalent: string
   ) => {
     cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
     cy.get("#surname").should("exist").invoke("val").should("not.be.empty");

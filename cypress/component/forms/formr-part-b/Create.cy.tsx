@@ -16,10 +16,10 @@ import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-
 import { updatedReference } from "../../../../src/redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../src/mock-data/combinedReferenceData";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
+import dayjs from "dayjs";
 
 describe("Create form B", () => {
-  const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
+  const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
   it("should not render a section if no tisId", () => {
     mount(
       <Provider store={store}>

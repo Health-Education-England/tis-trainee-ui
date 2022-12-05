@@ -9,7 +9,6 @@ import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-
 import { mockedCombinedReference } from "../../../../src/mock-data/combinedReferenceData";
 import { updatedReference } from "../../../../src/redux/slices/referenceSlice";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 
 describe("Section4", () => {
   it("should mount section 4 ", () => {
@@ -39,7 +38,7 @@ describe("Section4", () => {
       .should("exist")
       .should("include.text", "Section 4");
     //click no to check that assosiated panel doen not exist in dom
-    cy.get("[data-cy=havePreviousDeclarations1]").click();
+    cy.get("[data-cy=havePreviousDeclarations1]").click({ force: true });
     cy.get('[data-cy="previousDeclarations[0].declarationType"]').should(
       "not.exist"
     );

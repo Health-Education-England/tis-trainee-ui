@@ -12,7 +12,6 @@ import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-
 import { updatedReference } from "../../../../src/redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../src/mock-data/combinedReferenceData";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 
 describe("Section1", () => {
   it("should mount section 1 ", () => {
@@ -51,7 +50,13 @@ describe("Section1", () => {
     cy.get("[data-cy=BtnSaveDraft]").should("exist");
     cy.get("[data-cy=prevRevalBodyOther]").should("not.exist");
     cy.get("[data-cy=prevRevalBody]").select("other");
-    cy.get("[data-cy=prevRevalBodyOther]").should("exist").type("c");
-    cy.get(".nhsuk-form-group > ul").should("exist");
+    cy.get("[data-cy=prevRevalBodyOther]")
+      .should("exist")
+      .type("c")
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").should("include.text", "Maximus");
   });
 });

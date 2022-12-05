@@ -10,7 +10,6 @@ import store from "../../../../src/redux/store/store";
 import Section2 from "../../../../src/components/forms/formr-part-b/sections/Section2";
 import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-partb";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);

@@ -7,7 +7,6 @@ import store from "../../../../src/redux/store/store";
 import Section3 from "../../../../src/components/forms/formr-part-b/sections/Section3";
 import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-partb";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 
 describe("Section3", () => {
   it("should mount section 3 ", () => {
@@ -45,7 +44,7 @@ describe("Section3", () => {
     )
       .should("exist")
       .should("include.text", "Health statement");
-    cy.get("[data-cy=isWarned1]").should("exist").click();
+    cy.get("[data-cy=isWarned1]").should("exist").click({ force: true });
     cy.get("[data-cy=isWarned0]").should("exist").click();
     cy.get(".nhsuk-form-group > [data-cy=healthStatement]").click();
     cy.get("#isComplying--error-message").should("exist");

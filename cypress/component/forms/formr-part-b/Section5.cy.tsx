@@ -9,7 +9,6 @@ import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-
 import { updatedReference } from "../../../../src/redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../src/mock-data/combinedReferenceData";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 
 describe("Section 5", () => {
   it("should mount section 5", () => {
@@ -39,12 +38,10 @@ describe("Section 5", () => {
       .should("exist")
       .should("include.text", "Section 5");
 
-    //click no to check that assosiated panel doen not exist in dom
-    cy.get("[data-cy=haveCurrentDeclarations1]").click();
+    cy.get("[data-cy=haveCurrentDeclarations1]").click({ force: true });
     cy.get('[data-cy="currentDeclarations[0].declarationType"]').should(
       "not.exist"
     );
-    //click yes and complete panal
     cy.get("[data-cy=haveCurrentDeclarations0]").click();
     cy.get('[data-cy="currentDeclarations[0].declarationType"]').should(
       "exist"
@@ -67,10 +64,10 @@ describe("Section 5", () => {
     cy.get(
       "#declarationPanel1 > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
-    //click no on Current unresolved declerations
+
     cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
     cy.get("#currentDeclarationSummary--hint > span").should("not.exist");
-    //click yes on Current unresolved declarations
+
     cy.get("[data-cy=haveCurrentUnresolvedDeclarations0]").click();
     cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").should(
       "exist"
@@ -78,8 +75,7 @@ describe("Section 5", () => {
     cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").type(
       "test text"
     );
-    //click yes on click yes on Current unresolved declarations and
-    // no on Current resolved declarations
+
     cy.get("[data-cy=haveCurrentDeclarations1]").click();
     cy.get(
       "[data-cy=haveCurrentUnresolvedDeclarations] > .nhsuk-panel-with-label__label"

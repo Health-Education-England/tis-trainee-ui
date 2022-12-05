@@ -9,7 +9,6 @@ import { submittedFormRPartBs } from "../../../../src/mock-data/submitted-formr-
 import Section6 from "../../../../src/components/forms/formr-part-b/sections/Section6";
 import history from "../../../../src/components/navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
-import React from "react";
 
 it("should mount section 6 ", () => {
   const MockedDeclarations = () => {
@@ -42,7 +41,9 @@ it("should mount section 6 ", () => {
   cy.get(".nhsuk-card__heading")
     .should("exist")
     .should("include.text", "Declaration");
-  cy.get("[data-cy=isDeclarationAccepted0]").should("exist").click();
+  cy.get("[data-cy=isDeclarationAccepted0]")
+    .should("exist")
+    .click({ force: true });
   cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
   cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
   cy.get(".MuiDialog-container")

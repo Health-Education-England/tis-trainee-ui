@@ -39,7 +39,9 @@ describe("CovidDeclaration", () => {
       .should("exist")
       .should("include.text", "Pandemic");
     cy.get(".nhsuk-card__heading").should("include.text", "Covid declarations");
-    cy.get("[data-cy=haveCovidDeclarations0]").should("exist").click();
+    cy.get("[data-cy=haveCovidDeclarations0]")
+      .should("exist")
+      .click({ force: true });
     cy.get(".nhsuk-warning-callout__label")
       .should("exist")
       .should("include.text", "Important");

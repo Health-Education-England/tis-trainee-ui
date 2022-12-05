@@ -64,7 +64,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts -r @cypress/instrument-cra start",
     "prebuild": "npm run generate-build-version",
     "generate-build-version": "node generate-build-version",
     "build": "react-scripts build",

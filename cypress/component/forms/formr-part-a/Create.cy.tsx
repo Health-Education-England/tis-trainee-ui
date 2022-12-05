@@ -13,7 +13,6 @@ import { updatedFormA } from "../../../../src/redux/slices/formASlice";
 import { updatedReference } from "../../../../src/redux/slices/referenceSlice";
 import { FormRUtilities } from "../../../../src/utilities/FormRUtilities";
 import history from "../../../../src/components/navigation/history";
-import React from "react";
 
 describe("Form R Part A - Create", () => {
   it("should not render the form if no tisId", () => {
