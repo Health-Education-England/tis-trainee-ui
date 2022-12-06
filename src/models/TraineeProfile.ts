@@ -15,3 +15,7 @@ export enum TraineeProfileName {
   Placements = "placements",
   Programmes = "programmeMemberships"
 }
+export enum PanelName {
+  Placement = "placement",
+  Programme = "programme"
+}
