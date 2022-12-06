@@ -65,7 +65,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
 const colourStyles = {
   option: (baseStyles: any, { isFocused, isSelected }: any) => ({
     ...baseStyles,
-    background: isFocused ? "#2884FF" : isSelected ? "none" : undefined,
+    background: isFocused ? "#2884FF" : "none",
     color: isFocused ? "white" : undefined,
     zIndex: 1,
     fontSize: "1rem",

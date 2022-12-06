@@ -9,7 +9,6 @@ import {
   recentSubmitDate
 } from "../../../src/mock-data/submitted-formr-parta";
 import history from "../../../src/components/navigation/history";
-import React from "react";
 
 describe("SubmittedFormsList", () => {
   it("should show no forms submitted msg if no submitted forms", () => {

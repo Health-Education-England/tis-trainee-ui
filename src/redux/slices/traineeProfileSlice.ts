@@ -34,7 +34,6 @@ export const fetchTraineeProfileData = createAsyncThunk(
   }
 );
 
-// TODO CORS error if addCredential made via localhost
 export const issueDspCredential = createAsyncThunk(
   "traineeProfile/issueDspCredential",
   async (parData: { panelId: string; panelName: string }) => {
