@@ -29,7 +29,7 @@ describe("ProfileUtilities", () => {
     const totalLeaveCalc = ProfileUtilities.getTotal(draftFormRPartB);
     expect(totalLeaveCalc).toEqual(totLeave);
   });
-  it("should still return the total leave with null value", () => {
+  it("should still return the total leave with zero value", () => {
     const totLeave = draftFormRPartBWithNullCareerBreak.totalLeave;
     const totalLeaveCalc = ProfileUtilities.getTotal(
       draftFormRPartBWithNullCareerBreak
