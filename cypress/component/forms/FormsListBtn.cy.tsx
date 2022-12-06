@@ -15,7 +15,7 @@ import history from "../../../src/components/navigation/history";
 import day from "dayjs";
 import { ConfirmProvider } from "material-ui-confirm";
 import { FormRUtilities } from "../../../src/utilities/FormRUtilities";
-import React from "react";
+import { DateUtilities } from "../../../src/utilities/DateUtilities";
 
 describe("FormsListBtn", () => {
   it("should render the 'Submit new form' button if no submitted forms ", () => {
@@ -103,7 +103,12 @@ describe("FormsListBtn", () => {
     cy.stub(FormRUtilities, "loadNewForm").as("newForm");
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
     cy.get(".MuiDialog-container").should("exist");
-    cy.get("#mui-1").should("include.text", "Are you sure?");
+    cy.get(".MuiDialogContent-root > .MuiTypography-root").should(
+      "contain.text",
+      `You recently submitted a form on ${DateUtilities.ToLocalDate(
+        day().toDate()
+      )}. Are you sure you want to submit another?`
+    );
     cy.get(".MuiDialogActions-root > :nth-child(1)").click();
     cy.get(".MuiDialog-container").should("not.exist");
     cy.get("[data-cy=btnLoadNewForm]").should("exist").click();

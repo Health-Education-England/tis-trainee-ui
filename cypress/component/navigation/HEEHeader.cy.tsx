@@ -1,11 +1,9 @@
 import { mount } from "cypress/react18";
-import { beforeEach, describe } from "mocha";
 import { Router } from "react-router-dom";
 import HEEHeader from "../../../src/components/navigation/HEEHeader";
 import history from "../../../src/components/navigation/history";
 import { Provider } from "react-redux";
 import store from "../../../src/redux/store/store";
-import React from "react";
 
 const navLinks = [
   { name: "Profile", href: "/profile" },

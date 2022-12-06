@@ -1,6 +1,4 @@
 import { mount } from "cypress/react18";
-import { beforeEach } from "mocha";
-import React from "react";
 import { Router } from "react-router-dom";
 import HEEFooter from "../../../src/components/navigation/HEEFooter";
 import history from "../../../src/components/navigation/history";
