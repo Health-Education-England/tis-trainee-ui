@@ -59,8 +59,6 @@ describe("View", () => {
   });
 
   it("should render the correct work data", () => {
-    workData.map((workObj, index) => {
-      cy.testData(workObj, index + 1);
-    });
+    workData.map((workObj, index) => cy.testData(workObj, index + 1));
   });
 });

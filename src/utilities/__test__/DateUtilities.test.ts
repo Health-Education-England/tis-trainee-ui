@@ -1,10 +1,5 @@
 import dayjs from "dayjs";
 import day from "dayjs";
-
-import {
-  disorderedFormRPartBs,
-  orderedFormRPartBs
-} from "../../mock-data/submitted-formr-list";
 import { mockPlacements } from "../../mock-data/trainee-profile";
 import { DateUtilities, isWithinRange } from "../DateUtilities";
 

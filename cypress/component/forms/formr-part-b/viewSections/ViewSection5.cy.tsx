@@ -51,9 +51,7 @@ describe("View", () => {
   });
 
   it("should render the correct declaration data", () => {
-    currDecs.map((decObj, index) => {
-      cy.testData(decObj, index + 1);
-    });
+    currDecs.map((decObj, index) => cy.testData(decObj, index + 1));
   });
 });
 

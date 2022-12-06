@@ -1,4 +1,3 @@
-import { CurriculumKeyValue } from "./CurriculumKeyValue";
 import { IFormR } from "./IFormR";
 
 type DateType = Date | string | null;

@@ -11,7 +11,6 @@ import {
   mockProgrammeMembershipDuplicateCurriculaStart,
   mockPlacements
 } from "../../mock-data/trainee-profile";
-import { Work } from "../../models/FormRPartB";
 import { NEW_WORK } from "../Constants";
 import {
   workArr,
@@ -93,24 +92,20 @@ describe("ProfileUtilities", () => {
   // Trim future work placements
   it("should return a new blank work placement if empty arr", () => {
     const emptyArr = [];
-    const trimmedAndSortedEmptyArr = ProfileUtilities.sortedTrimmedWork(
-      emptyArr
-    );
+    const trimmedAndSortedEmptyArr =
+      ProfileUtilities.sortedTrimmedWork(emptyArr);
     expect(trimmedAndSortedEmptyArr).toEqual([NEW_WORK]);
   });
 
   it("should return the original array of just one placement", () => {
     const oneItemArr = [workArr[0]];
-    const trimmedAndSortedOneItemArr = ProfileUtilities.sortedTrimmedWork(
-      oneItemArr
-    );
+    const trimmedAndSortedOneItemArr =
+      ProfileUtilities.sortedTrimmedWork(oneItemArr);
     expect(trimmedAndSortedOneItemArr).toEqual(oneItemArr);
   });
 
   it("should trim the future placements by start date to one placement (if no two have same start date) and put all placements in desc order by end date", () => {
-    const trimmedAndSorted = ProfileUtilities.sortedTrimmedWork(
-      workArr
-    );
+    const trimmedAndSorted = ProfileUtilities.sortedTrimmedWork(workArr);
     expect(trimmedAndSorted).toEqual(trimmedAndSortedArr);
   });
 
@@ -118,6 +113,8 @@ describe("ProfileUtilities", () => {
     const trimmedAndSorted2 = ProfileUtilities.sortedTrimmedWork(
       workArrWithTwoFutureOnSameDay
     );
-    expect(trimmedAndSorted2).toEqual(trimmedAndSortedWorkArrWithTwoFutureOnSameDay);
+    expect(trimmedAndSorted2).toEqual(
+      trimmedAndSortedWorkArrWithTwoFutureOnSameDay
+    );
   });
 });

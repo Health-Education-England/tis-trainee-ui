@@ -52,9 +52,7 @@ describe("View", () => {
   });
 
   it("should render the correct declaration data", () => {
-    prevDecs.map((decObj, index) => {
-      cy.testData(decObj, index + 1);
-    });
+    prevDecs.map((decObj, index) => cy.testData(decObj, index + 1));
   });
 });
 

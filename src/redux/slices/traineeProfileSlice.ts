@@ -44,7 +44,9 @@ export const issueDspCredential = createAsyncThunk(
       panelId,
       panelName
     );
-    window.location.href = response.headers.location;
+    if (!!response.headers.location) {
+      window.location.href = response.headers.location;
+    }
   }
 );
 
