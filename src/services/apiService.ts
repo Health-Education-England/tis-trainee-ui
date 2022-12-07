@@ -5,13 +5,13 @@ import { Auth } from "aws-amplify";
 export const onFulfilled = async function (response: any) {
   // Any status code that lie within the range of 2xx.
   return response;
-}
+};
 
 export const onRejected = async function (error: any) {
   // Any status codes that falls outside the range of 2xx.
   Sentry.captureException(error);
   return Promise.reject(error);
-}
+};
 
 export class ApiService {
   axiosInstance: AxiosInstance;
