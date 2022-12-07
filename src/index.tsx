@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import store from "./redux/store/store";
 import { Provider } from "react-redux";
 import "./index.scss";
@@ -18,6 +18,7 @@ const tagManagerArgs = {
 };
 
 TagManager.initialize(tagManagerArgs);
+
 browserUpdate(browserUpdateConfig);
 
 async function fetchData(): Promise<any> {
@@ -50,11 +51,12 @@ async function fetchData(): Promise<any> {
       }
     });
   }
-  ReactDOM.render(
+  const container = document.getElementById("root");
+
+  createRoot(container!).render(
     <Provider store={store}>
       <App />
-    </Provider>,
-    document.getElementById("root")
+    </Provider>
   );
   serviceWorker.unregister();
 })();

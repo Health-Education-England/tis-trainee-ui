@@ -15,9 +15,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types", "node_modules/yup"]
   },
-  "include": ["src", "global.d.ts"],
+  "include": ["src", "global.d.ts", "cypress"],
   "exclude": [
     "src/mock-data",
     "**/*.spec.ts",

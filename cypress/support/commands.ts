@@ -1,30 +1,4 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-// cypress/support/index.js
-
+/// <reference types="cypress" />
 import day from "dayjs";
 import { DateUtilities } from "../../src/utilities/DateUtilities";
 import { BooleanUtilities } from "../../src/utilities/BooleanUtilities";
@@ -65,7 +39,7 @@ Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]")
     .should("exist")
     .should("include.text", "My details are wrong")
-    .click();
+    .click({ force: true });
   cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
   cy.get(".nhsuk-action-link__text").should(
     "contain.text",
@@ -79,22 +53,11 @@ Cypress.Commands.add("testDataSourceLink", () => {
 });
 
 Cypress.Commands.add("signIn", () => {
-  cy.get("#radix-2-trigger-0").click();
-  cy.get("#amplify-id-0").clear().type(Cypress.env("username"));
-  cy.get("#amplify-id-2").clear().type(Cypress.env("password"));
+  cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
+  cy.get('[type="password"]').clear().type(Cypress.env("password"));
   cy.get(".amplify-button--primary").click();
   cy.task("generateOTP").then(token => {
-    cy.get("#amplify-id-6").clear().type(`${token}{enter}`);
-  });
-});
-
-Cypress.Commands.add("signBackIn", () => {
-  cy.get("#radix-5-trigger-0").click();
-  cy.get("#amplify-id-9").clear().type(Cypress.env("username"));
-  cy.get("#amplify-id-11").clear().type(Cypress.env("password"));
-  cy.get(".amplify-button--primary").click();
-  cy.task("generateOTP").then(token => {
-    cy.get("#amplify-id-15").clear().type(`${token}{enter}`);
+    cy.get('[type="number"]').type(`${token}{enter}`);
   });
 });
 
@@ -104,7 +67,7 @@ Cypress.Commands.add(
     dateAttained: string,
     completionDate: string,
     startDate: string,
-    wholeTimeEquivalent: number
+    wholeTimeEquivalent: string
   ) => {
     cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
     cy.get("#surname").should("exist").invoke("val").should("not.be.empty");
@@ -599,3 +562,40 @@ Cypress.Commands.add("testData", (dataToTest: any, index?: number) => {
     }
   });
 });
+
+// ***********************************************
+// This example commands.ts shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add('login', (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+//
+// declare global {
+//   namespace Cypress {
+//     interface Chainable {
+//       login(email: string, password: string): Chainable<void>
+//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+//     }
+//   }
+// }

@@ -203,7 +203,7 @@ export const mockPlacements: Placement[] = [
     site: "Addenbrookes Hospital",
     siteLocation: "Site location",
     specialty: "Dermatology",
-    startDate: new Date("2020-01-01"),
+    startDate: new Date("2019-01-01"),
     status: Status.Current,
     employingBody: "Employing body",
     trainingBody: "Training body",

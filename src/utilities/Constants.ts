@@ -81,3 +81,43 @@ export const dialogBoxWarnings = {
   formSubMsg:
     "Please think carefully before submitting as the current process for deleting or re-submitting a new form isn't straightforward. You can save a draft copy if needed. But if you are ready to submit then please click OK."
 };
+
+export type PanelKeys = {
+  placements: string;
+  programmeMemberships: string;
+  site: string;
+  siteLocation: string;
+  startDate: string;
+  endDate: string;
+  wholeTimeEquivalent: string;
+  specialty: string;
+  grade: string;
+  placementType: string;
+  employingBody: string;
+  trainingBody: string;
+  programmeName: string;
+  programmeNumber: string;
+  managingDeanery: string;
+  programmeMembershipType: string;
+  curricula: string;
+};
+
+export const PANEL_KEYS: PanelKeys = {
+  placements: "Placements",
+  programmeMemberships: "Programmes",
+  site: "Site",
+  siteLocation: "Site Location",
+  startDate: "Starts",
+  endDate: "Ends",
+  wholeTimeEquivalent: "Whole Time Equivalent",
+  specialty: "Specialty",
+  grade: "Grade",
+  placementType: "Placement Type",
+  employingBody: "Employing Body",
+  trainingBody: "Training Body",
+  programmeName: "Programme Name",
+  programmeNumber: "Programme Number",
+  managingDeanery: "Owner",
+  programmeMembershipType: "Type",
+  curricula: "Curricula"
+};

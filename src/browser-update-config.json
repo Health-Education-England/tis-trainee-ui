@@ -1,23 +1,21 @@
 {
   "required": {
-    "e": -2,
-    "f": -3,
-    "c": -3,
-    "o": -3,
     "s": 0
   },
+  "test": false,
   "reminder": 0,
   "insecure": true,
-  "unsupported": true,
   "no_permanent_hide": true,
   "noclose": true,
   "url": "https://browser-update.org/update-browser.html",
+  "text_for_s": {
+    "msg": "Your version of the Safari web browser ({brow_name}) is not compatible with TIS Self-Service.",
+    "msgmore": "Older versions of Safari have known compatibility issues which means that you will get an error if you try to submit your Form R. Please update to the latest Safari version or use an alternative web browser such as Firefox, Edge, or Chrome.",
+    "bupdate": "Update web browser"
+  },
   "text": {
     "msg": "Your web browser ({brow_name}) is out of date.",
     "msgmore": "TIS Self-Service application has been designed to work with modern web browsers, such as the latest versions of Google Chrome or Microsoft Edge. The site will not display or function correctly using an older browser and it will be necessary to update your browser or use a modern alternative in order to run this application. ",
-    "bupdate": "Update browser",
-    "bignore": "Ignore",
-    "remind": "You will be reminded in {days} days.",
-    "bnever": "Never show again"
+    "bupdate": "Update web browser"
   }
 }

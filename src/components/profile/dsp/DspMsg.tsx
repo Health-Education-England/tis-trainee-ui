@@ -6,7 +6,6 @@ interface IDspMsg {
 }
 
 const DspMsg: React.FC<IDspMsg> = ({ panelName }) => {
-  // TODO need an issued date
   const msgDate = null;
   return (
     <>

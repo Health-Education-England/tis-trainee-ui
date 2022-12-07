@@ -1,8 +1,11 @@
 import { FormRPartA } from "../models/FormRPartA";
 import { LifeCycleState } from "../models/LifeCycleState";
+import dayjs from "dayjs";
+import { DateUtilities } from "../utilities/DateUtilities";
 
-export var recentSubmitDate = new Date();
-recentSubmitDate.setDate(recentSubmitDate.getDate() - 5);
+export const recentSubmitDate = DateUtilities.ToUTCDate(
+  dayjs().subtract(5, "days").toString()
+);
 
 export const submittedFormRPartAs: FormRPartA[] = [
   {
