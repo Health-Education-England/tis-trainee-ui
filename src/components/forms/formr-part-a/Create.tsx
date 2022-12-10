@@ -33,6 +33,7 @@ import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { DatepickerField } from "../../common/DatepickerField";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -95,11 +96,7 @@ const Create = ({ history }: { history: string[] }) => {
                   options={combinedReferenceData.localOffice}
                   name="localOfficeName"
                 />
-                <TextInputField
-                  label="Date of Birth"
-                  type="date"
-                  name="dateOfBirth"
-                />
+                <DatepickerField name="dateOfBirth" />
                 <SelectInputField
                   label="Gender"
                   options={combinedReferenceData.gender}
