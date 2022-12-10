@@ -34,6 +34,7 @@ import { CurriculumKeyValue } from "../../../models/CurriculumKeyValue";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { DatepickerField } from "../../common/DatepickerField";
+import { DatepickerAnt } from "../../common/DatepickerAnt";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -96,7 +97,8 @@ const Create = ({ history }: { history: string[] }) => {
                   options={combinedReferenceData.localOffice}
                   name="localOfficeName"
                 />
-                <DatepickerField name="dateOfBirth" />
+                {/* <DatepickerField name="dateOfBirth" /> */}
+                <DatepickerAnt name="dateOfBirth" value={values.dateOfBirth} />
                 <SelectInputField
                   label="Gender"
                   options={combinedReferenceData.gender}

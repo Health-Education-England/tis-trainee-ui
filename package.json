@@ -29,6 +29,7 @@
     "@types/react-helmet": "^6.1.4",
     "@types/react-router-dom": "^5.1.5",
     "@types/yup": "0.29.13",
+    "antd": "^5.0.5",
     "aws-amplify": "^4.3.25",
     "axios": "^0.21.4",
     "babel-plugin-istanbul": "^6.0.0",
