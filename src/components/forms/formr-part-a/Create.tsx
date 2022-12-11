@@ -35,6 +35,7 @@ import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { DatepickerField } from "../../common/DatepickerField";
 import { DatepickerAnt } from "../../common/DatepickerAnt";
+import { DatepickerMUI } from "../../common/DatepickerMUI";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -98,7 +99,8 @@ const Create = ({ history }: { history: string[] }) => {
                   name="localOfficeName"
                 />
                 {/* <DatepickerField name="dateOfBirth" /> */}
-                <DatepickerAnt name="dateOfBirth" value={values.dateOfBirth} />
+                {/* <DatepickerAnt name="dateOfBirth" value={values.dateOfBirth} /> */}
+                <DatepickerMUI name="dateOfBirth" />
                 <SelectInputField
                   label="Gender"
                   options={combinedReferenceData.gender}
