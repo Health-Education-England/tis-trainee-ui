@@ -29,10 +29,9 @@ export const submittedFormRPartAs: FormRPartA[] = [
     telephoneNumber: "01632960363",
     mobileNumber: "07465879348",
     email: "email@email.com",
-    declarationType:
-      "I will be seeking specialist registration by application for a CESR CP",
+    declarationType: "",
     isLeadingToCct: false,
-    programmeSpecialty: "ST3",
+    programmeSpecialty: undefined,
     cctSpecialty1: "",
     cctSpecialty2: "",
     college: "Faculty of Intensive Care Medicine",

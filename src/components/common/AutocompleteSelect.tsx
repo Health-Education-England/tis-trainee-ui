@@ -43,7 +43,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
         aria-labelledby={`${name}--label`}
         options={options}
         onChange={handleChange}
-        value={value.label}
+        value={value?.label}
         isClearable
         defaultValue={{
           value: value,

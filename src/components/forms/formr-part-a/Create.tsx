@@ -209,16 +209,14 @@ const Create = ({ history }: { history: string[] }) => {
                       setFieldValue("cctSpecialty1", "", false);
                     }}
                   />
-                  {values.declarationType && (
-                    <AutocompleteSelect
-                      value={values.programmeSpecialty}
-                      onChange={setFieldValue}
-                      error={errors.programmeSpecialty}
-                      options={filteredProgrammeSpecialtyOptions}
-                      name="programmeSpecialty"
-                      label="Programme Specialty"
-                    />
-                  )}
+                  <AutocompleteSelect
+                    value={values.programmeSpecialty}
+                    onChange={setFieldValue}
+                    error={errors.programmeSpecialty}
+                    options={filteredProgrammeSpecialtyOptions}
+                    name="programmeSpecialty"
+                    label="Programme Specialty"
+                  />
                   {values.declarationType === CCT_DECLARATION && (
                     <>
                       <AutocompleteSelect
