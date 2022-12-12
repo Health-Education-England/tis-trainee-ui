@@ -16,7 +16,24 @@ export const DatepickerMUI = ({ ...props }: any) => {
         onChange={val => {
           setFieldValue(field.name, val);
         }}
+        InputProps={{
+          sx: {
+            ".MuiFormControl-root": {
+              borderColor: "black"
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              color: "black",
+              borderRadius: 0
+            },
+            "& .MuiInputBase-input": {
+              padding: "6px",
+              fontSize: "19px",
+              borderColor: "black"
+            }
+          }
+        }}
         renderInput={params => <TextField {...params} />}
+        showDaysOutsideCurrentMonth
       />
     </LocalizationProvider>
   );
