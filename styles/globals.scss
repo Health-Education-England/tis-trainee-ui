@@ -1,0 +1,138 @@
+@import "~nhsuk-frontend/packages/nhsuk";
+@import "~nhsuk-frontend/packages/core/all";
+
+$nhsFont: “Frutiger W01”, Arial, sans-serif;
+
+html {
+  background-color: inherit;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+[data-amplify-authenticator] {
+  background-color: #005eb8;
+  min-height: calc(100vh);
+}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cookieConsent-overlay {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.CookieConsent {
+  align-items: baseline;
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  left: 0px;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  bottom: 0px;
+  background-color: darken(#7c2855, 10%);
+  height: 260px;
+  .cookieConsent-content {
+    flex: 1 0 300px;
+    margin: 40px;
+    a {
+      &:visited,
+      &:active,
+      &:focus {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        text-decoration: underline !important;
+      }
+    }
+  }
+  button {
+    cursor: pointer;
+    flex: 0 0 auto;
+    margin: 30px;
+  }
+}
+
+.Toastify {
+  & > div {
+    width: 400px;
+  }
+}
+.customToast {
+  div {
+    font-size: large;
+    padding: 15px;
+  }
+
+  &.successToast {
+    background-color: #006747;
+  }
+  &.failToast {
+    background-color: #8a1538;
+  }
+}
+.centreSpinner {
+  position: fixed;
+  margin: auto;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 900px) {
+  .CookieConsent {
+    height: 100%;
+    display: block;
+  }
+}
