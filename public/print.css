@@ -43,20 +43,6 @@ fieldset {
   display: table-cell !important;
 }
 
-.modalWrapper {
-  position: absolute !important;
-  top: 0 !important;
-  width: 100% !important;
-  overflow: visible !important;
-  box-shadow: none !important;
-}
-.modalContent {
-  overflow: visible !important;
-}
-
-.modalWrapper ~ .cookieConsent-overlay {
-  display: none !important;
-}
 @page {
   margin: 20mm 10mm;
 }
