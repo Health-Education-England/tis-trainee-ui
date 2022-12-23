@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import "./FieldWarningMsg.module.scss";
 interface IFieldWarningMsg {
   warningMsg: string;
 }
