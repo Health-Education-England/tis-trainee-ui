@@ -1,5 +1,4 @@
 import { INotification } from "../../../models/INotification";
-import "./NotificationItem.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -56,7 +55,7 @@ const NotificationItem = ({ notification }: INotificationItem) => {
           type="button"
           title="close button"
           data-cy="notifCloseBtn"
-          className={`closeBtn ${notification.type}`}
+          className={`close-btn ${notification.type}`}
           onClick={() => handleClick(notification.id)}
         >
           <FontAwesomeIcon icon={faClose} size="lg" />

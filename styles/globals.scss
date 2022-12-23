@@ -193,3 +193,73 @@ button:disabled {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+// notifications
+
+.notification {
+  border: 2px solid #fff;
+  padding: 12px;
+  text-align: center;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  animation: notifFadein 0.1s;
+}
+
+@keyframes notifFadein {
+  0%,
+  25% {
+    opacity: 0;
+  }
+  50%,
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fa-icon {
+  padding-right: 3px;
+}
+
+.msg-container {
+  align-self: center;
+  font-size: 1.25rem;
+}
+
+.close-btn {
+  color: #fff;
+  font-size: large;
+  text-align: right;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    color: #000;
+  }
+}
+
+.Success {
+  background-color: #006400;
+}
+
+.Error {
+  background-color: #a7171a;
+}
+
+// field warning
+.field-warning-container {
+  padding-bottom: 1.5rem;
+  text-align: left;
+  display: flex;
+}
+
+.field-warning-msg {
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.field-warning-icon {
+  color: #ed8b00;
+}
