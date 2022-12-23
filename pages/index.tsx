@@ -6,7 +6,10 @@ import AuthHeader from "../components/authentication/signup/header/AuthHeader";
 import AuthFooter from "../components/authentication/signup/footer/AuthFooter";
 import AuthHeading from "../components/authentication/signup/sharedPrimitives/AuthHeading";
 import AuthBtnLink from "../components/authentication/signup/sharedPrimitives/AuthBtnLink";
-import AuthFormFields from "../components/authentication/signup/formFields/AuthFormFields";
+import {
+  AuthFormFields,
+  FormFields
+} from "../components/authentication/signup/formFields/AuthFormFields";
 import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
   SIGN_IN_HEADING_TEXT,
@@ -73,21 +76,7 @@ const services = {
     return validationMessage;
   }
 };
-const formFields = {
-  confirmSignUp: {
-    confirmation_code: {
-      labelHidden: false,
-      label: "Email verification code is valid for 1 hour"
-    }
-  },
-  confirmResetPassword: {
-    confirmation_code: {
-      labelHidden: false,
-      label:
-        "Enter your Password Reset Code ('No Reply' email from no-reply@tis-selfservice.nhs.uk) "
-    }
-  }
-};
+const formFields = FormFields;
 const loginMechanisms: LoginMechanism[] = ["email"];
 const signUpAttributes: SignUpAttribute[] = [
   "given_name",
