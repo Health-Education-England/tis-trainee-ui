@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 
@@ -24,6 +24,15 @@ import { I18n } from "@aws-amplify/core";
 import { BrowserRouter } from "react-router-dom";
 import { Main } from "../components/main/Main";
 import Notifications from "../components/common/notifications/Notifications";
+import browserUpdateConfig from "../browser-update-config.json";
+import TagManager from "react-gtm-module";
+import packageJson from "../package.json";
+
+const appVersion = packageJson.version;
+
+const tagManagerArgs = {
+  gtmId: "GTM-5PWDC87"
+};
 
 I18n.putVocabulariesForLanguage("en", FORM_FIELD_VALUES);
 const components = {
@@ -89,8 +98,17 @@ const App: React.FC = () => {
     return null;
   }
 
-  // App version placeholder
-  const appVersion = "1.0.0";
+  TagManager.initialize(tagManagerArgs);
+
+  // Dynamically imported browser-update module (see https://github.com/browser-update/browser-update/issues/524 for more info)
+  // Also added a nomodule script tag in _app.tsx to catch IE and other browsers that don't support ES modules (see e.g. https://stackoverflow.com/questions/74154325/warning-ie11-users-their-browser-is-unsupported-in-react-18)
+  useEffect(() => {
+    const loadBrowserUpdate = async () => {
+      const browserUpdate = (await import("browser-update")).default;
+      browserUpdate(browserUpdateConfig);
+    };
+    loadBrowserUpdate();
+  }, []);
 
   return (
     <Authenticator
