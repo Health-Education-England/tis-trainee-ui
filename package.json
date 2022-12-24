@@ -66,8 +66,6 @@
   },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run generate-build-version",
-    "generate-build-version": "node generate-build-version",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
