@@ -1,8 +1,11 @@
 import { FormRPartA } from "../models/FormRPartA";
 import { LifeCycleState } from "../models/LifeCycleState";
+import dayjs from "dayjs";
+import { DateUtilities } from "../utilities/DateUtilities";
 
-export var recentSubmitDate = new Date();
-recentSubmitDate.setDate(recentSubmitDate.getDate() - 5);
+export const recentSubmitDate = DateUtilities.ToUTCDate(
+  dayjs().subtract(5, "days").toString()
+);
 
 export const submittedFormRPartAs: FormRPartA[] = [
   {
@@ -26,10 +29,9 @@ export const submittedFormRPartAs: FormRPartA[] = [
     telephoneNumber: "01632960363",
     mobileNumber: "07465879348",
     email: "email@email.com",
-    declarationType:
-      "I will be seeking specialist registration by application for a CESR CP",
+    declarationType: "",
     isLeadingToCct: false,
-    programmeSpecialty: "ST3",
+    programmeSpecialty: undefined,
     cctSpecialty1: "",
     cctSpecialty2: "",
     college: "Faculty of Intensive Care Medicine",

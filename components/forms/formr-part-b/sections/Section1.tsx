@@ -9,7 +9,6 @@ import {
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
-// import Autocomplete from "../../Autocomplete";
 import ScrollTo from "../../ScrollTo";
 import SelectInputField from "../../SelectInputField";
 import TextInputField from "../../TextInputField";
@@ -19,6 +18,7 @@ import { CombinedReferenceData } from "../../../../models/CombinedReferenceData"
 import DataSourceMsg from "../../../../components/common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
+import { AutocompleteSelect } from "../../../common/AutocompleteSelect";
 
 const Section1 = ({
   prevSectionLabel,
@@ -108,18 +108,18 @@ const Section1 = ({
                     setFieldValue("prevRevalBodyOther", "", false);
                   }}
                 />
-                {/* {values.prevRevalBody === "other" && (
-                  <Autocomplete
-                    label="Please Specify 'Other'"
-                    name="prevRevalBodyOther"
-                    id="prevRevalBodyOther"
+                {values.prevRevalBody === "other" && (
+                  <AutocompleteSelect
+                    value={values.prevRevalBodyOther}
+                    onChange={setFieldValue}
+                    error={errors.prevRevalBodyOther}
                     options={[...combinedReferenceData.dbc].filter(
                       (db: DesignatedBodyKeyValue) => !db.internal
                     )}
-                    dataCy="prevRevalBodyOther"
-                    width="75%"
+                    name="prevRevalBodyOther"
+                    label="Please Specify 'Other'"
                   />
-                )} */}
+                )}
                 <TextInputField
                   label="Current Revalidation Date"
                   type="date"
