@@ -4,7 +4,7 @@ export const YES_TO_PILOT = "Sign-up is by email invitation only.";
 export const FORM_FIELD_VALUES = {
   // log in screen:
   "Create Account": "Sign up & verify email", //create account tab header
-  "Sign In": "Log back in", // Tab header
+  "Sign In": "Log in", // Tab header
   "Sign in": "Log in", // Button label
 
   // after signing-up button click

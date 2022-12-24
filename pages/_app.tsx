@@ -56,6 +56,9 @@ export default function App({ Component, pageProps }: AppProps) {
         gtag("config", "G-HZVN2JNJEQ");
       }`}
           </Script>
+          <Script noModule>
+            {`alert("Sorry, you will need to use a modern up-to-date browser such as the latest version of chrome, Edge, Firefox, or Safari to use TIS Self-Service.")`}
+          </Script>
           <Component {...pageProps} />
         </>
       )}

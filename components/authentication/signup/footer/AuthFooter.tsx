@@ -1,4 +1,5 @@
 import { Flex, View, Text } from "@aws-amplify/ui-react";
+import dayjs from "dayjs";
 import styles from "../../Auth.module.scss";
 const AuthFooter = (): JSX.Element => {
   const footerLinks = [
@@ -23,7 +24,9 @@ const AuthFooter = (): JSX.Element => {
     <>
       <Flex className={styles.authFooterLinks}>{addFooterLinks()}</Flex>
       <Flex className={styles.authFooterText}>
-        <View data-cy="footerCopy">&copy; Health Education England</View>
+        <View data-cy="footerCopy">
+          &copy; Health Education England {dayjs().year()}
+        </View>
       </Flex>
     </>
   );
