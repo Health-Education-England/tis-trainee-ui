@@ -10,8 +10,6 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 
 RUN npm install --production
 
-RUN npm run prebuild
-
 RUN npm run build
 
 RUN npm install -g serve
