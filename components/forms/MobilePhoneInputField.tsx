@@ -2,7 +2,6 @@ import { FunctionComponent } from "react";
 import { useField, connect } from "formik";
 import PhoneInput from "react-phone-number-input";
 import InputFooterLabel from "./InputFooterLabel";
-import "./MobilePhoneInputField.module.scss";
 interface IMobilePhoneInputField {
   name: string;
   label?: string;
@@ -29,7 +28,7 @@ const MobilePhoneInputField: FunctionComponent<
         </label>
       )}
       <PhoneInput
-        placeholder="Enter mobile phone number"
+        placeholder="Enter mobile number..."
         onBlur={field.onBlur}
         disabled={props.disabled}
         name="mobilePhoneNumber"
