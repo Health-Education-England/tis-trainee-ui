@@ -1,6 +1,4 @@
 import { IProgSection } from "../../models/IProgressSection";
-import "./ProgressBar.module.scss";
-
 interface IProgressBar {
   sections: IProgSection[];
   section: number;
