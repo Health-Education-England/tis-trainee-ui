@@ -50,3 +50,34 @@
     color: #fff;
   }
 }
+
+// TOTP instructions and verify TOTP comps
+.panelBack {
+  background-color: #f0f4f5;
+}
+
+.qrAuth {
+  height: 300px;
+  width: 200px;
+  margin-bottom: 30px;
+}
+
+.qrTss {
+  padding: 20px;
+}
+
+.detailsAuthHelp {
+  margin-bottom: 40px;
+}
+
+.altDownloadApple {
+  height: 90px;
+  width: 175px;
+  margin-left: 12px;
+  margin-right: 12px;
+}
+
+.altDownloadAndroid {
+  height: 89px;
+  width: 200px;
+}

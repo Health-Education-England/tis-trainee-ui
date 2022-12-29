@@ -27,7 +27,7 @@ import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
-import "../MFA.module.scss";
+import styles from "../../../authentication/Auth.module.scss";
 interface IVerifyTotp {
   user: CognitoUser | any;
 }
@@ -125,14 +125,14 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
               </ActionLink>
             </Details.Text>
           </Details>
-          <Card feature className="panelBack">
+          <Card feature className={styles.panelBack}>
             <Card.Content>
               <Card.Heading>using your phone</Card.Heading>
               <Fieldset.Legend size="m">
                 Open your Authenticator App, click 'add a new account' button
                 then scan the QR Code below.
               </Fieldset.Legend>
-              <div className="qrTss">
+              <div className={styles.qrTss}>
                 <QRCodeSVG
                   data-cy="tssQrCode"
                   size={192}
