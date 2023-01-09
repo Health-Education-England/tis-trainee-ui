@@ -240,22 +240,29 @@ Cypress.Commands.add(
       "Health Education England Wessex"
     );
     cy.get("#prevRevalBody").select("other");
-    cy.get("#prevRevalBodyOther").should("exist");
 
-    cy.get("#prevRevalBodyOther").clear().type("Health ");
-    cy.get("#prevRevalBodyOther + ul li").should("exist");
+    cy.get(
+      ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").contains(
+      "Centre for Health and Disability Assessments (Maximus UK)"
+    );
 
-    cy.get("#prevRevalBodyOther").clear().type("Dental Training Agency");
-    cy.get("#prevRevalBodyOther + ul li").should("not.exist");
-
-    cy.get('[data-cy="currRevalDate"]').click();
-    cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
-    cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
-    cy.get("#prevRevalBodyOther + ul li").should("exist");
-    cy.get("#prevRevalBodyOther + ul li").eq(0).click();
-
-    cy.get("#prevRevalBody").select("other");
-    cy.get("#prevRevalBodyOther").should("have.value", "");
+    cy.get(
+      ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
+    )
+      .click()
+      .type("ya")
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(".react-select__value-container").contains("Yachts");
   }
 );
 
