@@ -7,22 +7,20 @@ dayjs.extend(duration);
 
 let isCovid = false;
 const currentDate = dayjs().format("YYYY-MM-DD");
-const futureDate = Cypress.dayjs()
+const futureDate = dayjs()
   .add(dayjs.duration({ months: 6 }))
   .format("YYYY-MM-DD");
-const pastDate = Cypress.dayjs()
+const pastDate = dayjs()
   .subtract(dayjs.duration({ months: 6 }))
   .format("YYYY-MM-DD");
 const outOfRangeFutureDate = dayjs(futureDate)
   .add(dayjs.duration({ years: 20 }))
   .format("YYYY-MM-DD");
-const farFutureDate = Cypress.dayjs()
+const farFutureDate = dayjs()
   .add(dayjs.duration({ years: 5 }))
   .format("YYYY-MM-DD");
-
-const currRevalDate = Cypress.dayjs().add(3, "month").format("YYYY-MM-DD");
-
-const prevRevalDate = Cypress.dayjs().subtract(5, "years").format("YYYY-MM-DD");
+const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
+const prevRevalDate = dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B)", () => {
   before(() => {
@@ -342,16 +340,6 @@ describe("Form R (Part B)", () => {
       dayjs(farFutureDate).format("DD/MM/YYYY")
     );
     // ------------- submit form -----------------------------------------
-
-    // intercept formr-partb POST req
-    let uid: string;
-
-    cy.intercept("POST", "/api/forms/formr-partb", res => {
-      uid = res.body["id"];
-    });
-
-    // intercept formr-partBs GET req
-    cy.intercept("GET", "/api/forms/formr-partbs").as("getFormrPartBs");
 
     cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
     cy.get(".MuiDialog-container")
