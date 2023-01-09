@@ -27,6 +27,7 @@
     "aws-amplify": "^5.0.7",
     "axios": "^1.2.1",
     "browser-update": "^3.3.44",
+    "cypress": "^12.3.0",
     "cypress-otp": "^1.0.3",
     "dayjs": "^1.11.7",
     "eslint": "^8.30.0",
@@ -75,7 +76,9 @@
     "start": "next start",
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.scss\" \"**/*.css\" --fix",
-    "test": "jest --transformIgnorePatterns \"node_modules/(?!@amcharts)/\" --coverage --watchAll=false"
+    "test": "jest --transformIgnorePatterns \"node_modules/(?!@amcharts)/\" --coverage --watchAll=false",
+    "cypress": "cypress open --e2e",
+    "cypress:headless": "cypress run --e2e"
   },
   "husky": {
     "hooks": {
