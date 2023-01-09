@@ -1,0 +1,8 @@
+{
+  "extension": [".ts", ".tsx"],
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "include": ["components/**/*"],
+  "all": true,
+  "sourceMap": true,
+  "instrument": true
+}
