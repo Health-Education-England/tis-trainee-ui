@@ -5,8 +5,19 @@
 /.pnp
 .pnp.js
 
-# testing
+# Coverage directory used by tools like istanbul
 /coverage
+/*.lcov
+/cypress-coverage
+/jest-coverage
+/cypress/videos
+
+/cypress.env.json
+/cypress/screenshots/
+/reports
+
+# nyc test coverage
+/.nyc_output/*
 
 # next.js
 /.next/

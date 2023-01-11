@@ -82,15 +82,20 @@
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.scss\" \"**/*.css\" --fix",
     "test": "jest --transformIgnorePatterns \"node_modules/(?!@amcharts)/\" --coverage --watchAll=false",
-    "ct": "cypress open --component",
-    "ct:headless": "cypress run --component",
+    "ct": "cypress open --component & npm run coverage:cypress",
+    "ct:headless": "cypress run --component & npm run coverage:cypress",
     "cypress": "cypress open --e2e",
-    "cypress:headless": "cypress run --e2e"
+    "cypress:headless": "cypress run --e2e",
+    "report:combined": "node ./mergeCoverage.js",
+    "coverage:combined": "npm test && npm run ct:headless && npm run report:combined"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint && npm run stylelint"
     }
+  },
+  "nyc": {
+    "report-dir": "cypress-coverage"
   },
   "browserslist": {
     "production": [

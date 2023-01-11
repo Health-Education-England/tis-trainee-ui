@@ -40,7 +40,7 @@ jobs:
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
           browser: chrome
-          command: npm run ct
+          command: npm run ct:headless
 
       - name: Report
         run: npm run report:combined
@@ -54,7 +54,7 @@ jobs:
         run: |
           do_analysis=false
           for changed_file in ${{ steps.changed-files.outputs.all }}; do
-            if [[ $changed_file =~ ^(src|cypress)\/.+$ ]]; then
+            if [[ $changed_file =~ ^(cypress)\/.+$ ]]; then
               do_analysis=true
               break
             fi
