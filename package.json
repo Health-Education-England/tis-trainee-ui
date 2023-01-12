@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.10.5",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@reduxjs/toolkit": "^1.9.0",
     "@sentry/browser": "^7.28.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -26,6 +27,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "aws-amplify": "^5.0.7",
     "axios": "^1.2.1",
+    "babel-plugin-istanbul": "^6.1.1",
     "browser-update": "^3.3.44",
     "cypress": "^12.3.0",
     "cypress-otp": "^1.0.3",
@@ -48,6 +50,7 @@
     "next": "^13.0.7",
     "nhsuk-frontend": "^6.1.2",
     "nhsuk-react-components": "^2.2.1",
+    "nyc": "^15.1.0",
     "prettier": "^2.8.1",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
@@ -80,7 +83,11 @@
     "ct": "cypress open --component",
     "ct:headless": "cypress run --component",
     "cypress": "cypress open --e2e",
-    "cypress:headless": "cypress run --e2e"
+    "cypress:headless": "cypress run --e2e",
+    "cover-jest": "nyc --silent npm run test",
+    "cover-cypress-ct": "nyc --silent --no-clean npm run ct:headless",
+    "cover:report": "nyc report --reporter=lcov --reporter=text",
+    "coverage": "npm run cover-jest && npm run cover-cypress-ct && npm run cover:report"
   },
   "husky": {
     "hooks": {
