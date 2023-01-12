@@ -65,7 +65,9 @@ describe("Form R Part A - Create", () => {
     cy.get(".field-warning-msg").should("not.exist");
 
     // test AutocompleteSelect dropdown
-    cy.get('[data-cy="programmeSpecialty"]')
+    cy.get(
+      '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
       .click()
       .get(".react-select__menu")
       .find(".react-select__option")
@@ -83,7 +85,9 @@ describe("Form R Part A - Create", () => {
     );
 
     // test AutocompleteSelect autocomplete
-    cy.get('[data-cy="programmeSpecialty"]')
+    cy.get(
+      '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
       .click()
       .type("ger")
       .get(".react-select__menu")
@@ -98,7 +102,9 @@ describe("Form R Part A - Create", () => {
       "contain.text",
       "Error: Specialty 1 for Award of CCT is required"
     );
-    cy.get('[data-cy="cctSpecialty1"]')
+    cy.get(
+      '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
       .click()
       .type("na")
       .get(".react-select__menu")

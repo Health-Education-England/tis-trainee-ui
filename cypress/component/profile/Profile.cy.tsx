@@ -67,7 +67,8 @@ describe("Profile", () => {
     cy.get(expanderPD).click();
 
     // placements section
-    const expanderPl = "[data-cy=placementsExpander]";
+    const expanderPl =
+      "[data-cy=placementsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
     cy.get(expanderPl).should("exist").click();
     cy.get("[data-cy=site0Key]")
       .first()
