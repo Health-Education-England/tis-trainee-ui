@@ -96,8 +96,8 @@ describe("Section2", () => {
     cy.get("[data-cy=otherLeave]").click().clear().type("1");
     cy.get("[data-cy=totalLeave]").should("have.value", 12);
 
-    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist").click();
-    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("not.exist");
+    cy.get("[data-cy=closeIcon1]").focus().should("exist").click();
+    cy.get("[data-cy=closeIcon1]").should("not.exist");
     cy.get(
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
@@ -112,7 +112,7 @@ describe("Section2", () => {
     cy.get('[data-cy="work[1].siteLocation"]').type("test site location");
 
     cy.get("#work[1].typeOfWork--error-message").should("not.exist");
-    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").should("exist");
+    cy.get("[data-cy=closeIcon1]").focus().should("exist");
 
     cy.get(".nhsuk-pagination__page > div")
       .should("exist")
