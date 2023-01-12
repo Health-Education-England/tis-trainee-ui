@@ -123,7 +123,7 @@ describe("Create form B", () => {
     );
     cy.get("[data-cy=BtnEditSection2]").click();
     cy.get(".progress-step").eq(1).should("have.class", "progress-step-active");
-    cy.get("[data-cy=closeIcon1] > .nhsuk-icon > path").click();
+    cy.get("[data-cy=closeIcon1]").click();
     cy.get(
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");

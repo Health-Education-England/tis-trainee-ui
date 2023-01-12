@@ -60,7 +60,7 @@ describe("Section 5", () => {
     cy.get('[data-cy="currentDeclarations[1].declarationType"]').should(
       "exist"
     );
-    cy.get("[data-cy=closeIcon1] > .nhsuk-icon").click();
+    cy.get("[data-cy=closeIcon1]").focus().click();
     cy.get(
       "#declarationPanel1 > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
