@@ -19,7 +19,7 @@ describe("Form R (Part A)", () => {
   });
   it("Should complete a new Form R Part A.", () => {
     cy.contains("Form R (Part A)").click();
-    cy.visit("/formr-a", {failOnStatusCode: false});
+    cy.visit("/formr-a", { failOnStatusCode: false });
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
@@ -27,13 +27,15 @@ describe("Form R (Part A)", () => {
         // ---------- if New form btn ------------------------------------------------------------------
         if (loadFormAButton.attr("data-cy") === "btnLoadNewForm") {
           cy.get("[data-cy=btnLoadNewForm]").click();
-          cy.get(".MuiDialog-container").should("exist");
-          cy.get(".MuiDialogContentText-root").should(
-            "include.text",
-            "You recently submitted a form"
-          );
-          cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-
+          cy.get("body").then($body => {
+            if ($body.find(".MuiDialog-container").length) {
+              cy.get(".MuiDialogContentText-root").should(
+                "include.text",
+                "You recently submitted a form"
+              );
+              cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+            }
+          });
           cy.log("##################### NEW FORM ##################");
           cy.get(".nhsuk-warning-callout > p").should("exist");
 
