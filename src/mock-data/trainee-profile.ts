@@ -111,6 +111,20 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
   }
 ];
 
+export const mockProgrammeMembershipNonTemplatedField = {
+  startDate: new Date("2020-01-01"),
+  endDate: new Date("2022-01-01"),
+  programmeCompletionDate: new Date("2019-12-31"),
+  programmeTisId: "1",
+  programmeName: "Cardiology",
+  programmeNumber: "EOE8945",
+  managingDeanery: "Health Education England East of England",
+  programmeMembershipType: "SUBSTANTIVE",
+  status: Status.Current,
+  curricula: [],
+  nonTemplatedField: "nonTemplatedField"
+};
+
 export const mockProgrammeMembershipNoCurricula = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),
@@ -224,6 +238,22 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.75"
   }
 ];
+
+export const mockPlacementNonTemplatedField = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  specialty: "Dermatology",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5",
+  nonTemplatedField: "nonTemplatedField"
+};
 
 export const mockTraineeProfile: TraineeProfile = {
   traineeTisId: "123",

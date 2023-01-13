@@ -15,7 +15,9 @@ import {
   mockPersonalDetails,
   mockProgrammeMemberships,
   mockPlacements,
-  mockProgrammeMembershipNoCurricula
+  mockPlacementNonTemplatedField,
+  mockProgrammeMembershipNoCurricula,
+  mockProgrammeMembershipNonTemplatedField
 } from "../../mock-data/trainee-profile";
 import history from "../navigation/history";
 import React from "react";
@@ -149,5 +151,53 @@ describe("Profile", () => {
     cy.get("[data-cy=curricula5Val]")
       .should("exist")
       .should("contain.text", "N/A");
+  });
+  it("should not show non-templated placement properties", () => {
+    const MockedProfileNonTemplatedField = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: [mockPlacementNonTemplatedField]
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileNonTemplatedField />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=placementsExpander]").should("exist").click();
+    cy.get("[data-cy=nonTemplatedField10Val]").should("not.exist");
+  });
+  it("should not show non-templated programme membership properties", () => {
+    const MockedProfileNonTemplatedField = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipNonTemplatedField],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileNonTemplatedField />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=programmeMembershipsExpander]").should("exist").click();
+    cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
   });
 });
