@@ -33,7 +33,7 @@ const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
           <Card feature data-cy="appInstalledAlreadyChoose">
             <Card.Content>
               <Card.Heading>
-                I've already installed an Authenticator App
+                I&#39;ve already installed an Authenticator App
               </Card.Heading>
               <MultiChoiceInputField
                 type="radios"

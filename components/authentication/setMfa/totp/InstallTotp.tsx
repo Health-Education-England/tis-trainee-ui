@@ -38,7 +38,7 @@ const InstallTotp = ({ user, handleSectionSubmit }: IInstallTotp) => {
                 }}
                 disabled={isSubmitting}
               >
-                Add 'NHS TIS Self-Service' to your Authenticator App
+                Add &#39;NHS TIS Self-Service&#39; to your Authenticator App
               </Button>
             </>
           )}

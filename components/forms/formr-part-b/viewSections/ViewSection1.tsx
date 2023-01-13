@@ -12,7 +12,7 @@ const ViewSection1 = ({ makeSectionEditButton, formData }: IViewSection1) => {
     <div>
       <div className="nhsuk-grid-row nhsuk-u-margin-top-3">
         <div className="nhsuk-grid-column-two-thirds">
-          <h2 data-cy="sectionHeader1">Section 1: Doctor's details</h2>
+          <h2 data-cy="sectionHeader1">Section 1: Doctor&#39;s details</h2>
         </div>
         <div className="nhsuk-grid-column-one-third">
           {makeSectionEditButton(1)}

@@ -328,3 +328,55 @@ button:disabled {
     font-size: 1.1875rem;
   }
 }
+
+// print preview css for PDF
+@media print {
+  header,
+  header *,
+  button,
+  .nhsuk-back-link,
+  .hide-from-print {
+    display: none !important;
+  }
+
+  .nhsuk-grid-row {
+    margin: 0 !important;
+  }
+
+  .nhsuk-panel-with-label {
+    margin-top: 0 !important;
+  }
+
+  .nhsuk-panel-with-label .nhsuk-panel {
+    border: none !important;
+  }
+
+  .nhsuk-panel-with-label .nhsuk-panel h3 {
+    font-size: 22px;
+    padding: 10px 0px;
+    border-bottom: 1px solid #d8dde0;
+  }
+
+  fieldset {
+    margin-bottom: 20px !important;
+  }
+
+  .page-break {
+    // break-before: page !important; Not supprted by Opera 12.1+
+    page-break-before: always !important;
+  }
+
+  .nhsuk-summary-list__key {
+    // text-size-adjust: none; not supported on Firefox or Safari;
+    width: 70mm !important;
+    display: table-cell !important;
+  }
+  .nhsuk-summary-list__value {
+    display: table-cell !important;
+  }
+
+  // @page {
+  //   margin: 20mm 10mm;
+  // }
+  // not supported on Safari
+}

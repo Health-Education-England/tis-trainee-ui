@@ -75,7 +75,7 @@ const SubmittedFormsList = ({
             <p>
               Please click the <b>Support</b> link (menu or footer link) to
               contact your Local Office. They will put the specified form back
-              into an 'unsubmitted' state for you to make the necessary
+              into an &#39;unsubmitted&#39; state for you to make the necessary
               amendments and re-submit - rather than you having to complete
               another form.
             </p>

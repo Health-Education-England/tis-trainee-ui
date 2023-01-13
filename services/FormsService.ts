@@ -1,8 +1,8 @@
 import { AxiosResponse } from "axios";
 import ApiService from "./apiService";
-import { FormRPartA } from "../../models/FormRPartA";
-import { FormRPartB } from "../../models/FormRPartB";
-import { FeatureFlags } from "../../models/FeatureFlags";
+import { FormRPartA } from "../models/FormRPartA";
+import { FormRPartB } from "../models/FormRPartB";
+import { FeatureFlags } from "../models/FeatureFlags";
 
 export class FormsService extends ApiService {
   constructor() {

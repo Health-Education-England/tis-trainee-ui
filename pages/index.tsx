@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 
@@ -93,11 +93,14 @@ const signUpAttributes: SignUpAttribute[] = [
   "email"
 ];
 
-const App: React.FC = () => {
+function App() {
   if (typeof window === "undefined") {
     return null;
   }
+  return <ClientApp />;
+}
 
+function ClientApp() {
   TagManager.initialize(tagManagerArgs);
 
   // Dynamically imported browser-update module (see https://github.com/browser-update/browser-update/issues/524 for more info)
@@ -133,7 +136,7 @@ const App: React.FC = () => {
       )}
     </Authenticator>
   );
-};
+}
 
 export default App;
 

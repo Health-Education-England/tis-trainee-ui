@@ -64,7 +64,8 @@ const Section4 = ({
                 If you have previously declared any Significant Events,
                 Complaints, or Other Investigations on your previous Form R Part
                 B, then please provide updates to these declarations below.
-                Please add more rows as required using the 'Add More' button.
+                Please add more rows as required using the &#39;Add More&#39;
+                button.
               </p>
             </div>
             <div>

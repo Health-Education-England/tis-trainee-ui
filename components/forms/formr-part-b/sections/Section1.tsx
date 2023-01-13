@@ -48,7 +48,7 @@ const Section1 = ({
               size="l"
               data-cy="legendFieldset1"
             >
-              Section 1: Doctor's details
+              Section 1: Doctor&#39;s details
             </Fieldset.Legend>
           </Fieldset>
           <WarningCallout data-cy="mainWarning1">
@@ -68,8 +68,8 @@ const Section1 = ({
               Body and the GMC informed as soon as possible of any changes to
               your contact details. Your HEE Local team remains your Designated
               Body throughout your time in training. You can update your
-              Designated Body on your GMC Online account under "My
-              Revalidation".
+              Designated Body on your GMC Online account under &#34;My
+              Revalidation&#34;.
               <br />
               <br /> Failure to appropriately complete a Form R Part B when
               requested may result in an Outcome 5 at ARCP{" "}

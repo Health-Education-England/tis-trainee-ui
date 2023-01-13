@@ -63,9 +63,9 @@ const ChooseMfa = ({ mfa }: IChooseMfa) => {
                 <p>
                   Multi factor authentication (MFA) provides a second layer of
                   security. When enabled, each time you log in to TIS
-                  Self-Service after entering your password, you'll be asked for
-                  a new <b>6-digit code to verify your identity</b> using either
-                  of the following:
+                  Self-Service after entering your password, you&#39;ll be asked
+                  for a new <b>6-digit code to verify your identity</b> using
+                  either of the following:
                 </p>
                 <p>
                   <b>An Authenticator App (recommended)</b>

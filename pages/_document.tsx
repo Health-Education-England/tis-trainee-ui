@@ -12,7 +12,6 @@ export default function Document() {
         />
         <meta name="robots" content="noindex,nofollow" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="stylesheet" media="print" href="/print.css" />
       </Head>
       <body>
         <Main />

@@ -49,14 +49,14 @@ export default function App({ Component, pageProps }: AppProps) {
           <Script id="google-tag-manager" strategy="afterInteractive">
             {`src="https://www.googletagmanager.com/gtag/js?id=${GTM_ID}"`}
           </Script>
-          <Script>
+          <Script id="gtm-id">
             {`window.dataLayer = window.dataLayer || []; function gtag() {
         dataLayer.push(arguments); gtag("js", new Date());
         gtag("config", ${GTM_ID});
         gtag("config", "G-HZVN2JNJEQ");
       }`}
           </Script>
-          <Script noModule>
+          <Script id="old-browser-alert" noModule>
             {`alert("Sorry, you will need to use a modern up-to-date browser such as the latest version of chrome, Edge, Firefox, or Safari to use TIS Self-Service.")`}
           </Script>
           <Component {...pageProps} />

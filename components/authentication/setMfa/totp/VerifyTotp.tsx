@@ -107,7 +107,7 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
       <Card feature data-cy="addTssTotpHeader">
         <Card.Content>
           <Card.Heading>
-            Add 'NHS TIS-Self-Service' to your Authenticator App
+            Add &#39;NHS TIS-Self-Service&#39; to your Authenticator App
           </Card.Heading>
           <Details>
             <Details.Summary data-cy="msAuthInfoSummary">
@@ -120,8 +120,9 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
                 rel="noopener noreferrer"
                 href="https://tis-support.hee.nhs.uk/trainees/how-to-set-up-an-authenticator-app-on-your-phone/"
               >
-                Click here for help adding the 'NHS TIS Self-Service' account to
-                your Authenticator App on your phone (opens in a new tab/window)
+                Click here for help adding the &#39;NHS TIS Self-Service&#39;
+                account to your Authenticator App on your phone (opens in a new
+                tab/window)
               </ActionLink>
             </Details.Text>
           </Details>
@@ -129,8 +130,8 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
             <Card.Content>
               <Card.Heading>using your phone</Card.Heading>
               <Fieldset.Legend size="m">
-                Open your Authenticator App, click 'add a new account' button
-                then scan the QR Code below.
+                Open your Authenticator App, click &#39;add a new account&#39;
+                button then scan the QR Code below.
               </Fieldset.Legend>
               <div className={styles.qrTss}>
                 <QRCodeSVG

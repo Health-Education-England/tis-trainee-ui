@@ -92,7 +92,7 @@ const Create = ({ history }: { history: string[] }) => {
                   to your contact details. Your HEE Local team remains your
                   Designated Body throughout your time in training. You can
                   update your Designated Body on your GMC Online account under
-                  "My Revalidation".
+                  &#34;My Revalidation&#34;.
                 </p>
               </WarningCallout>
               <DataSourceMsg />

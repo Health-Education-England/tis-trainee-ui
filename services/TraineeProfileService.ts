@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import ApiService from "./apiService";
-import { TraineeProfile } from "../../models/TraineeProfile";
+import { TraineeProfile } from "../models/TraineeProfile";
 
 export class TraineeProfileService extends ApiService {
   constructor() {

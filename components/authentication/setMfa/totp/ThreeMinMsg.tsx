@@ -13,7 +13,8 @@ const ThreeMinMsg = () => {
       </p>
       <p>
         Before proceeding, please have your phone to hand and remove any
-        existing 'NHS TIS Self-Service' accounts from your Authenticator App.
+        existing &#39;NHS TIS Self-Service&#39; accounts from your Authenticator
+        App.
       </p>
     </WarningCallout>
   );
