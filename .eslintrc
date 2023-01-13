@@ -17,4 +17,5 @@
     "@next/next/no-img-element": "off",
     "@next/next/no-html-link-for-pages": "off"
     // WIP turned the above 2 off for now
+  }
 }
