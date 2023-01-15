@@ -52,7 +52,11 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnMenu]").click();
     cy.get(":nth-child(3) > .nhsuk-header__navigation-link").click();
     cy.get("[data-cy=btnLoadNewForm]").click();
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
     cy.get("[data-cy=email]").should("have.value", "");
 
     //   // -------- Section 1 - Doctor's details -----------

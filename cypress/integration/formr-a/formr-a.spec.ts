@@ -108,6 +108,11 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=cctSpecialty1]").should("not.exist");
           cy.get("[data-cy=cctSpecialty2]").should("not.exist");
           cy.get("[data-cy=declarationType0]").click();
+          cy.get("[data-cy=programmeSpecialty]").should("exist").click();
+          cy.get("[data-cy=programmeSpecialty] + ul").should("exist");
+          cy.get("[data-cy=programmeSpecialty] + ul li").eq(1).click();
+          cy.get("[data-cy=programmeSpecialty]").should("not.have.value", "");
+
           cy.get("[data-cy=cctSpecialty1]").should("exist");
           cy.get("[data-cy=cctSpecialty2]").should("exist");
 
