@@ -16,7 +16,7 @@ export default defineConfig({
     supportFile: "cypress/support/component.ts"
   },
   e2e: {
-    baseUrl: "http://local.tis-selfservice.com",
+    baseUrl: "https://trainee.tis.nhs.uk/", // to test local use http://local.tis-selfservice.com
     specPattern: "cypress/e2e/**/*.spec.{ts,tsx}",
     chromeWebSecurity: false,
     defaultCommandTimeout: 15000,
