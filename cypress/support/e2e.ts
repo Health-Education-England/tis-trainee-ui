@@ -15,6 +15,7 @@
 
 import "./commands";
 import "@cypress/code-coverage/support";
+import "cypress-mochawesome-reporter/register";
 
 before(() => {
   cy.task("generateOTP", Cypress.env("secret"), { log: false });

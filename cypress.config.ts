@@ -3,6 +3,14 @@ import cypressOtp from "cypress-otp";
 import codeCoverageTask from "@cypress/code-coverage/task";
 
 export default defineConfig({
+  reporter: "cypress-mochawesome-reporter",
+  reporterOptions: {
+    reportDir: "cypress/reports",
+    assetsDir: "cypress/reports/assets",
+    reportPageTitle: "index.html",
+    embeddedScreenshots: true,
+    inlineAssets: true
+  },
   component: {
     devServer: {
       framework: "next",
@@ -24,6 +32,7 @@ export default defineConfig({
       // implement node event listeners here
       on("task", { generateOTP: cypressOtp });
       codeCoverageTask(on, config);
+      require("cypress-mochawesome-reporter/plugin")(on);
       return config;
     }
   }
