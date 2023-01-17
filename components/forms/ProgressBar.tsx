@@ -8,9 +8,9 @@ const ProgressBar = ({ sections, section }: IProgressBar) => {
   return (
     <div className="progressbar">
       {sections &&
-        sections.map((_sect: IProgSection, index: number) => (
+        sections.map((sect: IProgSection, index: number) => (
           <div
-            key={index}
+            key={sect.title}
             className={
               section === index + 1
                 ? "progress-step progress-step-active"

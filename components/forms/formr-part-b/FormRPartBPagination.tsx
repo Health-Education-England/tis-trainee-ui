@@ -58,8 +58,8 @@ const FormRPartBPagination = ({
           data-cy="LinkToPreviousSection"
           data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
         >
-          {prevSectionLabel.split("\n").map((item, index) => (
-            <div key={index}>{item}</div>
+          {prevSectionLabel.split("\n").map((item, _index) => (
+            <div key={item}>{item}</div>
           ))}
         </Pagination.Link>
       )}
@@ -113,8 +113,8 @@ const FormRPartBPagination = ({
           data-cy="LinkToNextSection"
           data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
         >
-          {nextSectionLabel.split("\n").map((item, index) => (
-            <div key={index}>{item}</div>
+          {nextSectionLabel.split("\n").map((item, _index) => (
+            <div key={item}>{item}</div>
           ))}
         </Pagination.Link>
       )}

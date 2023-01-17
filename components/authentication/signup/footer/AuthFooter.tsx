@@ -11,8 +11,8 @@ const AuthFooter = (): JSX.Element => {
     }
   ];
   const addFooterLinks = (): JSX.Element[] => {
-    return footerLinks.map((link, index) => (
-      <Text key={index}>
+    return footerLinks.map((link, _index) => (
+      <Text key={link.name}>
         <a href={link.href} target="_blank" rel="noopener noreferrer">
           {link.name}
         </a>
