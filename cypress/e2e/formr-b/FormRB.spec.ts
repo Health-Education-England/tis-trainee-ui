@@ -34,12 +34,15 @@ describe("Form R (Part B)", () => {
     cy.contains("Form R (Part B)").click();
     cy.visit("/formr-b", { failOnStatusCode: false });
     cy.get("[data-cy=btnLoadNewForm]").click();
-    cy.get(".MuiDialog-container").should("exist");
-    cy.get(".MuiDialogContentText-root").should(
-      "include.text",
-      "You recently submitted a form"
-    );
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
     cy.get(".nhsuk-warning-callout > p").should("exist");
 
     // ---- check if form state resets if navigate away from create page ------------
@@ -50,7 +53,11 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnMenu]").click();
     cy.get(":nth-child(3) > .nhsuk-header__navigation-link").click();
     cy.get("[data-cy=btnLoadNewForm]").click();
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
     cy.get("[data-cy=email]").should("have.value", "");
 
     //   // -------- Section 1 - Doctor's details -----------

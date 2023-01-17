@@ -75,11 +75,15 @@ function filterAndOrderProfilePanelData<T>(
   pObj: T extends ProfileType ? any : any
 ) {
   if (pName === TraineeProfileName.Placements) {
-    const reorderedPl = Object.assign(placementPanelTemplate, { ...pObj });
+    const reorderedPl = populateTemplateProperties(placementPanelTemplate, {
+      ...pObj
+    });
     const { tisId, status, ...filteredPlacementPanel } = reorderedPl;
     return filteredPlacementPanel;
   } else {
-    const reorderedPr = Object.assign(programmePanelTemplate, { ...pObj });
+    const reorderedPr = populateTemplateProperties(programmePanelTemplate, {
+      ...pObj
+    });
     const {
       tisId,
       programmeTisId,
@@ -90,4 +94,12 @@ function filterAndOrderProfilePanelData<T>(
     } = reorderedPr;
     return filteredProgrammePanel;
   }
+}
+
+function populateTemplateProperties(template: any, values: any) {
+  const populatedTemplate: any = {};
+  Object.keys(template).forEach(
+    key => (populatedTemplate[key] = (key in values ? values : template)[key])
+  );
+  return populatedTemplate;
 }

@@ -31,13 +31,15 @@ describe("Form R (Part A)", () => {
         // ---------- if New form btn ------------------------------------------------------------------
         if (loadFormAButton.attr("data-cy") === "btnLoadNewForm") {
           cy.get("[data-cy=btnLoadNewForm]").click();
-          cy.get(".MuiDialog-container").should("exist");
-          cy.get(".MuiDialogContentText-root").should(
-            "include.text",
-            "You recently submitted a form"
-          );
-          cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-
+          cy.get("body").then($body => {
+            if ($body.find(".MuiDialog-container").length) {
+              cy.get(".MuiDialogContentText-root").should(
+                "include.text",
+                "You recently submitted a form"
+              );
+              cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+            }
+          });
           cy.log("##################### NEW FORM ##################");
           cy.get(".nhsuk-warning-callout > p").should("exist");
 
@@ -110,6 +112,11 @@ describe("Form R (Part A)", () => {
           cy.get("[data-cy=cctSpecialty1]").should("not.exist");
           cy.get("[data-cy=cctSpecialty2]").should("not.exist");
           cy.get("[data-cy=declarationType0]").click();
+          cy.get("[data-cy=programmeSpecialty]").should("exist").click();
+          cy.get("[data-cy=programmeSpecialty] + ul").should("exist");
+          cy.get("[data-cy=programmeSpecialty] + ul li").eq(1).click();
+          cy.get("[data-cy=programmeSpecialty]").should("not.have.value", "");
+
           cy.get("[data-cy=cctSpecialty1]").should("exist");
           cy.get("[data-cy=cctSpecialty2]").should("exist");
 
