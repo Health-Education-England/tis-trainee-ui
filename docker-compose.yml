@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  app:
+    image: tis-trainee-ui-dev
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ./aws-amplify:/app/aws-amplify
+      - ./components:/app/components
+      - ./models:/app/models
+      - ./pages:/app/pages
+      - ./public:/app/public
+      - ./redux:/app/redux
+      - ./services:/app/services
+      - ./styles:/app/styles
+      - ./utilities:/app/utilities
+    

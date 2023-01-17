@@ -8,10 +8,12 @@ WORKDIR /app
 
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
-RUN npm install --production
+COPY package.json ./
+
+COPY next.config.js ./next.config.js
+
+RUN npm install
 
 RUN npm run build
 
-RUN npm install -g serve
-
-CMD serve -p 3000 -s build
+CMD ["npm", "start"]
