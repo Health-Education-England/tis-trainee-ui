@@ -1,9 +1,10 @@
 import React from "react";
 import FieldWarningMsg from "../../components/forms/FieldWarningMsg";
 import { FormRUtilities } from "../FormRUtilities";
+import { CHECK_POSTCODE_REGEX } from "../Constants";
 
 describe("FormRUtilities", () => {
-  const matcher = /[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}/i;
+  const matcher = CHECK_POSTCODE_REGEX;
   const warningMsg =
     "Warning. Non-UK Postcode (Please ignore if you meant it.)";
   it("should return undefined (no warning) if no field to check", () => {

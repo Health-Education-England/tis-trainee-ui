@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Col, Footer, Row } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
 import styles from "./HEEFooter.module.scss";
@@ -46,7 +47,7 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
           </Row>
         </Footer.List>
         <Footer.Copyright data-cy="copyrightText">
-          &copy; Health Education England
+          &copy; Health Education England {dayjs().year()}
         </Footer.Copyright>
         {appVersion ? (
           <Footer.List>

@@ -1,10 +1,10 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
-import { NEW_WORK } from "./Constants";
+import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
 import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
-import { MEDICAL_CURRICULUM } from "./Constants";
 import dayjs from "dayjs";
 
+export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
   public static sortWorkDesc(workArr: Work[]) {
     const workArrForSorting = [...workArr];

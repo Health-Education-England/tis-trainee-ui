@@ -15,6 +15,7 @@
 /cypress/screenshots
 /cypress/videos
 /cypress-coverage
+/cypress/reports
 /.nyc_output
 
 # next.js

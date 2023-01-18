@@ -11,7 +11,6 @@ import {
   mockProgrammeMembershipDuplicateCurriculaStart,
   mockPlacements
 } from "../../mock-data/trainee-profile";
-import { Work } from "../../models/FormRPartB";
 import { NEW_WORK } from "../Constants";
 import {
   workArr,

@@ -1,7 +1,6 @@
 import { IFormR } from "./IFormR";
-
-type DateType = Date | string | null;
-export type ProfileSType = string | null | undefined;
+import { DateType } from "../utilities/DateUtilities";
+import { ProfileSType } from "../utilities/ProfileUtilities";
 export interface FormRPartA extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;

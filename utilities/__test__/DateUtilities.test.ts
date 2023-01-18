@@ -1,10 +1,4 @@
 import dayjs from "dayjs";
-import day from "dayjs";
-
-import {
-  disorderedFormRPartBs,
-  orderedFormRPartBs
-} from "../../mock-data/submitted-formr-list";
 import { mockPlacements } from "../../mock-data/trainee-profile";
 import { DateUtilities, isWithinRange } from "../DateUtilities";
 
@@ -116,19 +110,19 @@ describe("DateUtilities", () => {
     expect(isWithinRange("nodate")).toEqual(false);
   });
   it("isWithinRange should return false if given date is outside range", () => {
-    const outsideDate = day().subtract(31, "d").toDate();
+    const outsideDate = dayjs().subtract(31, "d").toDate();
     expect(isWithinRange(outsideDate, 31, "d")).toEqual(false);
   });
   it("isWithinRange should return true if given date is inside range", () => {
-    const insideDate = day().subtract(30, "d").toDate();
+    const insideDate = dayjs().subtract(30, "d").toDate();
     expect(isWithinRange(insideDate, 31, "d")).toEqual(true);
   });
   it("isWithinRange should still return true if given date is inside range and value passed for dateToCompare is undefined", () => {
-    const insideDate = day().subtract(30, "d").toDate();
-    expect(isWithinRange(insideDate, 31, "d", undefined)).toEqual(true);
+    const insideDate = dayjs().subtract(30, "d").toDate();
+    expect(isWithinRange(insideDate, 31, "d")).toEqual(true);
   });
   it("isWithinRange should still return false if given date is outside range and value passed for dateToCompare is null", () => {
-    const insideDate = day().subtract(31, "d").toDate();
+    const insideDate = dayjs().subtract(31, "d").toDate();
     expect(isWithinRange(insideDate, 31, "d", null)).toEqual(false);
   });
   it("should order array in desc order when genericSort desc prop is true", () => {
