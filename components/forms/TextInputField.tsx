@@ -22,23 +22,19 @@ interface Props {
 const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
-
   const setFieldWidth = (width: number) => {
     return width < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-
   const { hidelabel, ...rest } = props;
+  const setCorrectLabelClass = () => {
+    if (error) {
+      return "nhsuk-form-group nhsuk-form-group--error";
+    }
+    return props.hidelabel ? "hide-label nhsuk-form-group" : "nhsuk-form-group";
+  };
 
   return (
-    <div
-      className={
-        error
-          ? "nhsuk-form-group nhsuk-form-group--error"
-          : props.hidelabel
-          ? "hide-label nhsuk-form-group"
-          : "nhsuk-form-group"
-      }
-    >
+    <div className={setCorrectLabelClass()}>
       <FormElement
         width={
           field.value ? props.width || setFieldWidth(field.value.length) : 20

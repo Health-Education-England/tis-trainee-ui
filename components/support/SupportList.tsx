@@ -51,8 +51,8 @@ const SupportList = ({ mappedContact, emailIds }: ISupportList) => {
         <Select.Option value={mappedContact ? mappedContact : ""}>
           -- Choose an alternative contact --
         </Select.Option>
-        {localOfficeContacts.map((contact, index) => (
-          <Select.Option key={index} value={contact.contact}>
+        {localOfficeContacts.map((contact, _index) => (
+          <Select.Option key={contact.name} value={contact.contact}>
             {contact.abbrevName}
           </Select.Option>
         ))}

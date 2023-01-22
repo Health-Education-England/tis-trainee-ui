@@ -78,7 +78,7 @@
     "start": "next start",
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.scss\" \"**/*.css\" --fix",
-    "test": "jest --transformIgnorePatterns \"node_modules/(?!@amcharts)/\" --coverage --watchAll=false",
+    "test": "jest",
     "ct": "cypress open --component",
     "ct:headless": "cypress run --component",
     "cypress": "cypress open --e2e",

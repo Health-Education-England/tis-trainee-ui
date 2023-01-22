@@ -53,8 +53,8 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
           <Footer.List>
             <Footer.ListItem>
               <span
+                className={styles.footerVersionText}
                 data-cy="versionText"
-                style={{ fontSize: "10pt" }}
               >{`version: ${appVersion}`}</span>
             </Footer.ListItem>
           </Footer.List>
