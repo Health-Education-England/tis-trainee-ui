@@ -69,10 +69,7 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
               <Route path="/formr-b" render={() => <FormRPartB mfa={mfa} />} />
               <Route path="/support" component={Support} />
               <Route path="/mfa" render={() => <MFA user={user} mfa={mfa} />} />
-              <Route
-                path="/preferences"
-                render={() => <Preferences user={user} mfa={mfa} />}
-              />
+              <Route path="/preferences" render={() => <Preferences />} />
 
               <Redirect exact path="/" to="/profile" />
               <Route path="/*" component={PageNotFound} />
