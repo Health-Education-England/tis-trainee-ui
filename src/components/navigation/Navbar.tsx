@@ -15,7 +15,8 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
   const paths = [
     { path: "profile", name: "Profile" },
     { path: "formr-a", name: "Form R (Part A)" },
-    { path: "formr-b", name: "Form R (Part B)" }
+    { path: "formr-b", name: "Form R (Part B)" },
+    { path: "preferences", name: "Preferences" }
   ];
   const noMfaPaths = [
     { path: "support", name: "Support" },

@@ -16,6 +16,7 @@ import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
+import Preferences from "../preferences/Preferences";
 
 interface IMain {
   user: CognitoUser | any;
@@ -68,6 +69,11 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
               <Route path="/formr-b" render={() => <FormRPartB mfa={mfa} />} />
               <Route path="/support" component={Support} />
               <Route path="/mfa" render={() => <MFA user={user} mfa={mfa} />} />
+              <Route
+                path="/preferences"
+                render={() => <Preferences user={user} mfa={mfa} />}
+              />
+
               <Redirect exact path="/" to="/profile" />
               <Route path="/*" component={PageNotFound} />
             </Switch>
