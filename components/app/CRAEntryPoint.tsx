@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 
-import AuthHeader from "../components/authentication/signup/header/AuthHeader";
-import AuthFooter from "../components/authentication/signup/footer/AuthFooter";
-import AuthHeading from "../components/authentication/signup/sharedPrimitives/AuthHeading";
-import AuthBtnLink from "../components/authentication/signup/sharedPrimitives/AuthBtnLink";
+import AuthHeader from "../authentication/signup/header/AuthHeader";
+import AuthFooter from "../authentication/signup/footer/AuthFooter";
+import AuthHeading from "../authentication/signup/sharedPrimitives/AuthHeading";
+import AuthBtnLink from "../authentication/signup/sharedPrimitives/AuthBtnLink";
 import {
   AuthFormFields,
   FormFields
-} from "../components/authentication/signup/formFields/AuthFormFields";
+} from "../authentication/signup/formFields/AuthFormFields";
 import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
   SIGN_IN_HEADING_TEXT,
@@ -18,15 +18,15 @@ import {
   YES_TO_PRIVACY,
   YES_TO_PILOT,
   FORM_FIELD_VALUES
-} from "../components/authentication/signup/constants/AuthConstants";
-import style from "../components/authentication/Auth.module.scss";
+} from "../authentication/signup/constants/AuthConstants";
+import style from "../authentication/Auth.module.scss";
 import { I18n } from "@aws-amplify/core";
 import { BrowserRouter } from "react-router-dom";
-import { Main } from "../components/main/Main";
-import Notifications from "../components/common/notifications/Notifications";
-import browserUpdateConfig from "../browser-update-config.json";
+import { Main } from "../main/Main";
+import Notifications from "../common/notifications/Notifications";
+import browserUpdateConfig from "../../browser-update-config.json";
 import TagManager from "react-gtm-module";
-import packageJson from "../package.json";
+import packageJson from "../../package.json";
 
 const appVersion = packageJson.version;
 
@@ -93,14 +93,7 @@ const signUpAttributes: SignUpAttribute[] = [
   "email"
 ];
 
-function App() {
-  if (typeof window === "undefined") {
-    return null;
-  }
-  return <ClientApp />;
-}
-
-function ClientApp() {
+function CRAEntryPoint() {
   TagManager.initialize(tagManagerArgs);
 
   // Dynamically imported browser-update module (see https://github.com/browser-update/browser-update/issues/524 for more info)
@@ -125,25 +118,15 @@ function ClientApp() {
       formFields={formFields}
     >
       {({ signOut, user }) => (
-        <SafeHydrate>
-          <BrowserRouter>
-            <>
-              <Notifications />
-              <Main user={user} signOut={signOut} appVersion={appVersion} />
-            </>
-          </BrowserRouter>
-        </SafeHydrate>
+        <BrowserRouter>
+          <>
+            <Notifications />
+            <Main user={user} signOut={signOut} appVersion={appVersion} />
+          </>
+        </BrowserRouter>
       )}
     </Authenticator>
   );
 }
 
-export default App;
-
-function SafeHydrate({ children }: any) {
-  return (
-    <div suppressHydrationWarning>
-      {typeof document === "undefined" ? null : children}
-    </div>
-  );
-}
+export default CRAEntryPoint;
