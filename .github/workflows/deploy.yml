@@ -75,14 +75,6 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
 
-      - name: Merge test results into one
-        if: always()
-        run: npm run report:merge
-
-      - name: Generate HTML report
-        if: always()
-        run: npm run report:generate
-
       - name: Create report artifact
         if: always()
         uses: actions/upload-artifact@v3

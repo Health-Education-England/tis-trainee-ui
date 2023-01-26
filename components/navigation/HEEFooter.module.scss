@@ -1,0 +1,10 @@
+.refLink {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footerVersionText {
+  font-size: 0.75rem;
+}
