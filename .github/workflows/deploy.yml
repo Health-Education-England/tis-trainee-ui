@@ -33,8 +33,9 @@ jobs:
         run: npm install && npm run build
 
       - name: Deploy app build to S3 bucket
-        run: mv ./out/[[...app]].html ./out/index.html
-        run: aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
+        run: |
+          mv ./out/[[...app]].html ./out/index.html
+          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*
@@ -177,8 +178,9 @@ jobs:
         run: npm install && npm run build
 
       - name: Deploy app build to S3 bucket
-        run: mv ./out/[[...app]].html ./out/index.html
-        run: aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PROD }} --delete
+        run: |
+          mv ./out/[[...app]].html ./out/index.html
+          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PROD }} --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*
