@@ -72,6 +72,11 @@ The app is then ready to be deployed.
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+#### Preprod Deployment
+
+When deploying to preprod the `ENV` environment variable should be set to
+`preprod`, allowing the correct dotenv file to be loaded.
+
 ## Ejecting from CRA (Create React App)
 
 `npm run eject` will 'eject' the app from CRA at any time in the development process if, for example, more choices are needed for build tools and configuration. This command will remove the single build dependency from your project.
