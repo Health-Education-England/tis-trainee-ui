@@ -132,6 +132,7 @@ jobs:
     needs: [cypress-e2e]
     name: Backup build artifacts
     runs-on: ubuntu-latest
+    if: always()
 
     steps:
       - name: Download build artifacts
