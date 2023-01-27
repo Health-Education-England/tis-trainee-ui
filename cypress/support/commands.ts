@@ -62,6 +62,41 @@ Cypress.Commands.add("signIn", () => {
   });
 });
 
+Cypress.Commands.add("completeFormAPersonalDetailsSection", dateAttained => {
+  cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#surname").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#gmcNumber").should("exist").invoke("val").should("not.be.empty");
+  cy.get("[data-cy=localOfficeName]").select("Health Education England Wessex");
+  cy.get("#dateOfBirth")
+    .should("exist")
+    .should("have.attr", "type", "date")
+    .invoke("val")
+    .should("not.be.empty");
+  cy.get("#gender").should("exist").should("have.value", "Male");
+  cy.get("#immigrationStatus")
+    .should("exist")
+    .select("Tier 1")
+    .should("have.value", "Tier 1");
+  cy.get("#qualification").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#dateAttained")
+    .should("exist")
+    .should("have.attr", "type", "date")
+    .clear()
+    .type(dateAttained);
+  cy.get("#medicalSchool")
+    .should("exist")
+    .clear()
+    .type("University of Medical Things");
+  cy.get("#address1").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#address2").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#address3").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#postCode").should("exist").invoke("val").should("not.be.empty");
+  cy.get("#telephoneNumber").should("exist").clear().type("01234567890");
+  cy.get("#mobileNumber").focus();
+  cy.get("#mobileNumber").should("exist").clear().type("0777777777777");
+  cy.get("#email").focus().clear().type("traineeui.tester@hee.nhs.uk");
+});
+
 Cypress.Commands.add("completeFormRAProgrammeSpecialtySection", () => {
   cy.get(
     '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
@@ -71,17 +106,19 @@ Cypress.Commands.add("completeFormRAProgrammeSpecialtySection", () => {
     .find(".react-select__option")
     .first()
     .click();
-  cy.get(".react-select__value-container").contains("Geriatric Medicine");
+  cy.get(".react-select__value-container").contains("ACCS - General");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
   )
     .click()
-    .type("an")
+    .type("trauma")
     .get(".react-select__menu")
     .find(".react-select__option")
-    .first()
+    .last()
     .click();
-  cy.get(".react-select__value-container").contains("ACCS - Anaesthetics");
+  cy.get(".react-select__value-container").contains(
+    "Trauma and orthopaedic surgery"
+  );
 });
 
 Cypress.Commands.add(
@@ -250,14 +287,14 @@ Cypress.Commands.add(
       .first()
       .click();
     cy.get(".react-select__value-container").contains(
-      "Centre for Health and Disability Assessments (Maximus UK)"
+      "21st Century Clinic Ltd"
     );
 
     cy.get(
       ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
     )
       .click()
-      .type("ya")
+      .type("yach")
       .get(".react-select__menu")
       .find(".react-select__option")
       .first()

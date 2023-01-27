@@ -14,6 +14,9 @@ declare global {
         startDate: string,
         wholeTimeEquivalent: string
       ): Chainable<Element>;
+      completeFormAPersonalDetailsSection(
+        dateAttained: string
+      ): Chainable<Element>;
       completeFormRAProgrammeSpecialtySection(): Chainable<Element>;
       checkAndFillSection1(
         currRevalDate: string,

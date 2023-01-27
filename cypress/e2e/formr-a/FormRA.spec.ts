@@ -15,7 +15,7 @@ const startDate = dayjs()
   .subtract(dayjs.duration({ months: 9, days: 30 }))
   .format("YYYY-MM-DD");
 
-describe("Form R (Part A)", () => {
+describe("Name of the group", () => {
   before(() => {
     cy.wait(30000);
     cy.visit("/");
@@ -40,222 +40,60 @@ describe("Form R (Part A)", () => {
               cy.get(".MuiDialogActions-root > :nth-child(2)").click();
             }
           });
-          cy.log("##################### NEW FORM ##################");
-          cy.get(".nhsuk-warning-callout > p").should("exist");
-
-          //-- personal details section --
-          cy.get("#forename")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#surname")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#gmcNumber")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("[data-cy=localOfficeName]").select(
-            "Health Education England Wessex"
-          );
-          cy.get("#dateOfBirth")
-            .should("exist")
-            .should("have.attr", "type", "date")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#gender").should("exist").should("have.value", "Male");
-          cy.get("#immigrationStatus")
-            .should("exist")
-            .select("Tier 1")
-            .should("have.value", "Tier 1");
-          cy.get("#qualification")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#dateAttained")
-            .should("exist")
-            .should("have.attr", "type", "date")
-            .clear()
-            .type(dateAttained);
-          cy.get("#medicalSchool")
-            .should("exist")
-            .clear()
-            .type("University of Medical Things");
-          cy.get("#address1")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#address2")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#address3")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#postCode")
-            .should("exist")
-            .invoke("val")
-            .should("not.be.empty");
-          cy.get("#telephoneNumber")
-            .should("exist")
-            .clear()
-            .type("01234567890");
-          cy.get("#mobileNumber").focus();
-          cy.get("#mobileNumber").should("exist").clear().type("0777777777777");
-          // Leave email blank intentionally to check for inline error message
-          cy.get("#email").focus().should("exist").should("not.contain.text");
-          cy.get("#email").should("exist").type("traineeui.tester@hee.nhs.uk");
-
-          //-- Declarations section --
           cy.get("[data-cy=cctSpecialty1]").should("not.exist");
           cy.get("[data-cy=cctSpecialty2]").should("not.exist");
-          cy.get("[data-cy=declarationType0]").click();
-          cy.get("[data-cy=programmeSpecialty]").should("exist").click();
-          cy.get("[data-cy=programmeSpecialty] + ul").should("exist");
-          cy.get("[data-cy=programmeSpecialty] + ul li").eq(1).click();
-          cy.get("[data-cy=programmeSpecialty]").should("not.have.value", "");
-
-          cy.get("[data-cy=cctSpecialty1]").should("exist");
-          cy.get("[data-cy=cctSpecialty2]").should("exist");
-
-          //- Programme specialty section --
-          cy.completeFormRAProgrammeSpecialtySection();
-
-          cy.get("[data-cy=college] > option")
-            .eq(1)
-            .then(element => {
-              const selectedItem = element.val()!.toString();
-              cy.get("[data-cy=college]")
-                .select(selectedItem)
-                .should("not.have.value", "--Please select--");
-            });
-          cy.get("[data-cy=completionDate]").clear().type(completionDate);
-
-          //-- Programme section --
-          cy.get("[data-cy=trainingGrade] > option")
-            .eq(3)
-            .then(element => {
-              const selectedItem = element.val()!.toString();
-              cy.get("[data-cy=trainingGrade]")
-                .select(selectedItem)
-                .should("not.have.value", "--Please select--");
-            });
-          cy.get("[data-cy=startDate]")
-            .clear()
-            .type(startDate)
-            .should("not.have.value", "");
-          cy.get("[data-cy=programmeMembershipType]")
-            .should("exist")
-            .clear()
-            .type("LAT");
-
-          //-- error msg when FTE not completed
-          cy.log("################ Error msg when no FTE ###################");
-          cy.get("[data-cy=BtnContinue]").should("exist").click();
-          cy.get(".nhsuk-error-summary").should("exist");
-          cy.get("#wholeTimeEquivalent--error-message").should("exist");
-          cy.get("[data-cy=wholeTimeEquivalent]").type("0.99");
-        }
-
-        // -------------else Edit Saved form ---------------------------------------------------------------------
-        else if (
-          loadFormAButton.attr("data-cy") === "btnEditSavedForm" ||
-          loadFormAButton.attr("data-cy") === "btnEditUnsubmittedForm"
-        ) {
-          cy.log("################ EDIT FORM ###################");
+        } else {
           cy.get("#btnOpenForm").click();
-          cy.get(".nhsuk-warning-callout > p").should("exist");
-
-          //-- personal details section --
-          cy.get("#forename").should("exist").clear().type("Anthony");
-          cy.get("#surname").should("exist").clear().type("Gilliam");
-          cy.get("#gmcNumber").should("exist").clear().type("11111111");
-          cy.get("[data-cy=localOfficeName]").select(
-            "Health Education England Wessex"
-          );
-          cy.get("#dateOfBirth")
-            .should("exist")
-            .should("have.attr", "type", "date")
-            .clear()
-            .type("1991-11-11");
-
-          cy.get("#gender").should("exist").select("Male");
-          cy.get("#immigrationStatus")
-            .should("exist")
-            .select("Tier 1")
-            .should("have.value", "Tier 1");
-
-          cy.get("#qualification")
-            .should("exist")
-            .clear()
-            .type("MBBS Bachelor of Medicine and Bachelor of Surgery");
-
-          cy.get("#dateAttained")
-            .should("exist")
-            .should("have.attr", "type", "date")
-            .clear()
-            .type(dateAttained);
-          cy.get("#medicalSchool")
-            .should("exist")
-            .clear()
-            .type("University of Medical Things");
-          cy.get("#address1")
-            .should("exist")
-            .clear()
-            .type("585-6360 Interdum Street");
-
-          cy.get("#address2").should("exist").clear().type("Goulburn");
-          cy.get("#address3").should("exist").clear().type("Mauritius");
-
-          cy.get("#postCode").should("exist").clear().type("80902");
-          cy.get("#telephoneNumber")
-            .should("exist")
-            .clear()
-            .type("	01632960363");
-
-          cy.get("#mobileNumber").focus();
-          cy.get("#mobileNumber").should("exist").clear().type("0777777777777");
-          cy.get("#email")
-            .should("exist")
-            .clear()
-            .type("traineeui.tester@hee.nhs.uk");
-
-          //-- Declarations section --
-          cy.get("[data-cy=cctSpecialty1]").should("not.exist");
-          cy.get("[data-cy=cctSpecialty2]").should("not.exist");
-          cy.get("[data-cy=declarationType0]").click();
-          cy.get("[data-cy=cctSpecialty1]").should("exist");
-          cy.get("[data-cy=cctSpecialty2]").should("exist");
-
-          //- Programme specialty section --
-          cy.completeFormRAProgrammeSpecialtySection();
-
-          cy.get("#college")
-            .should("exist")
-            .select("Faculty Of Dental Surgery");
-
-          cy.get("#completionDate").clear().type(completionDate);
-
-          //- Programme section --
-          cy.get("#trainingGrade").should("exist").select("Foundation Year 1");
-          cy.get("#startDate")
-            .clear()
-            .type(startDate)
-            .should("not.have.value", "");
-          cy.get("#programmeMembershipType")
-            .should("exist")
-            .clear()
-            .type("LAT");
-
-          cy.get("#wholeTimeEquivalent")
-
-            .should("exist")
-            .clear()
-            .type("0.99");
         }
+        cy.get(".nhsuk-warning-callout > p").should("exist");
+
+        //-- personal details section --
+        cy.completeFormAPersonalDetailsSection(dateAttained);
+        cy.get("[data-cy=wholeTimeEquivalent]").clear();
+
+        //-- Declarations section --
+        cy.get("[data-cy=declarationType0]").click();
+        cy.get("[data-cy=cctSpecialty2]").should("exist");
+
+        //- Programme specialty section --
+        cy.completeFormRAProgrammeSpecialtySection();
+
+        cy.get("[data-cy=college] > option")
+          .eq(1)
+          .then(element => {
+            const selectedItem = element.val()!.toString();
+            cy.get("[data-cy=college]")
+              .select(selectedItem)
+              .should("not.have.value", "--Please select--");
+          });
+        cy.get("[data-cy=completionDate]").clear().type(completionDate);
+
+        //-- Programme section --
+        cy.get("[data-cy=trainingGrade] > option")
+          .eq(3)
+          .then(element => {
+            const selectedItem = element.val()!.toString();
+            cy.get("[data-cy=trainingGrade]")
+              .select(selectedItem)
+              .should("not.have.value", "--Please select--");
+          });
+        cy.get("[data-cy=startDate]")
+          .clear()
+          .type(startDate)
+          .should("not.have.value", "");
+        cy.get("[data-cy=programmeMembershipType]")
+          .should("exist")
+          .clear()
+          .type("LAT");
+
+        //-- error msg when FTE not completed
+        cy.log("################ Error msg when no FTE ###################");
+        cy.get("[data-cy=BtnContinue]").should("exist").click();
+        cy.get(".nhsuk-error-summary").should("exist");
+        cy.get("#wholeTimeEquivalent--error-message").should("exist");
+        cy.get("[data-cy=wholeTimeEquivalent]").type("0.99");
       });
+
     // ---------------- Check/edit the form -------------------------------------------
     // -- Clicking Continue --
     cy.log("################ Check/ EDIT FORM ###################");
