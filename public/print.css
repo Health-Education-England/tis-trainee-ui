@@ -1,0 +1,62 @@
+header,
+header *,
+button,
+.nhsuk-back-link,
+.hide-from-print {
+  display: none !important;
+}
+
+.nhsuk-grid-row {
+  margin: 0 !important;
+}
+
+.nhsuk-panel-with-label {
+  margin-top: 0 !important;
+}
+
+.nhsuk-panel-with-label .nhsuk-panel {
+  border: none !important;
+}
+
+.nhsuk-panel-with-label .nhsuk-panel h3 {
+  font-size: 22px;
+  padding: 10px 0px;
+  border-bottom: 1px solid #d8dde0;
+}
+
+fieldset {
+  margin-bottom: 20px !important;
+}
+
+.page-break {
+  break-before: page !important;
+  page-break-before: always !important;
+}
+
+.nhsuk-summary-list__key {
+  text-size-adjust: none;
+  width: 70mm !important;
+  display: table-cell !important;
+}
+.nhsuk-summary-list__value {
+  text-size-adjust: none;
+  display: table-cell !important;
+}
+
+.modalWrapper {
+  position: absolute !important;
+  top: 0 !important;
+  width: 100% !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+}
+.modalContent {
+  overflow: visible !important;
+}
+
+.modalWrapper ~ .cookieConsent-overlay {
+  display: none !important;
+}
+@page {
+  margin: 20mm 10mm;
+}
