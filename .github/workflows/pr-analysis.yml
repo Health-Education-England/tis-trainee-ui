@@ -29,8 +29,21 @@ jobs:
       - name: Lint
         run: npm run lint -- -f json -o eslint-report.json
 
-      - name: Test & code coverage report (Jest and Cypress CT)
-        run: npm run coverage
+      - name: Test
+        run: npm test
+
+      - name: Cypress CT
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+        with:
+          browser: chrome
+          command: npm run ct
+
+      - name: Report
+        run: npm run report:combined
 
       - name: Get modified files
         id: changed-files

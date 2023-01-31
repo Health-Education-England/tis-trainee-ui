@@ -1,6 +1,6 @@
 {
   "extends": [
-    "next/core-web-vitals",
+    "react-app",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
     "plugin:cypress/recommended"
@@ -13,8 +13,6 @@
         "endOfLine": "auto"
       }
     ],
-    "cypress/no-unnecessary-waiting": "warn",
-    "@next/next/no-img-element": "off"
-    // Turned the above warning off due to the img tag best suiting our use case in TotpInstructions.tsx
+    "cypress/no-unnecessary-waiting": "warn"
   }
 }

@@ -31,13 +31,9 @@ jobs:
 
       - name: Build React App
         run: npm install && npm run build
-        env:
-          ENV: preprod
 
       - name: Deploy app build to S3 bucket
-        run: |
-          mv ./out/[[...app]].html ./out/index.html
-          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
+        run: aws s3 sync ./build/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*
@@ -68,7 +64,7 @@ jobs:
           echo "workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')" >> $GITHUB_ENV
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v2
         env:
           CYPRESS_baseUrl: https://trainee.tis.nhs.uk
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
@@ -78,6 +74,14 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
         with:
           browser: ${{ matrix.browser }}
+
+      - name: Merge test results into one
+        if: always()
+        run: npm run report:merge
+
+      - name: Generate HTML report
+        if: always()
+        run: npm run report:generate
 
       - name: Create report artifact
         if: always()
@@ -134,7 +138,6 @@ jobs:
     needs: [cypress-e2e]
     name: Backup build artifacts
     runs-on: ubuntu-latest
-    if: always()
 
     steps:
       - name: Download build artifacts
@@ -181,9 +184,7 @@ jobs:
         run: npm install && npm run build
 
       - name: Deploy app build to S3 bucket
-        run: |
-          mv ./out/[[...app]].html ./out/index.html
-          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PROD }} --delete
+        run: aws s3 sync ./build/ s3://${{ secrets.AWS_S3_BUCKET_PROD }} --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*

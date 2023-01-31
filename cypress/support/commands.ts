@@ -1,8 +1,33 @@
-/// <reference types="cypress" />
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+// Cypress.Commands.add("login", (email, password) => { ... })
+//
+//
+// -- This is a child command --
+// Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+// cypress/support/index.js
 
 import day from "dayjs";
-import { DateUtilities } from "../../utilities/DateUtilities";
-import { BooleanUtilities } from "../../utilities/BooleanUtilities";
+import { DateUtilities } from "../../src/utilities/DateUtilities";
+import { BooleanUtilities } from "../../src/utilities/BooleanUtilities";
 
 Cypress.Commands.add("checkForSuccessNotif", (successMsg: string) => {
   cy.get(".notification").should(
@@ -40,7 +65,7 @@ Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]")
     .should("exist")
     .should("include.text", "My details are wrong")
-    .click({ force: true });
+    .click();
   cy.get("[data-cy=dataSourceText] > :nth-child(1)").should("be.visible");
   cy.get(".nhsuk-action-link__text").should(
     "contain.text",
@@ -54,71 +79,23 @@ Cypress.Commands.add("testDataSourceLink", () => {
 });
 
 Cypress.Commands.add("signIn", () => {
-  cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
-  cy.get('[type="password"]').clear().type(Cypress.env("password"));
+  cy.get("#radix-2-trigger-0").click();
+  cy.get("#amplify-id-0").clear().type(Cypress.env("username"));
+  cy.get("#amplify-id-2").clear().type(Cypress.env("password"));
   cy.get(".amplify-button--primary").click();
   cy.task("generateOTP").then(token => {
-    cy.get('[type="number"]').type(`${token}{enter}`);
+    cy.get("#amplify-id-6").clear().type(`${token}{enter}`);
   });
 });
 
-Cypress.Commands.add("completeFormAPersonalDetailsSection", dateAttained => {
-  cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#surname").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#gmcNumber").should("exist").invoke("val").should("not.be.empty");
-  cy.get("[data-cy=localOfficeName]").select("Health Education England Wessex");
-  cy.get("#dateOfBirth")
-    .should("exist")
-    .should("have.attr", "type", "date")
-    .invoke("val")
-    .should("not.be.empty");
-  cy.get("#gender").should("exist").should("have.value", "Male");
-  cy.get("#immigrationStatus")
-    .should("exist")
-    .select("Tier 1")
-    .should("have.value", "Tier 1");
-  cy.get("#qualification").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#dateAttained")
-    .should("exist")
-    .should("have.attr", "type", "date")
-    .clear()
-    .type(dateAttained);
-  cy.get("#medicalSchool")
-    .should("exist")
-    .clear()
-    .type("University of Medical Things");
-  cy.get("#address1").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#address2").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#address3").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#postCode").should("exist").invoke("val").should("not.be.empty");
-  cy.get("#telephoneNumber").should("exist").clear().type("01234567890");
-  cy.get("#mobileNumber").focus();
-  cy.get("#mobileNumber").should("exist").clear().type("0777777777777");
-  cy.get("#email").focus().clear().type("traineeui.tester@hee.nhs.uk");
-});
-
-Cypress.Commands.add("completeFormRAProgrammeSpecialtySection", () => {
-  cy.get(
-    '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
-  )
-    .click()
-    .get(".react-select__menu")
-    .find(".react-select__option")
-    .first()
-    .click();
-  cy.get(".react-select__value-container").contains("ACCS - General");
-  cy.get(
-    '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
-  )
-    .click()
-    .type("trauma")
-    .get(".react-select__menu")
-    .find(".react-select__option")
-    .last()
-    .click();
-  cy.get(".react-select__value-container").contains(
-    "Trauma and orthopaedic surgery"
-  );
+Cypress.Commands.add("signBackIn", () => {
+  cy.get("#radix-5-trigger-0").click();
+  cy.get("#amplify-id-9").clear().type(Cypress.env("username"));
+  cy.get("#amplify-id-11").clear().type(Cypress.env("password"));
+  cy.get(".amplify-button--primary").click();
+  cy.task("generateOTP").then(token => {
+    cy.get("#amplify-id-15").clear().type(`${token}{enter}`);
+  });
 });
 
 Cypress.Commands.add(
@@ -127,7 +104,7 @@ Cypress.Commands.add(
     dateAttained: string,
     completionDate: string,
     startDate: string,
-    wholeTimeEquivalent: string
+    wholeTimeEquivalent: number
   ) => {
     cy.get("#forename").should("exist").invoke("val").should("not.be.empty");
     cy.get("#surname").should("exist").invoke("val").should("not.be.empty");
@@ -170,11 +147,9 @@ Cypress.Commands.add(
 
     cy.get("[data-cy=declarationType0]").should("be.checked");
 
-    cy.get(
-      '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
-    )
+    cy.get("#programmeSpecialty")
       .should("exist")
-      .should("not.contain.text", "--Please select--");
+      .should("not.have.value", "--Please select--");
 
     cy.get("[data-cy=cctSpecialty1]")
       .should("exist")
@@ -277,29 +252,22 @@ Cypress.Commands.add(
       "Health Education England Wessex"
     );
     cy.get("#prevRevalBody").select("other");
+    cy.get("#prevRevalBodyOther").should("exist");
 
-    cy.get(
-      ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
-    )
-      .click()
-      .get(".react-select__menu")
-      .find(".react-select__option")
-      .first()
-      .click();
-    cy.get(".react-select__value-container").contains(
-      "21st Century Clinic Ltd"
-    );
+    cy.get("#prevRevalBodyOther").clear().type("Health ");
+    cy.get("#prevRevalBodyOther + ul li").should("exist");
 
-    cy.get(
-      ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
-    )
-      .click()
-      .type("yach")
-      .get(".react-select__menu")
-      .find(".react-select__option")
-      .first()
-      .click();
-    cy.get(".react-select__value-container").contains("Yachts");
+    cy.get("#prevRevalBodyOther").clear().type("Dental Training Agency");
+    cy.get("#prevRevalBodyOther + ul li").should("not.exist");
+
+    cy.get('[data-cy="currRevalDate"]').click();
+    cy.get('[data-cy="prevRevalBodyOther"]').should("have.value", "");
+    cy.get('[data-cy="prevRevalBodyOther"]').clear().type("Health");
+    cy.get("#prevRevalBodyOther + ul li").should("exist");
+    cy.get("#prevRevalBodyOther + ul li").eq(0).click();
+
+    cy.get("#prevRevalBody").select("other");
+    cy.get("#prevRevalBodyOther").should("have.value", "");
   }
 );
 
