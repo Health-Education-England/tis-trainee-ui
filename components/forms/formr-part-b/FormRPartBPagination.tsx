@@ -20,6 +20,7 @@ interface IFormRPartBPagination {
   isValid?: boolean;
   isSubmitting?: boolean;
   finalSections?: IProgSection[];
+  resetForm: any;
 }
 
 const FormRPartBPagination = ({
@@ -31,7 +32,8 @@ const FormRPartBPagination = ({
   previousSection,
   isValid,
   isSubmitting,
-  finalSections
+  finalSections,
+  resetForm
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
@@ -67,6 +69,9 @@ const FormRPartBPagination = ({
         <Button
           secondary
           onClick={() => {
+            if (section === 8) {
+              resetForm();
+            }
             dispatch(updatesaveBtnActive());
             saveDraft(values);
           }}

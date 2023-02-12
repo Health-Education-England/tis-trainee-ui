@@ -84,7 +84,7 @@ const Declarations = ({
         handleSubClick(values, setSubmitting);
       }}
     >
-      {({ values, handleSubmit, isValid, isSubmitting }) => (
+      {({ values, handleSubmit, isValid, isSubmitting, resetForm }) => (
         <Form>
           <Fieldset
             disableErrorLine={true}
@@ -140,6 +140,7 @@ const Declarations = ({
             isValid={isValid}
             isSubmitting={isSubmitting}
             finalSections={finalSections}
+            resetForm={resetForm}
           />
         </Form>
       )}
