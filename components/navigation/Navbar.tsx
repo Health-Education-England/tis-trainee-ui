@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { Button, Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
-import { useAppDispatch } from "../../redux/hooks/hooks";
-import { resetUser } from "../../redux/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { resetMFAJourney } from "../../redux/slices/userSlice";
 interface NavProps {
   showMenu: boolean;
   updateMenuStatus: any;
   signOut: any;
-  mfa: string;
 }
 
-const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
+const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   const dispatch = useAppDispatch();
   const paths = [
     { path: "profile", name: "Profile" },
@@ -36,7 +35,8 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
   );
 
   const addLinks = (): JSX.Element[] => {
-    if (mfa === "NOMFA") {
+    const preferredMFA = useAppSelector(state => state.user.preferredMFA);
+    if (preferredMFA === "NOMFA") {
       return noMfaPaths.map(p => makeLi(p));
     } else return [...paths, ...noMfaPaths].map(p => makeLi(p));
   };
@@ -52,7 +52,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut, mfa }: NavProps) => {
   };
 
   const doSignOut = () => {
-    dispatch(resetUser());
+    dispatch(resetMFAJourney());
     signOut();
   };
 

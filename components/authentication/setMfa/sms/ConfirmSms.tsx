@@ -3,11 +3,10 @@ import { Button, Card } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import TextInputField from "../../../forms/TextInputField";
 import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
-import { CognitoUser } from "@aws-amplify/auth";
 import {
   decrementSmsSection,
+  getPreferredMFA,
   resetError,
-  resetUser,
   setPreferredMfa,
   verifyUserAttributeSubmit
 } from "../../../../redux/slices/userSlice";
@@ -15,11 +14,8 @@ import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
-interface IConfirmSms {
-  user: CognitoUser;
-}
 
-const ConfirmSms = ({ user }: IConfirmSms) => {
+const ConfirmSms = () => {
   const dispatch = useAppDispatch();
 
   const verifyCodeSub = async (code: string) => {
@@ -30,7 +26,7 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
 
   const updateMfa = async () => {
     const pref: MFAType = "SMS";
-    await dispatch(setPreferredMfa({ user, pref }));
+    await dispatch(setPreferredMfa(pref));
     return store.getState().user.status;
   };
 
@@ -43,7 +39,7 @@ const ConfirmSms = ({ user }: IConfirmSms) => {
     if (res === "succeeded") {
       const resU = await updateMfa();
       if (resU === "succeeded") {
-        dispatch(resetUser());
+        await dispatch(getPreferredMFA());
         history.push("/profile");
         dispatch(
           addNotification({

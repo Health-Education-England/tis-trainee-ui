@@ -1,4 +1,3 @@
-import { CognitoUser } from "@aws-amplify/auth";
 import { Formik } from "formik";
 import { Button, Card, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
@@ -10,11 +9,10 @@ import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import ThreeMinMsg from "./ThreeMinMsg";
 interface IDecideTotp {
-  user: CognitoUser | any;
   handleSectionSubmit: () => void;
 }
 
-const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
+const DecideTotp = ({ handleSectionSubmit }: IDecideTotp) => {
   const dispatch = useAppDispatch();
   return (
     <Formik
@@ -23,7 +21,7 @@ const DecideTotp = ({ user, handleSectionSubmit }: IDecideTotp) => {
       }}
       onSubmit={values => {
         if (values.appInstalledAlready === "true") {
-          dispatch(updateTotpCode(user));
+          dispatch(updateTotpCode());
           dispatch(updatedTotpSection(3));
         } else handleSectionSubmit();
       }}

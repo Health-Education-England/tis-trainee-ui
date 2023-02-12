@@ -1,4 +1,3 @@
-import { CognitoUser } from "@aws-amplify/auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "aws-amplify";
 import { MFAType } from "../../models/MFAStatus";
@@ -10,6 +9,8 @@ interface IUser {
   totpSection: number;
   error: any;
   totpCode: string;
+  preferredMFA: any;
+  username: string;
 }
 
 const initialState: IUser = {
@@ -18,20 +19,31 @@ const initialState: IUser = {
   smsSection: 1,
   totpSection: 1,
   error: "",
-  totpCode: ""
+  totpCode: "",
+  preferredMFA: "NOMFA",
+  username: ""
 };
+
+export const getPreferredMFA = createAsyncThunk(
+  "user/getPreferredMFA",
+  async () => {
+    const { preferredMFA } = await Auth.currentAuthenticatedUser();
+    return preferredMFA;
+  }
+);
 
 export const updateTotpCode = createAsyncThunk(
   "user/updateTotpCode",
-  async (user: any) => {
+  async () => {
+    const user = await Auth.currentAuthenticatedUser();
     return Auth.setupTOTP(user);
   }
 );
 
 export const updateUserAttributes = createAsyncThunk(
   "user/updateUserAttributes",
-  async (userAttribdata: any) => {
-    const { user, attrib } = userAttribdata;
+  async (attrib: { phone_number: string }) => {
+    const user = await Auth.currentAuthenticatedUser();
     return Auth.updateUserAttributes(user, attrib);
   }
 );
@@ -42,8 +54,8 @@ export const verifyPhone = createAsyncThunk("user/verifyPhone", async () => {
 
 export const verifyTotp = createAsyncThunk(
   "user/verifyTotp",
-  async (totpParamsData: { user: CognitoUser | any; totpInput: string }) => {
-    const { user, totpInput } = totpParamsData;
+  async (totpInput: string) => {
+    const user = await Auth.currentAuthenticatedUser();
     return Auth.verifyTotpToken(user, totpInput);
   }
 );
@@ -58,18 +70,31 @@ export const verifyUserAttributeSubmit = createAsyncThunk(
 
 export const setPreferredMfa = createAsyncThunk(
   "user/setPreferredMfa",
-  async (userPrefMfaData: { user: CognitoUser | any; pref: MFAType }) => {
-    const { user, pref } = userPrefMfaData;
+  async (pref: MFAType) => {
+    const user = await Auth.currentAuthenticatedUser();
     return Auth.setPreferredMFA(user, pref);
   }
 );
+
+export const getUsername = createAsyncThunk("user/getUsername", async () => {
+  const { username } = await Auth.currentAuthenticatedUser();
+  return username;
+});
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    resetUser() {
-      return initialState;
+    resetMFAJourney(state) {
+      return {
+        ...state,
+        status: "idle",
+        tempMfa: "NOMFA",
+        smsSection: 1,
+        totpSection: 1,
+        error: "",
+        totpCode: ""
+      };
     },
     resetError(state) {
       return { ...state, status: "idle", error: "" };
@@ -98,6 +123,14 @@ const userSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
+      .addCase(getPreferredMFA.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.preferredMFA = action.payload;
+      })
+      .addCase(getPreferredMFA.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(updateTotpCode.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.totpCode = action.payload;
@@ -140,14 +173,25 @@ const userSlice = createSlice({
       .addCase(setPreferredMfa.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(getUsername.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.username = action.payload;
+      })
+      .addCase(getUsername.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   }
 });
 
 export default userSlice.reducer;
 
+export const selectPreferredMFA = (state: { user: IUser }) =>
+  state.user.preferredMFA;
+
 export const {
-  resetUser,
+  resetMFAJourney,
   resetError,
   updatedtempMfa,
   decrementSmsSection,
