@@ -1,4 +1,3 @@
-import { CognitoUser } from "@aws-amplify/auth";
 import {
   ActionLink,
   Button,
@@ -12,8 +11,8 @@ import {
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
+  getPreferredMFA,
   resetError,
-  resetUser,
   setPreferredMfa,
   updatedTotpSection,
   updateUserAttributes,
@@ -28,19 +27,17 @@ import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
 import { addNotification } from "../../../../redux/slices/notificationsSlice";
 import styles from "../../../authentication/Auth.module.scss";
-interface IVerifyTotp {
-  user: CognitoUser | any;
-}
 
-const VerifyTotp = ({ user }: IVerifyTotp) => {
+const VerifyTotp = () => {
   const dispatch = useAppDispatch();
   const totpName = "NHS TIS Self-Service";
   const totpStr = useAppSelector(state => state.user.totpCode);
-  const qrCode = `otpauth://totp/${encodeURI(totpName)}:${
-    user.username
-  }?secret=${totpStr}&issuer=${encodeURI(totpName)}`;
-  const [expired, setExpired] = useState(false);
+  const username = useAppSelector(state => state.user.username);
+  const qrCode = `otpauth://totp/${encodeURI(
+    totpName
+  )}:${username}?secret=${totpStr}&issuer=${encodeURI(totpName)}`;
 
+  const [expired, setExpired] = useState(false);
   useEffect(() => {
     let timeOut = setTimeout(() => setExpired(true), 180000);
     if (expired) {
@@ -53,19 +50,19 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
   }, [expired, dispatch]);
 
   const verifyTotpInput = async (totpInput: string) => {
-    await dispatch(verifyTotp({ user, totpInput }));
+    await dispatch(verifyTotp(totpInput));
     return store.getState().user.status;
   };
 
   const updateMfa = async () => {
     const pref: MFAType = "TOTP";
-    await dispatch(setPreferredMfa({ user, pref }));
+    await dispatch(setPreferredMfa(pref));
     return store.getState().user.status;
   };
 
   const removePhoneNo = async () => {
     const attrib = { phone_number: "" };
-    await dispatch(updateUserAttributes({ user, attrib }));
+    await dispatch(updateUserAttributes(attrib));
     return store.getState().user.status;
   };
 
@@ -80,7 +77,7 @@ const VerifyTotp = ({ user }: IVerifyTotp) => {
       if (resU === "succeeded") {
         const resR = await removePhoneNo();
         if (resR === "succeeded") {
-          dispatch(resetUser());
+          await dispatch(getPreferredMFA());
           history.push("/profile");
           dispatch(
             addNotification({

@@ -1,17 +1,17 @@
-import { CognitoUser } from "@aws-amplify/auth";
 import { Formik } from "formik";
 import { Button, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import { updateTotpCode } from "../../../../redux/slices/userSlice";
+import {
+  getUsername,
+  updateTotpCode
+} from "../../../../redux/slices/userSlice";
 import ThreeMinMsg from "./ThreeMinMsg";
 import TotpInstructions from "./TotpInstructions";
-
 interface IInstallTotp {
-  user: CognitoUser | any;
   handleSectionSubmit: () => void;
 }
 
-const InstallTotp = ({ user, handleSectionSubmit }: IInstallTotp) => {
+const InstallTotp = ({ handleSectionSubmit }: IInstallTotp) => {
   const dispatch = useAppDispatch();
 
   return (
@@ -21,7 +21,8 @@ const InstallTotp = ({ user, handleSectionSubmit }: IInstallTotp) => {
         appInstalledNow: null
       }}
       onSubmit={_values => {
-        dispatch(updateTotpCode(user));
+        dispatch(updateTotpCode());
+        dispatch(getUsername());
         handleSectionSubmit();
       }}
     >

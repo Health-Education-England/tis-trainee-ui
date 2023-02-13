@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import PersonalDetailsComponent from "./personal-details/PersonalDetailsComponent";
 import { Fieldset, Details } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
@@ -8,17 +9,25 @@ import { PanelsCreator } from "./PanelsCreator";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import style from "../Common.module.scss";
 import { PANEL_KEYS } from "../../utilities/Constants";
-import { useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { placementPanelTemplate } from "../../models/Placement";
 import { programmePanelTemplate } from "../../models/ProgrammeMembership";
+import { resetMFAJourney } from "../../redux/slices/userSlice";
 
-const Profile = ({ mfa }: any) => {
+const Profile = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(resetMFAJourney());
+  }, [dispatch]);
+
   const placementsArr = useAppSelector(selectTraineeProfile).placements;
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
+  const preferredMFA = useAppSelector(state => state.user.preferredMFA);
 
-  if (mfa === "NOMFA") {
+  if (preferredMFA === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
   const content = (

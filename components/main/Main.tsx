@@ -1,4 +1,3 @@
-import { CognitoUser } from "amazon-cognito-identity-js";
 import { Switch, Route, Redirect, Router } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/formr-part-a/FormRPartA";
@@ -16,20 +15,23 @@ import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
+import { getPreferredMFA } from "../../redux/slices/userSlice";
 
 interface IMain {
-  user: CognitoUser | any;
   signOut: any;
   appVersion: string;
 }
 
-export const Main = ({ user, signOut, appVersion }: IMain) => {
-  const mfa = user.preferredMFA;
+export const Main = ({ signOut, appVersion }: IMain) => {
   const dispatch = useAppDispatch();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
   let content;
+
+  useEffect(() => {
+    dispatch(getPreferredMFA());
+  }, [dispatch]);
 
   useEffect(() => {
     if (traineeProfileDataStatus === "idle") {
@@ -60,14 +62,14 @@ export const Main = ({ user, signOut, appVersion }: IMain) => {
       <>
         <Router history={history}>
           <PageTitle />
-          <HEEHeader signOut={signOut} mfa={mfa} />
+          <HEEHeader signOut={signOut} />
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
             <Switch>
-              <Route path="/profile" render={() => <Profile mfa={mfa} />} />
-              <Route path="/formr-a" render={() => <FormRPartA mfa={mfa} />} />
-              <Route path="/formr-b" render={() => <FormRPartB mfa={mfa} />} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/formr-a" component={FormRPartA} />
+              <Route path="/formr-b" component={FormRPartB} />
               <Route path="/support" component={Support} />
-              <Route path="/mfa" render={() => <MFA user={user} mfa={mfa} />} />
+              <Route path="/mfa" component={MFA} />
               <Redirect exact path="/" to="/profile" />
               <Route path="/*" component={PageNotFound} />
             </Switch>

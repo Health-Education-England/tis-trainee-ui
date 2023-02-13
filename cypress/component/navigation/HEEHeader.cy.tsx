@@ -4,6 +4,7 @@ import HEEHeader from "../../../components/navigation/HEEHeader";
 import history from "../../../components/navigation/history";
 import { Provider } from "react-redux";
 import store from "../../../redux/store/store";
+import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 const navLinks = [
   { name: "Profile", href: "/profile" },
@@ -15,9 +16,9 @@ const navLinks = [
 
 describe("Header with MFA set up", () => {
   beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
     const props = {
-      signOut: cy.stub(),
-      mfa: "SMS"
+      signOut: cy.stub()
     };
     mount(
       <Provider store={store}>
@@ -56,9 +57,9 @@ describe("Header with MFA set up", () => {
 
 describe("Header with NOMFA", () => {
   beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("NOMFA"));
     const props = {
-      signOut: cy.stub(),
-      mfa: "NOMFA"
+      signOut: cy.stub()
     };
     mount(
       <Provider store={store}>
@@ -85,7 +86,7 @@ describe("Header with NOMFA", () => {
   });
 
   mfaOnlyLinks.forEach(link => {
-    it(`should show the ${link.name} link in the nav menu`, () => {
+    it(`should not show the ${link.name} link in the nav menu`, () => {
       cy.get(`[data-cy="${link.name}"]`).should("not.exist");
     });
   });

@@ -117,11 +117,11 @@ function CRAEntryPoint() {
       className={style.authAuthenticator}
       formFields={formFields}
     >
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <BrowserRouter>
           <>
             <Notifications />
-            <Main user={user} signOut={signOut} appVersion={appVersion} />
+            <Main signOut={signOut} appVersion={appVersion} />
           </>
         </BrowserRouter>
       )}

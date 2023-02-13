@@ -21,8 +21,12 @@ import {
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
+import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 describe("Profile", () => {
+  beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
+  });
   it("should display user details, placement and programme data in the profile section", () => {
     const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
@@ -200,5 +204,32 @@ describe("Profile", () => {
     );
     cy.get("[data-cy=programmeMembershipsExpander]").should("exist").click();
     cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
+  });
+});
+
+describe("Profile with NOMFA ", () => {
+  it("should not display Profile page if NOMFA", () => {
+    const MockedProfileFail = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: mockProgrammeMemberships,
+          placements: mockPlacements
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updatedPreferredMfa("NOMFA"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileFail />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=profileHeading]").should("not.exist");
   });
 });

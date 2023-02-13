@@ -8,19 +8,14 @@ import { updatedTraineeProfileStatus } from "../../../redux/slices/traineeProfil
 import { updatedReferenceStatus } from "../../../redux/slices/referenceSlice";
 import history from "../../../components/navigation/history";
 import React from "react";
+import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 describe("Main", () => {
   it("should return Loading comp if data loading ", () => {
     const MockedMainLoading = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("loading"));
-      return (
-        <Main
-          user={{ preferredMFA: "NOMFA" }}
-          signOut={null}
-          appVersion="1.0.0"
-        />
-      );
+      return <Main signOut={null} appVersion="1.0.0" />;
     };
     mount(
       <Provider store={store}>
@@ -36,13 +31,7 @@ describe("Main", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("succeeded"));
       dispatch(updatedReferenceStatus("succeeded"));
-      return (
-        <Main
-          user={{ preferredMFA: "NOMFA" }}
-          signOut={null}
-          appVersion="1.0.0"
-        />
-      );
+      return <Main signOut={null} appVersion="1.0.0" />;
     };
     mount(
       <Provider store={store}>
@@ -60,13 +49,8 @@ describe("Main", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("succeeded"));
       dispatch(updatedReferenceStatus("succeeded"));
-      return (
-        <Main
-          user={{ preferredMFA: "SMS" }}
-          signOut={null}
-          appVersion="1.0.0"
-        />
-      );
+      dispatch(updatedPreferredMfa("SMS"));
+      return <Main signOut={null} appVersion="1.0.0" />;
     };
     mount(
       <Provider store={store}>
@@ -87,13 +71,7 @@ describe("Main", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus("failed"));
       dispatch(updatedReferenceStatus("succeeded"));
-      return (
-        <Main
-          user={{ preferredMFA: "SMS" }}
-          signOut={null}
-          appVersion="1.0.0"
-        />
-      );
+      return <Main signOut={null} appVersion="1.0.0" />;
     };
     mount(
       <Provider store={store}>

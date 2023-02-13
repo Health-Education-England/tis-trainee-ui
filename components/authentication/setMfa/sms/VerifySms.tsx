@@ -10,18 +10,14 @@ import {
   updateUserAttributes,
   verifyPhone
 } from "../../../../redux/slices/userSlice";
-import { CognitoUser } from "@aws-amplify/auth";
 import store from "../../../../redux/store/store";
-interface IVerifySms {
-  user: CognitoUser;
-}
 
-const VerifySms = ({ user }: IVerifySms) => {
+const VerifySms = () => {
   const dispatch = useAppDispatch();
 
   const updatePhoneAttrib = async (mobNo: string) => {
     const attrib = { phone_number: mobNo };
-    await dispatch(updateUserAttributes({ user, attrib }));
+    await dispatch(updateUserAttributes(attrib));
     return store.getState().user.status;
   };
 

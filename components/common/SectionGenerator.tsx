@@ -13,7 +13,7 @@ interface ISectionGenerator<U> {
   path: string;
   section: number;
   sectionsArr: SectionsArray[];
-  sectionProps: U;
+  sectionProps?: U;
 }
 
 const SectionGenerator = <U,>({
