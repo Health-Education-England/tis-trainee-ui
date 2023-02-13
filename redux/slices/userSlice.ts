@@ -27,8 +27,8 @@ const initialState: IUser = {
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
-    const { preferredMfa } = await Auth.currentAuthenticatedUser();
-    return preferredMfa;
+    const { preferredMFA } = await Auth.currentAuthenticatedUser();
+    return preferredMFA;
   }
 );
 
