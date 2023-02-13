@@ -51,6 +51,8 @@ it("should mount section 6 ", () => {
     .should("include.text", "Please think carefully before submitting");
   cy.get(".MuiDialogActions-root > :nth-child(1)").click();
   cy.get(".MuiDialog-container").should("not.exist");
+  cy.get('[data-cy="BtnSaveDraft"]').should("exist").click();
+  cy.get(".MuiDialog-container").should("not.exist");
   cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
   cy.get(".MuiDialog-scrollPaper ").should("exist").click(1, 1);
   cy.get(".MuiDialog-container").should("not.exist");
