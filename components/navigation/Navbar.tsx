@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks/hooks";
-import { resetMFAJourney } from "../../redux/slices/userSlice";
+import { resetMfaJourney } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
 interface NavProps {
   showMenu: boolean;
@@ -36,8 +36,8 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   );
 
   const addLinks = (): JSX.Element[] => {
-    const preferredMFA = store.getState().user.preferredMFA;
-    if (preferredMFA === "NOMFA") {
+    const preferredMfa = store.getState().user.preferredMfa;
+    if (preferredMfa === "NOMFA") {
       return noMfaPaths.map(p => makeLi(p));
     } else return [...paths, ...noMfaPaths].map(p => makeLi(p));
   };
@@ -53,7 +53,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   };
 
   const doSignOut = () => {
-    dispatch(resetMFAJourney());
+    dispatch(resetMfaJourney());
     signOut();
   };
 

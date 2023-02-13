@@ -5,7 +5,7 @@ import TextInputField from "../../../forms/TextInputField";
 import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
 import {
   decrementSmsSection,
-  getPreferredMFA,
+  getPreferredMfa,
   resetError,
   setPreferredMfa,
   verifyUserAttributeSubmit
@@ -39,7 +39,7 @@ const ConfirmSms = () => {
     if (res === "succeeded") {
       const resU = await updateMfa();
       if (resU === "succeeded") {
-        await dispatch(getPreferredMFA());
+        await dispatch(getPreferredMfa());
         history.push("/profile");
         dispatch(
           addNotification({

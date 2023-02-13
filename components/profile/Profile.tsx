@@ -13,21 +13,21 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { placementPanelTemplate } from "../../models/Placement";
 import { programmePanelTemplate } from "../../models/ProgrammeMembership";
-import { resetMFAJourney } from "../../redux/slices/userSlice";
+import { resetMfaJourney } from "../../redux/slices/userSlice";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(resetMFAJourney());
+    dispatch(resetMfaJourney());
   }, [dispatch]);
 
   const placementsArr = useAppSelector(selectTraineeProfile).placements;
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
-  const preferredMFA = useAppSelector(state => state.user.preferredMFA);
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
-  if (preferredMFA === "NOMFA") {
+  if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
   const content = (

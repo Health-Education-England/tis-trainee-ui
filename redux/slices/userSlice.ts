@@ -9,7 +9,7 @@ interface IUser {
   totpSection: number;
   error: any;
   totpCode: string;
-  preferredMFA: any;
+  preferredMfa: any;
   username: string;
 }
 
@@ -20,15 +20,15 @@ const initialState: IUser = {
   totpSection: 1,
   error: "",
   totpCode: "",
-  preferredMFA: "NOMFA",
+  preferredMfa: "NOMFA",
   username: ""
 };
 
-export const getPreferredMFA = createAsyncThunk(
-  "user/getPreferredMFA",
+export const getPreferredMfa = createAsyncThunk(
+  "user/getPreferredMfa",
   async () => {
-    const { preferredMFA } = await Auth.currentAuthenticatedUser();
-    return preferredMFA;
+    const { preferredMfa } = await Auth.currentAuthenticatedUser();
+    return preferredMfa;
   }
 );
 
@@ -85,7 +85,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    resetMFAJourney(state) {
+    resetMfaJourney(state) {
       return {
         ...state,
         status: "idle",
@@ -99,7 +99,7 @@ const userSlice = createSlice({
     resetError(state) {
       return { ...state, status: "idle", error: "" };
     },
-    updatedtempMfa(state, action: PayloadAction<string>) {
+    updatedTempMfa(state, action: PayloadAction<string>) {
       return { ...state, tempMfa: action.payload };
     },
     decrementSmsSection: state => {
@@ -121,16 +121,16 @@ const userSlice = createSlice({
       return { ...state, status: action.payload };
     },
     updatedPreferredMfa(state, action: PayloadAction<string>) {
-      return { ...state, preferredMFA: action.payload };
+      return { ...state, preferredMfa: action.payload };
     }
   },
   extraReducers(builder): void {
     builder
-      .addCase(getPreferredMFA.fulfilled, (state, action) => {
+      .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMFA = action.payload;
+        state.preferredMfa = action.payload;
       })
-      .addCase(getPreferredMFA.rejected, (state, action) => {
+      .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
@@ -191,12 +191,12 @@ const userSlice = createSlice({
 export default userSlice.reducer;
 
 export const selectPreferredMFA = (state: { user: IUser }) =>
-  state.user.preferredMFA;
+  state.user.preferredMfa;
 
 export const {
-  resetMFAJourney,
+  resetMfaJourney,
   resetError,
-  updatedtempMfa,
+  updatedTempMfa,
   decrementSmsSection,
   incrementSmsSection,
   incrementTotpSection,

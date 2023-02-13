@@ -7,7 +7,7 @@ import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import {
   updatedSmsSection,
-  updatedtempMfa
+  updatedTempMfa
 } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import CreateSms from "../../../components/authentication/setMfa//sms/CreateSms";
@@ -19,7 +19,7 @@ describe("CreateSms sections", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <CreateSms user={{ username: "stan" }} mfa="NOMFA" />
+          <CreateSms />
         </Router>
       </Provider>
     );
@@ -28,8 +28,8 @@ describe("CreateSms sections", () => {
   it("should render the verify sms component when section number is 1", () => {
     const MockedVerifySmsSection = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedtempMfa("SMS"));
-      return <CreateSms user={{ username: "stan" }} mfa="SMS" />;
+      dispatch(updatedTempMfa("SMS"));
+      return <CreateSms />;
     };
     mount(
       <Provider store={store}>
@@ -51,9 +51,9 @@ describe("CreateSms sections", () => {
   it("should render the confirm sms component when section number is 2", () => {
     const MockedConfirmSmsSection = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedtempMfa("SMS"));
+      dispatch(updatedTempMfa("SMS"));
       dispatch(updatedSmsSection(2));
-      return <CreateSms user={{ username: "stan" }} mfa="SMS" />;
+      return <CreateSms />;
     };
     mount(
       <Provider store={store}>

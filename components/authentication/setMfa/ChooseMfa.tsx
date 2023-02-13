@@ -2,8 +2,8 @@ import { Formik } from "formik";
 import { Button, Card, Details, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
-  resetMFAJourney,
-  updatedtempMfa
+  resetMfaJourney,
+  updatedTempMfa
 } from "../../../redux/slices/userSlice";
 import { MFA_OPTIONS } from "../../../utilities/Constants";
 import MultiChoiceInputField from "../../forms/MultiChoiceInputField";
@@ -16,9 +16,9 @@ import { useEffect } from "react";
 const ChooseMfa = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(resetMFAJourney());
+    dispatch(resetMfaJourney());
   }, [dispatch]);
-  const preferredMFA = useAppSelector(state => state.user.preferredMFA);
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   return (
     <>
@@ -31,14 +31,14 @@ const ChooseMfa = () => {
           mfaChoice: Yup.string().required("Please choose an option")
         })}
         onSubmit={values => {
-          dispatch(updatedtempMfa(values.mfaChoice));
+          dispatch(updatedTempMfa(values.mfaChoice));
           history.push(`/mfa/${values.mfaChoice.toLowerCase()}`);
         }}
       >
         {({ handleSubmit }) => (
           <>
             <ScrollTo />
-            {preferredMFA !== "NOMFA" && (
+            {preferredMfa !== "NOMFA" && (
               <WarningCallout data-cy="mfaAlreadyWarning">
                 <WarningCallout.Label visuallyHiddenText={false}>
                   Important
@@ -47,7 +47,7 @@ const ChooseMfa = () => {
                   You have already set up
                   <b>
                     {" "}
-                    {preferredMFA === MFAStatus.TOTP
+                    {preferredMfa === MFAStatus.TOTP
                       ? "your Authenticator App for MFA"
                       : "SMS for MFA"}{" "}
                   </b>

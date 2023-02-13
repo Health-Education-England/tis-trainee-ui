@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
-  getPreferredMFA,
+  getPreferredMfa,
   resetError,
   setPreferredMfa,
   updatedTotpSection,
@@ -77,7 +77,7 @@ const VerifyTotp = () => {
       if (resU === "succeeded") {
         const resR = await removePhoneNo();
         if (resR === "succeeded") {
-          await dispatch(getPreferredMFA());
+          await dispatch(getPreferredMfa());
           history.push("/profile");
           dispatch(
             addNotification({

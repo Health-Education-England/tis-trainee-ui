@@ -15,7 +15,7 @@ import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
-import { getPreferredMFA } from "../../redux/slices/userSlice";
+import { getPreferredMfa } from "../../redux/slices/userSlice";
 
 interface IMain {
   signOut: any;
@@ -30,7 +30,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
   let content;
 
   useEffect(() => {
-    dispatch(getPreferredMFA());
+    dispatch(getPreferredMfa());
   }, [dispatch]);
 
   useEffect(() => {

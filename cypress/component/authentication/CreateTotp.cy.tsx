@@ -5,7 +5,7 @@ import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
-import { updatedtempMfa } from "../../../redux/slices/userSlice";
+import { updatedTempMfa } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import CreateTotp from "../../../components/authentication/setMfa/totp/CreateTotp";
 import history from "../../../components/navigation/history";
@@ -26,7 +26,7 @@ describe("CreateTotp sections", () => {
   it("should render the decide totp component when section number is 1 ", () => {
     const MockedDecideTotpSection = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedtempMfa("TOTP"));
+      dispatch(updatedTempMfa("TOTP"));
       return <CreateTotp user={{ username: "stan" }} mfa="TOTP" />;
     };
     mount(
