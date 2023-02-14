@@ -14,7 +14,7 @@ describe("ChooseMfa", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <ChooseMfa mfa="NOMFA" />
+          <ChooseMfa />
         </Router>
       </Provider>
     );

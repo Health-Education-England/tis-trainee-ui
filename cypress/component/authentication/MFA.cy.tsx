@@ -14,7 +14,7 @@ describe("MFA", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MFA user={{ username: "jeff" }} mfa="NOMFA" />
+          <MFA />
         </Router>
       </Provider>
     );
