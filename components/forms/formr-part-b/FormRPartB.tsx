@@ -6,9 +6,11 @@ import CreateList from "../CreateList";
 import View from "./viewSections/View";
 import ScrollTo from "../../../components/forms/ScrollTo";
 import PageTitle from "../../common/PageTitle";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 
-const FormRPartB = ({ mfa }: any) => {
-  if (mfa === "NOMFA") {
+const FormRPartB = () => {
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
   return (

@@ -6,9 +6,11 @@ import CreateList from "../CreateList";
 import View from "./View";
 import Create from "./Create";
 import Confirm from "./Confirm";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 
-const FormRPartA = ({ mfa }: any) => {
-  if (mfa === "NOMFA") {
+const FormRPartA = () => {
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
   return (

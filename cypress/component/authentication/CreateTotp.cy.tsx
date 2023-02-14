@@ -16,7 +16,7 @@ describe("CreateTotp sections", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <CreateTotp user={{ username: "Fred" }} mfa="NOMFA" />
+          <CreateTotp />
         </Router>
       </Provider>
     );
@@ -27,7 +27,7 @@ describe("CreateTotp sections", () => {
     const MockedDecideTotpSection = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTempMfa("TOTP"));
-      return <CreateTotp user={{ username: "stan" }} mfa="TOTP" />;
+      return <CreateTotp />;
     };
     mount(
       <Provider store={store}>
