@@ -5,9 +5,11 @@ import FormRPartA from "../../../../components/forms/formr-part-a/FormRPartA";
 import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
 import React from "react";
+import { updatedPreferredMfa } from "../../../../redux/slices/userSlice";
 
 describe("FormRPartA routes page", () => {
   it("should render without crashing", () => {
+    store.dispatch(updatedPreferredMfa("SMS"));
     mount(
       <Provider store={store}>
         <Router history={history}>
