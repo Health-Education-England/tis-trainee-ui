@@ -16,6 +16,10 @@ import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
 import { getPreferredMfa } from "../../redux/slices/userSlice";
+import Home from "../home/Home";
+import Placements from "../placements/Placements";
+import Programmes from "../programmes/Programmes";
+import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 
 interface IMain {
   signOut: any;
@@ -63,14 +67,18 @@ export const Main = ({ signOut, appVersion }: IMain) => {
         <Router history={history}>
           <PageTitle />
           <HEEHeader signOut={signOut} />
+          <Breadcrumbs />
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
             <Switch>
+              <Route path="/home" component={Home}></Route>
+              <Route path="/placements" component={Placements}></Route>
+              <Route path="/programmes" component={Programmes}></Route>
               <Route path="/profile" component={Profile} />
               <Route path="/formr-a" component={FormRPartA} />
               <Route path="/formr-b" component={FormRPartB} />
               <Route path="/support" component={Support} />
               <Route path="/mfa" component={MFA} />
-              <Redirect exact path="/" to="/profile" />
+              <Redirect exact path="/" to="/home" />
               <Route path="/*" component={PageNotFound} />
             </Switch>
           </main>

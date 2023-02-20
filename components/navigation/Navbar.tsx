@@ -14,6 +14,8 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   const dispatch = useAppDispatch();
   const paths = [
     { path: "profile", name: "Profile" },
+    { path: "placements", name: "Placements" },
+    { path: "programmes", name: "Programmes" },
     { path: "formr-a", name: "Form R (Part A)" },
     { path: "formr-b", name: "Form R (Part B)" }
   ];

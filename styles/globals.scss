@@ -358,21 +358,14 @@ button:disabled {
   }
 
   .page-break {
-    // break-before: page !important; Not supprted by Opera 12.1+
     page-break-before: always !important;
   }
 
   .nhsuk-summary-list__key {
-    // text-size-adjust: none; not supported on Firefox or Safari;
     width: 70mm !important;
     display: table-cell !important;
   }
   .nhsuk-summary-list__value {
     display: table-cell !important;
   }
-
-  // @page {
-  //   margin: 20mm 10mm;
-  // }
-  // not supported on Safari
 }
