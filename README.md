@@ -10,8 +10,9 @@ Front-end for TIS Self-Service app
 
 Full Tech and Architecture are described elsewhere. The front-end uses REST interaction with the back-end service(s).
 
-[Create React App (CRA)](https://create-react-app.dev/) is used to build the app as it comes with many build tools already configured.
-This single page application (SPA) is written in [TypeScript](https://www.typescriptlang.org/) using the [React](https://reactjs.org/) library.
+[Next.js](https://nextjs.org/) is used to build the app. It is now the industry standard for building an enterprise-level React applications. It gives lots of out-the-box features such as code-splitting and build optimization and allows full control over the underlying configuration. It will also allow for SSR as and when we decide (which can be on a component-by-component basis) which will improve UX.
+We are currently in the process of migrating fully to Next.js so the app is still a SPA.
+The app is written in [TypeScript](https://www.typescriptlang.org/) using the [React](https://reactjs.org/) library.
 
 ## Core Libraries
 
@@ -29,8 +30,8 @@ The thread can be picked up from the Jira ticket [Identify Core React Libraries]
 
 ## Running the application locally
 
-`npm start` runs the app in the development mode.<br />
-Open [http://local.tis.com](http://local.tis.com/) to view it in the browser.
+`npm run dev` runs the app in the development mode.<br />
+Open [http://local.tis-selfservice.com](http://local.tis-selfservice.com/) to view it in the browser.
 
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
@@ -59,40 +60,28 @@ Before you can run the e2e tests (logging in as an authorised user using a One T
 
 ### running e2e tests
 
-`npm run cypress` will run the e2e tests in headless mode with Cypress.<br />
-`npm run cypress:open` will allow you to view the tests in the browser. For more information visit (https://www.cypress.io/)
+`npm run cypress:headless` will run the e2e tests in headless mode with Cypress.<br />
+`npm run cypress` will allow you to view the e2e tests in the browser. For more information visit (https://docs.cypress.io/guides/end-to-end-testing/writing-your-first-end-to-end-test)
+
+### running Component Tests
+
+`npm run ct:headless` will run Component Tests in headless mode.<br />
+`npm run ct` will allow you to view the Component Tests in the browser. For more information visit (https://docs.cypress.io/guides/component-testing/overview)
 
 ## Building a production app
 
-`npm run build` builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`npm run build` generates an optimized version of your application for production. This standard output includes:
 
-The build is minified and the filenames include the hashes.<br />
-The app is then ready to be deployed.
+- HTML files for pages using getStaticProps or Automatic Static Optimization
+- CSS files for global styles or for individually scoped styles
+- JavaScript for pre-rendering dynamic content from the Next.js server
+- JavaScript for interactivity on the client-side through React
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This output is generated inside the `.next` folder.
+
+See the section about [deployment](https://nextjs.org/docs/deployment) for more information.
 
 #### Preprod Deployment
 
 When deploying to preprod the `ENV` environment variable should be set to
 `preprod`, allowing the correct dotenv file to be loaded.
-
-## Ejecting from CRA (Create React App)
-
-`npm run eject` will 'eject' the app from CRA at any time in the development process if, for example, more choices are needed for build tools and configuration. This command will remove the single build dependency from your project.
-
-**Note**
-
-You can `eject` at any time in the development cycle
-
-This is a one-way operation. Once you `eject`, you can’t go back!
-
-It will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
