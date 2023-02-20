@@ -10,7 +10,7 @@ Front-end for TIS Self-Service app
 
 Full Tech and Architecture are described elsewhere. The front-end uses REST interaction with the back-end service(s).
 
-[Next.js](https://nextjs.org/) is used to build the app. It is now the industry standard for building an enterprise-level React applications. It gives lots of out-the-box features such as code-splitting and build optimization and allows full control over the underlying configuration.It will also allow for SSR as and when we decide (which can be on a component-by-component basis) which will improve UX.
+[Next.js](https://nextjs.org/) is used to build the app. It is now the industry standard for building an enterprise-level React applications. It gives lots of out-the-box features such as code-splitting and build optimization and allows full control over the underlying configuration. It will also allow for SSR as and when we decide (which can be on a component-by-component basis) which will improve UX.
 We are currently in the process of migrating fully to Next.js so the app is still a SPA.
 The app is written in [TypeScript](https://www.typescriptlang.org/) using the [React](https://reactjs.org/) library.
 
@@ -77,7 +77,7 @@ Before you can run the e2e tests (logging in as an authorised user using a One T
 - JavaScript for pre-rendering dynamic content from the Next.js server
 - JavaScript for interactivity on the client-side through React
 
-This output is generated inside the `.next` folder
+This output is generated inside the `.next` folder.
 
 See the section about [deployment](https://nextjs.org/docs/deployment) for more information.
 
