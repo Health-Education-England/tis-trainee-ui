@@ -121,7 +121,7 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
       {preferredMfa === "NOMFA" ? (
         <p data-cy="mfaSetupText">
           Before you can access TIS Self-Service, you must first secure your
-          account by adding Multi-Factor Authentication to your sign-in journey.
+          account by adding MFA to your sign-in journey.
         </p>
       ) : (
         <p data-cy="mfaAlreadyText">

@@ -126,6 +126,7 @@ function PageCard({ isClickable, route, linkHeader, children }: HomeCardProps) {
         e.preventDefault();
         handleClick(route);
       }}
+      data-cy={linkHeader}
     >
       <Card.Content>
         <Card.Heading className="nhsuk-heading-m">

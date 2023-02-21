@@ -17,7 +17,7 @@ const MFA = () => {
           className={style.fieldLegHeader}
           data-cy="mfaHeading"
         >
-          Multi-Factor Authentication (MFA)
+          MFA (Multi-Factor Authentication) set-up
         </Fieldset.Legend>
       </Fieldset>
       <Switch>

@@ -14,7 +14,9 @@ const Breadcrumbs = () => {
   if (preferredMfa !== "NOMFA") {
     content = (
       <nav className="nhsuk-width-container nhsuk-u-margin-top-5">
-        <NavLink to="/home">Home</NavLink>
+        <NavLink data-cy="homeLink" to="/home">
+          Home
+        </NavLink>
       </nav>
     );
   }

@@ -20,6 +20,6 @@ describe("MFA", () => {
     );
     cy.get(".nhsuk-fieldset__heading")
       .should("exist")
-      .should("include.text", "Set up Multi-Factor Authentication (MFA)");
+      .should("include.text", "MFA (Multi-Factor Authentication) set-up");
   });
 });

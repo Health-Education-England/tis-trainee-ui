@@ -9,11 +9,13 @@ const HomeHeaderSection = () => {
                 Welcome to TIS Self-Service
               </h1>
               <p className="nhsuk-body-l nhsuk-u-margin-bottom-1">
-                This home page is a work-in-progress.
+                Your post-graduate training admin resource
               </p>
               <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">
-                This home page is a work-in-progress. This home page is a
-                work-in-progress.
+                We are in the Private Beta phase of delivery so expect more
+                features soon. Our goal is to improve your training experience
+                by making TIS Self-Service a one-stop-shop for your
+                training-related admin tasks.
               </p>
             </div>
           </div>
