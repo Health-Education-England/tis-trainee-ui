@@ -14,11 +14,17 @@ $nhsBlue: #005eb8;
   }
 }
 
-// profile
+// page header
 .fieldLegHeader {
   color: $nhsBlue;
 }
 
+.backLink {
+  cursor: pointer;
+  margin: 1rem 0 1rem 0;
+}
+
+// profile
 .panelDiv {
   padding: 0.75rem;
   border-radius: 6px;

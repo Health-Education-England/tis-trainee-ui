@@ -21,7 +21,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   ];
   const noMfaPaths = [
     { path: "support", name: "Support" },
-    { path: "mfa", name: "MFA set-up" }
+    { path: "mfa", name: "MFA" }
   ];
 
   const makeLi = (pathObj: { path: string; name: string }) => (

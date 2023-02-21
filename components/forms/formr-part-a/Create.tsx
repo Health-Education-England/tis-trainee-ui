@@ -32,6 +32,7 @@ import { CombinedReferenceData } from "../../../models/CombinedReferenceData";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { AutocompleteSelect } from "../../common/AutocompleteSelect";
+import style from "../../Common.module.scss";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -46,7 +47,7 @@ const Create = ({ history }: { history: string[] }) => {
     <>
       <BackLink
         data-cy="backLink"
-        style={{ cursor: "pointer" }}
+        className={style.backLink}
         onClick={() => FormRUtilities.historyPush(history, "/formr-a")}
       >
         Go back to forms list

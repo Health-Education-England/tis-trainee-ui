@@ -1,5 +1,6 @@
 import { ActionLink, BackLink, Button, Col, Row } from "nhsuk-react-components";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
+import style from "../Common.module.scss";
 
 type IFormSave = {
   history: any;
@@ -12,7 +13,7 @@ const FormSavePDF = ({ history, formrPath }: IFormSave) => {
       <Row>
         <Col width="full">
           <BackLink
-            style={{ cursor: "pointer", marginBottom: "1rem" }}
+            className={style.backLink}
             data-cy="backLink"
             onClick={() => FormRUtilities.historyPush(history, formrPath)}
           >
