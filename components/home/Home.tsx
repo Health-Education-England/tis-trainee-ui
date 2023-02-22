@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import history from "../navigation/history";
-import style from "./Home.module.scss";
+import style from "../Common.module.scss";
 
 const handleClick = (route: string) => history.push(route);
 
