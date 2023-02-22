@@ -1,6 +1,19 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
+const placementsArr = [
+  { name: "site0Val", text: "Addenbrookes Hospital" },
+  { name: "siteLocation1Val", text: "Acre Street Lindley Huddersfield" },
+  { name: "startDate2Val", text: "01/10/2019" },
+  { name: "endDate3Val", text: "01/10/2019" },
+  { name: "wholeTimeEquivalent4Val", text: "0.5" },
+  { name: "specialty0Val", text: "Dermatology" },
+  { name: "grade0Val", text: "ST1" },
+  { name: "placementType1Val", text: "OOPE" },
+  { name: "employingBody0Val", text: "Leicester University" },
+  { name: "trainingBody4Val", text: "Welsh Ambulance Services NHS Trust" }
+];
+
 describe("Placements", () => {
   beforeEach(() => {
     cy.wait(30000);
@@ -8,74 +21,17 @@ describe("Placements", () => {
     cy.signIn();
   });
 
-  it("should render placements section", () => {
+  it("should show the correct text for each placement ", () => {
     cy.get('[data-cy="homeLink"]').should("exist");
-    cy.get('.nhsuk-fieldset__heading')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Placements"
-    );
-    cy.get('[data-cy="site0Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Addenbrookes Hospital"
-    );
-    cy.get('[data-cy="siteLocation1Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Hills Road Cambridge Cambridgeshire"
-    );
-    cy.get('[data-cy="startDate2Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "01/01/2020"
-    );
-    cy.get('[data-cy="endDate3Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "31/12/2020"
-    );
-    cy.get('[data-cy="wholeTimeEquivalent4Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "0.25"
-    );
-    cy.get('[data-cy="specialty5Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Dermatology"
-    );
-    cy.get('[data-cy="grade6Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "ST1"
-    );
-    cy.get('[data-cy="placementType7Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "In Post"
-    );
-    cy.get('[data-cy="employingBody8Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Leicester University"
-    );
-    cy.get('[data-cy="trainingBody9Val"]')
-    .should("exist")
-    .should(
-      "contain.text",
-      "Bebbington & West Wirral PCT"
-    );
+    cy.get(".nhsuk-fieldset__heading")
+      .should("exist")
+      .should("contain.text", "Placements");
+
+    placementsArr.forEach(pl => {
+      cy.get(`[data-cy="${pl.name}"]`)
+        .should("exist")
+        .should("contain.text", pl.text);
+    });
   });
 });
 

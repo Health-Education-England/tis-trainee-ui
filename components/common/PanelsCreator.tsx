@@ -31,7 +31,7 @@ export function PanelsCreator<P extends {}>({
           <Card.GroupItem key={index} width="one-half">
             <Card className={style.panelDiv}>
               <SummaryList>
-                {Object.keys(panel).map((panelProp, index) => (
+                {Object.keys(panel).map((panelProp, _index) => (
                   <SummaryList.Row key={index}>
                     <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
                       {panelKeys[panelProp as keyof PanelKeys]}
