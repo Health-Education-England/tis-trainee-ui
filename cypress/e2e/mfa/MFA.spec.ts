@@ -8,10 +8,15 @@ describe("MFA set-up", () => {
     cy.signIn();
   });
   it("should render the Choose MFA page", () => {
-    cy.get('[data-cy="MFA set-up"]').should("exist").click();
+    cy.get('[data-cy="MFA"]').first().click();
+    cy.get('[data-cy="homeLink"]').should("exist");
+    cy.get(".nhsuk-fieldset__heading")
+      .should("exist")
+      .should("include.text", "MFA (Multi-Factor Authentication) set-up");
+
     cy.get("[data-cy=mfaAlreadyWarning]").should("exist");
     cy.get("[data-cy=mfaAlreadyText]")
-      .should("exist")
+      .should("exist")  
       .should(
         "include.text",
         "You have already set up your Authenticator App for MFA "
@@ -38,7 +43,7 @@ describe("MFA set-up", () => {
       )
       .click();
     cy.get("[data-cy=Profile]").click();
-    cy.get('[data-cy="MFA set-up"]').click();
+    cy.get('[data-cy="MFA"]').click();
     cy.get(".nhsuk-fieldset__heading").should("include.text", "MFA");
   });
 });

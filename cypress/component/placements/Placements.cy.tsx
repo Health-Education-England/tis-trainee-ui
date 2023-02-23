@@ -73,11 +73,11 @@ describe("Placements with MFA set up", () => {
       .first()
       .should("exist")
       .should("contain.text", "Site");
-    cy.get("[data-cy=wholeTimeEquivalent4Val]")
+    cy.get('[data-cy="wholeTimeEquivalent1Val"]')
       .last()
       .should("exist")
       .should("contain.text", "0.75");
-    cy.get("[data-cy=employingBody8Val]")
+    cy.get('[data-cy="employingBody1Val"]')
       .last()
       .should("exist")
       .should("contain.text", "None provided");
@@ -130,6 +130,6 @@ describe("Placements with MFA set up", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=nonTemplatedField10Val]").should("not.exist");
+    cy.get("[data-cy=nonTemplatedField0Val]").should("not.exist");
   });
 });

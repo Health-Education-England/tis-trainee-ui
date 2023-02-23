@@ -127,7 +127,7 @@ describe("Programmes with MFA set up", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=curricula5Val]")
+    cy.get("[data-cy=curricula0Val]")
       .should("exist")
       .should("contain.text", "N/A");
   });

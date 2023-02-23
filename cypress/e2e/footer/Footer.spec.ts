@@ -10,7 +10,7 @@ describe("Footer", () => {
 
   it("should link to Support, About, and Privacy & Cookies pages", () => {
     cy.get("[data-cy='linkSupport']").should("exist").click();
-    cy.get("[data-cy=pageTitle]").should("to.contain", "Support");
+    cy.get("[data-cy=supportHeading]").should("to.contain", "Support");
     cy.get("[data-cy='linkAbout']").should(
       "have.attr",
       "href",
