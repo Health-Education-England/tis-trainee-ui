@@ -4,7 +4,7 @@ const HomeHeaderSection = () => {
       <div className="nhsuk-width-container nhsuk-hero--border app-width-container">
         <div className="nhsuk-hero__wrapper app-hero__wrapper">
           <h1
-            data-cy="omeWelcomeHeaderText"
+            data-cy="homeWelcomeHeaderText"
             className="nhsuk-u-margin-bottom-4"
           >
             Welcome to TIS Self-Service
