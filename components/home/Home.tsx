@@ -91,7 +91,7 @@ const Home = () => {
             <PageCard isClickable={true} route="/mfa" linkHeader="MFA">
               <ul className={style.ull}>
                 <li>
-                  Set-up or update your MFA (Multi-Factor Authentication)
+                  set up or update your MFA (Multi-Factor Authentication)
                   sign-in method
                 </li>
               </ul>
@@ -102,7 +102,10 @@ const Home = () => {
           <Card.GroupItem width="one-third">
             <PageCard isClickable={true} route="/support" linkHeader="Support">
               <ul className={style.ull}>
-                <li>email your Local Office for Form R-related queries</li>
+                <li>
+                  email your Local Office with Form R and Personal details
+                  queries
+                </li>
                 <li>
                   email TIS Support with any technical issues (e.g. error
                   messages)
