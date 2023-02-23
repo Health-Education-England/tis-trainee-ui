@@ -40,7 +40,7 @@ const ConfirmSms = () => {
       const resU = await updateMfa();
       if (resU === "succeeded") {
         await dispatch(getPreferredMfa());
-        history.push("/profile");
+        history.push("/home");
         dispatch(
           addNotification({
             type: "Success",

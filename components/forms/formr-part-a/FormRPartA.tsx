@@ -7,6 +7,8 @@ import View from "./View";
 import Create from "./Create";
 import Confirm from "./Confirm";
 import { useAppSelector } from "../../../redux/hooks/hooks";
+import PageNotFound from "../../common/PageNotFound";
+import style from "../../Common.module.scss";
 
 const FormRPartA = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
@@ -18,7 +20,11 @@ const FormRPartA = () => {
       <PageTitle title="Form R Part-A" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
+        <Fieldset.Legend
+          isPageHeading
+          className={style.fieldLegHeader}
+          data-cy="formRAHeading"
+        >
           Form R (Part A)
         </Fieldset.Legend>
         <Label data-cy="formraLabel">
@@ -26,10 +32,11 @@ const FormRPartA = () => {
         </Label>
       </Fieldset>
       <Switch>
-        <Route path="/formr-a/create" component={Create} />
-        <Route path="/formr-a/confirm" component={Confirm} />
-        <Route path="/formr-a/:id" component={View} />
-        <Route path="/" component={CreateList} />
+        <Route exact path="/formr-a/create" component={Create} />
+        <Route exact path="/formr-a/confirm" component={Confirm} />
+        <Route exact path="/formr-a/:id" component={View} />
+        <Route exact path="/formr-a" component={CreateList} />
+        <Route path="/formr-a/*" component={PageNotFound} />
       </Switch>
     </>
   );

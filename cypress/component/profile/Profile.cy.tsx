@@ -11,31 +11,50 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
-import {
-  mockPersonalDetails,
-  mockProgrammeMemberships,
-  mockPlacements,
-  mockPlacementNonTemplatedField,
-  mockProgrammeMembershipNoCurricula,
-  mockProgrammeMembershipNonTemplatedField
-} from "../../../mock-data/trainee-profile";
+import { mockPersonalDetails } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
 import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
-describe("Profile", () => {
+describe("Profile with no MFA set up", () => {
+  it("should not display Profile page if NOMFA", () => {
+    const MockedProfileFail = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileFail />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=profileHeading]").should("not.exist");
+  });
+});
+
+describe("Profile with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
   });
-  it("should display user details, placement and programme data in the profile section", () => {
+  it("should display Profile (user details) when MFA set up.", () => {
     const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
         updatedTraineeProfileData({
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMemberships,
-          placements: mockPlacements
+          programmeMemberships: [],
+          placements: []
         })
       );
       dispatch(updatedTraineeProfileStatus("succeeded"));
@@ -53,10 +72,6 @@ describe("Profile", () => {
       .should("exist")
       .should("contain.text", "Profile");
 
-    //personal details section
-    const expanderPD =
-      "[data-cy=personalDetailsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
-    cy.get(expanderPD).should("exist").click();
     cy.get("[data-cy=fullNameKey]")
       .should("exist")
       .should("contain.text", "Full name");
@@ -70,166 +85,5 @@ describe("Profile", () => {
     cy.get("[data-cy=postCode")
       .should("exist")
       .should("contain.text", "WC1B 5DN");
-    cy.get(expanderPD).click();
-
-    // placements section
-    const expanderPl =
-      "[data-cy=placementsExpander] > .nhsuk-details__summary > .nhsuk-details__summary-text";
-    cy.get(expanderPl).should("exist").click();
-    cy.get("[data-cy=site0Key]")
-      .first()
-      .should("exist")
-      .should("contain.text", "Site");
-    cy.get("[data-cy=wholeTimeEquivalent4Val]")
-      .last()
-      .should("exist")
-      .should("contain.text", "0.75");
-    cy.get("[data-cy=employingBody8Val]")
-      .last()
-      .should("exist")
-      .should("contain.text", "None provided");
-    cy.get(expanderPl).click();
-
-    // programmes section
-    const expanderPr = "[data-cy=programmeMembershipsExpander]";
-    cy.get(expanderPr).should("exist").click();
-    cy.get("[data-cy=programmeName0Val]")
-      .first()
-      .should("exist")
-      .should("contain.text", "Cardiology");
-    cy.get("[data-cy=ST6]").should("exist");
-    cy.get("[data-cy=currDates]")
-      .last()
-      .should("contain.text", "01/08/2022 - 01/08/2025");
-  });
-  it("should show alternative text when no panel data available", () => {
-    const MockedProfileSomeEmpty = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileSomeEmpty />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=placementsExpander]").should("exist").click();
-    cy.get("[data-cy=notAssignedplacements]")
-      .should("exist")
-      .should("contain.text", "You are not assigned to any Placements");
-    cy.get("[data-cy=notAssignedprogrammeMemberships]")
-      .should("exist")
-      .should("contain.text", "You are not assigned to any Programmes");
-  });
-  it("should show alternative text when no Curricula", () => {
-    const MockedProfileNoCurricula = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipNoCurricula],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileNoCurricula />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=programmeMembershipsExpander]").should("exist").click();
-    cy.get("[data-cy=curricula5Val]")
-      .should("exist")
-      .should("contain.text", "N/A");
-  });
-  it("should not show non-templated placement properties", () => {
-    const MockedProfileNonTemplatedField = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementNonTemplatedField]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileNonTemplatedField />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=placementsExpander]").should("exist").click();
-    cy.get("[data-cy=nonTemplatedField10Val]").should("not.exist");
-  });
-  it("should not show non-templated programme membership properties", () => {
-    const MockedProfileNonTemplatedField = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipNonTemplatedField],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileNonTemplatedField />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=programmeMembershipsExpander]").should("exist").click();
-    cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
-  });
-});
-
-describe("Profile with NOMFA ", () => {
-  it("should not display Profile page if NOMFA", () => {
-    const MockedProfileFail = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMemberships,
-          placements: mockPlacements
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      dispatch(updatedPreferredMfa("NOMFA"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileFail />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=profileHeading]").should("not.exist");
   });
 });

@@ -1,4 +1,4 @@
-import { ActionLink, Card, Details } from "nhsuk-react-components";
+import { ActionLink, Card, Details, Fieldset } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import SupportMsg from "./SupportMsg";
 import SupportList from "./SupportList";
@@ -6,6 +6,8 @@ import { localOfficeContacts } from "../../models/LocalOfficeContacts";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { useEffect, useState } from "react";
+import ScrollTo from "../forms/ScrollTo";
+import style from "../Common.module.scss";
 
 const Support = () => {
   const traineeProfileData = useAppSelector(selectTraineeProfile);
@@ -30,9 +32,16 @@ const Support = () => {
   const content = (
     <>
       <PageTitle title="Support" />
-      <h1 data-cy="pageTitle" style={{ marginBottom: 16, color: "#005EB8" }}>
-        Support
-      </h1>
+      <ScrollTo />
+      <Fieldset>
+        <Fieldset.Legend
+          isPageHeading
+          className={style.fieldLegHeader}
+          data-cy="supportHeading"
+        >
+          Support
+        </Fieldset.Legend>
+      </Fieldset>
       <Details>
         <Details.Summary>Got a question?</Details.Summary>
         <Details.Text>

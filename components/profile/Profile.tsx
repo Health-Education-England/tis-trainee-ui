@@ -1,30 +1,89 @@
 import { useEffect } from "react";
-import PersonalDetailsComponent from "./personal-details/PersonalDetailsComponent";
-import { Fieldset, Details } from "nhsuk-react-components";
+import { Fieldset, SummaryList } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import DataSourceMsg from "../common/DataSourceMsg";
 import { Redirect } from "react-router-dom";
-import { PanelsCreator } from "./PanelsCreator";
-import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import style from "../Common.module.scss";
-import { PANEL_KEYS } from "../../utilities/Constants";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { placementPanelTemplate } from "../../models/Placement";
-import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
+import { PersonalDetails } from "../../models/PersonalDetails";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import { KeyValue } from "../../models/KeyValue";
+import { DateUtilities } from "../../utilities/DateUtilities";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
+  const {
+    maidenName,
+    knownAs,
+    gender,
+    dateOfBirth,
+    email,
+    telephoneNumber,
+    mobileNumber,
+    gmcNumber,
+    gdcNumber,
+    publicHealthNumber,
+    gmcStatus,
+    gdcStatus,
+    permitToWork,
+    settled,
+    visaIssued,
+    detailsNumber,
+    title,
+    forenames,
+    surname,
+    address1,
+    address2,
+    address3,
+    postCode
+  }: PersonalDetails = useAppSelector(selectTraineeProfile).personalDetails;
+
+  const personalData: KeyValue[] = [
+    { label: "Maiden name", value: maidenName },
+    { label: "Known As", value: knownAs },
+    { label: "Gender", value: gender },
+    {
+      label: "Date of birth",
+      value: DateUtilities.ToLocalDate(dateOfBirth)
+    },
+    { label: "Email", value: email },
+    { label: "Telephone", value: telephoneNumber },
+    { label: "Mobile", value: mobileNumber }
+  ];
+
+  const registrationDetails: KeyValue[] = [
+    {
+      label: "General Medical Council (GMC)",
+      value: gmcNumber
+    },
+    {
+      label: "General Dental Council (GDC)",
+      value: gdcNumber
+    },
+    {
+      label: "Public Health Number",
+      value: publicHealthNumber
+    },
+    {
+      label: "GMC status",
+      value: gmcStatus
+    },
+    {
+      label: "GDC status",
+      value: gdcStatus
+    },
+    { label: "Permit to Work", value: permitToWork },
+    { label: "Settled", value: settled },
+    { label: "Visa Issued", value: visaIssued },
+    { label: "Details/Number", value: detailsNumber }
+  ];
 
   useEffect(() => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
 
-  const placementsArr = useAppSelector(selectTraineeProfile).placements;
-  const programmesArr =
-    useAppSelector(selectTraineeProfile).programmeMemberships;
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   if (preferredMfa === "NOMFA") {
@@ -44,71 +103,51 @@ const Profile = () => {
         </Fieldset.Legend>
       </Fieldset>
       <DataSourceMsg />
-      <Details.ExpanderGroup>
-        <PersonalDetailsComponent />
-        <PanelsCreator
-          panelsArr={prepareProfilePanelsData(
-            placementsArr,
-            TraineeProfileName.Placements
+      <SummaryList>
+        <SummaryList.Row>
+          <SummaryList.Key data-cy="fullNameKey">Full name</SummaryList.Key>
+          <SummaryList.Value data-cy="fullNameValue">
+            {title && `${title} `}
+            {forenames && `${forenames} `}
+            {surname}
+          </SummaryList.Value>
+        </SummaryList.Row>
+        {personalData &&
+          personalData.map(pd => (
+            <SummaryList.Row key={pd.label} data-cy={pd.label}>
+              <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
+              <SummaryList.Value data-cy={pd.value}>
+                {pd.value}
+              </SummaryList.Value>
+            </SummaryList.Row>
+          ))}
+
+        <SummaryList.Row>
+          <SummaryList.Key>Address</SummaryList.Key>
+          <SummaryList.Value>
+            <p>{address1}</p>
+            <p>{address2}</p>
+            <p>{address3}</p>
+            <p data-cy="postCode">{postCode}</p>
+          </SummaryList.Value>
+        </SummaryList.Row>
+        <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
+          Registration details
+        </div>
+        {registrationDetails &&
+          registrationDetails.map(
+            rd =>
+              rd.value && (
+                <SummaryList.Row key={rd.label} data-cy={rd.label}>
+                  <SummaryList.Key>{rd.label}</SummaryList.Key>
+                  <SummaryList.Value>{rd.value}</SummaryList.Value>
+                </SummaryList.Row>
+              )
           )}
-          panelsName={TraineeProfileName.Placements}
-          panelsTitle={PANEL_KEYS.placements}
-          panelKeys={PANEL_KEYS}
-        />
-        <PanelsCreator
-          panelsArr={prepareProfilePanelsData(
-            programmesArr,
-            TraineeProfileName.Programmes
-          )}
-          panelsName={TraineeProfileName.Programmes}
-          panelsTitle={PANEL_KEYS.programmeMemberships}
-          panelKeys={PANEL_KEYS}
-        />
-      </Details.ExpanderGroup>
+      </SummaryList>
     </div>
   );
   return <div>{content}</div>;
 };
 
 export default Profile;
-
-function prepareProfilePanelsData(
-  arr: ProfileType[],
-  arrName: TraineeProfileName
-) {
-  return arr.map((obj, _index) => filterAndOrderProfilePanelData(arrName, obj));
-}
-
-function filterAndOrderProfilePanelData<T>(
-  pName: TraineeProfileName,
-  pObj: T extends ProfileType ? any : any
-) {
-  if (pName === TraineeProfileName.Placements) {
-    const reorderedPl = populateTemplateProperties(placementPanelTemplate, {
-      ...pObj
-    });
-    const { tisId, status, ...filteredPlacementPanel } = reorderedPl;
-    return filteredPlacementPanel;
-  } else {
-    const reorderedPr = populateTemplateProperties(programmePanelTemplate, {
-      ...pObj
-    });
-    const {
-      tisId,
-      programmeTisId,
-      programmeMembershipType,
-      status,
-      programmeCompletionDate,
-      ...filteredProgrammePanel
-    } = reorderedPr;
-    return filteredProgrammePanel;
-  }
-}
-
-function populateTemplateProperties(template: any, values: any) {
-  const populatedTemplate: any = {};
-  Object.keys(template).forEach(
-    key => (populatedTemplate[key] = (key in values ? values : template)[key])
-  );
-  return populatedTemplate;
-}

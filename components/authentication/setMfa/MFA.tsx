@@ -5,22 +5,27 @@ import ChooseMfa from "./ChooseMfa";
 import CreateSms from "./sms/CreateSms";
 import CreateTotp from "./totp/CreateTotp";
 import PageNotFound from "../../common/PageNotFound";
+import style from "../../Common.module.scss";
 
 const MFA = () => {
   return (
     <>
       <PageTitle title="MFA" />
       <Fieldset>
-        <Fieldset.Legend isPageHeading style={{ color: "#005EB8" }}>
-          Set up Multi-Factor Authentication (MFA)
+        <Fieldset.Legend
+          isPageHeading
+          className={style.fieldLegHeader}
+          data-cy="mfaHeading"
+        >
+          MFA (Multi-Factor Authentication) set-up
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
-        <Route path="/mfa/sms" component={CreateSms} />
-        <Route path="/mfa/totp" component={CreateTotp} />
-        <Route path="/mfa" component={ChooseMfa} />
+        <Route exact path="/mfa/sms" component={CreateSms} />
+        <Route exact path="/mfa/totp" component={CreateTotp} />
+        <Route exact path="/mfa" component={ChooseMfa} />
         <Redirect exact path="/" to="/mfa" />
-        <Route path="/*" component={PageNotFound} />
+        <Route path="/mfa/*" component={PageNotFound} />
       </Switch>
     </>
   );

@@ -78,7 +78,7 @@ const VerifyTotp = () => {
         const resR = await removePhoneNo();
         if (resR === "succeeded") {
           await dispatch(getPreferredMfa());
-          history.push("/profile");
+          history.push("/home");
           dispatch(
             addNotification({
               type: "Success",

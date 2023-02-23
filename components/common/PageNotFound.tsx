@@ -1,7 +1,7 @@
 const PageNotFound = () => {
   return (
     <div>
-      <h2>Sorry, page not found</h2>
+      <h2 data-cy="pageNotFoundText">Sorry, page not found</h2>
     </div>
   );
 };

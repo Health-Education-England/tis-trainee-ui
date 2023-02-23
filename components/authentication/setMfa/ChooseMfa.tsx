@@ -18,7 +18,7 @@ const ChooseMfa = () => {
   useEffect(() => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  const preferredMfa: string = useAppSelector(state => state.user.preferredMfa);
 
   return (
     <>
@@ -38,25 +38,7 @@ const ChooseMfa = () => {
         {({ handleSubmit }) => (
           <>
             <ScrollTo />
-            {preferredMfa !== "NOMFA" && (
-              <WarningCallout data-cy="mfaAlreadyWarning">
-                <WarningCallout.Label visuallyHiddenText={false}>
-                  Important
-                </WarningCallout.Label>
-                <p data-cy="mfaAlreadyText">
-                  You have already set up
-                  <b>
-                    {" "}
-                    {preferredMfa === MFAStatus.TOTP
-                      ? "your Authenticator App for MFA"
-                      : "SMS for MFA"}{" "}
-                  </b>
-                  to verify your identity when you log in to TIS Self-Service.
-                  If you want to redo the process or verify your identity a
-                  different way then please continue.
-                </p>
-              </WarningCallout>
-            )}
+            <MfaWarning preferredMfa={preferredMfa} />
             <Details>
               <Details.Summary data-cy="mfaSummary">Why MFA?</Details.Summary>
               <Details.Text data-cy="mfaText">
@@ -123,3 +105,39 @@ const ChooseMfa = () => {
 };
 
 export default ChooseMfa;
+
+type MfaWarningProps = {
+  preferredMfa: string;
+};
+
+function MfaWarning({ preferredMfa }: MfaWarningProps) {
+  const cyTag = preferredMfa === "NOMFA" ? "mfaSetup" : "mfaAlreadyWarning";
+  return (
+    <WarningCallout data-cy={cyTag}>
+      <WarningCallout.Label visuallyHiddenText={false}>
+        Important
+      </WarningCallout.Label>
+
+      {preferredMfa === "NOMFA" ? (
+        <p data-cy="mfaSetupText">
+          Before you can access TIS Self-Service, you must first secure your
+          account by adding MFA to your sign-in journey.
+        </p>
+      ) : (
+        <p data-cy="mfaAlreadyText">
+          You have already set up
+          <b>{getPrefMfa(preferredMfa)}</b>
+          to verify your identity when you log in to TIS Self-Service. If you
+          want to redo the process or verify your identity a different way then
+          please continue.
+        </p>
+      )}
+    </WarningCallout>
+  );
+}
+
+function getPrefMfa(prefMfa: string) {
+  return prefMfa === MFAStatus.TOTP
+    ? " your Authenticator App for MFA "
+    : " SMS for MFA ";
+}

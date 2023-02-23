@@ -8,10 +8,12 @@ import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 const navLinks = [
   { name: "Profile", href: "/profile" },
+  { name: "Placements", href: "/placements" },
+  { name: "Programmes", href: "/programmes" },
   { name: "Form R (Part A)", href: "/formr-a" },
   { name: "Form R (Part B)", href: "/formr-b" },
   { name: "Support", href: "/support" },
-  { name: "MFA set-up", href: "/mfa" }
+  { name: "MFA", href: "/mfa" }
 ];
 
 describe("Header with MFA set up", () => {
@@ -71,7 +73,7 @@ describe("Header with NOMFA", () => {
   });
   const noMfaNavLinks = [
     { name: "Support", href: "/support" },
-    { name: "MFA set-up", href: "/mfa" }
+    { name: "MFA", href: "/mfa" }
   ];
 
   const mfaOnlyLinks = navLinks.slice(0, 2);

@@ -14,12 +14,14 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
   const dispatch = useAppDispatch();
   const paths = [
     { path: "profile", name: "Profile" },
+    { path: "placements", name: "Placements" },
+    { path: "programmes", name: "Programmes" },
     { path: "formr-a", name: "Form R (Part A)" },
     { path: "formr-b", name: "Form R (Part B)" }
   ];
   const noMfaPaths = [
     { path: "support", name: "Support" },
-    { path: "mfa", name: "MFA set-up" }
+    { path: "mfa", name: "MFA" }
   ];
 
   const makeLi = (pathObj: { path: string; name: string }) => (

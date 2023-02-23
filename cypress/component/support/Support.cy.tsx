@@ -31,7 +31,7 @@ describe("Support", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=pageTitle]")
+    cy.get("[data-cy=supportHeading]")
       .should("exist")
       .should("include.text", "Support");
     cy.get(".nhsuk-details__summary-text").click();
