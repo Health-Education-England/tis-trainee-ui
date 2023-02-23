@@ -16,7 +16,7 @@ describe("MFA set-up", () => {
 
     cy.get("[data-cy=mfaAlreadyWarning]").should("exist");
     cy.get("[data-cy=mfaAlreadyText]")
-      .should("exist")  
+      .should("exist")
       .should(
         "include.text",
         "You have already set up your Authenticator App for MFA "
