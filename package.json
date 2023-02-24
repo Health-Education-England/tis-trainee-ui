@@ -29,7 +29,7 @@
     "axios": "^1.2.1",
     "babel-plugin-istanbul": "^6.1.1",
     "browser-update": "^3.3.44",
-    "cypress": "^12.3.0",
+    "cypress": "^12.6.0",
     "cypress-mochawesome-reporter": "^3.2.3",
     "cypress-otp": "^1.0.3",
     "dayjs": "^1.11.7",
