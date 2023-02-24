@@ -49,9 +49,9 @@ describe("Form R (Part B)", () => {
     cy.get("#email").type("test.reset@hee.nhs.uk");
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
     cy.get("[data-cy=BtnMenu]").click();
-    cy.get(":nth-child(2) > .nhsuk-header__navigation-link").click();
+    cy.contains("Support").click();
     cy.get("[data-cy=BtnMenu]").click();
-    cy.get(":nth-child(3) > .nhsuk-header__navigation-link").click();
+    cy.contains("Form R (Part B)").click();
     cy.get("[data-cy=btnLoadNewForm]").click();
     cy.get("body").then($body => {
       if ($body.find(".MuiDialog-container").length) {
@@ -60,7 +60,7 @@ describe("Form R (Part B)", () => {
     });
     cy.get("[data-cy=email]").should("have.value", "");
 
-    //   // -------- Section 1 - Doctor's details -----------
+    // -------- Section 1 - Doctor's details -----------
     cy.get(".progress-step")
       .first()
       .should("have.class", "progress-step-active");
