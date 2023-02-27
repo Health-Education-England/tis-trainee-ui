@@ -14,9 +14,9 @@ const HomeHeaderSection = () => {
           </p>
           <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">
             Our goal is to improve your training experience by making TIS
-            Self-Service a one-stop-shop for your training-related admin tasks.
-            We are in the Private Beta phase of delivery so expect more features
-            soon.
+            Self-Service a one-stop-shop to support you through your training
+            programme. We are in the Private Beta delivery phase and plan to add
+            more features in future releases.
           </p>
         </div>
       </div>
