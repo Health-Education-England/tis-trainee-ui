@@ -1,18 +1,20 @@
-import { Fieldset } from "nhsuk-react-components";
 import { useEffect } from "react";
-import { Redirect } from "react-router-dom";
-import { TraineeProfileName } from "../../models/TraineeProfile";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
-import { PANEL_KEYS } from "../../utilities/Constants";
-import DataSourceMsg from "../common/DataSourceMsg";
+import Dsp from "../dsp/Dsp";
+import PageNotFound from "../common/PageNotFound";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import PageTitle from "../common/PageTitle";
+import ScrollTo from "../forms/ScrollTo";
+import { Fieldset } from "nhsuk-react-components";
+import DataSourceMsg from "../common/DataSourceMsg";
 import {
   PanelsCreator,
   prepareProfilePanelsData
 } from "../common/PanelsCreator";
-import ScrollTo from "../forms/ScrollTo";
+import { TraineeProfileName } from "../../models/TraineeProfile";
+import { PANEL_KEYS } from "../../utilities/Constants";
 import style from "../Common.module.scss";
 
 const Placements = () => {
@@ -28,7 +30,14 @@ const Placements = () => {
     return <Redirect to="/mfa" />;
   }
 
-  return <PlacementsPanels />;
+  return (
+    <Switch>
+      <Route exact path="/placements/dsp" component={Dsp} />
+      <Route exact path="/placements" component={PlacementsPanels} />
+      <Redirect exact path="/" to="/placements" />
+      <Route path="/placements/*" component={PageNotFound} />
+    </Switch>
+  );
 };
 
 export default Placements;

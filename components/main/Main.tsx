@@ -71,8 +71,8 @@ export const Main = ({ signOut, appVersion }: IMain) => {
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
             <Switch>
               <Route exact path="/home" component={Home}></Route>
-              <Route exact path="/placements" component={Placements}></Route>
-              <Route exact path="/programmes" component={Programmes}></Route>
+              <Route path="/placements" component={Placements}></Route>
+              <Route path="/programmes" component={Programmes}></Route>
               <Route exact path="/profile" component={Profile} />
               <Route path="/formr-a" component={FormRPartA} />
               <Route path="/formr-b" component={FormRPartB} />
