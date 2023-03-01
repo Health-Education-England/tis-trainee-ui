@@ -1,9 +1,11 @@
 import { Button } from "nhsuk-react-components";
 import store from "../../redux/store/store";
-
 import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
-import { updatedDspPanelObj } from "../../redux/slices/dspSlice";
+import {
+  issueDspCredential,
+  updatedDspPanelObj
+} from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useLocation } from "react-router-dom";
 import useLocalStorage from "../../utilities/hooks/useLocalStorage";
@@ -32,11 +34,10 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
 
   const handleClick = () => {
     history.push(`${panelNameShort}/dsp`);
-    // store matched panel data
     chooseProfileArr(panelName, panelId);
-    // TODO
-    // issuing cred using stored matched panel data
-    // return to current path in local storage to return to later
+    const storedPanelData = store.getState().dsp.dspPanelObj;
+    const issueName = panelNameShort.slice(0, -1);
+    store.dispatch(issueDspCredential({ issueName, storedPanelData }));
   };
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";
@@ -73,8 +74,8 @@ function chooseProfileArr(pName: string, id: string) {
     pName === TraineeProfileName.Programmes
       ? store.getState().traineeProfile.traineeProfileData.programmeMemberships
       : store.getState().traineeProfile.traineeProfileData.placements;
-  const matchedProfileObj = profileArr.filter(
+  const matchedProfile = profileArr.filter(
     (pObj: ProfileType) => pObj.tisId === id
   );
-  if (matchedProfileObj) store.dispatch(updatedDspPanelObj(matchedProfileObj));
+  if (matchedProfile) store.dispatch(updatedDspPanelObj(matchedProfile[0]));
 }

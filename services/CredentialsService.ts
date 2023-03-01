@@ -5,10 +5,9 @@ import ApiService from "./apiService";
 
 export class CredentialsService extends ApiService {
   constructor() {
-    super("credentials/api");
+    super("../api/credentials");
   }
 
-  // WIP need to work with FS'ers on this stuff!
   async issueDspCredential(
     name: string,
     iData: ProgrammeMembership | Placement | null,
