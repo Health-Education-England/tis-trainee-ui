@@ -4,11 +4,11 @@ import { Placement } from "../../models/Placement";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { ProfileType } from "../../models/TraineeProfile";
 import { CredentialsService } from "../../services/CredentialsService";
+import { RootState } from "../store/store";
 
 interface IDsp {
   dspPanelObj: ProfileType | null;
   gatewayUri: string | null;
-  returnedData: any;
   status: string;
   error: any;
   errorCode: any;
@@ -16,15 +16,14 @@ interface IDsp {
 
 export const issueDspCredential = createAsyncThunk(
   "dsp/issueDspCredential",
-  async (dspIssueData: {
-    issueName: string;
-    storedPanelData: Placement | ProgrammeMembership | null;
-  }) => {
-    let { issueName, storedPanelData } = dspIssueData;
+  async (issueName: string, { getState }) => {
+    const state = getState() as RootState;
+    const panelData: Placement | ProgrammeMembership | null =
+      state.dsp.dspPanelObj;
     const credentialsService = new CredentialsService();
     const response = await credentialsService.issueDspCredential(
       issueName,
-      storedPanelData
+      panelData
     );
     return response.data;
   }
@@ -32,14 +31,12 @@ export const issueDspCredential = createAsyncThunk(
 
 export const verifyDspIdentity = createAsyncThunk(
   "dsp/verifyDspIdentity",
-  async (dspVerifyData: {
-    storedPersonalData: PersonalDetails | null;
-  }) => {
-    let { storedPersonalData } = dspVerifyData;
+  async (_, { getState }) => {
+    const state = getState() as RootState;
+    const personalData: PersonalDetails =
+      state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
-    const response = await credentialsService.verifyDspIdentity(
-      storedPersonalData
-    );
+    const response = await credentialsService.verifyDspIdentity(personalData);
 
     return response.data;
   }
@@ -48,7 +45,6 @@ export const verifyDspIdentity = createAsyncThunk(
 export const initialState: IDsp = {
   dspPanelObj: null,
   gatewayUri: null,
-  returnedData: null,
   status: "",
   error: "",
   errorCode: null
@@ -73,7 +69,7 @@ const dspSlice = createSlice({
       })
       .addCase(issueDspCredential.rejected, (state, action) => {
         state.status = "failed";
-        console.log(action)
+        console.log(action);
         state.error = action.error.message;
         state.errorCode = action.error.message?.slice(-3);
       })

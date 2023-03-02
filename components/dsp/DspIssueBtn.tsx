@@ -38,23 +38,21 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   const handleClick = async () => {
     history.push(`${panelNameShort}/dsp`);
     chooseProfileArr(panelName, panelId);
-    const storedPanelData = store.getState().dsp.dspPanelObj;
     const issueName = panelNameShort.slice(0, -1);
-    await dispatch(issueDspCredential({ issueName, storedPanelData }));
+    await dispatch(issueDspCredential(issueName));
     const issueUri = store.getState().dsp.gatewayUri;
 
     if (issueUri) {
       window.location.href = issueUri;
-    } else if (store.getState().dsp.errorCode === "401"){
+    } else if (store.getState().dsp.errorCode === "401") {
       console.log("Identity verification required.");
-      const storedPersonalData = store.getState().traineeProfile.traineeProfileData.personalDetails;
-      await dispatch(verifyDspIdentity({storedPersonalData}));
+      await dispatch(verifyDspIdentity());
       const verifyUri = store.getState().dsp.gatewayUri;
 
       if (verifyUri) {
         window.location.href = verifyUri;
       } else {
-        console.log("Identity verification failed.")
+        console.log("Identity verification failed.");
       }
     } else {
       console.log("Unknown error occured.");
