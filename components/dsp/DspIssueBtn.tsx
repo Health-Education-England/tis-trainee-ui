@@ -4,12 +4,14 @@ import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
 import {
   issueDspCredential,
-  updatedDspPanelObj
+  updatedDspPanelObj,
+  verifyDspIdentity
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useLocation } from "react-router-dom";
 import useLocalStorage from "../../utilities/hooks/useLocalStorage";
 import { useEffect } from "react";
+import { useAppDispatch } from "../../redux/hooks/hooks";
 
 interface IDspIssueBtn {
   panelName: string;
@@ -22,6 +24,7 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   panelId,
   isPastDate
 }) => {
+  const dispatch = useAppDispatch();
   const currPath = useLocation().pathname;
   const [_currPathname, setCurrPathname] = useLocalStorage("currPathname", "");
 
@@ -32,12 +35,30 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   const panelNameShort =
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
-  const handleClick = () => {
+  const handleClick = async () => {
     history.push(`${panelNameShort}/dsp`);
     chooseProfileArr(panelName, panelId);
     const storedPanelData = store.getState().dsp.dspPanelObj;
     const issueName = panelNameShort.slice(0, -1);
-    store.dispatch(issueDspCredential({ issueName, storedPanelData }));
+    await dispatch(issueDspCredential({ issueName, storedPanelData }));
+    const issueUri = store.getState().dsp.gatewayUri;
+
+    if (issueUri) {
+      window.location.href = issueUri;
+    } else if (store.getState().dsp.errorCode === "401"){
+      console.log("Identity verification required.");
+      const storedPersonalData = store.getState().traineeProfile.traineeProfileData.personalDetails;
+      await dispatch(verifyDspIdentity({storedPersonalData}));
+      const verifyUri = store.getState().dsp.gatewayUri;
+
+      if (verifyUri) {
+        window.location.href = verifyUri;
+      } else {
+        console.log("Identity verification failed.")
+      }
+    } else {
+      console.log("Unknown error occured.");
+    }
   };
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";
