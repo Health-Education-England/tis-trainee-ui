@@ -8,10 +8,12 @@ import { RootState } from "../store/store";
 
 interface IDsp {
   dspPanelObj: ProfileType | null;
+  dspPanelObjName: string;
   gatewayUri: string | null;
   status: string;
   error: any;
   errorCode: any;
+  isIssuing: boolean;
 }
 
 export const issueDspCredential = createAsyncThunk(
@@ -37,17 +39,18 @@ export const verifyDspIdentity = createAsyncThunk(
       state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
     const response = await credentialsService.verifyDspIdentity(personalData);
-
     return response.data;
   }
 );
 
 export const initialState: IDsp = {
   dspPanelObj: null,
+  dspPanelObjName: "",
   gatewayUri: null,
   status: "",
   error: "",
-  errorCode: null
+  errorCode: null,
+  isIssuing: false
 };
 
 const dspSlice = createSlice({
@@ -56,6 +59,12 @@ const dspSlice = createSlice({
   reducers: {
     updatedDspPanelObj(state, action: PayloadAction<ProfileType>) {
       return { ...state, dspPanelObj: action.payload };
+    },
+    updatedDspIsIssuing(state) {
+      return { ...state, isIssuing: !state.isIssuing };
+    },
+    updatedDspPanelObjName(state, action: PayloadAction<string>) {
+      return { ...state, dspPanelObjName: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -89,4 +98,8 @@ const dspSlice = createSlice({
 
 export default dspSlice.reducer;
 
-export const { updatedDspPanelObj } = dspSlice.actions;
+export const {
+  updatedDspPanelObj,
+  updatedDspIsIssuing,
+  updatedDspPanelObjName
+} = dspSlice.actions;

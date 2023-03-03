@@ -4,7 +4,9 @@ import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
 import {
   issueDspCredential,
+  updatedDspIsIssuing,
   updatedDspPanelObj,
+  updatedDspPanelObjName,
   verifyDspIdentity
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
@@ -25,38 +27,33 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   isPastDate
 }) => {
   const dispatch = useAppDispatch();
-  const currPath = useLocation().pathname;
-  const [_currPathname, setCurrPathname] = useLocalStorage("currPathname", "");
-
-  useEffect(() => {
-    setCurrPathname(currPath);
-  }, [currPath]);
-
   const panelNameShort =
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
-    history.push(`${panelNameShort}/dsp`);
+    dispatch(updatedDspIsIssuing());
+    dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
-    const issueUri = store.getState().dsp.gatewayUri;
+    history.push(`${panelNameShort}/dsp`);
+    // const issueUri = store.getState().dsp.gatewayUri;
 
-    if (issueUri) {
-      window.location.href = issueUri;
-    } else if (store.getState().dsp.errorCode === "401") {
-      console.log("Identity verification required.");
-      await dispatch(verifyDspIdentity());
-      const verifyUri = store.getState().dsp.gatewayUri;
+    // if (issueUri) {
+    //   window.location.href = issueUri;
+    // } else if (store.getState().dsp.errorCode === "401") {
+    //   console.log("Identity verification required.");
+    //   await dispatch(verifyDspIdentity());
+    //   const verifyUri = store.getState().dsp.gatewayUri;
 
-      if (verifyUri) {
-        window.location.href = verifyUri;
-      } else {
-        console.log("Identity verification failed.");
-      }
-    } else {
-      console.log("Unknown error occured.");
-    }
+    //   if (verifyUri) {
+    //     window.location.href = verifyUri;
+    //   } else {
+    //     console.log("Identity verification failed.");
+    //   }
+    // } else {
+    //   console.log("Unknown error occured.");
+    // }
   };
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";
@@ -95,6 +92,6 @@ function chooseProfileArr(pName: string, id: string) {
       : store.getState().traineeProfile.traineeProfileData.placements;
   const matchedProfile = profileArr.filter(
     (pObj: ProfileType) => pObj.tisId === id
-  );
-  if (matchedProfile) store.dispatch(updatedDspPanelObj(matchedProfile[0]));
+  )[0];
+  if (matchedProfile) store.dispatch(updatedDspPanelObj(matchedProfile));
 }

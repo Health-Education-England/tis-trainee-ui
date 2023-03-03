@@ -20,6 +20,7 @@ import Home from "../home/Home";
 import Placements from "../placements/Placements";
 import Programmes from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
+import useLocalStorage from "../../utilities/hooks/useLocalStorage";
 
 interface IMain {
   signOut: any;
@@ -32,6 +33,13 @@ export const Main = ({ signOut, appVersion }: IMain) => {
     state => state.traineeProfile.status
   );
   let content;
+  const [currPathname, _setCurrPathname] = useLocalStorage("currPathname", "");
+
+  useEffect(() => {
+    if (currPathname) {
+      history.replace(currPathname);
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(getPreferredMfa());
