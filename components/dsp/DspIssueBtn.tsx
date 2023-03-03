@@ -36,24 +36,24 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
-    history.push(`${panelNameShort}/dsp`);
-    // const issueUri = store.getState().dsp.gatewayUri;
+    // history.push(`${panelNameShort}/dsp`);
+    const issueUri = store.getState().dsp.gatewayUri;
 
-    // if (issueUri) {
-    //   window.location.href = issueUri;
-    // } else if (store.getState().dsp.errorCode === "401") {
-    //   console.log("Identity verification required.");
-    //   await dispatch(verifyDspIdentity());
-    //   const verifyUri = store.getState().dsp.gatewayUri;
+    if (issueUri) {
+      window.location.href = issueUri;
+    } else if (store.getState().dsp.errorCode === "401") {
+      console.log("Identity verification required.");
+      await dispatch(verifyDspIdentity());
+      const verifyUri = store.getState().dsp.gatewayUri;
 
-    //   if (verifyUri) {
-    //     window.location.href = verifyUri;
-    //   } else {
-    //     console.log("Identity verification failed.");
-    //   }
-    // } else {
-    //   console.log("Unknown error occured.");
-    // }
+      if (verifyUri) {
+        window.location.href = verifyUri;
+      } else {
+        console.log("Identity verification failed.");
+      }
+    } else {
+      console.log("Unknown error occured.");
+    }
   };
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";

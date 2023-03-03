@@ -19,7 +19,7 @@ export class CredentialsService extends ApiService {
   }
 
   async verifyDspIdentity(
-    iData: PersonalDetails| null,
+    iData: PersonalDetails | null,
     iState?: any
   ): Promise<AxiosResponse<any>> {
     return this.post(`/verify/identity`, iData, { params: iState });

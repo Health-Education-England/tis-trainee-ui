@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 import { PersonalDetails } from "../../models/PersonalDetails";
 import { Placement } from "../../models/Placement";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
@@ -23,9 +24,22 @@ export const issueDspCredential = createAsyncThunk(
     const panelData: Placement | ProgrammeMembership | null =
       state.dsp.dspPanelObj;
     const credentialsService = new CredentialsService();
+
+    const stateId = nanoid();
+    localStorage.setItem(
+      stateId,
+      JSON.stringify({
+        // TODO: finalize what session data needs capturing.
+        redirect: window.location.pathname,
+        panelData: panelData,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
+
     const response = await credentialsService.issueDspCredential(
       issueName,
-      panelData
+      panelData,
+      { state: stateId }
     );
     return response.data;
   }
@@ -38,7 +52,21 @@ export const verifyDspIdentity = createAsyncThunk(
     const personalData: PersonalDetails =
       state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
-    const response = await credentialsService.verifyDspIdentity(personalData);
+
+    const stateId = nanoid();
+    localStorage.setItem(
+      stateId,
+      JSON.stringify({
+        // TODO: finalize what session data needs capturing.
+        redirect: window.location.pathname,
+        panelData: state.dsp.dspPanelObj,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
+
+    const response = await credentialsService.verifyDspIdentity(personalData, {
+      state: stateId
+    });
     return response.data;
   }
 );
@@ -78,7 +106,6 @@ const dspSlice = createSlice({
       })
       .addCase(issueDspCredential.rejected, (state, action) => {
         state.status = "failed";
-        console.log(action);
         state.error = action.error.message;
         state.errorCode = action.error.message?.slice(-3);
       })
