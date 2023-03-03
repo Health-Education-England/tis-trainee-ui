@@ -5,6 +5,7 @@ import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { ProfileType } from "../../models/TraineeProfile";
 import { CredentialsService } from "../../services/CredentialsService";
 import { RootState } from "../store/store";
+import { v4 as uuid } from "uuid";
 
 interface IDsp {
   dspPanelObj: ProfileType | null;
@@ -23,9 +24,22 @@ export const issueDspCredential = createAsyncThunk(
     const panelData: Placement | ProgrammeMembership | null =
       state.dsp.dspPanelObj;
     const credentialsService = new CredentialsService();
+
+    const stateUuid = uuid();
+    localStorage.setItem(
+      stateUuid,
+      JSON.stringify({
+        // TODO: finalize what session data needs capturing.
+        redirect: window.location.pathname,
+        panelData: panelData,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
+
     const response = await credentialsService.issueDspCredential(
       issueName,
-      panelData
+      panelData,
+      { state: stateUuid }
     );
     return response.data;
   }
@@ -38,7 +52,21 @@ export const verifyDspIdentity = createAsyncThunk(
     const personalData: PersonalDetails =
       state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
-    const response = await credentialsService.verifyDspIdentity(personalData);
+
+    const stateUuid = uuid();
+    localStorage.setItem(
+      stateUuid,
+      JSON.stringify({
+        // TODO: finalize what session data needs capturing.
+        redirect: window.location.pathname,
+        panelData: state.dsp.dspPanelObj,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
+
+    const response = await credentialsService.verifyDspIdentity(personalData, {
+      state: stateUuid
+    });
     return response.data;
   }
 );
@@ -78,7 +106,6 @@ const dspSlice = createSlice({
       })
       .addCase(issueDspCredential.rejected, (state, action) => {
         state.status = "failed";
-        console.log(action);
         state.error = action.error.message;
         state.errorCode = action.error.message?.slice(-3);
       })

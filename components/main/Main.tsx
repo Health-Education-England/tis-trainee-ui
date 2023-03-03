@@ -21,6 +21,7 @@ import Placements from "../placements/Placements";
 import Programmes from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import useLocalStorage from "../../utilities/hooks/useLocalStorage";
+import Dsp from "../dsp/Dsp";
 
 interface IMain {
   signOut: any;
@@ -86,6 +87,9 @@ export const Main = ({ signOut, appVersion }: IMain) => {
               <Route path="/formr-b" component={FormRPartB} />
               <Route exact path="/support" component={Support} />
               <Route path="/mfa" component={MFA} />
+              <Route exact path="/credential-issued" component={Dsp} />
+              <Route exact path="/credential-verified" component={Dsp} />
+              <Route exact path="/invalid-credential" component={Dsp} />
               <Redirect exact path="/" to="/home" />
               <Route path="/*" component={PageNotFound} />
             </Switch>
