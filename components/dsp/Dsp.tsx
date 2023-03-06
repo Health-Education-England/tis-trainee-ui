@@ -31,8 +31,13 @@ export default function Dsp() {
   const stateParam = queryParams?.get("state");
   const issuingStatus = store.getState().dsp.isIssuing;
   const issueUri = store.getState().dsp.gatewayUri;
+  const verificationStatus = localStorage.getItem("verification");
 
   let content;
+
+  if (verificationStatus) {
+    return <PostVerificationIssuePrompt stateParam={stateParam} />;
+  }
 
   if (issueUri) {
     return <IssuePrompt issueUri={issueUri} />;
@@ -106,6 +111,49 @@ function IssuePrompt({ issueUri }: IssuePromptProps) {
   );
 }
 
+type PostVerificationIssuePromptProps = {
+  stateParam: string | null;
+};
+
+function PostVerificationIssuePrompt({
+  stateParam
+}: PostVerificationIssuePromptProps) {
+  const dispatch = useAppDispatch();
+  if (stateParam) {
+    const [currSessionState, _setCurrSessionState] = useLocalStorage(
+      stateParam,
+      ""
+    );
+    dispatch(updatedDspPanelObj(currSessionState.panelData));
+    dispatch(updatedDspPanelObjName(currSessionState.panelName));
+  }
+  const storedPanelData = store.getState().dsp.dspPanelObj;
+  const storedPanelName = store.getState().dsp.dspPanelObjName;
+  return (
+    <WarningCallout>
+      <WarningCallout.Label visuallyHiddenText={false}>
+        Important
+      </WarningCallout.Label>
+      <p>
+        Your ID has been verified and you can now add this credential to your
+        DSP wallet.
+      </p>
+      <DSPPanel profName={storedPanelName} profData={storedPanelData} />
+      <Button
+        onClick={async () => {
+          localStorage.removeItem("verification");
+          await dispatch(issueDspCredential(storedPanelName.slice(0, -1)));
+          const issueUri = store.getState().dsp.gatewayUri;
+          if (issueUri) window.location.href = issueUri;
+        }}
+        data-cy="dspIssueCred"
+      >
+        Click to add credential to your wallet
+      </Button>
+    </WarningCallout>
+  );
+}
+
 function VerifyIdPrompt() {
   const storedPanelData = store.getState().dsp.dspPanelObj;
   const storedPanelName = store.getState().dsp.dspPanelObjName;
@@ -132,6 +180,7 @@ function VerifyIdPrompt() {
 }
 
 async function handleVerifyClick() {
+  localStorage.setItem("verification", "yes");
   await store.dispatch(verifyDspIdentity());
   const verifyUri = store.getState().dsp.gatewayUri;
   // todo go to issue prompt screen before issuing gateway
@@ -155,7 +204,6 @@ function IssueSuccessPrompt({ stateParam }: IssueSuccessPromptProps) {
     stateParam,
     ""
   );
-  // Re-populate the state from local storage.
   dispatch(updatedDspPanelObj(currSessionState.panelData));
   dispatch(updatedDspPanelObjName(currSessionState.panelName));
   const storedPanelData = store.getState().dsp.dspPanelObj;
@@ -169,6 +217,7 @@ function IssueSuccessPrompt({ stateParam }: IssueSuccessPromptProps) {
       <DSPPanel profName={storedPanelName} profData={storedPanelData} />
       <Button
         onClick={() => {
+          localStorage.removeItem(stateParam);
           store.dispatch(resetDspSlice());
           localStorage.removeItem(stateParam);
           history.push(`/${storedPanelName}`);
