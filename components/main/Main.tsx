@@ -34,13 +34,6 @@ export const Main = ({ signOut, appVersion }: IMain) => {
     state => state.traineeProfile.status
   );
   let content;
-  const [currPathname, _setCurrPathname] = useLocalStorage("currPathname", "");
-
-  useEffect(() => {
-    if (currPathname) {
-      history.replace(currPathname);
-    }
-  }, []);
 
   useEffect(() => {
     dispatch(getPreferredMfa());
@@ -80,16 +73,14 @@ export const Main = ({ signOut, appVersion }: IMain) => {
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
             <Switch>
               <Route exact path="/home" component={Home}></Route>
-              <Route path="/placements" component={Placements}></Route>
-              <Route path="/programmes" component={Programmes}></Route>
+              <Route exact path="/placements" component={Placements}></Route>
+              <Route exact path="/programmes" component={Programmes}></Route>
               <Route exact path="/profile" component={Profile} />
               <Route path="/formr-a" component={FormRPartA} />
               <Route path="/formr-b" component={FormRPartB} />
               <Route exact path="/support" component={Support} />
               <Route path="/mfa" component={MFA} />
-              <Route exact path="/credential-issued" component={Dsp} />
-              <Route exact path="/credential-verified" component={Dsp} />
-              <Route exact path="/invalid-credential" component={Dsp} />
+              <Route path="/credential*" component={Dsp} />
               <Redirect exact path="/" to="/home" />
               <Route path="/*" component={PageNotFound} />
             </Switch>

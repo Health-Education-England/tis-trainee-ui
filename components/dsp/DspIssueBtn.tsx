@@ -6,13 +6,9 @@ import {
   issueDspCredential,
   updatedDspIsIssuing,
   updatedDspPanelObj,
-  updatedDspPanelObjName,
-  verifyDspIdentity
+  updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
-import { useLocation } from "react-router-dom";
-import useLocalStorage from "../../utilities/hooks/useLocalStorage";
-import { useEffect } from "react";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 
 interface IDspIssueBtn {
@@ -31,30 +27,14 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
-    dispatch(updatedDspIsIssuing());
+    dispatch(updatedDspIsIssuing(true));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
-    // history.push(`${panelNameShort}/dsp`);
-    const issueUri = store.getState().dsp.gatewayUri;
-
-    if (issueUri) {
-      window.location.href = issueUri;
-    } else if (store.getState().dsp.errorCode === "401") {
-      console.log("Identity verification required.");
-      await dispatch(verifyDspIdentity());
-      const verifyUri = store.getState().dsp.gatewayUri;
-
-      if (verifyUri) {
-        window.location.href = verifyUri;
-      } else {
-        console.log("Identity verification failed.");
-      }
-    } else {
-      console.log("Unknown error occured.");
-    }
+    history.push("/credential");
   };
+
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";
   let isBtnDisabled: boolean = false;

@@ -3,6 +3,7 @@ import { Status } from "./Status";
 
 export interface ProgrammeMembership {
   tisId?: string;
+  programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
   startDate: Date | string;

@@ -17,6 +17,16 @@ interface IDsp {
   isIssuing: boolean;
 }
 
+export const initialState: IDsp = {
+  dspPanelObj: null,
+  dspPanelObjName: "",
+  gatewayUri: null,
+  status: "",
+  error: "",
+  errorCode: null,
+  isIssuing: false
+};
+
 export const issueDspCredential = createAsyncThunk(
   "dsp/issueDspCredential",
   async (issueName: string, { getState }) => {
@@ -71,16 +81,6 @@ export const verifyDspIdentity = createAsyncThunk(
   }
 );
 
-export const initialState: IDsp = {
-  dspPanelObj: null,
-  dspPanelObjName: "",
-  gatewayUri: null,
-  status: "",
-  error: "",
-  errorCode: null,
-  isIssuing: false
-};
-
 const dspSlice = createSlice({
   name: "dsp",
   initialState,
@@ -88,11 +88,14 @@ const dspSlice = createSlice({
     updatedDspPanelObj(state, action: PayloadAction<ProfileType>) {
       return { ...state, dspPanelObj: action.payload };
     },
-    updatedDspIsIssuing(state) {
-      return { ...state, isIssuing: !state.isIssuing };
+    updatedDspIsIssuing(state, action: PayloadAction<boolean>) {
+      return { ...state, isIssuing: action.payload };
     },
     updatedDspPanelObjName(state, action: PayloadAction<string>) {
       return { ...state, dspPanelObjName: action.payload };
+    },
+    resetDspSlice() {
+      return initialState;
     }
   },
   extraReducers(builder): void {
@@ -128,5 +131,6 @@ export default dspSlice.reducer;
 export const {
   updatedDspPanelObj,
   updatedDspIsIssuing,
-  updatedDspPanelObjName
+  updatedDspPanelObjName,
+  resetDspSlice
 } = dspSlice.actions;

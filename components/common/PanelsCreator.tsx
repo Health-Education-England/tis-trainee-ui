@@ -71,7 +71,7 @@ export function PanelsCreator({
   );
 }
 
-function displayListVal<T>(
+export function displayListVal<T>(
   val: T extends Date | string ? any : any,
   k: string
 ) {
