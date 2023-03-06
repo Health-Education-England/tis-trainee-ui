@@ -72,16 +72,40 @@ export const Main = ({ signOut, appVersion }: IMain) => {
           <Breadcrumbs />
           <main className="nhsuk-width-container nhsuk-u-margin-top-5">
             <Switch>
-              <Route exact path="/home" component={Home}></Route>
-              <Route exact path="/placements" component={Placements}></Route>
-              <Route exact path="/programmes" component={Programmes}></Route>
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/placements" component={Placements} />
+              <Route exact path="/programmes" component={Programmes} />
               <Route exact path="/profile" component={Profile} />
+              <Route path="/credential" component={Dsp} />
               <Route path="/formr-a" component={FormRPartA} />
               <Route path="/formr-b" component={FormRPartB} />
               <Route exact path="/support" component={Support} />
               <Route path="/mfa" component={MFA} />
-              <Route path="/credential*" component={Dsp} />
               <Redirect exact path="/" to="/home" />
+              <Redirect
+                exact
+                path="/credential-issued"
+                to={{
+                  pathname: "/credential/issued",
+                  search: location.search
+                }}
+              />
+              <Redirect
+                exact
+                path="/credential-verified"
+                to={{
+                  pathname: "/credential/verified",
+                  search: location.search
+                }}
+              />
+              <Redirect
+                exact
+                path="/invalid-credential"
+                to={{
+                  pathname: "/credential/invalid",
+                  search: location.search
+                }}
+              />
               <Route path="/*" component={PageNotFound} />
             </Switch>
           </main>
