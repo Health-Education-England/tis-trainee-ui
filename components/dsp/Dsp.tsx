@@ -213,7 +213,7 @@ function IssueSuccessPrompt({ stateParam }: IssueSuccessPromptProps) {
       <WarningCallout.Label visuallyHiddenText={false}>
         Success
       </WarningCallout.Label>
-      <p>The following credential has been added to you DSP wallet.</p>
+      <p>The following credential has been added to your DSP wallet.</p>
       <DSPPanel profName={storedPanelName} profData={storedPanelData} />
       <Button
         onClick={() => {
