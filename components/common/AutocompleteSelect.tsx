@@ -12,6 +12,8 @@ type AutocompleteSelectProps = {
   options: any;
   name: string;
   label: string;
+  isMulti: boolean;
+  closeMenuOnSelect: boolean;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -20,11 +22,14 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   error,
   options,
   name,
-  label
+  label,
+  isMulti,
+  closeMenuOnSelect
 }) => {
   const handleChange = (val: any) => {
     onChange(name, !!val ? val.label : "");
   };
+  const handleMultiChange = (val: any) => onChange(name, val);
   return (
     <div
       data-cy={name}
@@ -42,13 +47,19 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
       <Select
         aria-labelledby={`${name}--label`}
         options={options}
-        onChange={handleChange}
+        onChange={isMulti ? handleMultiChange : handleChange}
         value={value?.label}
         isClearable
-        defaultValue={{
-          value: value,
-          label: value
-        }}
+        isMulti={isMulti}
+        closeMenuOnSelect={closeMenuOnSelect}
+        defaultValue={
+          isMulti
+            ? null
+            : {
+                value: value,
+                label: value
+              }
+        }
         placeholder="Select or start typing..."
         className="autocomplete-select"
         classNamePrefix="react-select"

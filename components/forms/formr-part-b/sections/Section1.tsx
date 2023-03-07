@@ -118,6 +118,8 @@ const Section1 = ({
                   )}
                   name="prevRevalBodyOther"
                   label="Please Specify 'Other'"
+                  isMulti={false}
+                  closeMenuOnSelect={true}
                 />
               )}
               <TextInputField

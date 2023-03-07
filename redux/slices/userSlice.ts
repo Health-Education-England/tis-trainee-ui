@@ -11,6 +11,9 @@ interface IUser {
   totpCode: string;
   preferredMfa: any;
   username: string;
+  mappedLoContact: string | null | undefined;
+  emailIds: string;
+  supportCategories: any;
 }
 
 const initialState: IUser = {
@@ -21,7 +24,10 @@ const initialState: IUser = {
   error: "",
   totpCode: "",
   preferredMfa: "NOMFA",
-  username: ""
+  username: "",
+  mappedLoContact: null,
+  emailIds: "",
+  supportCategories: null
 };
 
 export const getPreferredMfa = createAsyncThunk(
@@ -122,6 +128,18 @@ const userSlice = createSlice({
     },
     updatedPreferredMfa(state, action: PayloadAction<string>) {
       return { ...state, preferredMfa: action.payload };
+    },
+    updatedMappedLoContact(
+      state,
+      action: PayloadAction<string | null | undefined>
+    ) {
+      return { ...state, mappedLoContact: action.payload };
+    },
+    updatedEmailIds(state, action: PayloadAction<string>) {
+      return { ...state, emailIds: action.payload };
+    },
+    updatedSupportCategories(state, action: PayloadAction<string[]>) {
+      return { ...state, supportCategories: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -202,5 +220,8 @@ export const {
   incrementTotpSection,
   updatedTotpSection,
   updatedSmsSection,
-  updatedPreferredMfa
+  updatedPreferredMfa,
+  updatedMappedLoContact,
+  updatedEmailIds,
+  updatedSupportCategories
 } = userSlice.actions;

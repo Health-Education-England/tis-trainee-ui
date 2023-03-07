@@ -216,6 +216,8 @@ const Create = ({ history }: { history: string[] }) => {
                     options={filteredProgrammeSpecialtyOptions}
                     name="programmeSpecialty"
                     label="Programme Specialty"
+                    isMulti={false}
+                    closeMenuOnSelect={true}
                   />
                   {values.declarationType === CCT_DECLARATION && (
                     <>
@@ -226,6 +228,8 @@ const Create = ({ history }: { history: string[] }) => {
                         options={programmeSpecialtyOptions}
                         name="cctSpecialty1"
                         label="Specialty 1 for Award of CCT"
+                        isMulti={false}
+                        closeMenuOnSelect={true}
                       />
                       <AutocompleteSelect
                         value={values.cctSpecialty2}
@@ -234,6 +238,8 @@ const Create = ({ history }: { history: string[] }) => {
                         options={programmeSpecialtyOptions}
                         name="cctSpecialty2"
                         label="Specialty 2 for Award of CCT"
+                        isMulti={false}
+                        closeMenuOnSelect={true}
                       />
                     </>
                   )}
