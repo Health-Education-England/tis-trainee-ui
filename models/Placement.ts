@@ -1,3 +1,4 @@
+import { Signature } from "./Dsp";
 import { Status } from "./Status";
 
 export interface Placement {
@@ -13,9 +14,11 @@ export interface Placement {
   employingBody: string;
   trainingBody: string;
   status?: Status;
+  signature?: Signature;
 }
 
 export const placementPanelTemplate: Placement = {
+  tisId: "",
   site: "",
   siteLocation: "",
   startDate: "",

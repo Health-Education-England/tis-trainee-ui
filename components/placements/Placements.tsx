@@ -1,18 +1,18 @@
-import { Fieldset } from "nhsuk-react-components";
 import { useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import { TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
-import { PANEL_KEYS } from "../../utilities/Constants";
-import DataSourceMsg from "../common/DataSourceMsg";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import PageTitle from "../common/PageTitle";
+import ScrollTo from "../forms/ScrollTo";
+import { Fieldset } from "nhsuk-react-components";
+import DataSourceMsg from "../common/DataSourceMsg";
 import {
   PanelsCreator,
   prepareProfilePanelsData
 } from "../common/PanelsCreator";
-import ScrollTo from "../forms/ScrollTo";
+import { TraineeProfileName } from "../../models/TraineeProfile";
+import { PANEL_KEYS } from "../../utilities/Constants";
 import style from "../Common.module.scss";
 
 const Placements = () => {
