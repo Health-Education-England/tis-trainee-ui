@@ -119,11 +119,11 @@ function PostVerificationIssuePrompt({
   stateParam
 }: PostVerificationIssuePromptProps) {
   const dispatch = useAppDispatch();
-  if (stateParam) {
-    const [currSessionState, _setCurrSessionState] = useLocalStorage(
-      stateParam,
-      ""
-    );
+  const [currSessionState, _setCurrSessionState] = useLocalStorage(
+    stateParam ? stateParam : "",
+    ""
+  );
+  if (currSessionState) {
     dispatch(updatedDspPanelObj(currSessionState.panelData));
     dispatch(updatedDspPanelObjName(currSessionState.panelName));
   }

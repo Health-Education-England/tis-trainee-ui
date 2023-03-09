@@ -20,7 +20,6 @@ import Home from "../home/Home";
 import Placements from "../placements/Placements";
 import Programmes from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
-import useLocalStorage from "../../utilities/hooks/useLocalStorage";
 import Dsp from "../dsp/Dsp";
 
 interface IMain {
