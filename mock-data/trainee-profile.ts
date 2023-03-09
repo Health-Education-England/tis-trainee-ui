@@ -37,7 +37,12 @@ export const mockPersonalDetails: PersonalDetails = {
   prevRevalBody: "",
   prevRevalBodyOther: "",
   prevRevalDate: new Date("2021-12-31"),
-  currRevalDate: new Date("2021-12-31")
+  currRevalDate: new Date("2021-12-31"),
+  signature: {
+    signedAt: new Date(-8640000000000000),
+    validUntil: new Date(8640000000000000),
+    hmac: ""
+  }
 };
 
 export const mockProgrammeMemberships: ProgrammeMembership[] = [
