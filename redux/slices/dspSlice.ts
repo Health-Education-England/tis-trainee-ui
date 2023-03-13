@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
 import { PersonalDetails } from "../../models/PersonalDetails";
 import { Placement } from "../../models/Placement";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
@@ -15,6 +14,7 @@ interface IDsp {
   error: any;
   errorCode: any;
   isIssuing: boolean;
+  stateId: string | null;
 }
 
 export const initialState: IDsp = {
@@ -24,7 +24,8 @@ export const initialState: IDsp = {
   status: "",
   error: "",
   errorCode: null,
-  isIssuing: false
+  isIssuing: false,
+  stateId: null
 };
 
 export const issueDspCredential = createAsyncThunk(
@@ -34,18 +35,16 @@ export const issueDspCredential = createAsyncThunk(
     const panelData: Placement | ProgrammeMembership | null =
       state.dsp.dspPanelObj;
     const credentialsService = new CredentialsService();
-
-    const stateId = nanoid();
-    localStorage.setItem(
-      stateId,
-      JSON.stringify({
-        // TODO: finalize what session data needs capturing.
-        redirect: window.location.pathname,
-        panelData: panelData,
-        panelName: state.dsp.dspPanelObjName
-      })
-    );
-
+    const stateId = state.dsp.stateId;
+    if (stateId) {
+      localStorage.setItem(
+        stateId,
+        JSON.stringify({
+          panelData: panelData,
+          panelName: state.dsp.dspPanelObjName
+        })
+      );
+    }
     const response = await credentialsService.issueDspCredential(
       issueName,
       panelData,
@@ -62,18 +61,7 @@ export const verifyDspIdentity = createAsyncThunk(
     const personalData: PersonalDetails =
       state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
-
-    const stateId = nanoid();
-    localStorage.setItem(
-      stateId,
-      JSON.stringify({
-        // TODO: finalize what session data needs capturing.
-        redirect: window.location.pathname,
-        panelData: state.dsp.dspPanelObj,
-        panelName: state.dsp.dspPanelObjName
-      })
-    );
-
+    const stateId = state.dsp.stateId;
     const response = await credentialsService.verifyDspIdentity(personalData, {
       state: stateId
     });
@@ -85,6 +73,9 @@ const dspSlice = createSlice({
   name: "dsp",
   initialState,
   reducers: {
+    updatedDspStateId(state, action: PayloadAction<string>) {
+      return { ...state, stateId: action.payload };
+    },
     updatedDspPanelObj(state, action: PayloadAction<ProfileType>) {
       return { ...state, dspPanelObj: action.payload };
     },
@@ -129,6 +120,7 @@ const dspSlice = createSlice({
 export default dspSlice.reducer;
 
 export const {
+  updatedDspStateId,
   updatedDspPanelObj,
   updatedDspIsIssuing,
   updatedDspPanelObjName,

@@ -6,10 +6,12 @@ import {
   issueDspCredential,
   updatedDspIsIssuing,
   updatedDspPanelObj,
-  updatedDspPanelObjName
+  updatedDspPanelObjName,
+  updatedDspStateId
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
+import { nanoid } from "nanoid";
 
 interface IDspIssueBtn {
   panelName: string;
@@ -27,6 +29,9 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
+    // create and store the stateid here so we can use the same one throughout the issue -> verify -> issue journey.
+    const stateId = nanoid();
+    dispatch(updatedDspStateId(stateId));
     dispatch(updatedDspIsIssuing(true));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
