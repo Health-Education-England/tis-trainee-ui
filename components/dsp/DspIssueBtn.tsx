@@ -4,6 +4,7 @@ import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
 import {
   issueDspCredential,
+  resetDspSlice,
   updatedDspIsIssuing,
   updatedDspPanelObj,
   updatedDspPanelObjName,
@@ -29,7 +30,6 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
-    // create and store the stateid here so we can use the same one throughout the issue -> verify -> issue journey.
     const stateId = nanoid();
     dispatch(updatedDspStateId(stateId));
     dispatch(updatedDspIsIssuing(true));
@@ -37,7 +37,17 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
-    history.push("/credential");
+    const dspErrorCode = store.getState().dsp.errorCode;
+    const dspErrorText = store.getState().dsp.error;
+    const issueUri = store.getState().dsp.gatewayUri;
+    if (issueUri !== null || dspErrorCode === "401") {
+      history.push("/credential");
+    } else {
+      // TODO proper error notification
+      console.log("DspIssueBtn click error: ", dspErrorText);
+      localStorage.removeItem(stateId);
+      dispatch(resetDspSlice());
+    }
   };
 
   const cyTag = `dspBtn${panelName}${panelId}`;
