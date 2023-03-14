@@ -58,8 +58,7 @@ const CredentialStart: React.FC = () => {
   }
   localStorage.removeItem("verification");
   return <Redirect to="/home" />;
-  // Note: No state param in URI when aborting verify ID in Gateway, so no key to access and remove DSP local storage data.
-  // (One hacky fix could be to store the dsp local storage key under it's own named key?)
+  // TODO No state param in URI when aborting verify ID in Gateway, so no key to access and remove DSP local storage data in the usual way.
 };
 
 export default CredentialStart;
