@@ -21,8 +21,8 @@ const CredentialStart: React.FC = () => {
           Important
         </WarningCallout.Label>
         <p>
-          Before you can issue this credential to you DSP wallet you must verify
-          your identity.
+          Before you can issue this credential to your DSP wallet you must
+          verify your identity.
         </p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
@@ -57,8 +57,8 @@ const CredentialStart: React.FC = () => {
     );
   }
   localStorage.removeItem("verification");
-  return <Redirect to="/home" />;
-  // TODO No state param in URI when aborting verify ID in Gateway, so no key to access and remove DSP local storage data in the usual way.
+  return <Redirect to="/credential/invalid" />;
+  // TODO No state or reason param in URI when aborting verify ID in Gateway, so no key to access and remove DSP local storage data in the usual way and provide appropriate msg.
 };
 
 export default CredentialStart;
