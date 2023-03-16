@@ -4,13 +4,16 @@ import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
 import {
   issueDspCredential,
+  resetDspSlice,
   updatedDspIsIssuing,
   updatedDspPanelObj,
-  updatedDspPanelObjName
+  updatedDspPanelObjName,
+  updatedDspStateId
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
-
+import { nanoid } from "nanoid";
+import { addNotification } from "../../redux/slices/notificationsSlice";
 interface IDspIssueBtn {
   panelName: string;
   panelId: string;
@@ -27,12 +30,28 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
+    const stateId = nanoid();
+    dispatch(updatedDspStateId(stateId));
     dispatch(updatedDspIsIssuing(true));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
-    history.push("/credential");
+    const dspErrorCode = store.getState().dsp.errorCode;
+    const dspErrorText = store.getState().dsp.error;
+    const issueUri = store.getState().dsp.gatewayUri;
+    if (issueUri !== null || dspErrorCode === "401") {
+      history.push("/credential");
+    } else {
+      dispatch(
+        addNotification({
+          type: "Error",
+          text: ` - Something went wrong (Error: ${dspErrorText}). If problem persists please contact Support`
+        })
+      );
+      localStorage.removeItem(stateId);
+      dispatch(resetDspSlice());
+    }
   };
 
   const cyTag = `dspBtn${panelName}${panelId}`;
