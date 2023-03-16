@@ -4,15 +4,19 @@ import { mount } from "cypress/react18";
 import { Router } from "react-router-dom";
 import history from "../../../components/navigation/history";
 import { DspIssueBtn } from "../../../components/dsp/DspIssueBtn";
+import { Provider } from "react-redux";
+import store from "../../../redux/store/store";
 
 describe("DSP issue button", () => {
   it("should enable digital staff passport button if date is not past", () => {
     mount(
-      <Router history={history}>
-        <DspIssueBtn panelName="placement" panelId="" isPastDate={false} />
-      </Router>
+      <Provider store={store}>
+        <Router history={history}>
+          <DspIssueBtn panelName="placement" panelId="" isPastDate={false} />
+        </Router>
+      </Provider>
     );
-    cy.get("[data-cy=dspBtnplacement1]")
+    cy.get("[data-cy=dspBtnplacement]")
       .should("not.be.disabled")
       .should(
         "include.text",
@@ -22,11 +26,13 @@ describe("DSP issue button", () => {
 
   it("should disable digital staff passport button if date is past", () => {
     mount(
-      <Router history={history}>
-        <DspIssueBtn panelName="placement" panelId="" isPastDate={true} />
-      </Router>
+      <Provider store={store}>
+        <Router history={history}>
+          <DspIssueBtn panelName="placement" panelId="" isPastDate={true} />
+        </Router>
+      </Provider>
     );
-    cy.get("[data-cy=dspBtnplacement2]")
+    cy.get("[data-cy=dspBtnplacement]")
       .should("be.disabled")
       .should(
         "include.text",
