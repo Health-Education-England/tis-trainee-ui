@@ -13,7 +13,7 @@ import {
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { nanoid } from "nanoid";
-
+import { addNotification } from "../../redux/slices/notificationsSlice";
 interface IDspIssueBtn {
   panelName: string;
   panelId: string;
@@ -43,8 +43,12 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     if (issueUri !== null || dspErrorCode === "401") {
       history.push("/credential");
     } else {
-      // TODO proper error notification
-      console.log("DspIssueBtn click error: ", dspErrorText);
+      dispatch(
+        addNotification({
+          type: "Error",
+          text: ` - Something went wrong (Error: ${dspErrorText}). If problem persists please contact Support`
+        })
+      );
       localStorage.removeItem(stateId);
       dispatch(resetDspSlice());
     }
