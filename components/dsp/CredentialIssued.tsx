@@ -9,7 +9,7 @@ import {
 import store from "../../redux/store/store";
 import DSPPanel from "./DSPPanel";
 import history from "../navigation/history";
-import { DspUtilities } from "../../utilities/DspUtilities";
+import { Redirect } from "react-router-dom";
 
 const CredentialIssued: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +46,7 @@ const CredentialIssued: React.FC = () => {
         </WarningCallout>
       );
     }
-    return DspUtilities.redirectToCredInvalid();
+    return <Redirect to="/credential/invalid" />;
   }
 
   // Condition for when user cancels adding the cred to the wallet
@@ -73,7 +73,7 @@ const CredentialIssued: React.FC = () => {
       </div>
     );
   }
-  return DspUtilities.redirectToCredInvalid();
+  return <Redirect to="/credential/invalid" />;
 };
 
 export default CredentialIssued;

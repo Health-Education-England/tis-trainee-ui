@@ -5,7 +5,6 @@ import history from "../navigation/history";
 import {
   issueDspCredential,
   resetDspSlice,
-  updatedDspIsIssuing,
   updatedDspPanelObj,
   updatedDspPanelObjName,
   updatedDspStateId
@@ -32,21 +31,25 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   const handleClick = async () => {
     const stateId = nanoid();
     dispatch(updatedDspStateId(stateId));
-    dispatch(updatedDspIsIssuing(true));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
     await dispatch(issueDspCredential(issueName));
     const dspErrorCode = store.getState().dsp.errorCode;
     const dspErrorText = store.getState().dsp.error;
-    const issueUri = store.getState().dsp.gatewayUri;
-    if (issueUri !== null || dspErrorCode === "401") {
-      history.push("/credential");
-    } else {
+    const dspSuccessCode = store.getState().dsp.successCode;
+
+    if (dspSuccessCode === 201) {
+      history.push("/credential/issue");
+    }
+    if (dspErrorCode === "401") {
+      history.push("/credential/verify");
+    }
+    if (dspErrorCode && dspErrorCode !== "401") {
       dispatch(
         addNotification({
           type: "Error",
-          text: ` - Something went wrong (Error: ${dspErrorText}). If problem persists please contact Support`
+          text: ` - Something went wrong (Reason: ${dspErrorText}). If problem persists please contact Support`
         })
       );
       localStorage.removeItem(stateId);
