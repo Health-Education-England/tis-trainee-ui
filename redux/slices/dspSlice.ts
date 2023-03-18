@@ -30,21 +30,19 @@ export const initialState: IDsp = {
 
 export const issueDspCredential = createAsyncThunk(
   "dsp/issueDspCredential",
-  async (issueName: string, { getState }) => {
+  async (issueArgs: { issueName: string; stateId: string }, { getState }) => {
+    const { issueName, stateId } = issueArgs;
     const state = getState() as RootState;
     const panelData: Placement | ProgrammeMembership | null =
       state.dsp.dspPanelObj;
     const credentialsService = new CredentialsService();
-    const stateId = state.dsp.stateId;
-    if (stateId) {
-      localStorage.setItem(
-        stateId,
-        JSON.stringify({
-          panelData: panelData,
-          panelName: state.dsp.dspPanelObjName
-        })
-      );
-    }
+    localStorage.setItem(
+      stateId,
+      JSON.stringify({
+        panelData: panelData,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
     const response = await credentialsService.issueDspCredential(
       issueName,
       panelData,
@@ -56,13 +54,20 @@ export const issueDspCredential = createAsyncThunk(
 
 export const verifyDspIdentity = createAsyncThunk(
   "dsp/verifyDspIdentity",
-  async (dspSavedStateId: string, { getState }) => {
+  async (stateId: string, { getState }) => {
     const state = getState() as RootState;
     const personalData: PersonalDetails =
       state.traineeProfile.traineeProfileData.personalDetails;
     const credentialsService = new CredentialsService();
+    localStorage.setItem(
+      stateId,
+      JSON.stringify({
+        panelData: state.dsp.dspPanelObj,
+        panelName: state.dsp.dspPanelObjName
+      })
+    );
     const response = await credentialsService.verifyDspIdentity(personalData, {
-      state: dspSavedStateId
+      state: stateId
     });
     return response;
   }

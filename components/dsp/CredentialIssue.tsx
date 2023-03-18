@@ -1,10 +1,10 @@
+import { nanoid } from "nanoid";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useLocation } from "react-router-dom";
 import {
   issueDspCredential,
   updatedDspPanelObj,
-  updatedDspPanelObjName,
-  updatedDspStateId
+  updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import store from "../../redux/store/store";
 import DSPPanel from "./DSPPanel";
@@ -42,7 +42,6 @@ const CredentialIssue: React.FC = () => {
     const savedState = localStorage.getItem(stateParam);
     if (savedState) {
       const currSessionState = JSON.parse(savedState);
-      store.dispatch(updatedDspStateId(stateParam));
       store.dispatch(updatedDspPanelObj(currSessionState.panelData));
       store.dispatch(updatedDspPanelObjName(currSessionState.panelName));
       const storedPanelData = store.getState().dsp.dspPanelObj;
@@ -59,9 +58,10 @@ const CredentialIssue: React.FC = () => {
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
             onClick={async () => {
-              await store.dispatch(
-                issueDspCredential(storedPanelName.slice(0, -1))
-              );
+              localStorage.removeItem(stateParam);
+              const stateId = nanoid();
+              const issueName = storedPanelName.slice(0, -1);
+              await store.dispatch(issueDspCredential({ issueName, stateId }));
               const issueUri = store.getState().dsp.gatewayUri;
               if (issueUri) window.location.href = issueUri;
             }}

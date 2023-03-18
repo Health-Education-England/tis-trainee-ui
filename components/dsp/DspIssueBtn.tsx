@@ -6,13 +6,13 @@ import {
   issueDspCredential,
   resetDspSlice,
   updatedDspPanelObj,
-  updatedDspPanelObjName,
-  updatedDspStateId
+  updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
-import { nanoid } from "nanoid";
 import { addNotification } from "../../redux/slices/notificationsSlice";
+import { nanoid } from "nanoid";
+
 interface IDspIssueBtn {
   panelName: string;
   panelId: string;
@@ -30,11 +30,10 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
 
   const handleClick = async () => {
     const stateId = nanoid();
-    dispatch(updatedDspStateId(stateId));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
-    await dispatch(issueDspCredential(issueName));
+    await dispatch(issueDspCredential({ issueName, stateId }));
     const dspErrorCode = store.getState().dsp.errorCode;
     const dspErrorText = store.getState().dsp.error;
     const dspSuccessCode = store.getState().dsp.successCode;
@@ -43,16 +42,17 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
       history.push("/credential/issue");
     }
     if (dspErrorCode === "401") {
+      localStorage.removeItem(stateId);
       history.push("/credential/verify");
     }
     if (dspErrorCode && dspErrorCode !== "401") {
+      localStorage.removeItem(stateId);
       dispatch(
         addNotification({
           type: "Error",
           text: ` - Something went wrong (Reason: ${dspErrorText}). If problem persists please contact Support`
         })
       );
-      localStorage.removeItem(stateId);
       dispatch(resetDspSlice());
     }
   };

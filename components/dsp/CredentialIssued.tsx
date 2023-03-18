@@ -34,7 +34,6 @@ const CredentialIssued: React.FC = () => {
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
             onClick={() => {
-              localStorage.removeItem("verification");
               localStorage.removeItem(stateParam);
               history.push(`/${storedPanelName}`);
               store.dispatch(resetDspSlice());
@@ -51,7 +50,6 @@ const CredentialIssued: React.FC = () => {
 
   // Condition for when user cancels adding the cred to the wallet
   if (stateParam && errorDescParam) {
-    localStorage.removeItem("verification");
     localStorage.removeItem(stateParam);
     store.dispatch(resetDspSlice());
     return (

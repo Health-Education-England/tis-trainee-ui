@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import React from "react";
 import { Redirect } from "react-router-dom";
@@ -21,10 +22,7 @@ const CredentialVerify: React.FC = () => {
       <DSPPanel profName={storedPanelName} profData={storedPanelData} />
       <Button
         onClick={() => {
-          const savedStateId = store.getState().dsp.stateId;
-          if (savedStateId) {
-            handleVerifyClick(savedStateId);
-          } else return <Redirect to="/credential/invalid" />;
+          handleVerifyClick();
         }}
         data-cy="dspVerifyIdentity"
       >
@@ -36,11 +34,15 @@ const CredentialVerify: React.FC = () => {
 
 export default CredentialVerify;
 
-async function handleVerifyClick(dspSavedStateId: string) {
-  await store.dispatch(verifyDspIdentity(dspSavedStateId));
+async function handleVerifyClick() {
+  const stateId = nanoid();
+  await store.dispatch(verifyDspIdentity(stateId));
   const dspSuccessCode = store.getState().dsp.successCode;
   const verifyUri = store.getState().dsp.gatewayUri;
   if (verifyUri && dspSuccessCode === 201) {
     window.location.href = verifyUri;
-  } else return <Redirect to="/credential/invalid" />;
+  } else {
+    localStorage.removeItem(stateId);
+    return <Redirect to="/credential/invalid" />;
+  }
 }
