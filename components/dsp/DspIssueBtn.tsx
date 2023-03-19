@@ -12,6 +12,7 @@ import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { addNotification } from "../../redux/slices/notificationsSlice";
 import { nanoid } from "nanoid";
+import { useState } from "react";
 
 interface IDspIssueBtn {
   panelName: string;
@@ -24,11 +25,13 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   panelId,
   isPastDate
 }) => {
+  const [isIssuing, setIsIssuing] = useState(false);
   const dispatch = useAppDispatch();
   const panelNameShort =
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
+    setIsIssuing(true);
     const stateId = nanoid();
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
@@ -64,21 +67,23 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     btnTxt = `Past ${panelNameShort} can't be added to your Digital Staff Passport`;
     isBtnDisabled = true;
   } else
-    btnTxt = `Click to add this ${panelNameShort.slice(
-      0,
-      -1
-    )} to your Digital Staff Passport`;
+    btnTxt = isIssuing
+      ? "Please wait..."
+      : `Click to add this ${panelNameShort.slice(
+          0,
+          -1
+        )} to your Digital Staff Passport`;
 
   return (
     <div className={styles.btnDiv}>
       <Button
+        disabled={isIssuing ? true : false}
         className={styles.btn}
         secondary
         onClick={(e: { preventDefault: () => void }) => {
           e.preventDefault();
           handleClick();
         }}
-        disabled={isBtnDisabled}
         data-cy={cyTag}
       >
         {btnTxt}

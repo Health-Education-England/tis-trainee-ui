@@ -1,15 +1,18 @@
 import { nanoid } from "nanoid";
 import { Button, WarningCallout } from "nhsuk-react-components";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Redirect, useLocation } from "react-router-dom";
 import {
   issueDspCredential,
   updatedDspPanelObj,
   updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import store from "../../redux/store/store";
+import Loading from "../common/Loading";
 import DSPPanel from "./DSPPanel";
 
 const CredentialIssue: React.FC = () => {
+  const [isIssuing, setIsIssuing] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const stateParam = queryParams?.get("state");
@@ -17,6 +20,10 @@ const CredentialIssue: React.FC = () => {
   const storedPanelData = store.getState().dsp.dspPanelObj;
   const issueUri = store.getState().dsp.gatewayUri;
   let content = <></>;
+
+  if (isIssuing) {
+    return <Loading />;
+  }
 
   if (issueUri) {
     content = (
@@ -27,7 +34,9 @@ const CredentialIssue: React.FC = () => {
         <p>You are about to issue this credential to your DSP wallet.</p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
+          disabled={isIssuing ? true : false}
           onClick={() => {
+            setIsIssuing(true);
             window.location.href = issueUri;
           }}
           data-cy="dspIssueCred"
@@ -57,7 +66,9 @@ const CredentialIssue: React.FC = () => {
           </p>
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
+            disabled={isIssuing ? true : false}
             onClick={async () => {
+              setIsIssuing(true);
               localStorage.removeItem(stateParam);
               const stateId = nanoid();
               const issueName = storedPanelName.slice(0, -1);

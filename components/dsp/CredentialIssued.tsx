@@ -16,6 +16,7 @@ const CredentialIssued: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const stateParam = queryParams?.get("state");
   const errorDescParam = queryParams?.get("error_description");
+  let content = <></>;
 
   if (stateParam && !errorDescParam) {
     const savedState = localStorage.getItem(stateParam);
@@ -25,7 +26,7 @@ const CredentialIssued: React.FC = () => {
       dispatch(updatedDspPanelObjName(currSessionState.panelName));
       const storedPanelData = store.getState().dsp.dspPanelObj;
       const storedPanelName = store.getState().dsp.dspPanelObjName;
-      return (
+      content = (
         <WarningCallout>
           <WarningCallout.Label visuallyHiddenText={false}>
             Success
@@ -45,14 +46,13 @@ const CredentialIssued: React.FC = () => {
         </WarningCallout>
       );
     }
-    return <Redirect to="/credential/invalid" />;
   }
 
   // Condition for when user cancels adding the cred to the wallet
   if (stateParam && errorDescParam) {
     localStorage.removeItem(stateParam);
     store.dispatch(resetDspSlice());
-    return (
+    content = (
       <div
         className="nhsuk-error-summary"
         aria-labelledby="error-summary-title"
@@ -71,7 +71,7 @@ const CredentialIssued: React.FC = () => {
       </div>
     );
   }
-  return <Redirect to="/credential/invalid" />;
+  return content;
 };
 
 export default CredentialIssued;
