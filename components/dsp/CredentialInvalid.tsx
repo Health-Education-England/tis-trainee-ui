@@ -11,7 +11,7 @@ const CredentialInvalid: React.FC = () => {
     localStorage.removeItem(stateParam);
     content = (
       <>
-        <p>{`Your ${reasonParam.replaceAll("_", " ")}.`}</p>
+        <p>{`Reason: ${reasonParam.replaceAll("_", " ")}.`}</p>
         <p>{errText}</p>
       </>
     );

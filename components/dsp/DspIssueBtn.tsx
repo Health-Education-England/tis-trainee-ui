@@ -5,15 +5,15 @@ import history from "../navigation/history";
 import {
   issueDspCredential,
   resetDspSlice,
-  updatedDspIsIssuing,
   updatedDspPanelObj,
-  updatedDspPanelObjName,
-  updatedDspStateId
+  updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
-import { nanoid } from "nanoid";
 import { addNotification } from "../../redux/slices/notificationsSlice";
+import { nanoid } from "nanoid";
+import { useState } from "react";
+
 interface IDspIssueBtn {
   panelName: string;
   panelId: string;
@@ -25,31 +25,37 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   panelId,
   isPastDate
 }) => {
+  const [isIssuing, setIsIssuing] = useState(false);
   const dispatch = useAppDispatch();
   const panelNameShort =
     panelName === TraineeProfileName.Programmes ? "programmes" : "placements";
 
   const handleClick = async () => {
+    setIsIssuing(true);
     const stateId = nanoid();
-    dispatch(updatedDspStateId(stateId));
-    dispatch(updatedDspIsIssuing(true));
     dispatch(updatedDspPanelObjName(panelNameShort));
     chooseProfileArr(panelName, panelId);
     const issueName = panelNameShort.slice(0, -1);
-    await dispatch(issueDspCredential(issueName));
+    await dispatch(issueDspCredential({ issueName, stateId }));
     const dspErrorCode = store.getState().dsp.errorCode;
     const dspErrorText = store.getState().dsp.error;
-    const issueUri = store.getState().dsp.gatewayUri;
-    if (issueUri !== null || dspErrorCode === "401") {
-      history.push("/credential");
-    } else {
+    const dspSuccessCode = store.getState().dsp.successCode;
+
+    if (dspSuccessCode === 201) {
+      history.push("/credential/issue");
+    }
+    if (dspErrorCode === "401") {
+      localStorage.removeItem(stateId);
+      history.push("/credential/verify");
+    }
+    if (dspErrorCode && dspErrorCode !== "401") {
+      localStorage.removeItem(stateId);
       dispatch(
         addNotification({
           type: "Error",
-          text: ` - Something went wrong (Error: ${dspErrorText}). If problem persists please contact Support`
+          text: ` - Something went wrong (Reason: ${dspErrorText}). If problem persists please contact Support`
         })
       );
-      localStorage.removeItem(stateId);
       dispatch(resetDspSlice());
     }
   };
@@ -61,21 +67,23 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     btnTxt = `Past ${panelNameShort} can't be added to your Digital Staff Passport`;
     isBtnDisabled = true;
   } else
-    btnTxt = `Click to add this ${panelNameShort.slice(
-      0,
-      -1
-    )} to your Digital Staff Passport`;
+    btnTxt = isIssuing
+      ? "Please wait..."
+      : `Click to add this ${panelNameShort.slice(
+          0,
+          -1
+        )} to your Digital Staff Passport`;
 
   return (
     <div className={styles.btnDiv}>
       <Button
+        disabled={isIssuing ? true : false}
         className={styles.btn}
         secondary
         onClick={(e: { preventDefault: () => void }) => {
           e.preventDefault();
           handleClick();
         }}
-        disabled={isBtnDisabled}
         data-cy={cyTag}
       >
         {btnTxt}

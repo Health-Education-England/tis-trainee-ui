@@ -14,6 +14,7 @@ import {
 } from "../common/PanelsCreator";
 import { TraineeProfileName } from "../../models/TraineeProfile";
 import { PANEL_KEYS } from "../../utilities/Constants";
+import Loading from "../common/Loading";
 
 const Programmes = () => {
   const dispatch = useAppDispatch();
@@ -23,9 +24,14 @@ const Programmes = () => {
   }, [dispatch]);
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  const dspStatus = useAppSelector(state => state.dsp.status);
 
   if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
+  }
+
+  if (dspStatus === "loading") {
+    return <Loading />;
   }
 
   return <ProgrammesPanels />;

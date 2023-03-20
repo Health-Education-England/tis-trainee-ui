@@ -9,13 +9,14 @@ import {
 import store from "../../redux/store/store";
 import DSPPanel from "./DSPPanel";
 import history from "../navigation/history";
-import { DspUtilities } from "../../utilities/DspUtilities";
+import { Redirect } from "react-router-dom";
 
 const CredentialIssued: React.FC = () => {
   const dispatch = useAppDispatch();
   const queryParams = new URLSearchParams(location.search);
   const stateParam = queryParams?.get("state");
   const errorDescParam = queryParams?.get("error_description");
+  let content = <></>;
 
   if (stateParam && !errorDescParam) {
     const savedState = localStorage.getItem(stateParam);
@@ -25,7 +26,7 @@ const CredentialIssued: React.FC = () => {
       dispatch(updatedDspPanelObjName(currSessionState.panelName));
       const storedPanelData = store.getState().dsp.dspPanelObj;
       const storedPanelName = store.getState().dsp.dspPanelObjName;
-      return (
+      content = (
         <WarningCallout>
           <WarningCallout.Label visuallyHiddenText={false}>
             Success
@@ -34,7 +35,6 @@ const CredentialIssued: React.FC = () => {
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
             onClick={() => {
-              localStorage.removeItem("verification");
               localStorage.removeItem(stateParam);
               history.push(`/${storedPanelName}`);
               store.dispatch(resetDspSlice());
@@ -46,15 +46,13 @@ const CredentialIssued: React.FC = () => {
         </WarningCallout>
       );
     }
-    return DspUtilities.redirectToCredInvalid();
   }
 
   // Condition for when user cancels adding the cred to the wallet
   if (stateParam && errorDescParam) {
-    localStorage.removeItem("verification");
     localStorage.removeItem(stateParam);
     store.dispatch(resetDspSlice());
-    return (
+    content = (
       <div
         className="nhsuk-error-summary"
         aria-labelledby="error-summary-title"
@@ -73,7 +71,7 @@ const CredentialIssued: React.FC = () => {
       </div>
     );
   }
-  return DspUtilities.redirectToCredInvalid();
+  return content;
 };
 
 export default CredentialIssued;

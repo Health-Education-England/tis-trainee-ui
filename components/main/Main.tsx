@@ -93,7 +93,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
                 exact
                 path="/credential-verified"
                 to={{
-                  pathname: "/credential/verified",
+                  pathname: "/credential/issue",
                   search: location.search
                 }}
               />
