@@ -34,7 +34,7 @@ const CredentialVerify: React.FC = () => {
           }}
           data-cy="dspVerifyIdentity"
         >
-          Click to add credential to your wallet
+          Click to verify your identity
         </Button>
       </WarningCallout>
     );
