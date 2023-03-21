@@ -86,6 +86,9 @@ const dspSlice = createSlice({
     updatedDspPanelObjName(state, action: PayloadAction<string>) {
       return { ...state, dspPanelObjName: action.payload };
     },
+    updatedDspGatewayUri(state, action: PayloadAction<string>) {
+      return { ...state, gatewayUri: action.payload };
+    },
     resetDspSlice() {
       return initialState;
     }
@@ -127,5 +130,6 @@ export const {
   updatedDspStateId,
   updatedDspPanelObj,
   updatedDspPanelObjName,
+  updatedDspGatewayUri,
   resetDspSlice
 } = dspSlice.actions;
