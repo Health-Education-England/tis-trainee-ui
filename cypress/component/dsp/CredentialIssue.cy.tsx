@@ -8,6 +8,7 @@ import {
   updatedDspPanelObj,
   updatedDspPanelObjName
 } from "../../../redux/slices/dspSlice";
+import { mount } from "cypress/react18";
 
 const panelData = {
   tisId: "321",
@@ -21,20 +22,20 @@ const panelData = {
 };
 
 describe("CredentialIssue", () => {
-  it("should mount the Issue prompt comp when gatewayUri but no dsp state in localStorage", () => {
+  it("should mount the Issue prompt comp when no dsp state in localStorage (i.e. no verified ID)", () => {
     const MockedCredentialIssueJustUri = () => {
       store.dispatch(updatedDspPanelObjName("programmes"));
       store.dispatch(updatedDspPanelObj(panelData));
-      store.dispatch(updatedDspGatewayUri("/"));
-      return <CredentialIssue />;
+      store.dispatch(updatedDspGatewayUri("https://evertonfc.com"));
+      return (
+        <Provider store={store}>
+          <Router history={history}>
+            <CredentialIssue />
+          </Router>
+        </Provider>
+      );
     };
-    cy.mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedCredentialIssueJustUri />
-        </Router>
-      </Provider>
-    );
+    mount(<MockedCredentialIssueJustUri />);
     cy.get('[data-cy="dspIssueWarningLabel"]')
       .should("exist")
       .should("have.text", "Important");
@@ -55,35 +56,52 @@ describe("CredentialIssue", () => {
       .should("have.text", "01/01/2020");
     cy.get('[data-cy="endDateVal"]').should("have.text", "01/01/2028");
     cy.get('[data-cy="dspIssueCredBtn"]').should("exist");
-    // would like to test for loading state etc. onClick but can't work out a way to do it at the moment. Might try RTL.
   });
 });
 
-// // TODO Can't set the correct URL for this test. Might try RTL.
-// describe("Credential - verify Id before issuing credential", () => {
-//   it("should show the verify Id prompt when a state param but no gateway uri", () => {
-//     const MockedCredentialIssueJustStateParam = () => {
-//       store.dispatch(updatedDspPanelObjName("programmes"));
-//       store.dispatch(updatedDspPanelObj(panelData));
-//       localStorage.setItem(
-//         "eMdRu7Ir8kRNOrs8QxKSP",
-//         JSON.stringify({
-//           panelData: store.getState().dsp.dspPanelObj,
-//           panelName: store.getState().dsp.dspPanelObjName
-//         })
-//       );
-//       return (
-//         <Provider store={store}>
-//           <Router history={history}>
-//             <CredentialIssue />
-//           </Router>
-//         </Provider>
-//       );
-//     };
-//     cy.mount(<MockedCredentialIssueJustStateParam />, {
-//       routerProps: {
-//         initialEntries: ["/credential/issue?state=eMdRu7Ir8kRNOrs8QxKSP"]
-//       }
-//     });
-//   });
-// });
+describe("CredentialIssue", () => {
+  it("should mount the Add credential prompt comp when state param match (i.e. a verified ID)", () => {
+    const MockedCredentialIssueJustUri = () => {
+      store.dispatch(updatedDspPanelObjName("programmes"));
+      store.dispatch(updatedDspPanelObj(panelData));
+      store.dispatch(updatedDspGatewayUri(""));
+      localStorage.setItem(
+        "eMdRu7Ir8kRNOrs8QxKSP",
+        JSON.stringify({
+          panelData: store.getState().dsp.dspPanelObj,
+          panelName: store.getState().dsp.dspPanelObjName
+        })
+      );
+      return (
+        <Provider store={store}>
+          <CredentialIssue />
+        </Provider>
+      );
+    };
+    cy.mountRouterComponent(
+      <MockedCredentialIssueJustUri />,
+      "?state=eMdRu7Ir8kRNOrs8QxKSP"
+    );
+    cy.get('[data-cy="dspVerifiedWarningLabel"]')
+      .should("exist")
+      .should("have.text", "Success");
+    cy.get('[data-cy="dspVerifiedWarningText"]')
+      .should("exist")
+      .should(
+        "have.text",
+        "Your ID has been verified and you can now add this credential to your DSP wallet."
+      );
+    cy.get('[data-cy="dspPanelHeading"]')
+      .should("exist")
+      .should("have.text", "Programme credential");
+    cy.get('[data-cy="programmeNameVal"]')
+      .should("exist")
+      .should("have.text", "General Practice");
+    cy.get('[data-cy="startDateVal"]')
+      .should("exist")
+      .should("have.text", "01/01/2020");
+    cy.get('[data-cy="endDateVal"]').should("have.text", "01/01/2028");
+    cy.get('[data-cy="dspIssueCredBtn"]').should("exist");
+  });
+});
+// TODO: Would like to test for loading state onClick but can't work out a way to do it at the moment. Might try RTL.

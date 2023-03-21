@@ -77,7 +77,7 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
   return (
     <div className={styles.btnDiv}>
       <Button
-        disabled={isIssuing ? true : false}
+        disabled={isIssuing || isPastDate ? true : false}
         className={styles.btn}
         secondary
         onClick={(e: { preventDefault: () => void }) => {

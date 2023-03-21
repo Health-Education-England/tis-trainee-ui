@@ -10,9 +10,9 @@ declare global {
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
        */
-      mount(
+      mountRouterComponent(
         component: React.ReactNode,
-        options?: MountOptions & { routerProps?: MemoryRouterProps }
+        route: string
       ): Cypress.Chainable<MountReturn>;
       checkFormRAValues(
         dateAttained: string,

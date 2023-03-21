@@ -19,10 +19,13 @@ const CredentialVerify: React.FC = () => {
   if (storedPanelName && storedPanelData) {
     content = (
       <WarningCallout>
-        <WarningCallout.Label visuallyHiddenText={false}>
+        <WarningCallout.Label
+          visuallyHiddenText={false}
+          data-cy="dspVerifyWarningLabel"
+        >
           Important
         </WarningCallout.Label>
-        <p>
+        <p data-cy="dspVerifyWarningText">
           Before you can issue this credential to your DSP wallet you must
           verify your identity.
         </p>
@@ -32,7 +35,7 @@ const CredentialVerify: React.FC = () => {
             setIsIssuing(true);
             handleVerifyClick();
           }}
-          data-cy="dspVerifyIdentity"
+          data-cy="dspVerifyIdentityBtn"
         >
           Click to verify your identity
         </Button>

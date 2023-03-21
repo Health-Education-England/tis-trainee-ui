@@ -62,10 +62,13 @@ const CredentialIssue: React.FC = () => {
       const storedPanelName = store.getState().dsp.dspPanelObjName;
       content = (
         <WarningCallout>
-          <WarningCallout.Label visuallyHiddenText={false}>
+          <WarningCallout.Label
+            visuallyHiddenText={false}
+            data-cy="dspVerifiedWarningLabel"
+          >
             Success
           </WarningCallout.Label>
-          <p>
+          <p data-cy="dspVerifiedWarningText">
             Your ID has been verified and you can now add this credential to
             your DSP wallet.
           </p>
@@ -81,7 +84,7 @@ const CredentialIssue: React.FC = () => {
               const issueUri = store.getState().dsp.gatewayUri;
               if (issueUri) window.location.href = issueUri;
             }}
-            data-cy="dspIssueCred"
+            data-cy="dspIssueCredBtn"
           >
             Click to add credential to your wallet
           </Button>
