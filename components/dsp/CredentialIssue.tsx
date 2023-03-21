@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useState } from "react";
-import { Redirect, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   issueDspCredential,
   updatedDspPanelObj,
@@ -28,10 +28,15 @@ const CredentialIssue: React.FC = () => {
   if (issueUri) {
     content = (
       <WarningCallout>
-        <WarningCallout.Label visuallyHiddenText={false}>
+        <WarningCallout.Label
+          visuallyHiddenText={false}
+          data-cy="dspIssueWarningLabel"
+        >
           Important
         </WarningCallout.Label>
-        <p>You are about to issue this credential to your DSP wallet.</p>
+        <p data-cy="dspIssueWarningText">
+          You are about to issue this credential to your DSP wallet.
+        </p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
           disabled={isIssuing ? true : false}
@@ -39,7 +44,7 @@ const CredentialIssue: React.FC = () => {
             setIsIssuing(true);
             window.location.href = issueUri;
           }}
-          data-cy="dspIssueCred"
+          data-cy="dspIssueCredBtn"
         >
           Click to add credential to your wallet
         </Button>
@@ -57,10 +62,13 @@ const CredentialIssue: React.FC = () => {
       const storedPanelName = store.getState().dsp.dspPanelObjName;
       content = (
         <WarningCallout>
-          <WarningCallout.Label visuallyHiddenText={false}>
+          <WarningCallout.Label
+            visuallyHiddenText={false}
+            data-cy="dspVerifiedWarningLabel"
+          >
             Success
           </WarningCallout.Label>
-          <p>
+          <p data-cy="dspVerifiedWarningText">
             Your ID has been verified and you can now add this credential to
             your DSP wallet.
           </p>
@@ -76,7 +84,7 @@ const CredentialIssue: React.FC = () => {
               const issueUri = store.getState().dsp.gatewayUri;
               if (issueUri) window.location.href = issueUri;
             }}
-            data-cy="dspIssueCred"
+            data-cy="dspIssueCredBtn"
           >
             Click to add credential to your wallet
           </Button>

@@ -26,17 +26,17 @@ export default function DSPPanel({ profName, profData }: DSPPanelProps) {
 
   return filteredProf ? (
     <Card className={style.panelDiv}>
-      <Card.Heading>{`${panelHeader} credential`}</Card.Heading>
+      <Card.Heading data-cy="dspPanelHeading">{`${panelHeader} credential`}</Card.Heading>
       <SummaryList>
         {Object.keys(filteredProf).map((panelProp, index) => {
           const propKey =
             panelHeader === "Programme" ? prKeys[index] : plKeys[index];
           return (
             <SummaryList.Row key={index}>
-              <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
+              <SummaryList.Key data-cy={`${panelProp}Key`}>
                 {PANEL_KEYS[panelProp]}
               </SummaryList.Key>
-              <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
+              <SummaryList.Value data-cy={`${panelProp}Val`}>
                 {displayListVal(profData[propKey], propKey)}
               </SummaryList.Value>
             </SummaryList.Row>
