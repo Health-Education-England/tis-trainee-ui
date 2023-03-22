@@ -5,6 +5,7 @@ import {
   programmePanelTemplate
 } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
+import store from "../../redux/store/store";
 import { PanelKeys } from "../../utilities/Constants";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
@@ -25,6 +26,10 @@ export function PanelsCreator({
   panelsTitle,
   panelKeys
 }: PanelsCreatorProps) {
+  const cognitoGroups = store.getState().user.cognitoGroups;
+  const inDspBetaConsultantsGp: boolean = cognitoGroups.includes(
+    "dsp-beta-consultants"
+  );
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
@@ -51,11 +56,14 @@ export function PanelsCreator({
                     </SummaryList.Row>
                   ))}
                 </SummaryList>
-                <DspIssueBtn
-                  panelName={panelsName}
-                  panelId={panel.tisId}
-                  isPastDate={DateUtilities.IsPastDate(panel.endDate)}
-                />
+                {inDspBetaConsultantsGp ? (
+                  <DspIssueBtn
+                    panelName={panelsName}
+                    panelId={panel.tisId}
+                    isPastDate={DateUtilities.IsPastDate(panel.endDate)}
+                    data-cy={`dspIssueBtn-${panelsName}-${panel.tisId}`}
+                  />
+                ) : null}
               </Card>
             </Card.GroupItem>
           );

@@ -15,7 +15,10 @@ import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
 import history from "../navigation/history";
 import { ConfirmProvider } from "material-ui-confirm";
-import { getPreferredMfa } from "../../redux/slices/userSlice";
+import {
+  getCognitoGroups,
+  getPreferredMfa
+} from "../../redux/slices/userSlice";
 import Home from "../home/Home";
 import Placements from "../placements/Placements";
 import Programmes from "../programmes/Programmes";
@@ -36,6 +39,10 @@ export const Main = ({ signOut, appVersion }: IMain) => {
 
   useEffect(() => {
     dispatch(getPreferredMfa());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getCognitoGroups());
   }, [dispatch]);
 
   useEffect(() => {
