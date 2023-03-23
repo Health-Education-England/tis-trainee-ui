@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { Router } from "react-router-dom";
+import { MemoryRouter, Router } from "react-router-dom";
 import history from "../../../components/navigation/history";
 import CredentialIssue from "../../../components/dsp/CredentialIssue";
 import store from "../../../redux/store/store";
@@ -9,6 +9,7 @@ import {
   updatedDspPanelObjName
 } from "../../../redux/slices/dspSlice";
 import { mount } from "cypress/react18";
+import RenderSearchParams from "./RenderSearchParams";
 
 const panelData = {
   tisId: "321",
@@ -74,14 +75,14 @@ describe("CredentialIssue", () => {
       );
       return (
         <Provider store={store}>
-          <CredentialIssue />
+          <MemoryRouter initialEntries={["?state=eMdRu7Ir8kRNOrs8QxKSP"]}>
+            <RenderSearchParams />
+            <CredentialIssue />
+          </MemoryRouter>
         </Provider>
       );
     };
-    cy.mountRouterComponent(
-      <MockedCredentialIssueJustUri />,
-      "?state=eMdRu7Ir8kRNOrs8QxKSP"
-    );
+    mount(<MockedCredentialIssueJustUri />);
     cy.get('[data-cy="dspVerifiedWarningLabel"]')
       .should("exist")
       .should("have.text", "Success");
