@@ -199,6 +199,16 @@ describe("Programmes - dsp membership", () => {
     );
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
   });
+  it("should not show the dsp issue btn if member of no group ", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Programmes />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
+  });
   it("should show the dsp issue btn is member of the dsp beta group", () => {
     const MockedProgrammesDspBetaGp = () => {
       store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));

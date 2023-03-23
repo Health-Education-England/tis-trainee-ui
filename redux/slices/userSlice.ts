@@ -11,7 +11,7 @@ interface IUser {
   totpCode: string;
   preferredMfa: any;
   username: string;
-  cognitoGroups: string[];
+  cognitoGroups: string[] | undefined;
 }
 
 const initialState: IUser = {
@@ -23,7 +23,7 @@ const initialState: IUser = {
   totpCode: "",
   preferredMfa: "NOMFA",
   username: "",
-  cognitoGroups: []
+  cognitoGroups: undefined
 };
 
 export const getCognitoGroups = createAsyncThunk(

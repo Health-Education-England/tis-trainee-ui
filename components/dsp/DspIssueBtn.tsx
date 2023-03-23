@@ -62,10 +62,8 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
 
   const cyTag = `dspBtn${panelName}${panelId}`;
   let btnTxt: string = "";
-  let isBtnDisabled: boolean = false;
   if (isPastDate) {
     btnTxt = `Past ${panelNameShort} can't be added to your Digital Staff Passport`;
-    isBtnDisabled = true;
   } else
     btnTxt = isIssuing
       ? "Please wait..."
