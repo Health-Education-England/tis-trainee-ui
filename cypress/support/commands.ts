@@ -1,32 +1,8 @@
 /// <reference types="cypress" />
 
-import { MemoryRouter } from "react-router-dom";
 import day from "dayjs";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../utilities/BooleanUtilities";
-
-const RenderSearchParams = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const paramsObj = Object.fromEntries(searchParams.entries());
-  return (
-    <div id="search-params">
-      {Object.keys(paramsObj).map(key => (
-        <span id={`${key}:${paramsObj[key]}`} />
-      ))}
-    </div>
-  );
-};
-
-Cypress.Commands.add("mountRouterComponent", (component, route) => {
-  const wrapped = (
-    <MemoryRouter initialEntries={[route]}>
-      <RenderSearchParams />
-      {component}
-    </MemoryRouter>
-  );
-
-  return cy.mount(wrapped);
-});
 
 Cypress.Commands.add("checkForSuccessNotif", (successMsg: string) => {
   cy.get(".notification").should(
