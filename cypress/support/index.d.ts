@@ -1,8 +1,5 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-import { MountOptions, MountReturn } from "cypress/react18";
-import { MemoryRouterProps } from "react-router-dom";
-
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -10,10 +7,6 @@ declare global {
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
        */
-      mountRouterComponent(
-        component: React.ReactNode,
-        route: string
-      ): Cypress.Chainable<MountReturn>;
       checkFormRAValues(
         dateAttained: string,
         completionDate: string,

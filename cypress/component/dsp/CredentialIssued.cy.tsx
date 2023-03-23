@@ -1,10 +1,13 @@
+import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
 import CredentialIssued from "../../../components/dsp/CredentialIssued";
 import {
   updatedDspPanelObj,
   updatedDspPanelObjName
 } from "../../../redux/slices/dspSlice";
 import store from "../../../redux/store/store";
+import RenderSearchParams from "./RenderSearchParams";
 
 const panelData = {
   tisId: "321",
@@ -31,14 +34,14 @@ describe("CredentialIssued success", () => {
       );
       return (
         <Provider store={store}>
-          <CredentialIssued />
+          <MemoryRouter initialEntries={["?state=eMdRu7Ir8kRNOrs8QxKSP"]}>
+            <RenderSearchParams />
+            <CredentialIssued />
+          </MemoryRouter>
         </Provider>
       );
     };
-    cy.mountRouterComponent(
-      <MockedCredentialIssuedWithStateParam />,
-      "?state=eMdRu7Ir8kRNOrs8QxKSP"
-    );
+    mount(<MockedCredentialIssuedWithStateParam />);
     cy.get('[data-cy="dspIssuedSuccessWarningLabel"]')
       .should("exist")
       .should("have.text", "Success");
@@ -61,17 +64,19 @@ describe("CredentialIssued success", () => {
 
 describe("CredentialIssued user cancels", () => {
   it("should show the 'user cancelled issuance' msg when error_description param is user_cancelled.", () => {
-    const CredIssued = () => {
-      return (
-        <Provider store={store}>
+    mount(
+      <Provider store={store}>
+        <MemoryRouter
+          initialEntries={[
+            "?state=eMdRu7Ir8kRNOrs8QxKSP&error_description=user%20cancelled"
+          ]}
+        >
+          <RenderSearchParams />
           <CredentialIssued />
-        </Provider>
-      );
-    };
-    cy.mountRouterComponent(
-      <CredIssued />,
-      "?state=eMdRu7Ir8kRNOrs8QxKSP&error_description=user%20cancelled"
+        </MemoryRouter>
+      </Provider>
     );
+
     cy.get('[data-cy="dspIssuedErrorSummaryTitle"]')
       .should("exist")
       .should("have.text", "Something went wrong");
