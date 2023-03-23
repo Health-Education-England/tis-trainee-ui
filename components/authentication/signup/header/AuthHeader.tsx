@@ -10,7 +10,7 @@ const AuthHeader = (): JSX.Element => {
       </Flex>
       <Flex className={styles.authTitle}>
         <View>
-          <h1 data-cy="authTitle">TIS Self-Service (Alpha)</h1>
+          <h1 data-cy="authTitle">TIS Self-Service</h1>
         </View>
       </Flex>
       <Flex>

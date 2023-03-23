@@ -1,7 +1,6 @@
 import { Provider } from "react-redux";
 import CredentialIssued from "../../../components/dsp/CredentialIssued";
 import {
-  updatedDspGatewayUri,
   updatedDspPanelObj,
   updatedDspPanelObjName
 } from "../../../redux/slices/dspSlice";
