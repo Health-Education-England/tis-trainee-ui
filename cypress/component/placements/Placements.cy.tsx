@@ -11,7 +11,10 @@ import {
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import {
+  updatedCognitoGroups,
+  updatedPreferredMfa
+} from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
@@ -131,5 +134,58 @@ describe("Placements with MFA set up", () => {
       </Provider>
     );
     cy.get("[data-cy=nonTemplatedField0Val]").should("not.exist");
+  });
+});
+
+describe("Placements - dsp membership", () => {
+  beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: [],
+        placements: mockPlacements
+      })
+    );
+    store.dispatch(updatedTraineeProfileStatus("succeeded"));
+  });
+  it("should not show the dsp issue btn if member of no group ", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Placements />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnplacements316"]').should("not.exist");
+  });
+  it("should show the dsp issue btn is member of the dsp beta group", () => {
+    const MockedPlacementsDspBetaGp = () => {
+      store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsDspBetaGp />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnplacements316"]').should("exist");
+  });
+  it("should not show the dsp issue btn if member of another test gp ", () => {
+    const MockedPlacementsOtherGp = () => {
+      store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsOtherGp />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnplacements316"]').should("not.exist");
   });
 });

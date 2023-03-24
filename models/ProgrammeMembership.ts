@@ -1,6 +1,8 @@
+import { Signature } from "./Dsp";
 import { Status } from "./Status";
 
 export interface ProgrammeMembership {
+  tisId?: string;
   programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
@@ -11,6 +13,7 @@ export interface ProgrammeMembership {
   status?: Status;
   programmeCompletionDate?: Date;
   curricula: Curriculum[];
+  signature?: Signature;
 }
 
 export interface Curriculum {
@@ -22,6 +25,7 @@ export interface Curriculum {
 }
 
 export const programmePanelTemplate: ProgrammeMembership = {
+  tisId: "",
   programmeName: "",
   programmeNumber: "",
   startDate: "",

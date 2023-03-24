@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 import dayjs from "dayjs";
-
 declare global {
   namespace Cypress {
     interface Chainable {

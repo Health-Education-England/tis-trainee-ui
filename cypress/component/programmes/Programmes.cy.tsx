@@ -12,7 +12,10 @@ import {
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import {
+  updatedCognitoGroups,
+  updatedPreferredMfa
+} from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
@@ -180,5 +183,58 @@ describe("Programmes with MFA set up", () => {
       </Provider>
     );
     cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
+  });
+});
+
+describe("Programmes - dsp membership", () => {
+  beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammeMemberships,
+        placements: []
+      })
+    );
+    store.dispatch(updatedTraineeProfileStatus("succeeded"));
+  });
+  it("should not show the dsp issue btn if member of no group ", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Programmes />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
+  });
+  it("should show the dsp issue btn is member of the dsp beta group", () => {
+    const MockedProgrammesDspBetaGp = () => {
+      store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
+      return <Programmes />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammesDspBetaGp />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("exist");
+  });
+  it("should not show the dsp issue btn if member of another test gp ", () => {
+    const MockedProgrammesOtherGp = () => {
+      store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
+      return <Programmes />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammesOtherGp />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
   });
 });

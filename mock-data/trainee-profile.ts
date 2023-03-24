@@ -37,7 +37,12 @@ export const mockPersonalDetails: PersonalDetails = {
   prevRevalBody: "",
   prevRevalBodyOther: "",
   prevRevalDate: new Date("2021-12-31"),
-  currRevalDate: new Date("2021-12-31")
+  currRevalDate: new Date("2021-12-31"),
+  signature: {
+    signedAt: new Date(-8640000000000000),
+    validUntil: new Date(8640000000000000),
+    hmac: ""
+  }
 };
 
 export const mockProgrammeMemberships: ProgrammeMembership[] = [
@@ -45,7 +50,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     startDate: new Date("2020-01-01"),
     endDate: new Date("2022-01-01"),
     programmeCompletionDate: new Date("2019-12-31"),
-    programmeTisId: "1",
+    tisId: "1",
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
     managingDeanery: "Health Education England East of England",
@@ -79,7 +84,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     startDate: new Date("2022-01-01"),
     endDate: new Date("2024-01-01"),
     programmeCompletionDate: new Date("2021-12-31"),
-    programmeTisId: "2",
+    tisId: "2",
     programmeName: "General Practice",
     programmeNumber: "EOE8950",
     managingDeanery: "Health Education England East of England",
@@ -115,7 +120,7 @@ export const mockProgrammeMembershipNonTemplatedField = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),
   programmeCompletionDate: new Date("2019-12-31"),
-  programmeTisId: "1",
+  tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   managingDeanery: "Health Education England East of England",
@@ -129,7 +134,7 @@ export const mockProgrammeMembershipNoCurricula = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),
   programmeCompletionDate: new Date("2019-12-31"),
-  programmeTisId: "1",
+  tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   managingDeanery: "Health Education England East of England",
@@ -142,7 +147,7 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),
   programmeCompletionDate: new Date("2019-12-31"),
-  programmeTisId: "1",
+  tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   managingDeanery: "Health Education England East of England",
@@ -177,7 +182,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),
   programmeCompletionDate: new Date("2019-12-31"),
-  programmeTisId: "1",
+  tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   managingDeanery: "Health Education England East of England",
@@ -224,7 +229,7 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.5"
   },
   {
-    endDate: new Date("2021-12-31"),
+    endDate: new Date("2029-12-31"),
     grade: "ST2",
     tisId: "316",
     placementType: "Long-term sick",

@@ -101,7 +101,7 @@ export type PanelKeys = {
   curricula: string;
 };
 
-export const PANEL_KEYS: PanelKeys = {
+export const PANEL_KEYS: PanelKeys | any = {
   placements: "Placements",
   programmeMemberships: "Programmes",
   site: "Site",

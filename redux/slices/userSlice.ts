@@ -11,6 +11,7 @@ interface IUser {
   totpCode: string;
   preferredMfa: any;
   username: string;
+  cognitoGroups: string[] | undefined;
 }
 
 const initialState: IUser = {
@@ -21,8 +22,20 @@ const initialState: IUser = {
   error: "",
   totpCode: "",
   preferredMfa: "NOMFA",
-  username: ""
+  username: "",
+  cognitoGroups: undefined
 };
+
+export const getCognitoGroups = createAsyncThunk(
+  "user/getCognitoGroups",
+  async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const cogGroups = await user.signInUserSession.accessToken.payload[
+      "cognito:groups"
+    ];
+    return cogGroups;
+  }
+);
 
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
@@ -122,10 +135,21 @@ const userSlice = createSlice({
     },
     updatedPreferredMfa(state, action: PayloadAction<string>) {
       return { ...state, preferredMfa: action.payload };
+    },
+    updatedCognitoGroups(state, action: PayloadAction<Array<string>>) {
+      return { ...state, cognitoGroups: action.payload };
     }
   },
   extraReducers(builder): void {
     builder
+      .addCase(getCognitoGroups.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.cognitoGroups = action.payload;
+      })
+      .addCase(getCognitoGroups.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.preferredMfa = action.payload;
@@ -202,5 +226,6 @@ export const {
   incrementTotpSection,
   updatedTotpSection,
   updatedSmsSection,
-  updatedPreferredMfa
+  updatedPreferredMfa,
+  updatedCognitoGroups
 } = userSlice.actions;
