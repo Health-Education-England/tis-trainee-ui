@@ -46,7 +46,7 @@ jobs:
               break
             fi
           done
-          echo ::set-output name=do-analysis::$do_analysis
+          echo "do-analysis=$do_analysis" >> $GITHUB_OUTPUT
 
       - name: Notify skipped analysis
         if: steps.check-files.outputs.do-analysis == 'false'
