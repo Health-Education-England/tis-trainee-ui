@@ -1,15 +1,14 @@
-import { nanoid } from "nanoid";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
-  issueDspCredential,
   updatedDspPanelObj,
   updatedDspPanelObjName
 } from "../../redux/slices/dspSlice";
 import store from "../../redux/store/store";
 import Loading from "../common/Loading";
 import DSPPanel from "./DSPPanel";
+import { handleIssueCredential } from "../../utilities/DspUtilities";
 
 const CredentialIssue: React.FC = () => {
   const [isIssuing, setIsIssuing] = useState(false);
@@ -77,12 +76,11 @@ const CredentialIssue: React.FC = () => {
             disabled={isIssuing ? true : false}
             onClick={async () => {
               setIsIssuing(true);
-              localStorage.removeItem(stateParam);
-              const stateId = nanoid();
-              const issueName = storedPanelName.slice(0, -1);
-              await store.dispatch(issueDspCredential({ issueName, stateId }));
-              const issueUri = store.getState().dsp.gatewayUri;
-              if (issueUri) window.location.href = issueUri;
+              const newIssueUri = await handleIssueCredential(
+                stateParam,
+                storedPanelName
+              );
+              if (newIssueUri) window.location.href = newIssueUri;
             }}
             data-cy="dspIssueCredBtn"
           >

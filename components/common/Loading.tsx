@@ -7,6 +7,7 @@ export default function Loading() {
       data-cy="loading"
       type={"bars"}
       color={"black"}
+      aria-label="loading-bars"
     ></ReactLoading>
   );
 }

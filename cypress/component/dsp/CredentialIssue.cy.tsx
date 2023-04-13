@@ -105,4 +105,3 @@ describe("CredentialIssue", () => {
     cy.get('[data-cy="dspIssueCredBtn"]').should("exist");
   });
 });
-// TODO: Would like to test for loading state onClick but can't work out a way to do it at the moment. Might try RTL.
