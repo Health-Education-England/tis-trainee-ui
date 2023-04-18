@@ -1,9 +1,11 @@
 import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
 
 export function getStatusText(startDate: string | null) {
-  return !startDate
-    ? "Unknown status"
-    : new Date(startDate) < COJ_EPOCH
+  if (!startDate) {
+    return "Unknown status";
+  }
+
+  return new Date(startDate) < COJ_EPOCH
     ? "Submitted directly to Local Office"
     : "Not signed";
 }

@@ -60,7 +60,7 @@ export const CHECK_WHOLE_TIME_EQUIVALENT_REGEX =
 
 export const CHECK_POSTCODE_REGEX = /[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}/i;
 
-export const GOLD_GUIDE_VERSION_REGEX = /GG([0-9]+)/i;
+export const GOLD_GUIDE_VERSION_REGEX = /^GG(\d+)$/;
 
 export const VALUE_NOT_GIVEN = "Value not given";
 

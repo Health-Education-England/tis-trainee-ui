@@ -42,6 +42,9 @@ describe("CojUtilities", () => {
     });
 
     it("should return unknown when incorrect format", () => {
+      expect(getVersionText("prefixGG1")).toEqual("Unknown");
+      expect(getVersionText("GG1suffix")).toEqual("Unknown");
+      expect(getVersionText("prefixGG1suffix")).toEqual("Unknown");
       expect(getVersionText("GG")).toEqual("Unknown");
       expect(getVersionText("abc")).toEqual("Unknown");
       expect(getVersionText("123")).toEqual("Unknown");
