@@ -78,7 +78,11 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
         curriculumStartDate: new Date("2020-08-01"),
         curriculumEndDate: new Date("2025-08-01")
       }
-    ]
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
   },
   {
     startDate: new Date("2022-01-01"),
@@ -112,7 +116,11 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
         curriculumStartDate: new Date("2022-08-01"),
         curriculumEndDate: new Date("2025-08-01")
       }
-    ]
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
   }
 ];
 
