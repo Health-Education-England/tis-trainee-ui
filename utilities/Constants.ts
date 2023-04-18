@@ -22,6 +22,8 @@ export const MFA_OPTIONS = [
   }
 ];
 
+export const COJ_EPOCH = new Date("2023-08-01");
+
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
   "I will be seeking specialist registration by application for a CESR",
@@ -57,6 +59,8 @@ export const CHECK_WHOLE_TIME_EQUIVALENT_REGEX =
   /^((0\.[1-9])?|(0\.(\d[1-9]|[1-9]\d))|1(\.0{1,2})?)$/;
 
 export const CHECK_POSTCODE_REGEX = /[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}/i;
+
+export const GOLD_GUIDE_VERSION_REGEX = /GG([0-9]+)/i;
 
 export const VALUE_NOT_GIVEN = "Value not given";
 
@@ -99,6 +103,7 @@ export type PanelKeys = {
   managingDeanery: string;
   programmeMembershipType: string;
   curricula: string;
+  conditionsOfJoining: string;
 };
 
 export const PANEL_KEYS: PanelKeys | any = {
@@ -118,5 +123,6 @@ export const PANEL_KEYS: PanelKeys | any = {
   programmeNumber: "Programme Number",
   managingDeanery: "Owner",
   programmeMembershipType: "Type",
-  curricula: "Curricula"
+  curricula: "Curricula",
+  conditionsOfJoining: "Conditions of Joining"
 };

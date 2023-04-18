@@ -13,7 +13,13 @@ export interface ProgrammeMembership {
   status?: Status;
   programmeCompletionDate?: Date;
   curricula: Curriculum[];
+  conditionsOfJoining: ConditionsOfJoining;
   signature?: Signature;
+}
+
+export interface ConditionsOfJoining {
+  signedAt: Date | null;
+  version: string;
 }
 
 export interface Curriculum {
@@ -31,5 +37,9 @@ export const programmePanelTemplate: ProgrammeMembership = {
   startDate: "",
   endDate: "",
   managingDeanery: "",
-  curricula: []
+  curricula: [],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: ""
+  }
 };
