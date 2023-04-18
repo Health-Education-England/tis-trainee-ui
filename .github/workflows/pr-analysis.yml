@@ -41,7 +41,7 @@ jobs:
         run: |
           do_analysis=false
           for changed_file in ${{ steps.changed-files.outputs.all }}; do
-            if [[ $changed_file =~ ^(src|cypress)\/.+$ ]]; then
+            if [[ $changed_file =~ ^(components|cypress|mock-data|models|pages|redux|services|utilities)\/.+$ ]]; then
               do_analysis=true
               break
             fi
