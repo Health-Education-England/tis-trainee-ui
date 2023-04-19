@@ -133,6 +133,13 @@ export class DateUtilities {
   ) {
     return arr.sort((a, b) => DateUtilities.gSorter(a, b, prop, desc));
   }
+
+  public static isWithin13Weeks(dateToCheck: Date): boolean {
+    const now = new Date();
+    const weeksAhead = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 200);
+    return dateToCheck <= weeksAhead;
+  }
+
 }
 export const isWithinRange = (
   date: DateType = null,
