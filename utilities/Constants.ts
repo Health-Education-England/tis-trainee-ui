@@ -22,7 +22,9 @@ export const MFA_OPTIONS = [
   }
 ];
 
-export const COJ_EPOCH = new Date("2023-08-01");
+export const COJ_EPOCH = new Date(
+  process.env.NEXT_PUBLIC_CONDITIONS_OF_JOINING_EPOCH as string
+);
 
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
