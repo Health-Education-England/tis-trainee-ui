@@ -13,13 +13,13 @@ describe("CojUtilities", () => {
       );
     });
 
-    it("should return CoJ can only be signed within 13 weeks of the start date when start date equal to coj epoch and earlier than 13 weeks", () => {
-      expect(getStatusText("2023-08-01")).toEqual("CoJ can only be signed within 13 weeks of the start date");
+    it("should return Not signed, available from 02/05/2023 when start date equal to coj epoch and earlier than 13 weeks", () => {
+      expect(getStatusText("2023-08-01")).toEqual("Not signed, available from 02/05/2023");
     });
 
     it("should return not signed when start date after coj epoch", () => {
       const maxDate = new Date(8640000000000000).toISOString();
-      expect(getStatusText(maxDate)).toEqual("Not signed");
+      expect(getStatusText(maxDate)).toEqual("Not signed, available from 14/06/275760");
     });
   });
 
