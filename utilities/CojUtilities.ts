@@ -1,14 +1,20 @@
 import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
 import { DateUtilities } from "../utilities/DateUtilities";
+import { bool } from "yup";
 export function getStatusText(startDate: string | null) {
   if (!startDate) {
     return "Unknown status";
   }
   
-  return new Date(startDate) < COJ_EPOCH
-    ? "Submitted directly to Local Office"
-    : DateUtilities.isWithin13Weeks(new Date(startDate)) ? "Not signed"
-    : "CoJ can only be signed within 13 weeks of the start date";
+  if (new Date(startDate) < COJ_EPOCH) {
+    return "Submitted directly to Local Office";
+  } else {
+    if (DateUtilities.isWithin13Weeks(new Date(startDate))) {
+      return "Not signed";
+    } else {
+      return `Not signed, available from ${DateUtilities.isWithin13Weeks(new Date(startDate),"string")}`;
+    }
+  }
 }
 
 export function getVersionText(version: string) {

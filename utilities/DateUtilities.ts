@@ -134,10 +134,18 @@ export class DateUtilities {
     return arr.sort((a, b) => DateUtilities.gSorter(a, b, prop, desc));
   }
 
-  public static isWithin13Weeks(dateToCheck: Date): boolean {
+  public static isWithin13Weeks(dateToCheck: Date, extra?: string): boolean | string {
+    //gets todays date
     const now = new Date();
-    const weeksAhead = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 200);
-    return dateToCheck <= weeksAhead;
+    //gets the value of the startDate minus 13 weeks
+    const thirteenWeeksEarlier = new Date(dateToCheck.getTime() - (13 * 7 * 24 * 60 * 60 * 1000));
+
+    if (extra == "string")
+    return thirteenWeeksEarlier.toLocaleDateString();
+    else
+    //returns true if the start date is higher than the thirteen week threshold
+    return (now >= thirteenWeeksEarlier);
+
   }
 
 }

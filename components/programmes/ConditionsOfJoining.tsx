@@ -36,6 +36,6 @@ export function ConditionsOfJoiningField({
       ) : (
         <div>{getStatusText(startDate)}</div>
       )}
-    </>
+    </> 
   );
 }
