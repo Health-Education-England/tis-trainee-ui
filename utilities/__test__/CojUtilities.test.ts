@@ -13,8 +13,8 @@ describe("CojUtilities", () => {
       );
     });
 
-    it("should return not signed when start date equal to coj epoch", () => {
-      expect(getStatusText("2023-08-01")).toEqual("Not signed");
+    it("should return CoJ can only be signed within 13 weeks of the start date when start date equal to coj epoch and earlier than 13 weeks", () => {
+      expect(getStatusText("2023-08-01")).toEqual("CoJ can only be signed within 13 weeks of the start date");
     });
 
     it("should return not signed when start date after coj epoch", () => {
