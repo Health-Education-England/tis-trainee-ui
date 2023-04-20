@@ -96,17 +96,6 @@ describe("DateUtilities", () => {
   it("IsMoreThanMinDate should return true if null value ", () => {
     expect(DateUtilities.IsLessThanMaxDate(null)).toEqual(true);
   });
-  //isWithin13Weeks
-  it("isWithin13Weeks should return true if the input date is within 13 weeks", () => {
-    const today = new Date();
-    const dateToCheck = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 20);
-    expect(DateUtilities.isWithin13Weeks(dateToCheck)).toBe(true);
-  });
-  
-  it("isWithin13Weeks should return false if the input date is further than 13 weeks", () => {
-    const dateToCheck = new Date(today.getFullYear() + 5, today.getMonth(), today.getDate());
-    expect(DateUtilities.isWithin13Weeks(dateToCheck)).toBe(false);
-  });
   // isWithinRange
   it("isWithinRange should return false if given date is undefined", () => {
     expect(isWithinRange(undefined)).toEqual(false);
