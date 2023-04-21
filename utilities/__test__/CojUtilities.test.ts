@@ -18,8 +18,11 @@ describe("CojUtilities", () => {
     });
 
     it("should return Not signed, available from 02/05/2023 when start date equal to coj epoch and earlier than 13 weeks", () => {
-      expect(getStatusText("2023-08-01")).toEqual(
-        "Not signed, available from 02/05/2023"
+      const maxDate = new Date("2023-10-31");
+      const expectedDate = new Date(maxDate.getTime() - SIGNABLE_OFFSET);
+
+      expect(getStatusText(maxDate.toISOString())).toEqual(
+        "Not signed, available from " + expectedDate.toLocaleDateString()
       );
     });
 
