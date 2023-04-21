@@ -36,12 +36,26 @@ export function ConditionsOfJoiningField({
             </dd>
           </div>
         </dl>
-      ) : statusText === "Not signed" ? (
+      ) : (
+        <div>{statusText}</div>
+      )}
+      {statusText === "Not signed" ? (
         <>
-          <div>{statusText}</div>
           <Button onClick={() => {}} data-cy="goToCojBtn">
             Sign Condition of Joining Form
           </Button>
+        </>
+      ) : statusText.includes("Signed") ? (
+        <>
+          {
+            <a
+              href="FutureLinkToCoJform"
+              onClick={() => {}}
+              data-cy="goToCojBtn"
+            >
+              View Signed Form
+            </a>
+          }
         </>
       ) : null}
     </>
