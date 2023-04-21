@@ -45,7 +45,7 @@ export function ConditionsOfJoiningField({
             Sign Condition of Joining Form
           </Button>
         </>
-      ) : statusText.includes("Signed") ? (
+      ) : statusText.includes("Signed on") ? (
         <>
           {
             <a
