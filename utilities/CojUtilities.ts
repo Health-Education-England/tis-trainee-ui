@@ -1,6 +1,6 @@
 import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
 
-const SIGNABLE_OFFSET = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks.
+export const SIGNABLE_OFFSET = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks.
 
 export function getStatusText(startDate: string | null) {
   if (!startDate) {

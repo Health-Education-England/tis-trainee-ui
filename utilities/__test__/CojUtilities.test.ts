@@ -1,4 +1,8 @@
-import { getStatusText, getVersionText } from "../CojUtilities";
+import {
+  SIGNABLE_OFFSET,
+  getStatusText,
+  getVersionText
+} from "../CojUtilities";
 
 describe("CojUtilities", () => {
   describe("getStatusText", () => {
@@ -20,9 +24,11 @@ describe("CojUtilities", () => {
     });
 
     it("should return not signed when start date after coj epoch", () => {
-      const maxDate = new Date(8640000000000000).toISOString();
-      expect(getStatusText(maxDate)).toEqual(
-        "Not signed, available from 14/06/275760"
+      const maxDate = new Date(8640000000000000);
+      const expectedDate = new Date(maxDate.getTime() - SIGNABLE_OFFSET);
+
+      expect(getStatusText(maxDate.toISOString())).toEqual(
+        "Not signed, available from " + expectedDate.toLocaleDateString()
       );
     });
   });

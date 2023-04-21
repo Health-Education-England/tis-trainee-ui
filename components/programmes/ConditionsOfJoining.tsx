@@ -1,3 +1,4 @@
+import { Button } from "nhsuk-react-components";
 import { ConditionsOfJoining } from "../../models/ProgrammeMembership";
 import { getStatusText, getVersionText } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
@@ -11,6 +12,8 @@ export function ConditionsOfJoiningField({
   conditionsOfJoining,
   startDate
 }: ConditionsOfJoiningProps) {
+  const statusText = getStatusText(startDate);
+
   return (
     <>
       {conditionsOfJoining.signedAt ? (
@@ -33,9 +36,14 @@ export function ConditionsOfJoiningField({
             </dd>
           </div>
         </dl>
-      ) : (
-        <div>{getStatusText(startDate)}</div>
-      )}
+      ) : statusText === "Not signed" ? (
+        <>
+          <div>{statusText}</div>
+          <Button onClick={() => {}} data-cy="goToCojBtn">
+            Sign Condition of Joining Form
+          </Button>
+        </>
+      ) : null}
     </>
   );
 }
