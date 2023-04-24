@@ -1,4 +1,5 @@
 import { CojUtilities } from "../CojUtilities";
+import { DateUtilities } from "../DateUtilities";
 
 describe("CojUtilities", () => {
   const SIGNING_WINDOW_OFFSET_IN_MS = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks
@@ -36,8 +37,9 @@ describe("CojUtilities", () => {
 
       jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
 
+      const availableDate = DateUtilities.ToLocalDate(signableDate);
       expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
-        `Not signed, available from ${signableDate.toLocaleDateString()}`
+        `Not signed, available from ${availableDate}`
       );
     });
 
@@ -49,8 +51,9 @@ describe("CojUtilities", () => {
 
       jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
 
+      const availableDate = DateUtilities.ToLocalDate(signableDate);
       expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
-        `Not signed, available from ${signableDate.toLocaleDateString()}`
+        `Not signed, available from ${availableDate}`
       );
     });
 
