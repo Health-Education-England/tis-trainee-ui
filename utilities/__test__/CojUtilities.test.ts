@@ -76,7 +76,7 @@ describe("CojUtilities", () => {
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      jest.setSystemTime(new Date(signableDate));
+      jest.setSystemTime(signableDate);
 
       expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
         "Not signed"
@@ -119,7 +119,7 @@ describe("CojUtilities", () => {
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      jest.setSystemTime(new Date(signableDate.getTime()));
+      jest.setSystemTime(signableDate);
 
       expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
     });
@@ -163,7 +163,7 @@ describe("CojUtilities", () => {
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      jest.setSystemTime(new Date(signableDate.getTime()));
+      jest.setSystemTime(signableDate);
 
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
     });
@@ -196,7 +196,7 @@ describe("CojUtilities", () => {
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      jest.setSystemTime(new Date(signableDate.getTime()));
+      jest.setSystemTime(signableDate);
 
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
     });

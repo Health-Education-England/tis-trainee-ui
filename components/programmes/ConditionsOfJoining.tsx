@@ -34,8 +34,7 @@ export function ConditionsOfJoining({
         <dd className="nhsuk-summary-list__value" style={{ borderBottom: 0 }}>
           {CojUtilities.getStatusText(startDate)}
         </dd>
-        {startDate &&
-        CojUtilities.canBeSigned(new Date(startDate as string)) ? (
+        {startDate && CojUtilities.canBeSigned(new Date(startDate)) ? (
           <dd
             className="nhsuk-summary-list__actions"
             style={{ borderBottom: 0 }}
