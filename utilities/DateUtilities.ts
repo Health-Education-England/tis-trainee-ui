@@ -134,6 +134,7 @@ export class DateUtilities {
     return arr.sort((a, b) => DateUtilities.gSorter(a, b, prop, desc));
   }
 }
+
 export const isWithinRange = (
   date: DateType = null,
   range: number = 1,
