@@ -40,14 +40,14 @@ export function ConditionsOfJoining({
             className="nhsuk-summary-list__actions"
             style={{ borderBottom: 0 }}
           >
-            <a
-              href="#"
+            <button
+              className="nhsuk-button nhsuk-button--secondary"
               onClick={() =>
                 alert("We're still working on this feature, check back later.")
               }
             >
               Sign
-            </a>
+            </button>
           </dd>
         ) : null}
       </div>
