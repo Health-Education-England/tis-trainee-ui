@@ -1,6 +1,6 @@
 import { Button } from "nhsuk-react-components";
 import { ConditionsOfJoining } from "../../models/ProgrammeMembership";
-import { getStatusText, getVersionText } from "../../utilities/CojUtilities";
+import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 
 type ConditionsOfJoiningProps = {
@@ -12,7 +12,7 @@ export function ConditionsOfJoiningField({
   conditionsOfJoining,
   startDate
 }: ConditionsOfJoiningProps) {
-  const statusText = getStatusText(startDate);
+  const statusText = CojUtilities.getStatusText(startDate);
 
   return (
     <>
@@ -32,7 +32,7 @@ export function ConditionsOfJoiningField({
               className="nhsuk-summary-list__value"
               style={{ borderBottom: 0 }}
             >
-              {getVersionText(conditionsOfJoining.version)}
+              {CojUtilities.getVersionText(conditionsOfJoining.version)}
             </dd>
           </div>
         </dl>
