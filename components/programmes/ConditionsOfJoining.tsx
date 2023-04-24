@@ -1,63 +1,56 @@
-import { Button } from "nhsuk-react-components";
-import { ConditionsOfJoining } from "../../models/ProgrammeMembership";
+import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 
 type ConditionsOfJoiningProps = {
-  conditionsOfJoining: ConditionsOfJoining;
+  conditionsOfJoining: ConditionsOfJoiningModel;
   startDate: string | null;
 };
 
-export function ConditionsOfJoiningField({
+export function ConditionsOfJoining({
   conditionsOfJoining,
   startDate
 }: ConditionsOfJoiningProps) {
-  const statusText = CojUtilities.getStatusText(startDate);
-
-  return (
-    <>
-      {conditionsOfJoining.signedAt ? (
-        <dl className="nhsuk-summary-list">
-          <div className="nhsuk-summary-list__row">
-            <dt className="nhsuk-summary-list__key">Signed</dt>
-            <dd className="nhsuk-summary-list__value">
-              {DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}
-            </dd>
-          </div>
-          <div className="nhsuk-summary-list__row">
-            <dt className="nhsuk-summary-list__key" style={{ borderBottom: 0 }}>
-              Version
-            </dt>
-            <dd
-              className="nhsuk-summary-list__value"
-              style={{ borderBottom: 0 }}
-            >
-              {CojUtilities.getVersionText(conditionsOfJoining.version)}
-            </dd>
-          </div>
-        </dl>
-      ) : (
-        <div>{statusText}</div>
-      )}
-      {statusText === "Not signed" ? (
-        <>
-          <Button onClick={() => {}} data-cy="goToCojBtn">
-            Sign Condition of Joining Form
-          </Button>
-        </>
-      ) : statusText.includes("Signed on") ? (
-        <>
-          {
+  return conditionsOfJoining.signedAt ? (
+    <dl className="nhsuk-summary-list">
+      <div className="nhsuk-summary-list__row">
+        <dt className="nhsuk-summary-list__key">Signed</dt>
+        <dd className="nhsuk-summary-list__value">
+          {DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}
+        </dd>
+      </div>
+      <div className="nhsuk-summary-list__row">
+        <dt className="nhsuk-summary-list__key" style={{ borderBottom: 0 }}>
+          Version
+        </dt>
+        <dd className="nhsuk-summary-list__value" style={{ borderBottom: 0 }}>
+          {CojUtilities.getVersionText(conditionsOfJoining.version)}
+        </dd>
+      </div>
+    </dl>
+  ) : (
+    <dl className="nhsuk-summary-list">
+      <div className="nhsuk-summary-list__row">
+        <dd className="nhsuk-summary-list__value" style={{ borderBottom: 0 }}>
+          {CojUtilities.getStatusText(startDate)}
+        </dd>
+        {startDate &&
+        CojUtilities.canBeSigned(new Date(startDate as string)) ? (
+          <dd
+            className="nhsuk-summary-list__actions"
+            style={{ borderBottom: 0 }}
+          >
             <a
-              href="FutureLinkToCoJform"
-              onClick={() => {}}
-              data-cy="goToCojBtn"
+              href="#"
+              onClick={() =>
+                alert("We're still working on this feature, check back later.")
+              }
             >
-              View Signed Form
+              Sign
             </a>
-          }
-        </>
-      ) : null}
-    </>
+          </dd>
+        ) : null}
+      </div>
+    </dl>
   );
 }

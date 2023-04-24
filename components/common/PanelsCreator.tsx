@@ -11,7 +11,7 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";
 import { DspIssueBtn } from "../dsp/DspIssueBtn";
-import { ConditionsOfJoiningField } from "../programmes/ConditionsOfJoining";
+import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 
 type PanelsCreatorProps = {
@@ -51,7 +51,7 @@ export function PanelsCreator({
                             curricula={filteredPanel[panelProp] as Curriculum[]}
                           />
                         ) : panelProp === "conditionsOfJoining" ? (
-                          <ConditionsOfJoiningField
+                          <ConditionsOfJoining
                             conditionsOfJoining={filteredPanel[panelProp]}
                             startDate={filteredPanel["startDate"]}
                           />

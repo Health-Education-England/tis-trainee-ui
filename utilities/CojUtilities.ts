@@ -27,10 +27,10 @@ export class CojUtilities {
     return matcher && matcher[1] ? `Gold Guide ${matcher[1]}` : "Unknown";
   }
 
-  private static canBeSigned(startDate: Date): boolean {
+  public static canBeSigned(startDate: Date): boolean {
     const now = new Date();
     const signableFrom = CojUtilities.getSignableFromDate(startDate);
-    return now >= signableFrom;
+    return now >= signableFrom && startDate >= COJ_EPOCH;
   }
 
   private static getSignableFromDate(startDate: Date): Date {
