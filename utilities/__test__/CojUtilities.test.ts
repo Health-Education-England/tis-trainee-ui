@@ -1,5 +1,6 @@
 import {
   SIGNABLE_OFFSET,
+  canBeSigned,
   getStatusText,
   getVersionText
 } from "../CojUtilities";
@@ -17,21 +18,40 @@ describe("CojUtilities", () => {
       );
     });
 
-    it("should return Not signed, available from 02/05/2023 when start date equal to coj epoch and earlier than 13 weeks", () => {
-      const maxDate = new Date("2023-10-31");
+    it("should return Not signed, available from 14/06/275760 when start date in the far future", () => {
+      const maxDate = new Date(8640000000000000);
       const expectedDate = new Date(maxDate.getTime() - SIGNABLE_OFFSET);
 
       expect(getStatusText(maxDate.toISOString())).toEqual(
         "Not signed, available from " + expectedDate.toLocaleDateString()
       );
     });
+  });
 
-    it("should return not signed when start date after coj epoch", () => {
-      const maxDate = new Date(8640000000000000);
-      const expectedDate = new Date(maxDate.getTime() - SIGNABLE_OFFSET);
+  describe("canBeSigned", () => {
+    it("should return false when start date before coj epoch", () => {
+      const aDate = new Date("2023-07-31");
+      
+      expect(canBeSigned(aDate, new Date())).toEqual(
+        false
+      );
+    });
 
-      expect(getStatusText(maxDate.toISOString())).toEqual(
-        "Not signed, available from " + expectedDate.toLocaleDateString()
+    it("should return false when start date after coj epoch and more than 13 weeks after now", () => {
+      const aDate = new Date("2023-08-30");
+      const now = new Date("2023-05-30");
+      
+      expect(canBeSigned(aDate, now)).toEqual(
+        false
+      );
+    });
+
+    it("should return true when start date after coj epoch and no more than 13 weeks after now", () => {
+      const aDate = new Date("2023-08-30");
+      const now = new Date("2023-05-31");
+      
+      expect(canBeSigned(aDate, now)).toEqual(
+        true
       );
     });
   });

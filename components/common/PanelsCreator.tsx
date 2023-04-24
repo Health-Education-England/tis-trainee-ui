@@ -11,7 +11,7 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";
 import { DspIssueBtn } from "../dsp/DspIssueBtn";
-import { ConditionsOfJoiningField } from "../programmes/ConditionsOfJoining";
+import { ConditionsOfJoiningField } from "../programmes/ConditionsOfJoiningField";
 import { Curricula } from "../programmes/Curricula";
 
 type PanelsCreatorProps = {
