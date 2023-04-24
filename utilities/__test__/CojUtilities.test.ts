@@ -3,37 +3,80 @@ import { CojUtilities } from "../CojUtilities";
 describe("CojUtilities", () => {
   describe("getStatusText", () => {
     const SIGNING_WINDOW_OFFSET_IN_MS = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks
+    const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+    const COJ_EPOCH = "2023-08-01";
+    const PRE_COJ_EPOCH = "2023-07-31";
+    const POST_COJ_EPOCH = "2023-08-02";
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
 
     it("should return unknown when start date is null", () => {
       expect(CojUtilities.getStatusText(null)).toEqual("Unknown status");
     });
 
     it("should return submitted to LO when start date before coj epoch", () => {
-      const minDate = new Date(-8640000000000000).toISOString();
+      const minDate = new Date(PRE_COJ_EPOCH).toISOString();
       expect(CojUtilities.getStatusText(minDate)).toEqual(
         "Submitted directly to Local Office"
       );
     });
 
-    it("should return Not signed, available from 02/05/2023 when start date equal to coj epoch and earlier than 13 weeks", () => {
-      const maxDate = new Date("2023-10-31");
-      const expectedDate = new Date(
-        maxDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
+    it("should return not signed with available date when start date equal to coj epoch and currently before signing window opens", () => {
+      const startDate = new Date(COJ_EPOCH);
+      const signableDate = new Date(
+        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      expect(CojUtilities.getStatusText(maxDate.toISOString())).toEqual(
-        "Not signed, available from " + expectedDate.toLocaleDateString()
+      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
+
+      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
+        `Not signed, available from ${signableDate.toLocaleDateString()}`
       );
     });
 
-    it("should return not signed when start date after coj epoch", () => {
-      const maxDate = new Date(8640000000000000);
-      const expectedDate = new Date(
-        maxDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
+    it("should return not signed with available date when start date after coj epoch and currently before signing window opens", () => {
+      const startDate = new Date(POST_COJ_EPOCH);
+      const signableDate = new Date(
+        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
       );
 
-      expect(CojUtilities.getStatusText(maxDate.toISOString())).toEqual(
-        "Not signed, available from " + expectedDate.toLocaleDateString()
+      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
+
+      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
+        `Not signed, available from ${signableDate.toLocaleDateString()}`
+      );
+    });
+
+    it("should return not signed when start date equal to coj epoch and currently after signing window opens", () => {
+      const startDate = new Date(COJ_EPOCH);
+      const signableDate = new Date(
+        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
+      );
+
+      jest.setSystemTime(signableDate);
+
+      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
+        "Not signed"
+      );
+    });
+
+    it("should return not signed when start date after coj epoch and currently after signing window opens", () => {
+      const startDate = new Date(POST_COJ_EPOCH);
+      const signableDate = new Date(
+        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
+      );
+
+      jest.setSystemTime(new Date(signableDate));
+
+      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
+        "Not signed"
       );
     });
   });
