@@ -38,7 +38,7 @@ export class ApiService {
 
   post<T = any>(
     endpoint: string,
-    formData: T,
+    formData?: T,
     params?: any
   ): Promise<AxiosResponse<T>> {
     return this.axiosInstance.post(endpoint, formData, params);

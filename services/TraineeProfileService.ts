@@ -13,8 +13,10 @@ export class TraineeProfileService extends ApiService {
   }
 
   async signCoj(
-    programmeMembershipId : string
+    programmeMembershipId: string
   ): Promise<AxiosResponse<ProgrammeMembership>> {
-    return this.post<ProgrammeMembership>(`/programme-membership/${programmeMembershipId}/sign-coj`, null);
+    return this.post<ProgrammeMembership>(
+      `/programme-membership/${programmeMembershipId}/sign-coj`
+    );
   }
 }
