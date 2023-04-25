@@ -1,12 +1,14 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
+import { RootState } from "../../redux/store/store";
 
 const GlobalAlert = () => {
-  return (
+  return !useAppSelector(state => hasAlerts(state)) ? null : (
     <div
       className="app-global-alert"
       id="app-global-alert"
       role="complementary"
+      data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
         <CojAlert />
@@ -15,6 +17,10 @@ const GlobalAlert = () => {
   );
 };
 
+function hasAlerts(state: RootState) {
+  return state.traineeProfile.hasSignableCoj;
+}
+
 function CojAlert() {
   const pathName = useLocation().pathname;
   const showCojAlert = useAppSelector(
@@ -22,7 +28,7 @@ function CojAlert() {
   );
 
   return !showCojAlert ? null : (
-    <div className="nhsuk-grid-row">
+    <div className="nhsuk-grid-row" data-cy="cojAlert">
       <div className="nhsuk-grid-column-full">
         <div className="app-global-alert__content">
           <div className="app-global-alert__message">
