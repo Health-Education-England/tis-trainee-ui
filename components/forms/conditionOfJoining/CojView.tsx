@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { Button } from "nhsuk-react-components";
+import { Button, SummaryList } from "nhsuk-react-components";
 import { useEffect } from "react";
 import {
   updatedSignedCoj,
@@ -38,16 +38,34 @@ function CojDeclarationSection() {
     <>
       <Formik
         initialValues={{
-          declareResponsibility: "",
-          declareEmployment: ""
+          declareProvisional: "",
+          declareSatisfy: "",
+          declareProvide: "",
+          declareInform: "",
+          declareUpToDate: "",
+          declareAttend: "",
+          declareEngage: ""
         }}
         validationSchema={Yup.object({
-          declareResponsibility: Yup.string().required(
+          declareProvisional: Yup.string().required(
             "Please confirm your acceptance"
           ),
-          declareEmployment: Yup.string().required(
+          declareSatisfy: Yup.string().required(
             "Please confirm your acceptance"
-          )
+          ),
+          declareProvide: Yup.string().required(
+            "Please confirm your acceptance"
+          ),
+          declareInform: Yup.string().required(
+            "Please confirm your acceptance"
+          ),
+          declareUpToDate: Yup.string().required(
+            "Please confirm your acceptance"
+          ),
+          declareAttend: Yup.string().required(
+            "Please confirm your acceptance"
+          ),
+          declareEngage: Yup.string().required("Please confirm your acceptance")
         })}
         onSubmit={async _values => {
           const traineeProfileService = new TraineeProfileService();
@@ -61,25 +79,88 @@ function CojDeclarationSection() {
       >
         {({ handleSubmit, isSubmitting }) => (
           <>
+            <SummaryList noBorder>
+              <SummaryList.Row>
+                <SummaryList.Value>
+                  In addition, I acknowledge the following specific information
+                  requirements:
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
             <MultiChoiceInputField
-              id="declareResponsibility"
+              id="declareProvisional"
               type="checkbox"
-              name="declareResponsibility"
+              name="declareProvisional"
               items={[
                 {
-                  label: `I acknowledge the importance of these responsibilities and understand that they are requirements for maintaining my registration with the Postgraduate Dean. If I fail to meet them, I understand that my training number/contract may be withdrawn by the Postgraduate Dean.`,
+                  label: `I understand that programme and post allocations are provisional and subject to change until confirmed by HEE WM and/or my employing organisation.`,
                   value: true
                 }
               ]}
             />
             <MultiChoiceInputField
-              id="declareEmployment"
+              id="declareSatisfy"
               type="checkbox"
-              name="declareEmployment"
+              name="declareSatisfy"
               items={[
                 {
                   label:
-                    "I understand that this document does not constitute an offer of employment.",
+                    "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment.",
+                  value: true
+                }
+              ]}
+            />
+            <MultiChoiceInputField
+              id="declareProvide"
+              type="checkbox"
+              name="declareProvide"
+              items={[
+                {
+                  label: `I will obtain and provide my School and HEE WM with a professional email address.`,
+                  value: true
+                }
+              ]}
+            />
+            <MultiChoiceInputField
+              id="declareInform"
+              type="checkbox"
+              name="declareInform"
+              items={[
+                {
+                  label: `I will inform my School and HEE WM of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements.`,
+                  value: true
+                }
+              ]}
+            />
+            <MultiChoiceInputField
+              id="declareUpToDate"
+              type="checkbox"
+              name="declareUpToDate"
+              items={[
+                {
+                  label: `I will keep myself up to date with the latest information available via HEE as well as via the relevant educational and regulatory websites.`,
+                  value: true
+                }
+              ]}
+            />
+            <MultiChoiceInputField
+              id="declareAttend"
+              type="checkbox"
+              name="declareAttend"
+              items={[
+                {
+                  label: `I will attend the minimum number of formal teaching days as required by my School/programme.`,
+                  value: true
+                }
+              ]}
+            />
+            <MultiChoiceInputField
+              id="declareEngage"
+              type="checkbox"
+              name="declareEngage"
+              items={[
+                {
+                  label: `Where applicable, I will fully engage with immigration and employer requirements relating to Tier 2 and Tier 4 UK visas.`,
                   value: true
                 }
               ]}
