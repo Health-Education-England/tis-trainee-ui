@@ -1,15 +1,25 @@
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
+import {
+  updatedsigningCojPmId,
+  updatedsigningCojProgName
+} from "../../redux/slices/userSlice";
+import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import history from "../navigation/history";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
   startDate: string | null;
+  programmeMembershipId: string;
+  programmeName: string;
 };
 
 export function ConditionsOfJoining({
   conditionsOfJoining,
-  startDate
+  startDate,
+  programmeMembershipId,
+  programmeName
 }: ConditionsOfJoiningProps) {
   return conditionsOfJoining.signedAt ? (
     <dl className="nhsuk-summary-list">
@@ -41,9 +51,7 @@ export function ConditionsOfJoining({
           >
             <button
               className="nhsuk-button nhsuk-button--secondary"
-              onClick={() =>
-                alert("We're still working on this feature, check back later.")
-              }
+              onClick={() => viewCoj(programmeMembershipId, programmeName)}
             >
               Sign
             </button>
@@ -52,4 +60,10 @@ export function ConditionsOfJoining({
       </div>
     </dl>
   );
+}
+
+function viewCoj(programmeMembershipId: string, programmeName: string) {
+  store.dispatch(updatedsigningCojProgName(programmeName));
+  store.dispatch(updatedsigningCojPmId(programmeMembershipId));
+  history.push(`/programmes/${programmeMembershipId}`);
 }

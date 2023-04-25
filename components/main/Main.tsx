@@ -24,6 +24,7 @@ import Programmes from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";
+import CojView from "../forms/conditionOfJoining/CojView";
 
 interface IMain {
   signOut: any;
@@ -82,6 +83,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
             <Route exact path="/home" component={Home} />
             <Route exact path="/placements" component={Placements} />
             <Route exact path="/programmes" component={Programmes} />
+            <Route exact path="/programmes/:id" component={CojView} />
             <Route exact path="/profile" component={Profile} />
             <Route path="/credential" component={Dsp} />
             <Route path="/formr-a" component={FormRPartA} />
