@@ -190,7 +190,7 @@ describe("CojUtilities", () => {
       expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
     });
 
-    it("should true false when start date after coj epoch and currently equal to signing window", () => {
+    it("should return true when start date after coj epoch and currently equal to signing window", () => {
       const startDate = new Date(POST_COJ_EPOCH);
       const signableDate = new Date(
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
@@ -201,7 +201,7 @@ describe("CojUtilities", () => {
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
     });
 
-    it("should true false when start date after coj epoch and currently after signing window", () => {
+    it("should return true when start date after coj epoch and currently after signing window", () => {
       const startDate = new Date(POST_COJ_EPOCH);
       const signableDate = new Date(
         startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
