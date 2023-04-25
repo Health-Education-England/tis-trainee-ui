@@ -1,3 +1,7 @@
+import {
+  mockProgrammeMembershipCojNotSigned,
+  mockProgrammeMembershipCojSigned
+} from "../../mock-data/trainee-profile";
 import { CojUtilities } from "../CojUtilities";
 import { DateUtilities } from "../DateUtilities";
 
@@ -5,9 +9,10 @@ describe("CojUtilities", () => {
   const SIGNING_WINDOW_OFFSET_IN_MS = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks
   const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-  const COJ_EPOCH = "2023-08-01";
-  const PRE_COJ_EPOCH = "2023-07-31";
-  const POST_COJ_EPOCH = "2023-08-02";
+  // Dates based on env.test value.
+  const COJ_EPOCH = "2010-10-14";
+  const PRE_COJ_EPOCH = "2010-10-13";
+  const POST_COJ_EPOCH = "2010-10-15";
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -210,6 +215,95 @@ describe("CojUtilities", () => {
       jest.setSystemTime(new Date(signableDate.getTime() + DAY_IN_MS));
 
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
+    });
+  });
+
+  describe("canAnyBeSigned", () => {
+    it("should return false when empty programme memberships", () => {
+      expect(CojUtilities.canAnyBeSigned([])).toEqual(false);
+    });
+
+    it("should return false when no programme memberships can be signed", () => {
+      const currentDate = new Date(COJ_EPOCH);
+
+      const signed = mockProgrammeMembershipCojSigned;
+      const preCojEpoch = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(PRE_COJ_EPOCH)
+      };
+      const preSignableDate = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(
+          currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
+        )
+      };
+
+      jest.setSystemTime(currentDate);
+
+      expect(
+        CojUtilities.canAnyBeSigned([signed, preCojEpoch, preSignableDate])
+      ).toEqual(false);
+    });
+
+    it("should return true when a programme membership is post-coj epoch", () => {
+      const currentDate = new Date(COJ_EPOCH);
+
+      const signed = mockProgrammeMembershipCojSigned;
+      const postCojEpoch = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(POST_COJ_EPOCH)
+      };
+      const preSignableDate = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(
+          currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
+        )
+      };
+
+      jest.setSystemTime(currentDate);
+
+      expect(
+        CojUtilities.canAnyBeSigned([signed, postCojEpoch, preSignableDate])
+      ).toEqual(true);
+    });
+
+    it("should return true when a programme membership is post-signable date", () => {
+      const currentDate = new Date(COJ_EPOCH);
+
+      const signed = mockProgrammeMembershipCojSigned;
+      const preCojEpoch = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(PRE_COJ_EPOCH)
+      };
+      const postSignableDate = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
+      };
+
+      jest.setSystemTime(currentDate);
+
+      expect(
+        CojUtilities.canAnyBeSigned([signed, preCojEpoch, postSignableDate])
+      ).toEqual(true);
+    });
+
+    it("should return true when all programme memberships can be signed", () => {
+      const currentDate = new Date(COJ_EPOCH);
+
+      const postCojEpoch = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(POST_COJ_EPOCH)
+      };
+      const postSignableDate = {
+        ...mockProgrammeMembershipCojNotSigned,
+        startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
+      };
+
+      jest.setSystemTime(currentDate);
+
+      expect(
+        CojUtilities.canAnyBeSigned([postCojEpoch, postSignableDate])
+      ).toEqual(true);
     });
   });
 });
