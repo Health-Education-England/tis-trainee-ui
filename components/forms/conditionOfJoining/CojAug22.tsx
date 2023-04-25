@@ -238,46 +238,6 @@ const CojAug22: React.FC<CojAug22Props> = ({ progName }) => {
                 an unsatisfactory outcome.
               </SummaryList.Value>
             </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                In addition, I acknowledge the following specific information
-                requirements:
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                1. I understand that programme and post allocations are
-                provisional and subject to change until confirmed by HEE/NES/
-                HEIW/NIMDTA and/or my employing organisation.
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                2. I understand that I will need to satisfy all requirements of
-                the programme and curriculum to enable satisfactory sign off,
-                and that this may require a specific time commitment.
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                3. I agree to the following: a) I will obtain and provide my
-                School and HEE/NES/HEIW/NIMDTA with a professional email
-                address. b) I will inform my School and HEE/NES/HEIW/NIMDTA of
-                any change of my personal contact details and/or personal
-                circumstances that may affect my training programme
-                arrangements. c) I will keep myself up to date with the latest
-                information available via HEE/NES/HEIW/NIMDTA as well as via the
-                relevant educational and regulatory websites. d) I will attend
-                the minimum number of formal teaching days as required by my
-                School/programme.
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                4. Where applicable, I will fully engage with immigration and
-                employer requirements relating to Tier 2 and Tier 4 UK visas.
-              </SummaryList.Value>
-            </SummaryList.Row>
           </SummaryList>
         </Card.Content>
       </Card>
