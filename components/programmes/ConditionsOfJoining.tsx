@@ -52,6 +52,7 @@ export function ConditionsOfJoining({
             <button
               className="nhsuk-button nhsuk-button--secondary"
               onClick={() => viewCoj(programmeMembershipId, programmeName)}
+              data-cy={`cojSignBtn-${programmeMembershipId}`}
             >
               Sign
             </button>
