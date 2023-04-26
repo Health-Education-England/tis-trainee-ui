@@ -1,4 +1,5 @@
 import day from "dayjs";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
 import { DateUtilities } from "./DateUtilities";
 
@@ -12,12 +13,12 @@ export class CojUtilities {
       return "Submitted directly to Local Office";
     }
 
-    if (CojUtilities.canBeSigned(new Date(startDate))) {
+    if (this.canBeSigned(new Date(startDate))) {
       return "Not signed";
     }
 
     const signableDate = DateUtilities.ToLocalDate(
-      CojUtilities.getSignableFromDate(new Date(startDate))
+      this.getSignableFromDate(new Date(startDate))
     );
     return `Not signed, available from ${signableDate}`;
   }
@@ -27,9 +28,19 @@ export class CojUtilities {
     return matcher && matcher[1] ? `Gold Guide ${matcher[1]}` : "Unknown";
   }
 
+  public static canAnyBeSigned(
+    programmeMemberships: ProgrammeMembership[]
+  ): boolean {
+    return programmeMemberships.some(
+      pm =>
+        !pm.conditionsOfJoining.signedAt &&
+        this.canBeSigned(new Date(pm.startDate))
+    );
+  }
+
   public static canBeSigned(startDate: Date): boolean {
     const now = new Date();
-    const signableFrom = CojUtilities.getSignableFromDate(startDate);
+    const signableFrom = this.getSignableFromDate(startDate);
     return now >= signableFrom && startDate >= COJ_EPOCH;
   }
 

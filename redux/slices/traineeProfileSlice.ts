@@ -4,9 +4,12 @@ import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { initialPersonalDetails } from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { ProgrammeMembership } from "../../models/ProgrammeMembership";
+import { CojUtilities } from "../../utilities/CojUtilities";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
+  hasSignableCoj: boolean;
   status: string;
   error: any;
 }
@@ -18,6 +21,7 @@ export const initialState: IProfile = {
     programmeMemberships: [],
     placements: []
   },
+  hasSignableCoj: false,
   status: "idle",
   error: ""
 };
@@ -28,6 +32,16 @@ export const fetchTraineeProfileData = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<TraineeProfile> =
       await traineeProfileService.getTraineeProfile();
+    return response.data;
+  }
+);
+
+export const signCoj = createAsyncThunk(
+  "traineeProfile/programmeMembership/signCoj",
+  async (programmeMembershipId: string) => {
+    const traineeProfileService = new TraineeProfileService();
+    const response: AxiosResponse<ProgrammeMembership> =
+      await traineeProfileService.signCoj(programmeMembershipId);
     return response.data;
   }
 );
@@ -68,8 +82,29 @@ const traineeProfileSlice = createSlice({
           true
         );
         state.traineeProfileData.placements = sortedPlacements;
+        state.hasSignableCoj = CojUtilities.canAnyBeSigned(sortedProgrammes);
       })
       .addCase(fetchTraineeProfileData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(signCoj.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(signCoj.fulfilled, (state, action) => {
+        // Update the signed Programme Membership.
+        const tisId = action.payload.tisId;
+        const index = state.traineeProfileData.programmeMemberships.findIndex(
+          pm => pm.tisId === tisId
+        );
+        state.traineeProfileData.programmeMemberships[index] = action.payload;
+
+        // Show/hide the COJ alert.
+        state.hasSignableCoj = CojUtilities.canAnyBeSigned(
+          state.traineeProfileData.programmeMemberships
+        );
+      })
+      .addCase(signCoj.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

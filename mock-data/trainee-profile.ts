@@ -221,6 +221,34 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   ]
 };
 
+export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
+  tisId: "1",
+  programmeName: "",
+  programmeNumber: "",
+  startDate: new Date("2010-10-14"),
+  endDate: new Date("2011-10-14"),
+  managingDeanery: "",
+  curricula: [],
+  conditionsOfJoining: {
+    signedAt: new Date("2010-10-14"),
+    version: "GG8"
+  }
+};
+
+export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership = {
+  tisId: "1",
+  programmeName: "",
+  programmeNumber: "",
+  startDate: new Date("2010-10-14"),
+  endDate: new Date("2011-10-14"),
+  managingDeanery: "",
+  curricula: [],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: "GG8"
+  }
+};
+
 export const mockPlacements: Placement[] = [
   {
     endDate: new Date("2020-12-31"),

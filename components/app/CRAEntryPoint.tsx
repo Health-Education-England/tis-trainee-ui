@@ -21,12 +21,13 @@ import {
 } from "../authentication/signup/constants/AuthConstants";
 import style from "../authentication/Auth.module.scss";
 import { I18n } from "@aws-amplify/core";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { Main } from "../main/Main";
 import Notifications from "../common/notifications/Notifications";
 import browserUpdateConfig from "../../browser-update-config.json";
 import TagManager from "react-gtm-module";
 import packageJson from "../../package.json";
+import history from "../navigation/history";
 
 const appVersion = packageJson.version;
 
@@ -118,12 +119,12 @@ function CRAEntryPoint() {
       formFields={formFields}
     >
       {({ signOut }) => (
-        <BrowserRouter>
+        <Router history={history}>
           <>
             <Notifications />
             <Main signOut={signOut} appVersion={appVersion} />
           </>
-        </BrowserRouter>
+        </Router>
       )}
     </Authenticator>
   );
