@@ -64,7 +64,7 @@ describe("ProfileUtilities", () => {
     const progMem = ProfileUtilities.getRecentProgramme(
       mockProgrammeMemberships
     );
-    expect(progMem).toBe(mockProgrammeMemberships[1]);
+    expect(progMem).toBe(mockProgrammeMemberships[2]);
   });
   it("should return null when no programme membership", () => {
     const curriculum = ProfileUtilities.getCurriculum(null);
