@@ -7,7 +7,7 @@ import {
 } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import MultiChoiceInputField from "../MultiChoiceInputField";
-import CojAug22 from "./CojAug22";
+import CojGg9 from "./CojGg9";
 import * as Yup from "yup";
 import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
@@ -77,7 +77,7 @@ function CojDeclarationSection() {
           history.push("/programmes");
         }}
       >
-        {({ handleSubmit, isSubmitting }) => (
+        {({ handleSubmit, isSubmitting, isValid }) => (
           <>
             <SummaryList noBorder>
               <SummaryList.Row>
@@ -91,6 +91,7 @@ function CojDeclarationSection() {
               id="declareProvisional"
               type="checkbox"
               name="declareProvisional"
+              data-cy="declareProvisional"
               items={[
                 {
                   label: `I understand that programme and post allocations are provisional and subject to change until confirmed by HEE WM and/or my employing organisation.`,
@@ -102,6 +103,7 @@ function CojDeclarationSection() {
               id="declareSatisfy"
               type="checkbox"
               name="declareSatisfy"
+              data-cy="declareSatisfy"
               items={[
                 {
                   label:
@@ -114,6 +116,7 @@ function CojDeclarationSection() {
               id="declareProvide"
               type="checkbox"
               name="declareProvide"
+              data-cy="declareProvide"
               items={[
                 {
                   label: `I will obtain and provide my School and HEE WM with a professional email address.`,
@@ -125,6 +128,7 @@ function CojDeclarationSection() {
               id="declareInform"
               type="checkbox"
               name="declareInform"
+              data-cy="declareInform"
               items={[
                 {
                   label: `I will inform my School and HEE WM of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements.`,
@@ -136,6 +140,7 @@ function CojDeclarationSection() {
               id="declareUpToDate"
               type="checkbox"
               name="declareUpToDate"
+              data-cy="declareUpToDate"
               items={[
                 {
                   label: `I will keep myself up to date with the latest information available via HEE as well as via the relevant educational and regulatory websites.`,
@@ -147,6 +152,7 @@ function CojDeclarationSection() {
               id="declareAttend"
               type="checkbox"
               name="declareAttend"
+              data-cy="declareAttend"
               items={[
                 {
                   label: `I will attend the minimum number of formal teaching days as required by my School/programme.`,
@@ -158,6 +164,7 @@ function CojDeclarationSection() {
               id="declareEngage"
               type="checkbox"
               name="declareEngage"
+              data-cy="declareEngage"
               items={[
                 {
                   label: `Where applicable, I will fully engage with immigration and employer requirements relating to Tier 2 and Tier 4 UK visas.`,
@@ -170,7 +177,7 @@ function CojDeclarationSection() {
                 e.preventDefault();
                 handleSubmit();
               }}
-              disabled={isSubmitting}
+              disabled={!isValid || isSubmitting}
               data-cy="cogSignBtn"
             >
               Click to sign Conditions of Joining agreement
@@ -186,5 +193,5 @@ type COJversionType = {
   progName: string;
 };
 function CojVersion({ progName }: COJversionType) {
-  return <CojAug22 progName={progName} />;
+  return <CojGg9 progName={progName} />;
 }

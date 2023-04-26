@@ -1,15 +1,17 @@
 import { Card, SummaryList } from "nhsuk-react-components";
 
-type CojAug22Props = {
+type CojGg9Props = {
   progName: string;
 };
 
-const CojAug22: React.FC<CojAug22Props> = ({ progName }) => {
+const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
   return (
     <>
       <Card feature>
         <Card.Content>
-          <Card.Heading>Conditions of Joining Agreement</Card.Heading>
+          <Card.Heading data-cy="cojHeading">
+            Conditions of Joining Agreement
+          </Card.Heading>
           <h3 className="card-heading-spaced-top">{`${progName} Specialty Training Programme `}</h3>
           <SummaryList noBorder>
             <SummaryList.Row>
@@ -245,4 +247,4 @@ const CojAug22: React.FC<CojAug22Props> = ({ progName }) => {
   );
 };
 
-export default CojAug22;
+export default CojGg9;
