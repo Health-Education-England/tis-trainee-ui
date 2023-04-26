@@ -54,7 +54,13 @@ const traineeProfileSlice = createSlice({
       return initialState;
     },
     updatedTraineeProfileData(state, action: PayloadAction<TraineeProfile>) {
-      return { ...state, traineeProfileData: action.payload };
+      return {
+        ...state,
+        traineeProfileData: action.payload,
+        hasSignableCoj: CojUtilities.canAnyBeSigned(
+          action.payload.programmeMemberships
+        )
+      };
     },
     updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };

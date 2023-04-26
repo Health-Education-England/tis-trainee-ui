@@ -135,6 +135,10 @@ export const mockProgrammeMembershipNonTemplatedField = {
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
   curricula: [],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: "GG8"
+  },
   nonTemplatedField: "nonTemplatedField"
 };
 
@@ -148,7 +152,11 @@ export const mockProgrammeMembershipNoCurricula = {
   managingDeanery: "Health Education England East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
-  curricula: []
+  curricula: [],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: "GG8"
+  }
 };
 
 export const mockProgrammeMembershipNoMedicalCurricula = {
@@ -183,7 +191,11 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
       curriculumStartDate: new Date("2022-08-01"),
       curriculumEndDate: new Date("2025-08-01")
     }
-  ]
+  ],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: "GG8"
+  }
 };
 
 export const mockProgrammeMembershipDuplicateCurriculaStart = {
@@ -218,7 +230,11 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
       curriculumStartDate: new Date("2022-01-01"),
       curriculumEndDate: new Date("2025-03-01")
     }
-  ]
+  ],
+  conditionsOfJoining: {
+    signedAt: null,
+    version: "GG8"
+  }
 };
 
 export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
