@@ -121,6 +121,44 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
       signedAt: null,
       version: "GG8"
     }
+  },
+  {
+    startDate: new Date("2023-06-01"),
+    endDate: new Date("2024-01-01"),
+    programmeCompletionDate: new Date("2021-12-31"),
+    tisId: "3",
+    programmeName: "General Practice",
+    programmeNumber: "EOE8950",
+    managingDeanery: "Health Education England East of England",
+    programmeMembershipType: "LAT",
+    status: Status.Current,
+    curricula: [
+      {
+        curriculumTisId: "4",
+        curriculumName: "ST4",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2022-01-01"),
+        curriculumEndDate: new Date("2023-01-01")
+      },
+      {
+        curriculumTisId: "5",
+        curriculumName: "ST5",
+        curriculumSubType: "ACF_OTHER_FUNDING",
+        curriculumStartDate: new Date("2022-06-01"),
+        curriculumEndDate: new Date("2024-06-01")
+      },
+      {
+        curriculumTisId: "6",
+        curriculumName: "ST6",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2022-08-01"),
+        curriculumEndDate: new Date("2025-08-01")
+      }
+    ],
+    conditionsOfJoining: {
+      signedAt: new Date("2023-05-01"),
+      version: "GG8"
+    }
   }
 ];
 

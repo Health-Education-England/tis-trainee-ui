@@ -238,3 +238,38 @@ describe("Programmes - dsp membership", () => {
     cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
   });
 });
+
+describe("Programmes - conditions of joining", () => {
+  beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammeMemberships,
+        placements: []
+      })
+    );
+    store.dispatch(updatedTraineeProfileStatus("succeeded"));
+  });
+  it("should not show the sign coj btn if start day is before COJ EPOCH day", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Programmes />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="cojSignBtn-1"]').should("not.exist");
+  });
+  it("should not show the sign coj btn if COJ is signed", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Programmes />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="cojSignBtn-3"]').should("not.exist");
+  });
+});
