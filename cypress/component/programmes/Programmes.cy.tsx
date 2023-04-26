@@ -8,7 +8,9 @@ import {
   mockPersonalDetails,
   mockProgrammeMemberships,
   mockProgrammeMembershipNoCurricula,
-  mockProgrammeMembershipNonTemplatedField
+  mockProgrammeMembershipNonTemplatedField,
+  mockProgrammeMembershipCojNotSigned,
+  mockProgrammeMembershipCojSigned
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -236,5 +238,48 @@ describe("Programmes - dsp membership", () => {
       </Provider>
     );
     cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
+  });
+});
+
+describe("Programme summary panel", () => {
+  it("should show COJ status", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [
+            mockProgrammeMembershipCojNotSigned,
+            mockProgrammeMembershipCojSigned
+          ],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="conditionsOfJoining0Key"]')
+      .should("exist")
+      .and("have.text", "Conditions of Joining");
+
+    cy.get('[data-cy="conditionsOfJoining0Val"]')
+      .children('[data-cy="unsignedCoj"]')
+      .should("exist");
+
+    cy.get('[data-cy="conditionsOfJoining1Key"]')
+      .should("exist")
+      .and("have.text", "Conditions of Joining");
+    cy.get('[data-cy="conditionsOfJoining1Val"]')
+      .children('[data-cy="signedCoj"]')
+      .should("exist");
   });
 });
