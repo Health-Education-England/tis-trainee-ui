@@ -98,6 +98,7 @@ const traineeProfileSlice = createSlice({
         state.status = "loading";
       })
       .addCase(signCoj.fulfilled, (state, action) => {
+        state.status = "succeeded";
         // Update the signed Programme Membership.
         const tisId = action.payload.tisId;
         const index = state.traineeProfileData.programmeMemberships.findIndex(

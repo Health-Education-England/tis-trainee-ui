@@ -1,16 +1,11 @@
 import { Formik } from "formik";
 import { Button } from "nhsuk-react-components";
 import { useEffect } from "react";
-import {
-  updatedSignedCoj,
-  updatedsigningCojProgName
-} from "../../../redux/slices/userSlice";
+import { signCoj } from "../../../redux/slices/traineeProfileSlice";
+import { updatedsigningCojProgName } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
-import { TraineeProfileService } from "../../../services/TraineeProfileService";
-import { AxiosResponse } from "axios";
-import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import CojGg9 from "./CojGg9";
 
 const CojView: React.FC = () => {
@@ -37,12 +32,8 @@ function CojDeclarationSection() {
       <Formik
         initialValues={{}}
         onSubmit={async _values => {
-          const traineeProfileService = new TraineeProfileService();
-          const response: AxiosResponse<ProgrammeMembership> =
-            await traineeProfileService.signCoj(
-              store.getState().user.signingCojPmId
-            );
-          store.dispatch(updatedSignedCoj(response.data.conditionsOfJoining));
+          const signingCojPmId = store.getState().user.signingCojPmId;
+          await store.dispatch(signCoj(signingCojPmId));
           history.push("/programmes");
         }}
       >

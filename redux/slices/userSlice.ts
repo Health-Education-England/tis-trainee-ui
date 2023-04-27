@@ -15,7 +15,6 @@ interface IUser {
   cognitoGroups: string[] | undefined;
   signingCojProgName: string | null;
   signingCojPmId: string;
-  signedCoj: any;
 }
 
 const initialState: IUser = {
@@ -29,8 +28,7 @@ const initialState: IUser = {
   username: "",
   cognitoGroups: undefined,
   signingCojProgName: null,
-  signingCojPmId: "",
-  signedCoj: null
+  signingCojPmId: ""
 };
 
 export const getCognitoGroups = createAsyncThunk(
@@ -151,9 +149,6 @@ const userSlice = createSlice({
     },
     updatedsigningCojPmId(state, action: PayloadAction<string>) {
       return { ...state, signingCojPmId: action.payload };
-    },
-    updatedSignedCoj(state, action: PayloadAction<ConditionsOfJoiningModel>) {
-      return { ...state, signedCoj: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -245,6 +240,5 @@ export const {
   updatedPreferredMfa,
   updatedCognitoGroups,
   updatedsigningCojProgName,
-  updatedsigningCojPmId,
-  updatedSignedCoj
+  updatedsigningCojPmId
 } = userSlice.actions;
