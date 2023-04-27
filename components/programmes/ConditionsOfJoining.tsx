@@ -74,5 +74,5 @@ export function ConditionsOfJoining({
 function viewCoj(programmeMembershipId: string, programmeName: string) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
-  history.push(`/programmes/${programmeMembershipId}`);
+  history.push(`/programmes/${programmeMembershipId}/sign-coj`);
 }

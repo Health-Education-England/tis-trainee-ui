@@ -83,7 +83,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
             <Route exact path="/home" component={Home} />
             <Route exact path="/placements" component={Placements} />
             <Route exact path="/programmes" component={Programmes} />
-            <Route exact path="/programmes/:id" component={CojView} />
+            <Route exact path="/programmes/:id/sign-coj" component={CojView} />
             <Route exact path="/profile" component={Profile} />
             <Route path="/credential" component={Dsp} />
             <Route path="/formr-a" component={FormRPartA} />
