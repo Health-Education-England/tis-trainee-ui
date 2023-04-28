@@ -149,7 +149,7 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojStatusText]")
         .should("exist")
-        .and("have.text", "Submitted directly to Local Office");
+        .and("have.text", "Follow Local Office process");
     });
 
     it("should show available signing date when start date after COJ epoch but outside 13 weeks", () => {
