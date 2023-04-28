@@ -21,6 +21,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -32,6 +34,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -43,6 +47,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -56,6 +62,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -69,6 +77,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={{ ...conditionsOfJoining, version: "v123" }}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -89,6 +99,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -100,6 +112,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -111,6 +125,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={null}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -126,6 +142,8 @@ describe("ConditionsOfJoining", () => {
           startDate={new Date(
             COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000
           ).toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -141,6 +159,8 @@ describe("ConditionsOfJoining", () => {
           startDate={new Date(
             COJ_EPOCH.getTime() + 14 * 7 * 24 * 60 * 60 * 1000
           ).toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -159,6 +179,8 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={""}
+          programmeName={""}
         />
       );
 
@@ -172,10 +194,12 @@ describe("ConditionsOfJoining", () => {
         <ConditionsOfJoining
           conditionsOfJoining={conditionsOfJoining}
           startDate={COJ_EPOCH.toISOString()}
+          programmeMembershipId={"1"}
+          programmeName={"pmName"}
         />
       );
 
-      cy.get("[data-cy=cojSignBtn]").should("exist");
+      cy.get("[data-cy=cojSignBtn-1]").should("exist");
     });
   });
 });

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "aws-amplify";
 import { MFAType } from "../../models/MFAStatus";
+import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 
 interface IUser {
   status: string;
@@ -12,6 +13,8 @@ interface IUser {
   preferredMfa: any;
   username: string;
   cognitoGroups: string[] | undefined;
+  signingCojProgName: string | null;
+  signingCojPmId: string;
 }
 
 const initialState: IUser = {
@@ -23,7 +26,9 @@ const initialState: IUser = {
   totpCode: "",
   preferredMfa: "NOMFA",
   username: "",
-  cognitoGroups: undefined
+  cognitoGroups: undefined,
+  signingCojProgName: null,
+  signingCojPmId: ""
 };
 
 export const getCognitoGroups = createAsyncThunk(
@@ -138,6 +143,12 @@ const userSlice = createSlice({
     },
     updatedCognitoGroups(state, action: PayloadAction<Array<string>>) {
       return { ...state, cognitoGroups: action.payload };
+    },
+    updatedsigningCojProgName(state, action: PayloadAction<null | string>) {
+      return { ...state, signingCojProgName: action.payload };
+    },
+    updatedsigningCojPmId(state, action: PayloadAction<string>) {
+      return { ...state, signingCojPmId: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -227,5 +238,7 @@ export const {
   updatedTotpSection,
   updatedSmsSection,
   updatedPreferredMfa,
-  updatedCognitoGroups
+  updatedCognitoGroups,
+  updatedsigningCojProgName,
+  updatedsigningCojPmId
 } = userSlice.actions;
