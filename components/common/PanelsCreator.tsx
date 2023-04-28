@@ -28,8 +28,6 @@ export function PanelsCreator({
   panelKeys
 }: PanelsCreatorProps) {
   const cognitoGroups = store.getState().user.cognitoGroups;
-  const signedCoj = store.getState().user.signedCoj;
-  const signingCojPmId = store.getState().user.signingCojPmId;
   const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
     "dsp-beta-consultants"
   );
@@ -54,11 +52,7 @@ export function PanelsCreator({
                           />
                         ) : panelProp === "conditionsOfJoining" ? (
                           <ConditionsOfJoining
-                            conditionsOfJoining={
-                              signedCoj && signingCojPmId === tisId
-                                ? signedCoj
-                                : filteredPanel[panelProp]
-                            }
+                            conditionsOfJoining={filteredPanel[panelProp]}
                             startDate={filteredPanel["startDate"]}
                             programmeMembershipId={tisId}
                             programmeName={filteredPanel.programmeName}
