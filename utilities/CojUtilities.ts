@@ -10,7 +10,7 @@ export class CojUtilities {
     }
 
     if (new Date(startDate) < COJ_EPOCH) {
-      return "Submitted directly to Local Office";
+      return "Follow Local Office process";
     }
 
     if (this.canBeSigned(new Date(startDate))) {

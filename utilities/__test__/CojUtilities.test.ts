@@ -30,7 +30,7 @@ describe("CojUtilities", () => {
     it("should return submitted to LO when start date before coj epoch", () => {
       const minDate = new Date(PRE_COJ_EPOCH).toISOString();
       expect(CojUtilities.getStatusText(minDate)).toEqual(
-        "Submitted directly to Local Office"
+        "Follow Local Office process"
       );
     });
 
