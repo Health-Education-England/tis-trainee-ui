@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "aws-amplify";
 import { MFAType } from "../../models/MFAStatus";
-import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 
 interface IUser {
   status: string;
@@ -15,6 +14,7 @@ interface IUser {
   cognitoGroups: string[] | undefined;
   signingCojProgName: string | null;
   signingCojPmId: string;
+  signingCoj: boolean;
 }
 
 const initialState: IUser = {
@@ -28,7 +28,8 @@ const initialState: IUser = {
   username: "",
   cognitoGroups: undefined,
   signingCojProgName: null,
-  signingCojPmId: ""
+  signingCojPmId: "",
+  signingCoj: false
 };
 
 export const getCognitoGroups = createAsyncThunk(
@@ -149,6 +150,9 @@ const userSlice = createSlice({
     },
     updatedsigningCojPmId(state, action: PayloadAction<string>) {
       return { ...state, signingCojPmId: action.payload };
+    },
+    updatedsigningCoj(state, action: PayloadAction<boolean>) {
+      return { ...state, signingCoj: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -240,5 +244,6 @@ export const {
   updatedPreferredMfa,
   updatedCognitoGroups,
   updatedsigningCojProgName,
-  updatedsigningCojPmId
+  updatedsigningCojPmId,
+  updatedsigningCoj
 } = userSlice.actions;

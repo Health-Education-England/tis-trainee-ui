@@ -1,21 +1,18 @@
 import { Formik } from "formik";
 import { Button } from "nhsuk-react-components";
-import { useEffect } from "react";
 import { signCoj } from "../../../redux/slices/traineeProfileSlice";
-import { updatedsigningCojProgName } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
 import CojGg9 from "./CojGg9";
+import { Redirect } from "react-router-dom";
+import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 
 const CojView: React.FC = () => {
+  const signingCoj = store.getState().user.signingCoj;
   const progName = store.getState().user.signingCojProgName;
-  useEffect(() => {
-    return () => {
-      store.dispatch(updatedsigningCojProgName(null));
-    };
-  }, []);
 
+  if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
     <>
       <ScrollTo />
@@ -34,6 +31,7 @@ function CojDeclarationSection() {
         onSubmit={async _values => {
           const signingCojPmId = store.getState().user.signingCojPmId;
           await store.dispatch(signCoj(signingCojPmId));
+          store.dispatch(updatedsigningCoj(false));
           history.push("/programmes");
         }}
       >

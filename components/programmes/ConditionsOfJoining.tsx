@@ -1,5 +1,6 @@
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
+  updatedsigningCoj,
   updatedsigningCojPmId,
   updatedsigningCojProgName
 } from "../../redux/slices/userSlice";
@@ -74,5 +75,6 @@ export function ConditionsOfJoining({
 function viewCoj(programmeMembershipId: string, programmeName: string) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
+  store.dispatch(updatedsigningCoj(true));
   history.push(`/programmes/${programmeMembershipId}/sign-coj`);
 }
