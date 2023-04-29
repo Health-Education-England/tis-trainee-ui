@@ -5,7 +5,10 @@ import store from "../../../redux/store/store";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedsigningCojProgName } from "../../../redux/slices/userSlice";
+import {
+  updatedsigningCoj,
+  updatedsigningCojProgName
+} from "../../../redux/slices/userSlice";
 import CojView from "../../../components/forms/conditionOfJoining/CojView";
 
 describe("COJ Contents View", () => {
@@ -13,6 +16,7 @@ describe("COJ Contents View", () => {
     const MockedCojView = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedsigningCojProgName("General Practice"));
+      dispatch(updatedsigningCoj(true));
       return <CojView />;
     };
     mount(
