@@ -110,16 +110,16 @@ export const Section2ValidationSchema = yup.object({
   totalLeave: leaveValidation("Total")
 });
 
-const acceptanceValidation = yup
+export const acceptanceValidation = yup
   .bool()
   .nullable()
-  .oneOf([true], "You must confirm your acceptance")
-  .required("You must confirm your acceptance");
+  .oneOf([true], "Please confirm your acceptance")
+  .required("Please confirm your acceptance");
 
 export const Section3ValidationSchema = yup.object({
   isHonest: acceptanceValidation,
   isHealthy: acceptanceValidation,
-  isWarned: yup.boolean().nullable().required("You must select yes or no"),
+  isWarned: yup.boolean().nullable().required("Please select yes or no"),
   isComplying: yup.boolean().nullable().when("isWarned", {
     is: true,
     then: acceptanceValidation
@@ -130,11 +130,11 @@ export const Section4ValidationSchema = yup.object({
   havePreviousDeclarations: yup
     .boolean()
     .nullable()
-    .required("You must select yes or no"),
+    .required("Please select yes or no"),
   havePreviousUnresolvedDeclarations: yup
     .boolean()
     .nullable()
-    .required("You must select yes or no"),
+    .required("Please select yes or no"),
   previousDeclarations: yup
     .array(panelSchema)
     .when("havePreviousDeclarations", {
@@ -157,11 +157,11 @@ export const Section5ValidationSchema = yup.object({
   haveCurrentDeclarations: yup
     .boolean()
     .nullable()
-    .required("You must select yes or no"),
+    .required("Please select yes or no"),
   haveCurrentUnresolvedDeclarations: yup
     .boolean()
     .nullable()
-    .required("You must select yes or no"),
+    .required("Please select yes or no"),
   currentDeclarations: yup.array(panelSchema).when("haveCurrentDeclarations", {
     is: true,
     then: panelSchemaValidation
@@ -187,7 +187,7 @@ export const CovidSectionValidationSchema = yup.object({
   haveCovidDeclarations: yup
     .boolean()
     .nullable()
-    .required("You must select yes or no"),
+    .required("Please select yes or no"),
   covidDeclarationDto: yup
     .object()
     .nullable()
@@ -223,7 +223,7 @@ export const CovidSectionValidationSchema = yup.object({
           haveChangesToPlacement: yup
             .boolean()
             .nullable()
-            .required("You must select yes or no"),
+            .required("Please select yes or no"),
           changeCircumstances: yup
             .string()
             .nullable()

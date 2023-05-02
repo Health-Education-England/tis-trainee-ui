@@ -59,7 +59,7 @@ it("should mount section 6 ", () => {
   cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
   cy.get("#isConsentAccepted--error-message")
     .should("exist")
-    .should("contain.text", "Error: You must confirm your acceptance");
+    .should("contain.text", "Error: Please confirm your acceptance");
   cy.get("[data-cy=BtnSubmitForm]").should("be.disabled");
   cy.get("[data-cy=isConsentAccepted0]").should("exist").click();
   cy.get("[data-cy=BtnSubmitForm]").should("not.be.disabled").click();

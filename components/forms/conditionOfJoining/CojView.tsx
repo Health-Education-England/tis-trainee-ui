@@ -8,6 +8,7 @@ import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
 import CojGg9 from "./CojGg9";
 import * as Yup from "yup";
+import { acceptanceValidation } from "../formr-part-b/ValidationSchema";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 
@@ -30,37 +31,23 @@ function CojDeclarationSection() {
   return (
     <>
       <Formik
-        // validateOnChange={false}
-        // validateOnBlur={false}
         initialValues={{
-          declareProvisional: "",
-          declareSatisfy: "",
-          declareProvide: "",
-          declareInform: "",
-          declareUpToDate: "",
-          declareAttend: "",
-          declareEngage: ""
+          isDeclareProvisional: "",
+          isDeclareSatisfy: "",
+          isDeclareProvide: "",
+          isDeclareInform: "",
+          isDeclareUpToDate: "",
+          isDeclareAttend: "",
+          isDeclareEngage: ""
         }}
         validationSchema={Yup.object({
-          declareProvisional: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareSatisfy: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareProvide: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareInform: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareUpToDate: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareAttend: Yup.string().required(
-            "Please confirm your acceptance"
-          ),
-          declareEngage: Yup.string().required("Please confirm your acceptance")
+          isDeclareProvisional: acceptanceValidation,
+          isDeclareSatisfy: acceptanceValidation,
+          isDeclareProvide: acceptanceValidation,
+          isDeclareInform: acceptanceValidation,
+          isDeclareUpToDate: acceptanceValidation,
+          isDeclareAttend: acceptanceValidation,
+          isDeclareEngage: acceptanceValidation
         })}
         onSubmit={async _values => {
           const signingCojPmId = store.getState().user.signingCojPmId;
@@ -80,9 +67,9 @@ function CojDeclarationSection() {
               </SummaryList.Row>
             </SummaryList>
             <MultiChoiceInputField
-              id="declareProvisional"
+              id="isDeclareProvisional"
               type="checkbox"
-              name="declareProvisional"
+              name="isDeclareProvisional"
               items={[
                 {
                   label: `I understand that programme and post allocations are provisional and subject to change until confirmed by HEE WM and/or my employing organisation.`,
@@ -91,9 +78,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareSatisfy"
+              id="isDeclareSatisfy"
               type="checkbox"
-              name="declareSatisfy"
+              name="isDeclareSatisfy"
               items={[
                 {
                   label:
@@ -103,9 +90,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareProvide"
+              id="isDeclareProvide"
               type="checkbox"
-              name="declareProvide"
+              name="isDeclareProvide"
               items={[
                 {
                   label: `I will obtain and provide my School and HEE WM with a professional email address.`,
@@ -114,9 +101,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareInform"
+              id="isDeclareInform"
               type="checkbox"
-              name="declareInform"
+              name="isDeclareInform"
               items={[
                 {
                   label: `I will inform my School and HEE WM of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements.`,
@@ -125,9 +112,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareUpToDate"
+              id="isDeclareUpToDate"
               type="checkbox"
-              name="declareUpToDate"
+              name="isDeclareUpToDate"
               items={[
                 {
                   label: `I will keep myself up to date with the latest information available via HEE as well as via the relevant educational and regulatory websites.`,
@@ -136,9 +123,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareAttend"
+              id="isDeclareAttend"
               type="checkbox"
-              name="declareAttend"
+              name="isDeclareAttend"
               items={[
                 {
                   label: `I will attend the minimum number of formal teaching days as required by my School/programme.`,
@@ -147,9 +134,9 @@ function CojDeclarationSection() {
               ]}
             />
             <MultiChoiceInputField
-              id="declareEngage"
+              id="isDeclareEngage"
               type="checkbox"
-              name="declareEngage"
+              name="isDeclareEngage"
               items={[
                 {
                   label: `Where applicable, I will fully engage with immigration and employer requirements relating to Tier 2 and Tier 4 UK visas.`,
