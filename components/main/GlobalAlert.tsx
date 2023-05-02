@@ -5,10 +5,10 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 
 const GlobalAlert = () => {
   const currentPath = useLocation().pathname;
-  const hasSIgnableCoj = useAppSelector(
+  const hasSignableCoj = useAppSelector(
     state => state.traineeProfile.hasSignableCoj
   );
-  const showCojAlert = hasSIgnableCoj && !currentPath.includes("/sign-coj");
+  const showCojAlert = hasSignableCoj && !currentPath.includes("/sign-coj");
 
   const alerts = {
     coj: {
