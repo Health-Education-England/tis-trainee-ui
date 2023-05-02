@@ -189,5 +189,15 @@ describe("GlobalAlert", () => {
 
       cy.get("[data-cy=cojLink]").should("not.exist");
     });
+    it("should not render the Coj alert when on the Coj form page", () => {
+      mount(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={["/121/sign-coj"]}>
+            <GlobalAlert />
+          </MemoryRouter>
+        </Provider>
+      );
+      cy.get("[data-cy=cojAlert]").should("not.exist");
+    });
   });
 });

@@ -1,9 +1,28 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { RootState } from "../../redux/store/store";
 
 const GlobalAlert = () => {
-  return !useAppSelector(state => hasAlerts(state)) ? null : (
+  const currentPath = useLocation().pathname;
+  const hasSignableCoj = useAppSelector(
+    state => state.traineeProfile.hasSignableCoj
+  );
+  const showCojAlert = hasSignableCoj && !currentPath.includes("/sign-coj");
+
+  const alerts = {
+    coj: {
+      status: showCojAlert,
+      component: <CojAlert />
+    }
+  };
+
+  const [hasAlerts, setHasAlerts] = useState(false);
+  useEffect(() => {
+    setHasAlerts(Object.values(alerts).some(alert => alert.status));
+  }, [alerts]);
+
+  return hasAlerts ? (
     <div
       className="app-global-alert"
       id="app-global-alert"
@@ -11,23 +30,20 @@ const GlobalAlert = () => {
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
-        <CojAlert />
+        {Object.entries(alerts).map(
+          ([type, alert]) =>
+            alert.status && (
+              <React.Fragment key={type}>{alert.component}</React.Fragment>
+            )
+        )}
       </div>
     </div>
-  );
+  ) : null;
 };
-
-function hasAlerts(state: RootState) {
-  return state.traineeProfile.hasSignableCoj;
-}
 
 function CojAlert() {
   const pathName = useLocation().pathname;
-  const showCojAlert = useAppSelector(
-    state => state.traineeProfile.hasSignableCoj
-  );
-
-  return !showCojAlert ? null : (
+  return (
     <div className="nhsuk-grid-row" data-cy="cojAlert">
       <div className="nhsuk-grid-column-full">
         <div className="app-global-alert__content">
