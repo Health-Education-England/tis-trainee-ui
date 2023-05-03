@@ -36,7 +36,7 @@
     "cypress-mochawesome-reporter": "^3.3.0",
     "cypress-otp": "^1.0.3",
     "dayjs": "^1.11.7",
-    "eslint": "^8.30.0",
+    "eslint": "^8.39.0",
     "eslint-config-next": "13.0.7",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
