@@ -80,6 +80,23 @@ function CojDeclarationSection() {
                 ]}
               />
             ))}
+            <SummaryList noBorder>
+              <SummaryList.Row>
+                <SummaryList.Value>
+                  I acknowledge the importance of these responsibilities and
+                  understand that they are requirements for maintaining my
+                  registration with the Postgraduate Dean. If I fail to meet
+                  them, I understand that my training number/contract may be
+                  withdrawn by the Postgraduate Dean.
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Value>
+                  I understand that this document does not constitute an offer
+                  of employment.
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
