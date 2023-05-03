@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import React from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 
@@ -10,12 +10,15 @@ const GlobalAlert = () => {
   );
   const showCojAlert = hasSignableCoj && !currentPath.includes("/sign-coj");
 
-  const alerts = {
-    coj: {
-      status: showCojAlert,
-      component: <CojAlert />
-    }
-  };
+  const alerts = useMemo(
+    () => ({
+      coj: {
+        status: showCojAlert,
+        component: <CojAlert />
+      }
+    }),
+    [showCojAlert]
+  );
 
   const [hasAlerts, setHasAlerts] = useState(false);
   useEffect(() => {
