@@ -195,35 +195,6 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 unsatisfactory outcome.
               </li>
             </ul>
-            <ol>
-              In addition, I acknowledge the following specific information
-              requirements:
-              <li>
-                I understand that programme and post allocations are provisional
-                and subject to change until confirmed by HEE/NES/ HEIW/NIMDTA
-                and/or my employing organisation.
-              </li>
-              <li>
-                I understand that I will need to satisfy all requirements of the
-                programme and curriculum to enable satisfactory sign off, and
-                that this may require a specific time commitment.
-              </li>
-              <li>
-                I agree to the following: a) I will obtain and provide my School
-                and HEE/NES/HEIW/NIMDTA with a professional email address. b) I
-                will inform my School and HEE/NES/HEIW/NIMDTA of any change of
-                my personal contact details and/or personal circumstances that
-                may affect my training programme arrangements. c) I will keep
-                myself up to date with the latest information available via
-                HEE/NES/HEIW/NIMDTA as well as via the relevant educational and
-                regulatory websites. d) I will attend the minimum number of
-                formal teaching days as required by my School/programme.
-              </li>
-              <li>
-                Where applicable, I will fully engage with immigration and
-                employer requirements relating to Tier 2 and Tier 4 UK visas.
-              </li>
-            </ol>
           </SummaryList>
         </Card.Content>
       </Card>
