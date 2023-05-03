@@ -68,6 +68,7 @@ function CojDeclarationSection() {
             </SummaryList>
             {COJ_DECLARATIONS.map(declaration => (
               <MultiChoiceInputField
+                key={declaration.id}
                 id={declaration.id}
                 type="checkbox"
                 name={declaration.id}
