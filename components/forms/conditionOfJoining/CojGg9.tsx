@@ -110,11 +110,11 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 investigations.
               </li>
               <li>
-                will inform my Responsible Officer, HEE/NES/HEIW/NIMDTA and my
+                I will inform my Responsible Officer, HEE/NES/HEIW/NIMDTA and my
                 employer immediately if the MTPS or GMC/GDC place any conditions
                 (interim or otherwise) on my licence, or if I am suspended or
                 erased/removed from the Medical or Dental Register/Performers
-                List , or if NHS England take action to restrict my ability to
+                List, or if NHS England take action to restrict my ability to
                 work as a doctor or a dentist.
               </li>
               <li>
@@ -145,22 +145,30 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 information about my performance as a doctor in training with
                 other organisations (e.g. employers, medical schools, the GMC,
                 Colleges/training bodies involved in my training) and with the
-                Postgraduate Dean on a regular basis
+                Postgraduate Dean on a regular basis.
               </li>
               <li>
                 I acknowledge that data will be collected to support the
                 following processes and I will comply with the requirements of
                 the General Data Protection Regulation (GDPR) May 2018, Data
                 Protection Act (DPA) 2018 and other such data protection as is
-                in force from time to time: a) Managing the provision of
-                training programmes b) Managing processes allied to training
-                programmes, such as certification, evidence to support
-                revalidation and supporting the requirements of regulators c)
-                Quality assurance of training programmes d) Workforce planning
-                e) Ensuring and improving patient safety f) Compliance with
-                legal and regulatory responsibilities, including monitoring
-                under the Equality Act 2010 g) Research related to any of the
-                above
+                in force from time to time:
+                <ol type="a">
+                  <li>Managing the provision of training programmes</li>
+                  <li>
+                    Managing processes allied to training programmes, such as
+                    certification, evidence to support revalidation and
+                    supporting the requirements of regulators
+                  </li>
+                  <li>Quality assurance of training programmes</li>
+                  <li>Workforce planning</li>
+                  <li>Ensuring and improving patient safety</li>
+                  <li>
+                    Compliance with legal and regulatory responsibilities,
+                    including monitoring under the Equality Act 2010
+                  </li>
+                  <li>Research related to any of the above</li>
+                </ol>
               </li>
               <li>
                 I will maintain regular contact with my Training Programme
