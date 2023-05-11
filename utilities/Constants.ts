@@ -30,7 +30,7 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareProvisional",
     label:
-      "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE WM and/or my employing organisation."
+      "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE/NES/ HEIW/NIMDTA and/or my employing organisation."
   },
   {
     id: "isDeclareSatisfy",
@@ -40,17 +40,17 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareProvide",
     label:
-      "I will obtain and provide my School and HEE WM with a professional email address."
+      "I will obtain and provide my School and HEE/NES/HEIW/NIMDTA with a professional email address."
   },
   {
     id: "isDeclareInform",
     label:
-      "I will inform my School and HEE WM of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
+      "I will inform my School and HEE/NES/HEIW/NIMDTA of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
     id: "isDeclareUpToDate",
     label:
-      "I will keep myself up to date with the latest information available via HEE as well as via the relevant educational and regulatory websites."
+      "I will keep myself up to date with the latest information available via HEE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
   },
   {
     id: "isDeclareAttend",

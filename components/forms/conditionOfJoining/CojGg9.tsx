@@ -45,7 +45,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 training resources available optimally to develop my knowledge,
                 skills and attitudes to the standards set by the relevant
                 curriculum. This will include additional requirements as set out
-                by the relevant curriculum.
+                by the relevant curricula.
               </li>
               <li>
                 I will ensure that the care I give to patients is responsive to
@@ -112,8 +112,8 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
               <li>
                 I will inform my Responsible Officer, HEE/NES/HEIW/NIMDTA and my
                 employer immediately if the MTPS or GMC/GDC place any conditions
-                (interim or otherwise) on my licence, or if I am suspended or
-                erased/removed from the Medical or Dental Register/Performers
+                (interim or otherwise) on my licence, or if my name is suspended
+                or erased/removed from the Medical or Dental Register/Performers
                 List, or if NHS England take action to restrict my ability to
                 work as a doctor or a dentist.
               </li>
@@ -151,7 +151,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I acknowledge that data will be collected to support the
                 following processes and I will comply with the requirements of
                 the General Data Protection Regulation (GDPR) May 2018, Data
-                Protection Act (DPA) 2018 and other such data protection as is
+                Protection Act (DPA) 2018 and such other data protection as is
                 in force from time to time:
                 <ol type="a">
                   <li>Managing the provision of training programmes</li>
