@@ -34,7 +34,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I will always have at the forefront of my clinical and
                 professional practice the principles of Good Medical Practice
                 for the benefit of safe patient care. I am aware that Good
-                Medical Practice requires me to keep my knowledge and skill up
+                Medical Practice requires me to keep my knowledge and skills up
                 to date throughout my working life, and to regularly take part
                 in educational activities that maintain and further develop my
                 capabilities, competence and performance.
@@ -70,11 +70,13 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I understand my responsibilities within revalidation, that I
                 must declare my full scope of practice (including locum
                 positions) and that I will provide evidence for all areas of
-                activity. I understand that my Responsible Officer is the
-                Postgraduate Dean and that Health Education England (HEE), NHS
-                Education for Scotland (NES), HEIW or the Northern Ireland
-                Medical and Dental Training Agency (NIMDTA) is my designated
-                body.
+                activity using the Form R part B to inform the ARCP panel and RO
+                of the full scope of practice. I understand that my Responsible
+                Officer is the Postgraduate Dean or Medical Director (NIMDTA and
+                HEIW where the Medical Director is the RO) and that Health
+                Education England (HEE), NHS Education for Scotland (NES), HEIW
+                or the Northern Ireland Medical and Dental Training Agency
+                (NIMDTA) is my designated body.
               </li>
               <li>
                 If starting at F1 level, I will have achieved a primary medical
@@ -126,7 +128,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I will maintain a prescribed connection with
                 HEE/NES/HEIW/NIMDTA, work in an approved practice setting until
                 my GMC revalidation date (this applies to all doctors granted
-                full registration after 2 June 2014) and comply with all
+                full registration after 2 June 2014) and comply with all
                 requirements regarding the GMC revalidation process.
               </li>
               <li>
@@ -138,14 +140,14 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I acknowledge that as an employee in a healthcare organisation,
                 I accept the responsibility to abide by and work effectively as
                 an employee for that organisation; this includes familiarity
-                with policies, participating in pre-employment checks and
-                occupational health assessments, employer and departmental
-                inductions, and workplace-based appraisal as well as educational
-                appraisal. I acknowledge and agree to the need to share
-                information about my performance as a doctor in training with
-                other organisations (e.g. employers, medical schools, the GMC,
-                Colleges/training bodies involved in my training) and with the
-                Postgraduate Dean on a regular basis.
+                with policies (including absence policies), participating in
+                pre-employment checks and occupational health assessments,
+                employer and departmental inductions, and workplace-based
+                appraisal as well as educational appraisal. I acknowledge and
+                agree to the need to share information about my performance as a
+                doctor in training with other organisations (e.g. employers,
+                medical schools, the GMC, Colleges/training bodies involved in
+                my training) and with the Postgraduate Dean on a regular basis.
               </li>
               <li>
                 I acknowledge that data will be collected to support the
@@ -154,7 +156,10 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 Protection Act (DPA) 2018 and such other data protection as is
                 in force from time to time:
                 <ol type="a">
-                  <li>Managing the provision of training programmes</li>
+                  <li>
+                    Managing the provision of training programmes including
+                    inter deanery transfers
+                  </li>
                   <li>
                     Managing processes allied to training programmes, such as
                     certification, evidence to support revalidation and

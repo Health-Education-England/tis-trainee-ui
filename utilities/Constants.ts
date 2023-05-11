@@ -40,12 +40,12 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareProvide",
     label:
-      "I will obtain and provide my School and HEE/NES/HEIW/NIMDTA with a professional email address."
+      "I will obtain and provide my training programme and HEE/NES/HEIW/NIMDTA with a professional email address."
   },
   {
     id: "isDeclareInform",
     label:
-      "I will inform my School and HEE/NES/HEIW/NIMDTA of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
+      "I will inform my training programme and HEE/NES/HEIW/NIMDTA of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
     id: "isDeclareUpToDate",
@@ -55,12 +55,12 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareAttend",
     label:
-      "I will attend the minimum number of formal teaching days as required by my School/programme."
+      "I will attend the minimum number of formal teaching days as required by my training programme."
   },
   {
     id: "isDeclareEngage",
     label:
-      "Where applicable, I will fully engage with immigration and employer requirements relating to Tier 2 and Tier 4 UK visas."
+      "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
 ];
 
