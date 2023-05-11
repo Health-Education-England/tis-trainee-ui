@@ -30,7 +30,7 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareProvisional",
     label:
-      "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE/NES/ HEIW/NIMDTA and/or my employing organisation."
+      "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE/NES/HEIW/NIMDTA and/or my employing organisation."
   },
   {
     id: "isDeclareSatisfy",

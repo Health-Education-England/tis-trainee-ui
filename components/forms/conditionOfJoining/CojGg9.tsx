@@ -178,7 +178,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
               <li>
                 I will maintain regular contact with my Training Programme
                 Director, other trainers and HEE/NES/HEIW/NIMDTA by responding
-                promptly to communications from them
+                promptly to communications from them.
               </li>
               <li>
                 I will participate proactively in the appraisal, assessment and
