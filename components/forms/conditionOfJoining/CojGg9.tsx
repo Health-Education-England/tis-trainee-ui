@@ -128,7 +128,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I will maintain a prescribed connection with
                 HEE/NES/HEIW/NIMDTA, work in an approved practice setting until
                 my GMC revalidation date (this applies to all doctors granted
-                full registration after 2 June 2014) and comply with all
+                full registration after 2 June 2014) and comply with all
                 requirements regarding the GMC revalidation process.
               </li>
               <li>
@@ -178,7 +178,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
               <li>
                 I will maintain regular contact with my Training Programme
                 Director, other trainers and HEE/NES/HEIW/NIMDTA by responding
-                promptly to communications from them.
+                promptly to communications from them
               </li>
               <li>
                 I will participate proactively in the appraisal, assessment and

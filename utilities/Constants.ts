@@ -60,7 +60,7 @@ export const COJ_DECLARATIONS = [
   {
     id: "isDeclareEngage",
     label:
-      "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
+      "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
 ];
 
