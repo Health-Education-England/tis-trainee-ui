@@ -34,7 +34,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I will always have at the forefront of my clinical and
                 professional practice the principles of Good Medical Practice
                 for the benefit of safe patient care. I am aware that Good
-                Medical Practice requires me to keep my knowledge and skill up
+                Medical Practice requires me to keep my knowledge and skills up
                 to date throughout my working life, and to regularly take part
                 in educational activities that maintain and further develop my
                 capabilities, competence and performance.
@@ -45,7 +45,7 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 training resources available optimally to develop my knowledge,
                 skills and attitudes to the standards set by the relevant
                 curriculum. This will include additional requirements as set out
-                by the relevant curriculum.
+                by the relevant curricula.
               </li>
               <li>
                 I will ensure that the care I give to patients is responsive to
@@ -70,11 +70,13 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I understand my responsibilities within revalidation, that I
                 must declare my full scope of practice (including locum
                 positions) and that I will provide evidence for all areas of
-                activity. I understand that my Responsible Officer is the
-                Postgraduate Dean and that Health Education England (HEE), NHS
-                Education for Scotland (NES), HEIW or the Northern Ireland
-                Medical and Dental Training Agency (NIMDTA) is my designated
-                body.
+                activity using the Form R part B to inform the ARCP panel and RO
+                of the full scope of practice. I understand that my Responsible
+                Officer is the Postgraduate Dean or Medical Director (NIMDTA and
+                HEIW where the Medical Director is the RO) and that Health
+                Education England (HEE), NHS Education for Scotland (NES), HEIW
+                or the Northern Ireland Medical and Dental Training Agency
+                (NIMDTA) is my designated body.
               </li>
               <li>
                 If starting at F1 level, I will have achieved a primary medical
@@ -112,8 +114,8 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
               <li>
                 I will inform my Responsible Officer, HEE/NES/HEIW/NIMDTA and my
                 employer immediately if the MTPS or GMC/GDC place any conditions
-                (interim or otherwise) on my licence, or if I am suspended or
-                erased/removed from the Medical or Dental Register/Performers
+                (interim or otherwise) on my licence, or if my name is suspended
+                or erased/removed from the Medical or Dental Register/Performers
                 List, or if NHS England take action to restrict my ability to
                 work as a doctor or a dentist.
               </li>
@@ -138,23 +140,26 @@ const CojGg9: React.FC<CojGg9Props> = ({ progName }) => {
                 I acknowledge that as an employee in a healthcare organisation,
                 I accept the responsibility to abide by and work effectively as
                 an employee for that organisation; this includes familiarity
-                with policies, participating in pre-employment checks and
-                occupational health assessments, employer and departmental
-                inductions, and workplace-based appraisal as well as educational
-                appraisal. I acknowledge and agree to the need to share
-                information about my performance as a doctor in training with
-                other organisations (e.g. employers, medical schools, the GMC,
-                Colleges/training bodies involved in my training) and with the
-                Postgraduate Dean on a regular basis.
+                with policies (including absence policies), participating in
+                pre-employment checks and occupational health assessments,
+                employer and departmental inductions, and workplace-based
+                appraisal as well as educational appraisal. I acknowledge and
+                agree to the need to share information about my performance as a
+                doctor in training with other organisations (e.g. employers,
+                medical schools, the GMC, Colleges/training bodies involved in
+                my training) and with the Postgraduate Dean on a regular basis.
               </li>
               <li>
                 I acknowledge that data will be collected to support the
                 following processes and I will comply with the requirements of
                 the General Data Protection Regulation (GDPR) May 2018, Data
-                Protection Act (DPA) 2018 and other such data protection as is
+                Protection Act (DPA) 2018 and such other data protection as is
                 in force from time to time:
                 <ol type="a">
-                  <li>Managing the provision of training programmes</li>
+                  <li>
+                    Managing the provision of training programmes including
+                    inter deanery transfers
+                  </li>
                   <li>
                     Managing processes allied to training programmes, such as
                     certification, evidence to support revalidation and
