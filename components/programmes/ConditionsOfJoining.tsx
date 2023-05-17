@@ -1,3 +1,4 @@
+import { Button, SummaryList } from "nhsuk-react-components";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
   updatedsigningCoj,
@@ -23,52 +24,42 @@ export function ConditionsOfJoining({
   programmeName
 }: ConditionsOfJoiningProps) {
   return conditionsOfJoining.signedAt ? (
-    <dl className="nhsuk-summary-list" data-cy="signedCoj">
-      <div className="nhsuk-summary-list__row">
-        <dt className="nhsuk-summary-list__key">Signed</dt>
-        <dd className="nhsuk-summary-list__value" data-cy="cojSignedDate">
+    <SummaryList data-cy="signedCoj">
+      <SummaryList.Row>
+        <SummaryList.Key>Signed</SummaryList.Key>
+        <SummaryList.Value data-cy="cojSignedDate">
           {DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}
-        </dd>
-      </div>
-      <div className="nhsuk-summary-list__row">
-        <dt className="nhsuk-summary-list__key" style={{ borderBottom: 0 }}>
-          Version
-        </dt>
-        <dd
-          className="nhsuk-summary-list__value"
+        </SummaryList.Value>
+      </SummaryList.Row>
+      <SummaryList.Row>
+        <SummaryList.Key style={{ borderBottom: 0 }}>Version</SummaryList.Key>
+        <SummaryList.Value
           style={{ borderBottom: 0 }}
           data-cy="cojSignedVersion"
         >
           {CojUtilities.getVersionText(conditionsOfJoining.version)}
-        </dd>
-      </div>
-    </dl>
+        </SummaryList.Value>
+      </SummaryList.Row>
+    </SummaryList>
   ) : (
-    <dl className="nhsuk-summary-list" data-cy="unsignedCoj">
-      <div className="nhsuk-summary-list__row">
-        <dd
-          className="nhsuk-summary-list__value"
-          style={{ borderBottom: 0 }}
-          data-cy="cojStatusText"
-        >
+    <SummaryList data-cy="unsignedCoj">
+      <SummaryList.Row>
+        <SummaryList.Value style={{ borderBottom: 0 }} data-cy="cojStatusText">
           {CojUtilities.getStatusText(startDate)}
-        </dd>
+        </SummaryList.Value>
         {startDate && CojUtilities.canBeSigned(new Date(startDate)) ? (
-          <dd
-            className="nhsuk-summary-list__actions"
-            style={{ borderBottom: 0 }}
-          >
-            <button
-              className="nhsuk-button nhsuk-button--secondary"
+          <SummaryList.Actions style={{ borderBottom: 0 }}>
+            <Button
+              secondary
               onClick={() => viewCoj(programmeMembershipId, programmeName)}
               data-cy={`cojSignBtn-${programmeMembershipId}`}
             >
               Sign
-            </button>
-          </dd>
+            </Button>
+          </SummaryList.Actions>
         ) : null}
-      </div>
-    </dl>
+      </SummaryList.Row>
+    </SummaryList>
   );
 }
 
