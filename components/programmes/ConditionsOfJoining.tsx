@@ -2,7 +2,9 @@ import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/Pr
 import {
   updatedsigningCoj,
   updatedsigningCojPmId,
-  updatedsigningCojProgName
+  updatedsigningCojProgName,
+  updatedsigningCojCanEdit,
+  updatedsigningCojSignedDate
 } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
@@ -42,6 +44,30 @@ export function ConditionsOfJoining({
           {CojUtilities.getVersionText(conditionsOfJoining.version)}
         </dd>
       </div>
+      <div className="nhsuk-summary-list__row">
+        <dt className="nhsuk-summary-list__key" style={{ borderBottom: 0 }}>
+          <dd
+            onClick={() =>
+              viewCoj(
+                programmeMembershipId,
+                programmeName,
+                false,
+                conditionsOfJoining.signedAt
+              )
+            }
+            className="plain-text-link"
+            data-cy={`cojViewBtn-${programmeMembershipId}`}
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              whiteSpace: "nowrap"
+            }}
+          >
+            View Signed Condition of Joining
+          </dd>
+        </dt>
+        <dd style={{ borderBottom: 0 }}></dd>
+      </div>
     </dl>
   ) : (
     <dl className="nhsuk-summary-list" data-cy="unsignedCoj">
@@ -60,7 +86,14 @@ export function ConditionsOfJoining({
           >
             <button
               className="nhsuk-button nhsuk-button--secondary"
-              onClick={() => viewCoj(programmeMembershipId, programmeName)}
+              onClick={() =>
+                viewCoj(
+                  programmeMembershipId,
+                  programmeName,
+                  true,
+                  conditionsOfJoining.signedAt
+                )
+              }
               data-cy={`cojSignBtn-${programmeMembershipId}`}
             >
               Sign
@@ -72,9 +105,16 @@ export function ConditionsOfJoining({
   );
 }
 
-function viewCoj(programmeMembershipId: string, programmeName: string) {
+function viewCoj(
+  programmeMembershipId: string,
+  programmeName: string,
+  canEdit: boolean,
+  signedDate: Date | null
+) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
+  store.dispatch(updatedsigningCojCanEdit(canEdit));
+  store.dispatch(updatedsigningCojSignedDate(signedDate));
   store.dispatch(updatedsigningCoj(true));
   history.push(`/programmes/${programmeMembershipId}/sign-coj`);
 }
