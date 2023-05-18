@@ -117,7 +117,7 @@ function CojDeclarationSection({
             {!canEdit ? (
               <SummaryList noBorder>
                 <SummaryList.Row>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="SignedOn">
                     Signed On: {DateUtilities.ToLocalDate(signedDate)}
                   </SummaryList.Value>
                 </SummaryList.Row>
