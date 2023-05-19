@@ -41,18 +41,15 @@ export function ConditionsOfJoining({
         </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
-        <SummaryList.Value
-          onClick={() => viewCoj(programmeMembershipId, programmeName)}
-          className="plain-text-link"
-          data-cy={`cojViewBtn-${programmeMembershipId}`}
-          style={{
-            textDecoration: "underline",
-            cursor: "pointer",
-            whiteSpace: "nowrap"
-          }}
-        >
-          View Signed Condition of Joining
-        </SummaryList.Value>
+        <SummaryList.Actions style={{ borderBottom: 0 }}>
+          <Button
+            secondary
+            onClick={() => viewCoj(programmeMembershipId, programmeName)}
+            data-cy={`cojViewBtn-${programmeMembershipId}`}
+          >
+            View
+          </Button>
+        </SummaryList.Actions>
       </SummaryList.Row>
     </SummaryList>
   ) : (
