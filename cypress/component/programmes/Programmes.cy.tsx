@@ -282,4 +282,36 @@ describe("Programme summary panel", () => {
       .children('[data-cy="signedCoj"]')
       .should("exist");
   });
+
+  it("should display the view COJ button for placements with signed COJ forms", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [
+            mockProgrammeMembershipCojNotSigned,
+            mockProgrammeMembershipCojSigned
+          ],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='cojSignedDate']").should("exist");
+
+    cy.get("[data-cy='cojViewBtn-1']")
+      .should("exist")
+      .and("have.text", "View Signed Condition of Joining");
+  });
 });
