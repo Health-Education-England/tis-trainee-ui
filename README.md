@@ -84,4 +84,4 @@ See the section about [deployment](https://nextjs.org/docs/deployment) for more 
 #### Preprod Deployment
 
 When deploying to preprod the `ENV` environment variable should be set to
-`preprod`, allowing the correct dotenv file to be loaded.
+`preprod`, allowing the correct dotenv file to be loaded
