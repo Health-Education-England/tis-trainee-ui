@@ -310,8 +310,6 @@ describe("Programme summary panel", () => {
 
     cy.get("[data-cy='cojSignedDate']").should("exist");
 
-    cy.get("[data-cy='cojViewBtn-1']")
-      .should("exist")
-      .and("have.text", "View Signed Condition of Joining");
+    cy.get("[data-cy='cojViewBtn-1']").should("exist").and("have.text", "View");
   });
 });
