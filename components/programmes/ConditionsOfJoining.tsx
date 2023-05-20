@@ -40,6 +40,17 @@ export function ConditionsOfJoining({
           {CojUtilities.getVersionText(conditionsOfJoining.version)}
         </SummaryList.Value>
       </SummaryList.Row>
+      <SummaryList.Row>
+        <SummaryList.Actions style={{ borderBottom: 0 }}>
+          <Button
+            secondary
+            onClick={() => viewCoj(programmeMembershipId, programmeName)}
+            data-cy={`cojViewBtn-${programmeMembershipId}`}
+          >
+            View
+          </Button>
+        </SummaryList.Actions>
+      </SummaryList.Row>
     </SummaryList>
   ) : (
     <SummaryList data-cy="unsignedCoj">
