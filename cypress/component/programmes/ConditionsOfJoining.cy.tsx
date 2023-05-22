@@ -4,6 +4,7 @@ import { COJ_EPOCH } from "../../../utilities/Constants";
 import { ConditionsOfJoining } from "../../../components/programmes/ConditionsOfJoining";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../../models/ProgrammeMembership";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { BrowserRouter } from "react-router-dom";
 
 describe("ConditionsOfJoining", () => {
   beforeEach(() => {
@@ -18,12 +19,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should display signed COJ fields", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=signedCoj]").should("exist");
@@ -31,12 +34,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should not display unsigned COJ fields", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=unsignedCoj]").should("not.exist");
@@ -44,12 +49,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should display signed date", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojSignedDate]")
@@ -59,12 +66,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should display signed gold guide version when GGxx format", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojSignedVersion]")
@@ -74,12 +83,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should display unknown version when not GGxx format", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={{ ...conditionsOfJoining, version: "v123" }}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={{ ...conditionsOfJoining, version: "v123" }}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojSignedVersion]")
@@ -96,12 +107,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should display unsigned COJ fields", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=unsignedCoj]").should("exist");
@@ -109,12 +122,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should not display signed COJ fields", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=signedCoj]").should("not.exist");
@@ -122,12 +137,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should show unknown status when no start date", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={null}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={null}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojStatusText]")
@@ -137,14 +154,16 @@ describe("ConditionsOfJoining", () => {
 
     it("should show submitted to LO when start date before COJ epoch", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={new Date(
-            COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000
-          ).toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={new Date(
+              COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000
+            ).toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojStatusText]")
@@ -154,14 +173,16 @@ describe("ConditionsOfJoining", () => {
 
     it("should show available signing date when start date after COJ epoch but outside 13 weeks", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={new Date(
-            COJ_EPOCH.getTime() + 14 * 7 * 24 * 60 * 60 * 1000
-          ).toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={new Date(
+              COJ_EPOCH.getTime() + 14 * 7 * 24 * 60 * 60 * 1000
+            ).toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojStatusText]")
@@ -176,12 +197,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should show not signed when start date after COJ epoch and inside 13 weeks", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={""}
-          programmeName={""}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={""}
+            programmeName={""}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojStatusText]")
@@ -191,12 +214,14 @@ describe("ConditionsOfJoining", () => {
 
     it("should allow signing when start date after COJ epoch and inside 13 weeks", () => {
       mount(
-        <ConditionsOfJoining
-          conditionsOfJoining={conditionsOfJoining}
-          startDate={COJ_EPOCH.toISOString()}
-          programmeMembershipId={"1"}
-          programmeName={"pmName"}
-        />
+        <BrowserRouter>
+          <ConditionsOfJoining
+            conditionsOfJoining={conditionsOfJoining}
+            startDate={COJ_EPOCH.toISOString()}
+            programmeMembershipId={"1"}
+            programmeName={"pmName"}
+          />
+        </BrowserRouter>
       );
 
       cy.get("[data-cy=cojSignBtn-1]").should("exist");

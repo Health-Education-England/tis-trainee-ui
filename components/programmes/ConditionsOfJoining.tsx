@@ -1,4 +1,5 @@
-import { Button, SummaryList } from "nhsuk-react-components";
+import { SummaryList } from "nhsuk-react-components";
+import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
   updatedsigningCoj,
@@ -8,7 +9,6 @@ import {
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import history from "../navigation/history";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
@@ -42,13 +42,13 @@ export function ConditionsOfJoining({
       </SummaryList.Row>
       <SummaryList.Row>
         <SummaryList.Actions style={{ borderBottom: 0 }}>
-          <Button
-            secondary
-            onClick={() => viewCoj(programmeMembershipId, programmeName)}
+          <Link
+            to={`/programmes/${programmeMembershipId}/sign-coj`}
+            onClick={() => setCojState(programmeMembershipId, programmeName)}
             data-cy={`cojViewBtn-${programmeMembershipId}`}
           >
             View
-          </Button>
+          </Link>
         </SummaryList.Actions>
       </SummaryList.Row>
     </SummaryList>
@@ -60,13 +60,13 @@ export function ConditionsOfJoining({
         </SummaryList.Value>
         {startDate && CojUtilities.canBeSigned(new Date(startDate)) ? (
           <SummaryList.Actions style={{ borderBottom: 0 }}>
-            <Button
-              secondary
-              onClick={() => viewCoj(programmeMembershipId, programmeName)}
+            <Link
+              to={`/programmes/${programmeMembershipId}/sign-coj`}
+              onClick={() => setCojState(programmeMembershipId, programmeName)}
               data-cy={`cojSignBtn-${programmeMembershipId}`}
             >
               Sign
-            </Button>
+            </Link>
           </SummaryList.Actions>
         ) : null}
       </SummaryList.Row>
@@ -74,9 +74,8 @@ export function ConditionsOfJoining({
   );
 }
 
-function viewCoj(programmeMembershipId: string, programmeName: string) {
+function setCojState(programmeMembershipId: string, programmeName: string) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
   store.dispatch(updatedsigningCoj(true));
-  history.push(`/programmes/${programmeMembershipId}/sign-coj`);
 }
