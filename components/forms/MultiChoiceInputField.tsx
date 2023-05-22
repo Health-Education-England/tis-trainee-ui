@@ -13,6 +13,8 @@ interface Props {
   footer?: any;
   onChange?: any;
   conditional?: any;
+  canEdit?: boolean;
+  checked?: boolean;
 }
 
 const MultiChoiceInputField: React.FC<Props> = props => {
@@ -45,9 +47,10 @@ const MultiChoiceInputField: React.FC<Props> = props => {
               value={item.value}
               id={item.id}
               data-cy={`${props.name}${index}`}
-              checked={setCheckedStatus(field, item)}
+              checked={!props.checked ? setCheckedStatus(field, item) : true}
               onChange={() => setOnChangeValue(props, helpers, item)}
               conditional={props.conditional}
+              disabled={!props.canEdit && props.canEdit != null}
             >
               {item.label}
             </FormChildElement>
