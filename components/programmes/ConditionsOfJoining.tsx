@@ -4,7 +4,9 @@ import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/Pr
 import {
   updatedsigningCoj,
   updatedsigningCojPmId,
-  updatedsigningCojProgName
+  updatedsigningCojProgName,
+  updatedsigningCojCanEdit,
+  updatedsigningCojSignedDate
 } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
@@ -44,7 +46,14 @@ export function ConditionsOfJoining({
         <SummaryList.Actions style={{ borderBottom: 0 }}>
           <Link
             to={`/programmes/${programmeMembershipId}/sign-coj`}
-            onClick={() => setCojState(programmeMembershipId, programmeName)}
+            onClick={() =>
+              setCojState(
+                programmeMembershipId,
+                programmeName,
+                false,
+                conditionsOfJoining.signedAt
+              )
+            }
             data-cy={`cojViewBtn-${programmeMembershipId}`}
           >
             View
@@ -62,7 +71,14 @@ export function ConditionsOfJoining({
           <SummaryList.Actions style={{ borderBottom: 0 }}>
             <Link
               to={`/programmes/${programmeMembershipId}/sign-coj`}
-              onClick={() => setCojState(programmeMembershipId, programmeName)}
+              onClick={() =>
+                setCojState(
+                  programmeMembershipId,
+                  programmeName,
+                  false,
+                  conditionsOfJoining.signedAt
+                )
+              }
               data-cy={`cojSignBtn-${programmeMembershipId}`}
             >
               Sign
@@ -74,8 +90,15 @@ export function ConditionsOfJoining({
   );
 }
 
-function setCojState(programmeMembershipId: string, programmeName: string) {
+function setCojState(
+  programmeMembershipId: string,
+  programmeName: string,
+  canEdit: boolean,
+  signedDate: Date | null
+) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
   store.dispatch(updatedsigningCoj(true));
+  store.dispatch(updatedsigningCojCanEdit(canEdit));
+  store.dispatch(updatedsigningCojSignedDate(signedDate));
 }

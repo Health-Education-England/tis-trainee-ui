@@ -11,23 +11,32 @@ import { acceptanceValidation } from "../formr-part-b/ValidationSchema";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 import { COJ_DECLARATIONS } from "../../../utilities/Constants";
+import { DateUtilities } from "../../../utilities/DateUtilities";
 
 const CojView: React.FC = () => {
   const signingCoj = store.getState().user.signingCoj;
   const progName = store.getState().user.signingCojProgName;
+  const canEdit = store.getState().user.signingCojCanEdit;
+  const signedDate = store.getState().user.signingCojSignedDate;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
     <>
       <ScrollTo />
       <CojVersion progName={progName} />
-      <CojDeclarationSection />
+      <CojDeclarationSection canEdit={canEdit} signedDate={signedDate} />
     </>
   ) : null;
 };
 export default CojView;
 
-function CojDeclarationSection() {
+function CojDeclarationSection({
+  canEdit,
+  signedDate
+}: {
+  canEdit: boolean;
+  signedDate: Date | null;
+}) {
   return (
     <>
       <Formik
@@ -72,6 +81,8 @@ function CojDeclarationSection() {
                 id={declaration.id}
                 type="checkbox"
                 name={declaration.id}
+                canEdit={canEdit}
+                checked={!canEdit}
                 items={[
                   {
                     label: declaration.label,
@@ -97,16 +108,26 @@ function CojDeclarationSection() {
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            <Button
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSubmit();
-              }}
-              disabled={!isValid || isSubmitting}
-              data-cy="cogSignBtn"
-            >
-              Click to sign Conditions of Joining agreement
-            </Button>
+            {!canEdit ? (
+              <SummaryList noBorder>
+                <SummaryList.Row>
+                  <SummaryList.Value data-cy="SignedOn">
+                    Signed On: {DateUtilities.ToLocalDate(signedDate)}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+              </SummaryList>
+            ) : (
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+                disabled={!isValid || isSubmitting}
+                data-cy="cogSignBtn"
+              >
+                Click to sign Conditions of Joining agreement
+              </Button>
+            )}
           </>
         )}
       </Formik>
