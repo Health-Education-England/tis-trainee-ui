@@ -75,7 +75,7 @@ export function ConditionsOfJoining({
                 setCojState(
                   programmeMembershipId,
                   programmeName,
-                  false,
+                  true,
                   conditionsOfJoining.signedAt
                 )
               }
