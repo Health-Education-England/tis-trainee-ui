@@ -17,7 +17,7 @@ const CojView: React.FC = () => {
   const signingCoj = store.getState().user.signingCoj;
   const progName = store.getState().user.signingCojProgName;
   const signedDate = store.getState().user.signingCojSignedDate;
-  const canEdit = signedDate === null ? true : false;
+  const canEdit = signedDate === null;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
