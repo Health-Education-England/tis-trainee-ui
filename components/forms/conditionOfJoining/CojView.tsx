@@ -17,7 +17,7 @@ const CojView: React.FC = () => {
   const signingCoj = store.getState().user.signingCoj;
   const progName = store.getState().user.signingCojProgName;
   const signedDate = store.getState().user.signingCojSignedDate;
-  const canEdit = !!signedDate;
+  const canEdit = signedDate === null ? true : false;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
@@ -81,8 +81,8 @@ function CojDeclarationSection({
                 id={declaration.id}
                 type="checkbox"
                 name={declaration.id}
-                canEdit={!canEdit}
-                checked={canEdit}
+                canEdit={canEdit}
+                checked={!canEdit}
                 items={[
                   {
                     label: declaration.label,
@@ -108,7 +108,7 @@ function CojDeclarationSection({
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            {canEdit ? (
+            {!canEdit ? (
               <SummaryList noBorder>
                 <SummaryList.Row>
                   <SummaryList.Value data-cy="cojSignedOn">
