@@ -7,7 +7,6 @@ import history from "../../../components/navigation/history";
 import React from "react";
 import {
   updatedsigningCoj,
-  updatedsigningCojCanEdit,
   updatedsigningCojProgName,
   updatedsigningCojSignedDate
 } from "../../../redux/slices/userSlice";
@@ -19,7 +18,6 @@ describe("COJ Contents ReadOnly View", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedsigningCojProgName("General Practice"));
       dispatch(updatedsigningCoj(true));
-      dispatch(updatedsigningCojCanEdit(false));
       dispatch(updatedsigningCojSignedDate(new Date("2023-01-01")));
       return <CojView />;
     };
@@ -38,7 +36,7 @@ describe("COJ Contents ReadOnly View", () => {
   });
   it("should display signedOn date and not submit button", () => {
     cy.get("[data-cy=cogSignBtn]").should("not.exist");
-    cy.get('[data-cy="SignedOn"]')
+    cy.get('[data-cy="cojSignedOn"]')
       .should("exist")
       .should("contain.text", "Signed On: 01/01/2023");
   });
