@@ -16,8 +16,8 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 const CojView: React.FC = () => {
   const signingCoj = store.getState().user.signingCoj;
   const progName = store.getState().user.signingCojProgName;
-  const canEdit = store.getState().user.signingCojCanEdit;
   const signedDate = store.getState().user.signingCojSignedDate;
+  const canEdit = !!signedDate;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
@@ -81,8 +81,8 @@ function CojDeclarationSection({
                 id={declaration.id}
                 type="checkbox"
                 name={declaration.id}
-                canEdit={canEdit}
-                checked={!canEdit}
+                canEdit={!canEdit}
+                checked={canEdit}
                 items={[
                   {
                     label: declaration.label,
@@ -108,11 +108,11 @@ function CojDeclarationSection({
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            {!canEdit ? (
+            {canEdit ? (
               <SummaryList noBorder>
                 <SummaryList.Row>
-                  <SummaryList.Value data-cy="SignedOn">
-                    Signed On: {DateUtilities.ToLocalDate(signedDate)}
+                  <SummaryList.Value data-cy="cojSignedOn">
+                    Signed On: {DateUtilities.ToLocalDateTime(signedDate)}
                   </SummaryList.Value>
                 </SummaryList.Row>
               </SummaryList>
@@ -123,7 +123,7 @@ function CojDeclarationSection({
                   handleSubmit();
                 }}
                 disabled={!isValid || isSubmitting}
-                data-cy="cogSignBtn"
+                data-cy="cojSignBtn"
               >
                 Click to sign Conditions of Joining agreement
               </Button>

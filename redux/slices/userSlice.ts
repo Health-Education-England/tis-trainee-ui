@@ -15,7 +15,6 @@ interface IUser {
   signingCojProgName: string | null;
   signingCojPmId: string;
   signingCoj: boolean;
-  signingCojCanEdit: boolean;
   signingCojSignedDate: Date | null;
 }
 
@@ -32,7 +31,6 @@ const initialState: IUser = {
   signingCojProgName: null,
   signingCojPmId: "",
   signingCoj: false,
-  signingCojCanEdit: true,
   signingCojSignedDate: null
 };
 
@@ -160,9 +158,6 @@ const userSlice = createSlice({
     },
     updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
       return { ...state, signingCojSignedDate: action.payload };
-    },
-    updatedsigningCojCanEdit(state, action: PayloadAction<boolean>) {
-      return { ...state, signingCojCanEdit: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -256,6 +251,5 @@ export const {
   updatedsigningCojProgName,
   updatedsigningCojPmId,
   updatedsigningCoj,
-  updatedsigningCojSignedDate,
-  updatedsigningCojCanEdit
+  updatedsigningCojSignedDate
 } = userSlice.actions;

@@ -5,7 +5,6 @@ import {
   updatedsigningCoj,
   updatedsigningCojPmId,
   updatedsigningCojProgName,
-  updatedsigningCojCanEdit,
   updatedsigningCojSignedDate
 } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
@@ -50,7 +49,6 @@ export function ConditionsOfJoining({
               setCojState(
                 programmeMembershipId,
                 programmeName,
-                false,
                 conditionsOfJoining.signedAt
               )
             }
@@ -75,7 +73,6 @@ export function ConditionsOfJoining({
                 setCojState(
                   programmeMembershipId,
                   programmeName,
-                  true,
                   conditionsOfJoining.signedAt
                 )
               }
@@ -93,12 +90,10 @@ export function ConditionsOfJoining({
 function setCojState(
   programmeMembershipId: string,
   programmeName: string,
-  canEdit: boolean,
   signedDate: Date | null
 ) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
   store.dispatch(updatedsigningCoj(true));
-  store.dispatch(updatedsigningCojCanEdit(canEdit));
   store.dispatch(updatedsigningCojSignedDate(signedDate));
 }
