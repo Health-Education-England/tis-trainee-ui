@@ -23,19 +23,13 @@ const CojView: React.FC = () => {
     <>
       <ScrollTo />
       <CojVersion progName={progName} />
-      <CojDeclarationSection canEdit={!signedDate} signedDate={signedDate} />
+      <CojDeclarationSection signedDate={signedDate} />
     </>
   ) : null;
 };
 export default CojView;
 
-function CojDeclarationSection({
-  canEdit,
-  signedDate
-}: {
-  canEdit: boolean;
-  signedDate: Date | null;
-}) {
+function CojDeclarationSection({ signedDate }: { signedDate: Date | null }) {
   return (
     <>
       <Formik
@@ -80,8 +74,8 @@ function CojDeclarationSection({
                 id={declaration.id}
                 type="checkbox"
                 name={declaration.id}
-                canEdit={canEdit}
-                checked={!canEdit}
+                canEdit={!signedDate}
+                checked={!!signedDate}
                 items={[
                   {
                     label: declaration.label,
@@ -107,7 +101,7 @@ function CojDeclarationSection({
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            {!canEdit ? (
+            {!!signedDate ? (
               <SummaryList noBorder>
                 <SummaryList.Row>
                   <SummaryList.Value data-cy="cojSignedOn">

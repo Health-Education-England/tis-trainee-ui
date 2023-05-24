@@ -41,7 +41,7 @@ export function ConditionsOfJoining({
           {CojUtilities.getVersionText(conditionsOfJoining.version)}
         </SummaryList.Value>
       </SummaryList.Row>
-      <SummaryList.Row>
+      <SummaryList.Row style={{ borderBottom: 0 }}>
         <SummaryList.Actions style={{ borderBottom: 0 }}>
           <Link
             to={`/programmes/${programmeMembershipId}/sign-coj`}
@@ -60,8 +60,8 @@ export function ConditionsOfJoining({
       </SummaryList.Row>
     </SummaryList>
   ) : (
-    <SummaryList data-cy="unsignedCoj" noBorder>
-      <SummaryList.Row>
+    <SummaryList data-cy="unsignedCoj">
+      <SummaryList.Row style={{ borderBottom: 0 }}>
         <SummaryList.Value style={{ borderBottom: 0 }} data-cy="cojStatusText">
           {CojUtilities.getStatusText(startDate)}
         </SummaryList.Value>
