@@ -60,7 +60,7 @@ export function ConditionsOfJoining({
       </SummaryList.Row>
     </SummaryList>
   ) : (
-    <SummaryList data-cy="unsignedCoj">
+    <SummaryList data-cy="unsignedCoj" noBorder>
       <SummaryList.Row>
         <SummaryList.Value style={{ borderBottom: 0 }} data-cy="cojStatusText">
           {CojUtilities.getStatusText(startDate)}
