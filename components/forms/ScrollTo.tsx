@@ -27,7 +27,7 @@ export default class ScrollTo extends React.Component<IProps> {
 
       window.scrollTo({
         top: verticalScroll,
-        behavior: scrollType || "auto"
+        behavior: scrollType ?? "auto"
       });
     } else {
       window.scrollTo(0, 0);

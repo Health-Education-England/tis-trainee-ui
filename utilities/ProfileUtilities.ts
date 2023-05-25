@@ -24,7 +24,7 @@ export class ProfileUtilities {
   public static getCurriculum(
     programme: ProgrammeMembership | null
   ): Curriculum | null | undefined {
-    return programme && programme.curricula && programme.curricula.length > 0
+    return programme?.curricula && programme.curricula.length > 0
       ? programme.curricula
           .filter(
             (c: { curriculumSubType: string }) =>

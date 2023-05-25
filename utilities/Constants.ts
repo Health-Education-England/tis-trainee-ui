@@ -146,7 +146,7 @@ export type PanelKeys = {
   conditionsOfJoining: string;
 };
 
-export const PANEL_KEYS: PanelKeys | any = {
+export const PANEL_KEYS: PanelKeys = {
   placements: "Placements",
   programmeMemberships: "Programmes",
   site: "Site",

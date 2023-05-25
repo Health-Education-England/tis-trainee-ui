@@ -112,15 +112,12 @@ const Profile = () => {
             {surname}
           </SummaryList.Value>
         </SummaryList.Row>
-        {personalData &&
-          personalData.map(pd => (
-            <SummaryList.Row key={pd.label} data-cy={pd.label}>
-              <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
-              <SummaryList.Value data-cy={pd.value}>
-                {pd.value}
-              </SummaryList.Value>
-            </SummaryList.Row>
-          ))}
+        {personalData?.map(pd => (
+          <SummaryList.Row key={pd.label} data-cy={pd.label}>
+            <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
+            <SummaryList.Value data-cy={pd.value}>{pd.value}</SummaryList.Value>
+          </SummaryList.Row>
+        ))}
 
         <SummaryList.Row>
           <SummaryList.Key>Address</SummaryList.Key>
@@ -134,16 +131,15 @@ const Profile = () => {
         <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
           Registration details
         </div>
-        {registrationDetails &&
-          registrationDetails.map(
-            rd =>
-              rd.value && (
-                <SummaryList.Row key={rd.label} data-cy={rd.label}>
-                  <SummaryList.Key>{rd.label}</SummaryList.Key>
-                  <SummaryList.Value>{rd.value}</SummaryList.Value>
-                </SummaryList.Row>
-              )
-          )}
+        {registrationDetails?.map(
+          rd =>
+            rd.value && (
+              <SummaryList.Row key={rd.label} data-cy={rd.label}>
+                <SummaryList.Key>{rd.label}</SummaryList.Key>
+                <SummaryList.Value>{rd.value}</SummaryList.Value>
+              </SummaryList.Row>
+            )
+        )}
       </SummaryList>
     </div>
   );

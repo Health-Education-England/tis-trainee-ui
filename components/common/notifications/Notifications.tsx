@@ -7,12 +7,11 @@ const Notifications = () => {
   );
   return (
     <>
-      {notifications &&
-        notifications.map(notification => (
-          <div key={notification.id}>
-            <NotificationItem notification={notification} />
-          </div>
-        ))}
+      {notifications?.map(notification => (
+        <div key={notification.id}>
+          <NotificationItem notification={notification} />
+        </div>
+      ))}
     </>
   );
 };

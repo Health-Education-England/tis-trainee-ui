@@ -35,26 +35,25 @@ const MultiChoiceInputField: React.FC<Props> = props => {
       <FormElement
         name={props.name}
         data-cy={props.name}
-        id={props.id || props.name}
-        error={error || ""}
+        id={props.id ?? props.name}
+        error={error ?? ""}
         onChange={props.onChange ? props.onChange : field.onChange}
         hint={props.hint}
       >
-        {props.items &&
-          props.items.map((item, index) => (
-            <FormChildElement
-              key={item.value}
-              value={item.value}
-              id={item.id}
-              data-cy={`${props.name}${index}`}
-              checked={!props.checked ? setCheckedStatus(field, item) : true}
-              onChange={() => setOnChangeValue(props, helpers, item)}
-              conditional={props.conditional}
-              disabled={!props.canEdit && props.canEdit != null}
-            >
-              {item.label}
-            </FormChildElement>
-          ))}
+        {props?.items?.map((item, index) => (
+          <FormChildElement
+            key={item.value}
+            value={item.value}
+            id={item.id}
+            data-cy={`${props.name}${index}`}
+            checked={!props.checked ? setCheckedStatus(field, item) : true}
+            onChange={() => setOnChangeValue(props, helpers, item)}
+            conditional={props.conditional}
+            disabled={!props.canEdit && props.canEdit != null}
+          >
+            {item.label}
+          </FormChildElement>
+        ))}
       </FormElement>
       <InputFooterLabel label={props.footer || ""} />
     </div>
