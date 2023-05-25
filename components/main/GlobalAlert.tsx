@@ -1,6 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 
 const GlobalAlert = () => {

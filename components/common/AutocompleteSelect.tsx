@@ -23,7 +23,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   label
 }) => {
   const handleChange = (val: any) => {
-    onChange(name, !!val ? val.label : "");
+    onChange(name, val ? val.label : "");
   };
   return (
     <div
@@ -33,7 +33,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
       }
     >
       <Label id={`${name}--label`}>{label}</Label>
-      {!!error ? (
+      {error ? (
         <span className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error: </span>
           {error}

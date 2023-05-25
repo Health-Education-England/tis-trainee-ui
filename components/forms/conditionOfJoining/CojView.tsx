@@ -101,7 +101,7 @@ function CojDeclarationSection({ signedDate }: { signedDate: Date | null }) {
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            {!!signedDate ? (
+            {signedDate ? (
               <SummaryList noBorder>
                 <SummaryList.Row>
                   <SummaryList.Value data-cy="cojSignedOn">
