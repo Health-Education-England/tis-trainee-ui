@@ -101,16 +101,15 @@ function CRAEntryPoint() {
   // Also added a nomodule script tag in _app.tsx to catch IE and other browsers that don't support ES modules (see e.g. https://stackoverflow.com/questions/74154325/warning-ie11-users-their-browser-is-unsupported-in-react-18)
 
   useEffect(() => {
-    const loadBrowserUpdate = async () => {
+    (async () => {
       try {
         const browserUpdateModule = await import("browser-update");
         const browserUpdate = browserUpdateModule.default;
         browserUpdate(browserUpdateConfig);
       } catch (error) {
-        console.error("Failed to load browser-update:", error);
+        console.error("Failed to load browser-update: ", error);
       }
-    };
-    loadBrowserUpdate();
+    })();
   }, []);
 
   return (
