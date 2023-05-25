@@ -1,9 +1,6 @@
 import { BodyText, Card, SummaryList } from "nhsuk-react-components";
 import { placementPanelTemplate } from "../../models/Placement";
-import {
-  Curriculum,
-  programmePanelTemplate
-} from "../../models/ProgrammeMembership";
+import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import store from "../../redux/store/store";
 import { PanelKeys } from "../../utilities/Constants";
@@ -46,20 +43,7 @@ export function PanelsCreator({
                         {panelKeys[panelProp as keyof PanelKeys]}
                       </SummaryList.Key>
                       <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
-                        {panelProp === "curricula" ? (
-                          <Curricula
-                            curricula={filteredPanel[panelProp] as Curriculum[]}
-                          />
-                        ) : panelProp === "conditionsOfJoining" ? (
-                          <ConditionsOfJoining
-                            conditionsOfJoining={filteredPanel[panelProp]}
-                            startDate={filteredPanel["startDate"]}
-                            programmeMembershipId={tisId}
-                            programmeName={filteredPanel.programmeName}
-                          />
-                        ) : (
-                          displayListVal(filteredPanel[panelProp], panelProp)
-                        )}
+                        {displayTheCorrectListItem(panelProp, panel)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                   ))}
@@ -140,4 +124,22 @@ function populateTemplateProperties(template: any, values: any) {
     key => (populatedTemplate[key] = (key in values ? values : template)[key])
   );
   return populatedTemplate;
+}
+
+function displayTheCorrectListItem(panelProp: string, panel: any) {
+  switch (panelProp) {
+    case "curricula":
+      return <Curricula curricula={panel[panelProp]} />;
+    case "conditionsOfJoining":
+      return (
+        <ConditionsOfJoining
+          conditionsOfJoining={panel[panelProp]}
+          startDate={panel["startDate"]}
+          programmeMembershipId={panel.tisId}
+          programmeName={panel.programmeName}
+        />
+      );
+    default:
+      return displayListVal(panel[panelProp], panelProp);
+  }
 }

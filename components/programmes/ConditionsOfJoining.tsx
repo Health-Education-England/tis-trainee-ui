@@ -1,4 +1,3 @@
-import { SummaryList } from "nhsuk-react-components";
 import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
@@ -10,6 +9,7 @@ import {
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import React from "react";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
@@ -25,65 +25,46 @@ export function ConditionsOfJoining({
   programmeName
 }: ConditionsOfJoiningProps) {
   return conditionsOfJoining.signedAt ? (
-    <SummaryList data-cy="signedCoj">
-      <SummaryList.Row>
-        <SummaryList.Key>Signed</SummaryList.Key>
-        <SummaryList.Value data-cy="cojSignedDate">
-          {DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}
-        </SummaryList.Value>
-      </SummaryList.Row>
-      <SummaryList.Row>
-        <SummaryList.Key style={{ borderBottom: 0 }}>Version</SummaryList.Key>
-        <SummaryList.Value
-          style={{ borderBottom: 0 }}
-          data-cy="cojSignedVersion"
-        >
-          {CojUtilities.getVersionText(conditionsOfJoining.version)}
-        </SummaryList.Value>
-      </SummaryList.Row>
-      <SummaryList.Row style={{ borderBottom: 0 }}>
-        <SummaryList.Actions style={{ borderBottom: 0 }}>
-          <Link
-            to={`/programmes/${programmeMembershipId}/sign-coj`}
-            onClick={() =>
-              setCojState(
-                programmeMembershipId,
-                programmeName,
-                conditionsOfJoining.signedAt
-              )
-            }
-            data-cy={`cojViewBtn-${programmeMembershipId}`}
-          >
-            View
-          </Link>
-        </SummaryList.Actions>
-      </SummaryList.Row>
-    </SummaryList>
+    <React.Fragment>
+      <p data-cy="cojSignedDate">
+        {`Signed: ${DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}`}
+      </p>
+      <p data-cy="cojSignedVersion">
+        {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}
+      </p>
+      <Link
+        to={`/programmes/${programmeMembershipId}/sign-coj`}
+        onClick={() =>
+          setCojState(
+            programmeMembershipId,
+            programmeName,
+            conditionsOfJoining.signedAt
+          )
+        }
+        data-cy={`cojViewBtn-${programmeMembershipId}`}
+      >
+        View
+      </Link>
+    </React.Fragment>
   ) : (
-    <SummaryList data-cy="unsignedCoj">
-      <SummaryList.Row style={{ borderBottom: 0 }}>
-        <SummaryList.Value style={{ borderBottom: 0 }} data-cy="cojStatusText">
-          {CojUtilities.getStatusText(startDate)}
-        </SummaryList.Value>
-        {startDate && CojUtilities.canBeSigned(new Date(startDate)) ? (
-          <SummaryList.Actions style={{ borderBottom: 0 }}>
-            <Link
-              to={`/programmes/${programmeMembershipId}/sign-coj`}
-              onClick={() =>
-                setCojState(
-                  programmeMembershipId,
-                  programmeName,
-                  conditionsOfJoining.signedAt
-                )
-              }
-              data-cy={`cojSignBtn-${programmeMembershipId}`}
-            >
-              Sign
-            </Link>
-          </SummaryList.Actions>
-        ) : null}
-      </SummaryList.Row>
-    </SummaryList>
+    <React.Fragment>
+      <p data-cy="cojStatusText">{CojUtilities.getStatusText(startDate)}</p>
+      {startDate && CojUtilities.canBeSigned(new Date(startDate)) && (
+        <Link
+          to={`/programmes/${programmeMembershipId}/sign-coj`}
+          onClick={() =>
+            setCojState(
+              programmeMembershipId,
+              programmeName,
+              conditionsOfJoining.signedAt
+            )
+          }
+          data-cy={`cojSignBtn-${programmeMembershipId}`}
+        >
+          Sign
+        </Link>
+      )}
+    </React.Fragment>
   );
 }
 

@@ -17,43 +17,13 @@ describe("ConditionsOfJoining", () => {
       version: "GG8"
     } as ConditionsOfJoiningModel;
 
-    it("should display signed COJ fields", () => {
+    it("should only display signed COJ fields", () => {
       mount(
         <BrowserRouter>
           <ConditionsOfJoining
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=signedCoj]").should("exist");
-    });
-
-    it("should not display unsigned COJ fields", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=unsignedCoj]").should("not.exist");
-    });
-
-    it("should display signed date", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
+            programmeMembershipId={"1"}
             programmeName={""}
           />
         </BrowserRouter>
@@ -61,7 +31,11 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojSignedDate]")
         .should("exist")
-        .and("have.text", DateUtilities.ToLocalDate(COJ_EPOCH));
+        .and("have.text", `Signed: ${DateUtilities.ToLocalDate(COJ_EPOCH)}`);
+      cy.get("[data-cy=cojSignedVersion]").should("exist");
+      cy.get("[data-cy=cojViewBtn-1]").should("exist");
+      cy.get("[data-cy=cojStatusText]").should("not.exist");
+      cy.get("[data-cy=cojSignBtn-1]").should("not.exist");
     });
 
     it("should display signed gold guide version when GGxx format", () => {
@@ -78,7 +52,7 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojSignedVersion]")
         .should("exist")
-        .and("have.text", "Gold Guide 8");
+        .and("have.text", "Version: Gold Guide 8");
     });
 
     it("should display unknown version when not GGxx format", () => {
@@ -95,7 +69,7 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojSignedVersion]")
         .should("exist")
-        .and("have.text", "Unknown");
+        .and("have.text", "Version: Unknown");
     });
   });
 
@@ -111,28 +85,16 @@ describe("ConditionsOfJoining", () => {
           <ConditionsOfJoining
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
+            programmeMembershipId={"1"}
             programmeName={""}
           />
         </BrowserRouter>
       );
-
-      cy.get("[data-cy=unsignedCoj]").should("exist");
-    });
-
-    it("should not display signed COJ fields", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=signedCoj]").should("not.exist");
+      cy.get("[data-cy=cojStatusText]").should("exist");
+      cy.get("[data-cy=cojSignBtn-1]").should("exist");
+      cy.get("[data-cy=cojSignedDate]").should("not.exist");
+      cy.get("[data-cy=cojSignedVersion]").should("not.exist");
+      cy.get("[data-cy=cojViewBtn-1]").should("not.exist");
     });
 
     it("should show unknown status when no start date", () => {

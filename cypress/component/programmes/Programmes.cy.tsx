@@ -270,17 +270,17 @@ describe("Programme summary panel", () => {
     cy.get('[data-cy="conditionsOfJoining0Key"]')
       .should("exist")
       .and("have.text", "Conditions of Joining");
-
     cy.get('[data-cy="conditionsOfJoining0Val"]')
-      .children('[data-cy="unsignedCoj"]')
-      .should("exist");
-
+      .children('[data-cy="cojStatusText"]')
+      .should("exist")
+      .and("have.text", "Follow Local Office process");
     cy.get('[data-cy="conditionsOfJoining1Key"]')
       .should("exist")
       .and("have.text", "Conditions of Joining");
     cy.get('[data-cy="conditionsOfJoining1Val"]')
-      .children('[data-cy="signedCoj"]')
-      .should("exist");
+      .children('[data-cy="cojSignedDate"]')
+      .should("exist")
+      .and("have.text", "Signed: 14/10/2010");
   });
 
   it("should display the view COJ button for placements with signed COJ forms", () => {
