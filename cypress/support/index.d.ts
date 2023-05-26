@@ -32,7 +32,6 @@ declare global {
       checkAndFillCovidSection(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       logout(): Chainable<Element>;
-      login(): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
       signIn(): Chainable<Element>;

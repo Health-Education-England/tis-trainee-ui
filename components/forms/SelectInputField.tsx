@@ -27,11 +27,11 @@ const SelectInputField: React.FC<Props> = props => {
       >
         <Select
           name={name}
-          id={id || name}
+          id={id ?? name}
           onBlur={() => {
             helpers.setTouched(true);
           }}
-          error={error || ""}
+          error={error ?? ""}
           label={label}
           onChange={onChange ? onChange : field.onChange}
           hint={hint}

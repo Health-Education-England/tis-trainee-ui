@@ -581,17 +581,6 @@ Cypress.Commands.add("logout", () => {
   cy.get("[data-cy=logoutBtn]").click();
 });
 
-Cypress.Commands.add("login", () => {
-  cy.viewport("iphone-6");
-
-  if (cy.get("input[name=username]")) {
-    cy.get("input[name=username]").type(Cypress.env("username"));
-    cy.get("input[name=password]").type(`${Cypress.env("password")}{enter}`, {
-      log: false
-    });
-  }
-});
-
 Cypress.Commands.add("logoutDesktop", () => {
   cy.get("[data-cy=logoutBtn]").click();
 });

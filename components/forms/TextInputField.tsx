@@ -9,7 +9,7 @@ interface Props {
   id?: string;
   placeholder?: string;
   rows?: number;
-  hint?: string | any;
+  hint?: any;
   width?: any;
   footer?: any;
   type?: string;
@@ -40,11 +40,11 @@ const TextInputField: FunctionComponent<Props> = props => {
           field.value ? props.width || setFieldWidth(field.value.length) : 20
         }
         disabled={props.disabled}
-        error={error || ""}
-        id={props.id || props.name}
+        error={error ?? ""}
+        id={props.id ?? props.name}
         onBlur={field.onBlur}
         onChange={field.onChange}
-        value={field.value != null ? field.value : ""}
+        value={field.value ?? ""}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"

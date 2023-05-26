@@ -1,13 +1,15 @@
+import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
   updatedsigningCoj,
   updatedsigningCojPmId,
-  updatedsigningCojProgName
+  updatedsigningCojProgName,
+  updatedsigningCojSignedDate
 } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import history from "../navigation/history";
+import React from "react";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
@@ -23,58 +25,56 @@ export function ConditionsOfJoining({
   programmeName
 }: ConditionsOfJoiningProps) {
   return conditionsOfJoining.signedAt ? (
-    <dl className="nhsuk-summary-list" data-cy="signedCoj">
-      <div className="nhsuk-summary-list__row">
-        <dt className="nhsuk-summary-list__key">Signed</dt>
-        <dd className="nhsuk-summary-list__value" data-cy="cojSignedDate">
-          {DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}
-        </dd>
-      </div>
-      <div className="nhsuk-summary-list__row">
-        <dt className="nhsuk-summary-list__key" style={{ borderBottom: 0 }}>
-          Version
-        </dt>
-        <dd
-          className="nhsuk-summary-list__value"
-          style={{ borderBottom: 0 }}
-          data-cy="cojSignedVersion"
-        >
-          {CojUtilities.getVersionText(conditionsOfJoining.version)}
-        </dd>
-      </div>
-    </dl>
+    <React.Fragment>
+      <p data-cy="cojSignedDate">
+        {`Signed: ${DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}`}
+      </p>
+      <p data-cy="cojSignedVersion">
+        {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}
+      </p>
+      <Link
+        to={`/programmes/${programmeMembershipId}/sign-coj`}
+        onClick={() =>
+          setCojState(
+            programmeMembershipId,
+            programmeName,
+            conditionsOfJoining.signedAt
+          )
+        }
+        data-cy={`cojViewBtn-${programmeMembershipId}`}
+      >
+        View
+      </Link>
+    </React.Fragment>
   ) : (
-    <dl className="nhsuk-summary-list" data-cy="unsignedCoj">
-      <div className="nhsuk-summary-list__row">
-        <dd
-          className="nhsuk-summary-list__value"
-          style={{ borderBottom: 0 }}
-          data-cy="cojStatusText"
+    <React.Fragment>
+      <p data-cy="cojStatusText">{CojUtilities.getStatusText(startDate)}</p>
+      {startDate && CojUtilities.canBeSigned(new Date(startDate)) && (
+        <Link
+          to={`/programmes/${programmeMembershipId}/sign-coj`}
+          onClick={() =>
+            setCojState(
+              programmeMembershipId,
+              programmeName,
+              conditionsOfJoining.signedAt
+            )
+          }
+          data-cy={`cojSignBtn-${programmeMembershipId}`}
         >
-          {CojUtilities.getStatusText(startDate)}
-        </dd>
-        {startDate && CojUtilities.canBeSigned(new Date(startDate)) ? (
-          <dd
-            className="nhsuk-summary-list__actions"
-            style={{ borderBottom: 0 }}
-          >
-            <button
-              className="nhsuk-button nhsuk-button--secondary"
-              onClick={() => viewCoj(programmeMembershipId, programmeName)}
-              data-cy={`cojSignBtn-${programmeMembershipId}`}
-            >
-              Sign
-            </button>
-          </dd>
-        ) : null}
-      </div>
-    </dl>
+          Sign
+        </Link>
+      )}
+    </React.Fragment>
   );
 }
 
-function viewCoj(programmeMembershipId: string, programmeName: string) {
+function setCojState(
+  programmeMembershipId: string,
+  programmeName: string,
+  signedDate: Date | null
+) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
   store.dispatch(updatedsigningCoj(true));
-  history.push(`/programmes/${programmeMembershipId}/sign-coj`);
+  store.dispatch(updatedsigningCojSignedDate(signedDate));
 }

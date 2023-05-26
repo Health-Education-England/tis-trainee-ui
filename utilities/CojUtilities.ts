@@ -24,8 +24,9 @@ export class CojUtilities {
   }
 
   public static getVersionText(version: string) {
-    const matcher = GOLD_GUIDE_VERSION_REGEX.exec(version);
-    return matcher && matcher[1] ? `Gold Guide ${matcher[1]}` : "Unknown";
+    const regex = new RegExp(GOLD_GUIDE_VERSION_REGEX);
+    const matcher = regex.exec(version);
+    return matcher ? `Gold Guide ${matcher[1]}` : "Unknown";
   }
 
   public static canAnyBeSigned(

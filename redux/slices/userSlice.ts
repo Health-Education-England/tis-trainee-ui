@@ -15,6 +15,7 @@ interface IUser {
   signingCojProgName: string | null;
   signingCojPmId: string;
   signingCoj: boolean;
+  signingCojSignedDate: Date | null;
 }
 
 const initialState: IUser = {
@@ -29,7 +30,8 @@ const initialState: IUser = {
   cognitoGroups: undefined,
   signingCojProgName: null,
   signingCojPmId: "",
-  signingCoj: false
+  signingCoj: false,
+  signingCojSignedDate: null
 };
 
 export const getCognitoGroups = createAsyncThunk(
@@ -153,6 +155,9 @@ const userSlice = createSlice({
     },
     updatedsigningCoj(state, action: PayloadAction<boolean>) {
       return { ...state, signingCoj: action.payload };
+    },
+    updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
+      return { ...state, signingCojSignedDate: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -245,5 +250,6 @@ export const {
   updatedCognitoGroups,
   updatedsigningCojProgName,
   updatedsigningCojPmId,
-  updatedsigningCoj
+  updatedsigningCoj,
+  updatedsigningCojSignedDate
 } = userSlice.actions;
