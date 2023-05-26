@@ -24,7 +24,8 @@ export class CojUtilities {
   }
 
   public static getVersionText(version: string) {
-    const matcher = version.match(GOLD_GUIDE_VERSION_REGEX);
+    const regex = new RegExp(GOLD_GUIDE_VERSION_REGEX);
+    const matcher = regex.exec(version);
     return matcher ? `Gold Guide ${matcher[1]}` : "Unknown";
   }
 
