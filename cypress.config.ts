@@ -24,7 +24,8 @@ export default defineConfig({
     supportFile: "cypress/support/component.ts"
   },
   e2e: {
-    baseUrl: "https://trainee.tis.nhs.uk/", // to test local use http://local.tis-selfservice.com
+    baseUrl: "https://trainee.tis.nhs.uk/",
+    // baseUrl: "http://local.tis-selfservice.com",
     specPattern: "cypress/e2e/**/*.spec.{ts,tsx}",
     chromeWebSecurity: false,
     defaultCommandTimeout: 15000,
@@ -33,6 +34,7 @@ export default defineConfig({
       on("task", { generateOTP: cypressOtp });
       codeCoverageTask(on, config);
       require("cypress-mochawesome-reporter/plugin")(on);
+      require("cypress-localstorage-commands/plugin")(on, config);
       return config;
     }
   }

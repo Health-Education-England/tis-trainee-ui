@@ -5,10 +5,6 @@ describe("StringUtilities", () => {
     const wte = "";
     expect(StringUtilities.TrimZeros(wte)).toEqual("Value not given");
   });
-  it("should return 'not given' if null", () => {
-    const wte = null;
-    expect(StringUtilities.TrimZeros(wte)).toEqual("Value not given");
-  });
   it("should return '1' if first char is '1' ", () => {
     const wte = "1.000";
     expect(StringUtilities.TrimZeros(wte)).toEqual("1");

@@ -3,9 +3,12 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import { updatedFormA } from "../../../../redux/slices/formASlice";
+import {
+  updatedCanEdit,
+  updatedFormA
+} from "../../../../redux/slices/formASlice";
 import store from "../../../../redux/store/store";
-import View from "../../../../components/forms/formr-part-a/View";
+import FormAView from "../../../../components/forms/form-builder/form-r/part-a/FormAView";
 import history from "../../../../components/navigation/history";
 import React from "react";
 
@@ -14,7 +17,7 @@ describe("View", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <View canEdit={false} history={[]} />
+          <FormAView />
         </Router>
       </Provider>
     );
@@ -26,7 +29,7 @@ describe("View", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormA(submittedFormRPartAs[0]));
 
-      return <View canEdit={false} history={[]} />;
+      return <FormAView />;
     };
     mount(
       <Provider store={store}>
@@ -44,7 +47,7 @@ describe("View", () => {
         "href",
         "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
       );
-    cy.get("[data-cy=localOfficeName]").should(
+    cy.get('[data-cy="localOfficeName-value"]').should(
       "include.text",
       "Health Education England Thames Valley"
     );
@@ -66,8 +69,8 @@ describe("View", () => {
     const MockedViewUnsubmitted = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormA(submittedFormRPartAs[1]));
-
-      return <View canEdit={true} history={[]} />;
+      dispatch(updatedCanEdit(true));
+      return <FormAView />;
     };
     mount(
       <Provider store={store}>

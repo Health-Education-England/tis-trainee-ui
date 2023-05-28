@@ -196,3 +196,162 @@ export const mockedCombinedReference: CombinedReferenceData = {
     }
   ]
 };
+
+export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
+  college: [
+    {
+      label: "Faculty Of Dental Surgery",
+      value: "Faculty Of Dental Surgery"
+    },
+    {
+      label: "Faculty of Intensive Care Medicine",
+      value: "Faculty of Intensive Care Medicine"
+    },
+    {
+      label: "Faculty of Occupational Medicine",
+      value: "Faculty of Occupational Medicine"
+    }
+  ],
+  covidChangeCircs: [
+    {
+      label: "Any Period of self-isolation",
+      value: "Any Period of self-isolation"
+    },
+    {
+      label: "Limited opportunities to curricula requirements",
+      value: "Limited opportunities to curricula requirements"
+    }
+  ],
+  curriculum: [
+    {
+      label: "ACCS - Anaesthetics",
+      value: "ACCS - Anaesthetics"
+    },
+    {
+      label: "GP Returner",
+      value: "GP Returner"
+    },
+    {
+      label: "Geriatric Medicine",
+      value: "Geriatric Medicine"
+    }
+  ],
+  dbc: [
+    {
+      label: "Centre for Health and Disability Assessments (Maximus UK)",
+      value: "Centre for Health and Disability Assessments (Maximus UK)"
+    },
+    {
+      label: "Cheshire and Wirral Partnership NHS Foundation Trust",
+      value: "Cheshire and Wirral Partnership NHS Foundation Trust"
+    },
+    {
+      label: "Health Education England East of England",
+      value: "Health Education England East of England"
+    },
+    {
+      label: "Health Education England South London",
+      value: "Health Education England South London"
+    },
+    {
+      label: "Health Education England Thames Valley",
+      value: "Health Education England Thames Valley"
+    },
+    {
+      label: "Health Education England Wessex",
+      value: "Health Education England Wessex"
+    },
+    {
+      label: "Northern Ireland Medical and Dental Training Agency",
+      value: "Northern Ireland Medical and Dental Training Agency"
+    },
+    {
+      label: "Sarnia Yachts Management (UK) Limited",
+      value: "Sarnia Yachts Management (UK) Limited"
+    }
+  ],
+  declarationType: [
+    {
+      label: "Complaint",
+      value: "Complaint"
+    },
+    {
+      label: "Other investigation",
+      value: "Other investigation"
+    },
+    {
+      label: "Significant event",
+      value: "Significant event"
+    }
+  ],
+  gender: [
+    {
+      label: "Female",
+      value: "Female"
+    },
+    {
+      label: "I prefer not to specify",
+      value: "I prefer not to specify"
+    },
+    {
+      label: "Male",
+      value: "Male"
+    }
+  ],
+  grade: [
+    {
+      label: "Core Training Year 2",
+      value: "Core Training Year 2"
+    },
+    {
+      label: "Core Training Year 3",
+      value: "Core Training Year 3"
+    },
+    {
+      label: "Foundation Year 1",
+      value: "Foundation Year 1"
+    },
+    {
+      label: "Specialty Training Year 6",
+      value: "Specialty Training Year 6"
+    }
+  ],
+  immigrationStatus: [
+    {
+      label: "British National Overseas",
+      value: "British National Overseas"
+    },
+    {
+      label:
+        "Other immigration categories i.e. overseas government employees, innovators etc.",
+      value:
+        "Other immigration categories i.e. overseas government employees, innovators etc."
+    },
+    {
+      label: "You are the partner/civil partner/spouse of a UK/EEA national",
+      value: "You are the partner/civil partner/spouse of a UK/EEA national"
+    }
+  ],
+  localOffice: [
+    {
+      label: "Health Education England East of England",
+      value: "Health Education England East of England"
+    },
+    {
+      label: "Health Education England South London",
+      value: "Health Education England South London"
+    },
+    {
+      label: "Health Education England Thames Valley",
+      value: "Health Education England Thames Valley"
+    },
+    {
+      label: "Health Education England Wessex",
+      value: "Health Education England Wessex"
+    },
+    {
+      label: "Northern Ireland Medical and Dental Training Agency",
+      value: "Northern Ireland Medical and Dental Training Agency"
+    }
+  ]
+};
