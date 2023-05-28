@@ -10,12 +10,16 @@ interface IFormA {
   formAData: FormRPartA;
   status: string;
   error: any;
+  editPageNumber: number;
+  canEdit: boolean;
 }
 
 export const initialState: IFormA = {
   formAData: initialFormRABeforeProfileData,
   status: "idle",
-  error: ""
+  error: "",
+  editPageNumber: 0,
+  canEdit: false
 };
 
 export const loadSavedFormA = createAsyncThunk(
@@ -53,6 +57,12 @@ const formASlice = createSlice({
     },
     updatedFormA(state, action: PayloadAction<FormRPartA>) {
       return { ...state, formAData: action.payload };
+    },
+    updatedEditPageNumber(state, action: PayloadAction<number>) {
+      return { ...state, editPageNumber: action.payload };
+    },
+    updatedCanEdit(state, action: PayloadAction<boolean>) {
+      return { ...state, canEdit: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -93,7 +103,15 @@ const formASlice = createSlice({
 
 export default formASlice.reducer;
 
-export const { resetToInitFormA, updatedFormA } = formASlice.actions;
+export const {
+  resetToInitFormA,
+  updatedFormA,
+  updatedEditPageNumber,
+  updatedCanEdit
+} = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
   state.formA.formAData;
+
+export const selectCanEditStatus = (state: { formA: IFormA }) =>
+  state.formA.canEdit;

@@ -24,9 +24,19 @@ export const fetchForms = createAsyncThunk(
   async (path: string) => {
     const formsService = new FormsService();
     let response: AxiosResponse<IFormR[]>;
+    // define formName var so we can match with local storage key
+    let formName: string;
     if (path === "/formr-a") {
+      formName = "formA";
       response = await formsService.getTraineeFormRPartAList();
-    } else response = await formsService.getTraineeFormRPartBList();
+    } else {
+      formName = "formB";
+      response = await formsService.getTraineeFormRPartBList();
+    }
+    const localStorageForm = localStorage.getItem(formName);
+    if (localStorageForm) {
+      response.data = [...response.data, JSON.parse(localStorageForm)];
+    }
     return DateUtilities.genericSort(response.data, "submissionDate", true);
   }
 );

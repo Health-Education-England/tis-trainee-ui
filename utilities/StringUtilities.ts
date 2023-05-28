@@ -11,8 +11,8 @@ export class StringUtilities {
     return VALUE_NOT_GIVEN;
   }
 
-  public static argsToString(...args: string[]) {
-    return args.filter(a => a !== null).join(" ");
+  public static argsToString(...args: (string | null)[]) {
+    return args.filter((a): a is string => a !== null).join(" ");
   }
 
   public static validateInteger(val: number) {

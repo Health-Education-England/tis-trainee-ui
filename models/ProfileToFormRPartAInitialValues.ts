@@ -2,10 +2,24 @@ import { FormRPartA } from "./FormRPartA";
 import { LifeCycleState } from "./LifeCycleState";
 import { TraineeProfile } from "./TraineeProfile";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
+import store from "../redux/store/store";
 
 export function ProfileToFormRPartAInitialValues(
   traineeProfileData: TraineeProfile
 ): FormRPartA {
+  const refData = store.getState().reference.combinedRef;
+  const isLegitOption = (
+    key: string,
+    option: string | null | undefined
+  ): string => {
+    const result =
+      refData &&
+      refData[key].some(
+        (item: { label: string | null | undefined }) => item.label === option
+      );
+    return result ? option!! : "";
+  };
+
   const pd = traineeProfileData.personalDetails;
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
@@ -16,9 +30,9 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
-    localOfficeName: pd?.personOwner,
+    localOfficeName: isLegitOption("localOffice", pd?.personOwner),
     dateOfBirth: pd?.dateOfBirth || null,
-    gender: pd?.gender,
+    gender: isLegitOption("gender", pd?.gender),
     immigrationStatus: "",
     qualification: pd?.qualification,
     dateAttained: pd?.dateAttained || null,
@@ -32,15 +46,15 @@ export function ProfileToFormRPartAInitialValues(
     mobileNumber: pd?.mobileNumber,
     email: "",
     isLeadingToCct: false,
-    programmeSpecialty: curriculum?.curriculumName,
-    cctSpecialty1: curriculum?.curriculumName,
+    programmeSpecialty: isLegitOption("curriculum", curriculum?.curriculumName),
+    cctSpecialty1: isLegitOption("curriculum", curriculum?.curriculumName),
     cctSpecialty2: "",
     college: "",
     completionDate: programme?.programmeCompletionDate || null,
     trainingGrade: "",
     startDate: programme?.startDate || null,
     programmeMembershipType: programme?.programmeMembershipType,
-    wholeTimeEquivalent: undefined,
+    wholeTimeEquivalent: "",
     declarationType: "",
     otherImmigrationStatus: "",
     traineeTisId: traineeProfileData.traineeTisId,

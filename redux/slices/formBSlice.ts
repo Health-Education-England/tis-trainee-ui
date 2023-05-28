@@ -12,6 +12,8 @@ interface IFormB {
   status: string;
   error: any;
   saveBtnActive: boolean;
+  editPageNumber: number;
+  canEdit: boolean;
 }
 
 export const initialState: IFormB = {
@@ -20,7 +22,9 @@ export const initialState: IFormB = {
   previousSectionNumber: null,
   status: "idle",
   error: "",
-  saveBtnActive: false
+  saveBtnActive: false,
+  editPageNumber: 0,
+  canEdit: false
 };
 
 export const loadSavedFormB = createAsyncThunk(
@@ -73,6 +77,12 @@ const formBSlice = createSlice({
     },
     updatesaveBtnActive: state => {
       state.saveBtnActive = !state.saveBtnActive;
+    },
+    updatedEditPageNumberB(state, action: PayloadAction<number>) {
+      return { ...state, editPageNumber: action.payload };
+    },
+    updatedCanEditB(state, action: PayloadAction<boolean>) {
+      return { ...state, canEdit: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -120,7 +130,9 @@ export const {
   incrementFormBSection,
   updateFormBSection,
   updateFormBPreviousSection,
-  updatesaveBtnActive
+  updatesaveBtnActive,
+  updatedEditPageNumberB,
+  updatedCanEditB
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>

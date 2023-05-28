@@ -1,0 +1,254 @@
+{
+  "name": "formA",
+  "pages": [
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "FormAImportantNotice",
+      "msgLinkName": "DataSource",
+      "sections": [
+        {
+          "sectionHeader": "Personal Details",
+          "fields": [
+            {
+              "name": "forename",
+              "label": "Forename ",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "surname",
+              "label": "GMC-Registered Surname",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "gmcNumber",
+              "label": "GMC Number",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "localOfficeName",
+              "label": "Deanery / HEE Local Office",
+              "type": "select",
+              "visible": true,
+              "optionsKey": "localOffice"
+            },
+            {
+              "name": "dateOfBirth",
+              "label": "Date of Birth",
+              "placeholder": "DD/MM/YYYY",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "gender",
+              "label": "Gender",
+              "type": "select",
+              "visible": true,
+              "optionsKey": "gender"
+            },
+            {
+              "name": "immigrationStatus",
+              "label": "Immigration Status",
+              "type": "select",
+              "visible": true,
+              "optionsKey": "immigrationStatus",
+              "dependencies": ["otherImmigrationStatus"]
+            },
+            {
+              "name": "otherImmigrationStatus",
+              "label": "Immigration Status (Other)",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": false,
+              "visibleIf": [
+                "Dependent - other immigration category",
+                "Other immigration categories i.e. overseas government employees, innovators etc."
+              ],
+              "parent": "immigrationStatus"
+            },
+            {
+              "name": "qualification",
+              "label": "Primary Qualification",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "dateAttained",
+              "label": "Date Awarded",
+              "placeholder": "DD/MM/YYYY",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "medicalSchool",
+              "label": "Medical School Awarding Primary Qualification (name and country)",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "address1",
+              "label": "Home Address",
+              "placeholder": "Address Line 1",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "address2",
+              "label": "",
+              "placeholder": "Address Line 2",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "address3",
+              "label": "",
+              "placeholder": "Address Line 3",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "postCode",
+              "label": "Post Code",
+              "placeholder": "type...",
+              "type": "text",
+              "visible": true,
+              "warning": {
+                "matcher": "[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}",
+                "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
+              }
+            },
+            {
+              "name": "telephoneNumber",
+              "label": "Contact Telephone",
+              "placeholder": "type here...",
+              "type": "phone",
+              "visible": true
+            },
+            {
+              "name": "mobileNumber",
+              "label": "Contact Mobile",
+              "placeholder": "type here...",
+              "type": "phone",
+              "visible": true
+            },
+            {
+              "name": "email",
+              "label": "Email Address",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Programme Declarations",
+      "sections": [
+        {
+          "sectionHeader": "Declarations",
+          "fields": [
+            {
+              "name": "declarationType",
+              "label": "I confirm that",
+              "type": "radio",
+              "optionsKey": "programmeDeclarationOptions",
+              "dependencies": ["cctSpecialty1", "cctSpecialty2"],
+              "visible": true
+            },
+            {
+              "name": "programmeSpecialty",
+              "label": "Programme Specialty",
+              "type": "select",
+              "optionsKey": "filteredCurriculumOptions",
+              "visible": true
+            },
+            {
+              "name": "cctSpecialty1",
+              "label": "Specialty 1 for Award of CCT",
+              "type": "select",
+              "visible": false,
+              "visibleIf": [
+                "I have been appointed to a programme leading to award of CCT"
+              ],
+              "parent": "declarationType",
+              "optionsKey": "curriculum"
+            },
+            {
+              "name": "cctSpecialty2",
+              "label": "Specialty 2 for Award of CCT",
+              "type": "select",
+              "visible": false,
+              "visibleIf": [
+                "I have been appointed to a programme leading to award of CCT"
+              ],
+              "parent": "declarationType",
+              "optionsKey": "curriculum"
+            },
+            {
+              "name": "college",
+              "label": "Royal College / Faculty Assessing Training for the Award of CCT",
+              "type": "select",
+              "optionsKey": "college",
+              "visible": true
+            },
+            {
+              "name": "completionDate",
+              "label": "Anticipated Completion Date of Current Programme (if known)",
+              "placeholder": "DD/MM/YYYY",
+              "type": "date",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Programme Details",
+      "sections": [
+        {
+          "sectionHeader": "Programme",
+          "fields": [
+            {
+              "name": "trainingGrade",
+              "label": "Training Grade",
+              "type": "select",
+              "optionsKey": "grade",
+              "visible": true
+            },
+            {
+              "name": "startDate",
+              "label": "Start Date",
+              "placeholder": "DD/MM/YYYY",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "programmeMembershipType",
+              "label": "Post type or Appointment",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "wholeTimeEquivalent",
+              "label": "Training hours (Full Time Equivalent)",
+              "placeholder": "1 = 100%; 0.25 = 25% FTE etc.",
+              "type": "text",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

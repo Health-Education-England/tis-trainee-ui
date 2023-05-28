@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 interface IFieldWarningMsg {
-  warningMsg: string;
+  warningMsg: string | undefined;
 }
 const FieldWarningMsg = ({ warningMsg }: IFieldWarningMsg) => {
   return (

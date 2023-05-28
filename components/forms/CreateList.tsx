@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../common/Loading";
 import ScrollTo from "../../components/forms/ScrollTo";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
@@ -11,10 +11,14 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { Redirect, useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
+import {
+  DraftFormProps,
+  getDraftFormProps
+} from "../../utilities/FormBuilderUtilities";
 
 const CreateList = ({ history }: { history: string[] }) => {
-  let pathname = useLocation().pathname;
   const dispatch = useAppDispatch();
+  let pathname = useLocation().pathname;
   const formRListDesc = useAppSelector(selectAllforms);
   const submittedListDesc = useAppSelector(selectAllSubmittedforms);
   const latestSubDate = submittedListDesc.length
@@ -22,6 +26,13 @@ const CreateList = ({ history }: { history: string[] }) => {
     : null;
   const formRListStatus = useAppSelector(state => state.forms.status);
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
+  const [draftFormProps, setDraftFormProps] = useState<DraftFormProps | null>(
+    null
+  );
+
+  useEffect(() => {
+    setDraftFormProps(getDraftFormProps(formRListDesc));
+  }, [formRListDesc]);
 
   useEffect(() => {
     dispatch(fetchForms(pathname));
@@ -44,7 +55,7 @@ const CreateList = ({ history }: { history: string[] }) => {
         <br />
         <FormsListBtn
           pathName={pathname}
-          formRList={formRListDesc}
+          draftFormProps={draftFormProps}
           latestSubDate={latestSubDate}
         />
         <SubmittedFormsList

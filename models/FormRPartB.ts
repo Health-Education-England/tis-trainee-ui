@@ -1,6 +1,7 @@
 import { IFormR } from "./IFormR";
 import { DateType } from "../utilities/DateUtilities";
 import { ProfileSType } from "../utilities/ProfileUtilities";
+import { LifeCycleState } from "./LifeCycleState";
 export interface FormRPartB extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;
@@ -108,7 +109,7 @@ export const initialFormRBBeforeProfileData: FormRPartB = {
   compliments: "",
   haveCovidDeclarations: "",
   covidDeclarationDto: null,
-  lifecycleState: null,
+  lifecycleState: LifeCycleState.New,
   submissionDate: "",
   lastModifiedDate: "",
   isDeclarationAccepted: false,

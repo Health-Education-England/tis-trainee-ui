@@ -1,6 +1,7 @@
 import { IFormR } from "./IFormR";
 import { DateType } from "../utilities/DateUtilities";
 import { ProfileSType } from "../utilities/ProfileUtilities";
+import { LifeCycleState } from "./LifeCycleState";
 export interface FormRPartA extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;
@@ -30,7 +31,7 @@ export interface FormRPartA extends IFormR {
   trainingGrade: string;
   startDate: DateType;
   programmeMembershipType: ProfileSType;
-  wholeTimeEquivalent: number | undefined;
+  wholeTimeEquivalent: string;
   declarationType: string;
   otherImmigrationStatus: string;
 }
@@ -63,10 +64,10 @@ export const initialFormRABeforeProfileData: FormRPartA = {
   trainingGrade: "",
   startDate: null,
   programmeMembershipType: "",
-  wholeTimeEquivalent: undefined,
+  wholeTimeEquivalent: "",
   declarationType: "",
   otherImmigrationStatus: "",
-  lifecycleState: null,
+  lifecycleState: LifeCycleState.New,
   submissionDate: null,
   lastModifiedDate: null
 };

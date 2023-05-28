@@ -13,4 +13,9 @@ export interface CombinedReferenceData {
   curriculum: CurriculumKeyValue[];
   declarationType: KeyValue[];
   covidChangeCircs: KeyValue[];
+  [key: string]:
+    | KeyValue[]
+    | CurriculumKeyValue[]
+    | DesignatedBodyKeyValue[]
+    | GradeKeyValue[];
 }

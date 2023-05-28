@@ -3,6 +3,7 @@
 @import "react-phone-number-input/style.css";
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
+$nhsBlue: #005eb8;
 
 html {
   background-color: inherit;
@@ -85,6 +86,18 @@ button:disabled {
 .nhsuk-button {
   @media (max-width: 40.0525em) {
     padding: 8px 8px !important;
+  }
+}
+
+// form r page header
+.fieldset-legend__header {
+  color: $nhsBlue;
+}
+
+// form r 'Back'/'Next' Link text
+@media (max-width: 768px) {
+  .form-nav_text {
+    display: none;
   }
 }
 
@@ -377,4 +390,21 @@ button:disabled {
 
 ol[type="a"] {
   list-style-type: lower-alpha;
+}
+
+// FormBuilder
+
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-navigation-next-link {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.page-nav-link {
+  text-align: right;
 }

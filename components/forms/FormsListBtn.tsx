@@ -1,5 +1,4 @@
 import { Button } from "nhsuk-react-components";
-import { IFormR } from "../../models/IFormR";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { loadSavedFormA } from "../../redux/slices/formASlice";
@@ -15,54 +14,33 @@ import {
 } from "../../utilities/DateUtilities";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import { useConfirm } from "material-ui-confirm";
+import {
+  DraftFormProps,
+  addLocalFormToStore
+} from "../../utilities/FormBuilderUtilities";
+import { LifeCycleState } from "../../models/LifeCycleState";
+
 interface IFormsListBtn {
-  formRList: IFormR[];
+  draftFormProps: DraftFormProps | null;
   pathName: string;
   latestSubDate: DateType;
 }
 
-const btnProps = {
-  DRAFT: {
-    "data-cy": "btnEditSavedForm",
-    "on-click": "loadSavedForm",
-    "btn-text": "Edit saved form"
-  },
-  UNSUBMITTED: {
-    "data-cy": "btnEditUnsubmittedForm",
-    "on-click": "loadSavedForm",
-    "btn-text": "Edit unsubmitted form"
-  }
-};
-
 const FormsListBtn = ({
-  formRList,
+  draftFormProps,
   pathName,
   latestSubDate
 }: IFormsListBtn) => {
   const confirm = useConfirm();
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
-  let btnForm: IFormR | null = null;
-  let bFProps: any;
-
-  for (let form of formRList) {
-    if (
-      form.lifecycleState === "DRAFT" ||
-      form.lifecycleState === "UNSUBMITTED"
-    ) {
-      btnForm = form;
-      bFProps = btnProps[form.lifecycleState];
-    }
-  }
-
+  const formName: string = pathName === "/formr-a" ? "formA" : "formB";
   const resetForm = (pName: string) =>
     pName === "/formr-b" && dispatch(resetToInitFormB());
 
   const loadTheSavedForm = async (id: string) => {
-    if (pathName === "/formr-a") {
-      await dispatch(loadSavedFormA(id));
-    } else await dispatch(loadSavedFormB(id));
-    history.push(`${pathName}/create`);
+    if (pathName === "/formr-a") await dispatch(loadSavedFormA(id));
+    if (pathName === "/formr-b") await dispatch(loadSavedFormB(id));
   };
 
   const handleNewClick = () => {
@@ -81,18 +59,41 @@ const FormsListBtn = ({
   return (
     <Button
       id="btnOpenForm"
-      data-cy={btnForm ? bFProps["data-cy"] : "btnLoadNewForm"}
+      data-cy={
+        draftFormProps?.lifecycleState
+          ? `btn-${chooseBtnText(draftFormProps?.lifecycleState)}`
+          : "Submit new form"
+      }
       reverse
       type="submit"
-      onClick={() => {
+      onClick={async () => {
         resetForm(pathName);
-        if (btnForm?.id) loadTheSavedForm(btnForm.id);
-        else handleNewClick();
+        if (draftFormProps) {
+          {
+            draftFormProps.lifecycleState === LifeCycleState.Local
+              ? addLocalFormToStore(formName)
+              : await loadTheSavedForm(draftFormProps.id!!);
+          }
+          history.push(`${pathName}/create`);
+        } else handleNewClick();
       }}
     >
-      {btnForm ? bFProps["btn-text"] : "Submit new form"}
+      {chooseBtnText(draftFormProps?.lifecycleState)}
     </Button>
   );
 };
 
 export default FormsListBtn;
+
+function chooseBtnText(lifecycleState: LifeCycleState | undefined) {
+  switch (lifecycleState) {
+    case LifeCycleState.Draft:
+      return "Edit saved draft form";
+    case LifeCycleState.Local:
+      return "Edit unsaved draft form";
+    case LifeCycleState.Unsubmitted:
+      return "Edit unsubmitted form";
+    default:
+      return "Submit new form";
+  }
+}
