@@ -12,6 +12,7 @@ import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 import { COJ_DECLARATIONS } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import FormSavePDF from "../FormSavePDF";
 
 const CojView: React.FC = () => {
   const signingCoj = store.getState().user.signingCoj;
@@ -21,6 +22,7 @@ const CojView: React.FC = () => {
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
     <>
+      {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
       <ScrollTo />
       <CojVersion progName={progName} />
       <CojDeclarationSection signedDate={signedDate} />

@@ -15,7 +15,7 @@ describe("FormSavePDF", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <FormSavePDF history={[]} formrPath="/formr-b" />
+          <FormSavePDF history={[]} path="/formr-b" />
         </Router>
       </Provider>
     );

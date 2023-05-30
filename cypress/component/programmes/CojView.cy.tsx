@@ -72,4 +72,10 @@ describe("COJ Contents View", () => {
     cy.get("#isDeclareEngage--error-message").should("not.exist");
     cy.get("[data-cy=cojSignBtn]").should("not.be.disabled");
   });
+  it("should not show warning and enable button if all agreements are checked", () => {
+    cy.get("[data-cy=backLink]").should("not.exist");
+    cy.get("[data-cy=savePdfBtn]").should("not.exist");
+    cy.get("[data-cy=pdfHelpLink]").should("not.exist");
+    cy.get("[data-cy=sectionHeader8]").should("not.exist");
+  });
 });

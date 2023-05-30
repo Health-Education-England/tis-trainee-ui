@@ -4,10 +4,10 @@ import style from "../Common.module.scss";
 
 type IFormSave = {
   history: any;
-  formrPath: string;
+  path: string;
 };
 
-const FormSavePDF = ({ history, formrPath }: IFormSave) => {
+const FormSavePDF = ({ history, path }: IFormSave) => {
   return (
     <div className="hide-from-print">
       <Row>
@@ -15,9 +15,9 @@ const FormSavePDF = ({ history, formrPath }: IFormSave) => {
           <BackLink
             className={style.backLink}
             data-cy="backLink"
-            onClick={() => FormRUtilities.historyPush(history, formrPath)}
+            onClick={() => FormRUtilities.historyPush(history, path)}
           >
-            Go back to forms list
+            Go back
           </BackLink>
         </Col>
       </Row>
