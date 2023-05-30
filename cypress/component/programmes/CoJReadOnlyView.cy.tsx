@@ -63,4 +63,14 @@ describe("COJ Contents ReadOnly View", () => {
       .should("be.disabled")
       .should("be.checked");
   });
+  it("should render view component with save PDF btn/link and declarations for submitted form.", () => {
+    cy.get("[data-cy=savePdfBtn]").should("exist");
+    cy.get("[data-cy=pdfHelpLink]")
+      .should("exist")
+      .should(
+        "have.attr",
+        "href",
+        "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
+      );
+  });
 });

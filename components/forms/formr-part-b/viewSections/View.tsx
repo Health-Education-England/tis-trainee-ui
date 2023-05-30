@@ -59,7 +59,7 @@ const View = ({ canEdit, history }: IView) => {
     content = (
       <>
         <ScrollTo />
-        {!canEdit && <FormSavePDF history={history} formrPath={"/formr-b"} />}
+        {!canEdit && <FormSavePDF history={history} path={"/formr-b"} />}
         {!!canEdit && (
           <WarningCallout data-jest="warningConfirmation">
             <WarningCallout.Label visuallyHiddenText={false}>
