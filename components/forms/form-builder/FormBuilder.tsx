@@ -98,7 +98,7 @@ const FormBuilder: React.FC<FormBuilder> = ({
     );
   }, [pages]);
 
-  // Separate the fields of each page in a separate array
+  // Separate the fields of each page in a separate array for validation purposes
   const pagesFields: Field[][] = useMemo(() => {
     return pages.map((page: Page) =>
       page.sections.flatMap((section: Section) => section.fields)

@@ -232,6 +232,7 @@ export interface DraftFormProps {
   lifecycleState: LifeCycleState;
 }
 
+// TODO - Revert when trainee forms DTO has lastModifiedDate
 export function getDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   if (
     forms.length === 0 ||
@@ -249,27 +250,17 @@ export function getDraftFormProps(forms: IFormR[]): DraftFormProps | null {
     };
   }
 
-  const draftAndLocalForms = forms.filter(
-    form =>
-      form.lifecycleState === LifeCycleState.Draft ||
-      form.lifecycleState === LifeCycleState.Local
+  const draftForm = forms.find(
+    form => form.lifecycleState === LifeCycleState.Draft
   );
 
-  const mostRecentFormDraftLocal = draftAndLocalForms.reduce((prev, curr) =>
-    new Date(curr.lastModifiedDate!!).getTime() >
-    new Date(prev.lastModifiedDate!!).getTime()
-      ? curr
-      : prev
-  );
-
-  return {
-    ...(mostRecentFormDraftLocal.lifecycleState === LifeCycleState.Local
-      ? { lifecycleState: LifeCycleState.Local }
-      : {
-          id: mostRecentFormDraftLocal.id,
-          lifecycleState: LifeCycleState.Draft
-        })
-  };
+  if (draftForm) {
+    return {
+      id: draftForm.id,
+      lifecycleState: LifeCycleState.Draft
+    };
+  }
+  return null;
 }
 
 // react-select styles

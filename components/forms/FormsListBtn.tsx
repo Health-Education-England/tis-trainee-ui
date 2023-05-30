@@ -1,7 +1,10 @@
 import { Button } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { loadSavedFormA } from "../../redux/slices/formASlice";
+import {
+  loadSavedFormA,
+  resetToInitFormA
+} from "../../redux/slices/formASlice";
 import {
   loadSavedFormB,
   resetToInitFormB
@@ -36,7 +39,9 @@ const FormsListBtn = ({
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   const formName: string = pathName === "/formr-a" ? "formA" : "formB";
   const resetForm = (pName: string) =>
-    pName === "/formr-b" && dispatch(resetToInitFormB());
+    pName === "/formr-b"
+      ? dispatch(resetToInitFormB())
+      : dispatch(resetToInitFormA());
 
   const loadTheSavedForm = async (id: string) => {
     if (pathName === "/formr-a") await dispatch(loadSavedFormA(id));

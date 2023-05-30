@@ -41,7 +41,7 @@ const FormAView = () => {
   return formAData.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEdit && <FormSavePDF history={history} formrPath={"/formr-a"} />}
+      {!canEdit && <FormSavePDF history={history} path={"/formr-a"} />}
       {canEdit && (
         <WarningCallout data-cy="warningConfirmation">
           <WarningCallout.Label visuallyHiddenText={false}>

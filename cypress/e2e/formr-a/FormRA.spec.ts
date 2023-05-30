@@ -80,15 +80,16 @@ describe("Name of the group", () => {
             expect(immigrationStatus).to.equal(immigrationTxt);
           });
 
+        // TODO - Revert this once BE trainee forms DTO has lastModiFiedDate
         // Check the local storage form data is persisted if user navigates away from the page
-        cy.log(
-          "################ Check the local storage form data is persisted if user navigates away from the page ###################"
-        );
-        cy.get('[data-cy="Form R (Part A)"]').click();
-        cy.get('[data-cy="btn-Edit unsaved draft form"]')
-          .should("exist")
-          .click();
-        cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
+        // cy.log(
+        //   "################ Check the local storage form data is persisted if user navigates away from the page ###################"
+        // );
+        // cy.get('[data-cy="Form R (Part A)"]').click();
+        // cy.get('[data-cy="btn-Edit unsaved draft form"]')
+        //   .should("exist")
+        //   .click();
+        // cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
 
         //-- personal details section --
         // test error msg when no email
@@ -202,12 +203,15 @@ describe("Name of the group", () => {
         cy.get(".MuiDialogActions-root > :nth-child(2)").click();
         cy.get('[data-cy="Submit new form"]').should("exist");
 
+        // wait for the forms plus new form to reload
+        cy.wait(5000);
         cy.contains("Submitted forms").should("exist");
         cy.get("[data-cy=submittedForm]").first().click();
         cy.get('[data-cy="email-value"]').should(
           "have.text",
           "traineeui.tester@hee.nhs.uk"
         );
+        cy.get('[data-cy="savePdfBtn"]').should("exist");
 
         // Navigate back to the list
         cy.get(".nhsuk-back-link__link").should("exist").click();
