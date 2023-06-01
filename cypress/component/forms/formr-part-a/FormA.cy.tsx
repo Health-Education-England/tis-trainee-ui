@@ -81,6 +81,20 @@ describe("FormA (form creation)", () => {
       .should("exist")
       .should("include.text", "Immigration Status");
 
+    // test that the name fields grow and shrink with the input size
+    cy.get('[data-cy="forename-input"]')
+      .clear()
+      .type("Terry terry terry terry terry terry");
+    cy.get('[data-cy="forename-input"]').should(
+      "have.class",
+      "nhsuk-input nhsuk-input--width-30"
+    );
+    cy.get('[data-cy="forename-input"]').clear().type("Terry");
+    cy.get('[data-cy="forename-input"]').should(
+      "have.class",
+      "nhsuk-input nhsuk-input--width-20"
+    );
+
     // test AutocompleteSelect
     cy.get(
       '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
