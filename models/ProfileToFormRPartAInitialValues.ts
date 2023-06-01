@@ -3,23 +3,18 @@ import { LifeCycleState } from "./LifeCycleState";
 import { TraineeProfile } from "./TraineeProfile";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import store from "../redux/store/store";
+import { filterCurriculumOptions } from "../utilities/FormBuilderUtilities";
+import { CombinedReferenceData } from "./CombinedReferenceData";
 
 export function ProfileToFormRPartAInitialValues(
   traineeProfileData: TraineeProfile
 ): FormRPartA {
-  const refData = store.getState().reference.combinedRef;
-  const isLegitOption = (
-    key: string,
-    option: string | null | undefined
-  ): string => {
-    const result =
-      refData &&
-      refData[key].some(
-        (item: { label: string | null | undefined }) => item.label === option
-      );
-    return result ? option!! : "";
-  };
-
+  const refData: CombinedReferenceData = store.getState().reference.combinedRef;
+  const filteredCurriculumData: { value: string; label: string }[] | undefined =
+    filterCurriculumOptions(
+      store.getState().reference.curriculumOptions,
+      "MEDICAL_CURRICULUM"
+    );
   const pd = traineeProfileData.personalDetails;
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
@@ -30,12 +25,12 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
-    localOfficeName: isLegitOption("localOffice", pd?.personOwner),
-    dateOfBirth: pd?.dateOfBirth || null,
-    gender: isLegitOption("gender", pd?.gender),
+    localOfficeName: isValidOption("localOffice", pd?.personOwner, refData),
+    dateOfBirth: pd?.dateOfBirth ?? null,
+    gender: isValidOption("gender", pd?.gender, refData),
     immigrationStatus: "",
     qualification: pd?.qualification,
-    dateAttained: pd?.dateAttained || null,
+    dateAttained: pd?.dateAttained ?? null,
     medicalSchool: pd?.medicalSchool,
     address1: pd?.address1,
     address2: pd?.address2,
@@ -46,13 +41,18 @@ export function ProfileToFormRPartAInitialValues(
     mobileNumber: pd?.mobileNumber,
     email: "",
     isLeadingToCct: false,
-    programmeSpecialty: isLegitOption("curriculum", curriculum?.curriculumName),
-    cctSpecialty1: isLegitOption("curriculum", curriculum?.curriculumName),
+    programmeSpecialty: isValidOption(
+      "curriculum",
+      curriculum?.curriculumName,
+      null,
+      filteredCurriculumData
+    ),
+    cctSpecialty1: isValidOption("curriculum", curriculum?.curriculumName),
     cctSpecialty2: "",
     college: "",
-    completionDate: programme?.programmeCompletionDate || null,
+    completionDate: programme?.programmeCompletionDate ?? null,
     trainingGrade: "",
-    startDate: programme?.startDate || null,
+    startDate: programme?.startDate ?? null,
     programmeMembershipType: programme?.programmeMembershipType,
     wholeTimeEquivalent: "",
     declarationType: "",
@@ -62,4 +62,18 @@ export function ProfileToFormRPartAInitialValues(
     submissionDate: null,
     lastModifiedDate: null
   };
+}
+
+// Bug fix to also reset the option to empty string where no match against filtered curric data e.g. programmeSpecialty field.
+function isValidOption(
+  key: string,
+  option: string | null | undefined,
+  refData?: any,
+  filteredCurriculumData?: any
+): string {
+  const searchedArray = refData ? refData[key] : filteredCurriculumData;
+  const result = searchedArray?.some(
+    (item: { label: string | null | undefined }) => item.label === option
+  );
+  return result ? option!! : "";
 }

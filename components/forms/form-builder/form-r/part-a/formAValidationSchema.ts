@@ -2,7 +2,6 @@ import * as yup from "yup";
 import { DateUtilities } from "../../../../../utilities/DateUtilities";
 import { StringValidationSchema } from "../../../StringValidationSchema";
 import {
-  CCT_DECLARATION,
   CHECK_PHONE_REGEX,
   CHECK_WHOLE_TIME_EQUIVALENT_REGEX
 } from "../../../../../utilities/Constants";

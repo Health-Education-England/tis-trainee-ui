@@ -3,20 +3,17 @@ import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { FieldWarning } from "../FormBuilder";
 
-type Text = {
+type TextProps = {
   name: string;
   label: string | undefined;
   formFields: Record<string, string>;
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | any,
-    selectedOption?: any
-  ) => void;
+  handleChange: (event: any, selectedOption?: any) => void;
   fieldError?: string;
   placeholder?: string;
-  fieldWarning?: FieldWarning | undefined;
+  fieldWarning?: FieldWarning;
 };
 
-export const Text: React.FC<Text> = ({
+export const Text: React.FC<TextProps> = ({
   name,
   label,
   formFields,
@@ -24,7 +21,7 @@ export const Text: React.FC<Text> = ({
   fieldError,
   placeholder,
   fieldWarning
-}: Text) => {
+}: TextProps) => {
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

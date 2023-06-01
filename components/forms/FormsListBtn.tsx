@@ -1,14 +1,8 @@
 import { Button } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import {
-  loadSavedFormA,
-  resetToInitFormA
-} from "../../redux/slices/formASlice";
-import {
-  loadSavedFormB,
-  resetToInitFormB
-} from "../../redux/slices/formBSlice";
+import { resetToInitFormA } from "../../redux/slices/formASlice";
+import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import history from "../navigation/history";
 import {
   DateType,
@@ -19,10 +13,11 @@ import { FormRUtilities } from "../../utilities/FormRUtilities";
 import { useConfirm } from "material-ui-confirm";
 import {
   DraftFormProps,
-  addLocalFormToStore
+  loadTheSavedForm,
+  resetLocalStorageFormData
 } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
-
+import { useEffect } from "react";
 interface IFormsListBtn {
   draftFormProps: DraftFormProps | null;
   pathName: string;
@@ -43,10 +38,10 @@ const FormsListBtn = ({
       ? dispatch(resetToInitFormB())
       : dispatch(resetToInitFormA());
 
-  const loadTheSavedForm = async (id: string) => {
-    if (pathName === "/formr-a") await dispatch(loadSavedFormA(id));
-    if (pathName === "/formr-b") await dispatch(loadSavedFormB(id));
-  };
+  useEffect(() => {
+    resetLocalStorageFormData(formName);
+    resetForm(pathName);
+  }, [formName, pathName]);
 
   const handleNewClick = () => {
     if (isWithinRange(latestSubDate, 31, "d")) {
@@ -54,11 +49,22 @@ const FormsListBtn = ({
       confirm({
         description: `You recently submitted a form on ${localDate}. Are you sure you want to submit another?`
       })
-        .then(() =>
-          FormRUtilities.loadNewForm(pathName, history, traineeProfileData)
-        )
+        .then(() => {
+          FormRUtilities.loadNewForm(pathName, history, traineeProfileData);
+        })
         .catch(() => console.log("action cancelled"));
-    } else FormRUtilities.loadNewForm(pathName, history, traineeProfileData);
+    } else {
+      FormRUtilities.loadNewForm(pathName, history, traineeProfileData);
+    }
+  };
+
+  const handleBtnClick = () => {
+    resetForm(pathName);
+    if (draftFormProps?.id) {
+      loadTheSavedForm(pathName, draftFormProps?.id, history);
+    } else {
+      handleNewClick();
+    }
   };
 
   return (
@@ -71,17 +77,7 @@ const FormsListBtn = ({
       }
       reverse
       type="submit"
-      onClick={async () => {
-        resetForm(pathName);
-        if (draftFormProps) {
-          {
-            draftFormProps.lifecycleState === LifeCycleState.Local
-              ? addLocalFormToStore(formName)
-              : await loadTheSavedForm(draftFormProps.id!!);
-          }
-          history.push(`${pathName}/create`);
-        } else handleNewClick();
-      }}
+      onClick={handleBtnClick}
     >
       {chooseBtnText(draftFormProps?.lifecycleState)}
     </Button>

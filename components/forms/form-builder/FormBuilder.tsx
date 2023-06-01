@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import React from "react";
 import { Button, Card, ErrorSummary } from "nhsuk-react-components";
 import {
   continueToConfirm,
@@ -56,7 +55,7 @@ export interface Form {
   name: string;
   pages: Page[];
 }
-interface FormBuilder {
+interface FormBuilderProps {
   jsonForm: Form;
   fetchedFormData: FormData;
   options: any;
@@ -72,13 +71,13 @@ export interface Warning {
   msgText: string;
 }
 
-const FormBuilder: React.FC<FormBuilder> = ({
+const FormBuilder: React.FC<FormBuilderProps> = ({
   jsonForm,
   fetchedFormData,
   options,
   validationSchema,
   history
-}: FormBuilder) => {
+}: FormBuilderProps) => {
   const { pages, name } = jsonForm;
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(() => getEditPageNumber(name), [name]);
@@ -186,7 +185,7 @@ const FormBuilder: React.FC<FormBuilder> = ({
   };
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | any,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     selectedOption?: any
   ) => {
     const { name, value } = event.currentTarget;
@@ -207,7 +206,7 @@ const FormBuilder: React.FC<FormBuilder> = ({
     if (primaryField?.dependencies) {
       primaryField.dependencies.forEach(fieldToShow => {
         const depField = fields.find(field => field.name === fieldToShow);
-        if (depField && depField.visibleIf) {
+        if (depField?.visibleIf) {
           const shouldShow = depField.visibleIf.includes(currentValue);
           depField.visible = shouldShow;
         }
@@ -269,37 +268,47 @@ const FormBuilder: React.FC<FormBuilder> = ({
     return visibleValidationSchema.validate(values, { abortEarly: false });
   };
 
-  const handlePageChange = async () => {
-    try {
-      if (currentPage === lastPage) {
-        await validateFields(fields, formFields);
-        const visibleFormData = fields.reduce((formData, field) => {
-          if (
-            field.visible ||
-            (field.parent &&
-              field.visibleIf?.includes(formFields[field.parent]))
-          ) {
-            formData[field.name] = formFields[field.name];
-          } else {
-            formData[field.name] = "";
-          }
-          return formData;
-        }, {} as FormData);
-        // need to add the formId(?) and traineeId back to the formData
-        const updatedFormData = formId
-          ? { ...visibleFormData, id: formId, traineeTisId: traineeId }
-          : { ...visibleFormData, traineeTisId: traineeId };
-        continueToConfirm(name, updatedFormData, history);
-      } else {
-        await validateFields(pagesFields[currentPage], formFields);
-        setCurrentPage(currentPage + 1);
-      }
-    } catch (err: any) {
-      const errors: Record<string, string> = {};
-      err.inner.forEach((e: { path: string; message: string }) => {
-        errors[e.path] = e.message;
-      });
-      setFormErrors(errors);
+  const handlePageChange = () => {
+    if (currentPage === lastPage) {
+      validateFields(fields, formFields)
+        .then(() => {
+          const visibleFormData = fields.reduce((formData, field) => {
+            if (
+              field.visible ||
+              (field.parent &&
+                field.visibleIf?.includes(formFields[field.parent]))
+            ) {
+              formData[field.name] = formFields[field.name];
+            } else {
+              formData[field.name] = "";
+            }
+            return formData;
+          }, {} as FormData);
+          // need to add the formId(?) and traineeId back to the formData
+          const updatedFormData = formId
+            ? { ...visibleFormData, id: formId, traineeTisId: traineeId }
+            : { ...visibleFormData, traineeTisId: traineeId };
+          continueToConfirm(name, updatedFormData, history);
+        })
+        .catch((err: any) => {
+          const errors: Record<string, string> = {};
+          err.inner.forEach((e: { path: string; message: string }) => {
+            errors[e.path] = e.message;
+          });
+          setFormErrors(errors);
+        });
+    } else {
+      validateFields(pagesFields[currentPage], formFields)
+        .then(() => {
+          setCurrentPage(currentPage + 1);
+        })
+        .catch((err: any) => {
+          const errors: Record<string, string> = {};
+          err.inner.forEach((e: { path: string; message: string }) => {
+            errors[e.path] = e.message;
+          });
+          setFormErrors(errors);
+        });
     }
   };
 
@@ -322,30 +331,28 @@ const FormBuilder: React.FC<FormBuilder> = ({
                 pages[currentPage].pageName
               }`}</h3>
             )}
-            {pages[currentPage].sections &&
-              pages[currentPage].sections.map((section: Section) => (
-                <React.Fragment key={section.sectionHeader}>
-                  <Card feature>
-                    <Card.Content>
-                      <Card.Heading>{section.sectionHeader}</Card.Heading>
-                      {section.fields &&
-                        section.fields.map((field: Field) => (
-                          <div key={field.name} className="nhsuk-form-group">
-                            {formFields && renderFormField(field)}
-                            {formErrors[field.name] && (
-                              <div
-                                className="nhsuk-error-message"
-                                data-cy={`${field.name}-inline-error-msg`}
-                              >
-                                {formErrors[field.name]}
-                              </div>
-                            )}
+            {pages[currentPage]?.sections.map((section: Section) => (
+              <React.Fragment key={section.sectionHeader}>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>{section.sectionHeader}</Card.Heading>
+                    {section?.fields.map((field: Field) => (
+                      <div key={field.name} className="nhsuk-form-group">
+                        {formFields && renderFormField(field)}
+                        {formErrors[field.name] && (
+                          <div
+                            className="nhsuk-error-message"
+                            data-cy={`${field.name}-inline-error-msg`}
+                          >
+                            {formErrors[field.name]}
                           </div>
-                        ))}
-                    </Card.Content>
-                  </Card>
-                </React.Fragment>
-              ))}
+                        )}
+                      </div>
+                    ))}
+                  </Card.Content>
+                </Card>
+              </React.Fragment>
+            ))}
           </div>
         </>
       )}
@@ -391,7 +398,7 @@ const FormBuilder: React.FC<FormBuilder> = ({
             secondary
             onClick={async () => {
               setIsSubmitting(true);
-              saveDraftForm(name, formFields, history);
+              await saveDraftForm(name, formFields, history);
               setIsSubmitting(false);
             }}
             disabled={isSubmitting}
@@ -429,11 +436,11 @@ const FormBuilder: React.FC<FormBuilder> = ({
 };
 export default FormBuilder;
 
-interface FormErrors {
+interface FormErrorsProps {
   formErrors: Record<string, string>;
 }
 
-function FormErrors({ formErrors }: FormErrors) {
+function FormErrors({ formErrors }: FormErrorsProps) {
   return (
     <div className="error-summary" data-cy="errorSummary">
       <p>

@@ -2,6 +2,7 @@ import { CombinedReferenceData } from "../models/CombinedReferenceData";
 import { FormRPartA } from "../models/FormRPartA";
 import { KeyValue } from "../models/KeyValue";
 import {
+  loadSavedFormA,
   resetToInitFormA,
   saveFormA,
   updateFormA,
@@ -12,6 +13,7 @@ import {
 import store from "../redux/store/store";
 import { FormData } from "../components/forms/form-builder/FormBuilder";
 import {
+  loadSavedFormB,
   resetToInitFormB,
   saveFormB,
   updateFormB,
@@ -36,6 +38,19 @@ export function mapItemToNewFormat(item: KeyValue): {
 
 // ----------------------------------------------------------
 // TODO Lots of these functions below repeat the same logic for formA and formB - look to combine the form slices into one slice?
+
+export async function loadTheSavedForm(
+  pathName: string,
+  id: string,
+  history: any
+) {
+  if (pathName === "/formr-a") {
+    await store.dispatch(loadSavedFormA(id));
+  } else {
+    await store.dispatch(loadSavedFormB(id));
+  }
+  history.push(`${pathName}/create`);
+}
 
 // This is used in FormBuilder to set the initial page value (needed because when reviewing/editing mutli-page form needs to take user to the correct page)
 export function getEditPageNumber(formName: string) {
@@ -74,6 +89,10 @@ export function resetForm(formName: string, history: any) {
   }
 }
 
+export function resetLocalStorageFormData(formName: string) {
+  localStorage.removeItem(formName);
+}
+
 export async function submitForm(
   formName: string,
   formData: FormData,
@@ -97,7 +116,7 @@ export async function submitForm(
   resetForm(formName, history);
 }
 
-export function saveDraftForm(
+export async function saveDraftForm(
   formName: string,
   formData: FormData,
   history: string[]
@@ -119,17 +138,17 @@ export function saveDraftForm(
   }
   if (formName === "formA") {
     formData.id
-      ? store.dispatch(updateFormA(updatedFormData as FormRPartA))
-      : store.dispatch(saveFormA(updatedFormData as FormRPartA));
+      ? await store.dispatch(updateFormA(updatedFormData as FormRPartA))
+      : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
   } else {
     formData.id
-      ? store.dispatch(updateFormB(updatedFormData as FormRPartB))
-      : store.dispatch(saveFormB(updatedFormData as FormRPartB));
+      ? await store.dispatch(updateFormB(updatedFormData as FormRPartB))
+      : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
   }
   history.push(redirectPath);
 }
 
-export async function continueToConfirm(
+export function continueToConfirm(
   formName: string,
   formData: FormData,
   history: string[]
@@ -176,12 +195,9 @@ export function filterCurriculumOptions(
   curriculumOptions: CurriculumKeyValue[] | null,
   curriculumSubType: string | null | undefined
 ) {
-  return (
-    curriculumOptions &&
-    curriculumOptions
-      .filter(c => c?.curriculumSubType === curriculumSubType)
-      .map(option => mapItemToNewFormat(option))
-  );
+  return curriculumOptions
+    ?.filter(c => c?.curriculumSubType === curriculumSubType)
+    .map(option => mapItemToNewFormat(option));
 }
 
 export function transformReferenceData(

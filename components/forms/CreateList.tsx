@@ -9,7 +9,7 @@ import {
 } from "../../redux/slices/formsSlice";
 import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
-import { Redirect, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
 import {
   DraftFormProps,
@@ -46,8 +46,6 @@ const CreateList = ({ history }: { history: string[] }) => {
 
   if (formRListStatus === "loading" || featFlagStatus === "loading")
     content = <Loading />;
-  if (formRListStatus === "failed" || featFlagStatus === "failed")
-    content = <Redirect to="/support" />;
   if (formRListStatus === "succeeded" && featFlagStatus === "succeeded")
     content = (
       <>

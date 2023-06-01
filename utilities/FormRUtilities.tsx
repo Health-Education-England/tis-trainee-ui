@@ -7,7 +7,11 @@ import Section6 from "../components/forms/formr-part-b/sections/Section6";
 import CovidDeclaration from "../components/forms/formr-part-b/sections/CovidDeclaration";
 import { IProgSection } from "../models/IProgressSection";
 import store from "../redux/store/store";
-import { loadSavedFormA, updatedFormA } from "../redux/slices/formASlice";
+import {
+  loadSavedFormA,
+  updatedFormA,
+  updatedCanEdit
+} from "../redux/slices/formASlice";
 import {
   loadSavedFormB,
   updatedCanEditB,
@@ -17,7 +21,6 @@ import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAI
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
 import { DateType, DateUtilities } from "./DateUtilities";
-import { updatedCanEdit } from "../redux/slices/formASlice";
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;

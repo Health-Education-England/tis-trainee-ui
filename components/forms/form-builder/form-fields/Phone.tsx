@@ -2,17 +2,19 @@ import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import PhoneInput from "react-phone-number-input";
 
-type Phone = {
+type PhoneProps = {
   name: string;
   label: string | undefined;
   formFields: Record<string, string>;
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | any,
-    selectedOption?: any
-  ) => void;
+  handleChange: (event: any, selectedOption?: any) => void;
 };
 
-export const Phone = ({ name, label, formFields, handleChange }: Phone) => {
+export const Phone = ({
+  name,
+  label,
+  formFields,
+  handleChange
+}: PhoneProps) => {
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

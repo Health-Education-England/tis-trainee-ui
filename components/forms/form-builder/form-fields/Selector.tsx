@@ -5,15 +5,12 @@ import {
   handleKeyDown
 } from "../../../../utilities/FormBuilderUtilities";
 
-type Selector = {
+type SelectorProps = {
   name: string;
   label: string | undefined;
   options: any;
   formFields: Record<string, string>;
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | any,
-    selectedOption?: any
-  ) => void;
+  handleChange: (event: any, selectedOption?: any) => void;
 };
 
 export const Selector = ({
@@ -22,7 +19,7 @@ export const Selector = ({
   options,
   formFields,
   handleChange
-}: Selector) => {
+}: SelectorProps) => {
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

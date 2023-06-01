@@ -6,14 +6,11 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-type Dates = {
+type DatesProps = {
   name: string;
   label: string | undefined;
   formFields: Record<string, string>;
-  handleChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | any,
-    selectedOption?: any
-  ) => void;
+  handleChange: (event: any, selectedOption?: any) => void;
   fieldError?: string;
   placeholder?: string;
 };
@@ -25,7 +22,7 @@ export const Dates = ({
   handleChange,
   fieldError,
   placeholder
-}: Dates) => {
+}: DatesProps) => {
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

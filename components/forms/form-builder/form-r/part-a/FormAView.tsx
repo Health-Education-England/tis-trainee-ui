@@ -98,7 +98,6 @@ const FormAView = () => {
                     e.preventDefault();
                     setIsSubmitting(true);
                     handleSubClick(formAData);
-                    // TODO need to clear the local storage after successful submission
                   }}
                   disabled={isSubmitting}
                   data-cy="BtnSubmit"
