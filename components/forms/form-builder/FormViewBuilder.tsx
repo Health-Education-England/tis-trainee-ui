@@ -18,12 +18,12 @@ const FormViewBuilder: React.FC<FormViewBuilder> = ({
   return (
     <div>
       {jsonForm.pages.map((page, pageIndex) => (
-        <div key={pageIndex}>
+        <div key={page.pageName}>
           <Card feature>
             <Card.Content>
               <Card.Heading>{page.pageName}</Card.Heading>
               {page.sections.map((section, sectionIndex) => (
-                <div key={sectionIndex}>
+                <div key={section.sectionHeader}>
                   {canEdit && (
                     <Button
                       data-cy={`edit-${section.sectionHeader}`}

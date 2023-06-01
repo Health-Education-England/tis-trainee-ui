@@ -37,7 +37,7 @@ export function mapItemToNewFormat(item: KeyValue): {
 }
 
 // ----------------------------------------------------------
-// TODO Lots of these functions below repeat the same logic for formA and formB - look to combine the form slices into one slice?
+// Note - Lots of these functions below repeat the same logic for formA and formB - look to combine the form slices into one slice?
 
 export async function loadTheSavedForm(
   pathName: string,
@@ -248,7 +248,7 @@ export interface DraftFormProps {
   lifecycleState: LifeCycleState;
 }
 
-// TODO - Revert when trainee forms DTO has lastModifiedDate
+// Note - Revert when trainee forms DTO has lastModifiedDate
 export function getDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   if (
     forms.length === 0 ||

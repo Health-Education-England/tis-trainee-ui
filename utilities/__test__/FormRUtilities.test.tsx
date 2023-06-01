@@ -1,6 +1,6 @@
 import { FormRUtilities } from "../FormRUtilities";
 
-// TODO - delete tests when FormB uses FormBuilder
+// Note - delete tests when FormB uses FormBuilder
 describe("FormRUtilities", () => {
   it("should return value if data (string) provided", () => {
     const value = "Super Compliment";

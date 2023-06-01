@@ -312,6 +312,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     }
   };
 
+  const handleSaveBtnClick = () => {
+    setIsSubmitting(true);
+    saveDraftForm(name, formFields, history);
+    setIsSubmitting(false);
+  };
+
   return (
     <form onSubmit={handlePageChange} acceptCharset="UTF-8">
       {pages && (
@@ -324,7 +330,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             )}
           </div>
           {pages[currentPage].msgLinkName && <DataSourceMsg />}
-          {/* TODO progress bar instead? */}
           <div data-cy="progress-header">
             {pages[currentPage].pageName && (
               <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
@@ -396,10 +401,9 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
         <div className="nhsuk-grid-column-one-third form-navigation-save-button">
           <Button
             secondary
-            onClick={async () => {
-              setIsSubmitting(true);
-              await saveDraftForm(name, formFields, history);
-              setIsSubmitting(false);
+            onClick={(e: { preventDefault: () => void }) => {
+              e.preventDefault();
+              handleSaveBtnClick();
             }}
             disabled={isSubmitting}
             data-cy="BtnSaveDraft"

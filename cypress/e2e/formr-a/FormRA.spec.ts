@@ -80,7 +80,7 @@ describe("Name of the group", () => {
             expect(immigrationStatus).to.equal(immigrationTxt);
           });
 
-        // TODO - Revert this once BE trainee forms DTO has lastModiFiedDate
+        // NOTE - Revert this once BE trainee forms DTO has lastModiFiedDate
         // Check the local storage form data is persisted if user navigates away from the page
         // cy.log(
         //   "################ Check the local storage form data is persisted if user navigates away from the page ###################"
