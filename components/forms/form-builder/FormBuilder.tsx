@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, ErrorSummary } from "nhsuk-react-components";
 import {
@@ -78,7 +78,16 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   validationSchema,
   history
 }: FormBuilderProps) => {
-  const { pages, name } = jsonForm;
+  const { pages, name } = { ...jsonForm };
+  // set the form fields to be rendered (with jsonForm data as default)
+  const [fields, setFields] = useState<Field[]>([]);
+  useEffect(() => {
+    const fields: Field[] = pages.flatMap((page: Page) =>
+      page.sections.flatMap((section: Section) => section.fields)
+    );
+    setFields(fields);
+  }, [pages]);
+
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(() => getEditPageNumber(name), [name]);
   const [currentPage, setCurrentPage] = useState(initialPageValue);
@@ -91,11 +100,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     undefined
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const fields: Field[] = useMemo(() => {
-    return pages.flatMap((page: Page) =>
-      page.sections.flatMap((section: Section) => section.fields)
-    );
-  }, [pages]);
 
   // Separate the fields of each page in a separate array for validation purposes
   const pagesFields: Field[][] = useMemo(() => {
@@ -184,6 +188,33 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     } else return null;
   };
 
+  const updateFieldVisibility = (
+    fields: Field[],
+    fieldName: string,
+    fieldValue: string
+  ): Field[] => {
+    return fields.map(field => {
+      if (field.dependencies && field.dependencies.includes(fieldName)) {
+        const shouldShow = field.visibleIf
+          ? field.visibleIf.includes(fieldValue)
+          : false;
+        return {
+          ...field,
+          visible: shouldShow
+        };
+      }
+      return field;
+    });
+  };
+
+  const removeFormErrorForField = (
+    formErrors: Record<string, string>,
+    fieldName: string
+  ): Record<string, string> => {
+    const { [fieldName]: omittedField, ...newErrors } = formErrors;
+    return newErrors;
+  };
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     selectedOption?: any
@@ -205,17 +236,27 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     // show/hide fields based on the value of the current field
     if (primaryField?.dependencies) {
       primaryField.dependencies.forEach(fieldToShow => {
-        const depField = fields.find(field => field.name === fieldToShow);
-        if (depField?.visibleIf) {
-          const shouldShow = depField.visibleIf.includes(currentValue);
-          depField.visible = shouldShow;
-        }
-        if (!depField?.visible) {
-          setFormErrors((prev: FormData) => {
-            const { [fieldToShow]: omittedField, ...newErrors } = prev;
-            return newErrors;
+        setFields(prevFields => {
+          const updatedFields = updateFieldVisibility(
+            prevFields,
+            fieldToShow,
+            currentValue
+          );
+          // update errors object to remove errors for fields that are now hidden
+          updatedFields.forEach(depField => {
+            if (depField.name === fieldToShow && !depField.visible) {
+              setFormErrors(prevFormErrors => {
+                const newErrors = removeFormErrorForField(
+                  prevFormErrors,
+                  fieldToShow
+                );
+                return newErrors;
+              });
+            }
           });
-        }
+
+          return updatedFields;
+        });
       });
     }
 

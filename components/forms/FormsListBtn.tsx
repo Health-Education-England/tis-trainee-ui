@@ -41,7 +41,7 @@ const FormsListBtn = ({
   useEffect(() => {
     resetLocalStorageFormData(formName);
     resetForm(pathName);
-  }, [formName, pathName]);
+  }, [resetForm, formName, pathName]);
 
   const handleNewClick = () => {
     if (isWithinRange(latestSubDate, 31, "d")) {
