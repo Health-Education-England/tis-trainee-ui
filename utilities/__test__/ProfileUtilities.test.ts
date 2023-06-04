@@ -18,6 +18,7 @@ import {
   workArrWithTwoFutureOnSameDay,
   trimmedAndSortedWorkArrWithTwoFutureOnSameDay
 } from "../../mock-data/work-placements-list";
+import { Work } from "../../models/FormRPartB";
 
 describe("ProfileUtilities", () => {
   it("should sort work in desc order by end date", () => {
@@ -91,7 +92,7 @@ describe("ProfileUtilities", () => {
 
   // Trim future work placements
   it("should return a new blank work placement if empty arr", () => {
-    const emptyArr = [];
+    const emptyArr: Work[] = [];
     const trimmedAndSortedEmptyArr =
       ProfileUtilities.sortedTrimmedWork(emptyArr);
     expect(trimmedAndSortedEmptyArr).toEqual([NEW_WORK]);

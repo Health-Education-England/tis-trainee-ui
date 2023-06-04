@@ -1,16 +1,15 @@
 import * as yup from "yup";
-import { DateUtilities } from "../../../utilities/DateUtilities";
-import { StringValidationSchema } from "../StringValidationSchema";
+import { DateUtilities } from "../../../../../utilities/DateUtilities";
+import { StringValidationSchema } from "../../../StringValidationSchema";
 import {
-  CCT_DECLARATION,
   CHECK_PHONE_REGEX,
   CHECK_WHOLE_TIME_EQUIVALENT_REGEX
-} from "../../../utilities/Constants";
+} from "../../../../../utilities/Constants";
 
 const dateValidationSchema = (fieldName: string) =>
   yup.date().nullable().required(`${fieldName} is required`);
 
-export const ValidationSchema = yup.object({
+export const formAValidationSchema = yup.object({
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
@@ -63,10 +62,7 @@ export const ValidationSchema = yup.object({
     .required("You need to choose at least one Declaration")
     .nullable(),
   programmeSpecialty: StringValidationSchema("Programme specialty"),
-  cctSpecialty1: yup.string().when("declarationType", {
-    is: CCT_DECLARATION,
-    then: StringValidationSchema("Specialty 1 for Award of CCT")
-  }),
+  cctSpecialty1: StringValidationSchema("Specialty 1 for Award of CCT"),
   college: StringValidationSchema("Royal College / Faculty Assessing Training"),
   completionDate: yup
     .string()
@@ -90,10 +86,10 @@ export const ValidationSchema = yup.object({
   programmeMembershipType: StringValidationSchema("Post type or Appointment"),
   wholeTimeEquivalent: yup
     .string()
-    .required("Full Time or % of Full Time Training is required")
+    .required("Training hours (Full Time Equivalent) is required")
     .test(
       "wholeTimeEquivalent",
-      "Programme Full Time Equivalent in Training needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)",
+      "Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)",
       value => (value ? CHECK_WHOLE_TIME_EQUIVALENT_REGEX.test(value) : false)
     )
     .nullable()

@@ -7,16 +7,6 @@ declare global {
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
        */
-      checkFormRAValues(
-        dateAttained: string,
-        completionDate: string,
-        startDate: string,
-        wholeTimeEquivalent: string
-      ): Chainable<Element>;
-      completeFormAPersonalDetailsSection(
-        dateAttained: string
-      ): Chainable<Element>;
-      completeFormRAProgrammeSpecialtySection(): Chainable<Element>;
       checkAndFillSection1(
         currRevalDate: string,
         prevRevalDate: string

@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect, useLocation } from "react-router-dom";
 import Profile from "../profile/Profile";
-import FormRPartA from "../forms/formr-part-a/FormRPartA";
+import FormRPartA from "../forms/form-builder/form-r/part-a/FormRPartA";
 import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
 import PageNotFound from "../common/PageNotFound";

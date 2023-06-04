@@ -4,11 +4,6 @@ import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import store from "../../../redux/store/store";
 import { mockTraineeProfile } from "../../../mock-data/trainee-profile";
-import {
-  submittedFormRPartBs,
-  submittedFormRPartBsWithDraft,
-  submittedFormRPartBsWithUnsubmitted
-} from "../../../mock-data/submitted-formr-partb";
 import FormsListBtn from "../../../components/forms/FormsListBtn";
 import { updatedTraineeProfileData } from "../../../redux/slices/traineeProfileSlice";
 import history from "../../../components/navigation/history";
@@ -16,33 +11,16 @@ import day from "dayjs";
 import { ConfirmProvider } from "material-ui-confirm";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { LifeCycleState } from "../../../models/LifeCycleState";
 
 describe("FormsListBtn", () => {
-  it("should render the 'Submit new form' button if no submitted forms ", () => {
-    const MockedFormsListBtnNoSubForms = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedTraineeProfileData(mockTraineeProfile));
-      return (
-        <FormsListBtn formRList={[]} pathName="/formr-b" latestSubDate={null} />
-      );
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedFormsListBtnNoSubForms />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
-  });
-
-  it("should render 'Submit new form' button when all forms status is 'submitted'.", () => {
-    const MockedFormsListBtnAllSubs = () => {
+  it("should render the 'Submit new form' button if no draft forms", () => {
+    const MockedFormsListBtnNoDraftForms = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileData(mockTraineeProfile));
       return (
         <FormsListBtn
-          formRList={submittedFormRPartBs}
+          draftFormProps={null}
           pathName="/formr-b"
           latestSubDate={null}
         />
@@ -51,48 +29,72 @@ describe("FormsListBtn", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedFormsListBtnAllSubs />
+          <MockedFormsListBtnNoDraftForms />
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
+    cy.get('[data-cy="Submit new form"]').should("exist");
   });
-  it("should render 'Edit saved form ' when a draft form in list", () => {
+
+  it("should render 'Edit saved draft form ' btn when a saved draft form is to be edited", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
           <FormsListBtn
-            formRList={submittedFormRPartBsWithDraft}
+            draftFormProps={{
+              id: "4",
+              lifecycleState: LifeCycleState.Draft
+            }}
             pathName="/formr-b"
             latestSubDate={null}
           />
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=btnEditSavedForm]").should("exist");
+    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist");
   });
-  it("should render 'Edit unsubmitted form' when an unsubmitted form in list", () => {
+  it("should render 'Edit unsubmitted form' when an unsubmitted form is to be edited", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
           <FormsListBtn
-            formRList={submittedFormRPartBsWithUnsubmitted}
+            draftFormProps={{
+              id: "5",
+              lifecycleState: LifeCycleState.Unsubmitted
+            }}
             pathName="/formr-b"
             latestSubDate={null}
           />
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=btnEditUnsubmittedForm]").should("exist").click();
+    cy.get('[data-cy="btn-Edit unsubmitted form"]').should("exist").click();
     cy.url().should("include", "/create");
   });
+  it("should render 'Edit unsaved draft form ' btn when a saved draft form is to be edited", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <FormsListBtn
+            draftFormProps={{
+              lifecycleState: LifeCycleState.Local
+            }}
+            pathName="/formr-b"
+            latestSubDate={null}
+          />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="btn-Edit unsaved draft form"]').should("exist");
+  });
+
   it("should render the modal warning if a form has been submitted within 31 days from today", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
           <ConfirmProvider>
             <FormsListBtn
-              formRList={[]}
+              draftFormProps={null}
               pathName="/formr-b"
               latestSubDate={day().toDate()}
             />
@@ -101,7 +103,7 @@ describe("FormsListBtn", () => {
       </Provider>
     );
     cy.stub(FormRUtilities, "loadNewForm").as("newForm");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
     cy.get(".MuiDialog-container").should("exist");
     cy.get(".MuiDialogContent-root > .MuiTypography-root").should(
       "contain.text",
@@ -111,7 +113,7 @@ describe("FormsListBtn", () => {
     );
     cy.get(".MuiDialogActions-root > :nth-child(1)").click();
     cy.get(".MuiDialog-container").should("not.exist");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.url().should("include", "/create");
     cy.get("@newForm").should("have.been.called");
@@ -122,7 +124,7 @@ describe("FormsListBtn", () => {
         <Router history={history}>
           <ConfirmProvider>
             <FormsListBtn
-              formRList={[]}
+              draftFormProps={null}
               pathName="/formr-b"
               latestSubDate={day().subtract(31, "d").toDate()}
             />
@@ -131,7 +133,7 @@ describe("FormsListBtn", () => {
       </Provider>
     );
     cy.stub(FormRUtilities, "loadNewForm").as("newForm");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist").click();
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
     cy.get(".MuiDialog-container").should("not.exist");
     cy.url().should("include", "/create");
     cy.get("@newForm").should("have.been.called");

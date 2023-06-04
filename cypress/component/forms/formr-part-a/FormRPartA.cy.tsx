@@ -1,10 +1,10 @@
+import React from "react";
 import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import FormRPartA from "../../../../components/forms/formr-part-a/FormRPartA";
+import FormRPartA from "../../../../components/forms/form-builder/form-r/part-a/FormRPartA";
 import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
-import React from "react";
 import { updatedPreferredMfa } from "../../../../redux/slices/userSlice";
 
 describe("FormRPartA routes page", () => {

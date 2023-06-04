@@ -1,14 +1,12 @@
 import { Redirect, Route, Switch } from "react-router-dom";
-import ScrollTo from "../ScrollTo";
-import PageTitle from "../../../components/common/PageTitle";
+import ScrollTo from "../../../ScrollTo";
+import PageTitle from "../../../../common/PageTitle";
 import { Fieldset, Label } from "nhsuk-react-components";
-import CreateList from "../CreateList";
-import View from "./View";
-import Create from "./Create";
-import Confirm from "./Confirm";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import PageNotFound from "../../common/PageNotFound";
-import style from "../../Common.module.scss";
+import CreateList from "../../../CreateList";
+import { useAppSelector } from "../../../../../redux/hooks/hooks";
+import PageNotFound from "../../../../common/PageNotFound";
+import FormA from "./FormA";
+import FormAView from "./FormAView";
 
 const FormRPartA = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
@@ -22,19 +20,19 @@ const FormRPartA = () => {
       <Fieldset>
         <Fieldset.Legend
           isPageHeading
-          className={style.fieldLegHeader}
+          className="fieldset-legend__header"
           data-cy="formRAHeading"
         >
           Form R (Part A)
         </Fieldset.Legend>
-        <Label data-cy="formraLabel">
+        <Label data-cy="formraLabel" size="s">
           Trainee registration for Postgraduate Speciality Training
         </Label>
       </Fieldset>
       <Switch>
-        <Route exact path="/formr-a/create" component={Create} />
-        <Route exact path="/formr-a/confirm" component={Confirm} />
-        <Route exact path="/formr-a/:id" component={View} />
+        <Route exact path="/formr-a/create" component={FormA} />
+        <Route exact path="/formr-a/confirm" component={FormAView} />
+        <Route exact path="/formr-a/:id" component={FormAView} />
         <Route exact path="/formr-a" component={CreateList} />
         <Route path="/formr-a/*" component={PageNotFound} />
       </Switch>
