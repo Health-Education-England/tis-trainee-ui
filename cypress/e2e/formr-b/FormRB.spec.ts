@@ -33,7 +33,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnMenu]").should("exist").click();
     cy.contains("Form R (Part B)").click();
     cy.visit("/formr-b", { failOnStatusCode: false });
-    cy.get("[data-cy=btnLoadNewForm]").click();
+    cy.get('[data-cy="Submit new form"]').click();
     cy.get("body").then($body => {
       if ($body.find(".MuiDialog-container").length) {
         cy.get(".MuiDialogContentText-root").should(
@@ -52,7 +52,7 @@ describe("Form R (Part B)", () => {
     cy.contains("Support").click();
     cy.get("[data-cy=BtnMenu]").click();
     cy.contains("Form R (Part B)").click();
-    cy.get("[data-cy=btnLoadNewForm]").click();
+    cy.get('[data-cy="Submit new form"]').click();
     cy.get("body").then($body => {
       if ($body.find(".MuiDialog-container").length) {
         cy.get(".MuiDialogActions-root > :nth-child(2)").click();
@@ -328,7 +328,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnSaveDraft]").click();
 
     // -------------- Retrieve saved draft form ----------------------------------
-    cy.get("[data-cy=btnEditSavedForm]").should("exist").click();
+    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
     cy.get(".nhsuk-warning-callout").should("exist");
     cy.get("[data-cy=gmcNumber]").should("exist");
 
@@ -354,7 +354,7 @@ describe("Form R (Part B)", () => {
       .should("include.text", "Please think carefully before submitting");
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
     cy.checkForSuccessNotif("Success");
-    cy.get("[data-cy=btnLoadNewForm]").should("exist");
+    cy.get('[data-cy="Submit new form"]').should("exist");
     cy.contains("Submitted forms").should("exist");
     cy.get("[data-cy=formsTrueHint]").should("exist");
     cy.log(
