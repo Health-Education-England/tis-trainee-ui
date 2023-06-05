@@ -160,6 +160,15 @@ describe("Name of the group", () => {
           .find(".react-select__option")
           .first()
           .click();
+
+        cy.get(
+          '[data-cy="startDate"]> .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
+        )
+          .click()
+          .clear()
+          .type(startDate);
+
+        cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
         cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
 
         cy.get('[data-cy="BtnContinue"]')
@@ -212,7 +221,7 @@ describe("Name of the group", () => {
         // Navigate back to the list
         cy.get(".nhsuk-back-link__link").should("exist").click();
         cy.contains("Submitted forms").should("exist");
-        cy.get('[data-cy="Submit new form"]').should("exist");
+        cy.get('[data-cy="Submit new form"]').should("exist").click();
       });
   });
 });
