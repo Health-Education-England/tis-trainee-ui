@@ -55,25 +55,23 @@ describe("Name of the group", () => {
 
         // -- personal details section --
         // immigration status
-        const immigrationTxt = "Dependent - other immigration category";
+        const immigrationTxt = "Refugee in the UK";
         cy.get(
           '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
         )
           .click()
-          .type("ot")
+          .type("ref")
           .get(".react-select__menu")
           .find(".react-select__option")
           .first()
           .click();
         cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
-        cy.get('[data-cy="otherImmigrationStatus-label"]').should("exist");
 
         // Test the local storage is updated
         // put a wait here to give time for the local storage to update
         cy.wait(5000)
           .getLocalStorage("formA")
           .then(formA => {
-            console.log("formA", formA && JSON.parse(formA));
             const parsedForm = formA && JSON.parse(formA);
             const immigrationStatus = parsedForm.immigrationStatus;
             console.log("immigrationStatus", immigrationStatus);
@@ -201,11 +199,9 @@ describe("Name of the group", () => {
           .should("exist")
           .should("include.text", "Please think carefully before submitting");
         cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-        cy.get('[data-cy="Submit new form"]').should("exist");
 
-        // wait for the forms plus new form to reload
-        cy.wait(5000);
         cy.contains("Submitted forms").should("exist");
+        cy.get('[data-cy="Submit new form"]').should("exist");
         cy.get("[data-cy=submittedForm]").first().click();
         cy.get('[data-cy="email-value"]').should(
           "have.text",

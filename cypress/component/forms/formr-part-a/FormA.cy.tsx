@@ -100,13 +100,12 @@ describe("FormA (form creation)", () => {
       '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     )
       .click()
-      .type("ot")
+      .type("brit")
       .get(".react-select__menu")
       .find(".react-select__option")
       .first()
       .click();
-    cy.get(".react-select__value-container").contains("Other");
-    cy.get('[data-cy="otherImmigrationStatus-label"]').should("exist");
+    cy.get(".react-select__value-container").contains("British");
 
     // test datepicker
     cy.get('[data-cy="dateAttained-label"]').should("exist");
