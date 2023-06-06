@@ -15,7 +15,7 @@ const startDate = dayjs()
   .subtract(dayjs.duration({ months: 9, days: 30 }))
   .format("YYYY-MM-DD");
 
-describe("Name of the group", () => {
+describe("Form R Part A - Basic Form completion and submission", () => {
   before(() => {
     cy.wait(30000);
     cy.visit("/");
@@ -121,8 +121,9 @@ describe("Name of the group", () => {
           "Part 2 of 3 - Programme Declarations"
         );
         cy.get(
-          '[data-cy="declarationType-I will be seeking specialist registration by application for a CESR-input"]'
+          '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
         ).click();
+
         cy.get(
           '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
         )
@@ -131,6 +132,15 @@ describe("Name of the group", () => {
           .find(".react-select__option")
           .first()
           .click();
+        cy.get(
+          '   [data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+        )
+          .click()
+          .get(".react-select__menu")
+          .find(".react-select__option")
+          .first()
+          .click();
+
         cy.get(
           '[data-cy="college"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
         )
@@ -160,38 +170,27 @@ describe("Name of the group", () => {
           .find(".react-select__option")
           .first()
           .click();
+
+        cy.get(
+          '[data-cy="startDate"]> .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
+        )
+          .click()
+          .clear()
+          .type(startDate);
+        cy.get(".nhsuk-card__heading").click(); // to remove date picker focus
+        cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
         cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
 
         cy.get('[data-cy="BtnContinue"]')
           .should("have.text", "Review & submit")
           .click();
 
-        // Save draft
         cy.get('[data-cy="warningConfirmation"]').should("exist");
         cy.get('[data-cy="email-value"]').should(
           "have.text",
           "traineeui.tester@hee.nhs.uk"
         );
         cy.get('[data-cy="edit-Personal Details"]').should("exist");
-        cy.get('[data-cy="BtnSaveDraft"]').should("exist").click();
-
-        // open the saved draft form
-        cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
-        cy.get('[data-cy="progress-header"] > h3').should(
-          "contain.text",
-          "Part 1 of 3 - Personal Details"
-        );
-        cy.get('[data-cy="BtnContinue"]').click();
-        cy.get('[data-cy="progress-header"] > h3').should(
-          "contain.text",
-          "Part 2 of 3 - Programme Declarations"
-        );
-        cy.get('[data-cy="BtnContinue"]').click();
-        cy.get('[data-cy="progress-header"] > h3').should(
-          "contain.text",
-          "Part 3 of 3 - Programme Details"
-        );
-        cy.get('[data-cy="BtnContinue"]').click();
 
         // Submit form
         cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
@@ -212,7 +211,123 @@ describe("Name of the group", () => {
         // Navigate back to the list
         cy.get(".nhsuk-back-link__link").should("exist").click();
         cy.contains("Submitted forms").should("exist");
-        cy.get('[data-cy="Submit new form"]').should("exist");
       });
+  });
+});
+
+describe("Form R Part A - JSON form fields visibility status checks", () => {
+  before(() => {
+    cy.wait(30000);
+    cy.visit("/");
+    cy.signIn();
+  });
+  it("should persist the updated dependent field visibility status to trigger any expected validation  when a draft form is re-opened.", () => {
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get(
+      '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .type("ref")
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get('[data-cy="email-input"]')
+      .focus()
+      .clear()
+      .type("traineeui.tester@hee.nhs.uk");
+
+    cy.get('[data-cy="BtnContinue"]').click();
+
+    cy.log(
+      "################ Check that the changed dependent field visibility prop is persisted when a draft form is saved and re-opened so that the validation still fires correctly ###################"
+    );
+    cy.get(
+      '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
+    ).click();
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
+    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get(
+      '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
+    ).should("be.checked");
+    cy.get(
+      '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    ).should("exist");
+    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get(".nhsuk-error-summary").should("exist");
+    cy.get(
+      '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(
+      '   [data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+
+    cy.get(
+      '[data-cy="college"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(
+      '[data-cy="completionDate"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
+    )
+      .click()
+      .clear()
+      .type(completionDate);
+    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get(
+      '[data-cy="trainingGrade"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();
+    cy.get(
+      '[data-cy="startDate"]> .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
+    )
+      .click()
+      .clear()
+      .type(startDate);
+    cy.get(".nhsuk-card__heading").click(); // to remove date picker focus
+    cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
+    cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
+
+    cy.get('[data-cy="BtnContinue"]')
+      .should("have.text", "Review & submit")
+      .click();
+    // Submit form
+    cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
+    cy.get(".MuiDialog-container")
+      .should("exist")
+      .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+
+    cy.contains("Submitted forms").should("exist");
+    cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });

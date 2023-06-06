@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, ErrorSummary } from "nhsuk-react-components";
 import {
@@ -78,12 +78,54 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   validationSchema,
   history
 }: FormBuilderProps) => {
-  const { pages, name } = jsonForm;
+  const jsonFormName = jsonForm.name;
+  const pages = jsonForm.pages;
+  const [fields, setFields] = useState<Field[]>([]);
+  // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
+  useEffect(() => {
+    const updatedFields = pages
+      .flatMap((page: Page) =>
+        page.sections.flatMap((section: Section) => section.fields)
+      )
+      .map(field => {
+        if (field.visibleIf) {
+          const shouldShow = field.visibleIf.includes(
+            fetchedFormData[field.parent!!]
+          );
+          return {
+            ...field,
+            visible: shouldShow
+          };
+        }
+        return field;
+      });
+
+    setFields(updatedFields);
+  }, [jsonForm, fetchedFormData, pages]);
+
   const lastPage = pages.length - 1;
-  const initialPageValue = useMemo(() => getEditPageNumber(name), [name]);
+  const initialPageValue = useMemo(
+    () => getEditPageNumber(jsonFormName),
+    [jsonFormName]
+  );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
+  // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
+  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
+    (section: Section) => section.fields.map((field: Field) => field.name)
+  );
+  const fieldNamesForCurrentPageSet = useMemo(
+    () => new Set(fieldNamesForCurrentPage),
+    [fieldNamesForCurrentPage]
+  );
+  const currentFields = useMemo(() => {
+    return fields.filter(field => fieldNamesForCurrentPageSet.has(field.name));
+  }, [fields, fieldNamesForCurrentPageSet]);
+
   // Custom hook that tracks data changes and autosaves draft form data to localStorage (triggered 2s after onChange)
-  const { formFields, setFormFields } = useFormAutosave(fetchedFormData, name);
+  const { formFields, setFormFields } = useFormAutosave(
+    fetchedFormData,
+    jsonFormName
+  );
   const formId: string | undefined = formFields?.id;
   const traineeId: string = formFields?.traineeTisId;
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -91,18 +133,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     undefined
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const fields: Field[] = useMemo(() => {
-    return pages.flatMap((page: Page) =>
-      page.sections.flatMap((section: Section) => section.fields)
-    );
-  }, [pages]);
-
-  // Separate the fields of each page in a separate array for validation purposes
-  const pagesFields: Field[][] = useMemo(() => {
-    return pages.map((page: Page) =>
-      page.sections.flatMap((section: Section) => section.fields)
-    );
-  }, [pages]);
 
   const filteredOptions = (optionsKey: string | undefined, options: any) => {
     return optionsKey && options[optionsKey]?.length > 0
@@ -205,17 +235,31 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     // show/hide fields based on the value of the current field
     if (primaryField?.dependencies) {
       primaryField.dependencies.forEach(fieldToShow => {
-        const depField = fields.find(field => field.name === fieldToShow);
-        if (depField?.visibleIf) {
-          const shouldShow = depField.visibleIf.includes(currentValue);
-          depField.visible = shouldShow;
-        }
-        if (!depField?.visible) {
-          setFormErrors((prev: FormData) => {
-            const { [fieldToShow]: omittedField, ...newErrors } = prev;
-            return newErrors;
+        setFields(prevFields => {
+          const updatedFields = prevFields.map(field => {
+            if (field.name === fieldToShow) {
+              const shouldShow = field.visibleIf
+                ? field.visibleIf.includes(currentValue)
+                : false;
+              return {
+                ...field,
+                visible: shouldShow
+              };
+            }
+            return field;
           });
-        }
+
+          updatedFields.forEach(depField => {
+            if (depField.name === fieldToShow && !depField.visible) {
+              setFormErrors((prev: FormData) => {
+                const { [fieldToShow]: omittedField, ...newErrors } = prev;
+                return newErrors;
+              });
+            }
+          });
+
+          return updatedFields;
+        });
       });
     }
 
@@ -288,7 +332,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           const updatedFormData = formId
             ? { ...visibleFormData, id: formId, traineeTisId: traineeId }
             : { ...visibleFormData, traineeTisId: traineeId };
-          continueToConfirm(name, updatedFormData, history);
+          continueToConfirm(jsonFormName, updatedFormData, history);
         })
         .catch((err: any) => {
           const errors: Record<string, string> = {};
@@ -298,7 +342,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           setFormErrors(errors);
         });
     } else {
-      validateFields(pagesFields[currentPage], formFields)
+      validateFields(currentFields, formFields)
         .then(() => {
           setCurrentPage(currentPage + 1);
         })
@@ -314,7 +358,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
 
   const handleSaveBtnClick = () => {
     setIsSubmitting(true);
-    saveDraftForm(name, formFields, history);
+    saveDraftForm(jsonFormName, formFields, history);
     setIsSubmitting(false);
   };
 

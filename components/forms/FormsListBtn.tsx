@@ -17,7 +17,7 @@ import {
   resetLocalStorageFormData
 } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 interface IFormsListBtn {
   draftFormProps: DraftFormProps | null;
   pathName: string;
@@ -33,10 +33,16 @@ const FormsListBtn = ({
   const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
   const formName: string = pathName === "/formr-a" ? "formA" : "formB";
-  const resetForm = (pName: string) =>
-    pName === "/formr-b"
-      ? dispatch(resetToInitFormB())
-      : dispatch(resetToInitFormA());
+  const resetForm = useCallback(
+    (pName: string) => {
+      if (pName === "/formr-b") {
+        dispatch(resetToInitFormB());
+      } else {
+        dispatch(resetToInitFormA());
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     resetLocalStorageFormData(formName);
