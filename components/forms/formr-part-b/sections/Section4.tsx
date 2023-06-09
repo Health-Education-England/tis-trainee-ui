@@ -125,9 +125,7 @@ const Section4 = ({
                               section={4}
                               key={i}
                               index={i}
-                              removeDeclaration={(index: number) =>
-                                p.remove(index)
-                              }
+                              removePanel={(index: number) => p.remove(index)}
                               data-jest="declarationPanel4"
                             ></DeclarationPanel>
                           ))}
@@ -181,6 +179,13 @@ const Section4 = ({
                       which organisation is undertaking the investigation.
                     </span>
                   }
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    setFieldValue(
+                      "previousDeclarationSummary",
+                      e.target.value.toString().trim(),
+                      false
+                    );
+                  }}
                 />
               )}
             </Card.Content>

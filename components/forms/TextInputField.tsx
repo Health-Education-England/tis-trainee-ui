@@ -17,6 +17,7 @@ interface Props {
   value?: any;
   disabled?: boolean;
   validate?: any;
+  onBlur?: any;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {

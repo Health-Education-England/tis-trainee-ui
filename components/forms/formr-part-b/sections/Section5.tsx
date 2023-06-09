@@ -149,9 +149,7 @@ const Section5 = ({
                               section={5}
                               key={i}
                               index={i}
-                              removeDeclaration={(index: number) =>
-                                c.remove(index)
-                              }
+                              removePanel={(index: number) => c.remove(index)}
                               data-jest="declarationPanel"
                             ></DeclarationPanel>
                           ))}
@@ -207,6 +205,13 @@ const Section5 = ({
                       investigation.
                     </span>
                   }
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    setFieldValue(
+                      "currentDeclarationSummary",
+                      e.target.value.toString().trim(),
+                      false
+                    );
+                  }}
                 />
               )}
             </Card.Content>

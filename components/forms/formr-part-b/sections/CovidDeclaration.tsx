@@ -196,6 +196,13 @@ const CovidDeclaration = ({
                           label="Please explain your reason for your progress self-rating."
                           name="covidDeclarationDto.reasonOfSelfRate"
                           rows={5}
+                          onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                            setFieldValue(
+                              "covidDeclarationDto.reasonOfSelfRate",
+                              e.target.value.toString().trim(),
+                              false
+                            );
+                          }}
                         />
                       )}
 
@@ -210,6 +217,13 @@ const CovidDeclaration = ({
                       name="covidDeclarationDto.otherInformationForPanel"
                       data-jest="covidDeclarationDto.otherInformationForPanel"
                       rows={10}
+                      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                        setFieldValue(
+                          "covidDeclarationDto.otherInformationForPanel",
+                          e.target.value.toString().trim(),
+                          false
+                        );
+                      }}
                     />
                   </Card.Content>
                 </Card>
@@ -323,6 +337,13 @@ const CovidDeclaration = ({
                             label="If other, please explain"
                             name="covidDeclarationDto.changeCircumstanceOther"
                             data-jest="changeCircumstanceOther"
+                            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                              setFieldValue(
+                                "covidDeclarationDto.changeCircumstanceOther",
+                                e.target.value.toString().trim(),
+                                false
+                              );
+                            }}
                           />
                         )}
 
@@ -331,6 +352,13 @@ const CovidDeclaration = ({
                           name="covidDeclarationDto.howPlacementAdjusted"
                           rows={5}
                           data-jest="howPlacementAdjusted"
+                          onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                            setFieldValue(
+                              "covidDeclarationDto.howPlacementAdjusted",
+                              e.target.value.toString().trim(),
+                              false
+                            );
+                          }}
                         />
                       </div>
                     )}
@@ -361,11 +389,25 @@ const CovidDeclaration = ({
                       label="Educational Supervisor Name (If applicable)"
                       name="covidDeclarationDto.educationSupervisorName"
                       data-jest="educationSupervisorName"
+                      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                        setFieldValue(
+                          "covidDeclarationDto.educationSupervisorName",
+                          e.target.value.toString().trim(),
+                          false
+                        );
+                      }}
                     />
                     <TextInputField
                       label="Educational Supervisor Email Address (If applicable)"
                       name="covidDeclarationDto.educationSupervisorEmail"
                       data-jest="educationSupervisorEmail"
+                      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                        setFieldValue(
+                          "covidDeclarationDto.educationSupervisorEmail",
+                          e.target.value.toString().trim(),
+                          true
+                        );
+                      }}
                     />
                   </Card.Content>
                 </Card>

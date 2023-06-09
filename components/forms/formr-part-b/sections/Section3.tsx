@@ -143,6 +143,13 @@ const Section3 = ({
                     Officer knew about, please do so below.
                   </span>
                 }
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    "healthStatement",
+                    e.target.value.toString().trim(),
+                    false
+                  );
+                }}
               />
             </Card.Content>
           </Card>
