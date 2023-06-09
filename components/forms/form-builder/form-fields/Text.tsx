@@ -11,6 +11,7 @@ type TextProps = {
   fieldError?: string;
   placeholder?: string;
   fieldWarning?: FieldWarning;
+  handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -20,7 +21,8 @@ export const Text: React.FC<TextProps> = ({
   handleChange,
   fieldError,
   placeholder,
-  fieldWarning
+  fieldWarning,
+  handleBlur
 }: TextProps) => {
   return (
     <>
@@ -39,6 +41,7 @@ export const Text: React.FC<TextProps> = ({
         }`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
+        onBlur={handleBlur}
       />
       {fieldWarning?.fieldName === name ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />

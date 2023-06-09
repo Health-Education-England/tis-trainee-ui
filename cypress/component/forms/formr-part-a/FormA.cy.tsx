@@ -95,6 +95,11 @@ describe("FormA (form creation)", () => {
       "nhsuk-input nhsuk-input--width-20"
     );
 
+    // test that the whitespace is removed from the text input
+    cy.get('[data-cy="surname-input"]').clear().type("  Johnny Boy  ");
+    cy.get('[data-cy="progress-header"] > h3').click();
+    cy.get('[data-cy="surname-input"]').should("have.value", "Johnny Boy");
+
     // test AutocompleteSelect
     cy.get(
       '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'

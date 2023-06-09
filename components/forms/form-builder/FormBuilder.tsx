@@ -165,6 +165,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
               fieldError={fieldError}
               placeholder={placeholder}
               fieldWarning={fieldWarning}
+              handleBlur={handleBlur}
             />
           );
         case "radio":
@@ -212,6 +213,13 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           );
       }
     } else return null;
+  };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    setFormFields((prev: FormData) => {
+      return { ...prev, [name]: value.trim() };
+    });
   };
 
   const handleChange = (
