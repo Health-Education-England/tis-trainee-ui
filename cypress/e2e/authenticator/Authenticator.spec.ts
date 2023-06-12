@@ -13,7 +13,7 @@ describe("Authenticator", () => {
 
   it("Footer should have the correct links and copyright text", () => {
     const links: string[] = [
-      "https://tis-support.hee.nhs.uk/",
+      "https://tis-support.hee.nhs.uk/trainees/",
       "https://tis-support.hee.nhs.uk/about-tis/",
       "https://www.hee.nhs.uk/about/privacy-notice"
     ];
