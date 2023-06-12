@@ -3,13 +3,25 @@ import TextInputField from "../../../../components/forms/TextInputField";
 import { Button, Card, CloseIcon } from "nhsuk-react-components";
 import classes from "../FormRPartB.module.scss";
 import SelectInputField from "../../../../components/forms/SelectInputField";
+import { useField } from "formik";
 interface Props {
   index: number;
   removeWork: any;
+  onBlur?: any;
 }
 
 const WorkPanel: FunctionComponent<Props> = (props: Props) => {
   const { index, removeWork: removePlacement } = props;
+  const [_workTypeField, _workTypeMeta, workTypeHelpers] = useField(
+    `work[${index}].typeOfWork`
+  );
+  const [_siteNameField, _siteNameMeta, siteNameHelpers] = useField(
+    `work[${index}].site`
+  );
+  const [_siteLocationField, _siteLocationMeta, siteLocationHelpers] = useField(
+    `work[${index}].siteLocation`
+  );
+
   return (
     <Card data-cy="workPanel">
       <Card.Content>
@@ -41,6 +53,10 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
               data-cy={`workTypeInput${index}`}
               width="50"
               hint="e.g. name and grade of specialty rotation, OOP, parental leave, etc."
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                workTypeHelpers.setValue(trimmedValue);
+              }}
             />
           </div>
         </div>
@@ -78,6 +94,10 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
               label="Site Name"
               name={`work[${index}].site`}
               data-cy={`siteNameInput${index}`}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                siteNameHelpers.setValue(trimmedValue);
+              }}
             />
           </div>
           <div className="nhsuk-grid-column-one-half">
@@ -85,6 +105,10 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
               label="Site Location"
               name={`work[${index}].siteLocation`}
               data-cy={`siteLocInput${index}`}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                siteLocationHelpers.setValue(trimmedValue);
+              }}
             />
           </div>
         </div>

@@ -78,7 +78,9 @@ Cypress.Commands.add(
     cy.get("#forename").should("exist").invoke("val");
     cy.get("#forename").focus();
     cy.get("#forename").clear();
-    cy.get("#forename").type("Fore name");
+    cy.get("#forename").type("   Fore name  ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get("#forename").should("have.value", "Fore name");
     cy.get("#surname").should("exist").invoke("val");
     cy.get("#surname").clear();
     cy.get("#surname").type("Last name");

@@ -104,7 +104,14 @@ describe("Section2", () => {
     cy.get("[data-cy=BtnAddWorkType]").should("exist").click();
 
     cy.get(".nhsuk-error-summary > .nhsuk-error-message").should("exist");
-    cy.get('[data-cy="work[1].typeOfWork"]').type("type of work test");
+    cy.get('[data-cy="work[1].typeOfWork"]')
+      .clear()
+      .type("   type of work test  ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get('[data-cy="work[1].typeOfWork"]').should(
+      "have.value",
+      "type of work test"
+    );
     cy.get('[data-cy="work[1].trainingPost"]').select("Yes");
     cy.get('[data-cy="work[1].startDate"]').type(startDate);
     cy.get('[data-cy="work[1].endDate"]').type(endDate);

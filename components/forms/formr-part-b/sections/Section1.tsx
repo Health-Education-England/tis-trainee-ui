@@ -80,9 +80,31 @@ const Section1 = ({
           <Card feature>
             <Card.Content>
               <Card.Heading>Personal details</Card.Heading>
-              <TextInputField label="Forename" name="forename" />
-              <TextInputField label="GMC-Registered Surname" name="surname" />
-              <TextInputField label="GMC Number" name="gmcNumber" />
+              <TextInputField
+                label="Forename"
+                name="forename"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    "forename",
+                    e.target.value.toString().trim(),
+                    false
+                  );
+                }}
+              />
+              <TextInputField
+                label="GMC-Registered Surname"
+                name="surname"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  setFieldValue("surname", e.target.value.trim(), false);
+                }}
+              />
+              <TextInputField
+                label="GMC Number"
+                name="gmcNumber"
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  setFieldValue("gmcNumber", e.target.value.trim(), false);
+                }}
+              />
               <TextInputField
                 label="Primary contact email address"
                 name="email"

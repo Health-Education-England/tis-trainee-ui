@@ -41,6 +41,9 @@ describe("Section1", () => {
       .should("exist")
       .should("include.text", "Section 1");
     cy.testDataSourceLink();
+    cy.get('[data-cy="forename"]').clear().type("   forename    ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get('[data-cy="forename"]').should("have.value", "forename");
     cy.get("[data-cy=email]")
       .should("exist")
       .should("have.value", "email@email.com");

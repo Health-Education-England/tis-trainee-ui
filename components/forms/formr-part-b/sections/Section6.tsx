@@ -23,7 +23,7 @@ const Section6 = ({
         handleSectionSubmit(values);
       }}
     >
-      {({ values, handleSubmit }) => (
+      {({ values, handleSubmit, setFieldValue }) => (
         <Form>
           <ScrollTo />
           <Fieldset
@@ -57,6 +57,13 @@ const Section6 = ({
                     <strong>This section is not compulsory.</strong>
                   </span>
                 }
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    "compliments",
+                    e.target.value.toString().trim(),
+                    false
+                  );
+                }}
               />
             </Card.Content>
           </Card>

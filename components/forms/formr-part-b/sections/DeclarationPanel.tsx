@@ -6,15 +6,18 @@ import SelectInputField from "../../SelectInputField";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
+import { useField } from "formik";
 interface IDeclarationPanel {
   index: number;
-  removeDeclaration: any;
+  removePanel: any;
   section: number;
 }
 
-const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
-  props: IDeclarationPanel
-) => {
+const DeclarationPanel: FunctionComponent<IDeclarationPanel> = ({
+  index,
+  removePanel,
+  section
+}: IDeclarationPanel) => {
   const combinedReferenceData: CombinedReferenceData =
     useAppSelector(selectAllReference);
   const declarationTypes = combinedReferenceData.declarationType.map(
@@ -25,8 +28,17 @@ const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
       };
     }
   );
+  const [_titleField, _titleMeta, titleHelpers] = useField(
+    section === 4
+      ? `previousDeclarations[${index}].title`
+      : `currentDeclarations[${index}].title`
+  );
+  const [_LocOfEntryField, _LocOfEntryMeta, LocOfEntryHelpers] = useField(
+    section === 4
+      ? `previousDeclarations[${index}].locationOfEntry`
+      : `currentDeclarations[${index}].locationOfEntry`
+  );
 
-  const { index, removeDeclaration: removePanel, section } = props;
   return (
     <Card id={`declarationPanel${index}`}>
       <Card.Content>
@@ -85,6 +97,10 @@ const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
                   : `currentDeclarations[${index}].title`
               }
               data-cy={`titleInput${index}`}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                titleHelpers.setValue(trimmedValue);
+              }}
             />
           </div>
           <div className="nhsuk-grid-column-one-half">
@@ -96,6 +112,10 @@ const DeclarationPanel: FunctionComponent<IDeclarationPanel> = (
                   : `currentDeclarations[${index}].locationOfEntry`
               }
               data-cy={`LocOfEntryInput${index}`}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                LocOfEntryHelpers.setValue(trimmedValue);
+              }}
             />
           </div>
         </div>

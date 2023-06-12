@@ -42,5 +42,8 @@ describe("Section6", () => {
       .should("exist")
       .should("include.text", "Section 5");
     cy.get("[data-cy=BtnSaveDraft]").should("exist");
+    cy.get('[data-cy="compliments"]').clear().type("   compliments    ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get('[data-cy="compliments"]').should("have.value", "compliments");
   });
 });
