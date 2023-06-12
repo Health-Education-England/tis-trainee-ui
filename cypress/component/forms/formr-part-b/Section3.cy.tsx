@@ -46,7 +46,14 @@ describe("Section3", () => {
       .should("include.text", "Health statement");
     cy.get("[data-cy=isWarned1]").should("exist").click({ force: true });
     cy.get("[data-cy=isWarned0]").should("exist").click();
-    cy.get(".nhsuk-form-group > [data-cy=healthStatement]").click();
+    cy.get(".nhsuk-form-group > [data-cy=healthStatement]")
+      .clear()
+      .type("  I feel great");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get(".nhsuk-form-group > [data-cy=healthStatement]").should(
+      "have.value",
+      "I feel great"
+    );
     cy.get("#isComplying--error-message").should("exist");
     cy.get("[data-cy=isComplying0]").click();
     cy.get("#isComplying--error-message").should("not.exist");

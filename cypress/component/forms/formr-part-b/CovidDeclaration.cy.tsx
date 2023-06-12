@@ -49,7 +49,15 @@ describe("CovidDeclaration", () => {
     cy.get('[data-cy="covidDeclarationDto.selfRateForCovid0"]')
       .should("exist")
       .click();
-    cy.get('[data-cy="covidDeclarationDto.reasonOfSelfRate"]').should("exist");
+    cy.get('[data-cy="covidDeclarationDto.reasonOfSelfRate"]')
+      .should("exist")
+      .clear()
+      .type("    my reason    ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get('[data-cy="covidDeclarationDto.reasonOfSelfRate"]').should(
+      "have.value",
+      "my reason"
+    );
     cy.get('[data-cy="covidDeclarationDto.selfRateForCovid2"]')
       .should("exist")
       .click();

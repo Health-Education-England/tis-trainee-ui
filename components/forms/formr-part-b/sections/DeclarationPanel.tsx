@@ -39,7 +39,6 @@ const DeclarationPanel: FunctionComponent<IDeclarationPanel> = ({
       : `currentDeclarations[${index}].locationOfEntry`
   );
 
-  // const { index, removeDeclaration: removePanel, section } = props;
   return (
     <Card id={`declarationPanel${index}`}>
       <Card.Content>

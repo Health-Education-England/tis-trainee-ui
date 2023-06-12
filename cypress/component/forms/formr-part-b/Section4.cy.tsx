@@ -75,7 +75,12 @@ describe("Section4", () => {
     cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").should(
       "exist"
     );
-    cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").type(
+    cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]")
+      .clear()
+      .type("test text                               ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get(".nhsuk-form-group > [data-cy=previousDeclarationSummary]").should(
+      "have.value",
       "test text"
     );
     //click yes on click yes on previous unresolved declarations and

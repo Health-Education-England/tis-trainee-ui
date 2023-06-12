@@ -72,8 +72,13 @@ describe("Section 5", () => {
     cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").should(
       "exist"
     );
-    cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").type(
-      "test text"
+    cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]")
+      .clear()
+      .type("    more test text   .                            ");
+    cy.get(".nhsuk-card__heading").first().click();
+    cy.get(".nhsuk-form-group > [data-cy=currentDeclarationSummary]").should(
+      "have.value",
+      "more test text   ."
     );
 
     cy.get("[data-cy=haveCurrentDeclarations1]").click();
