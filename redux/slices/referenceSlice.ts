@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { TraineeReferenceService } from "../../services/TraineeReferenceService";
 import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../models/CurriculumKeyValue";
+import { toast } from "react-toastify";
+import { toastErrText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IReference {
   combinedRef: any;
   curriculumOptions: CurriculumKeyValue[] | null;
@@ -58,9 +61,14 @@ const referenceSlice = createSlice({
         state.combinedRef = action.payload;
         state.curriculumOptions = action.payload?.curriculum;
       })
-      .addCase(fetchReference.rejected, (state, action) => {
+      .addCase(fetchReference.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchReference,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

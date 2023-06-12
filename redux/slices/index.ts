@@ -5,7 +5,6 @@ import formsReducer from "./formsSlice";
 import formAReducer from "./formASlice";
 import formBReducer from "./formBSlice";
 import featureFlagsReducer from "./featureFlagsSlice";
-import notificationsReducer from "./notificationsSlice";
 import userReducer from "./userSlice";
 import dspReducer from "./dspSlice";
 
@@ -16,7 +15,6 @@ const rootReducer = combineReducers({
   formA: formAReducer,
   formB: formBReducer,
   featureFlags: featureFlagsReducer,
-  notifications: notificationsReducer,
   user: userReducer,
   dsp: dspReducer
 });

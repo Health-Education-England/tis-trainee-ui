@@ -353,7 +353,6 @@ describe("Form R (Part B)", () => {
       .should("exist")
       .should("include.text", "Please think carefully before submitting");
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-    cy.checkForSuccessNotif("Success");
     cy.get('[data-cy="Submit new form"]').should("exist");
     cy.contains("Submitted forms").should("exist");
     cy.get("[data-cy=formsTrueHint]").should("exist");

@@ -6,6 +6,8 @@ import { initialPersonalDetails } from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
+import { toastErrText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
@@ -90,11 +92,16 @@ const traineeProfileSlice = createSlice({
         state.traineeProfileData.placements = sortedPlacements;
         state.hasSignableCoj = CojUtilities.canAnyBeSigned(sortedProgrammes);
       })
-      .addCase(fetchTraineeProfileData.rejected, (state, action) => {
+      .addCase(fetchTraineeProfileData.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchTraineeProfileData,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
-      .addCase(signCoj.pending, (state, action) => {
+      .addCase(signCoj.pending, (state, _action) => {
         state.status = "loading";
       })
       .addCase(signCoj.fulfilled, (state, action) => {

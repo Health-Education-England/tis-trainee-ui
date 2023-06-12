@@ -166,3 +166,47 @@ export const PANEL_KEYS: any = {
   curricula: "Curricula",
   conditionsOfJoining: "Conditions of Joining"
 };
+
+export const toastErrText = {
+  fetchFeatureFlags:
+    "Couldn't load some of your new form data (feature flags).",
+  fetchForms: " Couldn't load your list of saved forms.",
+  fetchReference:
+    "Couldn't fetch the data to pre-populate your new form (reference data).",
+  loadSavedFormA: "Couldn't load your saved Form R (Part A).",
+  loadSavedFormB: "Couldn't load your saved Form R (Part B).",
+  saveFormA: "Couldn't save your Form R (Part A).",
+  saveFormB: "Couldn't save your Form R (Part B).",
+  updateFormA: "Couldn't update your Form R (Part A).",
+  updateFormB: "Couldn't update your Form R (Part B).",
+  fetchTraineeProfileData:
+    "Couldn't load your personal details (profile data).",
+  updateUserAttributes:
+    "Couldn't update your user information (user attributes).",
+  verifyPhone: "Couldn't send you an SMS code to sign in (verify phone).",
+  verifyUserAttributeSubmit:
+    "verify your identification with that code (user attributes).",
+  setPreferredMfa:
+    "Couldn't set your preferred MFA method and log in (user attributes).",
+  updateTotpCode:
+    "Couldn't continue. MFA set-up session has expired. Please refresh the page and try again.",
+  verifyTotp:
+    "Couldn't verify your identification with that Authentication code.",
+  signCoj: "Couldn't sign your Conditions of Joining."
+};
+
+export const toastSuccessText = {
+  saveFormA: "Your Form R (Part A) has been saved.",
+  saveFormB: "Your Form R (Part B) has been saved.",
+  updateFormA: "Your Form R (Part A) has been updated.",
+  updateFormB: "Your Form R (Part B) has been updated.",
+  submitFormA: "Your Form R (Part A) has been submitted.",
+  submitFormB: "Your Form R (Part B) has been submitted.",
+  verifyPhone:
+    "Your phone has been verified. An SMS code from HEE should arrive soon",
+  getPreferredMfaSms:
+    "SMS MFA is now set up. When prompted, provide a new 6-digit code (sent to your phone) when you next log in.",
+  getPreferredMfaTotp:
+    "Authenticator MFA is now set up. When prompted, provide a new 6-digit code from your app when you next log in.",
+  signCoj: "Your Conditions of Joining has been signed."
+};

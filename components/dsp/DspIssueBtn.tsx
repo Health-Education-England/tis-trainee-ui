@@ -10,9 +10,9 @@ import {
 } from "../../redux/slices/dspSlice";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import { useAppDispatch } from "../../redux/hooks/hooks";
-import { addNotification } from "../../redux/slices/notificationsSlice";
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import { ToastType, showToast } from "../common/ToastMessage";
 
 interface IDspIssueBtn {
   panelName: string;
@@ -50,12 +50,8 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
     }
     if (dspErrorCode && dspErrorCode !== "401") {
       localStorage.removeItem(stateId);
-      dispatch(
-        addNotification({
-          type: "Error",
-          text: ` - Something went wrong (Reason: ${dspErrorText}). If problem persists please contact Support`
-        })
-      );
+      const dspToastText = "Something went wrong issuing the DSP credential";
+      showToast(dspToastText, ToastType.ERROR, dspErrorText);
       dispatch(resetDspSlice());
     }
   };
