@@ -13,13 +13,6 @@ const AuthHeader = (): JSX.Element => {
           <h1 data-cy="authTitle">TIS Self-Service</h1>
         </View>
       </Flex>
-      <Flex>
-        <div className={styles.authMessage}>
-          This application is currently in <i>private beta</i>. You should sign
-          up and log in only if you have received an email inviting you to do
-          so.
-        </div>
-      </Flex>
     </>
   );
 };
