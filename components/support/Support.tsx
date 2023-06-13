@@ -8,16 +8,18 @@ import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { useEffect, useState } from "react";
 import ScrollTo from "../forms/ScrollTo";
 import style from "../Common.module.scss";
+import { getUserAgentInfo } from "../../utilities/UserUtilities";
 
 const Support = () => {
-  const traineeProfileData = useAppSelector(selectTraineeProfile);
-  const personOwner = traineeProfileData.personalDetails?.personOwner;
-  const gmcNo = traineeProfileData.personalDetails?.gmcNumber;
-  const tisId = traineeProfileData.traineeTisId;
+  const { traineeTisId, personalDetails } =
+    useAppSelector(selectTraineeProfile);
+  const personOwner = personalDetails?.personOwner;
+  const gmcNo = personalDetails?.gmcNumber;
   const emailIds = gmcNo
-    ? `GMC no. ${gmcNo}, TIS ID ${tisId}`
-    : `TIS ID ${tisId}`;
+    ? `GMC no. ${gmcNo}, TIS ID ${traineeTisId}`
+    : `TIS ID ${traineeTisId}`;
   const [mappedContact, setIsMappedContact] = useState("");
+  const userAgentData = getUserAgentInfo();
 
   useEffect(() => {
     if (personOwner) {
@@ -72,7 +74,11 @@ const Support = () => {
             Form R (including unsubmitting a form) & Personal Details queries
           </Card.Heading>
           <SupportMsg personOwner={personOwner} mappedContact={mappedContact} />
-          <SupportList mappedContact={mappedContact} emailIds={emailIds} />
+          <SupportList
+            mappedContact={mappedContact}
+            emailIds={emailIds}
+            userAgentData={userAgentData}
+          />
         </Card.Content>
       </Card>
       <Card feature data-cy="techSupportLabel">
@@ -80,7 +86,7 @@ const Support = () => {
           <Card.Heading>Technical issues</Card.Heading>
           <ActionLink
             data-cy="techSupportLink"
-            href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})`}
+            href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})&body=Browser and OS info:%0A${userAgentData}%0A%0A`}
           >
             Please click here to email TIS Support
           </ActionLink>

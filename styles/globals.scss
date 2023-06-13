@@ -4,10 +4,12 @@
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
+$nhsSuccess: #006400;
+$nhsError: #a7171a;
 
 html {
   background-color: inherit;
-  font-family: "Frutiger W01", Arial, sans-serif !important;
+  font-family: $nhsFont !important;
 }
 
 body {
@@ -356,7 +358,6 @@ ol[type="a"] {
 }
 
 // Toast message
-/* Position the icon in the top left corner */
 .Toastify__toast-icon {
   position: absolute;
   top: 8px;
@@ -364,18 +365,27 @@ ol[type="a"] {
   padding: 8px;
 }
 
-.Success {
-  color: #006400;
+.success {
+  color: $nhsSuccess;
 }
 
-.Error {
-  color: #a7171a;
+.error {
+  color: $nhsError;
 }
 
-.Toastify__progress-bar--success {
-  color: #006400;
+.Toastify__toast-body {
+  font-family: $nhsFont;
 }
 
-.Toastify__progress-bar--error {
-  color: #a7171a;
+.toast-text {
+  color: black;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 4px 40px;
+}
+
+.toast-anchor {
+  color: $nhsBlue;
+  margin-left: 40px;
+  font-size: 1rem;
 }

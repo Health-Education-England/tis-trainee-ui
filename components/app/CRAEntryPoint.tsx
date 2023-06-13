@@ -127,7 +127,11 @@ function CRAEntryPoint() {
       {({ signOut }) => (
         <Router history={history}>
           <>
-            <ToastContainer autoClose={8000} transition={Zoom} limit={2} />
+            <ToastContainer
+              transition={Zoom}
+              limit={4}
+              hideProgressBar={true}
+            />
             <Main signOut={signOut} appVersion={appVersion} />
           </>
         </Router>

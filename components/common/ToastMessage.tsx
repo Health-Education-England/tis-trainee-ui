@@ -1,13 +1,13 @@
 import React from "react";
-import { Zoom, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { ActionLink } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faExclamationCircle
 } from "@fortawesome/free-solid-svg-icons";
+import { getUserAgentInfo } from "../../utilities/UserUtilities";
 
 export enum ToastType {
   SUCCESS = "success",
@@ -22,28 +22,35 @@ type ToastMessageProps = {
   actionErrorMsg?: string;
 };
 
-const ToastMessage = ({ msg, type, actionErrorMsg }: ToastMessageProps) => {
-  const traineeProfileData = useAppSelector(selectTraineeProfile);
-  const gmcNo = traineeProfileData.personalDetails?.gmcNumber;
-  const tisId = traineeProfileData.traineeTisId;
-  const emailIds = gmcNo
-    ? `GMC no. ${gmcNo}, TIS ID ${tisId}, Error: ${actionErrorMsg}`
-    : `TIS ID ${tisId}, Error: ${actionErrorMsg}`;
+export const ToastMessage = ({
+  msg,
+  type,
+  actionErrorMsg
+}: ToastMessageProps) => {
+  const { personalDetails, traineeTisId } =
+    useAppSelector(selectTraineeProfile);
+  const gmcNo = personalDetails?.gmcNumber ?? "Not available";
+  const userIds = gmcNo
+    ? `GMC no. ${gmcNo}, TIS ID ${traineeTisId}`
+    : `TIS ID ${traineeTisId}`;
+
+  const getPageURL = (): string => {
+    return window.location.href;
+  };
 
   return (
-    <div>
-      <p style={{ marginLeft: 40 }}>
-        <b>{msg}</b>
-      </p>
+    <>
+      <p className="toast-text">{msg}</p>
       {type === "error" && (
-        <ActionLink
+        <a
+          className="toast-anchor"
           data-cy="techSupportLink"
-          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${emailIds})`}
+          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${userIds})&body=Browser and OS info:%0A${getUserAgentInfo()}%0A%0APage URL:%0A${getPageURL()}%0A%0AError message:%0A${actionErrorMsg}%0A%0A%0A%0A`}
         >
-          Click here to email TIS Support
-        </ActionLink>
+          Click here to email Support
+        </a>
       )}
-    </div>
+    </>
   );
 };
 
@@ -60,14 +67,8 @@ export const showToast = (
         type={messageType}
       />,
       {
-        icon: (
-          <FontAwesomeIcon
-            data-cy="faIconSuccess"
-            className="fa-icon Success"
-            icon={faCheckCircle}
-            size="lg"
-          />
-        )
+        icon: <FontAwesomeIconWrapper messageType={messageType} />,
+        autoClose: 6000
       }
     );
   } else if (messageType === ToastType.ERROR) {
@@ -79,15 +80,28 @@ export const showToast = (
         actionErrorMsg={actionErrorMsg}
       />,
       {
-        icon: (
-          <FontAwesomeIcon
-            data-cy="faIconError"
-            className="fa-icon Error"
-            icon={faExclamationCircle}
-            size="lg"
-          />
-        )
+        icon: <FontAwesomeIconWrapper messageType={messageType} />,
+        autoClose: 12000
       }
     );
   }
 };
+
+type FontAwesomeIconWrapperProps = {
+  messageType: ToastType;
+};
+
+function FontAwesomeIconWrapper({ messageType }: FontAwesomeIconWrapperProps) {
+  return (
+    <FontAwesomeIcon
+      data-cy={
+        messageType === ToastType.ERROR ? "faIconError" : "faIconSuccess"
+      }
+      className={`fa-icon ${messageType}`}
+      icon={
+        messageType === ToastType.ERROR ? faExclamationCircle : faCheckCircle
+      }
+      size="xl"
+    />
+  );
+}

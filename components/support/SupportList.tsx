@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { ActionLink, Select } from "nhsuk-react-components";
 import { localOfficeContacts } from "../../models/LocalOfficeContacts";
-
 interface ISupportList {
   mappedContact: string | null | undefined;
   emailIds: string;
+  userAgentData: string;
 }
 
-const SupportList = ({ mappedContact, emailIds }: ISupportList) => {
+const SupportList = ({
+  mappedContact,
+  emailIds,
+  userAgentData
+}: ISupportList) => {
   const [linkContact, updateLinkContact] = useState(mappedContact);
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const SupportList = ({ mappedContact, emailIds }: ISupportList) => {
               return (
                 <ActionLink
                   data-cy="loLink"
-                  href={`mailto:${linkContact}?subject=Form R support query (${emailIds})`}
+                  href={`mailto:${linkContact}?subject=Form R support query (${emailIds})&body=Browser and OS info:%0A${userAgentData}%0A%0A`}
                 >
                   {linkContact}
                 </ActionLink>
