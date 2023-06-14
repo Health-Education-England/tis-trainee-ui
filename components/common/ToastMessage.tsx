@@ -40,7 +40,9 @@ export const ToastMessage = ({
 
   return (
     <>
-      <p className="toast-text">{msg}</p>
+      <p className="toast-text" data-cy="toastText">
+        {msg}
+      </p>
       {type === "error" && (
         <a
           className="toast-anchor"
@@ -91,7 +93,9 @@ type FontAwesomeIconWrapperProps = {
   messageType: ToastType;
 };
 
-function FontAwesomeIconWrapper({ messageType }: FontAwesomeIconWrapperProps) {
+export function FontAwesomeIconWrapper({
+  messageType
+}: FontAwesomeIconWrapperProps) {
   return (
     <FontAwesomeIcon
       data-cy={

@@ -1,6 +1,11 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import { ToastMessage, ToastType } from "../ToastMessage";
+import {
+  FontAwesomeIconWrapper,
+  ToastMessage,
+  ToastType,
+  showToast
+} from "../ToastMessage";
 import { Provider } from "react-redux";
 import store from "../../../redux/store/store";
 import {
@@ -8,6 +13,14 @@ import {
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
 import { mockTraineeProfile } from "../../../mock-data/trainee-profile";
+import { toast } from "react-toastify";
+
+jest.mock("react-toastify", () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn()
+  }
+}));
 
 describe("ToastMessage - error", () => {
   it("displays the error message plus Support link and href data", () => {
@@ -49,5 +62,45 @@ describe("ToastMessage - error", () => {
       // Check the href attribute of the support link element
       expect(supportLinkElement.getAttribute("href")).toBe(expectedHref);
     });
+  });
+});
+
+describe("showToast", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should call toast.success with correct parameters for success message", () => {
+    showToast("Success message", ToastType.SUCCESS);
+
+    expect(toast.success).toHaveBeenCalledWith(
+      <ToastMessage
+        data-cy="toastMsgSuccess"
+        msg="Success message"
+        type={ToastType.SUCCESS}
+      />,
+      {
+        autoClose: 6000,
+        icon: <FontAwesomeIconWrapper messageType={ToastType.SUCCESS} />
+      }
+    );
+  });
+
+  test("should call toast.error with correct parameters for error message", () => {
+    const actionErrorMsg = "Action error message";
+    showToast("Error message", ToastType.ERROR, actionErrorMsg);
+
+    expect(toast.error).toHaveBeenCalledWith(
+      <ToastMessage
+        data-cy="toastMsgError"
+        msg="Error message"
+        type={ToastType.ERROR}
+        actionErrorMsg="Action error message"
+      />,
+      {
+        icon: <FontAwesomeIconWrapper messageType={ToastType.ERROR} />,
+        autoClose: 12000
+      }
+    );
   });
 });
