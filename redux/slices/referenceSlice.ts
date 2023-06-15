@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { TraineeReferenceService } from "../../services/TraineeReferenceService";
 import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 import { CurriculumKeyValue } from "../../models/CurriculumKeyValue";
-import { toast } from "react-toastify";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IReference {

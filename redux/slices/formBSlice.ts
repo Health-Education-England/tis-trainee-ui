@@ -5,7 +5,6 @@ import {
   initialFormRBBeforeProfileData
 } from "../../models/FormRPartB";
 import { FormsService } from "../../services/FormsService";
-import { toast } from "react-toastify";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IFormB {

@@ -5,10 +5,8 @@ import {
   initialFormRABeforeProfileData
 } from "../../models/FormRPartA";
 import { FormsService } from "../../services/FormsService";
-import { toast } from "react-toastify";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
-import { Toast } from "react-toastify/dist/components";
 
 interface IFormA {
   formAData: FormRPartA;
