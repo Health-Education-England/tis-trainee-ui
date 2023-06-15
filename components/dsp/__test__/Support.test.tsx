@@ -19,7 +19,7 @@ describe("Support", () => {
       .mockReturnValue("Mocked User Agent Info");
     jest.spyOn(window, "location", "get").mockReturnValue({
       ...window.location,
-      href: "http://example.com"
+      href: "https://www.evertonfc.com"
     });
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
     store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
@@ -48,7 +48,7 @@ describe("Support", () => {
       .mockReturnValue("Mocked User Agent Info");
     jest.spyOn(window, "location", "get").mockReturnValue({
       ...window.location,
-      href: "http://example.com"
+      href: "https://www.evertonfc.com"
     });
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
     store.dispatch(updatedTraineeProfileData(mockTraineeProfileNoGMC));

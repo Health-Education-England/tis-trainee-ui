@@ -11,9 +11,7 @@ import { getUserAgentInfo } from "../../utilities/UserUtilities";
 
 export enum ToastType {
   SUCCESS = "success",
-  ERROR = "error",
-  INFO = "info",
-  WARNING = "warning"
+  ERROR = "error"
 }
 
 type ToastMessageProps = {

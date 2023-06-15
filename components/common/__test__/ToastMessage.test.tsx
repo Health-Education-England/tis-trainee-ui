@@ -29,7 +29,7 @@ describe("ToastMessage - error", () => {
       .mockReturnValue("Mocked User Agent Info");
     jest.spyOn(window, "location", "get").mockReturnValue({
       ...window.location,
-      href: "http://example.com"
+      href: "https://www.evertonfc.com"
     });
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
     store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
@@ -57,7 +57,7 @@ describe("ToastMessage - error", () => {
     // Wait for any asynchronous tasks to complete
     return waitFor(() => {
       const expectedHref =
-        "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (GMC no. 11111111, TIS ID 123)&body=Browser and OS info:%0AUser Agent: Mocked User Agent Info%0A%0APage URL:%0Ahttp://example.com%0A%0AError message:%0A808 State%0A%0A%0A%0A";
+        "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (GMC no. 11111111, TIS ID 123)&body=Browser and OS info:%0AUser Agent: Mocked User Agent Info%0A%0APage URL:%0Ahttps://www.evertonfc.com%0A%0AError message:%0A808 State%0A%0A%0A%0A";
 
       // Check the href attribute of the support link element
       expect(supportLinkElement.getAttribute("href")).toBe(expectedHref);
