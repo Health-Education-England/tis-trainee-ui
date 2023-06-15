@@ -23,11 +23,12 @@ import style from "../authentication/Auth.module.scss";
 import { I18n } from "@aws-amplify/core";
 import { Router } from "react-router-dom";
 import { Main } from "../main/Main";
-import Notifications from "../common/notifications/Notifications";
 import browserUpdateConfig from "../../browser-update-config.json";
 import TagManager from "react-gtm-module";
 import packageJson from "../../package.json";
 import history from "../navigation/history";
+import { ToastContainer, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const appVersion = packageJson.version;
 
@@ -126,7 +127,11 @@ function CRAEntryPoint() {
       {({ signOut }) => (
         <Router history={history}>
           <>
-            <Notifications />
+            <ToastContainer
+              transition={Zoom}
+              limit={4}
+              hideProgressBar={true}
+            />
             <Main signOut={signOut} appVersion={appVersion} />
           </>
         </Router>

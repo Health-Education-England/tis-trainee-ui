@@ -13,7 +13,8 @@ import {
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
-import { addNotification } from "../../../../redux/slices/notificationsSlice";
+import { ToastType, showToast } from "../../../common/ToastMessage";
+import { toastSuccessText } from "../../../../utilities/Constants";
 
 const ConfirmSms = () => {
   const dispatch = useAppDispatch();
@@ -41,12 +42,7 @@ const ConfirmSms = () => {
       if (resU === "succeeded") {
         await dispatch(getPreferredMfa());
         history.push("/home");
-        dispatch(
-          addNotification({
-            type: "Success",
-            text: "- SMS authentication is now set up. You will be asked for a new 6-digit (sent to your phone) each time you log in"
-          })
-        );
+        showToast(toastSuccessText.getPreferredMfaSms, ToastType.SUCCESS);
       } else {
         stepBack();
       }

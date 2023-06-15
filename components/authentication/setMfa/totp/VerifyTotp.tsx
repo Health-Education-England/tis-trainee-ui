@@ -25,8 +25,9 @@ import TextInputField from "../../../../components/forms/TextInputField";
 import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
 import { MFAType } from "../../../../models/MFAStatus";
-import { addNotification } from "../../../../redux/slices/notificationsSlice";
 import styles from "../../../authentication/Auth.module.scss";
+import { ToastType, showToast } from "../../../common/ToastMessage";
+import { toastSuccessText } from "../../../../utilities/Constants";
 
 const VerifyTotp = () => {
   const dispatch = useAppDispatch();
@@ -79,12 +80,7 @@ const VerifyTotp = () => {
         if (resR === "succeeded") {
           await dispatch(getPreferredMfa());
           history.push("/home");
-          dispatch(
-            addNotification({
-              type: "Success",
-              text: "- Your Authenticator App is now set up. You will be asked for a new 6-digit code each time you log in"
-            })
-          );
+          showToast(toastSuccessText.getPreferredMfaTotp, ToastType.SUCCESS);
         } else getBack();
       } else getBack();
     }

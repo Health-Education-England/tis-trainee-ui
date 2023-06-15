@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { FeatureFlags } from "../../models/FeatureFlags";
 import { FormsService } from "../../services/FormsService";
+import { toastErrText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 
 interface IFeatureFlags {
   featureFlags: FeatureFlags;
@@ -42,9 +44,14 @@ const featureFlagsSlice = createSlice({
         state.status = "succeeded";
         state.featureFlags = action.payload;
       })
-      .addCase(fetchFeatureFlags.rejected, (state, action) => {
+      .addCase(fetchFeatureFlags.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchFeatureFlags,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

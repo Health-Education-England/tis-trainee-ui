@@ -4,6 +4,8 @@ import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormsService } from "../../services/FormsService";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { toastErrText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 
 interface IForms {
   forms: IFormR[];
@@ -57,9 +59,14 @@ const formsSlice = createSlice({
           (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
         );
       })
-      .addCase(fetchForms.rejected, (state, action) => {
+      .addCase(fetchForms.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchForms,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

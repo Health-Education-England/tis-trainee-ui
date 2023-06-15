@@ -29,8 +29,6 @@ declare global {
       useTotp(): Chainable<Element>;
       logoutDesktop(): Chainable<Element>;
       testDataSourceLink(): Chainable<Element>;
-      checkForSuccessNotif(notifType: string): Chainable<Element>;
-      checkForErrorNotif(notifType: string): Chainable<Element>;
       testData(dataToTest: any, index?: number): Chainable<Element>;
     }
     interface Cypress {

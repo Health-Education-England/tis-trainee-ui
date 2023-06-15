@@ -5,9 +5,6 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-const dateAttained = dayjs()
-  .subtract(dayjs.duration({ years: 1, months: 6, days: 12 }))
-  .format("YYYY-MM-DD");
 const completionDate = dayjs()
   .add(dayjs.duration({ months: 6 }))
   .format("YYYY-MM-DD");
@@ -329,5 +326,60 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
 
     cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="Submit new form"]').should("exist");
+  });
+});
+
+describe("Form R Part A - toast messages", () => {
+  beforeEach(() => {
+    cy.wait(30000);
+    cy.visit("/");
+    cy.signIn();
+  });
+  it("should display a error toast message when the form is submitted unsuccessfully.", () => {
+    cy.intercept("POST", /\/api\/forms\/formr-parta/, {
+      statusCode: 500,
+      body: { error: "Internal Server Error" }
+    }).as("saveFormRequestErrored");
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.contains(
+      "[data-cy=toastText]",
+      "Couldn't save your Form R (Part A)."
+    ).should("be.visible");
+    cy.get('[data-cy="techSupportLink"]').should("be.visible");
+  });
+  it("should display a success toast message when the form is submitted successfully.", () => {
+    cy.intercept("POST", /\/api\/forms\/formr-parta/, {
+      statusCode: 200,
+      body: { id: "1234" }
+    }).as("saveFormRequestSucceeded");
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.contains(
+      "[data-cy=toastText]",
+      "Your Form R (Part A) has been saved."
+    ).should("be.visible");
   });
 });

@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "aws-amplify";
 import { MFAType } from "../../models/MFAStatus";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { showToast, ToastType } from "../../components/common/ToastMessage";
 
 interface IUser {
   status: string;
@@ -182,44 +184,75 @@ const userSlice = createSlice({
         state.status = "succeeded";
         state.totpCode = action.payload;
       })
-      .addCase(updateTotpCode.rejected, (state, action) => {
+      .addCase(updateTotpCode.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.updateTotpCode,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(updateUserAttributes.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(updateUserAttributes.rejected, (state, action) => {
+      .addCase(updateUserAttributes.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.updateUserAttributes,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(verifyPhone.fulfilled, (state, _action) => {
         state.status = "succeeded";
+        showToast(toastSuccessText.verifyPhone, ToastType.SUCCESS);
       })
-      .addCase(verifyPhone.rejected, (state, action) => {
+      .addCase(verifyPhone.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.verifyPhone,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(verifyTotp.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(verifyTotp.rejected, (state, action) => {
+      .addCase(verifyTotp.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.verifyTotp,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(verifyUserAttributeSubmit.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(verifyUserAttributeSubmit.rejected, (state, action) => {
+      .addCase(verifyUserAttributeSubmit.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.verifyUserAttributeSubmit,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(setPreferredMfa.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(setPreferredMfa.rejected, (state, action) => {
+      .addCase(setPreferredMfa.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.setPreferredMfa,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(getUsername.fulfilled, (state, action) => {
         state.status = "succeeded";

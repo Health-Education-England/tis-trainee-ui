@@ -5,6 +5,8 @@ import {
   initialFormRBBeforeProfileData
 } from "../../models/FormRPartB";
 import { FormsService } from "../../services/FormsService";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IFormB {
   formBData: FormRPartB;
   sectionNumber: number;
@@ -94,29 +96,46 @@ const formBSlice = createSlice({
         state.status = "succeeded";
         state.formBData = action.payload;
       })
-      .addCase(loadSavedFormB.rejected, (state, action) => {
+      .addCase(loadSavedFormB.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.loadSavedFormB,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(saveFormB.pending, (state, _action) => {
         state.status = "saving";
       })
       .addCase(saveFormB.fulfilled, (state, _action) => {
         state.status = "succeeded";
+        showToast(toastSuccessText.saveFormB, ToastType.SUCCESS);
       })
-      .addCase(saveFormB.rejected, (state, action) => {
+      .addCase(saveFormB.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.saveFormB,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(updateFormB.pending, (state, _action) => {
         state.status = "updating";
       })
       .addCase(updateFormB.fulfilled, (state, _action) => {
         state.status = "succeeded";
+        showToast(toastSuccessText.updateFormB, ToastType.SUCCESS);
       })
-      .addCase(updateFormB.rejected, (state, action) => {
+      .addCase(updateFormB.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.updateFormB,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

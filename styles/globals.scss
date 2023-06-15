@@ -4,10 +4,12 @@
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
+$nhsSuccess: #006400;
+$nhsError: #a7171a;
 
 html {
   background-color: inherit;
-  font-family: "Frutiger W01", Arial, sans-serif !important;
+  font-family: $nhsFont !important;
 }
 
 body {
@@ -224,60 +226,6 @@ button:disabled {
   transform: translate(-50%, -50%);
 }
 
-// notifications
-
-.notification {
-  border: 2px solid #fff;
-  padding: 12px;
-  text-align: center;
-  color: #fff;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  animation: notifFadein 0.1s;
-}
-
-@keyframes notifFadein {
-  0%,
-  25% {
-    opacity: 0;
-  }
-  50%,
-  75% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.fa-icon {
-  padding-right: 3px;
-}
-
-.msg-container {
-  align-self: center;
-  font-size: 1.25rem;
-}
-
-.close-btn {
-  color: #fff;
-  font-size: large;
-  text-align: right;
-  border: none;
-  &:hover {
-    cursor: pointer;
-    color: #000;
-  }
-}
-
-.Success {
-  background-color: #006400;
-}
-
-.Error {
-  background-color: #a7171a;
-}
-
 // field warning
 .field-warning-container {
   padding-bottom: 1.5rem;
@@ -407,4 +355,37 @@ ol[type="a"] {
 
 .page-nav-link {
   text-align: right;
+}
+
+// Toast message
+.Toastify__toast-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 8px;
+}
+
+.success {
+  color: $nhsSuccess;
+}
+
+.error {
+  color: $nhsError;
+}
+
+.Toastify__toast-body {
+  font-family: $nhsFont;
+}
+
+.toast-text {
+  color: black;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 4px 40px;
+}
+
+.toast-anchor {
+  color: $nhsBlue;
+  margin-left: 40px;
+  font-size: 1rem;
 }

@@ -5,6 +5,8 @@ import {
   initialFormRABeforeProfileData
 } from "../../models/FormRPartA";
 import { FormsService } from "../../services/FormsService";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { ToastType, showToast } from "../../components/common/ToastMessage";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -74,29 +76,46 @@ const formASlice = createSlice({
         state.status = "succeeded";
         state.formAData = action.payload;
       })
-      .addCase(loadSavedFormA.rejected, (state, action) => {
+      .addCase(loadSavedFormA.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.loadSavedFormA,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(saveFormA.pending, (state, _action) => {
         state.status = "saving";
       })
       .addCase(saveFormA.fulfilled, (state, _action) => {
         state.status = "succeeded";
+        showToast(toastSuccessText.saveFormA, ToastType.SUCCESS);
       })
-      .addCase(saveFormA.rejected, (state, action) => {
+      .addCase(saveFormA.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.saveFormA,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       })
       .addCase(updateFormA.pending, (state, _action) => {
         state.status = "updating";
       })
       .addCase(updateFormA.fulfilled, (state, _action) => {
         state.status = "succeeded";
+        showToast(toastSuccessText.updateFormA, ToastType.SUCCESS);
       })
-      .addCase(updateFormA.rejected, (state, action) => {
+      .addCase(updateFormA.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
+        showToast(
+          toastErrText.updateFormA,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

@@ -17,6 +17,7 @@ import history from "../../../components/navigation/history";
 import React from "react";
 
 describe("Support", () => {
+  // Note - new implementation means we need to stub the window (navigator, location) so see RTL Support.test.tsx for link href values tests.
   it("should render the Support page on successful main app load", () => {
     const MockedSupportSucceeded = () => {
       const dispatch = useAppDispatch();
@@ -40,11 +41,7 @@ describe("Support", () => {
     )
       .should("exist")
       .should("include.text", "Technical");
-    cy.get("[data-cy=techSupportLink]").should(
-      "have.attr",
-      "href",
-      "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (GMC no. 11111111, TIS ID 123)"
-    );
+    cy.get("[data-cy=techSupportLink]").should("have.attr", "href");
     cy.get("[data-cy=techSupportLink] > .nhsuk-action-link__text").should(
       "include.text",
       "email TIS Support"
@@ -54,11 +51,7 @@ describe("Support", () => {
     )
       .should("exist")
       .should("include.text", "Form R (including unsubmitting a form");
-    cy.get("[data-cy=loLink]").should(
-      "have.attr",
-      "href",
-      "mailto:Formr.tv@hee.nhs.uk?subject=Form R support query (GMC no. 11111111, TIS ID 123)"
-    );
+    cy.get("[data-cy=loLink]").should("have.attr", "href");
     cy.get(".nhsuk-details__text > :nth-child(1)").should("be.visible");
     cy.get("[data-cy=successMsg] > :nth-child(1)").should(
       "include.text",
@@ -117,15 +110,7 @@ describe("Support", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=loLink]").should(
-      "have.attr",
-      "href",
-      "mailto:Formr.tv@hee.nhs.uk?subject=Form R support query (TIS ID 789)"
-    );
-    cy.get("[data-cy=techSupportLink]").should(
-      "have.attr",
-      "href",
-      "mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (TIS ID 789)"
-    );
+    cy.get("[data-cy=loLink]").should("have.attr", "href");
+    cy.get("[data-cy=techSupportLink]").should("have.attr", "href");
   });
 });
