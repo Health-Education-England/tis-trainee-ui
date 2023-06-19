@@ -15,10 +15,15 @@ export class StringUtilities {
     return args.filter((a): a is string => a !== null).join(" ");
   }
 
-  public static validateInteger(val: number) {
-    const strVal: string = val.toString();
-    if (!/^\d+$/.test(strVal)) {
-      return "Whole numbers only. No decimals please";
+  public static validateInteger(val: number | null | undefined) {
+    if (val === null || val === undefined) {
+      return null;
+    } else {
+      const strVal = val.toString();
+      if (!/^\d+$/.test(strVal)) {
+        return "Whole numbers only. No decimals please.";
+      }
+      return null;
     }
   }
 }
