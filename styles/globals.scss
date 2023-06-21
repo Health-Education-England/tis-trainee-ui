@@ -47,12 +47,28 @@ body {
     background-color: #005eb8 !important;
   }
 
+  [data-amplify-authenticator-signin] .amplify-button[data-variation="primary"],
+  [data-amplify-authenticator-signup] .amplify-button[data-variation="primary"] {
+    margin-top: 60px;
+    margin-bottom: -40px;
+  }
+
   .amplify-button[data-variation="link"] {
     color: #005eb8 !important;
   }
 
   [data-amplify-router] {
     box-shadow: rgb(0, 21, 42) 0px 16px 24px -10px !important;
+  }
+  
+  .signInSupportLinks {
+    position: relative;
+    top: -80px;
+    padding-left: 30px;
+    font-size: 0.85em;
+  }
+  .signInSupportLinks .supportEmail:hover {
+    cursor: help;
   }
 }
 
