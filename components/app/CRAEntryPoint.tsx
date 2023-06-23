@@ -5,7 +5,9 @@ import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 import AuthHeader from "../authentication/signup/header/AuthHeader";
 import AuthFooter from "../authentication/signup/footer/AuthFooter";
 import AuthHeading from "../authentication/signup/sharedPrimitives/AuthHeading";
-import AuthBtnLink, { SupportLinks } from "../authentication/signup/sharedPrimitives/AuthBtnLink";
+import AuthBtnLink, {
+  SupportLinks
+} from "../authentication/signup/sharedPrimitives/AuthBtnLink";
 import {
   AuthFormFields,
   FormFields
@@ -54,8 +56,8 @@ const components = {
       const { toResetPassword } = useAuthenticator();
       return (
         <>
-            {SupportLinks('Log in')}
-            {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
+          {SupportLinks("Log in")}
+          {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
         </>
       );
     }
@@ -69,8 +71,8 @@ const components = {
       const { toSignIn } = useAuthenticator();
       return (
         <>
-            {SupportLinks('Sign up')}
-            {AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT)}
+          {SupportLinks("Sign up")}
+          {AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT)}
         </>
       );
     },
