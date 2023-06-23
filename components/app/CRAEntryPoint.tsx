@@ -54,7 +54,7 @@ const components = {
       const { toResetPassword } = useAuthenticator();
       return (
         <>
-            {SupportLinks()}
+            {SupportLinks('Log in')}
             {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
         </>
       );
@@ -69,7 +69,7 @@ const components = {
       const { toSignIn } = useAuthenticator();
       return (
         <>
-            {SupportLinks()}
+            {SupportLinks('Sign up')}
             {AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT)}
         </>
       );
