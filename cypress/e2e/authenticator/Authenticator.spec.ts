@@ -11,17 +11,32 @@ describe("Authenticator", () => {
     cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
   });
 
+  it("Body should have the support FAQ and mailto links", () => {
+    cy.get("[data-cy=signInSupportLinks]")
+      .find("a")
+      .should($anchors => {
+        expect($anchors).to.have.length(2);
+        expect($anchors.first()).to.contain("FAQ");
+        expect($anchors.last()).to.contain("email");
+
+        const hrefs = $anchors.map<string>((_i, a) => {
+          return Cypress.$(a).attr("href");
+        });
+        expect(hrefs[0]).to.deep.eq("https://tis-support.hee.nhs.uk/trainees/support-faq/");
+        expect(hrefs[1]).to.contain("mailto:tis.support@hee.nhs.uk");
+      });
+  });
+
   it("Footer should have the correct links and copyright text", () => {
     const links: string[] = [
-      "https://tis-support.hee.nhs.uk/trainees/",
       "https://tis-support.hee.nhs.uk/about-tis/",
       "https://www.hee.nhs.uk/about/privacy-notice"
     ];
     cy.get(".amplify-flex")
       .find("a")
       .should($anchors => {
-        expect($anchors).to.have.length(3);
-        expect($anchors.first()).to.contain("Support");
+        expect($anchors).to.have.length(2);
+        expect($anchors.first()).to.contain("About");
 
         const hrefs = $anchors.map<string>((_i, a) => {
           return Cypress.$(a).attr("href");
