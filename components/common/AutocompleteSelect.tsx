@@ -12,6 +12,8 @@ type AutocompleteSelectProps = {
   options: any;
   name: string;
   label: string;
+  isMulti: boolean;
+  closeMenuOnSelect: boolean;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -20,11 +22,14 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   error,
   options,
   name,
-  label
+  label,
+  isMulti,
+  closeMenuOnSelect
 }) => {
   const handleChange = (val: any) => {
-    onChange(name, val ? val.label : "");
+    onChange(name, val ? val.label : null);
   };
+  const handleMultiChange = (val: any) => onChange(name, val);
   return (
     <div
       data-cy={name}
@@ -40,15 +45,21 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
         </span>
       ) : null}
       <Select
-        aria-labelledby={`${name}--label`}
+        data-cy={`${name}-select`}
         options={options}
-        onChange={handleChange}
+        onChange={isMulti ? handleMultiChange : handleChange}
         value={value?.label}
         isClearable
-        defaultValue={{
-          value: value,
-          label: value
-        }}
+        isMulti={isMulti}
+        closeMenuOnSelect={closeMenuOnSelect}
+        defaultValue={
+          isMulti
+            ? null
+            : {
+                value: value,
+                label: value
+              }
+        }
         placeholder="Select or start typing..."
         className="autocomplete-select"
         classNamePrefix="react-select"
@@ -63,7 +74,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
 };
 
 const colourStyles = {
-  option: (baseStyles: any, { isFocused, isSelected }: any) => ({
+  option: (baseStyles: any, { isFocused }: any) => ({
     ...baseStyles,
     background: isFocused ? "#2884FF" : "none",
     color: isFocused ? "white" : undefined,

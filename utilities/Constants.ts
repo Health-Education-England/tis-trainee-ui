@@ -210,3 +210,38 @@ export const toastSuccessText = {
     "Authenticator MFA is now set up. When prompted, provide a new 6-digit code from your app when you next log in.",
   signCoj: "Your Conditions of Joining has been signed."
 };
+
+export const supportCatOptions = [
+  { value: "Authenticator", label: "Authenticator" },
+  { value: "Conditions of Joining", label: "Conditions of Joining" },
+  { value: "Data Quality", label: "Data Quality" },
+  { value: "Digital Staff Passport", label: "Digital Staff Passport" },
+  { value: "FormR", label: "FormR" },
+  { value: "Login", label: "Login" },
+  { value: "Personal data", label: "Personal data" },
+  { value: "Placement data", label: "Placement data" },
+  { value: "Programme data", label: "Programme data" },
+  { value: "Sign up", label: "Sign up" },
+  { value: "SMS", label: "SMS" }
+];
+
+type localOfficeContactsProps = {
+  [key: string]: string;
+};
+
+export const localOfficeContacts: localOfficeContactsProps = {
+  "Health Education England East Midlands": "TIS.EM@hee.nhs.uk",
+  "Health Education England East of England": "TIS.EOE@hee.nhs.uk",
+  "Health Education England Kent, Surrey and Sussex": "PGMDE support portal",
+  "Health Education England North Central and East London":
+    "PGMDE support portal",
+  "Health Education England North East": "InformationTeam.NE@hee.nhs.uk",
+  "Health Education England North West": "tissupport.north@hee.nhs.uk",
+  "Health Education England North West London": "PGMDE support portal",
+  "Health Education England South London": "PGMDE support portal",
+  "Health Education England South West": "TISQueries.sw@hee.nhs.uk",
+  "Health Education England Thames Valley": "Formr.tv@hee.nhs.uk",
+  "Health Education England Wessex": "Formr.wx@hee.nhs.uk",
+  "Health Education England West Midlands": "TIS.WM@hee.nhs.uk",
+  "Health Education England Yorkshire and the Humber": "TIS.yh@hee.nhs.uk"
+};
