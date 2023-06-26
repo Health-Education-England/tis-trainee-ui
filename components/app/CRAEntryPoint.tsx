@@ -5,7 +5,9 @@ import { LoginMechanism, SignUpAttribute } from "@aws-amplify/ui";
 import AuthHeader from "../authentication/signup/header/AuthHeader";
 import AuthFooter from "../authentication/signup/footer/AuthFooter";
 import AuthHeading from "../authentication/signup/sharedPrimitives/AuthHeading";
-import AuthBtnLink from "../authentication/signup/sharedPrimitives/AuthBtnLink";
+import AuthBtnLink, {
+  SupportLinks
+} from "../authentication/signup/sharedPrimitives/AuthBtnLink";
 import {
   AuthFormFields,
   FormFields
@@ -50,9 +52,14 @@ const components = {
     Header(): JSX.Element {
       return AuthHeading(SIGN_IN_HEADING_TEXT);
     },
-    Footer(): JSX.Element {
+    Footer() {
       const { toResetPassword } = useAuthenticator();
-      return AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT);
+      return (
+        <>
+          {SupportLinks("Log in")}
+          {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
+        </>
+      );
     }
   },
 
@@ -62,7 +69,12 @@ const components = {
     },
     Footer() {
       const { toSignIn } = useAuthenticator();
-      return AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT);
+      return (
+        <>
+          {SupportLinks("Sign up")}
+          {AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT)}
+        </>
+      );
     },
     FormFields() {
       return AuthFormFields();

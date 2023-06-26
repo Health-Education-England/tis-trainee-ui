@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import styles from "../../Auth.module.scss";
 const AuthFooter = (): JSX.Element => {
   const footerLinks = [
-    { name: "Support", href: "https://tis-support.hee.nhs.uk/trainees/" },
     { name: "About", href: "https://tis-support.hee.nhs.uk/about-tis/" },
     {
       name: "Privacy & Cookies",
