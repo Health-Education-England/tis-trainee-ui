@@ -17,13 +17,13 @@ describe("Authenticator", () => {
       .should($anchors => {
         expect($anchors).to.have.length(2);
         expect($anchors.first()).to.contain("FAQ");
+        expect($anchors.first().attr("href")).to.eq(
+          "https://tis-support.hee.nhs.uk/trainees/support-faq/"
+        );
         expect($anchors.last()).to.contain("email");
-
-        const hrefs = $anchors.map<string>((_i, a) => {
-          return Cypress.$(a).attr("href");
-        });
-        expect(hrefs[0]).to.deep.eq("https://tis-support.hee.nhs.uk/trainees/support-faq/");
-        expect(hrefs[1]).to.contain("mailto:tis.support@hee.nhs.uk");
+        expect($anchors.last().attr("href")).to.contain(
+          "mailto:tis.support@hee.nhs.uk"
+        );
       });
   });
 
