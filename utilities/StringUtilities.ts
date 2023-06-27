@@ -26,4 +26,14 @@ export class StringUtilities {
       return null;
     }
   }
+
+  public static alphabetSortedArrAsString(
+    arr: { value: string; label: string }[]
+  ): string {
+    const sortedValues = [...arr]
+      .map(obj => obj.value)
+      .sort((a, b) => a.localeCompare(b));
+
+    return sortedValues.join(", ");
+  }
 }
