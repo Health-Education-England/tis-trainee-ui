@@ -42,10 +42,10 @@ export function LoSupport({ emailIds, userAgentData }: LoSupportProps) {
             data-cy="loSupportList"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue("localOffice", e.target.value, true);
-              e.target.value === "" ||
-                (localOfficeContacts[e.target.value] ===
-                  "PGMDE support portal" &&
-                  setFieldValue("supportCats", "", true));
+              (e.target.value === "" ||
+                localOfficeContacts[e.target.value] ===
+                  "PGMDE support portal") &&
+                setFieldValue("supportCats", "", true);
             }}
             options={localOfficeOptions}
             name="localOffice"
