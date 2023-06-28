@@ -362,6 +362,14 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     {
       label: "Northern Ireland Medical and Dental Training Agency",
       value: "Northern Ireland Medical and Dental Training Agency"
+    },
+    {
+      label: "London LETBs",
+      value: "London LETBs"
+    },
+    {
+      label: "Defence Postgraduate Medical Deanery",
+      value: "Defence Postgraduate Medical Deanery"
     }
   ]
 };
