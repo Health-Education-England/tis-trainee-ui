@@ -48,9 +48,37 @@ body {
   }
 
   [data-amplify-authenticator-signin] .amplify-button[data-variation="primary"],
-  [data-amplify-authenticator-signup] .amplify-button[data-variation="primary"] {
+  [data-amplify-authenticator-signup]
+    .amplify-button[data-variation="primary"] {
     margin-top: 60px;
     margin-bottom: -40px;
+  }
+  @media (max-width: 478px) and (min-width: 390px) {
+    [data-amplify-authenticator-signin]
+      .amplify-button[data-variation="primary"],
+    [data-amplify-authenticator-signup]
+      .amplify-button[data-variation="primary"] {
+      margin-top: 80px;
+      margin-bottom: -60px;
+    }
+  }
+  @media (max-width: 390px) and (min-width: 280px) {
+    [data-amplify-authenticator-signin]
+      .amplify-button[data-variation="primary"],
+    [data-amplify-authenticator-signup]
+      .amplify-button[data-variation="primary"] {
+      margin-top: 100px;
+      margin-bottom: -75px;
+    }
+  }
+  @media (max-width: 280px) {
+    [data-amplify-authenticator-signin]
+      .amplify-button[data-variation="primary"],
+    [data-amplify-authenticator-signup]
+      .amplify-button[data-variation="primary"] {
+      margin-top: 120px;
+      margin-bottom: -100px;
+    }
   }
 
   .amplify-button[data-variation="link"] {
@@ -60,11 +88,11 @@ body {
   [data-amplify-router] {
     box-shadow: rgb(0, 21, 42) 0px 16px 24px -10px !important;
   }
-  
+
   .signInSupportLinks {
     position: relative;
     top: -80px;
-    padding-left: 30px;
+    margin: 0 30px;
     font-size: 0.85em;
   }
   .signInSupportLinks .supportEmail:hover {
