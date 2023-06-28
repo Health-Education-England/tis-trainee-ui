@@ -24,6 +24,14 @@ export function LoSupport({ emailIds, userAgentData }: LoSupportProps) {
   const localOfficeOptions =
     transformReferenceData(combinedRefData).localOffice;
 
+  const labelsToFilter = [
+    "London LETBs",
+    "Defence Postgraduate Medical Deanery"
+  ];
+  const filteredLocalOfficeOptions = localOfficeOptions.filter(
+    office => !labelsToFilter.includes(office.label)
+  );
+
   return (
     <Formik
       initialValues={{
@@ -47,7 +55,7 @@ export function LoSupport({ emailIds, userAgentData }: LoSupportProps) {
                   "PGMDE support portal") &&
                 setFieldValue("supportCats", "", true);
             }}
-            options={localOfficeOptions}
+            options={filteredLocalOfficeOptions}
             name="localOffice"
             label=""
           />

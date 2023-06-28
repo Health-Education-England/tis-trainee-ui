@@ -110,6 +110,16 @@ export const mockedCombinedReference: CombinedReferenceData = {
       id: "5e7c8df62523bc1554f1ce7f",
       tisId: "15",
       label: "Northern Ireland Medical and Dental Training Agency"
+    },
+    {
+      id: "345454h545h4545h4545h45fce",
+      tisId: "14",
+      label: "London LETBs"
+    },
+    {
+      id: "45fce4748374474949444749e7f",
+      tisId: "15",
+      label: "Defence Postgraduate Medical Deanery"
     }
   ],
   grade: [
