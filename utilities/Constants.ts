@@ -235,7 +235,7 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England Kent, Surrey and Sussex": "PGMDE support portal",
   "Health Education England North Central and East London":
     "PGMDE support portal",
-  "Health Education England North East": "InformationTeam.NE@hee.nhs.uk",
+  "Health Education England North East": "tissupport.north@hee.nhs.uk",
   "Health Education England North West": "tissupport.north@hee.nhs.uk",
   "Health Education England North West London": "PGMDE support portal",
   "Health Education England South London": "PGMDE support portal",
@@ -243,5 +243,6 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England Thames Valley": "Formr.tv@hee.nhs.uk",
   "Health Education England Wessex": "Formr.wx@hee.nhs.uk",
   "Health Education England West Midlands": "TIS.WM@hee.nhs.uk",
-  "Health Education England Yorkshire and the Humber": "TIS.yh@hee.nhs.uk"
+  "Health Education England Yorkshire and the Humber":
+    "tissupport.north@hee.nhs.uk"
 };
