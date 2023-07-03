@@ -76,6 +76,10 @@ describe("Placements with MFA set up", () => {
       .first()
       .should("exist")
       .should("contain.text", "Site");
+    cy.get("[data-cy=siteKnownAs0Val]")
+      .first()
+      .should("exist")
+      .should("contain.text", "Addenbrookes Hospital (siteNo)");
     cy.get('[data-cy="wholeTimeEquivalent1Val"]')
       .last()
       .should("exist")

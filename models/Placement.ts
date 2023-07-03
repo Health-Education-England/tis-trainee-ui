@@ -5,6 +5,7 @@ export interface Placement {
   tisId?: string;
   site: string;
   siteLocation: string;
+  siteKnownAs: string;
   startDate: Date | string;
   endDate: Date | string;
   wholeTimeEquivalent: string;
@@ -21,6 +22,7 @@ export const placementPanelTemplate: Placement = {
   tisId: "",
   site: "",
   siteLocation: "",
+  siteKnownAs: "",
   startDate: "",
   endDate: "",
   wholeTimeEquivalent: "",

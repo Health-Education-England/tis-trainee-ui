@@ -130,6 +130,7 @@ export type PanelKeys = {
   programmeMemberships: string;
   site: string;
   siteLocation: string;
+  siteKnownAs: string;
   startDate: string;
   endDate: string;
   wholeTimeEquivalent: string;
@@ -151,6 +152,7 @@ export const PANEL_KEYS: any = {
   programmeMemberships: "Programmes",
   site: "Site",
   siteLocation: "Site Location",
+  siteKnownAs: "Site Known As",
   startDate: "Starts",
   endDate: "Ends",
   wholeTimeEquivalent: "Whole Time Equivalent",
