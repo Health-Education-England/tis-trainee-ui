@@ -9,6 +9,7 @@ import config from "../aws-amplify/config";
 import "@aws-amplify/ui-react/styles.css";
 import Script from "next/script";
 import Head from "next/head";
+import Chatbot from "../components/support/Chatbot";
 
 const GTM_ID: string = "UA-40570867-12";
 const HJID: string = "1733748";
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps }: AppProps) {
             {`alert("Sorry, you will need to use a modern up-to-date browser such as the latest version of chrome, Edge, Firefox, or Safari to use TIS Self-Service.")`}
           </Script>
           <Component {...pageProps} />
+          <Chatbot />
         </>
       )}
     </Provider>
