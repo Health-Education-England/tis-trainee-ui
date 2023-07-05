@@ -41,6 +41,7 @@ export interface FormRPartB extends IFormR {
   covidDeclarationDto: CovidDeclaration | null;
   isDeclarationAccepted?: boolean;
   isConsentAccepted?: boolean;
+  arcpYear?: number | null;
 }
 
 export interface Declaration {
@@ -113,5 +114,6 @@ export const initialFormRBBeforeProfileData: FormRPartB = {
   submissionDate: "",
   lastModifiedDate: "",
   isDeclarationAccepted: false,
-  isConsentAccepted: false
+  isConsentAccepted: false,
+  arcpYear: null
 };

@@ -30,19 +30,17 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
             <h3>Type of work {index + 1}</h3>
           </div>
           <div className="nhsuk-grid-column-three-quarters">
-            {index > 0 ? (
-              <Button
-                reverse
-                type="button"
-                data-jest="removePanel"
-                data-cy={`closeIcon${index}`}
-                onClick={() => removePlacement(index)}
-                className={classes.panelCloseButton}
-                title="Delete"
-              >
-                <CloseIcon />
-              </Button>
-            ) : null}
+            <Button
+              reverse
+              type="button"
+              data-jest="removePanel"
+              data-cy={`closeIcon${index}`}
+              onClick={() => removePlacement(index)}
+              className={classes.panelCloseButton}
+              title="Delete"
+            >
+              <CloseIcon />
+            </Button>
           </div>
         </div>
         <div style={{ marginTop: 10 }} className="nhsuk-grid-row">

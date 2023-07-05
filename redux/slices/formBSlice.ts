@@ -16,6 +16,7 @@ interface IFormB {
   saveBtnActive: boolean;
   editPageNumber: number;
   canEdit: boolean;
+  chosenArcpYear: number | null;
 }
 
 export const initialState: IFormB = {
@@ -26,7 +27,8 @@ export const initialState: IFormB = {
   error: "",
   saveBtnActive: false,
   editPageNumber: 0,
-  canEdit: false
+  canEdit: false,
+  chosenArcpYear: null
 };
 
 export const loadSavedFormB = createAsyncThunk(
@@ -85,6 +87,9 @@ const formBSlice = createSlice({
     },
     updatedCanEditB(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
+    },
+    updateChosenArcpYear(state, action: PayloadAction<number | null>) {
+      return { ...state, chosenArcpYear: action.payload };
     }
   },
   extraReducers(builder): void {

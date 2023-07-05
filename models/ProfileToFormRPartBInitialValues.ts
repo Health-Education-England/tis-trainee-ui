@@ -37,7 +37,7 @@ export function ProfileToFormRPartBInitialValues(
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
     prevRevalDate: pd?.prevRevalDate,
-    programmeSpecialty: curriculum?.curriculumName || null,
+    programmeSpecialty: curriculum?.curriculumName ?? null,
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
     work: workFilteredSorted,
@@ -68,6 +68,7 @@ export function ProfileToFormRPartBInitialValues(
     submissionDate: null,
     lastModifiedDate: null,
     isDeclarationAccepted: false,
-    isConsentAccepted: false
+    isConsentAccepted: false,
+    arcpYear: null
   };
 }

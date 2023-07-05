@@ -19,19 +19,19 @@ export const submittedFormRPartBs: FormRPartB[] = [
     work: [
       {
         typeOfWork: "In Post ST1 Dermatology",
-        startDate: "2019-01-12",
-        endDate: "2019-12-21",
+        startDate: "2019-01-01",
+        endDate: "2020-12-31",
         trainingPost: "Yes",
         site: "Addenbrookes Hospital",
         siteLocation: "Hills Road Cambridge Cambridgeshire"
       },
       {
-        typeOfWork: "In Post ST1 Dermatology",
+        typeOfWork: "Long-term sick ST2 Dermatology",
         startDate: "2020-01-01",
-        endDate: "2020-12-31",
-        trainingPost: "Yes",
+        endDate: "2029-12-31",
+        trainingPost: "",
         site: "Addenbrookes Hospital",
-        siteLocation: "Hills Road Cambridge Cambridgeshire"
+        siteLocation: "Carmarthenshire NHS Trust"
       }
     ],
     sicknessAbsence: 0,

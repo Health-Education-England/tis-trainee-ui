@@ -92,7 +92,7 @@ export const Section2ValidationSchema = yup.object({
           )
       })
     )
-    .min(1, "At least one type of work should be added"),
+    .min(1, "You must add at least one Type of Work"),
   sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
   parentalLeave: leaveValidation(
     "Parental leave (incl Maternity / Paternity leave)"
