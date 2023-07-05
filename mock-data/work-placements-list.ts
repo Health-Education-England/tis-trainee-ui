@@ -171,3 +171,92 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     typeOfWork: ""
   }
 ];
+
+export const arcpWorkArr: Work[] = [
+  {
+    startDate: "2018-08-01",
+    endDate: "2019-03-04",
+    site: "Blackpool",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: "2018-12-05",
+    endDate: "2019-04-02",
+    site: "Liverpool",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: futureStart1,
+    endDate: futureEnd1,
+    site: "Everton",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: "2021-12-04",
+    endDate: "2024-03-31",
+    site: "London",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: futureStart2,
+    endDate: futureEnd2,
+    site: "Sheffield",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: "2021-12-04",
+    endDate: "2024-03-31",
+    site: "Leicester",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: "2018-12-05",
+    endDate: "2021-04-02",
+    site: "Blackpool",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  }
+];
+
+export const trimmedAndSortedWorkArrWithin2023ARCP = [
+  {
+    startDate: "2021-12-04",
+    endDate: "2024-03-31",
+    site: "London",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  },
+  {
+    startDate: "2021-12-04",
+    endDate: "2024-03-31",
+    site: "Leicester",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  }
+];
+
+export const trimmedAndSortedWorkArrWithin2020ARCP = [
+  {
+    startDate: "2018-12-05",
+    endDate: "2021-04-02",
+    site: "Blackpool",
+    typeOfWork: "",
+    trainingPost: "",
+    siteLocation: ""
+  }
+];
