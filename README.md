@@ -39,6 +39,16 @@ You will also see any lint errors in the console.
 Note: To populate the form with data, you will need to run the Docker containers to start the back-end services. See
 [dev-handbook](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service) for more details on these services.
 
+## Testing with BrowserStack
+
+Sign in [BrowserStack](https://www.browserstack.com/users/sign_in) with your work email. Start a web testing session by clicking `Live` on the menu bar. You can enter the URL of TSS Preprod/Prod for testing.<br />
+Clicking `Switch browser` on the left side menu, you may choose different browsers / OS / mobile devices to test with.
+
+### Running local test on BrowserStack
+
+In a Live session, enable `Local testing` from the left side menu. Follow the instructions to download the BrowserStack Local app if it is the first time config. Enable `Resolve all URLs through my network` in the setting. Enter your localhost URL in the remote browser's address bar for live local test.<br />
+For more information visit (https://www.browserstack.com/docs/live/local-testing#enable-local-testing)
+
 ## Unit tests (Jest)
 
 `npm test` launches the test runner in the interactive watch mode.<br />
