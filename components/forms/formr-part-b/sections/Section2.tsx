@@ -27,6 +27,7 @@ import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { useEffect, useMemo, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import Select from "react-select";
+import { colourStyles } from "../../../../utilities/FormBuilderUtilities";
 
 const Section2 = ({
   prevSectionLabel,
@@ -45,30 +46,15 @@ const Section2 = ({
     []
   );
   const [allWork, setAllWork] = useState<Work[]>([]);
-
   const defaultWork = useMemo(() => {
-    return traineeProfileData.placements.map<Work>(placement => ({
-      typeOfWork: StringUtilities.argsToString(
-        placement.placementType,
-        placement.grade,
-        placement.specialty
-      ),
-      startDate: DateUtilities.ToUTCDate(placement.startDate),
-      endDate: DateUtilities.ToUTCDate(placement.endDate),
-      site: placement.site,
-      siteLocation: placement.siteLocation,
-      trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
-    }));
+    const workArr = traineeProfileData.placements.map<Work>(placement =>
+      ProfileUtilities.mappedPltoWork(placement)
+    );
+    return ProfileUtilities.sortedTrimmedWork(workArr);
   }, [traineeProfileData]);
-
-  useEffect(() => {
-    setAllWork(defaultWork);
-  }, [traineeProfileData]);
-
   const defaultYear = useMemo(() => {
     return new Date().getFullYear();
   }, []);
-
   const getPreviousYears = (year: number, numberOfYears: number) => {
     const years = [];
     for (let i = 0; i < numberOfYears + 1; i++) {
@@ -76,11 +62,6 @@ const Section2 = ({
     }
     return years;
   };
-
-  useEffect(() => {
-    setFullYearSelectOptions(getPreviousYears(defaultYear, 2));
-  }, [defaultYear]);
-
   const firstWednesdayInAugust = useMemo(() => {
     return ReferenceDataUtilities.firstWednesdayInAugust(currentYear as number);
   }, [currentYear]);
@@ -90,12 +71,6 @@ const Section2 = ({
       currentYear as number
     );
   }, [currentYear]);
-
-  useEffect(() => {
-    if (formData?.arcpYear) {
-      setCurrentYear(formData.arcpYear);
-    }
-  }, [formData]);
 
   const selectOptions = useMemo(() => {
     return [
@@ -107,6 +82,18 @@ const Section2 = ({
     ];
   }, [fullYearSelectOptions]);
 
+  useEffect(() => {
+    setAllWork(defaultWork);
+  }, [traineeProfileData, defaultWork]);
+
+  useEffect(() => {
+    setCurrentYear(formData?.arcpYear ? formData.arcpYear : null);
+  }, [formData]);
+
+  useEffect(() => {
+    setFullYearSelectOptions(getPreviousYears(defaultYear, 2));
+  }, [defaultYear]);
+
   return (
     <Formik
       initialValues={formData}
@@ -117,6 +104,12 @@ const Section2 = ({
       }}
     >
       {({ values, errors, handleSubmit, setFieldValue }) => {
+        const selectValue = values.arcpYear
+          ? {
+              value: values.arcpYear,
+              label: values.arcpYear?.toString()
+            }
+          : { value: null, label: "All years" };
         return (
           <Form>
             <ScrollTo />
@@ -175,7 +168,7 @@ const Section2 = ({
                   <p>
                     You can filter Your Type of Work by selecting a year from
                     the drop-down list below - which will show only those that
-                    fall within that year's ARCP period as defined above.
+                    fall within that year&apos;s ARCP period as defined above.
                   </p>
                   <p>
                     <b>
@@ -185,7 +178,7 @@ const Section2 = ({
                     </b>
                   </p>
                   <p>
-                    <b>
+                    <b data-cy="arcpPeriodTxt">
                       {currentYear
                         ? `The ARCP period for ${currentYear} is ${DateUtilities.ToLocalDate(
                             firstWednesdayInAugust
@@ -195,51 +188,46 @@ const Section2 = ({
                         : null}
                     </b>
                   </p>
-                  <label htmlFor="arcpYear" className="select-label">
-                    {"To filter Type of Work please select a year: "}
-                  </label>
-                  <Select
-                    options={selectOptions}
-                    value={
-                      values.arcpYear
-                        ? {
-                            value: values.arcpYear,
-                            label: values.arcpYear?.toString()
-                          }
-                        : { value: null, label: "All years" }
-                    }
-                    defaultValue={
-                      values.arcpYear
-                        ? {
-                            value: values.arcpYear,
-                            label: values.arcpYear?.toString()
-                          }
-                        : { value: null, label: "All years" }
-                    }
-                    onChange={(selectedOption: any) => {
-                      const selectedValue = selectedOption.value;
-                      confirm({
-                        description:
-                          "Choosing another Year option will overwrite any changes you have made to the Work panels. Do you want to continue?"
-                      })
-                        .then(() => {
-                          setCurrentYear(selectedValue);
-                          setFieldValue("arcpYear", selectedValue);
-                          setFieldValue(
-                            "work",
-                            selectedValue === null
-                              ? allWork
-                              : ReferenceDataUtilities.filterArcpWorkPlacements(
-                                  allWork,
-                                  selectedValue
-                                )
-                          );
+                  <div data-cy="arcpYYear">
+                    <label htmlFor="arcpYear" className="select-label">
+                      {"To filter Type of Work please select a year: "}
+                    </label>
+                    <Select
+                      options={selectOptions}
+                      value={selectValue}
+                      defaultValue={selectValue}
+                      onChange={(selectedOption: any) => {
+                        const selectedValue = selectedOption.value;
+                        confirm({
+                          description:
+                            "Choosing another Year option will overwrite any changes you have made to the Work panels. Do you want to continue?"
                         })
-                        .catch(() => {
-                          setFieldValue("arcpYear", values.arcpYear);
-                        });
-                    }}
-                  />
+                          .then(() => {
+                            setCurrentYear(selectedValue);
+                            setFieldValue("arcpYear", selectedValue);
+                            setFieldValue(
+                              "work",
+                              selectedValue === null
+                                ? allWork
+                                : ReferenceDataUtilities.filterArcpWorkPlacements(
+                                    allWork,
+                                    selectedValue
+                                  )
+                            );
+                          })
+                          .catch(() => {
+                            setFieldValue("arcpYear", values.arcpYear);
+                          });
+                      }}
+                      className="year-select"
+                      classNamePrefix="react-select"
+                      theme={theme => ({
+                        ...theme,
+                        borderRadius: 0
+                      })}
+                      styles={colourStyles}
+                    />
+                  </div>
                 </WarningCallout>
                 <FieldArray
                   name="work"

@@ -2,7 +2,6 @@ import { TraineeProfile } from "./TraineeProfile";
 import { FormRPartB, Work } from "./FormRPartB";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
-import { StringUtilities } from "../utilities/StringUtilities";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
@@ -12,18 +11,9 @@ export function ProfileToFormRPartBInitialValues(
     traineeProfileData.programmeMemberships
   );
   const curriculum = ProfileUtilities.getCurriculum(programme);
-  const work = traineeProfileData.placements.map<Work>(placement => ({
-    typeOfWork: StringUtilities.argsToString(
-      placement.placementType,
-      placement.grade,
-      placement.specialty
-    ),
-    startDate: placement.startDate,
-    endDate: placement.endDate,
-    site: placement.site,
-    siteLocation: placement.siteLocation,
-    trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
-  }));
+  const work = traineeProfileData.placements.map<Work>(placement =>
+    ProfileUtilities.mappedPltoWork(placement)
+  );
 
   const workFilteredSorted = ProfileUtilities.sortedTrimmedWork(work);
 

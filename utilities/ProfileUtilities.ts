@@ -3,6 +3,8 @@ import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
 import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import dayjs from "dayjs";
+import { StringUtilities } from "./StringUtilities";
+import { DateUtilities } from "./DateUtilities";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -102,5 +104,20 @@ export class ProfileUtilities {
     } else if (trimmedWork.length === 0) trimmedWork.push(NEW_WORK);
 
     return trimmedWork;
+  }
+
+  public static mappedPltoWork(placement: Placement): Work {
+    return {
+      typeOfWork: StringUtilities.argsToString(
+        placement.placementType,
+        placement.grade,
+        placement.specialty
+      ),
+      startDate: DateUtilities.ToUTCDate(placement.startDate),
+      endDate: DateUtilities.ToUTCDate(placement.endDate),
+      site: placement.site,
+      siteLocation: placement.siteLocation,
+      trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
+    };
   }
 }
