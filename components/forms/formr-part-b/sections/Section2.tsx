@@ -26,7 +26,7 @@ import { ReferenceDataUtilities } from "../../../../utilities/ReferenceDataUtili
 import { DateUtilities } from "../../../../utilities/DateUtilities";
 import { useEffect, useMemo, useState } from "react";
 import { useConfirm } from "material-ui-confirm";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 import { colourStyles } from "../../../../utilities/FormBuilderUtilities";
 
 const Section2 = ({
@@ -196,8 +196,15 @@ const Section2 = ({
                       options={selectOptions}
                       value={selectValue}
                       defaultValue={selectValue}
-                      onChange={(selectedOption: any) => {
-                        const selectedValue = selectedOption.value;
+                      onChange={(
+                        selectedOption: SingleValue<{
+                          value: number | null;
+                          label: string;
+                        }>
+                      ) => {
+                        const selectedValue = selectedOption?.value
+                          ? selectedOption.value
+                          : null;
                         confirm({
                           description:
                             "Choosing another Year option will overwrite any changes you have made to the Work panels. Do you want to continue?"
