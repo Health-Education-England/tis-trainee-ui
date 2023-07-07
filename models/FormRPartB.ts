@@ -41,7 +41,7 @@ export interface FormRPartB extends IFormR {
   covidDeclarationDto: CovidDeclaration | null;
   isDeclarationAccepted?: boolean;
   isConsentAccepted?: boolean;
-  arcpYear?: number | null;
+  arcpYear?: Date | null;
 }
 
 export interface Declaration {

@@ -172,91 +172,45 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
   }
 ];
 
-export const arcpWorkArr: Work[] = [
+export const workPlacementsForArcpFilter: Work[] = [
   {
-    startDate: "2018-08-01",
-    endDate: "2019-03-04",
-    site: "Blackpool",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
+    typeOfWork: "Type 1",
+    startDate: "2023-07-01",
+    endDate: "2023-08-15",
+    trainingPost: "Post 1",
+    site: "Site 1",
+    siteLocation: "Location 1"
   },
   {
-    startDate: "2018-12-05",
-    endDate: "2019-04-02",
-    site: "Liverpool",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
+    typeOfWork: "Type 2",
+    startDate: "2023-08-02",
+    endDate: "2023-09-10",
+    trainingPost: "Post 2",
+    site: "Site 2",
+    siteLocation: "Location 2"
   },
   {
-    startDate: futureStart1,
-    endDate: futureEnd1,
-    site: "Everton",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
+    typeOfWork: "Type 3",
+    startDate: "2023-08-01",
+    endDate: "2023-08-20",
+    trainingPost: "Post 3",
+    site: "Site 3",
+    siteLocation: "Location 3"
   },
   {
-    startDate: "2021-12-04",
-    endDate: "2024-03-31",
-    site: "London",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
+    typeOfWork: "Type 4",
+    startDate: "2024-08-07",
+    endDate: "2025-08-20",
+    trainingPost: "Post 4",
+    site: "Site 4",
+    siteLocation: "Location 4"
   },
   {
-    startDate: futureStart2,
-    endDate: futureEnd2,
-    site: "Sheffield",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
-  },
-  {
-    startDate: "2021-12-04",
-    endDate: "2024-03-31",
-    site: "Leicester",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
-  },
-  {
-    startDate: "2018-12-05",
-    endDate: "2021-04-02",
-    site: "Blackpool",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
-  }
-];
-
-export const trimmedAndSortedWorkArrWithin2023ARCP = [
-  {
-    startDate: "2021-12-04",
-    endDate: "2024-03-31",
-    site: "London",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
-  },
-  {
-    startDate: "2021-12-04",
-    endDate: "2024-03-31",
-    site: "Leicester",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
-  }
-];
-
-export const trimmedAndSortedWorkArrWithin2020ARCP = [
-  {
-    startDate: "2018-12-05",
-    endDate: "2021-04-02",
-    site: "Blackpool",
-    typeOfWork: "",
-    trainingPost: "",
-    siteLocation: ""
+    typeOfWork: "Type 5",
+    startDate: "2020-08-10",
+    endDate: "2025-08-20",
+    trainingPost: "Post 5",
+    site: "Site 5",
+    siteLocation: "Location 5"
   }
 ];

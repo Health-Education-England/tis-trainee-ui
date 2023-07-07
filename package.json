@@ -1,6 +1,6 @@
 {
   "name": "trainee-ui-app",
-  "version": "0.74.0",
+  "version": "0.75.0",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^4.2.1",

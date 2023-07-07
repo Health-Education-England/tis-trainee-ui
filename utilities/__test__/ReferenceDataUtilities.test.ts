@@ -1,10 +1,6 @@
 import { ReferenceDataUtilities } from "../ReferenceDataUtilities";
 import { KeyValue } from "../../models/KeyValue";
-import {
-  arcpWorkArr,
-  trimmedAndSortedWorkArrWithin2023ARCP,
-  trimmedAndSortedWorkArrWithin2020ARCP
-} from "../../mock-data/work-placements-list";
+import { workPlacementsForArcpFilter } from "../../mock-data/work-placements-list";
 
 const refData: KeyValue[] = [
   { tisId: "1", label: "Label one", value: "Value one" },
@@ -74,63 +70,65 @@ describe("ReferenceDataUtilities", () => {
     expect(formDataProp).toEqual(matchedProp);
   });
 
-  it("should return filter out types of work outside the ARCP date for 2023 & 2020", () => {
-    //check for 2023
-    jest.useFakeTimers().setSystemTime(new Date("2023-01-01"));
-    const work2023 = ReferenceDataUtilities.filterArcpWorkPlacements(
-      arcpWorkArr,
-      2023
+  // Type of Work (ARCP year) filter tests
+  it("should return the submitted Type of Work array if no ARCP year provided", () => {
+    const testYear = null;
+    const arcpWorkArr = ReferenceDataUtilities.filterArcpWorkPlacements(
+      workPlacementsForArcpFilter,
+      testYear
     );
-
-    expect(arcpWorkArr).not.toEqual(work2023);
-
-    expect(work2023).toEqual(trimmedAndSortedWorkArrWithin2023ARCP);
-    //check for 2020
-    jest.useFakeTimers().setSystemTime(new Date("2020-01-01"));
-    const work2020 = ReferenceDataUtilities.filterArcpWorkPlacements(
-      arcpWorkArr,
-      2020
-    );
-    expect(arcpWorkArr).not.toEqual(work2020);
-    expect(work2020).toEqual(trimmedAndSortedWorkArrWithin2020ARCP);
+    expect(arcpWorkArr).toEqual(workPlacementsForArcpFilter);
   });
 
-  it("should return the first wednesday for each year", () => {
-    const firstWednesdayInAugust1973 = new Date(1973, 7, 1);
-    const firstWednesdayInAugust2020 = new Date(2020, 7, 5);
-    const firstWednesdayInAugust2043 = new Date(2044, 7, 3);
-
-    var firstWednesday = ReferenceDataUtilities.firstWednesdayInAugust(1973);
-
-    expect(firstWednesday).toEqual(firstWednesdayInAugust1973);
-
-    firstWednesday = ReferenceDataUtilities.firstWednesdayInAugust(2020);
-
-    expect(firstWednesday).toEqual(firstWednesdayInAugust2020);
-
-    firstWednesday = ReferenceDataUtilities.firstWednesdayInAugust(2044);
-
-    expect(firstWednesday).toEqual(firstWednesdayInAugust2043);
+  it("should return an empty array if no Type of Work falls within the ARCP period for the year provided", () => {
+    const testYear = new Date("2019-01-01");
+    const arcpWorkArr = ReferenceDataUtilities.filterArcpWorkPlacements(
+      workPlacementsForArcpFilter,
+      testYear
+    );
+    expect(arcpWorkArr).toEqual([]);
   });
 
-  it("should return the first tuesday of august for the following year", () => {
-    const firstTuesdayInAugust1994 = new Date(1994, 7, 2);
-    const firstTuesdayInAugust2025 = new Date(2025, 7, 5);
-    const firstTuesdayInAugust2044 = new Date(2044, 7, 2);
+  it("should return an array of Type of Work that falls within the ARCP period for the year provided", () => {
+    const expectedArr = [
+      {
+        endDate: "2023-08-15",
+        site: "Site 1",
+        siteLocation: "Location 1",
+        startDate: "2023-07-01",
+        trainingPost: "Post 1",
+        typeOfWork: "Type 1"
+      },
+      {
+        endDate: "2023-08-20",
+        site: "Site 3",
+        siteLocation: "Location 3",
+        startDate: "2023-08-01",
+        trainingPost: "Post 3",
+        typeOfWork: "Type 3"
+      },
+      {
+        endDate: "2025-08-20",
+        site: "Site 5",
+        siteLocation: "Location 5",
+        startDate: "2020-08-10",
+        trainingPost: "Post 5",
+        typeOfWork: "Type 5"
+      }
+    ];
+    const testYear = new Date("2022-01-01");
+    const arcpWorkArr = ReferenceDataUtilities.filterArcpWorkPlacements(
+      workPlacementsForArcpFilter,
+      testYear
+    );
+    expect(arcpWorkArr).toEqual(expectedArr);
+  });
 
-    var followingTuesday =
-      ReferenceDataUtilities.tueBeforeFirstWedNextAugust(1993);
-
-    expect(followingTuesday).toEqual(firstTuesdayInAugust1994);
-
-    var followingTuesday =
-      ReferenceDataUtilities.tueBeforeFirstWedNextAugust(2024);
-
-    expect(followingTuesday).toEqual(firstTuesdayInAugust2025);
-
-    var followingTuesday =
-      ReferenceDataUtilities.tueBeforeFirstWedNextAugust(2043);
-
-    expect(followingTuesday).toEqual(firstTuesdayInAugust2044);
+  it("should return the first Wednesday for a given year and the Tuesday before the first Wednesday in August the following year", () => {
+    const firstWedInAugust = new Date("2023-08-02");
+    const tueBeforeFirstWedNextAugust = new Date("2024-08-06");
+    expect(
+      ReferenceDataUtilities.thisAugFirstWedAndNextAugTueBeforeFirstWed(2023)
+    ).toEqual({ firstWedInAugust, tueBeforeFirstWedNextAugust });
   });
 });

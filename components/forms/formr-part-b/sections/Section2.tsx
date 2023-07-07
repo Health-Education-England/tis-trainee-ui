@@ -41,8 +41,8 @@ const Section2 = ({
     state => state.traineeProfile.traineeProfileData
   );
   let formData = useAppSelector(selectSavedFormB);
-  const [currentYear, setCurrentYear] = useState<number | null>(null);
-  const [fullYearSelectOptions, setFullYearSelectOptions] = useState<number[]>(
+  const [currentYear, setCurrentYear] = useState<Date | null>(null);
+  const [fullYearSelectOptions, setFullYearSelectOptions] = useState<Date[]>(
     []
   );
   const [allWork, setAllWork] = useState<Work[]>([]);
@@ -52,32 +52,37 @@ const Section2 = ({
     );
     return ProfileUtilities.sortedTrimmedWork(workArr);
   }, [traineeProfileData]);
+
   const defaultYear = useMemo(() => {
-    return new Date().getFullYear();
+    return new Date();
   }, []);
-  const getPreviousYears = (year: number, numberOfYears: number) => {
-    const years = [];
+
+  const getPreviousYears = (year: Date, numberOfYears: number): Date[] => {
+    const years: Date[] = [];
+    const currentYear = year.getFullYear();
+
     for (let i = 0; i < numberOfYears + 1; i++) {
-      years.push(year - i);
+      const previousYear = new Date(currentYear - i, 0, 1);
+      years.push(previousYear);
     }
+
     return years;
   };
-  const firstWednesdayInAugust = useMemo(() => {
-    return ReferenceDataUtilities.firstWednesdayInAugust(currentYear as number);
-  }, [currentYear]);
 
-  const tueBeforeFirstWedNextAugust = useMemo(() => {
-    return ReferenceDataUtilities.tueBeforeFirstWedNextAugust(
-      currentYear as number
+  const { firstWedInAugust, tueBeforeFirstWedNextAugust } = useMemo(() => {
+    return ReferenceDataUtilities.thisAugFirstWedAndNextAugTueBeforeFirstWed(
+      currentYear?.getFullYear()
+        ? currentYear.getFullYear()
+        : defaultYear.getFullYear()
     );
-  }, [currentYear]);
+  }, [currentYear, defaultYear]);
 
   const selectOptions = useMemo(() => {
     return [
       { value: null, label: "All years" },
       ...fullYearSelectOptions.map(year => ({
         value: year,
-        label: year.toString()
+        label: year.getFullYear().toString()
       }))
     ];
   }, [fullYearSelectOptions]);
@@ -107,7 +112,7 @@ const Section2 = ({
         const selectValue = values.arcpYear
           ? {
               value: values.arcpYear,
-              label: values.arcpYear?.toString()
+              label: values.arcpYear?.getFullYear().toString()
             }
           : { value: null, label: "All years" };
         return (
@@ -180,8 +185,8 @@ const Section2 = ({
                   <p>
                     <b data-cy="arcpPeriodTxt">
                       {currentYear
-                        ? `The ARCP period for ${currentYear} is ${DateUtilities.ToLocalDate(
-                            firstWednesdayInAugust
+                        ? `The ARCP period for ${currentYear.getFullYear()} is ${DateUtilities.ToLocalDate(
+                            firstWedInAugust
                           )} to ${DateUtilities.ToLocalDate(
                             tueBeforeFirstWedNextAugust
                           )}.`
@@ -198,7 +203,7 @@ const Section2 = ({
                       defaultValue={selectValue}
                       onChange={(
                         selectedOption: SingleValue<{
-                          value: number | null;
+                          value: Date | null;
                           label: string;
                         }>
                       ) => {
