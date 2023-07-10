@@ -171,3 +171,46 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     typeOfWork: ""
   }
 ];
+
+export const workPlacementsForARCP: Work[] = [
+  {
+    typeOfWork: "Type 1",
+    startDate: "2023-07-01",
+    endDate: "2023-08-15",
+    trainingPost: "Post 1",
+    site: "Site 1",
+    siteLocation: "Location 1"
+  },
+  {
+    typeOfWork: "Type 2",
+    startDate: "2023-08-02",
+    endDate: "2023-09-10",
+    trainingPost: "Post 2",
+    site: "Site 2",
+    siteLocation: "Location 2"
+  },
+  {
+    typeOfWork: "Type 3",
+    startDate: "2023-08-10",
+    endDate: "2023-08-20",
+    trainingPost: "Post 3",
+    site: "Site 3",
+    siteLocation: "Location 3"
+  },
+  {
+    typeOfWork: "Type 4",
+    startDate: "2024-08-07",
+    endDate: "2025-08-20",
+    trainingPost: "Post 4",
+    site: "Site 4",
+    siteLocation: "Location 4"
+  },
+  {
+    typeOfWork: "Type 5",
+    startDate: "2020-08-10",
+    endDate: "2025-08-20",
+    trainingPost: "Post 5",
+    site: "Site 5",
+    siteLocation: "Location 5"
+  }
+];

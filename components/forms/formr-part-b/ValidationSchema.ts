@@ -14,7 +14,7 @@ const leaveValidation = (fieldName: string) =>
     .max(999, `${fieldName} must not be more than 999`)
     .required(`${fieldName} is required`);
 
-const panelSchema = yup.object({
+const panelSchema: any = yup.object({
   declarationType: yup.string(),
   title: yup.string(),
   locationOfEntry: yup.string(),
@@ -89,10 +89,18 @@ export const Section2ValidationSchema = yup.object({
             "endDate",
             "The date is outside the allowed date range",
             value => DateUtilities.IsInsideDateRange(value)
-          )
+          ),
+        isCurrentArcp: yup.boolean().nullable()
       })
     )
-    .min(1, "At least one type of work should be added"),
+    .min(1, "At least one Type of Work should be added.")
+    .test(
+      "work",
+      "You must include at least one Type of Work in this ARCP period",
+      value => {
+        return value?.find(w => w.isCurrentArcp) !== undefined;
+      }
+    ),
   sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
   parentalLeave: leaveValidation(
     "Parental leave (incl Maternity / Paternity leave)"

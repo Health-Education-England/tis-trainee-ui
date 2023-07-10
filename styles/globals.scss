@@ -451,3 +451,54 @@ ol[type="a"] {
   margin-left: 40px;
   font-size: 1rem;
 }
+
+// Plus button (used in form b section 2)
+
+.plus-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.plus-button span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.plus-text {
+  margin-left: 5px;
+  font-size: 1rem; /* Add margin to create space */
+}
+
+.plus-icon {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid $nhsSuccess;
+  border-radius: 50%;
+  position: relative;
+  background-color: $nhsSuccess;
+}
+
+.plus-icon:before,
+.plus-icon:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #fff;
+}
+
+.plus-icon:before {
+  width: 75%;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.plus-icon:after {
+  width: 2px;
+  height: 75%;
+  transform: translate(-50%, -50%);
+}

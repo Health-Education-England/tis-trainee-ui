@@ -7,8 +7,7 @@ import dayjs from "dayjs";
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
   public static sortWorkDesc(workArr: Work[]) {
-    const workArrForSorting = [...workArr];
-    return workArrForSorting.sort(
+    return [...workArr].sort(
       (a: Work, b: Work) =>
         new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
     );
@@ -69,11 +68,26 @@ export class ProfileUtilities {
     );
   }
 
+  public static filterCurrentArcpWork(workArr: Work[]) {
+    return workArr.filter(wp => wp.isCurrentArcp === true);
+  }
+
+  // TODO: Won't need this if make the necessary BE changes (add isCurrentArcp to Work)
+  public static removeTemporaryProperty(filterWorkArr: Work[]) {
+    return filterWorkArr.map(({ isCurrentArcp, ...rest }) => rest);
+  }
+
+  public static updateWorkVals(workArr: Work[]) {
+    const sortedWork = this.sortWorkDesc(workArr);
+    const filteredWork = this.filterCurrentArcpWork(sortedWork);
+    return filteredWork;
+  }
+
   public static updateVals(currVals: FormRPartB) {
     return {
       ...currVals,
       totalLeave: this.getTotal(currVals),
-      work: this.sortWorkDesc(currVals.work)
+      work: this.updateWorkVals(currVals.work)
     };
   }
 

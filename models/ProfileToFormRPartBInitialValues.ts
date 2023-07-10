@@ -22,7 +22,8 @@ export function ProfileToFormRPartBInitialValues(
     endDate: placement.endDate,
     site: placement.site,
     siteLocation: placement.siteLocation,
-    trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
+    trainingPost: ProfileUtilities.getTrainingPostInitVal(placement),
+    isCurrentArcp: false
   }));
 
   const workFilteredSorted = ProfileUtilities.sortedTrimmedWork(work);
