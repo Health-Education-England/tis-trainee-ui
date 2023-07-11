@@ -22,7 +22,8 @@ export const draftFormRPartB: FormRPartB = {
       endDate: "2019-12-13",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     },
     {
       typeOfWork: "In Post ST2",
@@ -30,7 +31,8 @@ export const draftFormRPartB: FormRPartB = {
       endDate: "2020-12-21",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     },
     {
       typeOfWork: "In Post ST3",
@@ -38,7 +40,8 @@ export const draftFormRPartB: FormRPartB = {
       endDate: "2020-12-24",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     }
   ],
   sicknessAbsence: 1,
@@ -104,7 +107,8 @@ export const draftFormRPartBWithNullCareerBreak: FormRPartB = {
       endDate: "2019-12-21",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     },
     {
       typeOfWork: "In Post ST1 Dermatology",
@@ -112,7 +116,8 @@ export const draftFormRPartBWithNullCareerBreak: FormRPartB = {
       endDate: "2020-12-31",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     }
   ],
   sicknessAbsence: 0,
@@ -178,7 +183,8 @@ export const draftFormRPartBWithNoLeaveTotal = {
       endDate: "2019-12-21",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     },
     {
       typeOfWork: "In Post ST1 Dermatology",
@@ -186,7 +192,8 @@ export const draftFormRPartBWithNoLeaveTotal = {
       endDate: "2020-12-31",
       trainingPost: "Yes",
       site: "Addenbrookes Hospital",
-      siteLocation: "Hills Road Cambridge Cambridgeshire"
+      siteLocation: "Hills Road Cambridge Cambridgeshire",
+      siteKnownAs: "Addenbrooke's Hospital (RT1) (RT190)"
     }
   ],
   sicknessAbsence: 1,

@@ -22,6 +22,7 @@ export function ProfileToFormRPartBInitialValues(
     endDate: placement.endDate,
     site: placement.site,
     siteLocation: placement.siteLocation,
+    siteKnownAs: placement.siteKnownAs,
     trainingPost: ProfileUtilities.getTrainingPostInitVal(placement)
   }));
 

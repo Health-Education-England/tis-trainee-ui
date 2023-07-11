@@ -1,6 +1,9 @@
 import * as yup from "yup";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { StringValidationSchema } from "../../../components/forms/StringValidationSchema";
+import {
+  StringValidationSchema,
+  StringValidationSchemaOptional
+} from "../../../components/forms/StringValidationSchema";
 
 const dateValidationSchema = (fieldName: string) =>
   yup.date().nullable().required(`${fieldName} is required`);
@@ -73,6 +76,7 @@ export const Section2ValidationSchema = yup.object({
         trainingPost: StringValidationSchema("Training Post"),
         site: StringValidationSchema("Site Name"),
         siteLocation: StringValidationSchema("Site Location"),
+        siteKnownAs: StringValidationSchemaOptional("Site Known As"),
         startDate: yup
           .date()
           .required("Start date is required")
