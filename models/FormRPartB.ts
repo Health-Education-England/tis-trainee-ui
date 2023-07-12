@@ -57,6 +57,7 @@ export interface Work {
   trainingPost: string;
   site: string;
   siteLocation: string;
+  siteKnownAs: string;
 }
 
 export interface CovidDeclaration {

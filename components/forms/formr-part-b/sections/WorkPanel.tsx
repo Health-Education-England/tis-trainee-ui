@@ -21,6 +21,9 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
   const [_siteLocationField, _siteLocationMeta, siteLocationHelpers] = useField(
     `work[${index}].siteLocation`
   );
+  const [_siteKnownAsField, _siteKnownAsMeta, siteKnownAsHelpers] = useField(
+    `work[${index}].siteKnownAs`
+  );
 
   return (
     <Card data-cy="workPanel">
@@ -108,6 +111,17 @@ const WorkPanel: FunctionComponent<Props> = (props: Props) => {
               onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
                 const trimmedValue = e.target.value.trim();
                 siteLocationHelpers.setValue(trimmedValue);
+              }}
+            />
+          </div>
+          <div className="nhsuk-grid-column-one-half">
+            <TextInputField
+              label="Site Known As"
+              name={`work[${index}].siteKnownAs`}
+              data-cy={`siteKnownAsInput${index}`}
+              onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                const trimmedValue = e.target.value.trim();
+                siteKnownAsHelpers.setValue(trimmedValue);
               }}
             />
           </div>

@@ -163,6 +163,10 @@ Cypress.Commands.add(
       .should("exist")
       .clear()
       .type("Location");
+    cy.get(`[data-cy="work[0].siteKnownAs"]`)
+      .should("exist")
+      .clear()
+      .type("siteKnownAs");
 
     cy.get("#sicknessAbsence").should("exist").clear().type("1");
     cy.get("#paidLeave").should("exist").clear().type("2");

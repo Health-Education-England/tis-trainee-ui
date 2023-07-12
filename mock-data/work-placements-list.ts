@@ -22,7 +22,8 @@ export const workArr: Work[] = [
     site: "Blackpool",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "Blackpool (code)"
   },
   {
     startDate: "2018-12-05",
@@ -30,7 +31,8 @@ export const workArr: Work[] = [
     site: "Liverpool",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "Liverpool (code)"
   },
   {
     startDate: futureStart1,
@@ -38,7 +40,8 @@ export const workArr: Work[] = [
     site: "Everton",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "Everton (code)"
   },
   {
     startDate: "2021-12-04",
@@ -46,7 +49,8 @@ export const workArr: Work[] = [
     site: "London",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "London (code)"
   },
   {
     startDate: futureStart2,
@@ -54,7 +58,8 @@ export const workArr: Work[] = [
     site: "Sheffield",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "Sheffield (code)"
   },
   {
     startDate: "2021-12-04",
@@ -62,7 +67,8 @@ export const workArr: Work[] = [
     site: "Leicester",
     typeOfWork: "",
     trainingPost: "",
-    siteLocation: ""
+    siteLocation: "",
+    siteKnownAs: "Leicester (code)"
   }
 ];
 
@@ -71,6 +77,7 @@ export const trimmedAndSortedArr = [
     endDate: futureEnd1,
     site: "Everton",
     siteLocation: "",
+    siteKnownAs: "Everton (code)",
     startDate: futureStart1,
     trainingPost: "",
     typeOfWork: ""
@@ -79,6 +86,7 @@ export const trimmedAndSortedArr = [
     endDate: "2024-03-31",
     site: "London",
     siteLocation: "",
+    siteKnownAs: "London (code)",
     startDate: "2021-12-04",
     trainingPost: "",
     typeOfWork: ""
@@ -87,6 +95,7 @@ export const trimmedAndSortedArr = [
     endDate: "2024-03-31",
     site: "Leicester",
     siteLocation: "",
+    siteKnownAs: "Leicester (code)",
     startDate: "2021-12-04",
     trainingPost: "",
     typeOfWork: ""
@@ -95,6 +104,7 @@ export const trimmedAndSortedArr = [
     endDate: "2019-04-02",
     site: "Liverpool",
     siteLocation: "",
+    siteKnownAs: "Liverpool (code)",
     startDate: "2018-12-05",
     trainingPost: "",
     typeOfWork: ""
@@ -103,6 +113,7 @@ export const trimmedAndSortedArr = [
     endDate: "2019-03-04",
     site: "Blackpool",
     siteLocation: "",
+    siteKnownAs: "Blackpool (code)",
     startDate: "2018-08-01",
     trainingPost: "",
     typeOfWork: ""
@@ -115,6 +126,7 @@ export const workArrWithTwoFutureOnSameDay = [
     endDate: futureEnd1,
     site: "Sheffield",
     siteLocation: "",
+    siteKnownAs: "Sheffield (code)",
     startDate: futureStart1,
     trainingPost: "",
     typeOfWork: ""
@@ -126,6 +138,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: futureEnd1,
     site: "Everton",
     siteLocation: "",
+    siteKnownAs: "Everton (code)",
     startDate: futureStart1,
     trainingPost: "",
     typeOfWork: ""
@@ -134,6 +147,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: futureEnd1,
     site: "Sheffield",
     siteLocation: "",
+    siteKnownAs: "Sheffield (code)",
     startDate: futureStart1,
     trainingPost: "",
     typeOfWork: ""
@@ -142,6 +156,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: "2024-03-31",
     site: "London",
     siteLocation: "",
+    siteKnownAs: "London (code)",
     startDate: "2021-12-04",
     trainingPost: "",
     typeOfWork: ""
@@ -150,6 +165,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: "2024-03-31",
     site: "Leicester",
     siteLocation: "",
+    siteKnownAs: "Leicester (code)",
     startDate: "2021-12-04",
     trainingPost: "",
     typeOfWork: ""
@@ -158,6 +174,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: "2019-04-02",
     site: "Liverpool",
     siteLocation: "",
+    siteKnownAs: "Liverpool (code)",
     startDate: "2018-12-05",
     trainingPost: "",
     typeOfWork: ""
@@ -166,6 +183,7 @@ export const trimmedAndSortedWorkArrWithTwoFutureOnSameDay = [
     endDate: "2019-03-04",
     site: "Blackpool",
     siteLocation: "",
+    siteKnownAs: "Blackpool (code)",
     startDate: "2018-08-01",
     trainingPost: "",
     typeOfWork: ""

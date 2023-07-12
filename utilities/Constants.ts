@@ -110,7 +110,8 @@ export const NEW_WORK: Work = {
   endDate: "",
   trainingPost: "",
   site: "",
-  siteLocation: ""
+  siteLocation: "",
+  siteKnownAs: ""
 };
 
 export const NEW_DECLARATION: Declaration = {

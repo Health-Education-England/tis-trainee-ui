@@ -63,6 +63,12 @@ const ViewSection2 = ({ makeSectionEditButton, formData }: IViewSection2) => {
                         {w.siteLocation}
                       </SummaryList.Value>
                     </SummaryList.Row>
+                    <SummaryList.Row>
+                      <SummaryList.Key>Site Known As</SummaryList.Key>
+                      <SummaryList.Value data-cy={`siteKnownAs${i + 1}`}>
+                        {w.siteKnownAs}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
                   </SummaryList>
                 </Card.Content>
               </Card>
