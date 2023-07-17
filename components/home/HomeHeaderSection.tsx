@@ -25,6 +25,24 @@ const HomeHeaderSection = () => {
                 </p>
               </div>
             </div>
+            <div className="nhsuk-grid-column-one-third tss-update-column">
+              <div className="tss-update-content">
+                <h2>What&apos;s new</h2>
+                <p>Just placeholder text to show the scroll...</p>
+                <p>
+                  Our goal is to improve your training experience by making TIS
+                  Self-Service a one-stop-shop for your training-related admin
+                  tasks. We are in the Private Beta phase of delivery so expect
+                  more features soon.
+                </p>
+                <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">
+                  Our goal is to improve your training experience by making TIS
+                  Self-Service a one-stop-shop for your training-related admin
+                  tasks. We are in the Private Beta phase of delivery so expect
+                  more features soon.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
