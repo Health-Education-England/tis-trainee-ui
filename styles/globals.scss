@@ -476,6 +476,12 @@ ol[type="a"] {
   padding: 56px 16px;
 }
 
+@media (max-width: 768px) {
+  .tss-update-column {
+    padding-top: 0;
+  }
+}
+
 .tss-update-content {
   box-sizing: "border-box";
   border: solid #ffffff33 2px;
