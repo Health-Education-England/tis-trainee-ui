@@ -25,6 +25,7 @@ describe("Home", () => {
     cy.get('[data-cy="homeWelcomeHeaderText"]')
       .should("exist")
       .should("contain.text", "Welcome to TIS Self-Service");
+    cy.get('[data-cy="tssUpdatesContainer"]').should("exist");
 
     homeArr.forEach(section => {
       cy.get(`[data-cy="${section.name}"]`)

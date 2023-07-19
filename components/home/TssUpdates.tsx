@@ -31,13 +31,15 @@ export const TssUpdates: React.FC = () => {
 
   const addWhatsNewPosts = (): JSX.Element[] | JSX.Element => {
     if (filteredPosts.length === 0) {
-      return <p>No updates available</p>;
+      return <p data-cy="noUpdates">No updates available</p>;
     }
     return filteredPosts.map(post => {
       return (
         <ListPanel.Item key={post.id}>
-          <h3>{post.title.rendered}</h3>
-          <p>{extractTextFromHTML(post.excerpt.rendered)}</p>
+          <h3 data-cy={`postTitle${post.id}`}>{post.title.rendered}</h3>
+          <p data-cy={`postExcerpt${post.id}`}>
+            {extractTextFromHTML(post.excerpt.rendered)}
+          </p>
         </ListPanel.Item>
       );
     });
@@ -46,7 +48,7 @@ export const TssUpdates: React.FC = () => {
   if (whatsNewStatus === "loading") {
     return (
       <div className="tss-update-content">
-        <p>
+        <p data-cy="loadingUpdates">
           Loading{" "}
           <b>
             <i>{whatsNewHeader}</i>
@@ -60,7 +62,7 @@ export const TssUpdates: React.FC = () => {
   if (whatsNewStatus === "failed") {
     return (
       <div className="tss-update-content">
-        <p>
+        <p data-cy="failedUpdates">
           Failed to load{" "}
           <b>
             <i>{whatsNewHeader}</i>
@@ -71,11 +73,12 @@ export const TssUpdates: React.FC = () => {
   }
 
   return (
-    <div className="tss-update-content">
-      <h2>{whatsNewHeader}</h2>
+    <div className="tss-update-content" data-cy="tssUpdatesContainer">
+      <h2 data-cy="whatsNewHeader">{whatsNewHeader}</h2>
       <ListPanel>{addWhatsNewPosts()}</ListPanel>
       <div>
         <a
+          data-cy="readMoreLink"
           className="nhsuk-link custom-link"
           href="https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/"
           target="_blank"
@@ -95,5 +98,5 @@ function extractTextFromHTML(html: string): string {
   if (element) {
     return element.textContent?.trim() ?? "";
   }
-  return "";
+  return html;
 }

@@ -24,10 +24,16 @@ export const HomeHeaderSection = () => {
                 >
                   Welcome to TIS Self-Service
                 </h1>
-                <p className="nhsuk-body-l nhsuk-u-margin-bottom-1">
+                <p
+                  data-cy="homeWelcomeSubHeaderText"
+                  className="nhsuk-body-l nhsuk-u-margin-bottom-1"
+                >
                   Your post-graduate training programme resource
                 </p>
-                <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">
+                <p
+                  data-cy="homeWelcomeBodyText"
+                  className="nhsuk-body-m nhsuk-u-margin-bottom-1"
+                >
                   Our goal is to improve your training experience by making TIS
                   Self-Service a one-stop-shop for your training-related admin
                   tasks. We are in the Private Beta phase of delivery so expect

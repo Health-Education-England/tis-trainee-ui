@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getWhatsNew } from "../../services/TssUpdatesService";
 import { Post } from "../../models/WPPost";
 
@@ -25,7 +25,14 @@ export const fetchWhatsNew = createAsyncThunk(
 const tssUpdatesSlice = createSlice({
   name: "tssUpdates",
   initialState,
-  reducers: {},
+  reducers: {
+    updatedTssUpdates(state, action: PayloadAction<Post[]>) {
+      return { ...state, tssUpdates: action.payload };
+    },
+    updatedTssUpdatesStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchWhatsNew.pending, (state, _action) => {
@@ -44,4 +51,5 @@ const tssUpdatesSlice = createSlice({
 
 export default tssUpdatesSlice.reducer;
 
-export const {} = tssUpdatesSlice.actions;
+export const { updatedTssUpdates, updatedTssUpdatesStatus } =
+  tssUpdatesSlice.actions;
