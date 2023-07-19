@@ -74,6 +74,16 @@ export const TssUpdates: React.FC = () => {
     <div className="tss-update-content">
       <h2>{whatsNewHeader}</h2>
       <ListPanel>{addWhatsNewPosts()}</ListPanel>
+      <div>
+        <a
+          className="nhsuk-link custom-link"
+          href="https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Click here to read more
+        </a>
+      </div>
     </div>
   );
 };
@@ -83,7 +93,7 @@ function extractTextFromHTML(html: string): string {
   const doc = parser.parseFromString(html, "text/html");
   const element = doc.querySelector("p");
   if (element) {
-    return element.textContent?.trim() || "";
+    return element.textContent?.trim() ?? "";
   }
   return "";
 }
