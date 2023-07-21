@@ -27,7 +27,7 @@ describe("Home with no MFA set up", () => {
     );
   });
   homeCards.forEach(card => {
-    it(`should display the ${card} card on the Home page`, () => {
+    it(`should not display the ${card} card on the Home page`, () => {
       cy.get(`[data-cy="${card}"]`).should("not.exist");
     });
   });

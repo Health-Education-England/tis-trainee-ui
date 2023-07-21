@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import HomeHeaderSection from "../home/HomeHeaderSection";
+import { HomeHeaderSection } from "../home/HomeHeaderSection";
 
 const Breadcrumbs = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
