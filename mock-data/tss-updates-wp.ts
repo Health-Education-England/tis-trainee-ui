@@ -33,7 +33,7 @@ export const tssUpdatesWp: Post[] = [
     template: "",
     format: "standard",
     meta: [],
-    categories: [1, 2],
+    categories: [1, 19],
     tags: [20],
     _links: {
       self: [
@@ -129,7 +129,7 @@ export const tssUpdatesWp: Post[] = [
     template: "",
     format: "standard",
     meta: [],
-    categories: [3],
+    categories: [19],
     tags: [20, 40],
     _links: {
       self: [
