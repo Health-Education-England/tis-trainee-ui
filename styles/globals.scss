@@ -499,40 +499,7 @@ ol[type="a"] {
 .tss-updates-content {
   box-sizing: border-box;
   border: solid #ffffff33 2px;
-  overflow-y: auto;
   padding: 16px;
-  max-height: 25vh;
-}
-
-// Note - Is there a generic @media to rule them all!? (Didn't spend much time looking as the nested scroll may not pass the quality checks on preprod anyway.)
-@media only screen and (max-height: 800px) and (orientation: landscape) {
-  .tss-updates-content {
-    max-height: 35vh;
-  }
-}
-
-@media only screen and (max-height: 600px) and (orientation: landscape) {
-  .tss-updates-content {
-    max-height: 45vh;
-  }
-}
-
-@media only screen and (max-height: 450px) and (orientation: landscape) {
-  .tss-updates-content {
-    max-height: 55vh;
-  }
-}
-
-@media only screen and (max-height: 350px) and (orientation: landscape) {
-  .tss-updates-content {
-    max-height: 65vh;
-  }
-}
-
-@media only screen and (max-height: 250px) and (orientation: landscape) {
-  .tss-updates-content {
-    max-height: 75vh;
-  }
 }
 
 .list-panel-header {
