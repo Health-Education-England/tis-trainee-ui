@@ -88,7 +88,7 @@ function WhatsNewHeader(): JSX.Element {
         target="_blank"
         rel="noopener noreferrer"
       >
-        What's New
+        What&apos;s New
       </a>
     </h2>
   );
