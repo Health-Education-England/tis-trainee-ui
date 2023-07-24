@@ -27,7 +27,9 @@ export const SupportLinks = (action: string) => {
     <div className="signInSupportLinks" data-cy="signInSupportLinks">
       <b>Can&apos;t access your account? </b>
       <a
-        href="https://tis-support.hee.nhs.uk/trainees/support-faq/"
+        href={`https://tis-support.hee.nhs.uk/trainees/${
+          action === "Log in" ? "when-i-log-in" : "when-i-sign-up"
+        }/`}
         target="_blank"
         rel="noreferrer"
       >
