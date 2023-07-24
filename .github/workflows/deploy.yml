@@ -38,6 +38,8 @@ jobs:
         run: |
           mv ./out/[[...app]].html ./out/index.html
           aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }} --delete
+          PKG_VERSION=$(npm pkg get version | xargs)
+          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }}/$PKG_VERSION --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*
@@ -184,6 +186,8 @@ jobs:
         run: |
           mv ./out/[[...app]].html ./out/index.html
           aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PROD }} --delete
+          PKG_VERSION=$(npm pkg get version | xargs)
+          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }}/$PKG_VERSION --delete
 
       - name: Invalidate CDN Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}} --paths /static/*
