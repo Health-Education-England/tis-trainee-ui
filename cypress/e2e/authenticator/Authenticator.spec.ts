@@ -18,7 +18,7 @@ describe("Authenticator", () => {
         expect($anchors).to.have.length(2);
         expect($anchors.first()).to.contain("FAQ");
         expect($anchors.first().attr("href")).to.eq(
-          "https://tis-support.hee.nhs.uk/trainees/support-faq/"
+          "https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
         );
         expect($anchors.last()).to.contain("email");
         expect($anchors.last().attr("href")).to.contain(
