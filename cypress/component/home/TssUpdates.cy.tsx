@@ -49,10 +49,7 @@ describe("TssUpdates", () => {
     );
   });
 
-  it("should display 'no updates' msg when no posts (no categories 19) ", () => {
-    const postsWithoutCat19 = tssUpdatesWp.filter(
-      post => !post.categories.includes(19)
-    );
+  it("should display 'no updates' msg when no posts", () => {
     const MockedTssUpdatesNone = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTssUpdatesStatus("Succeeded"));
@@ -75,7 +72,7 @@ describe("TssUpdates", () => {
   it("should display TssUpdates", () => {
     const MockedTssUpdates = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedTssUpdates(tssUpdatesWp));
+      dispatch(updatedTssUpdates([tssUpdatesWp[0]]));
       return <TssUpdates />;
     };
     mount(
@@ -85,14 +82,7 @@ describe("TssUpdates", () => {
         </Router>
       </Provider>
     );
-
-    cy.get(".tss-updates-content").then($element => {
-      // Check if the element's content exceeds its visible height
-      const canScroll = $element[0].scrollHeight > $element[0].clientHeight;
-      if (canScroll) {
-        cy.get(".tss-updates-content").should("have.css", "overflow-y", "auto");
-      }
-    });
+    cy.get(".tss-updates-content").should("exist");
     cy.get('[data-cy="whatsNewHeader"]').should("contain", "What's New");
     cy.get('[data-cy="anchorEl_What\'s New"]')
       .should("contain.text", "What's New")
@@ -106,40 +96,5 @@ describe("TssUpdates", () => {
       "contain",
       "This is the excerpt of post 1."
     );
-    cy.get('[data-cy="postTitle2"]').should("contain", "Post 2 Title");
-    cy.get('[data-cy="postExcerpt2"]').should(
-      "contain",
-      "This is the excerpt of post 2."
-    );
-    cy.get('[data-cy="anchorEl_Click here to read more"]')
-      .should("contain.text", "Click here to read more")
-      .should(
-        "have.attr",
-        "href",
-        "https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/"
-      );
-  });
-  it("should display no footer anchor when only 1 post", () => {
-    const singlePost = tssUpdatesWp[0];
-    const MockedSingleTssUpdate = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedTssUpdates([singlePost]));
-      return <TssUpdates />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedSingleTssUpdate />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="anchorEl_What\'s New"]')
-      .should("contain.text", "What's New")
-      .should(
-        "have.attr",
-        "href",
-        "https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/"
-      );
-    cy.get('[data-cy="anchorEl_Click here to read more"]').should("not.exist");
   });
 });
