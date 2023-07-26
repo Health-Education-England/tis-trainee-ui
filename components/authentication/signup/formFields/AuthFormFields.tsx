@@ -24,7 +24,7 @@ export const AuthFormFields = () => {
           hasError={!!validationErrors.yesToPilot}
           name="yesToPilot"
           value="yes"
-          label="I received an email inviting me to create an account"
+          label="I received an email inviting me to sign up"
         />
       </div>
     </>
@@ -34,7 +34,7 @@ export const AuthFormFields = () => {
 export const FormFields = {
   signIn: {
     username: {
-      placeholder: "Email (used to create account)",
+      placeholder: "Email (used to sign up)",
       isRequired: true,
       labelHidden: true
     },
@@ -81,7 +81,7 @@ export const FormFields = {
   resetPassword: {
     username: {
       label:
-        "This will only work if you have created an account - which includes the email verification step. If not then please contact Support to get your account reset so you can create an account again.",
+        "This will only work if you have completed the sign-up process by verifying your email address. If not, please contact Support to get your account reset so you can sign up again.",
       placeholder: "Enter your (verified) email address"
     }
   },
