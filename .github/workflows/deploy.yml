@@ -47,7 +47,7 @@ jobs:
           aws cloudfront get-distribution-config --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} > ${{ env.ORIGINAL_CONFIG_FILENAME }}
           etag=`jq '.ETag' ${{ env.ORIGINAL_CONFIG_FILENAME }} | xargs`
           jq '.DistributionConfig | (.Origins.Items[] | select(.Id | contains("website")).OriginPath) = "/${{ env.app_version }}"' ${{ env.ORIGINAL_CONFIG_FILENAME }} > ${{ env.UPDATED_CONFIG_FILENAME }}
-          aws cloudfront update-distribution --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --if-match ${ etag } --distribution-config file://${{ env.UPDATED_CONFIG_FILENAME }}
+          aws cloudfront update-distribution --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --if-match $etag --distribution-config file://${{ env.UPDATED_CONFIG_FILENAME }}
         env:
           ORIGINAL_CONFIG_FILENAME: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}}_get.json
           UPDATED_CONFIG_FILENAME: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}}_update.json
@@ -203,7 +203,7 @@ jobs:
           aws cloudfront get-distribution-config --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} > ${{ env.ORIGINAL_CONFIG_FILENAME }}
           etag=`jq '.ETag' ${{ env.ORIGINAL_CONFIG_FILENAME }} | xargs`
           jq '.DistributionConfig | (.Origins.Items[] | select(.Id | contains("website")).OriginPath) = "/${{ env.app_version }}"' ${{ env.ORIGINAL_CONFIG_FILENAME }} > ${{ env.UPDATED_CONFIG_FILENAME }}
-          aws cloudfront update-distribution --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --if-match ${ etag } --distribution-config file://${{ env.UPDATED_CONFIG_FILENAME }}
+          aws cloudfront update-distribution --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --if-match $etag --distribution-config file://${{ env.UPDATED_CONFIG_FILENAME }}
         env:
           ORIGINAL_CONFIG_FILENAME: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}}_get.json
           UPDATED_CONFIG_FILENAME: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}}_update.json
