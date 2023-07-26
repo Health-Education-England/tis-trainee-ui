@@ -1,11 +1,10 @@
 export const YES_TO_PRIVACY =
   "To use TIS Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
-export const YES_TO_PILOT = "Sign-up is by email invitation only.";
+export const YES_TO_PILOT =
+  "TIS Self-Service is currently in pilot so we are onboarding new users via an invite email from the TIS Team.";
 export const FORM_FIELD_VALUES = {
   // log in screen:
-  "Create Account": "Sign up & verify email", //create account tab header
-  "Sign In": "Log in", // Tab header
-  "Sign in": "Log in", // Button label
+  "Create Account": "Create an account (first time only)", //create account tab header
 
   // after signing-up button click
   "We Emailed You": "We've emailed you a 6-digit veification code", // verify email
@@ -19,9 +18,7 @@ export const FORM_FIELD_VALUES = {
   "Confirm SMS Code": "Check your phone for an SMS from HEE"
 };
 
-export const SIGN_UP_HEADING_TEXT = "First time sign-up";
-export const SIGN_UP_FOOTER_BTN_LINK_TEXT = "Back to Login";
+export const SIGN_UP_HEADING_TEXT = "Create an account";
 
-export const SIGN_IN_HEADING_TEXT = "Log back in";
 export const SIGN_IN_FOOTER_BTN_LINK_TEXT =
-  "Password Reset (for verified email addresses only)";
+  "Password Reset (only works if you create an acccount and verify your email)";
