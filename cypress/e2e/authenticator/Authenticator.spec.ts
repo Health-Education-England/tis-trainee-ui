@@ -49,9 +49,9 @@ describe("Authenticator", () => {
     );
   });
 
-  it("should remove the privacy & cookies error message and show the Create an account button if checkbox checked", () => {
+  it("should remove the privacy & cookies error message and show the Sign up button if checkbox checked", () => {
     cy.get(".amplify-tabs-item").last().click();
-    cy.get(".amplify-heading").contains("Create an account");
+    cy.get(".amplify-heading").contains("First time sign-up");
     cy.get("[data-cy='checkboxPrivacy'] p.amplify-field__error-message").should(
       "exist"
     );
