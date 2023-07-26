@@ -196,7 +196,7 @@ jobs:
       - name: Deploy app build to S3 bucket
         run: |
           mv ./out/[[...app]].html ./out/index.html
-          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PREPROD }}/${{ env.app_version }} --delete
+          aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_PROD }}/${{ env.app_version }} --delete
 
       - name: Update Cloudfront Origin Path
         run: |
