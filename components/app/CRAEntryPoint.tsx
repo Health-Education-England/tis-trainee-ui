@@ -14,8 +14,6 @@ import {
 } from "../authentication/signup/formFields/AuthFormFields";
 import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
-  SIGN_IN_HEADING_TEXT,
-  SIGN_UP_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY,
   YES_TO_PILOT,
@@ -49,9 +47,6 @@ const components = {
   },
 
   SignIn: {
-    Header(): JSX.Element {
-      return AuthHeading(SIGN_IN_HEADING_TEXT);
-    },
     Footer() {
       const { toResetPassword } = useAuthenticator();
       return (
@@ -69,12 +64,7 @@ const components = {
     },
     Footer() {
       const { toSignIn } = useAuthenticator();
-      return (
-        <>
-          {SupportLinks("Sign up")}
-          {AuthBtnLink(toSignIn, SIGN_UP_FOOTER_BTN_LINK_TEXT)}
-        </>
-      );
+      return <>{SupportLinks("Sign up")}</>;
     },
     FormFields() {
       return AuthFormFields();
