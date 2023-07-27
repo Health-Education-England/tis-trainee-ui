@@ -28,7 +28,7 @@ export const SupportLinks = (action: string) => {
       <b>Can&apos;t access your account? </b>
       <a
         href={`https://tis-support.hee.nhs.uk/trainees/${
-          action === "Log in" ? "when-i-log-in" : "when-i-sign-up"
+          action === "Log in" ? "when-i-log-in" : "when-i-create-an-account"
         }/`}
         target="_blank"
         rel="noreferrer"
