@@ -38,7 +38,7 @@ const CredentialIssue: React.FC = () => {
         </p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
-          disabled={isIssuing ? true : false}
+          disabled={isIssuing}
           onClick={() => {
             setIsIssuing(true);
             window.location.href = issueUri;
@@ -73,7 +73,7 @@ const CredentialIssue: React.FC = () => {
           </p>
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
-            disabled={isIssuing ? true : false}
+            disabled={isIssuing}
             onClick={async () => {
               setIsIssuing(true);
               const newIssueUri = await handleIssueCredential(
