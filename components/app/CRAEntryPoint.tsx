@@ -51,7 +51,7 @@ const components = {
       const { toResetPassword } = useAuthenticator();
       return (
         <>
-          {SupportLinks("Log in")}
+          {SupportLinks("Sign in")}
           {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
         </>
       );
@@ -64,7 +64,7 @@ const components = {
     },
     Footer() {
       const { toSignIn } = useAuthenticator();
-      return <>{SupportLinks("Sign up")}</>;
+      return <>{SupportLinks("Create an account")}</>;
     },
     FormFields() {
       return AuthFormFields();
