@@ -33,9 +33,9 @@ const SelectInputField: React.FC<Props> = props => {
           }}
           error={error ?? ""}
           label={label}
-          onChange={onChange ? onChange : field.onChange}
+          onChange={onChange ?? field.onChange}
           hint={hint}
-          value={field.value || ""}
+          value={field.value ?? ""}
           data-cy={name}
         >
           <Select.Option value="">-- Please select --</Select.Option>

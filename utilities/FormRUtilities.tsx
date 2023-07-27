@@ -59,7 +59,7 @@ export class FormRUtilities {
     value: string,
     message: string = "None recorded"
   ) {
-    return value ? value : message;
+    return value.length > 0 ? value : message;
   }
 
   public static displaySubmissionDate(date: DateType, cyTag: string) {

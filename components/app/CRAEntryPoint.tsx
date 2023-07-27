@@ -63,7 +63,6 @@ const components = {
       return AuthHeading(SIGN_UP_HEADING_TEXT);
     },
     Footer() {
-      const { toSignIn } = useAuthenticator();
       return <>{SupportLinks("Create an account")}</>;
     },
     FormFields() {

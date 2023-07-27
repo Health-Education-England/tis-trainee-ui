@@ -33,7 +33,7 @@ export const Selector = ({
             {
               currentTarget: {
                 name,
-                value: selectedOption ? selectedOption : ""
+                value: selectedOption ?? ""
               }
             },
             selectedOption

@@ -71,19 +71,19 @@ export function PanelsCreator({
   );
 }
 
-export function displayListVal<T>(
-  val: T extends Date | string ? any : any,
-  k: string
-) {
-  switch (k) {
-    case "endDate":
-      return DateUtilities.ToLocalDate(val);
-    case "startDate":
-      return DateUtilities.ToLocalDate(val);
-    case "wholeTimeEquivalent":
-      return StringUtilities.TrimZeros(val);
-    default:
-      return val ? val : "None provided";
+export function displayListVal<T extends Date | string>(val: T, k: string) {
+  const transformations: Record<string, (value: Date | string) => string> = {
+    endDate: DateUtilities.ToLocalDate,
+    startDate: DateUtilities.ToLocalDate,
+    wholeTimeEquivalent: StringUtilities.TrimZeros as (
+      v: Date | string
+    ) => string
+  };
+  const transformation = transformations[k];
+  if (transformation) {
+    return transformation(val);
+  } else {
+    return val ? val : "None provided";
   }
 }
 
