@@ -1,8 +1,8 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
 import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
-import { Placement } from "../models/Placement";
+import { Placement, PlacementGroup } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
-import dayjs from "dayjs";
+import { isCurrentPl, isPastIt, isUpcomingPl, today } from "./DateUtilities";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -83,8 +83,6 @@ export class ProfileUtilities {
   }
 
   public static trimmedFutureWork(works: Work[]) {
-    const today = dayjs(new Date()).format("YYYY-MM-DD");
-
     const firstFutureWorks = works
       .filter(w => w.startDate > today)
       .sort((a, b) => (a.startDate > b.startDate ? 1 : -1));
@@ -103,4 +101,30 @@ export class ProfileUtilities {
 
     return trimmedWork;
   }
+
+  public static groupPlacementsByDate = (
+    placements: Placement[]
+  ): PlacementGroup => {
+    const groupedPlacements: PlacementGroup = {
+      future: [],
+      upcoming: [],
+      current: [],
+      past: []
+    };
+
+    return placements.reduce(
+      (grouped: PlacementGroup, placement: Placement) => {
+        const { future, upcoming, current, past } = grouped;
+        if (isPastIt(placement.endDate)) {
+          past.push(placement);
+        } else if (isCurrentPl(placement)) {
+          current.push(placement);
+        } else if (isUpcomingPl(placement)) {
+          upcoming.push(placement);
+        } else future.push(placement);
+        return grouped;
+      },
+      groupedPlacements
+    );
+  };
 }

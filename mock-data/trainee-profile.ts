@@ -3,6 +3,13 @@ import { TraineeProfile } from "../models/TraineeProfile";
 import { Status } from "../models/Status";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { Placement } from "../models/Placement";
+import {
+  oneWeekAgo,
+  today,
+  twelveWeeksAhead,
+  twelveWeeksAheadPlusOneDay,
+  yesterday
+} from "../utilities/DateUtilities";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -335,3 +342,66 @@ export const mockTraineeProfileNoGMC: TraineeProfile = {
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
+
+export const mockPlacementsForGrouping: Placement[] = [
+  // Past
+  {
+    tisId: "1",
+    site: "site1",
+    siteLocation: "siteLocation1",
+    siteKnownAs: "siteKnownAs1",
+    startDate: oneWeekAgo,
+    endDate: yesterday,
+    wholeTimeEquivalent: "wholeTimeEquivalent1",
+    specialty: "specialty1",
+    grade: "grade1",
+    placementType: "placementType1",
+    employingBody: "employingBody1",
+    trainingBody: "trainingBody1"
+  },
+  // Current
+  {
+    tisId: "2",
+    site: "site2",
+    siteLocation: "siteLocation2",
+    siteKnownAs: "siteKnownAs2",
+    startDate: today,
+    endDate: today,
+    wholeTimeEquivalent: "wholeTimeEquivalent2",
+    specialty: "specialty2",
+    grade: "grade2",
+    placementType: "placementType2",
+    employingBody: "employingBody2",
+    trainingBody: "trainingBody2"
+  },
+  // Upcoming
+  {
+    tisId: "3",
+    site: "site3",
+    siteLocation: "siteLocation3",
+    siteKnownAs: "siteKnownAs3",
+    startDate: twelveWeeksAhead,
+    endDate: twelveWeeksAheadPlusOneDay,
+    wholeTimeEquivalent: "wholeTimeEquivalent3",
+    specialty: "specialty3",
+    grade: "grade3",
+    placementType: "placementType3",
+    employingBody: "employingBody3",
+    trainingBody: "trainingBody3"
+  },
+  // Future
+  {
+    tisId: "4",
+    site: "site4",
+    siteLocation: "siteLocation4",
+    siteKnownAs: "siteKnownAs4",
+    startDate: twelveWeeksAheadPlusOneDay,
+    endDate: twelveWeeksAheadPlusOneDay,
+    wholeTimeEquivalent: "wholeTimeEquivalent4",
+    specialty: "specialty4",
+    grade: "grade4",
+    placementType: "placementType4",
+    employingBody: "employingBody4",
+    trainingBody: "trainingBody4"
+  }
+];
