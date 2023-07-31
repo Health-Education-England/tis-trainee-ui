@@ -1,5 +1,11 @@
 import { ProfileUtilities } from "../ProfileUtilities";
 import {
+  isCurrentPl,
+  isFuturePl,
+  isPastIt,
+  isUpcomingPl
+} from "../DateUtilities";
+import {
   draftFormRPartB,
   draftFormRPartBWithNoLeaveTotal,
   draftFormRPartBWithNullCareerBreak
@@ -9,7 +15,8 @@ import {
   mockProgrammeMembershipNoCurricula,
   mockProgrammeMembershipNoMedicalCurricula,
   mockProgrammeMembershipDuplicateCurriculaStart,
-  mockPlacements
+  mockPlacements,
+  mockPlacementsForGrouping
 } from "../../mock-data/trainee-profile";
 import { NEW_WORK } from "../Constants";
 import {
@@ -117,5 +124,33 @@ describe("ProfileUtilities", () => {
     expect(trimmedAndSorted2).toEqual(
       trimmedAndSortedWorkArrWithTwoFutureOnSameDay
     );
+  });
+});
+
+describe("Profile utilities - groupPlacementsByDate", () => {
+  it("should classify a placement correctly", () => {
+    expect(isPastIt(mockPlacementsForGrouping[0].endDate)).toBe(true);
+    expect(isPastIt(mockPlacementsForGrouping[1].endDate)).toBe(false);
+    expect(isCurrentPl(mockPlacementsForGrouping[1])).toBe(true);
+    expect(isCurrentPl(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isCurrentPl(mockPlacementsForGrouping[2])).toBe(false);
+    expect(isCurrentPl(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingPl(mockPlacementsForGrouping[2])).toBe(true);
+    expect(isUpcomingPl(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingPl(mockPlacementsForGrouping[1])).toBe(false);
+    expect(isUpcomingPl(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isFuturePl(mockPlacementsForGrouping[3])).toBe(true);
+    expect(isFuturePl(mockPlacementsForGrouping[2])).toBe(false);
+  });
+
+  it("should group placements correctly", () => {
+    expect(
+      ProfileUtilities.groupPlacementsByDate(mockPlacementsForGrouping)
+    ).toEqual({
+      future: [mockPlacementsForGrouping[3]],
+      upcoming: [mockPlacementsForGrouping[2]],
+      current: [mockPlacementsForGrouping[1]],
+      past: [mockPlacementsForGrouping[0]]
+    });
   });
 });

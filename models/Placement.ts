@@ -32,3 +32,10 @@ export const placementPanelTemplate: Placement = {
   employingBody: "",
   trainingBody: ""
 };
+
+export interface PlacementGroup {
+  future: Placement[];
+  upcoming: Placement[];
+  current: Placement[];
+  past: Placement[];
+}

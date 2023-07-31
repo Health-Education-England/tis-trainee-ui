@@ -22,7 +22,7 @@ import {
 
 describe("Placements with no MFA set up", () => {
   it("should not display Placements page if NOMFA", () => {
-    const MockedProgrammesFail = () => {
+    const MockedPlacementsNoMfa = () => {
       const dispatch = useAppDispatch();
       dispatch(
         updatedTraineeProfileData({
@@ -38,7 +38,7 @@ describe("Placements with no MFA set up", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedProgrammesFail />
+          <MockedPlacementsNoMfa />
         </Router>
       </Provider>
     );
@@ -80,14 +80,20 @@ describe("Placements with MFA set up", () => {
       .first()
       .should("exist")
       .should("contain.text", "Addenbrookes Hospital (siteNo)");
-    cy.get('[data-cy="wholeTimeEquivalent1Val"]')
-      .last()
+    cy.get('[data-cy="wholeTimeEquivalent0Val"]')
+      .first()
       .should("exist")
       .should("contain.text", "0.75");
-    cy.get('[data-cy="employingBody1Val"]')
-      .last()
+    cy.get('[data-cy="employingBody0Val"]')
+      .first()
       .should("exist")
       .should("contain.text", "None provided");
+
+    cy.get('[data-cy="futureExpand"]').click();
+    cy.get('[data-cy="futureWarningText"]').should(
+      "have.text",
+      "The information we have for future placements with a start date more than 12 weeks from today is not yet finalised and may be subject to change."
+    );
   });
 
   it("should show alternative text when no panel data available", () => {
@@ -111,7 +117,10 @@ describe("Placements with MFA set up", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=notAssignedplacements]")
+    cy.get('[data-cy="upcomingExpand"]').click();
+    cy.get(
+      '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedplacements"]'
+    )
       .should("exist")
       .should("contain.text", "You are not assigned to any Placements");
   });

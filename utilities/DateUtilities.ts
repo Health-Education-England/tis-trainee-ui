@@ -2,6 +2,7 @@ import day from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import { Placement } from "../models/Placement";
 
 day.extend(isBetween);
 day.extend(isSameOrBefore);
@@ -142,3 +143,40 @@ export const isWithinRange = (
 ): boolean => {
   return date ? day(dateToCompare).diff(date, unit) < range : false;
 };
+
+// Utils for Grouping Placements by Date
+
+export const today = day(new Date()).format("YYYY-MM-DD");
+export const yesterday = day(today).subtract(1, "day").format("YYYY-MM-DD");
+export const oneWeekAgo = day(today).subtract(7, "day").format("YYYY-MM-DD");
+export const twelveWeeksAhead = day(new Date())
+  .add(12, "week")
+  .format("YYYY-MM-DD");
+export const twelveWeeksAheadPlusOneDay = day(twelveWeeksAhead)
+  .add(1, "day")
+  .format("YYYY-MM-DD");
+
+export function isPastIt(date: DateType): boolean {
+  return day(date).format("YYYY-MM-DD") < today;
+}
+
+export function isCurrentPl(pl: Placement): boolean {
+  const { startDate, endDate } = pl;
+  return (
+    day(endDate).format("YYYY-MM-DD") >= today &&
+    day(startDate).format("YYYY-MM-DD") <= today
+  );
+}
+
+export function isUpcomingPl(pl: Placement): boolean {
+  const { startDate } = pl;
+  return (
+    day(startDate).format("YYYY-MM-DD") > today &&
+    day(startDate).format("YYYY-MM-DD") <= twelveWeeksAhead
+  );
+}
+
+export function isFuturePl(pl: Placement): boolean {
+  const { startDate } = pl;
+  return day(startDate).format("YYYY-MM-DD") > twelveWeeksAhead;
+}
