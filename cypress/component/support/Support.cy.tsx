@@ -33,10 +33,25 @@ describe("Support", () => {
     cy.get("[data-cy=supportHeading]")
       .should("exist")
       .should("include.text", "Support");
-    cy.get('[data-cy="supportFaqsLink"]').should(
+    cy.get('[data-cy="supportCreateAccFaqsLink"]').should(
       "have.attr",
       "href",
-      "https://tis-support.hee.nhs.uk/trainees/support-faq/"
+      "https://tis-support.hee.nhs.uk/trainees/when-i-sign-up/"
+    );
+    cy.get('[data-cy="supportSignInFaqsLink"]').should(
+      "have.attr",
+      "href",
+      "https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
+    );
+    cy.get('[data-cy="supportFormRFaqsLink"]').should(
+      "have.attr",
+      "href",
+      "https://tis-support.hee.nhs.uk/trainees/form-r/"
+    );
+    cy.get('[data-cy="supportChangesFaqsLink"]').should(
+      "have.attr",
+      "href",
+      "https://tis-support.hee.nhs.uk/trainees/changes-to-account/"
     );
     cy.get('[data-cy="loSupportHeading"]').should(
       "include.text",
