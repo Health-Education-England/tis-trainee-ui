@@ -40,14 +40,39 @@ const Support = () => {
           >
             Please read our FAQ&apos;s to see if your query can be answered
             there.
+            <p>Click the link below to view FAQ&apos;s (opens a new window)</p>
           </Fieldset.Legend>
           <ActionLink
-            data-cy="supportFaqsLink"
+            data-cy="supportCreateAccFaqsLink"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://tis-support.hee.nhs.uk/trainees/support-faq/"
+            href="https://tis-support.hee.nhs.uk/trainees/when-i-sign-up/"
           >
-            Click here to view FAQ&apos;s (opens a new window)
+            When I Create an Account
+          </ActionLink>
+          <ActionLink
+            data-cy="supportSignInFaqsLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
+          >
+            When I Sign In
+          </ActionLink>
+          <ActionLink
+            data-cy="supportFormRFaqsLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://tis-support.hee.nhs.uk/trainees/form-r/"
+          >
+            Form R
+          </ActionLink>
+          <ActionLink
+            data-cy="supportChangesFaqsLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://tis-support.hee.nhs.uk/trainees/changes-to-account/"
+          >
+            Changes to Account
           </ActionLink>
         </Card.Content>
       </Card>
