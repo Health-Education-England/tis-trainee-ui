@@ -80,7 +80,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         env:
-          CYPRESS_baseUrl: https://trainee.tis.nhs.uk
+          CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
