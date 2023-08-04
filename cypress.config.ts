@@ -24,7 +24,7 @@ export default defineConfig({
     supportFile: "cypress/support/component.ts"
   },
   e2e: {
-    baseUrl: "https://trainee.tis.nhs.uk/",
+    baseUrl: "https://stage.trainee.tis.nhs.uk/",
     // baseUrl: "http://local.tis-selfservice.com",
     specPattern: "cypress/e2e/**/*.spec.{ts,tsx}",
     chromeWebSecurity: false,
