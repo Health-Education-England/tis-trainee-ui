@@ -68,7 +68,7 @@ const Navbar = ({ showMenu, updateMenuStatus, signOut }: NavProps) => {
           onClick={doSignOut}
           style={{ margin: "6px 0 8px 8px", padding: "4px 6px" }}
         >
-          Logout
+          Sign out
         </Button>
       </li>
     </Header.Nav>

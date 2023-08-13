@@ -30,6 +30,7 @@ import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
+import { Startoverbtn } from "../Startoverbtn";
 
 export interface Field {
   name: string;
@@ -453,7 +454,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             </Button>
           </Col>
           <Col width="one-quarter">
-            {/* <Button reverse>Start over WIP</Button> */}
+            <Startoverbtn />
           </Col>
         </Row>
       </Container>

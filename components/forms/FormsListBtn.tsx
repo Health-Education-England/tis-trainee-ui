@@ -52,7 +52,6 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
           ? `btn-${chooseBtnText(draftFormProps?.lifecycleState)}`
           : "Submit new form"
       }
-      reverse
       type="submit"
       onClick={handleBtnClick}
     >
