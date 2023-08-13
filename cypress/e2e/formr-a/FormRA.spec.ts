@@ -42,7 +42,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         }
 
         // most of the Form A functionality is tested in FormA.cy.tsx Component
-        // This file is to test localStorage, saving and submitting the form
+        // This file is to test saving and submitting the form
 
         cy.get(".nhsuk-warning-callout > p").should("exist");
         cy.get('[data-cy="progress-header"] > h3').should(
@@ -63,28 +63,6 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .first()
           .click();
         cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
-
-        // Test the local storage is updated
-        // put a wait here to give time for the local storage to update
-        cy.wait(5000)
-          .getLocalStorage("formA")
-          .then(formA => {
-            const parsedForm = formA && JSON.parse(formA);
-            const immigrationStatus = parsedForm.immigrationStatus;
-            console.log("immigrationStatus", immigrationStatus);
-            expect(immigrationStatus).to.equal(immigrationTxt);
-          });
-
-        // NOTE - Revert this once BE trainee forms DTO has lastModiFiedDate
-        // Check the local storage form data is persisted if user navigates away from the page
-        // cy.log(
-        //   "################ Check the local storage form data is persisted if user navigates away from the page ###################"
-        // );
-        // cy.get('[data-cy="Form R (Part A)"]').click();
-        // cy.get('[data-cy="btn-Edit unsaved draft form"]')
-        //   .should("exist")
-        //   .click();
-        // cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
 
         //-- personal details section --
         // test error msg when no email

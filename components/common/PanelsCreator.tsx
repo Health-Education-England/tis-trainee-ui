@@ -64,7 +64,7 @@ export function PanelsCreator({
         <Card className={style.panelDiv}>
           <BodyText
             data-cy={`notAssigned${panelsName}`}
-          >{`You are not assigned to any ${panelsTitle}.`}</BodyText>
+          >{`You are not assigned to any p${panelsTitle.slice(1)}.`}</BodyText>
         </Card>
       )}
     </Card.Group>

@@ -91,8 +91,6 @@ function PlacementsPanels() {
             />
           </Details.Text>
         </Details>
-      </Details.ExpanderGroup>
-      <Details.ExpanderGroup>
         <Details expander data-cy="futureExpand">
           <Details.Summary>
             Future placements (&gt;12 weeks from today)

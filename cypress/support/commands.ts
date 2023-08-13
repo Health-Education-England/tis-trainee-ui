@@ -3,7 +3,6 @@
 import day from "dayjs";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../utilities/BooleanUtilities";
-import "cypress-localstorage-commands";
 
 Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]")

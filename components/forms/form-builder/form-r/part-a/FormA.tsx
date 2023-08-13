@@ -37,15 +37,13 @@ const FormA: React.FC = () => {
   };
 
   return formAData.traineeTisId ? (
-    <>
-      <FormBuilder
-        jsonForm={formAJson}
-        fetchedFormData={formAData}
-        options={formAOptions}
-        validationSchema={formAValidationSchema}
-        history={history}
-      />
-    </>
+    <FormBuilder
+      jsonForm={formAJson}
+      fetchedFormData={formAData}
+      options={formAOptions}
+      validationSchema={formAValidationSchema}
+      history={history}
+    />
   ) : (
     <Redirect to="/formr-a" />
   );
