@@ -47,6 +47,9 @@ export class ApiService {
   put<T = any>(endpoint: string, formData: T): Promise<AxiosResponse<T>> {
     return this.axiosInstance.put(endpoint, formData);
   }
+  delete(endpoint: string): Promise<AxiosResponse> {
+    return this.axiosInstance.delete(endpoint);
+  }
 }
 
 export default ApiService;

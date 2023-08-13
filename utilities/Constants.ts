@@ -171,6 +171,8 @@ export const PANEL_KEYS: any = {
 };
 
 export const toastErrText = {
+  deleteFormA: "Couldn't delete your draft Form R (Part A).",
+  deleteFormB: "Couldn't delete your draft Form R (Part B).",
   fetchFeatureFlags:
     "Couldn't load some of your new form data (feature flags).",
   fetchForms: " Couldn't load your list of saved forms.",
@@ -199,6 +201,8 @@ export const toastErrText = {
 };
 
 export const toastSuccessText = {
+  deleteFormA: "Your draft Form R (Part A) has been deleted.",
+  deleteFormB: "Your draft Form R (Part B) has been deleted.",
   saveFormA: "Your Form R (Part A) has been saved.",
   saveFormB: "Your Form R (Part B) has been saved.",
   updateFormA: "Your Form R (Part A) has been updated.",

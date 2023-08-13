@@ -77,6 +77,14 @@ export const autoUpdateFormB = createAsyncThunk(
   }
 );
 
+export const deleteFormB = createAsyncThunk(
+  "formB/deleteFormB",
+  async (formId: string) => {
+    const formsService = new FormsService();
+    return formsService.deleteTraineeFormRPartB(formId);
+  }
+);
+
 const formBSlice = createSlice({
   name: "formB",
   initialState,
@@ -183,6 +191,22 @@ const formBSlice = createSlice({
       })
       .addCase(autoUpdateFormB.rejected, state => {
         state.autosaveStatus = "failed";
+      })
+      .addCase(deleteFormB.pending, (state, _action) => {
+        state.status = "deleting";
+      })
+      .addCase(deleteFormB.fulfilled, (state, _action) => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.deleteFormB, ToastType.SUCCESS);
+      })
+      .addCase(deleteFormB.rejected, (state, { error }) => {
+        state.status = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.deleteFormB,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });
