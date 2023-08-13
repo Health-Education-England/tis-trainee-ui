@@ -37,6 +37,8 @@ const FormRPartBPagination = ({
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
+  const isAutosaving =
+    useAppSelector(state => state.formB.autosaveStatus) === "saving";
 
   const paginationClasses = [
     classes.heePagination,
@@ -89,7 +91,7 @@ const FormRPartBPagination = ({
               e.preventDefault();
               handleSubmit();
             }}
-            disabled={!isValid || isSubmitting}
+            disabled={!isValid || isSubmitting || isAutosaving}
             data-cy="BtnSubmitForm"
           >
             Submit Form

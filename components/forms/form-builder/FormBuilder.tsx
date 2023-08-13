@@ -29,6 +29,7 @@ import { ImportantText } from "./form-sections/ImportantText";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 
 export interface Field {
   name: string;
@@ -88,6 +89,8 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   const pages = jsonForm.pages;
   const [fields, setFields] = useState<Field[]>([]);
   const isFormDirty = useRef(false);
+  const isAutosaving =
+    useAppSelector(state => state.formA.autosaveStatus) === "saving";
   // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
   useEffect(() => {
     const updatedFields = pages
@@ -443,7 +446,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                 e.preventDefault();
                 handleSaveBtnClick();
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isAutosaving}
               data-cy="BtnSaveDraft"
             >
               {"Save & exit"}
