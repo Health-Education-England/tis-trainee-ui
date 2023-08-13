@@ -4,6 +4,7 @@ import { KeyValue } from "../models/KeyValue";
 import {
   autoSaveFormA,
   autoUpdateFormA,
+  deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
   saveFormA,
@@ -17,6 +18,7 @@ import { FormData } from "../components/forms/form-builder/FormBuilder";
 import {
   autoSaveFormB,
   autoUpdateFormB,
+  deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
   saveFormB,
@@ -204,6 +206,12 @@ export function handleEditSection(
     store.dispatch(updatedEditPageNumberB(pageNum));
   }
   history.push(redirectPath);
+}
+
+export async function deleteForm(formId: string, formName: string) {
+  await store.dispatch(
+    formName === "formr-a" ? deleteFormA(formId) : deleteFormB(formId)
+  );
 }
 
 // ----------------------------------------------------------
