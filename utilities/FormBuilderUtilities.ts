@@ -303,12 +303,9 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   return null;
 }
 
-function prepFormData(
-  lastSavedFormData: FormRPartA | FormRPartB,
-  formData: FormData
-) {
+function prepFormData(formData: FormData) {
   let updatedFormData: FormData;
-  if (lastSavedFormData?.lifecycleState !== LifeCycleState.Unsubmitted) {
+  if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
     updatedFormData = {
       ...formData,
       submissionDate: null,
@@ -349,11 +346,14 @@ export async function autosaveFormR(
       ? store.getState().formA?.formAData
       : store.getState().formB?.formBData;
 
-  // update form data
-  const preppedFormData = prepFormData(lastSavedFormData, formData);
+  // update form data for submission
+  const preppedFormData = prepFormData(formData);
 
   if (lastSavedFormData.id) {
-    await updateForm(preppedFormData, formName);
+    await updateForm(
+      { ...preppedFormData, id: lastSavedFormData.id },
+      formName
+    );
   } else {
     await saveForm(preppedFormData, formName);
   }

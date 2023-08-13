@@ -12,6 +12,8 @@ import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
 import { resetToInitFormA } from "../../redux/slices/formASlice";
 import { resetToInitFormB } from "../../redux/slices/formBSlice";
+import { Col, Container, Row } from "nhsuk-react-components";
+import { Startoverbtn } from "./Startoverbtn";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();
@@ -45,7 +47,18 @@ const CreateList = () => {
       <>
         <ScrollTo />
         <br />
-        <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
+        <Container>
+          <Row>
+            <Col width="one-third">
+              <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
+            </Col>
+          </Row>
+          <Row>
+            <Col width="one-third">
+              <Startoverbtn />
+            </Col>
+          </Row>
+        </Container>
         <SubmittedFormsList
           formRList={submittedListDesc}
           path={pathname}

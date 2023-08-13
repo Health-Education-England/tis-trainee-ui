@@ -8,16 +8,30 @@ import { deleteForm } from "../../utilities/FormBuilderUtilities";
 export const Startoverbtn = () => {
   const confirm = useConfirm();
   const formName = useLocation().pathname.split("/")[1];
+
+  // get id from updated form r data when autosaved form
   const formId = useAppSelector(state =>
     formName === "formr-a" ? state.formA.formAData.id : state.formB.formBData.id
   );
+  // get id from forms draftFormProps when forms are loaded from db
+  const formIdFromDraftFormProps = useAppSelector(
+    state => state.forms?.draftFormProps?.id
+  );
+
   const autosaveStatus = useAppSelector(state =>
     formName === "formr-a"
       ? state.formA.autosaveStatus
       : state.formB.autosaveStatus
   );
-  const isAutosaving =
-    useAppSelector(state => state.formA.autosaveStatus) === "saving";
+  const isAutosaving = autosaveStatus === "saving";
+
+  const deleteThisForm = async () => {
+    if (formId) {
+      await deleteForm(formId, formName);
+    } else if (formIdFromDraftFormProps) {
+      await deleteForm(formIdFromDraftFormProps, formName);
+    }
+  };
 
   const handleBtnClick = async () => {
     confirm({
@@ -25,13 +39,15 @@ export const Startoverbtn = () => {
         "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
     })
       .then(async () => {
-        formId && (await deleteForm(formId, formName));
+        await deleteThisForm();
         window.location.reload();
       })
       .catch(() => console.log("startover cancelled"));
   };
 
-  return formId || autosaveStatus === "succeeded" ? (
+  return formId ||
+    formIdFromDraftFormProps ||
+    autosaveStatus === "succeeded" ? (
     <Button
       data-cy="startoverBtn"
       reverse
