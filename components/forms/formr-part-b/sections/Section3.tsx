@@ -15,11 +15,12 @@ import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const Section3 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -65,6 +66,7 @@ const Section3 = ({
               endanger patients. Health is covered in Good Medical Practice.
             </p>
           </WarningCallout>
+          <AutosaveNote />
           <Card feature data-cy="declarations">
             <Card.Content>
               <Card.Heading>Declarations</Card.Heading>
@@ -153,6 +155,7 @@ const Section3 = ({
               />
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -165,7 +168,6 @@ const Section3 = ({
 
           <FormRPartBPagination
             values={values}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

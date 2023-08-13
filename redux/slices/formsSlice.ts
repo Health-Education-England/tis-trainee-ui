@@ -6,19 +6,25 @@ import { FormsService } from "../../services/FormsService";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import {
+  DraftFormProps,
+  setDraftFormProps
+} from "../../utilities/FormBuilderUtilities";
 
 interface IForms {
   forms: IFormR[];
   submittedForms: IFormR[];
   status: string;
   error: any;
+  draftFormProps: DraftFormProps | null;
 }
 
 export const initialState: IForms = {
   forms: [],
   submittedForms: [],
   status: "idle",
-  error: ""
+  error: "",
+  draftFormProps: null
 };
 
 export const fetchForms = createAsyncThunk(
@@ -26,18 +32,10 @@ export const fetchForms = createAsyncThunk(
   async (path: string) => {
     const formsService = new FormsService();
     let response: AxiosResponse<IFormR[]>;
-    // define formName var so we can match with local storage key
-    let formName: string;
     if (path === "/formr-a") {
-      formName = "formA";
       response = await formsService.getTraineeFormRPartAList();
     } else {
-      formName = "formB";
       response = await formsService.getTraineeFormRPartBList();
-    }
-    const localStorageForm = localStorage.getItem(formName);
-    if (localStorageForm) {
-      response.data = [...response.data, JSON.parse(localStorageForm)];
     }
     return DateUtilities.genericSort(response.data, "submissionDate", true);
   }
@@ -58,6 +56,7 @@ const formsSlice = createSlice({
         state.submittedForms = action.payload.filter(
           (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
         );
+        state.draftFormProps = setDraftFormProps(action.payload);
       })
       .addCase(fetchForms.rejected, (state, { error }) => {
         state.status = "failed";
@@ -75,4 +74,4 @@ export default formsSlice.reducer;
 
 export const selectAllforms = (state: { forms: IForms }) => state.forms.forms;
 export const selectAllSubmittedforms = (state: { forms: IForms }) =>
-  state.forms.submittedForms;
+  state.forms?.submittedForms;

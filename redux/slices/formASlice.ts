@@ -7,6 +7,7 @@ import {
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -14,6 +15,7 @@ interface IFormA {
   error: any;
   editPageNumber: number;
   canEdit: boolean;
+  autosaveStatus: AutosaveStatusProps;
 }
 
 export const initialState: IFormA = {
@@ -21,7 +23,8 @@ export const initialState: IFormA = {
   status: "idle",
   error: "",
   editPageNumber: 0,
-  canEdit: false
+  canEdit: false,
+  autosaveStatus: "idle"
 };
 
 export const loadSavedFormA = createAsyncThunk(
@@ -47,6 +50,22 @@ export const updateFormA = createAsyncThunk(
   async (form: FormRPartA) => {
     const formsService = new FormsService();
     return formsService.updateTraineeFormRPartA(form);
+  }
+);
+
+export const autoSaveFormA = createAsyncThunk(
+  "formA/autoSaveFormA",
+  async (form: FormRPartA) => {
+    const formsService = new FormsService();
+    return (await formsService.saveTraineeFormRPartA(form)).data;
+  }
+);
+
+export const autoUpdateFormA = createAsyncThunk(
+  "formA/autoUpdateFormA",
+  async (form: FormRPartA) => {
+    const formsService = new FormsService();
+    return (await formsService.updateTraineeFormRPartA(form)).data;
   }
 );
 
@@ -116,6 +135,26 @@ const formASlice = createSlice({
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );
+      })
+      .addCase(autoSaveFormA.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoSaveFormA.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formAData = action.payload;
+      })
+      .addCase(autoSaveFormA.rejected, state => {
+        state.autosaveStatus = "failed";
+      })
+      .addCase(autoUpdateFormA.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoUpdateFormA.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formAData = action.payload;
+      })
+      .addCase(autoUpdateFormA.rejected, state => {
+        state.autosaveStatus = "failed";
       });
   }
 });

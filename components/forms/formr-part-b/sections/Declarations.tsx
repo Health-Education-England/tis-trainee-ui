@@ -13,25 +13,21 @@ import {
   resetToInitFormB,
   selectSaveBtnActive,
   selectSavedFormB,
-  updatedFormB,
-  updateFormB,
   updatesaveBtnActive
 } from "../../../../redux/slices/formBSlice";
 import FormRPartBPagination from "../FormRPartBPagination";
-import { LifeCycleState } from "../../../../models/LifeCycleState";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 import { useConfirm } from "material-ui-confirm";
+import { submitForm } from "../../../../utilities/FormBuilderUtilities";
 interface IDeclarations {
   prevSectionLabel: string;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
   history: any;
   finalSections: IProgSection[];
 }
 
 const Declarations = ({
   prevSectionLabel,
-  saveDraft,
   history,
   finalSections
 }: IDeclarations) => {
@@ -40,19 +36,10 @@ const Declarations = ({
   const formData = useAppSelector(selectSavedFormB);
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
 
-  const handleFormBSubmit = async (formDataSubmit: FormRPartB) => {
+  const handleFormBSubmit = async (formVals: FormRPartB) => {
     if (!saveBtnActive) {
       dispatch(updatesaveBtnActive());
-      dispatch(
-        updatedFormB({
-          ...formDataSubmit,
-          submissionDate: new Date(),
-          lifecycleState: LifeCycleState.Submitted,
-          lastModifiedDate: new Date()
-        })
-      );
-      const updatedFormBData = store.getState().formB.formBData;
-      await dispatch(updateFormB(updatedFormBData));
+      await submitForm("formB", formVals, history);
       const formBStatus = store.getState().formB.status;
       if (formBStatus === "succeeded") {
         history.push("/formr-b");
@@ -133,7 +120,6 @@ const Declarations = ({
           <FormRPartBPagination
             values={values}
             handleSubmit={handleSubmit}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel=""
             previousSection={null}

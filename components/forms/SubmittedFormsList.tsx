@@ -12,18 +12,17 @@ import {
 } from "../../utilities/DateUtilities";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import styles from "./FormR.module.scss";
+import history from "../navigation/history";
 
 interface ISubmittedFormsList {
   formRList: IFormR[];
   path: string;
-  history: string[];
   latestSubDate: DateType;
 }
 
 const SubmittedFormsList = ({
   formRList,
   path,
-  history,
   latestSubDate
 }: ISubmittedFormsList) => {
   let content: JSX.Element | JSX.Element[];

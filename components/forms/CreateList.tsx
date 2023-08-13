@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Loading from "../common/Loading";
 import ScrollTo from "../../components/forms/ScrollTo";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import {
-  selectAllforms,
   fetchForms,
   selectAllSubmittedforms
 } from "../../redux/slices/formsSlice";
@@ -11,28 +10,19 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
-import {
-  DraftFormProps,
-  getDraftFormProps
-} from "../../utilities/FormBuilderUtilities";
+import { resetToInitFormA } from "../../redux/slices/formASlice";
+import { resetToInitFormB } from "../../redux/slices/formBSlice";
 
-const CreateList = ({ history }: { history: string[] }) => {
+const CreateList = () => {
   const dispatch = useAppDispatch();
-  let pathname = useLocation().pathname;
-  const formRListDesc = useAppSelector(selectAllforms);
+  const pathname = useLocation().pathname;
+  const formName = pathname === "/formr-a" ? "formA" : "formB";
   const submittedListDesc = useAppSelector(selectAllSubmittedforms);
-  const latestSubDate = submittedListDesc.length
+  const latestSubDate = submittedListDesc?.length
     ? submittedListDesc[0].submissionDate
     : null;
-  const formRListStatus = useAppSelector(state => state.forms.status);
+  const formRListStatus = useAppSelector(state => state.forms?.status);
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
-  const [draftFormProps, setDraftFormProps] = useState<DraftFormProps | null>(
-    null
-  );
-
-  useEffect(() => {
-    setDraftFormProps(getDraftFormProps(formRListDesc));
-  }, [formRListDesc]);
 
   useEffect(() => {
     dispatch(fetchForms(pathname));
@@ -41,6 +31,10 @@ const CreateList = ({ history }: { history: string[] }) => {
   useEffect(() => {
     dispatch(fetchFeatureFlags());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(formName === "formA" ? resetToInitFormA() : resetToInitFormB());
+  }, []);
 
   let content: JSX.Element = <></>;
 
@@ -51,15 +45,10 @@ const CreateList = ({ history }: { history: string[] }) => {
       <>
         <ScrollTo />
         <br />
-        <FormsListBtn
-          pathName={pathname}
-          draftFormProps={draftFormProps}
-          latestSubDate={latestSubDate}
-        />
+        <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
         <SubmittedFormsList
           formRList={submittedListDesc}
           path={pathname}
-          history={history}
           latestSubDate={latestSubDate}
         />
       </>

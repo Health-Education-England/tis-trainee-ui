@@ -7,6 +7,7 @@ import {
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 interface IFormB {
   formBData: FormRPartB;
   sectionNumber: number;
@@ -16,6 +17,7 @@ interface IFormB {
   saveBtnActive: boolean;
   editPageNumber: number;
   canEdit: boolean;
+  autosaveStatus: AutosaveStatusProps;
 }
 
 export const initialState: IFormB = {
@@ -26,7 +28,8 @@ export const initialState: IFormB = {
   error: "",
   saveBtnActive: false,
   editPageNumber: 0,
-  canEdit: false
+  canEdit: false,
+  autosaveStatus: "idle"
 };
 
 export const loadSavedFormB = createAsyncThunk(
@@ -52,6 +55,22 @@ export const updateFormB = createAsyncThunk(
   async (form: FormRPartB) => {
     const formsService = new FormsService();
     return formsService.updateTraineeFormRPartB(form);
+  }
+);
+
+export const autoSaveFormB = createAsyncThunk(
+  "formB/autoSaveFormB",
+  async (form: FormRPartB) => {
+    const formsService = new FormsService();
+    return (await formsService.saveTraineeFormRPartB(form)).data;
+  }
+);
+
+export const autoUpdateFormB = createAsyncThunk(
+  "formB/autoUpdateFormB",
+  async (form: FormRPartB) => {
+    const formsService = new FormsService();
+    return (await formsService.updateTraineeFormRPartB(form)).data;
   }
 );
 
@@ -89,7 +108,7 @@ const formBSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(loadSavedFormB.pending, (state, _action) => {
+      .addCase(loadSavedFormB.pending, state => {
         state.status = "loading";
       })
       .addCase(loadSavedFormB.fulfilled, (state, action) => {
@@ -105,10 +124,10 @@ const formBSlice = createSlice({
           `${error.code}-${error.message}`
         );
       })
-      .addCase(saveFormB.pending, (state, _action) => {
+      .addCase(saveFormB.pending, state => {
         state.status = "saving";
       })
-      .addCase(saveFormB.fulfilled, (state, _action) => {
+      .addCase(saveFormB.fulfilled, state => {
         state.status = "succeeded";
         showToast(toastSuccessText.saveFormB, ToastType.SUCCESS);
       })
@@ -121,10 +140,10 @@ const formBSlice = createSlice({
           `${error.code}-${error.message}`
         );
       })
-      .addCase(updateFormB.pending, (state, _action) => {
+      .addCase(updateFormB.pending, state => {
         state.status = "updating";
       })
-      .addCase(updateFormB.fulfilled, (state, _action) => {
+      .addCase(updateFormB.fulfilled, state => {
         state.status = "succeeded";
         showToast(toastSuccessText.updateFormB, ToastType.SUCCESS);
       })
@@ -136,6 +155,26 @@ const formBSlice = createSlice({
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );
+      })
+      .addCase(autoSaveFormB.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoSaveFormB.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formBData = action.payload;
+      })
+      .addCase(autoSaveFormB.rejected, state => {
+        state.autosaveStatus = "failed";
+      })
+      .addCase(autoUpdateFormB.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoUpdateFormB.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formBData = action.payload;
+      })
+      .addCase(autoUpdateFormB.rejected, state => {
+        state.autosaveStatus = "failed";
       });
   }
 });

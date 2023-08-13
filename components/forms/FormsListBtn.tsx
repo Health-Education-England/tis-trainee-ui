@@ -1,8 +1,6 @@
 import { Button } from "nhsuk-react-components";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
-import { resetToInitFormA } from "../../redux/slices/formASlice";
-import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import history from "../navigation/history";
 import {
   DateType,
@@ -11,43 +9,17 @@ import {
 } from "../../utilities/DateUtilities";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import { useConfirm } from "material-ui-confirm";
-import {
-  DraftFormProps,
-  loadTheSavedForm,
-  resetLocalStorageFormData
-} from "../../utilities/FormBuilderUtilities";
+import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
-import { useCallback, useEffect } from "react";
 interface IFormsListBtn {
-  draftFormProps: DraftFormProps | null;
   pathName: string;
   latestSubDate: DateType;
 }
 
-const FormsListBtn = ({
-  draftFormProps,
-  pathName,
-  latestSubDate
-}: IFormsListBtn) => {
+const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   const confirm = useConfirm();
-  const dispatch = useAppDispatch();
   const traineeProfileData = useAppSelector(selectTraineeProfile);
-  const formName: string = pathName === "/formr-a" ? "formA" : "formB";
-  const resetForm = useCallback(
-    (pName: string) => {
-      if (pName === "/formr-b") {
-        dispatch(resetToInitFormB());
-      } else {
-        dispatch(resetToInitFormA());
-      }
-    },
-    [dispatch]
-  );
-
-  useEffect(() => {
-    resetLocalStorageFormData(formName);
-    resetForm(pathName);
-  }, [resetForm, formName, pathName]);
+  const draftFormProps = useAppSelector(state => state.forms?.draftFormProps);
 
   const handleNewClick = () => {
     if (isWithinRange(latestSubDate, 31, "d")) {
@@ -65,7 +37,6 @@ const FormsListBtn = ({
   };
 
   const handleBtnClick = () => {
-    resetForm(pathName);
     if (draftFormProps?.id) {
       loadTheSavedForm(pathName, draftFormProps?.id, history);
     } else {

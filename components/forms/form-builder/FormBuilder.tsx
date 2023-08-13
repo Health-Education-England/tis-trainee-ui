@@ -1,6 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Card, ErrorSummary } from "nhsuk-react-components";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  Button,
+  Card,
+  Col,
+  Container,
+  ErrorSummary,
+  Row
+} from "nhsuk-react-components";
 import {
   continueToConfirm,
   getEditPageNumber,
@@ -10,11 +19,6 @@ import {
 } from "../../../utilities/FormBuilderUtilities";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import {
-  faChevronLeft,
-  faChevronRight
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { Text } from "./form-fields/Text";
 import { Radios } from "./form-fields/Radios";
@@ -22,7 +26,9 @@ import { Selector } from "./form-fields/Selector";
 import { Dates } from "./form-fields/Dates";
 import { Phone } from "./form-fields/Phone";
 import { ImportantText } from "./form-sections/ImportantText";
-import useFormAutosave from "../../../utilities/hooks/useFormLocalStorageAutosave";
+import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
+import { AutosaveMessage } from "../AutosaveMessage";
+import { AutosaveNote } from "../AutosaveNote";
 
 export interface Field {
   name: string;
@@ -81,6 +87,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const [fields, setFields] = useState<Field[]>([]);
+  const isFormDirty = useRef(false);
   // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
   useEffect(() => {
     const updatedFields = pages
@@ -121,10 +128,11 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     return fields.filter(field => fieldNamesForCurrentPageSet.has(field.name));
   }, [fields, fieldNamesForCurrentPageSet]);
 
-  // Custom hook that tracks data changes and autosaves draft form data to localStorage (triggered 2s after onChange)
+  // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 5s after last dirty change)
   const { formFields, setFormFields } = useFormAutosave(
     fetchedFormData,
-    jsonFormName
+    jsonFormName,
+    isFormDirty
   );
   const formId: string | undefined = formFields?.id;
   const traineeId: string = formFields?.traineeTisId;
@@ -303,6 +311,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           });
         });
     }
+    isFormDirty.current = true;
   };
 
   const validateFields = (fields: Field[], values: FormData) => {
@@ -390,6 +399,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             )}
             {pages[currentPage]?.sections.map((section: Section) => (
               <React.Fragment key={section.sectionHeader}>
+                <AutosaveNote />
                 <Card feature>
                   <Card.Content>
                     <Card.Heading>{section.sectionHeader}</Card.Heading>
@@ -408,12 +418,12 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                     ))}
                   </Card.Content>
                 </Card>
+                <AutosaveMessage formName={jsonFormName} />
               </React.Fragment>
             ))}
           </div>
         </>
       )}
-
       {/* Render error summary for the entire form */}
       {Object.keys(formErrors).length > 0 && (
         <ErrorSummary
@@ -424,69 +434,77 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           <FormErrors formErrors={formErrors} />
         </ErrorSummary>
       )}
-
-      <div className="nhsuk-grid-row form-navigation">
-        <div className="nhsuk-grid-column-one-third">
-          {currentPage > 0 && pages.length > 1 && (
-            <>
+      <Container>
+        <Row>
+          <Col width="one-quarter">
+            <Button
+              secondary
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                handleSaveBtnClick();
+              }}
+              disabled={isSubmitting}
+              data-cy="BtnSaveDraft"
+            >
+              {"Save & exit"}
+            </Button>
+          </Col>
+          <Col width="one-quarter">
+            {/* <Button reverse>Start over WIP</Button> */}
+          </Col>
+        </Row>
+      </Container>
+      <nav className="nhsuk-pagination">
+        <ul className="nhsuk-list nhsuk-pagination__list">
+          <li className="nhsuk-pagination-item--previous">
+            {currentPage > 0 && pages.length > 1 && (
               <Link
                 to="#"
-                className="nhsuk-back-link nhsuk-u-margin-top-0 nhsuk-u-font-size-24"
+                className={
+                  "nhsuk-pagination__link nhsuk-pagination__link--prev"
+                }
                 onClick={() => {
                   setFormErrors({});
                   setCurrentPage(currentPage - 1);
                 }}
                 data-cy={`btnBack-${currentPage - 1}`}
               >
-                <FontAwesomeIcon
-                  icon={faChevronLeft}
-                  style={{ fontSize: "0.8em" }}
-                />
-                Back
+                <span className="nhsuk-pagination__title">{"Previous"}</span>
+                <span className="nhsuk-u-visually-hidden">:</span>
+                <span className="nhsuk-pagination__page">
+                  <div>{`${currentPage}. ${
+                    pages[currentPage - 1].pageName
+                  }`}</div>
+                </span>
+                <ArrowLeftIcon />
               </Link>
-              <p className="form-nav_text">{`${currentPage}. ${
-                pages[currentPage - 1].pageName
-              }`}</p>
-            </>
-          )}
-        </div>
-        <div className="nhsuk-grid-column-one-third form-navigation-save-button">
-          <Button
-            secondary
-            onClick={(e: { preventDefault: () => void }) => {
-              e.preventDefault();
-              handleSaveBtnClick();
-            }}
-            disabled={isSubmitting}
-            data-cy="BtnSaveDraft"
-          >
-            Save & exit
-          </Button>
-        </div>
-        <div className="nhsuk-grid-column-one-third form-navigation-next-link">
-          <div className="page-nav-link">
+            )}
+          </li>
+          <li className="nhsuk-pagination-item--next">
             <Link
               to="#"
-              className="nhsuk-back-link nhsuk-u-margin-top-0 nhsuk-u-font-size-24"
+              className={"nhsuk-pagination__link nhsuk-pagination__link--next"}
               onClick={handlePageChange}
               data-cy="BtnContinue"
             >
-              {currentPage === lastPage ? "Review & submit" : "Next"}
-              <FontAwesomeIcon
-                icon={faChevronRight}
-                style={{ fontSize: "0.8em" }}
-              />
+              <span className="nhsuk-pagination__title">{"Next"}</span>
+              <span className="nhsuk-u-visually-hidden">:</span>
+              <span className="nhsuk-pagination__page">
+                {currentPage === lastPage ? (
+                  <>{"Review & submit"}</>
+                ) : (
+                  <>
+                    <div>{`${currentPage + 2}. ${
+                      pages[currentPage + 1].pageName
+                    }`}</div>
+                  </>
+                )}
+              </span>
+              <ArrowRightIcon />
             </Link>
-            {currentPage === lastPage ? (
-              <p> </p>
-            ) : (
-              <p className="form-nav_text">{`${currentPage + 2}. ${
-                pages[currentPage + 1].pageName
-              }`}</p>
-            )}
-          </div>
-        </div>
-      </div>
+          </li>
+        </ul>
+      </nav>
     </form>
   );
 };

@@ -10,11 +10,12 @@ import {
 } from "../../../redux/slices/formBSlice";
 import { IProgSection } from "../../../models/IProgressSection";
 import classes from "./FormRPartB.module.scss";
+import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
+import history from "../../navigation/history";
 interface IFormRPartBPagination {
   prevSectionLabel: string;
   nextSectionLabel: string;
   values: FormRPartB;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   previousSection: number | null;
   isValid?: boolean;
@@ -28,7 +29,6 @@ const FormRPartBPagination = ({
   nextSectionLabel,
   handleSubmit,
   values,
-  saveDraft,
   previousSection,
   isValid,
   isSubmitting,
@@ -74,7 +74,7 @@ const FormRPartBPagination = ({
               resetForm();
             }
             dispatch(updatesaveBtnActive());
-            saveDraft(values);
+            saveDraftForm("formB", values, history);
           }}
           disabled={isSubmitting}
           data-cy="BtnSaveDraft"
