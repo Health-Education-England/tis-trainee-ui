@@ -117,6 +117,19 @@ export class DateUtilities {
     return true;
   }
 
+  public static NowToGbDateTimeString() {
+    const timeZoneOptions: any = {
+      timeZone: "Europe/London",
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    };
+    const gbDate = new Date().toLocaleDateString("en-GB");
+    const gbTime = new Date().toLocaleTimeString("en-GB", timeZoneOptions);
+    return `${gbDate} ${gbTime}`;
+  }
+
   private static gSorter<T>(
     a: T,
     b: T,

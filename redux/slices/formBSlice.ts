@@ -8,6 +8,7 @@ import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { DateUtilities } from "../../utilities/DateUtilities";
 interface IFormB {
   formBData: FormRPartB;
   sectionNumber: number;
@@ -18,6 +19,7 @@ interface IFormB {
   editPageNumber: number;
   canEdit: boolean;
   autosaveStatus: AutosaveStatusProps;
+  autoSaveLatestTimeStamp: string;
 }
 
 export const initialState: IFormB = {
@@ -29,7 +31,8 @@ export const initialState: IFormB = {
   saveBtnActive: false,
   editPageNumber: 0,
   canEdit: false,
-  autosaveStatus: "idle"
+  autosaveStatus: "idle",
+  autoSaveLatestTimeStamp: "none this session"
 };
 
 export const loadSavedFormB = createAsyncThunk(
@@ -104,6 +107,9 @@ const formBSlice = createSlice({
     },
     updatedCanEditB(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
+    },
+    updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
+      return { ...state, autoSaveLatestTimeStamp: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -162,6 +168,7 @@ const formBSlice = createSlice({
       .addCase(autoSaveFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formBData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
       })
       .addCase(autoSaveFormB.rejected, state => {
         state.autosaveStatus = "failed";
@@ -172,6 +179,7 @@ const formBSlice = createSlice({
       .addCase(autoUpdateFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formBData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
       })
       .addCase(autoUpdateFormB.rejected, state => {
         state.autosaveStatus = "failed";
@@ -190,7 +198,8 @@ export const {
   updateFormBPreviousSection,
   updatesaveBtnActive,
   updatedEditPageNumberB,
-  updatedCanEditB
+  updatedCanEditB,
+  updatedAutoSaveLatestTimeStamp
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>

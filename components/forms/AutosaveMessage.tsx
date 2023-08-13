@@ -14,12 +14,17 @@ export const AutosaveMessage: React.FC<AutoSaveMessageProps> = ({
       ? state.formA.autosaveStatus
       : state.formB.autosaveStatus
   );
+  const latestTimeStamp = useAppSelector(state =>
+    formName === "formA"
+      ? state.formA.autoSaveLatestTimeStamp
+      : state.formB.autoSaveLatestTimeStamp
+  );
 
   const statusMessages: { [key in AutosaveStatusProps]: string } = {
-    idle: "Not triggered yet.",
+    idle: "Waiting for new changes...",
     saving: "In progress...",
-    succeeded: "Successful.",
-    failed: "failed."
+    succeeded: `Success (${latestTimeStamp})`,
+    failed: `Fail (last autosave success: ${latestTimeStamp})`
   };
 
   const message = statusMessages[autoSaveStatus];

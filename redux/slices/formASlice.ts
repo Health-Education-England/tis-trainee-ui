@@ -8,6 +8,7 @@ import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { DateUtilities } from "../../utilities/DateUtilities";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -16,6 +17,7 @@ interface IFormA {
   editPageNumber: number;
   canEdit: boolean;
   autosaveStatus: AutosaveStatusProps;
+  autoSaveLatestTimeStamp: string;
 }
 
 export const initialState: IFormA = {
@@ -24,7 +26,8 @@ export const initialState: IFormA = {
   error: "",
   editPageNumber: 0,
   canEdit: false,
-  autosaveStatus: "idle"
+  autosaveStatus: "idle",
+  autoSaveLatestTimeStamp: "none this session"
 };
 
 export const loadSavedFormA = createAsyncThunk(
@@ -84,6 +87,9 @@ const formASlice = createSlice({
     },
     updatedCanEdit(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
+    },
+    updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
+      return { ...state, autoSaveLatestTimeStamp: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -142,6 +148,7 @@ const formASlice = createSlice({
       .addCase(autoSaveFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formAData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
       })
       .addCase(autoSaveFormA.rejected, state => {
         state.autosaveStatus = "failed";
@@ -152,6 +159,7 @@ const formASlice = createSlice({
       .addCase(autoUpdateFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formAData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
       })
       .addCase(autoUpdateFormA.rejected, state => {
         state.autosaveStatus = "failed";
@@ -165,7 +173,8 @@ export const {
   resetToInitFormA,
   updatedFormA,
   updatedEditPageNumber,
-  updatedCanEdit
+  updatedCanEdit,
+  updatedAutoSaveLatestTimeStamp
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
