@@ -10,7 +10,7 @@ export const AutosaveForFormB = () => {
     if (dirty) {
       const timer = setTimeout(() => {
         autosaveFormR("formB", values as FormRPartB);
-      }, 5000);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [values, dirty]);

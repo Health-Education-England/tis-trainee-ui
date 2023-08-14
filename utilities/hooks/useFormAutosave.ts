@@ -12,7 +12,7 @@ const useFormAutosave = (
     if (isFormDirty.current) {
       const timeoutId = setTimeout(() => {
         autosaveFormR(formName, formFields);
-      }, 5000);
+      }, 2000);
       return () => {
         clearTimeout(timeoutId);
       };

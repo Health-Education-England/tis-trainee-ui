@@ -133,7 +133,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     return fields.filter(field => fieldNamesForCurrentPageSet.has(field.name));
   }, [fields, fieldNamesForCurrentPageSet]);
 
-  // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 5s after last dirty change)
+  // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 2s after last dirty change)
   const { formFields, setFormFields } = useFormAutosave(
     fetchedFormData,
     jsonFormName,
@@ -496,7 +496,13 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           <li className="nhsuk-pagination-item--next">
             <Link
               to="#"
-              className={"nhsuk-pagination__link nhsuk-pagination__link--next"}
+              className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
+                isSubmitting ||
+                isAutosaving ||
+                Object.keys(formErrors).length > 0
+                  ? "disabled-link"
+                  : ""
+              }`}
               onClick={handlePageChange}
               data-cy="BtnContinue"
             >
