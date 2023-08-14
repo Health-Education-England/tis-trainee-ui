@@ -31,6 +31,7 @@ import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { Startoverbtn } from "../Startoverbtn";
+import store from "../../../redux/store/store";
 
 export interface Field {
   name: string;
@@ -138,8 +139,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     jsonFormName,
     isFormDirty
   );
-  const formId: string | undefined = formFields?.id;
-  const traineeId: string = formFields?.traineeTisId;
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
@@ -334,6 +333,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
   };
 
   const handlePageChange = () => {
+    const lastSavedFormData = store.getState().formA.formAData;
     if (currentPage === lastPage) {
       validateFields(fields, formFields)
         .then(() => {
@@ -349,10 +349,19 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             }
             return formData;
           }, {} as FormData);
-          // need to add the formId(?) and traineeId back to the formData
-          const updatedFormData = formId
-            ? { ...visibleFormData, id: formId, traineeTisId: traineeId }
-            : { ...visibleFormData, traineeTisId: traineeId };
+          // Need to add these vals listed below (from last lastSavedFormData) to ensure latest autosave data is included)
+          const updatedFormData = lastSavedFormData.id
+            ? {
+                ...visibleFormData,
+                id: lastSavedFormData.id,
+                lastModifiedDate: lastSavedFormData.lastModifiedDate,
+                lifecycleState: lastSavedFormData.lifecycleState,
+                traineeTisId: lastSavedFormData.traineeTisId
+              }
+            : {
+                ...visibleFormData,
+                traineeTisId: lastSavedFormData.traineeTisId
+              };
           continueToConfirm(jsonFormName, updatedFormData, history);
         })
         .catch((err: any) => {

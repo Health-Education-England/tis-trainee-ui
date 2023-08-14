@@ -30,9 +30,17 @@ const Create = ({ history }: { history: string[] }) => {
   const finalSections = FormRUtilities.makeFormRBSections(isfeatFlagCovid);
 
   const handleSectionSubmit = (formValues: FormRPartB) => {
-    const lastAutoSavedFormDataId = store.getState().formB.formBData.id;
+    const lastSavedFormData = store.getState().formB.formBData;
     if (!saveBtnActive) {
-      dispatch(updatedFormB({ ...formValues, id: lastAutoSavedFormDataId }));
+      dispatch(
+        updatedFormB({
+          ...formValues,
+          id: lastSavedFormData?.id,
+          lastModifiedDate: lastSavedFormData?.lastModifiedDate,
+          lifecycleState: lastSavedFormData.lifecycleState,
+          traineeTisId: lastSavedFormData?.traineeTisId
+        })
+      );
       if (previousSection) {
         dispatch(updateFormBSection(previousSection));
       } else {

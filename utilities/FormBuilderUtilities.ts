@@ -118,7 +118,7 @@ export async function submitForm(
         )
       : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
   } else {
-    formData.id
+    lastSavedFormData.id
       ? await store.dispatch(
           updateFormB({
             ...updatedFormData,
