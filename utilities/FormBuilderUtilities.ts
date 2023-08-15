@@ -208,10 +208,23 @@ export function handleEditSection(
   history.push(redirectPath);
 }
 
-export async function deleteForm(formId: string, formName: string) {
-  await store.dispatch(
-    formName === "formr-a" ? deleteFormA(formId) : deleteFormB(formId)
-  );
+export async function isFormDeleted(
+  formName: string,
+  formId: string | undefined,
+  formIdFromDraftFormProps: string | undefined
+) {
+  if (formName === "formr-a") {
+    await store.dispatch(
+      deleteFormA((formId as string) ?? (formIdFromDraftFormProps as string))
+    );
+    return store.getState().formA.status === "succeeded";
+  } else {
+    await store.dispatch(
+      deleteFormB((formId as string) ?? (formIdFromDraftFormProps as string))
+    );
+
+    return store.getState().formB.status === "succeeded";
+  }
 }
 
 // ----------------------------------------------------------

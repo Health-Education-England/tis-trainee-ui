@@ -3,7 +3,7 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { useLocation } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import { Button } from "nhsuk-react-components";
-import { deleteForm } from "../../utilities/FormBuilderUtilities";
+import { isFormDeleted } from "../../utilities/FormBuilderUtilities";
 
 export const StartOverButton = () => {
   const confirm = useConfirm();
@@ -25,22 +25,20 @@ export const StartOverButton = () => {
   );
   const isAutosaving = autosaveStatus === "saving";
 
-  const deleteThisForm = async () => {
-    if (formId) {
-      await deleteForm(formId, formName);
-    } else if (formIdFromDraftFormProps) {
-      await deleteForm(formIdFromDraftFormProps, formName);
-    }
-  };
-
   const handleBtnClick = async () => {
     confirm({
       description:
         "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
     })
       .then(async () => {
-        await deleteThisForm();
-        window.location.reload();
+        const shouldStartOver = await isFormDeleted(
+          formName,
+          formId,
+          formIdFromDraftFormProps
+        );
+        shouldStartOver
+          ? window.location.reload()
+          : console.log("startover failed");
       })
       .catch(() => console.log("startover cancelled"));
   };

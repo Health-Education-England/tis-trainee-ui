@@ -15,6 +15,33 @@ jest.mock("react-router-dom", () => ({
   useLocation: () => ({ pathname: "/formr-a" })
 }));
 
+jest.mock("material-ui-confirm", () => ({
+  useConfirm: () => {
+    return () => {
+      return new Promise((resolve: any, _reject) => {
+        // Simulate the user clicking "OK" on the confirm modal
+        resolve();
+      });
+    };
+  }
+}));
+
+jest.mock("../../../utilities/FormBuilderUtilities", () => ({
+  isFormDeleted: jest.fn()
+}));
+
+// Create a mock for window.location that allows reloading
+const originalLocation = window.location;
+const mockReload = jest.fn();
+const mockLocation = {
+  ...originalLocation,
+  reload: mockReload
+};
+Object.defineProperty(window, "location", {
+  value: mockLocation,
+  writable: true
+});
+
 describe("Startoverbtn Component", () => {
   const renderStartOverButton = () => {
     return render(
@@ -23,6 +50,7 @@ describe("Startoverbtn Component", () => {
       </Provider>
     );
   };
+
   it("should NOT render the Startover button when NO formId is available and NO autosave success", () => {
     const startOverButton = screen.queryByRole("button", {
       name: "Start over"
@@ -50,5 +78,38 @@ describe("Startoverbtn Component", () => {
       name: "Start over"
     });
     expect(startOverButton).toBeInTheDocument();
+  });
+  it("should trigger page reload when successful form delete.", async () => {
+    const mockIsFormDeleted = jest.fn().mockResolvedValue(true);
+    require("../../../utilities/FormBuilderUtilities").isFormDeleted.mockImplementationOnce(
+      mockIsFormDeleted
+    );
+    const { queryByRole } = renderStartOverButton();
+    const startOverButton = queryByRole("button", {
+      name: "Start over"
+    });
+
+    await act(async () => {
+      fireEvent.click(startOverButton as HTMLElement);
+    });
+    expect(mockIsFormDeleted).toHaveBeenCalled();
+    expect(mockReload).toHaveBeenCalled();
+    mockReload.mockReset();
+  });
+  it("should NOT trigger page reload when unsuccessful form delete.", async () => {
+    const mockIsFormDeleted = jest.fn().mockResolvedValue(false);
+    require("../../../utilities/FormBuilderUtilities").isFormDeleted.mockImplementationOnce(
+      mockIsFormDeleted
+    );
+    const { queryByRole } = renderStartOverButton();
+    const startOverButton = queryByRole("button", {
+      name: "Start over"
+    });
+
+    await act(async () => {
+      fireEvent.click(startOverButton as HTMLElement);
+    });
+    expect(mockIsFormDeleted).toHaveBeenCalled();
+    expect(mockReload).not.toHaveBeenCalled();
   });
 });
