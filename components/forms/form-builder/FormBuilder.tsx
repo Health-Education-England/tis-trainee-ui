@@ -447,26 +447,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           <FormErrors formErrors={formErrors} />
         </ErrorSummary>
       )}
-      <Container>
-        <Row>
-          <Col width="one-quarter">
-            <Button
-              secondary
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSaveBtnClick();
-              }}
-              disabled={isSubmitting || isAutosaving}
-              data-cy="BtnSaveDraft"
-            >
-              {"Save & exit"}
-            </Button>
-          </Col>
-          <Col width="one-quarter">
-            <Startoverbtn />
-          </Col>
-        </Row>
-      </Container>
       <nav className="nhsuk-pagination">
         <ul className="nhsuk-list nhsuk-pagination__list">
           <li className="nhsuk-pagination-item--previous">
@@ -524,6 +504,26 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
           </li>
         </ul>
       </nav>
+      <Container>
+        <Row>
+          <Col width="one-quarter">
+            <Button
+              secondary
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                handleSaveBtnClick();
+              }}
+              disabled={isSubmitting || isAutosaving}
+              data-cy="BtnSaveDraft"
+            >
+              {"Save & exit"}
+            </Button>
+          </Col>
+          <Col width="one-quarter">
+            <Startoverbtn />
+          </Col>
+        </Row>
+      </Container>
     </form>
   );
 };

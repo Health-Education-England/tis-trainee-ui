@@ -56,6 +56,43 @@ const FormRPartBPagination = ({
 
   return (
     <>
+      <Pagination className={paginationClasses}>
+        {prevSectionLabel && (
+          <Pagination.Link
+            previous
+            onClick={() => {
+              if (!finalSections?.length) {
+                dispatch(updatedFormB(values));
+              }
+              dispatch(decrementFormBSection());
+              dispatch(updateFormBPreviousSection(null));
+            }}
+            disabled={isSubmitting || isAutosaving}
+            data-cy="LinkToPreviousSection"
+            data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
+          >
+            {prevSectionLabel.split("\n").map((item, _index) => (
+              <div key={item}>{item}</div>
+            ))}
+          </Pagination.Link>
+        )}
+        {nextSectionLabel && (
+          <Pagination.Link
+            next
+            onClick={() => {
+              dispatch(updateFormBPreviousSection(null));
+              handleSubmit();
+            }}
+            disabled={!isValid || isSubmitting || isAutosaving}
+            data-cy="LinkToNextSection"
+            data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
+          >
+            {nextSectionLabel.split("\n").map((item, _index) => (
+              <div key={item}>{item}</div>
+            ))}
+          </Pagination.Link>
+        )}
+      </Pagination>
       <Container>
         <Row>
           <Col width="one-quarter">
@@ -108,43 +145,6 @@ const FormRPartBPagination = ({
           </Col>
         </Row>
       </Container>
-      <Pagination className={paginationClasses}>
-        {prevSectionLabel && (
-          <Pagination.Link
-            previous
-            onClick={() => {
-              if (!finalSections?.length) {
-                dispatch(updatedFormB(values));
-              }
-              dispatch(decrementFormBSection());
-              dispatch(updateFormBPreviousSection(null));
-            }}
-            disabled={isSubmitting || isAutosaving}
-            data-cy="LinkToPreviousSection"
-            data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
-          >
-            {prevSectionLabel.split("\n").map((item, _index) => (
-              <div key={item}>{item}</div>
-            ))}
-          </Pagination.Link>
-        )}
-        {nextSectionLabel && (
-          <Pagination.Link
-            next
-            onClick={() => {
-              dispatch(updateFormBPreviousSection(null));
-              handleSubmit();
-            }}
-            disabled={!isValid || isSubmitting || isAutosaving}
-            data-cy="LinkToNextSection"
-            data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
-          >
-            {nextSectionLabel.split("\n").map((item, _index) => (
-              <div key={item}>{item}</div>
-            ))}
-          </Pagination.Link>
-        )}
-      </Pagination>
     </>
   );
 };
