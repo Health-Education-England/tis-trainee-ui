@@ -4,7 +4,7 @@ import React from "react";
 export const AutosaveNote = () => {
   return (
     <Label>
-      Note: This form autosaves 5 seconds after you pause making changes.
+      Note: This form will autosave 2 seconds after you pause making changes.
     </Label>
   );
 };
