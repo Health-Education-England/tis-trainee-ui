@@ -36,7 +36,7 @@ const CreateList = () => {
 
   useEffect(() => {
     dispatch(formName === "formA" ? resetToInitFormA() : resetToInitFormB());
-  }, []);
+  }, [dispatch, formName]);
 
   let content: JSX.Element = <></>;
 
