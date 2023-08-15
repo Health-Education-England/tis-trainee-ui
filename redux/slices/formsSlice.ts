@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
@@ -44,7 +44,14 @@ export const fetchForms = createAsyncThunk(
 const formsSlice = createSlice({
   name: "forms",
   initialState,
-  reducers: {},
+  reducers: {
+    updatedDraftFormProps: (
+      state,
+      action: PayloadAction<DraftFormProps | null>
+    ) => {
+      return { ...state, draftFormProps: action.payload };
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchForms.pending, (state, _action) => {
@@ -71,6 +78,8 @@ const formsSlice = createSlice({
 });
 
 export default formsSlice.reducer;
+
+export const { updatedDraftFormProps } = formsSlice.actions;
 
 export const selectAllforms = (state: { forms: IForms }) => state.forms.forms;
 export const selectAllSubmittedforms = (state: { forms: IForms }) =>

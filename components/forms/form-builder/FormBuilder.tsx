@@ -30,7 +30,7 @@ import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { Startoverbtn } from "../Startoverbtn";
+import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
 
 export interface Field {
@@ -460,7 +460,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                   setFormErrors({});
                   setCurrentPage(currentPage - 1);
                 }}
-                data-cy={`btnBack-${currentPage - 1}`}
+                data-cy="navPrevious"
               >
                 <span className="nhsuk-pagination__title">{"Previous"}</span>
                 <span className="nhsuk-u-visually-hidden">:</span>
@@ -484,7 +484,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
                   : ""
               }`}
               onClick={handlePageChange}
-              data-cy="BtnContinue"
+              data-cy="navNext"
             >
               <span className="nhsuk-pagination__title">{"Next"}</span>
               <span className="nhsuk-u-visually-hidden">:</span>
@@ -520,7 +520,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             </Button>
           </Col>
           <Col width="one-quarter">
-            <Startoverbtn />
+            <StartOverButton />
           </Col>
         </Row>
       </Container>

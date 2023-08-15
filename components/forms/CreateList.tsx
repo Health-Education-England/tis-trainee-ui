@@ -13,7 +13,7 @@ import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
 import { resetToInitFormA } from "../../redux/slices/formASlice";
 import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
-import { Startoverbtn } from "./Startoverbtn";
+import { StartOverButton } from "./StartOverButton";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +55,7 @@ const CreateList = () => {
           </Row>
           <Row>
             <Col width="one-third">
-              <Startoverbtn />
+              <StartOverButton />
             </Col>
           </Row>
         </Container>

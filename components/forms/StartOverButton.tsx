@@ -5,7 +5,7 @@ import { useConfirm } from "material-ui-confirm";
 import { Button } from "nhsuk-react-components";
 import { deleteForm } from "../../utilities/FormBuilderUtilities";
 
-export const Startoverbtn = () => {
+export const StartOverButton = () => {
   const confirm = useConfirm();
   const formName = useLocation().pathname.split("/")[1];
 
@@ -45,11 +45,9 @@ export const Startoverbtn = () => {
       .catch(() => console.log("startover cancelled"));
   };
 
-  return formId ||
-    formIdFromDraftFormProps ||
-    autosaveStatus === "succeeded" ? (
+  return formId || formIdFromDraftFormProps ? (
     <Button
-      data-cy="startoverBtn"
+      data-cy="startOverButton"
       reverse
       type="button"
       onClick={handleBtnClick}

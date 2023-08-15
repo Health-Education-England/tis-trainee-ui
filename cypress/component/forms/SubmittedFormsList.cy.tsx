@@ -18,7 +18,6 @@ describe("SubmittedFormsList", () => {
           <SubmittedFormsList
             formRList={[]}
             path="/formr-a"
-            history={[]}
             latestSubDate={""}
           />
         </Router>
@@ -40,7 +39,6 @@ describe("SubmittedFormsList", () => {
           <SubmittedFormsList
             formRList={submittedFormRPartAs}
             path="/formr-a"
-            history={[]}
             latestSubDate={""}
           />
         </Router>
@@ -55,10 +53,10 @@ describe("SubmittedFormsList", () => {
     cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
     cy.get(
       ":nth-child(1) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
-    ).should("contain.text", "form submitted on 02/07/2022 13:12");
+    ).should("contain.text", "Form submitted on 02/07/2022 13:12 (GMT)");
     cy.get(
       ":nth-child(4) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
-    ).should("contain.text", "form submitted on 22/04/2020 00:00");
+    ).should("contain.text", "Form submitted on 22/04/2020 00:00 (GMT)");
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
       .should("contain.text", "Important")
@@ -71,7 +69,6 @@ describe("SubmittedFormsList", () => {
           <SubmittedFormsList
             formRList={recentSubmittedFormRPartAs}
             path="/formr-a"
-            history={[]}
             latestSubDate={recentSubmitDate}
           />
         </Router>

@@ -18,7 +18,7 @@ import { IProgSection } from "../../../models/IProgressSection";
 import classes from "./FormRPartB.module.scss";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 import history from "../../navigation/history";
-import { Startoverbtn } from "../Startoverbtn";
+import { StartOverButton } from "../StartOverButton";
 interface IFormRPartBPagination {
   prevSectionLabel: string;
   nextSectionLabel: string;
@@ -96,6 +96,20 @@ const FormRPartBPagination = ({
       <Container>
         <Row>
           <Col width="one-quarter">
+            {!nextSectionLabel && (
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+                disabled={!isValid || isSubmitting || isAutosaving}
+                data-cy="BtnSubmitForm"
+              >
+                Submit Form
+              </Button>
+            )}
+          </Col>
+          <Col width="one-quarter">
             <Button
               secondary
               onClick={(e: { preventDefault: () => void }) => {
@@ -113,21 +127,7 @@ const FormRPartBPagination = ({
             </Button>
           </Col>
           <Col width="one-quarter">
-            <Startoverbtn />
-          </Col>
-          <Col width="one-quarter">
-            {!nextSectionLabel && (
-              <Button
-                onClick={(e: { preventDefault: () => void }) => {
-                  e.preventDefault();
-                  handleSubmit();
-                }}
-                disabled={!isValid || isSubmitting || isAutosaving}
-                data-cy="BtnSubmitForm"
-              >
-                Submit Form
-              </Button>
-            )}
+            <StartOverButton />
           </Col>
           <Col width="one-quarter">
             {previousSection && (
