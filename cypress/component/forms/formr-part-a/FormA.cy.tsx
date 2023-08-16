@@ -65,7 +65,15 @@ describe("FormA (form creation)", () => {
         "This form has been pre-populated using the information available against your records"
       );
     cy.testDataSourceLink();
-
+    cy.get('[data-cy="autosaveNote"]')
+      .should("exist")
+      .should(
+        "contain.text",
+        "Note: This form will autosave 2 seconds after you pause making changes."
+      );
+    cy.get('[data-cy="autosaveStatusMsg"]')
+      .should("exist")
+      .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 1 of 3 - Personal Details"
@@ -329,5 +337,12 @@ describe("FormA (form creation)", () => {
       .first()
       .click();
     cy.get(".nhsuk-error-summary").should("not.exist");
+    cy.wait(2000);
+    cy.get('[data-cy="autosaveStatusMsg"]')
+      .should("exist")
+      .should(
+        "contain.text",
+        "Autosave status: Fail (last autosave success: none this session)"
+      );
   });
 });

@@ -17,6 +17,7 @@ import { updatedReference } from "../../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../mock-data/combinedReferenceData";
 import history from "../../../../components/navigation/history";
 import dayjs from "dayjs";
+import { ConfirmProvider } from "material-ui-confirm";
 
 describe("Create form B", () => {
   const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
@@ -117,7 +118,9 @@ describe("Create form B", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <Create history={[]} />
+          <ConfirmProvider>
+            <Create history={[]} />
+          </ConfirmProvider>
         </Router>
       </Provider>
     );
@@ -140,5 +143,14 @@ describe("Create form B", () => {
       ":nth-child(2) > :nth-child(1) > .nhsuk-grid-column-one-quarter > h3"
     ).should("not.exist");
     cy.get("[data-cy=BtnSaveDraft]").should("exist").click();
+    cy.get('[data-cy="autosaveNote"]').should("exist");
+    cy.get('[data-cy="autosaveStatusMsg"]').should("exist");
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContent-root > .MuiTypography-root").should(
+      "contain.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(1)").click();
+    cy.get(".MuiDialog-container").should("not.exist");
   });
 });
