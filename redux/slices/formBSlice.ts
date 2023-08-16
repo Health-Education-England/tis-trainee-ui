@@ -116,6 +116,9 @@ const formBSlice = createSlice({
     updatedCanEditB(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
     },
+    updatedAutosaveStatus(state, action: PayloadAction<AutosaveStatusProps>) {
+      return { ...state, autosaveStatus: action.payload };
+    },
     updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
       return { ...state, autoSaveLatestTimeStamp: action.payload };
     }
@@ -223,6 +226,7 @@ export const {
   updatesaveBtnActive,
   updatedEditPageNumberB,
   updatedCanEditB,
+  updatedAutosaveStatus,
   updatedAutoSaveLatestTimeStamp
 } = formBSlice.actions;
 
