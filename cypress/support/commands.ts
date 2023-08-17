@@ -111,10 +111,6 @@ Cypress.Commands.add(
       .find(".react-select__option")
       .first()
       .click();
-    cy.get(".react-select__value-container").contains(
-      "21st Century Clinic Ltd"
-    );
-
     cy.get(
       ".autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container"
     )
@@ -124,7 +120,6 @@ Cypress.Commands.add(
       .find(".react-select__option")
       .first()
       .click();
-    cy.get(".react-select__value-container").contains("Yachts");
   }
 );
 

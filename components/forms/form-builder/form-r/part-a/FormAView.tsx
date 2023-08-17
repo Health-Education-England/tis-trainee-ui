@@ -25,6 +25,7 @@ import {
   saveDraftForm,
   submitForm
 } from "../../../../../utilities/FormBuilderUtilities";
+import { StartOverButton } from "../../../StartOverButton";
 
 const FormAView = () => {
   const confirm = useConfirm();
@@ -109,6 +110,9 @@ const FormAView = () => {
               >
                 {"Save & exit"}
               </Button>
+            </Col>
+            <Col width="one-quarter">
+              <StartOverButton />
             </Col>
           </Row>
         </Container>
