@@ -17,6 +17,7 @@ interface IForms {
   status: string;
   error: any;
   draftFormProps: DraftFormProps | null;
+  formsRefreshNeeded?: boolean;
 }
 
 export const initialState: IForms = {
@@ -24,7 +25,8 @@ export const initialState: IForms = {
   submittedForms: [],
   status: "idle",
   error: "",
-  draftFormProps: null
+  draftFormProps: null,
+  formsRefreshNeeded: false
 };
 
 export const fetchForms = createAsyncThunk(
@@ -50,6 +52,9 @@ const formsSlice = createSlice({
       action: PayloadAction<DraftFormProps | null>
     ) => {
       return { ...state, draftFormProps: action.payload };
+    },
+    updatedFormsRefreshNeeded: state => {
+      return { ...state, formsRefreshNeeded: true };
     }
   },
   extraReducers(builder) {
@@ -79,7 +84,8 @@ const formsSlice = createSlice({
 
 export default formsSlice.reducer;
 
-export const { updatedDraftFormProps } = formsSlice.actions;
+export const { updatedDraftFormProps, updatedFormsRefreshNeeded } =
+  formsSlice.actions;
 
 export const selectAllforms = (state: { forms: IForms }) => state.forms.forms;
 export const selectAllSubmittedforms = (state: { forms: IForms }) =>

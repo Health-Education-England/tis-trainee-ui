@@ -4,10 +4,16 @@ import { useLocation } from "react-router-dom";
 import { useConfirm } from "material-ui-confirm";
 import { Button } from "nhsuk-react-components";
 import { isFormDeleted } from "../../utilities/FormBuilderUtilities";
+import history from "../navigation/history";
+import store from "../../redux/store/store";
+import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 
 export const StartOverButton = () => {
   const confirm = useConfirm();
-  const formName = useLocation().pathname.split("/")[1];
+  const pathName = useLocation().pathname;
+  console.log("pathName", pathName);
+  const formName = pathName.split("/")[1];
+  console.log("formName", formName);
 
   // get id from updated form r data when autosaved form
   const formId = useAppSelector(state =>
@@ -37,7 +43,7 @@ export const StartOverButton = () => {
           formIdFromDraftFormProps
         );
         shouldStartOver
-          ? window.location.reload()
+          ? checkPush(formName, pathName)
           : console.log("startover failed");
       })
       .catch(() => console.log("startover cancelled"));
@@ -55,3 +61,9 @@ export const StartOverButton = () => {
     </Button>
   ) : null;
 };
+
+function checkPush(formName: string, path: string) {
+  path.endsWith("create")
+    ? history.push(`/${formName}`)
+    : store.dispatch(updatedFormsRefreshNeeded());
+}

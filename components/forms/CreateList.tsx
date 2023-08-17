@@ -25,10 +25,13 @@ const CreateList = () => {
     : null;
   const formRListStatus = useAppSelector(state => state.forms?.status);
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
+  const needFormsRefresh = useAppSelector(
+    state => state.forms?.formsRefreshNeeded
+  );
 
   useEffect(() => {
     dispatch(fetchForms(pathname));
-  }, [dispatch, pathname]);
+  }, [dispatch, pathname, needFormsRefresh]);
 
   useEffect(() => {
     dispatch(fetchFeatureFlags());
