@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { supportCatOptions } from "../../../utilities/Constants";
 import { LoSupport } from "../LoSupport";
@@ -74,8 +74,8 @@ describe("LoSupport", () => {
       name: /Please click here to email Health Education England Thames Valley/i
     });
     expect(loSupportLink).toBeInTheDocument();
-    await act(async () => {
-      await clickElement(loSupportLink);
+    await act(() => {
+      fireEvent.click(loSupportLink);
     });
     const expectedHref =
       "mailto:Formr.tv@hee.nhs.uk?subject=TSS LO support query (TisID: 47165, GMC: 1111111, Support categories: Authenticator)&body=Browser and OS info:%0AMocked User Agent Info%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A";

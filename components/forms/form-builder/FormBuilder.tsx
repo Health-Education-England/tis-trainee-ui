@@ -477,9 +477,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
             <Link
               to="#"
               className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
-                isSubmitting ||
-                isAutosaving ||
-                Object.keys(formErrors).length > 0
+                isSubmitting || Object.keys(formErrors).length > 0
                   ? "disabled-link"
                   : ""
               }`}

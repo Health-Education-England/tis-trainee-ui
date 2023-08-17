@@ -122,7 +122,7 @@ describe("Placements with MFA set up", () => {
       '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedplacements"]'
     )
       .should("exist")
-      .should("contain.text", "You are not assigned to any Placements");
+      .should("contain.text", "You are not assigned to any placements");
   });
 
   it("should not show non-templated placement properties", () => {

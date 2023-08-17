@@ -67,7 +67,7 @@ const FormRPartBPagination = ({
               dispatch(decrementFormBSection());
               dispatch(updateFormBPreviousSection(null));
             }}
-            disabled={isSubmitting || isAutosaving}
+            disabled={isSubmitting}
             data-cy="LinkToPreviousSection"
             data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
           >
@@ -83,7 +83,7 @@ const FormRPartBPagination = ({
               dispatch(updateFormBPreviousSection(null));
               handleSubmit();
             }}
-            disabled={!isValid || isSubmitting || isAutosaving}
+            disabled={!isValid || isSubmitting}
             data-cy="LinkToNextSection"
             data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
           >
@@ -136,7 +136,7 @@ const FormRPartBPagination = ({
                   e.preventDefault();
                   handleSubmit();
                 }}
-                disabled={isSubmitting || isAutosaving}
+                disabled={isSubmitting}
                 data-cy="BtnBackToSubmit"
               >
                 Back to Submit

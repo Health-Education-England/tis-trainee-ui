@@ -6,7 +6,7 @@ import { mockForms } from "../../mock-data/formr-list";
 import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import {
-  getDraftFormProps,
+  setDraftFormProps,
   showFieldMatchWarning,
   transformReferenceData
 } from "../FormBuilderUtilities";
@@ -51,22 +51,22 @@ describe("transformReferenceData", () => {
 describe("Get the latest 'draft' form version to open ", () => {
   // Test the draft form priority logic
   it("should return null if forms list is empty", () => {
-    expect(getDraftFormProps([])).toBe(null);
+    expect(setDraftFormProps([])).toBe(null);
   });
 
   it("should return null if forms list only contains submitted forms", () => {
-    expect(getDraftFormProps(mockForms.slice(1, 3))).toBe(null);
+    expect(setDraftFormProps(mockForms.slice(1, 3))).toBe(null);
   });
 
   it("should return the unsubmitted form", () => {
-    expect(getDraftFormProps(mockForms)).toEqual({
+    expect(setDraftFormProps(mockForms)).toEqual({
       id: "3",
       lifecycleState: LifeCycleState.Unsubmitted
     });
   });
 
   it("should return the single draft form", () => {
-    expect(getDraftFormProps(mockForms.slice(1, 4))).toEqual({
+    expect(setDraftFormProps(mockForms.slice(1, 4))).toEqual({
       id: "4",
       lifecycleState: LifeCycleState.Draft
     });
@@ -74,7 +74,7 @@ describe("Get the latest 'draft' form version to open ", () => {
 
   it("should return the most recent form between draft and local forms", () => {
     const forms = mockForms.slice(3, 5);
-    expect(getDraftFormProps(forms)).toEqual({
+    expect(setDraftFormProps(forms)).toEqual({
       id: "4",
       lifecycleState: LifeCycleState.Draft
     });

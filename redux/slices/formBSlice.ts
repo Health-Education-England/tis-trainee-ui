@@ -20,6 +20,7 @@ interface IFormB {
   canEdit: boolean;
   autosaveStatus: AutosaveStatusProps;
   autoSaveLatestTimeStamp: string;
+  isDirty: boolean;
 }
 
 export const initialState: IFormB = {
@@ -32,7 +33,8 @@ export const initialState: IFormB = {
   editPageNumber: 0,
   canEdit: false,
   autosaveStatus: "idle",
-  autoSaveLatestTimeStamp: "none this session"
+  autoSaveLatestTimeStamp: "none this session",
+  isDirty: false
 };
 
 export const loadSavedFormB = createAsyncThunk(
@@ -121,6 +123,9 @@ const formBSlice = createSlice({
     },
     updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
       return { ...state, autoSaveLatestTimeStamp: action.payload };
+    },
+    updatedIsDirty(state, action: PayloadAction<boolean>) {
+      return { ...state, isDirty: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -227,7 +232,8 @@ export const {
   updatedEditPageNumberB,
   updatedCanEditB,
   updatedAutosaveStatus,
-  updatedAutoSaveLatestTimeStamp
+  updatedAutoSaveLatestTimeStamp,
+  updatedIsDirty
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>
