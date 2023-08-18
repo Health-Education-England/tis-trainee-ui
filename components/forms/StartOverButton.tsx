@@ -11,9 +11,7 @@ import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 export const StartOverButton = () => {
   const confirm = useConfirm();
   const pathName = useLocation().pathname;
-  console.log("pathName", pathName);
   const formName = pathName.split("/")[1];
-  console.log("formName", formName);
 
   // get id from updated form r data when autosaved form
   const formId = useAppSelector(state =>
