@@ -71,12 +71,9 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .first()
           .click();
         cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
-        // Give time for autosave to complete
-        cy.wait(5000);
-        cy.get('[data-cy="autosaveStatusMsg"]').should(
-          "include.text",
-          "Autosave status: Success"
-        );
+        cy.get('[data-cy="autosaveStatusMsg"]')
+          .should("exist")
+          .should("include.text", "Autosave status: Success");
         cy.log("################ Start over functionality ###################");
         cy.get('[data-cy="startOverButton"]').should("exist").click();
         cy.get(".MuiDialogContentText-root").should(
@@ -415,5 +412,59 @@ describe("Form R Part A - 'save form' toast messages", () => {
       "[data-cy=toastText]",
       "Your Form R (Part A) has been saved."
     ).should("be.visible");
+  });
+});
+
+describe("Form R Part A - 'delete form' toast messages", () => {
+  beforeEach(() => {
+    cy.wait(30000);
+    cy.visit("/");
+    cy.signIn();
+  });
+  it("should display a error toast message when the form is deleted unsuccessfully.", () => {
+    cy.intercept("DELETE", /\/api\/forms\/formr-parta/, {
+      statusCode: 500,
+      body: { error: "Some server error" }
+    }).as("deleteFormRequestErrored");
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get('[data-cy="email-input"]').focus().clear().type("t");
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get('[data-cy="toastText"]').should(
+      "include.text",
+      "Couldn't delete your draft Form R (Part A)."
+    );
+  });
+  it("should display a sucess toast message when the form is deleted successfully.", () => {
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
+    cy.get('[data-cy="email-input"]').focus().clear().type("t");
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get('[data-cy="toastText"]').should(
+      "include.text",
+      "Your draft Form R (Part A) has been deleted."
+    );
+    cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });

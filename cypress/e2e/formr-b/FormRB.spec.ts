@@ -45,6 +45,23 @@ describe("Form R (Part B)", () => {
     });
     cy.get(".nhsuk-warning-callout > p").should("exist");
 
+    // Should not autosave if no changes made
+    cy.log("### check form does not autosave if no changes made ###");
+    cy.get("[data-cy=BtnMenu]").click();
+    cy.contains("Support").click();
+    cy.get("[data-cy=BtnMenu]").click();
+    cy.contains("Form R (Part B)").click();
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+
     // ---- check if form autosaves if navigate away after edit ------------
     cy.log("### check form autosaves when nav away after edit ###");
     cy.get('[data-cy="autosaveNote"]').should("exist");
@@ -53,8 +70,6 @@ describe("Form R (Part B)", () => {
       .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
     cy.get("#email").type("test.reset@hee.nhs.uk");
-    // Give time for autosave to complete
-    cy.wait(5000);
     cy.get('[data-cy="autosaveStatusMsg"]').should(
       "include.text",
       "Autosave status: Success"
