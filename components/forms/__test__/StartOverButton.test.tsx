@@ -116,7 +116,7 @@ describe("Startoverbtn Component", () => {
       fireEvent.click(startOverButton as HTMLElement);
     });
     expect(mockIsFormDeleted).toHaveBeenCalled();
-    expect(dispatchSpy).toHaveBeenCalledWith(updatedFormsRefreshNeeded());
+    expect(dispatchSpy).toHaveBeenCalledWith(updatedFormsRefreshNeeded(true));
     mockIsFormDeleted.mockReset();
   });
 

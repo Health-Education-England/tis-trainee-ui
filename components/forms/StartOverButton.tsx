@@ -63,5 +63,5 @@ export const StartOverButton = () => {
 function checkPush(formName: string, path: string) {
   path.endsWith("create")
     ? history.push(`/${formName}`)
-    : store.dispatch(updatedFormsRefreshNeeded());
+    : store.dispatch(updatedFormsRefreshNeeded(true));
 }

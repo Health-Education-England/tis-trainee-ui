@@ -4,7 +4,8 @@ import ScrollTo from "../../components/forms/ScrollTo";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import {
   fetchForms,
-  selectAllSubmittedforms
+  selectAllSubmittedforms,
+  updatedFormsRefreshNeeded
 } from "../../redux/slices/formsSlice";
 import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
@@ -31,6 +32,7 @@ const CreateList = () => {
 
   useEffect(() => {
     dispatch(fetchForms(pathname));
+    dispatch(updatedFormsRefreshNeeded(false));
   }, [dispatch, pathname, needFormsRefresh]);
 
   useEffect(() => {

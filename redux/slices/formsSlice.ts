@@ -53,8 +53,8 @@ const formsSlice = createSlice({
     ) => {
       return { ...state, draftFormProps: action.payload };
     },
-    updatedFormsRefreshNeeded: state => {
-      return { ...state, formsRefreshNeeded: true };
+    updatedFormsRefreshNeeded: (state, action: PayloadAction<boolean>) => {
+      return { ...state, formsRefreshNeeded: action.payload };
     }
   },
   extraReducers(builder) {
