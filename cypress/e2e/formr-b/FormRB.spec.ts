@@ -414,3 +414,37 @@ describe("Form R (Part B)", () => {
     cy.contains("Submitted forms").should("exist");
   });
 });
+
+describe("Form R (Part B) - Start over via forms list (CreateList) page", () => {
+  before(() => {
+    cy.visit("/");
+    cy.viewport("iphone-6");
+    cy.signIn();
+  });
+  it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
+    isCovid = false;
+    cy.get("[data-cy=BtnMenu]").should("exist").click();
+    cy.contains("Form R (Part B)").click();
+    cy.visit("/formr-b", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get(".nhsuk-warning-callout > p").should("exist");
+    cy.get("#gmcNumber").type("22222222");
+    cy.get("[data-cy=BtnSaveDraft]").click();
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get('[data-cy="Submit new form"]').should("exist");
+  });
+});
