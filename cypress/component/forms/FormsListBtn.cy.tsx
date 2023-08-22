@@ -12,19 +12,14 @@ import { ConfirmProvider } from "material-ui-confirm";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { LifeCycleState } from "../../../models/LifeCycleState";
+import { updatedDraftFormProps } from "../../../redux/slices/formsSlice";
 
 describe("FormsListBtn", () => {
   it("should render the 'Submit new form' button if no draft forms", () => {
     const MockedFormsListBtnNoDraftForms = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileData(mockTraineeProfile));
-      return (
-        <FormsListBtn
-          draftFormProps={null}
-          pathName="/formr-b"
-          latestSubDate={null}
-        />
-      );
+      return <FormsListBtn pathName="/formr-b" latestSubDate={null} />;
     };
     mount(
       <Provider store={store}>
@@ -37,67 +32,61 @@ describe("FormsListBtn", () => {
   });
 
   it("should render 'Edit saved draft form ' btn when a saved draft form is to be edited", () => {
+    const MockedFormsListBtnWithDraftForm = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedDraftFormProps({
+          id: "4",
+          lifecycleState: LifeCycleState.Draft
+        })
+      );
+      return <FormsListBtn pathName="/formr-b" latestSubDate={null} />;
+    };
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <FormsListBtn
-            draftFormProps={{
-              id: "4",
-              lifecycleState: LifeCycleState.Draft
-            }}
-            pathName="/formr-b"
-            latestSubDate={null}
-          />
+          <MockedFormsListBtnWithDraftForm />
         </Router>
       </Provider>
     );
     cy.get('[data-cy="btn-Edit saved draft form"]').should("exist");
   });
   it("should render 'Edit unsubmitted form' when an unsubmitted form is to be edited", () => {
+    const MockedFormsListBtnWithUnsubmittedForm = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedDraftFormProps({
+          id: "5",
+          lifecycleState: LifeCycleState.Unsubmitted
+        })
+      );
+      return <FormsListBtn pathName="/formr-a" latestSubDate={null} />;
+    };
+
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <FormsListBtn
-            draftFormProps={{
-              id: "5",
-              lifecycleState: LifeCycleState.Unsubmitted
-            }}
-            pathName="/formr-b"
-            latestSubDate={null}
-          />
+          <MockedFormsListBtnWithUnsubmittedForm />
         </Router>
       </Provider>
     );
     cy.get('[data-cy="btn-Edit unsubmitted form"]').should("exist").click();
     cy.url().should("include", "/create");
   });
-  it("should render 'Edit unsaved draft form ' btn when a saved draft form is to be edited", () => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormsListBtn
-            draftFormProps={{
-              lifecycleState: LifeCycleState.Local
-            }}
-            pathName="/formr-b"
-            latestSubDate={null}
-          />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="btn-Edit unsaved draft form"]').should("exist");
-  });
 
   it("should render the modal warning if a form has been submitted within 31 days from today", () => {
+    const MockedFormsListBtnDraftFormsBackToNull = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedDraftFormProps(null));
+      return (
+        <FormsListBtn pathName="/formr-b" latestSubDate={day().toDate()} />
+      );
+    };
     mount(
       <Provider store={store}>
         <Router history={history}>
           <ConfirmProvider>
-            <FormsListBtn
-              draftFormProps={null}
-              pathName="/formr-b"
-              latestSubDate={day().toDate()}
-            />
+            <MockedFormsListBtnDraftFormsBackToNull />
           </ConfirmProvider>
         </Router>
       </Provider>
@@ -124,7 +113,6 @@ describe("FormsListBtn", () => {
         <Router history={history}>
           <ConfirmProvider>
             <FormsListBtn
-              draftFormProps={null}
               pathName="/formr-b"
               latestSubDate={day().subtract(31, "d").toDate()}
             />

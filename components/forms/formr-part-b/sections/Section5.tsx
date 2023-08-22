@@ -22,11 +22,12 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const Section5 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -106,6 +107,7 @@ const Section5 = ({
               </p>
             </div>
           </WarningCallout>
+          <AutosaveNote />
           <Card feature data-cy="declarations5">
             <Card.Content>
               <Card.Heading>New resolved declarations</Card.Heading>
@@ -216,6 +218,7 @@ const Section5 = ({
               )}
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -228,7 +231,6 @@ const Section5 = ({
 
           <FormRPartBPagination
             values={values}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

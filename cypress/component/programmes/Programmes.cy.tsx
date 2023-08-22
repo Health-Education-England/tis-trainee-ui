@@ -108,7 +108,7 @@ describe("Programmes with MFA set up", () => {
     );
     cy.get("[data-cy=notAssignedprogrammeMemberships]")
       .should("exist")
-      .should("contain.text", "You are not assigned to any Programmes");
+      .should("contain.text", "You are not assigned to any programmes");
   });
 
   it("should show alternative text when no Curricula", () => {
@@ -160,7 +160,7 @@ describe("Programmes with MFA set up", () => {
     );
     cy.get("[data-cy=notAssignedprogrammeMemberships]")
       .should("exist")
-      .should("contain.text", "You are not assigned to any Programmes");
+      .should("contain.text", "You are not assigned to any programmes");
   });
 
   it("should not show non-templated programme membership properties", () => {

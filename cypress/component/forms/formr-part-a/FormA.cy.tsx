@@ -65,7 +65,15 @@ describe("FormA (form creation)", () => {
         "This form has been pre-populated using the information available against your records"
       );
     cy.testDataSourceLink();
-
+    cy.get('[data-cy="autosaveNote"]')
+      .should("exist")
+      .should(
+        "contain.text",
+        "Note: This form will autosave 2 seconds after you pause making changes."
+      );
+    cy.get('[data-cy="autosaveStatusMsg"]')
+      .should("exist")
+      .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 1 of 3 - Personal Details"
@@ -155,7 +163,7 @@ describe("FormA (form creation)", () => {
       );
     cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
 
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get(
       '[data-cy="error-txt-dateOfBirth,This date is before the minimum date allowed"]'
@@ -180,7 +188,7 @@ describe("FormA (form creation)", () => {
       "not.exist"
     );
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
 
     // Page 2
     cy.get(
@@ -243,7 +251,7 @@ describe("FormA (form creation)", () => {
     cy.get(".nhsuk-error-summary").should("not.exist");
 
     // catch any errors not ttriggered completing the form section
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get(
       '[data-cy="error-txt-completionDate,Anticipated completion date - please choose a future date"]'
@@ -284,7 +292,7 @@ describe("FormA (form creation)", () => {
       .first()
       .click();
     cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
 
     // Page 3
     cy.get('[data-cy="progress-header"] > h3').should(
@@ -296,17 +304,17 @@ describe("FormA (form creation)", () => {
     ).should("not.exist");
 
     // can navigate back to previous section without triggering validation
-    cy.get(".nhsuk-grid-row > :nth-child(1) > .nhsuk-back-link").click();
+    cy.get('[data-cy="navPrevious"]').click();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 2 of 3 - Programme Declarations"
     );
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 3 of 3 - Programme Details"
     );
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get("b").should(
       "contain.text",
@@ -329,6 +337,12 @@ describe("FormA (form creation)", () => {
       .first()
       .click();
     cy.get(".nhsuk-error-summary").should("not.exist");
-    // Note - been trying to test if the updated form data is being saved in local storage but couldn't find a way to access this via component test so using e2e test instead.
+    cy.wait(2000);
+    cy.get('[data-cy="autosaveStatusMsg"]')
+      .should("exist")
+      .should(
+        "contain.text",
+        "Autosave status: Fail (last autosave success: none this session)"
+      );
   });
 });

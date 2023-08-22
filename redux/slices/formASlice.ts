@@ -7,6 +7,8 @@ import {
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { DateUtilities } from "../../utilities/DateUtilities";
 
 interface IFormA {
   formAData: FormRPartA;
@@ -14,6 +16,8 @@ interface IFormA {
   error: any;
   editPageNumber: number;
   canEdit: boolean;
+  autosaveStatus: AutosaveStatusProps;
+  autoSaveLatestTimeStamp: string;
 }
 
 export const initialState: IFormA = {
@@ -21,7 +25,9 @@ export const initialState: IFormA = {
   status: "idle",
   error: "",
   editPageNumber: 0,
-  canEdit: false
+  canEdit: false,
+  autosaveStatus: "idle",
+  autoSaveLatestTimeStamp: "none this session"
 };
 
 export const loadSavedFormA = createAsyncThunk(
@@ -50,6 +56,30 @@ export const updateFormA = createAsyncThunk(
   }
 );
 
+export const autoSaveFormA = createAsyncThunk(
+  "formA/autoSaveFormA",
+  async (form: FormRPartA) => {
+    const formsService = new FormsService();
+    return (await formsService.saveTraineeFormRPartA(form)).data;
+  }
+);
+
+export const autoUpdateFormA = createAsyncThunk(
+  "formA/autoUpdateFormA",
+  async (form: FormRPartA) => {
+    const formsService = new FormsService();
+    return (await formsService.updateTraineeFormRPartA(form)).data;
+  }
+);
+
+export const deleteFormA = createAsyncThunk(
+  "formA/deleteFormA",
+  async (formId: string) => {
+    const formsService = new FormsService();
+    return formsService.deleteTraineeFormRPartA(formId);
+  }
+);
+
 const formASlice = createSlice({
   name: "formA",
   initialState,
@@ -65,6 +95,12 @@ const formASlice = createSlice({
     },
     updatedCanEdit(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
+    },
+    updatedAutosaveStatus(state, action: PayloadAction<AutosaveStatusProps>) {
+      return { ...state, autosaveStatus: action.payload };
+    },
+    updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
+      return { ...state, autoSaveLatestTimeStamp: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -116,6 +152,44 @@ const formASlice = createSlice({
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );
+      })
+      .addCase(autoSaveFormA.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoSaveFormA.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formAData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+      })
+      .addCase(autoSaveFormA.rejected, state => {
+        state.autosaveStatus = "failed";
+      })
+      .addCase(autoUpdateFormA.pending, state => {
+        state.autosaveStatus = "saving";
+      })
+      .addCase(autoUpdateFormA.fulfilled, (state, action) => {
+        state.autosaveStatus = "succeeded";
+        state.formAData = action.payload;
+        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+      })
+      .addCase(autoUpdateFormA.rejected, state => {
+        state.autosaveStatus = "failed";
+      })
+      .addCase(deleteFormA.pending, (state, _action) => {
+        state.status = "deleting";
+      })
+      .addCase(deleteFormA.fulfilled, (state, _action) => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.deleteFormA, ToastType.SUCCESS);
+      })
+      .addCase(deleteFormA.rejected, (state, { error }) => {
+        state.status = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.deleteFormA,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });
@@ -126,7 +200,9 @@ export const {
   resetToInitFormA,
   updatedFormA,
   updatedEditPageNumber,
-  updatedCanEdit
+  updatedCanEdit,
+  updatedAutosaveStatus,
+  updatedAutoSaveLatestTimeStamp
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>

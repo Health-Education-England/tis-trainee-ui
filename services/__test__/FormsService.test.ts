@@ -81,4 +81,30 @@ describe("FormsService", () => {
       expect(res).toEqual(errorResponse);
     });
   });
+  it("deleteTraineeFormRPartA method should return success response", () => {
+    const successResponse: Promise<AxiosResponse> = Promise.resolve({
+      data: {},
+      status: 204,
+      statusText: "OK",
+      headers: {},
+      config: {}
+    });
+
+    jest.spyOn(mockService, "delete").mockReturnValue(successResponse);
+
+    expect(mockService.deleteTraineeFormRPartA("123")).toEqual(successResponse);
+  });
+  it("deleteTraineeFormRPartB method should return success response", () => {
+    const successResponse: Promise<AxiosResponse> = Promise.resolve({
+      data: {},
+      status: 204,
+      statusText: "OK",
+      headers: {},
+      config: {}
+    });
+
+    jest.spyOn(mockService, "delete").mockReturnValue(successResponse);
+
+    expect(mockService.deleteTraineeFormRPartB("123")).toEqual(successResponse);
+  });
 });

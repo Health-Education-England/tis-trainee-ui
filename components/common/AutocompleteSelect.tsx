@@ -1,5 +1,6 @@
 import { Label } from "nhsuk-react-components";
 import Select from "react-select";
+import { colourStyles } from "../../utilities/FormBuilderUtilities";
 
 type AutocompleteSelectProps = {
   value: any;
@@ -71,58 +72,4 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
       />
     </div>
   );
-};
-
-const colourStyles = {
-  option: (baseStyles: any, { isFocused }: any) => ({
-    ...baseStyles,
-    background: isFocused ? "#2884FF" : "none",
-    color: isFocused ? "white" : undefined,
-    zIndex: 1,
-    fontSize: "1rem",
-    "@media (min-width: 40.0625em)": {
-      ...baseStyles["@media (min-width: 40.0625em)"],
-      fontSize: "1.1875rem"
-    },
-    paddingTop: "1px",
-    paddingBottom: "1px"
-  }),
-  control: (baseStyles: any, { isFocused }: any) => ({
-    ...baseStyles,
-    border: "0.0625rem solid #4C6272",
-    borderColor: "#4C6272",
-    "&:hover": {
-      borderColor: "#4C6272"
-    },
-    boxShadow: isFocused ? "inset 0 0 0 2px" : "none",
-    outline: isFocused ? "4px solid #ffeb3b" : "1px solid #4c6272"
-  }),
-  singleValue: (baseStyles: any) => ({
-    ...baseStyles,
-    fontSize: "1rem",
-    "@media (min-width: 40.0625em)": {
-      ...baseStyles["@media (min-width: 40.0625em)"],
-      fontSize: "1.1875rem"
-    }
-  }),
-  dropdownIndicator: (baseStyles: any) => ({
-    ...baseStyles,
-    padding: "0 2px 0 2px",
-    width: "1.125rem",
-    color: "#212b32"
-  }),
-  clearIndicator: (baseStyles: any) => ({
-    ...baseStyles,
-    padding: "0 2px 0 0",
-    width: "1.125rem",
-    color: "#212b32"
-  }),
-  container: (baseStyles: any) => ({
-    ...baseStyles,
-    maxWidth: "100%",
-    "@media (min-width: 40.0625em)": {
-      ...baseStyles["@media (min-width: 40.0625em)"],
-      maxWidth: "52%"
-    }
-  })
 };

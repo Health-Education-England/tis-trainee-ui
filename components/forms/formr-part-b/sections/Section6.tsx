@@ -6,11 +6,12 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const Section6 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -39,6 +40,7 @@ const Section6 = ({
               Section 6: Compliments
             </Fieldset.Legend>
           </Fieldset>
+          <AutosaveNote />
           <Card feature data-cy="complimentsPanel">
             <Card.Content>
               <Card.Heading>Compliments</Card.Heading>
@@ -67,9 +69,9 @@ const Section6 = ({
               />
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           <FormRPartBPagination
             values={values}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

@@ -20,9 +20,5 @@ export const mockForms = [
     id: "4",
     lifecycleState: LifeCycleState.Draft,
     lastModifiedDate: "2023-05-22T12:50:52.589Z"
-  },
-  {
-    lifecycleState: LifeCycleState.Local,
-    lastModifiedDate: "2023-05-22T12:50:52.588Z"
   }
 ];

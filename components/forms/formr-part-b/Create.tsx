@@ -3,20 +3,16 @@ import ProgressBar from "../../../components/forms/ProgressBar";
 import React from "react";
 import Loading from "../../common/Loading";
 import { FormRPartB } from "../../../models/FormRPartB";
-import { LifeCycleState } from "../../../models/LifeCycleState";
-import store from "../../../redux/store/store";
 import {
   incrementFormBSection,
-  resetToInitFormB,
-  saveFormB,
   selectSaveBtnActive,
   updatedFormB,
-  updateFormB,
   updateFormBSection
 } from "../../../redux/slices/formBSlice";
 import Confirm from "./sections/Confirm";
 import { Redirect } from "react-router-dom";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import store from "../../../redux/store/store";
 
 const Create = ({ history }: { history: string[] }) => {
   const dispatch = useAppDispatch();
@@ -33,33 +29,18 @@ const Create = ({ history }: { history: string[] }) => {
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
   const finalSections = FormRUtilities.makeFormRBSections(isfeatFlagCovid);
 
-  const saveDraft = async (formData: FormRPartB) => {
-    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+  const handleSectionSubmit = (formValues: FormRPartB) => {
+    const lastSavedFormData = store.getState().formB.formBData;
+    if (!saveBtnActive) {
       dispatch(
         updatedFormB({
-          ...formData,
-          submissionDate: null,
-          lifecycleState: LifeCycleState.Draft,
-          lastModifiedDate: new Date()
+          ...formValues,
+          id: lastSavedFormData?.id,
+          lastModifiedDate: lastSavedFormData?.lastModifiedDate,
+          lifecycleState: lastSavedFormData.lifecycleState,
+          traineeTisId: lastSavedFormData?.traineeTisId
         })
       );
-    } else
-      dispatch(updatedFormB({ ...formData, lastModifiedDate: new Date() }));
-
-    const updatedFormBData = store.getState().formB.formBData;
-    if (formData.id) {
-      await dispatch(updateFormB(updatedFormBData));
-    } else await dispatch(saveFormB(updatedFormBData));
-    const formRBStatus = store.getState().formB.status;
-    if (formRBStatus === "succeeded") {
-      dispatch(resetToInitFormB());
-      history.push("/formr-b");
-    }
-  };
-
-  const handleSectionSubmit = (formValues: FormRPartB) => {
-    if (!saveBtnActive) {
-      dispatch(updatedFormB(formValues));
       if (previousSection) {
         dispatch(updateFormBSection(previousSection));
       } else {
@@ -74,7 +55,6 @@ const Create = ({ history }: { history: string[] }) => {
       section < finalSections.length
         ? finalSections[section].title
         : "Review & Submit",
-    saveDraft,
     history: history,
     previousSection: previousSection,
     handleSectionSubmit,

@@ -11,7 +11,7 @@ describe("CreateList", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <Createlist history={[]} />
+          <Createlist />
         </Router>
       </Provider>
     );

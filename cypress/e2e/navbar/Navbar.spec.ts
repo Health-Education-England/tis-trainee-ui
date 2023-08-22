@@ -32,20 +32,18 @@ describe("Desktop/ tablet header", () => {
       cy.get(".nhsuk-header__navigation-link")
         .should("exist")
         .contains(/Support/);
-      cy.get(".nhsuk-header__navigation-link")
-        .should("exist")
-        .contains(/MFA/);
+      cy.get(".nhsuk-header__navigation-link").should("exist").contains(/MFA/);
       cy.get(".nhsuk-button")
         .should("exist")
-        .contains(/Logout/);
+        .contains(/Sign out/);
     });
   });
 
-  it("should logout of the desktop", () => {
+  it("should sign out of the desktop", () => {
     cy.logoutDesktop();
   });
 
-  it("should logout of mobile", () => {
+  it("should sign out of mobile", () => {
     cy.logout();
   });
 });

@@ -26,11 +26,12 @@ import { selectSavedFormB } from "../../../../redux/slices/formBSlice";
 import { selectAllReference } from "../../../../redux/slices/referenceSlice";
 import { CombinedReferenceData } from "../../../../models/CombinedReferenceData";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const CovidDeclaration = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -79,6 +80,7 @@ const CovidDeclaration = ({
               Self-declaration and Educational supervisor validation for the
               Doctors in Training ARCPs during COVID 19 Pandemic
             </Label>
+            <AutosaveNote />
             <Card feature data-cy="complimentsPanel">
               <Card.Content>
                 <Card.Heading>Covid declarations</Card.Heading>
@@ -414,6 +416,7 @@ const CovidDeclaration = ({
               </div>
             ) : null}
           </Fieldset>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -427,7 +430,6 @@ const CovidDeclaration = ({
 
           <FormRPartBPagination
             values={values}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

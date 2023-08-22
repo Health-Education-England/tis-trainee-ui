@@ -158,13 +158,6 @@ button:disabled {
   color: $nhsBlue;
 }
 
-// form r 'Back'/'Next' Link text
-@media (max-width: 768px) {
-  .form-nav_text {
-    display: none;
-  }
-}
-
 .nhsuk-header__navigation {
   ul {
     justify-content: normal;
@@ -413,6 +406,11 @@ ol[type="a"] {
 .form-navigation-next-link {
   display: flex;
   justify-content: flex-end;
+}
+
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .page-nav-link {

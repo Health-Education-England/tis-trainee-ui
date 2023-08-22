@@ -56,6 +56,14 @@ export class FormsService extends ApiService {
     return this.put<FormRPartB>("/formr-partb", newFormData);
   }
 
+  async deleteTraineeFormRPartA(id: string): Promise<AxiosResponse> {
+    return this.delete(`/formr-parta/${id}`);
+  }
+
+  async deleteTraineeFormRPartB(id: string): Promise<AxiosResponse> {
+    return this.delete(`/formr-partb/${id}`);
+  }
+
   async getFeatureFlags(): Promise<AxiosResponse<FeatureFlags>> {
     return this.get<FeatureFlags>("/feature-flags");
   }

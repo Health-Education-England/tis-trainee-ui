@@ -2,6 +2,9 @@ import { CombinedReferenceData } from "../models/CombinedReferenceData";
 import { FormRPartA } from "../models/FormRPartA";
 import { KeyValue } from "../models/KeyValue";
 import {
+  autoSaveFormA,
+  autoUpdateFormA,
+  deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
   saveFormA,
@@ -13,6 +16,9 @@ import {
 import store from "../redux/store/store";
 import { FormData } from "../components/forms/form-builder/FormBuilder";
 import {
+  autoSaveFormB,
+  autoUpdateFormB,
+  deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
   saveFormB,
@@ -76,21 +82,15 @@ export function resetForm(formName: string, history: any) {
     const formAStatus = store.getState().formA.status;
     if (formAStatus === "succeeded") {
       store.dispatch(resetToInitFormA());
-      localStorage.removeItem(formName);
       history.push(redirectPath);
     }
   } else {
     const formBStatus = store.getState().formB.status;
     if (formBStatus === "succeeded") {
       store.dispatch(resetToInitFormB());
-      localStorage.removeItem(formName);
       history.push(redirectPath);
     }
   }
-}
-
-export function resetLocalStorageFormData(formName: string) {
-  localStorage.removeItem(formName);
 }
 
 export async function submitForm(
@@ -98,6 +98,10 @@ export async function submitForm(
   formData: FormData,
   history: any
 ) {
+  const lastSavedFormData =
+    formName === "formA"
+      ? store.getState().formA?.formAData
+      : store.getState().formB?.formBData;
   const updatedFormData = {
     ...formData,
     submissionDate: new Date(),
@@ -105,12 +109,22 @@ export async function submitForm(
     lastModifiedDate: new Date()
   };
   if (formName === "formA") {
-    formData.id
-      ? await store.dispatch(updateFormA(updatedFormData as FormRPartA))
+    lastSavedFormData.id
+      ? await store.dispatch(
+          updateFormA({
+            ...updatedFormData,
+            id: lastSavedFormData.id
+          } as FormRPartA)
+        )
       : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
   } else {
-    formData.id
-      ? await store.dispatch(updateFormB(updatedFormData as FormRPartB))
+    lastSavedFormData.id
+      ? await store.dispatch(
+          updateFormB({
+            ...updatedFormData,
+            id: lastSavedFormData.id
+          } as FormRPartB)
+        )
       : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
   }
   resetForm(formName, history);
@@ -122,8 +136,12 @@ export async function saveDraftForm(
   history: string[]
 ) {
   const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
+  const lastSavedFormData =
+    formName === "formA"
+      ? store.getState().formA?.formAData
+      : store.getState().formB?.formBData;
   let updatedFormData: FormData;
-  if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+  if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
     updatedFormData = {
       ...formData,
       submissionDate: null,
@@ -137,12 +155,22 @@ export async function saveDraftForm(
     };
   }
   if (formName === "formA") {
-    formData.id
-      ? await store.dispatch(updateFormA(updatedFormData as FormRPartA))
+    lastSavedFormData.id
+      ? await store.dispatch(
+          updateFormA({
+            ...updatedFormData,
+            id: lastSavedFormData.id
+          } as FormRPartA)
+        )
       : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
   } else {
-    formData.id
-      ? await store.dispatch(updateFormB(updatedFormData as FormRPartB))
+    lastSavedFormData.id
+      ? await store.dispatch(
+          updateFormB({
+            ...updatedFormData,
+            id: lastSavedFormData.id
+          } as FormRPartB)
+        )
       : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
   }
   history.push(redirectPath);
@@ -180,15 +208,25 @@ export function handleEditSection(
   history.push(redirectPath);
 }
 
-export function addLocalFormToStore(formName: string) {
-  const localStorageForm = localStorage.getItem(formName);
-  if (localStorageForm) {
-    const parsedForm = JSON.parse(localStorageForm);
-    formName === "formA"
-      ? store.dispatch(updatedFormA(parsedForm as FormRPartA))
-      : store.dispatch(updatedFormB(parsedForm as FormRPartB));
+export async function isFormDeleted(
+  formName: string,
+  formId: string | undefined,
+  formIdFromDraftFormProps: string | undefined
+) {
+  if (formName === "formr-a") {
+    await store.dispatch(
+      deleteFormA((formId as string) ?? (formIdFromDraftFormProps as string))
+    );
+    return store.getState().formA.status === "succeeded";
+  } else {
+    await store.dispatch(
+      deleteFormB((formId as string) ?? (formIdFromDraftFormProps as string))
+    );
+
+    return store.getState().formB.status === "succeeded";
   }
 }
+
 // ----------------------------------------------------------
 
 export function filterCurriculumOptions(
@@ -248,8 +286,7 @@ export interface DraftFormProps {
   lifecycleState: LifeCycleState;
 }
 
-// Note - Revert when trainee forms DTO has lastModifiedDate
-export function getDraftFormProps(forms: IFormR[]): DraftFormProps | null {
+export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   if (
     forms.length === 0 ||
     forms.every(form => form.lifecycleState === LifeCycleState.Submitted)
@@ -277,6 +314,62 @@ export function getDraftFormProps(forms: IFormR[]): DraftFormProps | null {
     };
   }
   return null;
+}
+
+function prepFormData(formData: FormData) {
+  let updatedFormData: FormData;
+  if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
+    updatedFormData = {
+      ...formData,
+      submissionDate: null,
+      lifecycleState: LifeCycleState.Draft,
+      lastModifiedDate: new Date()
+    };
+  } else {
+    updatedFormData = {
+      ...formData,
+      lastModifiedDate: new Date()
+    };
+  }
+  return updatedFormData;
+}
+
+async function updateForm(formData: FormData, formName: string) {
+  if (formName === "formA") {
+    await store.dispatch(autoUpdateFormA(formData as FormRPartA));
+  } else {
+    await store.dispatch(autoUpdateFormB(formData as FormRPartB));
+  }
+}
+
+async function saveForm(formData: FormData, formName: string) {
+  if (formName === "formA") {
+    await store.dispatch(autoSaveFormA(formData as FormRPartA));
+  } else {
+    await store.dispatch(autoSaveFormB(formData as FormRPartB));
+  }
+}
+
+export async function autosaveFormR(
+  formName: string,
+  formData: FormRPartA | FormRPartB
+) {
+  const lastSavedFormData =
+    formName === "formA"
+      ? store.getState().formA?.formAData
+      : store.getState().formB?.formBData;
+
+  // update form data for submission
+  const preppedFormData = prepFormData(formData);
+
+  if (lastSavedFormData.id) {
+    await updateForm(
+      { ...preppedFormData, id: lastSavedFormData.id },
+      formName
+    );
+  } else {
+    await saveForm(preppedFormData, formName);
+  }
 }
 
 // react-select styles

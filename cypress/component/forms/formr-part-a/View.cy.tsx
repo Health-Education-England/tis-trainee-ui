@@ -38,7 +38,7 @@ describe("View", () => {
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=backLink]").should("include.text", "Go back");
+    cy.get("[data-cy=backLink]").should("include.text", "Back to forms list");
     cy.get("[data-cy=savePdfBtn]").should("exist");
     cy.get("[data-cy=pdfHelpLink]")
       .should("include.text", "Click here for help saving form as a PDF")

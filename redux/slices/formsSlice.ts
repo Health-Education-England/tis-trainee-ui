@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
@@ -6,19 +6,27 @@ import { FormsService } from "../../services/FormsService";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import {
+  DraftFormProps,
+  setDraftFormProps
+} from "../../utilities/FormBuilderUtilities";
 
 interface IForms {
   forms: IFormR[];
   submittedForms: IFormR[];
   status: string;
   error: any;
+  draftFormProps: DraftFormProps | null;
+  formsRefreshNeeded?: boolean;
 }
 
 export const initialState: IForms = {
   forms: [],
   submittedForms: [],
   status: "idle",
-  error: ""
+  error: "",
+  draftFormProps: null,
+  formsRefreshNeeded: false
 };
 
 export const fetchForms = createAsyncThunk(
@@ -26,18 +34,10 @@ export const fetchForms = createAsyncThunk(
   async (path: string) => {
     const formsService = new FormsService();
     let response: AxiosResponse<IFormR[]>;
-    // define formName var so we can match with local storage key
-    let formName: string;
     if (path === "/formr-a") {
-      formName = "formA";
       response = await formsService.getTraineeFormRPartAList();
     } else {
-      formName = "formB";
       response = await formsService.getTraineeFormRPartBList();
-    }
-    const localStorageForm = localStorage.getItem(formName);
-    if (localStorageForm) {
-      response.data = [...response.data, JSON.parse(localStorageForm)];
     }
     return DateUtilities.genericSort(response.data, "submissionDate", true);
   }
@@ -46,7 +46,17 @@ export const fetchForms = createAsyncThunk(
 const formsSlice = createSlice({
   name: "forms",
   initialState,
-  reducers: {},
+  reducers: {
+    updatedDraftFormProps: (
+      state,
+      action: PayloadAction<DraftFormProps | null>
+    ) => {
+      return { ...state, draftFormProps: action.payload };
+    },
+    updatedFormsRefreshNeeded: (state, action: PayloadAction<boolean>) => {
+      return { ...state, formsRefreshNeeded: action.payload };
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchForms.pending, (state, _action) => {
@@ -58,6 +68,7 @@ const formsSlice = createSlice({
         state.submittedForms = action.payload.filter(
           (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
         );
+        state.draftFormProps = setDraftFormProps(action.payload);
       })
       .addCase(fetchForms.rejected, (state, { error }) => {
         state.status = "failed";
@@ -73,6 +84,9 @@ const formsSlice = createSlice({
 
 export default formsSlice.reducer;
 
+export const { updatedDraftFormProps, updatedFormsRefreshNeeded } =
+  formsSlice.actions;
+
 export const selectAllforms = (state: { forms: IForms }) => state.forms.forms;
 export const selectAllSubmittedforms = (state: { forms: IForms }) =>
-  state.forms.submittedForms;
+  state.forms?.submittedForms;

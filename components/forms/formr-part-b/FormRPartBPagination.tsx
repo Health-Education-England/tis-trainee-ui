@@ -1,4 +1,10 @@
-import { Button, Pagination } from "nhsuk-react-components";
+import {
+  Button,
+  Col,
+  Container,
+  Pagination,
+  Row
+} from "nhsuk-react-components";
 import React from "react";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
@@ -10,11 +16,13 @@ import {
 } from "../../../redux/slices/formBSlice";
 import { IProgSection } from "../../../models/IProgressSection";
 import classes from "./FormRPartB.module.scss";
+import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
+import history from "../../navigation/history";
+import { StartOverButton } from "../StartOverButton";
 interface IFormRPartBPagination {
   prevSectionLabel: string;
   nextSectionLabel: string;
   values: FormRPartB;
-  saveDraft: (formData: FormRPartB) => Promise<void>;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   previousSection: number | null;
   isValid?: boolean;
@@ -28,7 +36,6 @@ const FormRPartBPagination = ({
   nextSectionLabel,
   handleSubmit,
   values,
-  saveDraft,
   previousSection,
   isValid,
   isSubmitting,
@@ -37,6 +44,8 @@ const FormRPartBPagination = ({
 }: IFormRPartBPagination) => {
   const dispatch = useAppDispatch();
   const section = useAppSelector(state => state.formB.sectionNumber);
+  const isAutosaving =
+    useAppSelector(state => state.formB.autosaveStatus) === "saving";
 
   const paginationClasses = [
     classes.heePagination,
@@ -46,85 +55,97 @@ const FormRPartBPagination = ({
     .join(" ");
 
   return (
-    <Pagination className={paginationClasses}>
-      {prevSectionLabel && (
-        <Pagination.Link
-          previous
-          onClick={() => {
-            if (!finalSections?.length) {
-              dispatch(updatedFormB(values));
-            }
-            dispatch(decrementFormBSection());
-            dispatch(updateFormBPreviousSection(null));
-          }}
-          data-cy="LinkToPreviousSection"
-          data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
-        >
-          {prevSectionLabel.split("\n").map((item, _index) => (
-            <div key={item}>{item}</div>
-          ))}
-        </Pagination.Link>
-      )}
-      <Pagination.Link>
-        <Button
-          secondary
-          onClick={(e: { preventDefault: () => void }) => {
-            e.preventDefault();
-            if (section === 8) {
-              resetForm();
-            }
-            dispatch(updatesaveBtnActive());
-            saveDraft(values);
-          }}
-          disabled={isSubmitting}
-          data-cy="BtnSaveDraft"
-        >
-          Save for later
-        </Button>
-      </Pagination.Link>
-      <Pagination.Link>
-        {!nextSectionLabel && (
-          <Button
-            onClick={(e: { preventDefault: () => void }) => {
-              e.preventDefault();
+    <>
+      <Pagination className={paginationClasses}>
+        {prevSectionLabel && (
+          <Pagination.Link
+            previous
+            onClick={() => {
+              if (!finalSections?.length) {
+                dispatch(updatedFormB(values));
+              }
+              dispatch(decrementFormBSection());
+              dispatch(updateFormBPreviousSection(null));
+            }}
+            disabled={isSubmitting}
+            data-cy="LinkToPreviousSection"
+            data-jest={section ? "LinkToPreviousSection" + (section - 1) : ""}
+          >
+            {prevSectionLabel.split("\n").map((item, _index) => (
+              <div key={item}>{item}</div>
+            ))}
+          </Pagination.Link>
+        )}
+        {nextSectionLabel && (
+          <Pagination.Link
+            next
+            onClick={() => {
+              dispatch(updateFormBPreviousSection(null));
               handleSubmit();
             }}
             disabled={!isValid || isSubmitting}
-            data-cy="BtnSubmitForm"
+            data-cy="LinkToNextSection"
+            data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
           >
-            Submit Form
-          </Button>
+            {nextSectionLabel.split("\n").map((item, _index) => (
+              <div key={item}>{item}</div>
+            ))}
+          </Pagination.Link>
         )}
-      </Pagination.Link>
-      <Pagination.Link>
-        {previousSection && (
-          <Button
-            onClick={(e: { preventDefault: () => void }) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-            data-cy="BtnBackToSubmit"
-          >
-            Back to Submit
-          </Button>
-        )}
-      </Pagination.Link>
-      {nextSectionLabel && (
-        <Pagination.Link
-          next
-          onClick={() => {
-            dispatch(updateFormBPreviousSection(null));
-            handleSubmit();
-          }}
-          data-cy="LinkToNextSection"
-          data-jest={section ? "LinkToNextSection" + (section + 1) : ""}
-        >
-          {nextSectionLabel.split("\n").map((item, _index) => (
-            <div key={item}>{item}</div>
-          ))}
-        </Pagination.Link>
-      )}
-    </Pagination>
+      </Pagination>
+      <Container>
+        <Row>
+          <Col width="one-quarter">
+            {!nextSectionLabel && (
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+                disabled={!isValid || isSubmitting || isAutosaving}
+                data-cy="BtnSubmitForm"
+              >
+                Submit Form
+              </Button>
+            )}
+          </Col>
+          <Col width="one-quarter">
+            <Button
+              secondary
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                if (section === 8) {
+                  resetForm();
+                }
+                dispatch(updatesaveBtnActive());
+                saveDraftForm("formB", values, history);
+              }}
+              disabled={isSubmitting}
+              data-cy="BtnSaveDraft"
+            >
+              {"Save & exit"}
+            </Button>
+          </Col>
+          <Col width="one-quarter">
+            <StartOverButton />
+          </Col>
+          <Col width="one-quarter">
+            {previousSection && (
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+                disabled={isSubmitting}
+                data-cy="BtnBackToSubmit"
+              >
+                Back to Submit
+              </Button>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 

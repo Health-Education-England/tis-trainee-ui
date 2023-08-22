@@ -9,7 +9,13 @@ import formAJson from "./formA.json";
 import FormViewBuilder from "../../FormViewBuilder";
 import ScrollTo from "../../../ScrollTo";
 import FormSavePDF from "../../../FormSavePDF";
-import { Button, WarningCallout } from "nhsuk-react-components";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  WarningCallout
+} from "nhsuk-react-components";
 import { FormRUtilities } from "../../../../../utilities/FormRUtilities";
 import { useConfirm } from "material-ui-confirm";
 import { FormRPartA } from "../../../../../models/FormRPartA";
@@ -19,6 +25,7 @@ import {
   saveDraftForm,
   submitForm
 } from "../../../../../utilities/FormBuilderUtilities";
+import { StartOverButton } from "../../../StartOverButton";
 
 const FormAView = () => {
   const confirm = useConfirm();
@@ -76,38 +83,39 @@ const FormAView = () => {
         </WarningCallout>
       )}
       {canEdit && (
-        <div className="nhsuk-grid-row">
-          <div className="nhsuk-grid-column-two-thirds">
-            <div className="nhsuk-grid-row">
-              <div className="nhsuk-grid-column-one-third">
-                <Button
-                  secondary
-                  onClick={() => {
-                    setIsSubmitting(true);
-                    saveDraftForm(formName, formAData, history);
-                  }}
-                  disabled={isSubmitting}
-                  data-cy="BtnSaveDraft"
-                >
-                  Save for later
-                </Button>
-              </div>
-              <div className="nhsuk-grid-column-one-third">
-                <Button
-                  onClick={(e: { preventDefault: () => void }) => {
-                    e.preventDefault();
-                    setIsSubmitting(true);
-                    handleSubClick(formAData);
-                  }}
-                  disabled={isSubmitting}
-                  data-cy="BtnSubmit"
-                >
-                  Submit Form
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Container>
+          <Row>
+            <Col width="one-quarter">
+              <Button
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  setIsSubmitting(true);
+                  handleSubClick(formAData);
+                }}
+                disabled={isSubmitting}
+                data-cy="BtnSubmit"
+              >
+                Submit Form
+              </Button>
+            </Col>
+            <Col width="one-quarter">
+              <Button
+                secondary
+                onClick={() => {
+                  setIsSubmitting(true);
+                  saveDraftForm(formName, formAData, history);
+                }}
+                disabled={isSubmitting}
+                data-cy="BtnSaveDraft"
+              >
+                {"Save & exit"}
+              </Button>
+            </Col>
+            <Col width="one-quarter">
+              <StartOverButton />
+            </Col>
+          </Row>
+        </Container>
       )}
       {!canEdit &&
         FormRUtilities.displaySubmissionDate(

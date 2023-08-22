@@ -53,7 +53,7 @@ describe("Header with MFA set up", () => {
     cy.get(`[data-cy=BtnMenu]`).should("exist").should("contain.text", "Menu");
     cy.get("[data-cy=logoutBtn]")
       .should("exist")
-      .should("contain.text", "Logout");
+      .should("contain.text", "Sign out");
   });
 });
 

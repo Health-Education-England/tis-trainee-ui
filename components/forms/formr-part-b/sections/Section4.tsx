@@ -21,11 +21,12 @@ import {
 } from "../../../../utilities/Constants";
 import { BooleanUtilities } from "../../../../utilities/BooleanUtilities";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const Section4 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -82,6 +83,7 @@ const Section4 = ({
               </p>
             </div>
           </WarningCallout>
+          <AutosaveNote />
           <Card feature data-cy="declarations4">
             <Card.Content>
               <Card.Heading>Previous resolved declarations</Card.Heading>
@@ -190,6 +192,7 @@ const Section4 = ({
               )}
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -202,7 +205,6 @@ const Section4 = ({
 
           <FormRPartBPagination
             values={values}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

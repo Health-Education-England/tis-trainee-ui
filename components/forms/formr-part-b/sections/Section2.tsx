@@ -22,11 +22,12 @@ import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
 import { StringUtilities } from "../../../../utilities/StringUtilities";
+import { AutosaveNote } from "../../AutosaveNote";
+import { AutosaveForFormB } from "../AutosaveForFormB";
 
 const Section2 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -76,6 +77,7 @@ const Section2 = ({
             </p>
           </WarningCallout>
           <DataSourceMsg />
+          <AutosaveNote />
           <Card feature>
             <Card.Content>
               <Card.Heading>Type of work</Card.Heading>
@@ -166,6 +168,7 @@ const Section2 = ({
               />
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -178,7 +181,6 @@ const Section2 = ({
 
           <FormRPartBPagination
             values={ProfileUtilities.updateVals(values)}
-            saveDraft={saveDraft}
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             handleSubmit={handleSubmit}

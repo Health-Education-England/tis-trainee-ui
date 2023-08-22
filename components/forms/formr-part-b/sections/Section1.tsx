@@ -19,11 +19,12 @@ import DataSourceMsg from "../../../../components/common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { DesignatedBodyKeyValue } from "../../../../models/DesignatedBodyKeyValue";
 import { AutocompleteSelect } from "../../../common/AutocompleteSelect";
+import { AutosaveForFormB } from "../AutosaveForFormB";
+import { AutosaveNote } from "../../AutosaveNote";
 
 const Section1 = ({
   prevSectionLabel,
   nextSectionLabel,
-  saveDraft,
   previousSection,
   handleSectionSubmit
 }: IFormRPartBSection) => {
@@ -77,6 +78,7 @@ const Section1 = ({
             </p>
           </WarningCallout>
           <DataSourceMsg />
+          <AutosaveNote />
           <Card feature>
             <Card.Content>
               <Card.Heading>Personal details</Card.Heading>
@@ -166,6 +168,7 @@ const Section1 = ({
               />
             </Card.Content>
           </Card>
+          <AutosaveForFormB />
           {[...Object.values(errors)].length > 0 ? (
             <ErrorSummary
               aria-labelledby="errorSummaryTitle"
@@ -179,7 +182,6 @@ const Section1 = ({
             prevSectionLabel={prevSectionLabel}
             nextSectionLabel={nextSectionLabel}
             values={values}
-            saveDraft={saveDraft}
             handleSubmit={handleSubmit}
             previousSection={previousSection}
           />

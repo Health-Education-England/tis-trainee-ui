@@ -12,6 +12,7 @@ const startDate = dayjs()
   .subtract(dayjs.duration({ months: 9, days: 30 }))
   .format("YYYY-MM-DD");
 
+// Note: See FormA.cy.tsx Component for more thorough tests of the form fields and validation
 describe("Form R Part A - Basic Form completion and submission", () => {
   before(() => {
     cy.wait(30000);
@@ -40,10 +41,6 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         } else {
           cy.get("#btnOpenForm").click();
         }
-
-        // most of the Form A functionality is tested in FormA.cy.tsx Component
-        // This file is to test localStorage, saving and submitting the form
-
         cy.get(".nhsuk-warning-callout > p").should("exist");
         cy.get('[data-cy="progress-header"] > h3').should(
           "contain.text",
@@ -53,6 +50,17 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         // -- personal details section --
         // immigration status
         const immigrationTxt = "Refugee in the UK";
+        // test autosave functionality and start over button visibility
+        cy.log(
+          "################ Autosave functionality and start over visibility ###################"
+        );
+        cy.get('[data-cy="autosaveStatusMsg"]')
+          .should("exist")
+          .should(
+            "contain.text",
+            "Autosave status: Waiting for new changes..."
+          );
+        cy.get('[data-cy="startOverButton"]').should("not.exist");
         cy.get(
           '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
         )
@@ -63,33 +71,39 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .first()
           .click();
         cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
-
-        // Test the local storage is updated
-        // put a wait here to give time for the local storage to update
-        cy.wait(5000)
-          .getLocalStorage("formA")
-          .then(formA => {
-            const parsedForm = formA && JSON.parse(formA);
-            const immigrationStatus = parsedForm.immigrationStatus;
-            console.log("immigrationStatus", immigrationStatus);
-            expect(immigrationStatus).to.equal(immigrationTxt);
+        cy.get('[data-cy="autosaveStatusMsg"]')
+          .should("exist")
+          .should("include.text", "Autosave status: Success");
+        cy.log("################ Start over functionality ###################");
+        cy.get('[data-cy="startOverButton"]').should("exist").click();
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+        cy.get("#btnOpenForm")
+          .should("exist")
+          .focus()
+          .then((loadFormAButton: JQuery) => {
+            if (loadFormAButton.attr("data-cy") === "Submit new form") {
+              cy.get('[data-cy="Submit new form"]').click();
+              cy.get("body").then($body => {
+                if ($body.find(".MuiDialog-container").length) {
+                  cy.get(".MuiDialogContentText-root").should(
+                    "include.text",
+                    "You recently submitted a form"
+                  );
+                  cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+                }
+              });
+            } else {
+              cy.get("#btnOpenForm").click();
+            }
           });
-
-        // NOTE - Revert this once BE trainee forms DTO has lastModiFiedDate
-        // Check the local storage form data is persisted if user navigates away from the page
-        // cy.log(
-        //   "################ Check the local storage form data is persisted if user navigates away from the page ###################"
-        // );
-        // cy.get('[data-cy="Form R (Part A)"]').click();
-        // cy.get('[data-cy="btn-Edit unsaved draft form"]')
-        //   .should("exist")
-        //   .click();
-        // cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
-
         //-- personal details section --
         // test error msg when no email
         cy.log("################ Error msg when no email ###################");
-        cy.get('[data-cy="BtnContinue"]').click();
+        cy.get('[data-cy="navNext"]').click();
         cy.get(".nhsuk-error-summary").should("exist");
         cy.get('[data-cy="error-txt-email,Email address is required"]').should(
           "exist"
@@ -98,12 +112,21 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .focus()
           .clear()
           .type("traineeui.tester@hee.nhs.uk");
+        cy.get(
+          '[data-cy="immigrationStatus"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+        )
+          .click()
+          .type("ref")
+          .get(".react-select__menu")
+          .find(".react-select__option")
+          .first()
+          .click();
         cy.get(".nhsuk-error-summary").should("not.exist");
-        cy.get('[data-cy="BtnContinue"]').click();
+        cy.get('[data-cy="navNext"]').click();
 
         //-- Declarations section --
         // test navigation to the previous section
-        cy.get('[data-cy="btnBack-0"]').should("exist").click();
+        cy.get('[data-cy="navPrevious"]').should("exist").click();
         cy.get('[data-cy="progress-header"] > h3').should(
           "contain.text",
           "Part 1 of 3 - Personal Details"
@@ -112,7 +135,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           "have.value",
           "traineeui.tester@hee.nhs.uk"
         );
-        cy.get('[data-cy="BtnContinue"]').click();
+        cy.get('[data-cy="navNext"]').click();
         cy.get('[data-cy="progress-header"] > h3').should(
           "contain.text",
           "Part 2 of 3 - Programme Declarations"
@@ -152,7 +175,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .click()
           .clear()
           .type(completionDate);
-        cy.get('[data-cy="BtnContinue"]').click();
+        cy.get('[data-cy="navNext"]').click();
 
         // section 3 - Programme details
         cy.get('[data-cy="progress-header"] > h3').should(
@@ -178,8 +201,8 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
         cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
 
-        cy.get('[data-cy="BtnContinue"]')
-          .should("have.text", "Review & submit")
+        cy.get('[data-cy="navNext"]')
+          .should("have.text", "Next:Review & submit")
           .click();
 
         cy.get('[data-cy="warningConfirmation"]').should("exist");
@@ -206,7 +229,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         cy.get('[data-cy="savePdfBtn"]').should("exist");
 
         // Navigate back to the list
-        cy.get(".nhsuk-back-link__link").should("exist").click();
+        cy.get('[data-cy="backLink"]').should("exist").click();
         cy.contains("Submitted forms").should("exist");
       });
   });
@@ -245,7 +268,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
       .clear()
       .type("traineeui.tester@hee.nhs.uk");
 
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
 
     cy.log(
       "################ Check that the changed dependent field visibility prop is persisted when a draft form is saved and re-opened so that the validation still fires correctly ###################"
@@ -255,14 +278,15 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     ).click();
     cy.get('[data-cy="BtnSaveDraft"]').click();
     cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="startOverButton"]').should("exist");
+    cy.get('[data-cy="navNext"]').click();
     cy.get(
       '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
     ).should("be.checked");
     cy.get(
       '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     ).should("exist");
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get(
       '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
@@ -295,7 +319,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
       .click()
       .clear()
       .type(completionDate);
-    cy.get('[data-cy="BtnContinue"]').click();
+    cy.get('[data-cy="navNext"]').click();
     cy.get(
       '[data-cy="trainingGrade"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     )
@@ -314,22 +338,29 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
     cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
 
-    cy.get('[data-cy="BtnContinue"]')
-      .should("have.text", "Review & submit")
+    cy.get('[data-cy="navNext"]')
+      .should("have.text", "Next:Review & submit")
       .click();
-    // Submit form
+    // Cancel submit and start over
+    cy.log(
+      "################ Cancel submit and start over/delete draft ###################"
+    );
     cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
     cy.get(".MuiDialog-container")
       .should("exist")
       .should("include.text", "Please think carefully before submitting");
+    cy.get(".MuiDialogActions-root > :nth-child(1)").click();
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-
-    cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });
 
-describe("Form R Part A - toast messages", () => {
+describe("Form R Part A - 'save form' toast messages", () => {
   beforeEach(() => {
     cy.wait(30000);
     cy.visit("/");
@@ -381,5 +412,59 @@ describe("Form R Part A - toast messages", () => {
       "[data-cy=toastText]",
       "Your Form R (Part A) has been saved."
     ).should("be.visible");
+  });
+});
+
+describe("Form R Part A - 'delete form' toast messages", () => {
+  beforeEach(() => {
+    cy.wait(30000);
+    cy.visit("/");
+    cy.signIn();
+  });
+  it("should display a error toast message when the form is deleted unsuccessfully.", () => {
+    cy.intercept("DELETE", /\/api\/forms\/formr-parta/, {
+      statusCode: 500,
+      body: { error: "Some server error" }
+    }).as("deleteFormRequestErrored");
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.get("body").then($body => {
+      if ($body.find(".MuiDialog-container").length) {
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "You recently submitted a form"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      }
+    });
+    cy.get('[data-cy="email-input"]').focus().clear().type("t");
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get('[data-cy="toastText"]').should(
+      "include.text",
+      "Couldn't delete your draft Form R (Part A)."
+    );
+  });
+  it("should display a sucess toast message when the form is deleted successfully.", () => {
+    cy.contains("Form R (Part A)").click();
+    cy.visit("/formr-a", { failOnStatusCode: false });
+    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
+    cy.get('[data-cy="email-input"]').focus().clear().type("t");
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get(".MuiDialogContentText-root").should(
+      "include.text",
+      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+    );
+    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    cy.get('[data-cy="toastText"]').should(
+      "include.text",
+      "Your draft Form R (Part A) has been deleted."
+    );
+    cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });
