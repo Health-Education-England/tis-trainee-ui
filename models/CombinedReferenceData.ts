@@ -12,6 +12,7 @@ export interface CombinedReferenceData {
   immigrationStatus: KeyValue[];
   curriculum: CurriculumKeyValue[];
   declarationType: KeyValue[];
+  programmeMembershipType: KeyValue[];
   covidChangeCircs: KeyValue[];
   [key: string]:
     | KeyValue[]

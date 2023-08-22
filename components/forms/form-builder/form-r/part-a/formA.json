@@ -235,8 +235,8 @@
             {
               "name": "programmeMembershipType",
               "label": "Post type or Appointment",
-              "placeholder": "type here...",
-              "type": "text",
+              "type": "select",
+              "optionsKey": "programmeMembershipType",
               "visible": true
             },
             {
