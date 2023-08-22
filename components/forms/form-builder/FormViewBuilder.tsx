@@ -4,17 +4,17 @@ import { Button, Card, SummaryList } from "nhsuk-react-components";
 import { handleEditSection } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
-interface FormViewBuilder {
+interface FormViewBuilderProps {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
 }
 
-const FormViewBuilder: React.FC<FormViewBuilder> = ({
+const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
   jsonForm,
   formData,
   canEdit
-}: FormViewBuilder) => {
+}: FormViewBuilderProps) => {
   return (
     <div>
       {jsonForm.pages.map((page, pageIndex) => (
