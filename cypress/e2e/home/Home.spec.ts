@@ -11,10 +11,7 @@ const homeArr = [
 
 describe("Home", () => {
   beforeEach(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/home", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/home");
   });
 
   it("should find profile button and click in to the profile section", () => {

@@ -3,10 +3,7 @@
 
 describe("MFA set-up", () => {
   before(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
   it("should render the Choose MFA page", () => {
     cy.get('[data-cy="MFA"]').first().click();

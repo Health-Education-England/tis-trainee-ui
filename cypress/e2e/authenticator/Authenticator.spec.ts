@@ -3,9 +3,7 @@
 
 describe("Authenticator", () => {
   beforeEach(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/");
+    cy.signInToTss(3000);
   });
 
   it("Header should show logo and heading", () => {

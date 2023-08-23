@@ -25,6 +25,11 @@ declare global {
       checkFlags(name: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
       signIn(): Chainable<Element>;
+      signInToTss(
+        waitTimeMs?: number,
+        visitUrl?: string,
+        viewport?: Cypress.ViewportPreset
+      ): Chainable<Element>;
       getTotp(): Chainable<Element>;
       useTotp(): Chainable<Element>;
       logoutDesktop(): Chainable<Element>;

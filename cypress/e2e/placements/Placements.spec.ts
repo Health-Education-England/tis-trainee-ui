@@ -3,10 +3,7 @@
 
 describe("Placements", () => {
   beforeEach(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/placements", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/placements");
   });
 
   it("should show the correct text for each placement ", () => {

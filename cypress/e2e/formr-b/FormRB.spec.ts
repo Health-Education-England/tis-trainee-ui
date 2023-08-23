@@ -24,11 +24,7 @@ const prevRevalDate = dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
 describe("Form R (Part B) - Start over via forms list (CreateList) page", () => {
   before(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/");
-    cy.viewport("iphone-6");
-    cy.signIn();
+    cy.signInToTss(30000, undefined, "iphone-6");
   });
   it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
     isCovid = false;
@@ -70,11 +66,7 @@ describe("Form R (Part B) - Start over via forms list (CreateList) page", () => 
 
 describe("Form R (Part B)", () => {
   before(() => {
-    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
-    cy.wait(30000);
-    cy.visit("/");
-    cy.viewport("iphone-6");
-    cy.signIn();
+    cy.signInToTss(30000, undefined, "iphone-6");
   });
   it("Should complete a new Form R Part B.", () => {
     isCovid = true;
