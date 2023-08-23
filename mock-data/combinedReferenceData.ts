@@ -204,6 +204,12 @@ export const mockedCombinedReference: CombinedReferenceData = {
       id: "614b6140e0f4f2685df397bb",
       label: "Limited opportunities to curricula requirements"
     }
+  ],
+  programmeMembershipType: [
+    { id: "1", label: "Substantive"},
+    { id: "2", label: "LAT"},
+    { id: "4", label: "Military"},
+    { id: "5", label: "Visitor"}
   ]
 };
 
@@ -370,6 +376,24 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     {
       label: "Defence Postgraduate Medical Deanery",
       value: "Defence Postgraduate Medical Deanery"
+    }
+  ],
+  programmeMembershipType: [
+    { 
+      label: "Substantive", 
+      value: "Substantive"
+    },
+    { 
+      label: "LAT", 
+      value: "LAT"
+    },
+    { 
+      label: "Military", 
+      value: "Military"
+    },
+    { 
+      label: "Visitor", 
+      value: "Visitor"
     }
   ]
 };

@@ -198,7 +198,14 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .clear()
           .type(startDate);
         cy.get(".nhsuk-card__heading").click(); // to remove date picker focus
-        cy.get('[data-cy="programmeMembershipType-input"]').clear().type("LAT");
+        cy.get(
+          '[data-cy="programmeMembershipType"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+        )
+          .click()
+          .get(".react-select__menu")
+          .find(".react-select__option")
+          .first()
+          .click();
         cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("1");
 
         cy.get('[data-cy="navNext"]')

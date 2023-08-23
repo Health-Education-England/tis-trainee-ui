@@ -46,6 +46,10 @@ export class TraineeReferenceService extends ApiService {
     return this.get("/covid-change-circs");
   }
 
+  getProgrammeMembershipType(): Promise<AxiosResponse<any>> {
+    return this.get("/programme-membership-type");
+  }
+
   getCombinedReferenceData(): Promise<CombinedReferenceData> {
     return Promise.all([
       this.get("/gender").then(response => response.data),
@@ -56,7 +60,8 @@ export class TraineeReferenceService extends ApiService {
       this.get("/immigration-status").then(response => response.data),
       this.get("/curriculum").then(response => response.data),
       this.get("/declaration-type").then(response => response.data),
-      this.get("/covid-change-circs").then(response => response.data)
+      this.get("/covid-change-circs").then(response => response.data),
+      this.get("/programme-membership-type").then(response => response.data)
     ]).then(
       ([
         gender,
@@ -67,7 +72,8 @@ export class TraineeReferenceService extends ApiService {
         immigrationStatus,
         curriculum,
         declarationType,
-        covidChangeCircs
+        covidChangeCircs,
+        programmeMembershipType
       ]) => ({
         gender,
         college,
@@ -77,7 +83,8 @@ export class TraineeReferenceService extends ApiService {
         immigrationStatus,
         curriculum,
         declarationType,
-        covidChangeCircs
+        covidChangeCircs,
+        programmeMembershipType
       })
     );
   }
