@@ -95,3 +95,9 @@ See the section about [deployment](https://nextjs.org/docs/deployment) for more 
 
 When deploying to preprod the `ENV` environment variable should be set to
 `preprod`, allowing the correct dotenv file to be loaded.
+
+### Deployment pipeline
+
+Note that e2e tests are not run as part of the suite of automated PR tests. They are only run after a PR is merged and built: they are run against the resulting preprod instance. 
+
+This means that you need to run the e2e tests locally (which you should be doing anyway) and not rely on the PR / Sonarcloud automated checks to avoid deploying failing code to preprod.
