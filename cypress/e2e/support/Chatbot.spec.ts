@@ -1,5 +1,6 @@
 describe("Chatbot", () => {
   before(() => {
+    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
     cy.wait(30000);
     cy.visit("/");
     // Wait for the chatbot to fully load.

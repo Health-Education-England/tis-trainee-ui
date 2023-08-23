@@ -7,6 +7,7 @@ describe("Desktop/ tablet header", () => {
   const sizes = [mobileView, desktopView];
 
   beforeEach(() => {
+    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
     cy.wait(30000);
     cy.visit("/");
     cy.signIn();

@@ -15,6 +15,7 @@ const startDate = dayjs()
 // Note: See FormA.cy.tsx Component for more thorough tests of the form fields and validation
 describe("Form R Part A - Basic Form completion and submission", () => {
   before(() => {
+    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
     cy.wait(30000);
     cy.visit("/");
     cy.signIn();
@@ -244,6 +245,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
 describe("Form R Part A - JSON form fields visibility status checks", () => {
   before(() => {
+    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
     cy.wait(30000);
     cy.visit("/");
     cy.signIn();
