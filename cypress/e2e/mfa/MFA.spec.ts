@@ -3,9 +3,7 @@
 
 describe("MFA set-up", () => {
   before(() => {
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
   it("should render the Choose MFA page", () => {
     cy.get('[data-cy="MFA"]').first().click();

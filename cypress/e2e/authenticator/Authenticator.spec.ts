@@ -3,7 +3,7 @@
 
 describe("Authenticator", () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.signInToTss(30000);
   });
 
   it("Header should show logo and heading", () => {

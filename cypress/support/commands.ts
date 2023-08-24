@@ -21,6 +21,45 @@ Cypress.Commands.add("testDataSourceLink", () => {
   );
 });
 
+Cypress.Commands.add(
+  "signInToTss",
+  (
+    waitTimeMs?: number,
+    visitUrl?: string,
+    viewport?: Cypress.ViewportPreset
+  ) => {
+    if (waitTimeMs) {
+      if (waitTimeMs === 30) {
+        cy.log(
+          "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
+        );
+      }
+      cy.wait(waitTimeMs);
+    }
+    const urlString = visitUrl ? visitUrl : "/";
+    cy.visit(urlString, { failOnStatusCode: false });
+    if (viewport) cy.viewport(viewport);
+    cy.signIn();
+  }
+);
+
+const SignInToTss = (
+  visitUrl: string = "/",
+  waitTimeMs?: number,
+  viewport?: any
+) => {
+  if (waitTimeMs) {
+    if (waitTimeMs === 30) {
+      cy.log(
+        "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
+      );
+    }
+    cy.wait(waitTimeMs);
+  }
+  cy.visit(visitUrl);
+  if (viewport) cy.viewport(viewport);
+};
+
 Cypress.Commands.add("signIn", () => {
   cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
   cy.get('[type="password"]').clear().type(Cypress.env("password"));

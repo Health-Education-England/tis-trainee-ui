@@ -3,9 +3,7 @@
 
 describe("Placements", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/placements", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/placements");
   });
 
   it("should show the correct text for each placement ", () => {
