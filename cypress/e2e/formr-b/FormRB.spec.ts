@@ -34,9 +34,9 @@ describe("Form R (Part B) - Start over via forms list (CreateList) page", () => 
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
-      .then((loadFormAButton: JQuery) => {
+      .then((loadFormBButton: JQuery) => {
         // ---------- if New form btn ------------------------------------------------------------------
-        if (loadFormAButton.attr("data-cy") === "Submit new form") {
+        if (loadFormBButton.attr("data-cy") === "Submit new form") {
           cy.get('[data-cy="Submit new form"]').click();
           cy.get("body").then($body => {
             if ($body.find(".MuiDialog-container").length) {
@@ -53,6 +53,7 @@ describe("Form R (Part B) - Start over via forms list (CreateList) page", () => 
         cy.get(".nhsuk-warning-callout > p").should("exist");
         cy.get("#gmcNumber").type("55555555");
         cy.get("[data-cy=BtnSaveDraft]").click();
+        cy.wait(5000);
         cy.get('[data-cy="startOverButton"]').should("exist").click();
         cy.get(".MuiDialogContentText-root").should(
           "include.text",
@@ -395,6 +396,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnSaveDraft]").click();
 
     // -------------- Retrieve saved draft form ----------------------------------
+    cy.wait(5000);
     cy.get('[data-cy="btn-Edit saved draft form"]')
       .should("exist")
       .focus()
