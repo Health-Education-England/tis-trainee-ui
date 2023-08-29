@@ -136,6 +136,7 @@ export type PanelKeys = {
   endDate: string;
   wholeTimeEquivalent: string;
   specialty: string;
+  subSpecialty: string;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -159,6 +160,7 @@ export const PANEL_KEYS: any = {
   endDate: "Ends",
   wholeTimeEquivalent: "Whole Time Equivalent",
   specialty: "Specialty",
+  subSpecialty: "Sub specialty",
   grade: "Grade",
   placementType: "Placement Type",
   employingBody: "Employing Body",

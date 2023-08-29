@@ -11,6 +11,7 @@ export interface Placement {
   endDate: Date | string;
   wholeTimeEquivalent: string;
   specialty: string;
+  subSpecialty: string;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -29,6 +30,7 @@ export const placementPanelTemplate: Placement = {
   endDate: "",
   wholeTimeEquivalent: "",
   specialty: "",
+  subSpecialty: "",
   grade: "",
   placementType: "",
   employingBody: "",
