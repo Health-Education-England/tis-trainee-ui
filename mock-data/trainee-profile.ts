@@ -281,6 +281,7 @@ export const mockPlacements: Placement[] = [
     site: "Addenbrookes Hospital",
     siteLocation: "Site location",
     siteKnownAs: "Addenbrookes Hospital (siteNo)",
+    otherSites: [],
     specialty: "Dermatology",
     startDate: new Date("2019-01-01"),
     status: Status.Current,
@@ -296,6 +297,18 @@ export const mockPlacements: Placement[] = [
     site: "Addenbrookes Hospital",
     siteLocation: "Site location",
     siteKnownAs: "Addenbrookes Hospital (siteNo)",
+    otherSites: [
+      {
+        site: "Huddersfield Royal Infirmary",
+        siteKnownAs: "Huddersfield Royal Infirmary (RWY01)",
+        siteLocation: "Acre Street Lindley Huddersfield"
+      },
+      {
+        site: "Great North Children's Hospital",
+        siteKnownAs: "Great North Children's Hospital (RTD10)",
+        siteLocation: "Queen Victoria Road Newcastle upon Tyne"
+      }
+    ],
     specialty: "Dermatology",
     startDate: new Date("2020-01-01"),
     status: Status.Current,
@@ -305,6 +318,52 @@ export const mockPlacements: Placement[] = [
   }
 ];
 
+export const mockPlacementPartialOtherSites = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [
+    {
+      site: "site with missing location",
+      siteKnownAs: "site known as"
+    },
+    {
+      site: "site with missing known as",
+      siteLocation: "site location"
+    },
+    {
+      site: "site with only name"
+    }
+  ],
+  specialty: "Dermatology",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
+
+export const mockPlacementNoOtherSites = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [],
+  specialty: "Dermatology",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
+
 export const mockPlacementNonTemplatedField = {
   endDate: new Date("2020-12-31"),
   grade: "ST1",
@@ -313,6 +372,7 @@ export const mockPlacementNonTemplatedField = {
   site: "Addenbrookes Hospital",
   siteLocation: "Site location",
   siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [],
   specialty: "Dermatology",
   startDate: new Date("2019-01-01"),
   status: Status.Current,
@@ -350,6 +410,7 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site1",
     siteLocation: "siteLocation1",
     siteKnownAs: "siteKnownAs1",
+    otherSites: [],
     startDate: oneWeekAgo,
     endDate: yesterday,
     wholeTimeEquivalent: "wholeTimeEquivalent1",
@@ -365,6 +426,7 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site2",
     siteLocation: "siteLocation2",
     siteKnownAs: "siteKnownAs2",
+    otherSites: [],
     startDate: today,
     endDate: today,
     wholeTimeEquivalent: "wholeTimeEquivalent2",
@@ -380,6 +442,7 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site3",
     siteLocation: "siteLocation3",
     siteKnownAs: "siteKnownAs3",
+    otherSites: [],
     startDate: twelveWeeksAhead,
     endDate: twelveWeeksAheadPlusOneDay,
     wholeTimeEquivalent: "wholeTimeEquivalent3",
@@ -395,6 +458,7 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site4",
     siteLocation: "siteLocation4",
     siteKnownAs: "siteKnownAs4",
+    otherSites: [],
     startDate: twelveWeeksAheadPlusOneDay,
     endDate: twelveWeeksAheadPlusOneDay,
     wholeTimeEquivalent: "wholeTimeEquivalent4",

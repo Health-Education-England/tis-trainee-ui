@@ -154,6 +154,7 @@ export const PANEL_KEYS: any = {
   site: "Site",
   siteLocation: "Site Location",
   siteKnownAs: "Site Known As",
+  otherSites: "Other Sites",
   startDate: "Starts",
   endDate: "Ends",
   wholeTimeEquivalent: "Whole Time Equivalent",

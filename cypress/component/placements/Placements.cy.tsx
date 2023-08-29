@@ -7,7 +7,9 @@ import Placements from "../../../components/placements/Placements";
 import {
   mockPlacements,
   mockPlacementNonTemplatedField,
-  mockPersonalDetails
+  mockPersonalDetails,
+  mockPlacementNoOtherSites,
+  mockPlacementPartialOtherSites
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -80,6 +82,22 @@ describe("Placements with MFA set up", () => {
       .first()
       .should("exist")
       .should("contain.text", "Addenbrookes Hospital (siteNo)");
+    cy.get('[data-cy="otherSite0Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "Huddersfield Royal Infirmary");
+    cy.get('[data-cy="otherSiteLocation0Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "Acre Street Lindley Huddersfield");
+    cy.get('[data-cy="otherSite1Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "Great North Children's Hospital (RTD10)");
+    cy.get('[data-cy="otherSiteLocation1Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "Queen Victoria Road Newcastle upon Tyne");
     cy.get('[data-cy="wholeTimeEquivalent0Val"]')
       .first()
       .should("exist")
@@ -94,6 +112,77 @@ describe("Placements with MFA set up", () => {
       "have.text",
       "The information we have for future placements with a start date more than 12 weeks from today is not yet finalised and may be subject to change."
     );
+  });
+
+  it("should show available data when partial Other Sites", () => {
+    const MockedPlacementsSuccess = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: [mockPlacementPartialOtherSites]
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsSuccess />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="otherSite0Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "site known as");
+    cy.get('[data-cy="otherSiteLocation0Val"]').should("not.exist");
+
+    cy.get('[data-cy="otherSite1Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "site with missing known as");
+    cy.get('[data-cy="otherSiteLocation1Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "site location");
+
+    cy.get('[data-cy="otherSite2Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "site with only name");
+    cy.get('[data-cy="otherSiteLocation2Val"]').should("not.exist");
+  });
+
+  it("should show alternative text when no Other Sites", () => {
+    const MockedPlacementsSuccess = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: [mockPlacementNoOtherSites]
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsSuccess />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy=otherSites0Val]")
+      .should("exist")
+      .should("contain.text", "None provided");
   });
 
   it("should show alternative text when no panel data available", () => {
