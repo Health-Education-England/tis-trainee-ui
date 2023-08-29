@@ -10,10 +10,17 @@ export function OtherSites({ otherSites }: OtherSitesProps) {
     return (
       <>
         {otherSites.map(
-          ({ siteKnownAs, siteLocation }: Site, index: number): JSX.Element => (
+          (
+            { site, siteKnownAs, siteLocation }: Site,
+            index: number
+          ): JSX.Element => (
             <div key={index} className={style.cItems}>
-              <div data-cy={`otherSiteKnownAs${index}Val`}>{siteKnownAs}</div>
-              <div data-cy={`otherSiteLocation${index}Val`}>{siteLocation}</div>
+              <div data-cy={`otherSite${index}Val`}>{siteKnownAs || site}</div>
+              {siteLocation && (
+                <div data-cy={`otherSiteLocation${index}Val`}>
+                  {siteLocation}
+                </div>
+              )}
             </div>
           )
         )}

@@ -318,6 +318,35 @@ export const mockPlacements: Placement[] = [
   }
 ];
 
+export const mockPlacementPartialOtherSites = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [
+    {
+      site: "site with missing location",
+      siteKnownAs: "site known as"
+    },
+    {
+      site: "site with missing known as",
+      siteLocation: "site location"
+    },
+    {
+      site: "site with only name"
+    }
+  ],
+  specialty: "Dermatology",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
+
 export const mockPlacementNoOtherSites = {
   endDate: new Date("2020-12-31"),
   grade: "ST1",

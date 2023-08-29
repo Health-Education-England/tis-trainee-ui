@@ -37,8 +37,8 @@ export const placementPanelTemplate: Placement = {
 
 export interface Site {
   site: string;
-  siteKnownAs: string;
-  siteLocation: string;
+  siteKnownAs?: string;
+  siteLocation?: string;
 }
 
 export interface PlacementGroup {
