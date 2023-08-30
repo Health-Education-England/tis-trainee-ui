@@ -132,6 +132,7 @@ export type PanelKeys = {
   site: string;
   siteLocation: string;
   siteKnownAs: string;
+  otherSites: string;
   startDate: string;
   endDate: string;
   wholeTimeEquivalent: string;
