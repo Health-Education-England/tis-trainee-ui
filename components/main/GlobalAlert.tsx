@@ -14,6 +14,10 @@ const GlobalAlert = () => {
       coj: {
         status: showCojAlert,
         component: <CojAlert />
+      },
+      bookmark: {
+        status: window.location.search.includes("redirected=1"),
+        component: <BookmarkAlert />
       }
     }),
     [showCojAlert]
@@ -42,6 +46,24 @@ const GlobalAlert = () => {
     </div>
   ) : null;
 };
+
+function BookmarkAlert() {
+  return (
+    <div className="nhsuk-grid-row" data-cy="BookmarkAlert">
+      <div className="nhsuk-grid-column-full">
+        <div className="app-global-alert__content">
+          <div className="app-global-alert__message">
+            <h2>Welcome to the new Self Service Domain</h2>
+            <p>
+              Please replace any saved bookmarks for Self Service with this new
+              URL.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function CojAlert() {
   const pathName = useLocation().pathname;
