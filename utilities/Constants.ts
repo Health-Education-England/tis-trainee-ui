@@ -138,7 +138,6 @@ export type PanelKeys = {
   wholeTimeEquivalent: string;
   specialty: string;
   subSpecialty: string;
-  postAllowsSubspecialty: boolean;
   grade: string;
   placementType: string;
   employingBody: string;

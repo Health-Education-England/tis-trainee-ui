@@ -1,5 +1,4 @@
 import { Signature } from "./Dsp";
-import { PlacementSubSpecialty } from "./PlacementSubSpecialty";
 import { Status } from "./Status";
 
 export interface Placement {
@@ -12,7 +11,7 @@ export interface Placement {
   endDate: Date | string;
   wholeTimeEquivalent: string;
   specialty: string;
-  subSpecialty?: PlacementSubSpecialty;
+  subSpecialty: string;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -31,7 +30,7 @@ export const placementPanelTemplate: Placement = {
   endDate: "",
   wholeTimeEquivalent: "",
   specialty: "",
-  subSpecialty: { subSpecialty: "", postAllowsSubspecialty: false },
+  subSpecialty: "",
   grade: "",
   placementType: "",
   employingBody: "",
