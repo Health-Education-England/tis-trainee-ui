@@ -4,6 +4,7 @@ import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import store from "../../redux/store/store";
 import { PanelKeys } from "../../utilities/Constants";
+import { BooleanUtilities } from "../../utilities/BooleanUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";
@@ -142,6 +143,8 @@ function displayTheCorrectListItem(panelProp: string, panel: any) {
       );
     case "otherSites":
       return <OtherSites otherSites={panel[panelProp]} />;
+    case "postAllowsSubspecialty":
+      return BooleanUtilities.ToYesNo(panel[panelProp])
     default:
       return displayListVal(panel[panelProp], panelProp);
   }

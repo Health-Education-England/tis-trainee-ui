@@ -114,6 +114,38 @@ describe("Placements with MFA set up", () => {
     );
   });
 
+  it("should display Placements Post-Allows-Subspecialty as text", () => {
+    const MockedPlacementsSuccess = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: mockPlacements
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsSuccess />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="postAllowsSubspecialty0Val"]')
+      .first()
+      .should("exist")
+      .should("have.text", "No");
+    cy.get('[data-cy="postAllowsSubspecialty0Val"]')
+      .last()
+      .should("exist")
+      .should("have.text", "Yes");  
+  });
+
   it("should show available data when partial Other Sites", () => {
     const MockedPlacementsSuccess = () => {
       const dispatch = useAppDispatch();
