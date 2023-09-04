@@ -11,6 +11,7 @@ import { DspIssueBtn } from "../dsp/DspIssueBtn";
 import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 import { OtherSites } from "../placements/OtherSites";
+import { SubSpecialty } from "../placements/SubSpecialty";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -142,6 +143,8 @@ function displayTheCorrectListItem(panelProp: string, panel: any) {
       );
     case "otherSites":
       return <OtherSites otherSites={panel[panelProp]} />;
+    case "subSpecialty":
+      return <SubSpecialty subSpecialty={panel[panelProp]} />;
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
