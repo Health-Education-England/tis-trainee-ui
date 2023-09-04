@@ -160,7 +160,7 @@ export const PANEL_KEYS: any = {
   endDate: "Ends",
   wholeTimeEquivalent: "Whole Time Equivalent",
   specialty: "Specialty",
-  postAllowsSubspecialty: "Subspecialty is Possible",
+  subSpecialty: "Subspecialty",
   grade: "Grade",
   placementType: "Placement Type",
   employingBody: "Employing Body",
