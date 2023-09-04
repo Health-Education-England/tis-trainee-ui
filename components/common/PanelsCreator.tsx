@@ -144,7 +144,7 @@ function displayTheCorrectListItem(panelProp: string, panel: any) {
     case "otherSites":
       return <OtherSites otherSites={panel[panelProp]} />;
     case "postAllowsSubspecialty":
-      return BooleanUtilities.ToYesNo(panel[panelProp])
+      return BooleanUtilities.ToYesNo(panel[panelProp]);
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
