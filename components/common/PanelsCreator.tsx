@@ -11,6 +11,7 @@ import { DspIssueBtn } from "../dsp/DspIssueBtn";
 import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 import { OtherSites } from "../placements/OtherSites";
+import { Specialty } from "../placements/Specialty";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -33,7 +34,7 @@ export function PanelsCreator({
     <Card.Group>
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: any, index: number) => {
-          const { tisId, ...filteredPanel } = panel;
+          const { tisId, subSpecialty, postAllowsSubspecialty, ...filteredPanel } = panel;
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
@@ -44,7 +45,7 @@ export function PanelsCreator({
                         {panelKeys[panelProp as keyof PanelKeys]}
                       </SummaryList.Key>
                       <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
-                        {displayTheCorrectListItem(panelProp, panel)}
+                        {displayTheCorrectListItem(panelProp, panel, index)}
                       </SummaryList.Value>
                     </SummaryList.Row>
                   ))}
@@ -127,7 +128,7 @@ function populateTemplateProperties(template: any, values: any) {
   return populatedTemplate;
 }
 
-function displayTheCorrectListItem(panelProp: string, panel: any) {
+function displayTheCorrectListItem(panelProp: string, panel: any, index: number) {
   switch (panelProp) {
     case "curricula":
       return <Curricula curricula={panel[panelProp]} />;
@@ -142,6 +143,15 @@ function displayTheCorrectListItem(panelProp: string, panel: any) {
       );
     case "otherSites":
       return <OtherSites otherSites={panel[panelProp]} />;
+    case "specialty":
+      return (
+        <Specialty
+          specialty={panel[panelProp]}
+          subSpecialty={panel["subSpecialty"]}
+          postAllowsSubspecialty={panel["postAllowsSubspecialty"]}
+          index={index}
+        />
+      ); 
     default:
       return displayListVal(panel[panelProp], panelProp);
   }

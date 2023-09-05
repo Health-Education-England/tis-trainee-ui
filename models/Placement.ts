@@ -12,6 +12,7 @@ export interface Placement {
   wholeTimeEquivalent: string;
   specialty: string;
   subSpecialty: string;
+  postAllowsSubspecialty: boolean;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -31,6 +32,7 @@ export const placementPanelTemplate: Placement = {
   wholeTimeEquivalent: "",
   specialty: "",
   subSpecialty: "",
+  postAllowsSubspecialty: false,
   grade: "",
   placementType: "",
   employingBody: "",
