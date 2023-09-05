@@ -8,6 +8,7 @@ const GlobalAlert = () => {
     state => state.traineeProfile.hasSignableCoj
   );
   const showCojAlert = hasSignableCoj && !currentPath.includes("/sign-coj");
+  const showBookmarkAlert = useAppSelector(state => state.user.redirected);
 
   const alerts = useMemo(
     () => ({
@@ -16,11 +17,11 @@ const GlobalAlert = () => {
         component: <CojAlert />
       },
       bookmark: {
-        status: window.location.search.includes("redirected=1"),
+        status: showBookmarkAlert,
         component: <BookmarkAlert />
       }
     }),
-    [showCojAlert]
+    [showCojAlert, showBookmarkAlert]
   );
 
   const [hasAlerts, setHasAlerts] = useState(false);
@@ -49,14 +50,18 @@ const GlobalAlert = () => {
 
 function BookmarkAlert() {
   return (
-    <div className="nhsuk-grid-row" data-cy="BookmarkAlert">
+    <div className="nhsuk-grid-row" data-cy="bookmarkAlert">
       <div className="nhsuk-grid-column-full">
         <div className="app-global-alert__content">
           <div className="app-global-alert__message">
-            <h2>Welcome to the new Self Service Domain</h2>
+            <h2>We have moved</h2>
             <p>
-              Please replace any saved bookmarks for Self Service with this new
-              URL.
+              You are seeing this message because you accessed this site using
+              an old address, we have redirected you here automatically.
+            </p>
+            <p>
+              Please update any bookmarks or password managers to use the new{" "}
+              <a href="/">{window.location.origin}</a> address.
             </p>
           </div>
         </div>

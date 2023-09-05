@@ -16,7 +16,8 @@ import MFA from "../authentication/setMfa/MFA";
 import { ConfirmProvider } from "material-ui-confirm";
 import {
   getCognitoGroups,
-  getPreferredMfa
+  getPreferredMfa,
+  updatedRedirected
 } from "../../redux/slices/userSlice";
 import Home from "../home/Home";
 import Placements from "../placements/Placements";
@@ -36,8 +37,10 @@ export const Main = ({ signOut, appVersion }: IMain) => {
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
+  const redirected = useAppSelector(state => state.user.redirected);
   let content;
   const pathname = useLocation().pathname;
+  const queryParams = new URLSearchParams(location.search);
 
   useEffect(() => {
     dispatch(getPreferredMfa());
@@ -46,6 +49,24 @@ export const Main = ({ signOut, appVersion }: IMain) => {
   useEffect(() => {
     dispatch(getCognitoGroups());
   }, [dispatch]);
+
+  useEffect(() => {
+    // Store whether the user was redirected.
+    if (redirected || queryParams?.get("redirected") === "1") {
+      dispatch(updatedRedirected(true));
+    }
+  }, [dispatch]);
+
+  // If the user was redirected the URL param should be cleaned to avoid it being bookmarked.
+  if (redirected) {
+    queryParams.delete("redirected");
+    window.history.pushState(
+      null,
+      "",
+      location.pathname +
+        (queryParams.toString() ? "?" + queryParams.toString() : "")
+    );
+  }
 
   useEffect(() => {
     if (traineeProfileDataStatus === "idle") {

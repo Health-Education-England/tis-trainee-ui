@@ -18,6 +18,7 @@ interface IUser {
   signingCojPmId: string;
   signingCoj: boolean;
   signingCojSignedDate: Date | null;
+  redirected: boolean;
 }
 
 const initialState: IUser = {
@@ -33,7 +34,8 @@ const initialState: IUser = {
   signingCojProgName: null,
   signingCojPmId: "",
   signingCoj: false,
-  signingCojSignedDate: null
+  signingCojSignedDate: null,
+  redirected: false
 };
 
 export const getCognitoGroups = createAsyncThunk(
@@ -160,6 +162,9 @@ const userSlice = createSlice({
     },
     updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
       return { ...state, signingCojSignedDate: action.payload };
+    },
+    updatedRedirected(state, action: PayloadAction<boolean>) {
+      return { ...state, redirected: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -284,5 +289,6 @@ export const {
   updatedsigningCojProgName,
   updatedsigningCojPmId,
   updatedsigningCoj,
-  updatedsigningCojSignedDate
+  updatedsigningCojSignedDate,
+  updatedRedirected
 } = userSlice.actions;
