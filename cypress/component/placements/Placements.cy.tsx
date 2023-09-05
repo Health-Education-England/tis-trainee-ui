@@ -106,6 +106,10 @@ describe("Placements with MFA set up", () => {
       .first()
       .should("exist")
       .should("contain.text", "None provided");
+    cy.get('[data-cy="subSpecialty0Val"]')
+      .first()
+      .should("exist")
+      .should("contain.text", "Sub specialty");
 
     cy.get('[data-cy="futureExpand"]').click();
     cy.get('[data-cy="futureWarningText"]').should(
