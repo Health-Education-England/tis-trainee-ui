@@ -7,9 +7,7 @@ describe("Desktop/ tablet header", () => {
   const sizes = [mobileView, desktopView];
 
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
 
   sizes.forEach((size: any) => {

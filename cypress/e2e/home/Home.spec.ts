@@ -11,9 +11,7 @@ const homeArr = [
 
 describe("Home", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/home", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/home");
   });
 
   it("should find profile button and click in to the profile section", () => {

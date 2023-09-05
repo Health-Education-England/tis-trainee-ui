@@ -336,6 +336,14 @@ describe("FormA (form creation)", () => {
       .find(".react-select__option")
       .first()
       .click();
+    cy.get(
+      '[data-cy="programmeMembershipType"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
+    )
+      .click()
+      .get(".react-select__menu")
+      .find(".react-select__option")
+      .first()
+      .click();  
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.wait(2000);
     cy.get('[data-cy="autosaveStatusMsg"]')

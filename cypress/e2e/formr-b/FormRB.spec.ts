@@ -22,11 +22,52 @@ const farFutureDate = dayjs()
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
 const prevRevalDate = dayjs().subtract(5, "years").format("YYYY-MM-DD");
 
+describe("Form R (Part B) - Start over via forms list (CreateList) page", () => {
+  before(() => {
+    cy.signInToTss(30000, undefined, "iphone-6");
+  });
+  it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
+    isCovid = false;
+    cy.get("[data-cy=BtnMenu]").should("exist").click();
+    cy.contains("Form R (Part B)").click();
+    cy.visit("/formr-b", { failOnStatusCode: false });
+    cy.get("#btnOpenForm")
+      .should("exist")
+      .focus()
+      .then((loadFormBButton: JQuery) => {
+        // ---------- if New form btn ------------------------------------------------------------------
+        if (loadFormBButton.attr("data-cy") === "Submit new form") {
+          cy.get('[data-cy="Submit new form"]').click();
+          cy.get("body").then($body => {
+            if ($body.find(".MuiDialog-container").length) {
+              cy.get(".MuiDialogContentText-root").should(
+                "include.text",
+                "You recently submitted a form"
+              );
+              cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+            }
+          });
+        } else {
+          cy.get("#btnOpenForm").click();
+        }
+        cy.get(".nhsuk-warning-callout > p").should("exist");
+        cy.get("#gmcNumber").type("55555555");
+        cy.get("[data-cy=BtnSaveDraft]").click();
+        cy.wait(5000);
+        cy.get('[data-cy="startOverButton"]').should("exist").click();
+        cy.get(".MuiDialogContentText-root").should(
+          "include.text",
+          "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+        );
+        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+        cy.get('[data-cy="Submit new form"]').should("exist");
+      });
+  });
+});
+
 describe("Form R (Part B)", () => {
   before(() => {
-    cy.visit("/");
-    cy.viewport("iphone-6");
-    cy.signIn();
+    cy.signInToTss(30000, undefined, "iphone-6");
   });
   it("Should complete a new Form R Part B.", () => {
     isCovid = true;
@@ -355,6 +396,7 @@ describe("Form R (Part B)", () => {
     cy.get("[data-cy=BtnSaveDraft]").click();
 
     // -------------- Retrieve saved draft form ----------------------------------
+    cy.wait(5000);
     cy.get('[data-cy="btn-Edit saved draft form"]')
       .should("exist")
       .focus()
@@ -412,39 +454,5 @@ describe("Form R (Part B)", () => {
     // Navigate back to the list
     cy.get(".nhsuk-back-link__link").should("exist").click();
     cy.contains("Submitted forms").should("exist");
-  });
-});
-
-describe("Form R (Part B) - Start over via forms list (CreateList) page", () => {
-  before(() => {
-    cy.visit("/");
-    cy.viewport("iphone-6");
-    cy.signIn();
-  });
-  it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
-    isCovid = false;
-    cy.get("[data-cy=BtnMenu]").should("exist").click();
-    cy.contains("Form R (Part B)").click();
-    cy.visit("/formr-b", { failOnStatusCode: false });
-    cy.get('[data-cy="Submit new form"]').click();
-    cy.get("body").then($body => {
-      if ($body.find(".MuiDialog-container").length) {
-        cy.get(".MuiDialogContentText-root").should(
-          "include.text",
-          "You recently submitted a form"
-        );
-        cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-      }
-    });
-    cy.get(".nhsuk-warning-callout > p").should("exist");
-    cy.get("#gmcNumber").type("22222222");
-    cy.get("[data-cy=BtnSaveDraft]").click();
-    cy.get('[data-cy="startOverButton"]').should("exist").click();
-    cy.get(".MuiDialogContentText-root").should(
-      "include.text",
-      "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
-    );
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-    cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });

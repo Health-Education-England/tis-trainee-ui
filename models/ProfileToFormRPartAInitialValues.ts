@@ -53,7 +53,7 @@ export function ProfileToFormRPartAInitialValues(
     completionDate: programme?.programmeCompletionDate ?? null,
     trainingGrade: "",
     startDate: programme?.startDate ?? null,
-    programmeMembershipType: programme?.programmeMembershipType ?? "",
+    programmeMembershipType: "",
     wholeTimeEquivalent: "",
     declarationType: "",
     otherImmigrationStatus: "",

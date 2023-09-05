@@ -10,6 +10,7 @@ import style from "../Common.module.scss";
 import { DspIssueBtn } from "../dsp/DspIssueBtn";
 import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
+import { OtherSites } from "../placements/OtherSites";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -139,6 +140,8 @@ function displayTheCorrectListItem(panelProp: string, panel: any) {
           programmeName={panel.programmeName}
         />
       );
+    case "otherSites":
+      return <OtherSites otherSites={panel[panelProp]} />;
     default:
       return displayListVal(panel[panelProp], panelProp);
   }

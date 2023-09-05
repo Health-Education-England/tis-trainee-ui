@@ -3,7 +3,7 @@
 
 describe("Authenticator", () => {
   beforeEach(() => {
-    cy.visit("/");
+    cy.visit("/"); //in this instance we do not want to sign-in before the tests
   });
 
   it("Header should show logo and heading", () => {
