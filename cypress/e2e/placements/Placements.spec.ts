@@ -16,6 +16,7 @@ describe("Placements", () => {
     cy.get("[data-cy=site0Val]").should("exist");
     cy.get("[data-cy=siteKnownAs0Key]").should("exist");
     cy.get("[data-cy=siteKnownAs0Val]").should("exist");
+    cy.get("[data-cy=specialty0Val]").should("exist");
     cy.get("[data-cy=subSpecialty0Val]").should("exist");
   });
 });
