@@ -13,6 +13,7 @@ import { updatedTraineeProfileData } from "../../../redux/slices/traineeProfileS
 import store from "../../../redux/store/store";
 import React from "react";
 import { COJ_EPOCH } from "../../../utilities/Constants";
+import { updatedRedirected } from "../../../redux/slices/userSlice";
 
 describe("GlobalAlert", () => {
   beforeEach(() => {
@@ -72,6 +73,44 @@ describe("GlobalAlert", () => {
     );
 
     cy.get("[data-cy=globalAlert]").should("exist");
+  });
+
+  describe("BookmarkAlert", () => {
+    it("should not render when user not redirected", () => {
+      const MockedGlobalAlert = () => {
+        const dispatch = useAppDispatch();
+        dispatch(updatedRedirected(false));
+        return <GlobalAlert />;
+      };
+
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedGlobalAlert />
+          </Router>
+        </Provider>
+      );
+
+      cy.get("[data-cy=bookmarkAlert]").should("not.exist");
+    });
+
+    it("should render when user redirected", () => {
+      const MockedGlobalAlert = () => {
+        const dispatch = useAppDispatch();
+        dispatch(updatedRedirected(true));
+        return <GlobalAlert />;
+      };
+
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedGlobalAlert />
+          </Router>
+        </Provider>
+      );
+
+      cy.get("[data-cy=bookmarkAlert]").should("exist");
+    });
   });
 
   describe("CojAlert", () => {

@@ -8,15 +8,20 @@ const GlobalAlert = () => {
     state => state.traineeProfile.hasSignableCoj
   );
   const showCojAlert = hasSignableCoj && !currentPath.includes("/sign-coj");
+  const showBookmarkAlert = useAppSelector(state => state.user.redirected);
 
   const alerts = useMemo(
     () => ({
       coj: {
         status: showCojAlert,
         component: <CojAlert />
+      },
+      bookmark: {
+        status: showBookmarkAlert,
+        component: <BookmarkAlert />
       }
     }),
-    [showCojAlert]
+    [showCojAlert, showBookmarkAlert]
   );
 
   const [hasAlerts, setHasAlerts] = useState(false);
@@ -42,6 +47,28 @@ const GlobalAlert = () => {
     </div>
   ) : null;
 };
+
+function BookmarkAlert() {
+  return (
+    <div className="nhsuk-grid-row" data-cy="bookmarkAlert">
+      <div className="nhsuk-grid-column-full">
+        <div className="app-global-alert__content">
+          <div className="app-global-alert__message">
+            <h2>We have moved</h2>
+            <p>
+              You are seeing this message because you accessed this site using
+              an old address, we have redirected you here automatically.
+            </p>
+            <p>
+              Please update any bookmarks or password managers to use the new{" "}
+              <a href="/">{window.location.origin}</a> address.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function CojAlert() {
   const pathName = useLocation().pathname;
