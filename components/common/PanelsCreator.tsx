@@ -34,7 +34,12 @@ export function PanelsCreator({
     <Card.Group>
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: any, index: number) => {
-          const { tisId, subSpecialty, postAllowsSubspecialty, ...filteredPanel } = panel;
+          const {
+            tisId,
+            subSpecialty,
+            postAllowsSubspecialty,
+            ...filteredPanel
+          } = panel;
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
@@ -128,7 +133,11 @@ function populateTemplateProperties(template: any, values: any) {
   return populatedTemplate;
 }
 
-function displayTheCorrectListItem(panelProp: string, panel: any, index: number) {
+function displayTheCorrectListItem(
+  panelProp: string,
+  panel: any,
+  index: number
+) {
   switch (panelProp) {
     case "curricula":
       return <Curricula curricula={panel[panelProp]} />;
@@ -151,7 +160,7 @@ function displayTheCorrectListItem(panelProp: string, panel: any, index: number)
           postAllowsSubspecialty={panel["postAllowsSubspecialty"]}
           index={index}
         />
-      ); 
+      );
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
