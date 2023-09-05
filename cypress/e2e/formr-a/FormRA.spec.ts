@@ -15,6 +15,7 @@ const startDate = dayjs()
 // Note: See FormA.cy.tsx Component for more thorough tests of the form fields and validation
 describe("Form R Part A - Basic Form completion and submission", () => {
   before(() => {
+    // Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test)
     cy.wait(30000);
     cy.visit("/");
     cy.signIn();
@@ -244,9 +245,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
 describe("Form R Part A - JSON form fields visibility status checks", () => {
   before(() => {
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
   it("should persist the updated dependent field visibility status to trigger any expected validation  when a draft form is re-opened.", () => {
     cy.contains("Form R (Part A)").click();
@@ -376,9 +375,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
 
 describe("Form R Part A - 'save form' toast messages", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
   it("should display a error toast message when the form is submitted unsuccessfully.", () => {
     cy.intercept("POST", /\/api\/forms\/formr-parta/, {
@@ -431,9 +428,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
 
 describe("Form R Part A - 'delete form' toast messages", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/");
-    cy.signIn();
+    cy.signInToTss(30000);
   });
   it("should display a error toast message when the form is deleted unsuccessfully.", () => {
     cy.intercept("DELETE", /\/api\/forms\/formr-parta/, {

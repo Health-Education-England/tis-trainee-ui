@@ -281,7 +281,9 @@ export const mockPlacements: Placement[] = [
     site: "Addenbrookes Hospital",
     siteLocation: "Site location",
     siteKnownAs: "Addenbrookes Hospital (siteNo)",
+    otherSites: [],
     specialty: "Dermatology",
+    subSpecialty: "Sub Specialty",
     startDate: new Date("2019-01-01"),
     status: Status.Current,
     employingBody: "Employing body",
@@ -296,7 +298,20 @@ export const mockPlacements: Placement[] = [
     site: "Addenbrookes Hospital",
     siteLocation: "Site location",
     siteKnownAs: "Addenbrookes Hospital (siteNo)",
+    otherSites: [
+      {
+        site: "Huddersfield Royal Infirmary",
+        siteKnownAs: "Huddersfield Royal Infirmary (RWY01)",
+        siteLocation: "Acre Street Lindley Huddersfield"
+      },
+      {
+        site: "Great North Children's Hospital",
+        siteKnownAs: "Great North Children's Hospital (RTD10)",
+        siteLocation: "Queen Victoria Road Newcastle upon Tyne"
+      }
+    ],
     specialty: "Dermatology",
+    subSpecialty: "Sub specialty",
     startDate: new Date("2020-01-01"),
     status: Status.Current,
     employingBody: "",
@@ -304,6 +319,54 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.75"
   }
 ];
+
+export const mockPlacementPartialOtherSites = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [
+    {
+      site: "site with missing location",
+      siteKnownAs: "site known as"
+    },
+    {
+      site: "site with missing known as",
+      siteLocation: "site location"
+    },
+    {
+      site: "site with only name"
+    }
+  ],
+  specialty: "Dermatology",
+  subSpecialty: "sub specialty",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
+
+export const mockPlacementNoOtherSites = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [],
+  specialty: "Dermatology",
+  subSpecialty: "sub specialty",
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
 
 export const mockPlacementNonTemplatedField = {
   endDate: new Date("2020-12-31"),
@@ -313,7 +376,9 @@ export const mockPlacementNonTemplatedField = {
   site: "Addenbrookes Hospital",
   siteLocation: "Site location",
   siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [],
   specialty: "Dermatology",
+  subSpecialty: "sub specialty",
   startDate: new Date("2019-01-01"),
   status: Status.Current,
   employingBody: "Employing body",
@@ -350,10 +415,12 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site1",
     siteLocation: "siteLocation1",
     siteKnownAs: "siteKnownAs1",
+    otherSites: [],
     startDate: oneWeekAgo,
     endDate: yesterday,
     wholeTimeEquivalent: "wholeTimeEquivalent1",
     specialty: "specialty1",
+    subSpecialty: "subSpecialty1",
     grade: "grade1",
     placementType: "placementType1",
     employingBody: "employingBody1",
@@ -365,10 +432,12 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site2",
     siteLocation: "siteLocation2",
     siteKnownAs: "siteKnownAs2",
+    otherSites: [],
     startDate: today,
     endDate: today,
     wholeTimeEquivalent: "wholeTimeEquivalent2",
     specialty: "specialty2",
+    subSpecialty: "subSpecialty2",
     grade: "grade2",
     placementType: "placementType2",
     employingBody: "employingBody2",
@@ -380,10 +449,12 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site3",
     siteLocation: "siteLocation3",
     siteKnownAs: "siteKnownAs3",
+    otherSites: [],
     startDate: twelveWeeksAhead,
     endDate: twelveWeeksAheadPlusOneDay,
     wholeTimeEquivalent: "wholeTimeEquivalent3",
     specialty: "specialty3",
+    subSpecialty: "subSpecialty3",
     grade: "grade3",
     placementType: "placementType3",
     employingBody: "employingBody3",
@@ -395,10 +466,12 @@ export const mockPlacementsForGrouping: Placement[] = [
     site: "site4",
     siteLocation: "siteLocation4",
     siteKnownAs: "siteKnownAs4",
+    otherSites: [],
     startDate: twelveWeeksAheadPlusOneDay,
     endDate: twelveWeeksAheadPlusOneDay,
     wholeTimeEquivalent: "wholeTimeEquivalent4",
     specialty: "specialty4",
+    subSpecialty: "subSpecialty4",
     grade: "grade4",
     placementType: "placementType4",
     employingBody: "employingBody4",

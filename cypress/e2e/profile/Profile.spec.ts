@@ -3,9 +3,7 @@
 
 describe("Profile", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/profile", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/profile");
   });
 
   it("should render and populate profile section", () => {

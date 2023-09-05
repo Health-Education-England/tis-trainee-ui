@@ -3,9 +3,7 @@
 
 describe("Placements", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/placements", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/placements");
   });
 
   it("should show the correct text for each placement ", () => {
@@ -18,6 +16,7 @@ describe("Placements", () => {
     cy.get("[data-cy=site0Val]").should("exist");
     cy.get("[data-cy=siteKnownAs0Key]").should("exist");
     cy.get("[data-cy=siteKnownAs0Val]").should("exist");
+    cy.get("[data-cy=subSpecialty0Val]").should("exist");
   });
 });
 

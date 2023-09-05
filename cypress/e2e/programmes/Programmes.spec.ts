@@ -3,9 +3,7 @@
 
 describe("Programmes", () => {
   beforeEach(() => {
-    cy.wait(30000);
-    cy.visit("/programmes", { failOnStatusCode: false });
-    cy.signIn();
+    cy.signInToTss(30000, "/programmes");
   });
 
   it("should display and populate programme section", () => {

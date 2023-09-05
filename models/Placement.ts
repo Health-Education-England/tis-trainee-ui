@@ -6,10 +6,12 @@ export interface Placement {
   site: string;
   siteLocation: string;
   siteKnownAs: string;
+  otherSites: Site[];
   startDate: Date | string;
   endDate: Date | string;
   wholeTimeEquivalent: string;
   specialty: string;
+  subSpecialty: string;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -23,15 +25,23 @@ export const placementPanelTemplate: Placement = {
   site: "",
   siteLocation: "",
   siteKnownAs: "",
+  otherSites: [],
   startDate: "",
   endDate: "",
   wholeTimeEquivalent: "",
   specialty: "",
+  subSpecialty: "",
   grade: "",
   placementType: "",
   employingBody: "",
   trainingBody: ""
 };
+
+export interface Site {
+  site: string;
+  siteKnownAs?: string;
+  siteLocation?: string;
+}
 
 export interface PlacementGroup {
   future: Placement[];

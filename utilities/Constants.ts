@@ -132,10 +132,12 @@ export type PanelKeys = {
   site: string;
   siteLocation: string;
   siteKnownAs: string;
+  otherSites: string;
   startDate: string;
   endDate: string;
   wholeTimeEquivalent: string;
   specialty: string;
+  subSpecialty: string;
   grade: string;
   placementType: string;
   employingBody: string;
@@ -154,10 +156,12 @@ export const PANEL_KEYS: any = {
   site: "Site",
   siteLocation: "Site Location",
   siteKnownAs: "Site Known As",
+  otherSites: "Other Sites",
   startDate: "Starts",
   endDate: "Ends",
   wholeTimeEquivalent: "Whole Time Equivalent",
   specialty: "Specialty",
+  subSpecialty: "Sub specialty",
   grade: "Grade",
   placementType: "Placement Type",
   employingBody: "Employing Body",

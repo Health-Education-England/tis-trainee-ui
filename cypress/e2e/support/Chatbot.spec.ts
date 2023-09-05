@@ -1,7 +1,6 @@
 describe("Chatbot", () => {
   before(() => {
-    cy.wait(30000);
-    cy.visit("/");
+    cy.signInToTss(30000);
     // Wait for the chatbot to fully load.
     cy.wait(5000);
   });

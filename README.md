@@ -49,14 +49,31 @@ Clicking `Switch browser` on the left side menu, you may choose different browse
 In a Live session, enable `Local testing` from the left side menu. Follow the instructions to download the BrowserStack Local app if it is the first time config. Enable `Resolve all URLs through my network` in the setting. Enter your localhost URL in the remote browser's address bar for live local test.<br />
 For more information visit (https://www.browserstack.com/docs/live/local-testing#enable-local-testing)
 
-## Unit tests (Jest)
+## Automated tests
+
+### Unit Tests (Jest)
+
+Unit tests are found in the `__test__` folders throughout the app and end with `.test.ts` .
 
 `npm test` launches the test runner in the interactive watch mode.<br />
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## E2E tests (cypress)
+### Component Tests (React-Testing-Library)
 
-### configurating e2e tests
+RTL component tests are also in the `__test__` folders and end with `.test.tsx`
+
+### Component Tests (Cypress)
+
+Cypress CT are found in the `cypress/component` folder and end with `cy.tsx` .
+
+`npm run ct:headless` will run CT in headless mode.<br />
+`npm run ct` will allow you to view the CT in the browser. For more information visit (https://docs.cypress.io/guides/component-testing/overview)
+
+### E2e tests (Cypress)
+
+Cypress e2e tests are found in the `cypress/e2e` folder and end with `spec.ts` .
+
+#### configurating e2e tests
 
 Before you can run the e2e tests (logging in as an authorised user using a One Time Pass Code), you will need to add a `cypress.env.json` file to the root of your project folder:
 
@@ -68,15 +85,10 @@ Before you can run the e2e tests (logging in as an authorised user using a One T
 }
 ```
 
-### running e2e tests
+#### running e2e tests
 
 `npm run cypress:headless` will run the e2e tests in headless mode with Cypress.<br />
 `npm run cypress` will allow you to view the e2e tests in the browser. For more information visit (https://docs.cypress.io/guides/end-to-end-testing/writing-your-first-end-to-end-test)
-
-### running Component Tests
-
-`npm run ct:headless` will run Component Tests in headless mode.<br />
-`npm run ct` will allow you to view the Component Tests in the browser. For more information visit (https://docs.cypress.io/guides/component-testing/overview)
 
 ## Building a production app
 
@@ -95,3 +107,9 @@ See the section about [deployment](https://nextjs.org/docs/deployment) for more 
 
 When deploying to preprod the `ENV` environment variable should be set to
 `preprod`, allowing the correct dotenv file to be loaded.
+
+### Deployment pipeline
+
+Note that e2e tests are not run as part of the suite of automated PR tests. They are only run after a PR is merged and built: they are run against the resulting preprod instance.
+
+This means that you need to run the e2e tests locally (which you should be doing anyway) and not rely on the PR / Sonarcloud automated checks to avoid deploying failing code to preprod.
