@@ -91,6 +91,8 @@ describe("Main", () => {
         </Router>
       </Provider>
     );
+
+    cy.wait(1000);
     cy.url().then(url => expect(url.endsWith("/test?abc=123")).to.be.true);
   });
 });
