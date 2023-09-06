@@ -254,6 +254,5 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England Thames Valley": "Formr.tv@hee.nhs.uk",
   "Health Education England Wessex": "Formr.wx@hee.nhs.uk",
   "Health Education England West Midlands": "TIS.WM@hee.nhs.uk",
-  "Health Education England Yorkshire and the Humber":
-    "tissupport.north@hee.nhs.uk"
+  "Health Education England Yorkshire and the Humber": "tis.yh@hee.nhs.uk"
 };
