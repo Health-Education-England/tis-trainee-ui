@@ -11,7 +11,10 @@ export function Specialty(specialtyProps: SpecialtyProps) {
   let specialtyText = specialtyProps.specialty
     ? specialtyProps.specialty
     : "None provided";
-  if (specialtyProps.postAllowsSubspecialty && specialtyProps.specialty) {
+  if (
+    specialtyProps.specialty &&
+    (specialtyProps.subSpecialty || specialtyProps.postAllowsSubspecialty)
+  ) {
     let subSpecialtyText = specialtyProps.subSpecialty
       ? specialtyProps.subSpecialty
       : "None provided";
