@@ -249,7 +249,7 @@ describe("Placements with MFA set up", () => {
       .should("contain.text", "None provided");
   });
 
-  it("should not display missing Placements Subspecialty if Post does not Allow", () => {
+  it("should display Placements Subspecialty even if Post does not Allow", () => {
     const MockedPlacementsSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
@@ -277,7 +277,7 @@ describe("Placements with MFA set up", () => {
     );
   });
 
-  it("should display Placements Subspecialty even if Post does not Allow", () => {
+  it("should not display missing Placements Subspecialty if Post does not Allow", () => {
     const MockedPlacementsSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
