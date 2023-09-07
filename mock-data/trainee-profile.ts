@@ -429,6 +429,25 @@ export const mockPlacementNoSubSpecialtyPostAllows: Placement = {
   wholeTimeEquivalent: "0.5"
 };
 
+export const mockPlacemenSubSpecialtyPostNotAllows: Placement = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "In Post",
+  site: "Addenbrookes Hospital",
+  siteLocation: "Site location",
+  siteKnownAs: "Addenbrookes Hospital (siteNo)",
+  otherSites: [],
+  specialty: "Dermatology",
+  subSpecialty: "sub specialty",
+  postAllowsSubspecialty: false,
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "0.5"
+};
+
 export const mockPlacementNonTemplatedField = {
   endDate: new Date("2020-12-31"),
   grade: "ST1",

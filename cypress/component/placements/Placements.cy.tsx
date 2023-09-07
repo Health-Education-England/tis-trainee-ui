@@ -11,6 +11,7 @@ import {
   mockPlacementNoOtherSites,
   mockPlacementPartialOtherSites,
   mockPlacementSubSpecialtyPostAllows,
+  mockPlacemenSubSpecialtyPostNotAllows,
   mockPlacementNoSubSpecialtyPostAllows,
   mockPlacementNoSubSpecialtyPostNotAllows
 } from "../../../mock-data/trainee-profile";
@@ -220,7 +221,7 @@ describe("Placements with MFA set up", () => {
       .should("contain.text", "sub specialty");
   });
 
-  it("should display Placements Subspecialty None Provided when Post Allows", () => {
+  it("should display missing Placements Subspecialty None Provided when Post Allows", () => {
     const MockedPlacementsSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
@@ -248,7 +249,35 @@ describe("Placements with MFA set up", () => {
       .should("contain.text", "None provided");
   });
 
-  it("should not display Placements Subspecialty if Post does not Allow", () => {
+  it("should not display missing Placements Subspecialty if Post does not Allow", () => {
+    const MockedPlacementsSuccess = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: [mockPlacemenSubSpecialtyPostNotAllows]
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Placements />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedPlacementsSuccess />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="subSpecialty0Val"]').should(
+      "contain.text",
+      "sub specialty"
+    );
+  });
+
+  it("should display Placements Subspecialty even if Post does not Allow", () => {
     const MockedPlacementsSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
