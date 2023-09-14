@@ -36,7 +36,7 @@ Cypress.Commands.add(
       }
       cy.wait(waitTimeMs);
     }
-    const urlString = visitUrl ? visitUrl : "/";
+    const urlString = visitUrl ?? "/";
     cy.visit(urlString, { failOnStatusCode: false });
     if (viewport) cy.viewport(viewport);
     cy.signIn();

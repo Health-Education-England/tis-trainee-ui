@@ -15,7 +15,7 @@ export function OtherSites({ otherSites }: OtherSitesProps) {
             index: number
           ): JSX.Element => (
             <div key={index} className={style.cItems}>
-              <div data-cy={`otherSite${index}Val`}>{siteKnownAs || site}</div>
+              <div data-cy={`otherSite${index}Val`}>{siteKnownAs ?? site}</div>
               {siteLocation && (
                 <div data-cy={`otherSiteLocation${index}Val`}>
                   {siteLocation}

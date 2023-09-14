@@ -80,40 +80,20 @@ export interface Warning {
   msgText: string;
 }
 
-const FormBuilder: React.FC<FormBuilderProps> = ({
+export default function FormBuilder({
   jsonForm,
   fetchedFormData,
   options,
   validationSchema,
   history
-}: FormBuilderProps) => {
+}: FormBuilderProps) {
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const [fields, setFields] = useState<Field[]>([]);
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
-  // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
-  useEffect(() => {
-    const updatedFields = pages
-      .flatMap((page: Page) =>
-        page.sections.flatMap((section: Section) => section.fields)
-      )
-      .map(field => {
-        if (field.visibleIf) {
-          const shouldShow = field.visibleIf.includes(
-            fetchedFormData[field.parent!!]
-          );
-          return {
-            ...field,
-            visible: shouldShow
-          };
-        }
-        return field;
-      });
-
-    setFields(updatedFields);
-  }, [jsonForm, fetchedFormData, pages]);
+  const lastSavedFormData = store.getState().formA.formAData;
 
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
@@ -233,15 +213,11 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     });
   };
 
-  const handleChange = (
+  const handleTextFieldWidth = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    selectedOption?: any
+    currentValue: string,
+    primaryField: Field | undefined
   ) => {
-    const { name, value } = event.currentTarget;
-    const currentValue = selectedOption ? selectedOption.value : value;
-    const primaryField = fields.find(field => field.name === name);
-
-    // increase the width of the text field if the value is longer than 20 characters
     if (
       primaryField?.type === "text" &&
       currentValue.length >= 20 &&
@@ -250,70 +226,106 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
       const thisFieldWidth = setTextFieldWidth(currentValue?.length);
       event.currentTarget.className = `nhsuk-input nhsuk-input--width-${thisFieldWidth}`;
     }
+  };
 
-    // show/hide fields based on the value of the current field
-    if (primaryField?.dependencies) {
-      primaryField.dependencies.forEach(fieldToShow => {
-        setFields(prevFields => {
-          const updatedFields = prevFields.map(field => {
-            if (field.name === fieldToShow) {
-              const shouldShow = field.visibleIf
-                ? field.visibleIf.includes(currentValue)
-                : false;
-              return {
-                ...field,
-                visible: shouldShow
-              };
-            }
-            return field;
-          });
+  const updateFieldVisibility = (
+    field: Field,
+    fieldToShow: string,
+    currentValue: string
+  ) => {
+    if (field.name !== fieldToShow) return field;
+    const shouldShow = field.visibleIf
+      ? field.visibleIf.includes(currentValue)
+      : false;
+    return { ...field, visible: shouldShow };
+  };
 
-          updatedFields.forEach(depField => {
-            if (depField.name === fieldToShow && !depField.visible) {
-              setFormErrors((prev: FormData) => {
-                const { [fieldToShow]: omittedField, ...newErrors } = prev;
-                return newErrors;
-              });
-            }
-          });
-
-          return updatedFields;
+  const removeErrorsForInvisibleFields = (
+    updatedFields: Field[],
+    fieldToShow: string
+  ) => {
+    updatedFields.forEach(depField => {
+      if (depField.name === fieldToShow && !depField.visible) {
+        setFormErrors((prev: FormData) => {
+          const { [fieldToShow]: omittedField, ...newErrors } = prev;
+          return newErrors;
         });
-      });
-    }
-
-    // show warning if the value of the current field matches the warning criteria
-    const inputValue = selectedOption ? selectedOption.value : value;
-    if (inputValue?.length && primaryField?.warning) {
-      const matcher = new RegExp(primaryField.warning.matcher, "i");
-      const msg = primaryField.warning.msgText;
-      const warning = showFieldMatchWarning(inputValue, matcher, msg, name);
-      setFieldWarning(warning as FieldWarning);
-    } else setFieldWarning(undefined);
-
-    // update the value of the current field
-    setFormFields((prev: FormData) => {
-      return { ...prev, [name]: currentValue };
+      }
     });
+  };
 
+  const handleDependantFieldVisibility = (
+    currentValue: string,
+    primaryField: Field | undefined
+  ) => {
+    if (!primaryField?.dependencies) return;
+
+    primaryField.dependencies.forEach(fieldToShow => {
+      setFields(prevFields => {
+        const updatedFields = prevFields.map(field =>
+          updateFieldVisibility(field, fieldToShow, currentValue)
+        );
+        removeErrorsForInvisibleFields(updatedFields, fieldToShow);
+        return updatedFields;
+      });
+    });
+  };
+
+  const validateCurrentField = (fieldName: string, currentVal: string) => {
     // validate the current field only if validation is needed on that field
-    if (Object.keys(validationSchema.fields).includes(name)) {
+    if (Object.keys(validationSchema.fields).includes(fieldName)) {
       validationSchema
-        .validateAt(name, { [name]: currentValue })
+        .validateAt(fieldName, { [fieldName]: currentVal })
         .then(() => {
           // remove error for the current field
           setFormErrors((prev: FormData) => {
-            const { [name]: currentValue, ...newErrors } = prev;
+            const { [fieldName]: val, ...newErrors } = prev;
             return newErrors;
           });
         })
         .catch((err: { message: string }) => {
           // set error for the current field
           setFormErrors((prev: FormData) => {
-            return { ...prev, [name]: err.message };
+            return { ...prev, [fieldName]: err.message };
           });
         });
     }
+  };
+
+  const handleSoftValidationWarningMsgVisibility = (
+    inputVal: string | undefined,
+    primaryFormField: Field | undefined,
+    fieldName: string
+  ) => {
+    // show warning if the value of the current field matches the warning criteria
+    if (inputVal?.length && primaryFormField?.warning) {
+      const matcher = new RegExp(primaryFormField.warning.matcher, "i");
+      const msg = primaryFormField.warning.msgText;
+      const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
+      setFieldWarning(warning as FieldWarning);
+    } else setFieldWarning(undefined);
+  };
+
+  const updateCurrentField = (fieldName: string, currVal: string) => {
+    // update the value of the current field
+    setFormFields((prevFormData: FormData) => {
+      return { ...prevFormData, [fieldName]: currVal };
+    });
+  };
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    selectedOption?: any
+  ) => {
+    const { name, value } = event.currentTarget;
+    const currentValue = selectedOption ? selectedOption.value : value;
+    const primaryField = fields.find(field => field.name === name);
+    const inputValue = selectedOption ? selectedOption.value : value;
+    handleTextFieldWidth(event, currentValue, primaryField);
+    handleDependantFieldVisibility(currentValue, primaryField);
+    handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
+    updateCurrentField(name, currentValue);
+    validateCurrentField(name, currentValue);
     isFormDirty.current = true;
   };
 
@@ -332,56 +344,62 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     return visibleValidationSchema.validate(values, { abortEarly: false });
   };
 
+  const calculateVisibleFields = (formFields: {
+    [fieldName: string]: string;
+  }) => {
+    const visibleFormData = fields.reduce((formData, field: Field) => {
+      if (
+        field.visible ||
+        (field.parent && field.visibleIf?.includes(formFields[field.parent]))
+      ) {
+        formData[field.name] = formFields[field.name];
+      } else {
+        formData[field.name] = "";
+      }
+      return formData;
+    }, {} as FormData);
+    // Need to add these vals listed below (from last lastSavedFormData) to ensure latest autosave data is included)
+    return lastSavedFormData.id
+      ? {
+          ...visibleFormData,
+          id: lastSavedFormData.id,
+          lastModifiedDate: lastSavedFormData.lastModifiedDate,
+          lifecycleState: lastSavedFormData.lifecycleState,
+          traineeTisId: lastSavedFormData.traineeTisId
+        }
+      : {
+          ...visibleFormData,
+          traineeTisId: lastSavedFormData.traineeTisId
+        };
+  };
+
+  const handleErrorCatching = (e: any) => {
+    if (e) {
+      const errors: Record<string, string> = {};
+      e.inner.forEach((err: { path: string; message: string }) => {
+        errors[err.path] = err.message;
+      });
+      setFormErrors(errors);
+    }
+  };
+
   const handlePageChange = () => {
-    const lastSavedFormData = store.getState().formA.formAData;
     if (currentPage === lastPage) {
       validateFields(fields, formFields)
         .then(() => {
-          const visibleFormData = fields.reduce((formData, field) => {
-            if (
-              field.visible ||
-              (field.parent &&
-                field.visibleIf?.includes(formFields[field.parent]))
-            ) {
-              formData[field.name] = formFields[field.name];
-            } else {
-              formData[field.name] = "";
-            }
-            return formData;
-          }, {} as FormData);
-          // Need to add these vals listed below (from last lastSavedFormData) to ensure latest autosave data is included)
-          const updatedFormData = lastSavedFormData.id
-            ? {
-                ...visibleFormData,
-                id: lastSavedFormData.id,
-                lastModifiedDate: lastSavedFormData.lastModifiedDate,
-                lifecycleState: lastSavedFormData.lifecycleState,
-                traineeTisId: lastSavedFormData.traineeTisId
-              }
-            : {
-                ...visibleFormData,
-                traineeTisId: lastSavedFormData.traineeTisId
-              };
-          continueToConfirm(jsonFormName, updatedFormData, history);
+          const visibleFormData = calculateVisibleFields(formFields);
+          continueToConfirm(jsonFormName, visibleFormData, history);
         })
-        .catch((err: any) => {
-          const errors: Record<string, string> = {};
-          err.inner.forEach((e: { path: string; message: string }) => {
-            errors[e.path] = e.message;
-          });
-          setFormErrors(errors);
+        .catch(err => {
+          handleErrorCatching(err);
         });
     } else {
       validateFields(currentFields, formFields)
         .then(() => {
           setCurrentPage(currentPage + 1);
         })
-        .catch((err: any) => {
-          const errors: Record<string, string> = {};
-          err.inner.forEach((e: { path: string; message: string }) => {
-            errors[e.path] = e.message;
-          });
-          setFormErrors(errors);
+        .catch(err => {
+          handleErrorCatching(err);
         });
     }
   };
@@ -391,6 +409,28 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
     saveDraftForm(jsonFormName, formFields, history);
     setIsSubmitting(false);
   };
+
+  // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
+  useEffect(() => {
+    const updatedFields = pages
+      .flatMap((page: Page) =>
+        page.sections.flatMap((section: Section) => section.fields)
+      )
+      .map(field => {
+        if (field.visibleIf) {
+          const shouldShow = field.visibleIf.includes(
+            fetchedFormData[field.parent!!]
+          );
+          return {
+            ...field,
+            visible: shouldShow
+          };
+        }
+        return field;
+      });
+
+    setFields(updatedFields);
+  }, [jsonForm, fetchedFormData, pages]);
 
   return (
     <form onSubmit={handlePageChange} acceptCharset="UTF-8">
@@ -524,8 +564,7 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
       </Container>
     </form>
   );
-};
-export default FormBuilder;
+}
 
 interface FormErrorsProps {
   formErrors: Record<string, string>;
