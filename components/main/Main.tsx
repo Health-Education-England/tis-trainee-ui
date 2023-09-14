@@ -41,6 +41,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
   let content;
   const pathname = useLocation().pathname;
   const queryParams = new URLSearchParams(location.search);
+  const isMatchedQueryParamsRedirect = queryParams.get("redirected") === "1";
 
   useEffect(() => {
     dispatch(getPreferredMfa());
@@ -52,10 +53,10 @@ export const Main = ({ signOut, appVersion }: IMain) => {
 
   useEffect(() => {
     // Store whether the user was redirected.
-    if (redirected || queryParams?.get("redirected") === "1") {
+    if (redirected || isMatchedQueryParamsRedirect) {
       dispatch(updatedRedirected(true));
     }
-  }, [dispatch]);
+  }, [dispatch, redirected, isMatchedQueryParamsRedirect]);
 
   // If the user was redirected the URL param should be cleaned to avoid it being bookmarked.
   if (redirected) {
