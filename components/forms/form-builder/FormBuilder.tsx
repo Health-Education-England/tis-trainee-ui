@@ -228,39 +228,47 @@ export default function FormBuilder({
     }
   };
 
+  const updateFieldVisibility = (
+    field: Field,
+    fieldToShow: string,
+    currentValue: string
+  ) => {
+    if (field.name !== fieldToShow) return field;
+    const shouldShow = field.visibleIf
+      ? field.visibleIf.includes(currentValue)
+      : false;
+    return { ...field, visible: shouldShow };
+  };
+
+  const removeErrorsForInvisibleFields = (
+    updatedFields: Field[],
+    fieldToShow: string
+  ) => {
+    updatedFields.forEach(depField => {
+      if (depField.name === fieldToShow && !depField.visible) {
+        setFormErrors((prev: FormData) => {
+          const { [fieldToShow]: omittedField, ...newErrors } = prev;
+          return newErrors;
+        });
+      }
+    });
+  };
+
   const handleDependantFieldVisibility = (
     currentValue: string,
     primaryField: Field | undefined
   ) => {
-    if (primaryField?.dependencies) {
-      primaryField.dependencies.forEach(fieldToShow => {
-        setFields(prevFields => {
-          const updatedFields = prevFields.map(field => {
-            if (field.name === fieldToShow) {
-              const shouldShow = field.visibleIf
-                ? field.visibleIf.includes(currentValue)
-                : false;
-              return {
-                ...field,
-                visible: shouldShow
-              };
-            }
-            return field;
-          });
+    if (!primaryField?.dependencies) return;
 
-          updatedFields.forEach(depField => {
-            if (depField.name === fieldToShow && !depField.visible) {
-              setFormErrors((prev: FormData) => {
-                const { [fieldToShow]: omittedField, ...newErrors } = prev;
-                return newErrors;
-              });
-            }
-          });
-
-          return updatedFields;
-        });
+    primaryField.dependencies.forEach(fieldToShow => {
+      setFields(prevFields => {
+        const updatedFields = prevFields.map(field =>
+          updateFieldVisibility(field, fieldToShow, currentValue)
+        );
+        removeErrorsForInvisibleFields(updatedFields, fieldToShow);
+        return updatedFields;
       });
-    }
+    });
   };
 
   const validateCurrentField = (fieldName: string, currentVal: string) => {
