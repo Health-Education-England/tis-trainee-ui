@@ -241,8 +241,8 @@ type localOfficeContactsProps = {
 };
 
 export const localOfficeContacts: localOfficeContactsProps = {
-  "Health Education England East Midlands": "TIS.EM@hee.nhs.uk",
-  "Health Education England East of England": "TIS.EOE@hee.nhs.uk",
+  "Health Education England East Midlands": "england.tis.em@nhs.net",
+  "Health Education England East of England": "england.tis.eoe@nhs.net",
   "Health Education England Kent, Surrey and Sussex": "PGMDE support portal",
   "Health Education England North Central and East London":
     "PGMDE support portal",
@@ -250,9 +250,9 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England North West": "tissupport.north@hee.nhs.uk",
   "Health Education England North West London": "PGMDE support portal",
   "Health Education England South London": "PGMDE support portal",
-  "Health Education England South West": "TISQueries.sw@hee.nhs.uk",
-  "Health Education England Thames Valley": "Formr.tv@hee.nhs.uk",
-  "Health Education England Wessex": "Formr.wx@hee.nhs.uk",
-  "Health Education England West Midlands": "TIS.WM@hee.nhs.uk",
-  "Health Education England Yorkshire and the Humber": "tis.yh@hee.nhs.uk"
+  "Health Education England South West": "england.tisqueries.sw@nhs.net",
+  "Health Education England Thames Valley": "england.formr.tv@nhs.net",
+  "Health Education England Wessex": "england.formr.wx@nhs.net",
+  "Health Education England West Midlands": "england.tis.wm@nhs.net",
+  "Health Education England Yorkshire and the Humber": "england.tis.yh@nhs.net"
 };
