@@ -78,7 +78,7 @@ describe("LoSupport", () => {
       fireEvent.click(loSupportLink);
     });
     const expectedHref =
-      "mailto:Formr.tv@hee.nhs.uk?subject=TSS LO support query (TisID: 47165, GMC: 1111111, Support categories: Authenticator)&body=Browser and OS info:%0AMocked User Agent Info%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A";
+      "mailto:england.formr.tv@nhs.net?subject=TSS LO support query (TisID: 47165, GMC: 1111111, Support categories: Authenticator)&body=Browser and OS info:%0AMocked User Agent Info%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A";
     expect(loSupportLink.getAttribute("href")).toBe(expectedHref);
   });
 });
