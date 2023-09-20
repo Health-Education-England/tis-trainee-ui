@@ -2,25 +2,17 @@
 /// <reference path="../../support/index.d.ts" />
 
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
 
 let isCovid = false;
 const currentDate = dayjs().format("YYYY-MM-DD");
-const futureDate = dayjs()
-  .add(dayjs.duration({ months: 6 }))
-  .format("YYYY-MM-DD");
-const pastDate = dayjs()
-  .subtract(dayjs.duration({ months: 6 }))
-  .format("YYYY-MM-DD");
+const futureDate = dayjs().add(6, "month").format("YYYY-MM-DD");
+const pastDate = dayjs().subtract(6, "month").format("YYYY-MM-DD");
 const outOfRangeFutureDate = dayjs(futureDate)
-  .add(dayjs.duration({ years: 20 }))
+  .add(20, "year")
   .format("YYYY-MM-DD");
-const farFutureDate = dayjs()
-  .add(dayjs.duration({ years: 5 }))
-  .format("YYYY-MM-DD");
+const farFutureDate = dayjs().add(5, "year").format("YYYY-MM-DD");
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
-const prevRevalDate = dayjs().subtract(5, "years").format("YYYY-MM-DD");
+const prevRevalDate = dayjs().subtract(5, "year").format("YYYY-MM-DD");
 
 describe("Form R (Part B) - Start over via forms list (CreateList) page", () => {
   before(() => {

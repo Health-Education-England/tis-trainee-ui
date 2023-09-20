@@ -11,16 +11,10 @@ import Section2 from "../../../../components/forms/formr-part-b/sections/Section
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
 import history from "../../../../components/navigation/history";
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
 
 describe("Section2", () => {
-  const startDate = dayjs()
-    .subtract(dayjs.duration({ months: 12 }))
-    .format("YYYY-MM-DD");
-  const endDate = dayjs()
-    .subtract(dayjs.duration({ months: 6 }))
-    .format("YYYY-MM-DD");
+  const startDate = dayjs().subtract(12, "month").format("YYYY-MM-DD");
+  const endDate = dayjs().subtract(6, "month").format("YYYY-MM-DD");
 
   it("should mount section 2 ", () => {
     const MockedSection2 = () => {
@@ -31,7 +25,6 @@ describe("Section2", () => {
         <Section2
           prevSectionLabel="Section 1:\nDoctor's details"
           nextSectionLabel="Section 3:\nDeclarations relating to\nGood Medical Practice"
-          saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
         />

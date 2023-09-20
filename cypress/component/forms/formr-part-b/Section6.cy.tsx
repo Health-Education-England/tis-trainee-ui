@@ -19,7 +19,6 @@ describe("Section6", () => {
         <Section6
           prevSectionLabel="Section 5:\nNew Declarations\nsince your last Form R"
           nextSectionLabel="Covid declaration"
-          saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
         />

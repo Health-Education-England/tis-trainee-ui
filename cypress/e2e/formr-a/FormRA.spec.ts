@@ -2,14 +2,11 @@
 /// <reference path="../../support/index.d.ts" />
 
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
 
-const completionDate = dayjs()
-  .add(dayjs.duration({ months: 6 }))
-  .format("YYYY-MM-DD");
+const completionDate = dayjs().add(6, "month").format("YYYY-MM-DD");
 const startDate = dayjs()
-  .subtract(dayjs.duration({ months: 9, days: 30 }))
+  .subtract(9, "month")
+  .subtract(30, "day")
   .format("YYYY-MM-DD");
 
 // Note: See FormA.cy.tsx Component for more thorough tests of the form fields and validation
