@@ -18,7 +18,6 @@ it("should mount section 6 ", () => {
     return (
       <Declarations
         prevSectionLabel="Section 6:\nCompliments"
-        saveDraft={() => Promise.resolve()}
         history={[]}
         finalSections={[
           {

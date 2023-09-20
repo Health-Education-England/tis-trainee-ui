@@ -21,7 +21,6 @@ describe("Section 5", () => {
         <Section5
           prevSectionLabel="Section 4"
           nextSectionLabel="Section 6"
-          saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
         />

@@ -22,7 +22,6 @@ describe("CovidDeclaration", () => {
         <CovidDeclaration
           prevSectionLabel="Section 6"
           nextSectionLabel="Review & Submit"
-          saveDraft={() => Promise.resolve()}
           previousSection={null}
           handleSectionSubmit={() => Promise.resolve()}
         />
