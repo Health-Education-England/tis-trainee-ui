@@ -166,6 +166,12 @@ jobs:
           workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')
           aws s3 sync build-artifacts s3://tis-build-artifacts/${{ github.event.repository.name }}/$workflow/${{ github.run_number }}
 
+  clear-outdated-runs:
+    needs: [cypress-e2e]
+    uses: health-education-england/.github/.github/workflows/clear-runs.yml@main
+    with:
+      environment: prod
+
   deploy-prod:
     name: Deploy to Prod
     runs-on: ubuntu-latest
