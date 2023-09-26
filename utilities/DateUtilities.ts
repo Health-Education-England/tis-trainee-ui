@@ -3,7 +3,11 @@ import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { Placement } from "../models/Placement";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
+day.extend(utc);
+day.extend(timezone);
 day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
@@ -117,17 +121,20 @@ export class DateUtilities {
     return true;
   }
 
-  public static NowToGbDateTimeString() {
-    const timeZoneOptions: any = {
-      timeZone: "Europe/London",
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    };
-    const gbDate = new Date().toLocaleDateString("en-GB");
-    const gbTime = new Date().toLocaleTimeString("en-GB", timeZoneOptions);
-    return `${gbDate} ${gbTime}`;
+  public static ConvertToLondonTime(
+    givenDate: DateType,
+    includeSecs?: boolean
+  ): string {
+    if (!givenDate) return "No date provided";
+    const utcDate = day.utc(givenDate);
+    if (!utcDate.isValid()) return "Invalid date provided";
+    const londonDate = utcDate.tz("Europe/London");
+    const offset = londonDate.utcOffset();
+    const daylightSavingStr = offset === 0 ? "GMT" : "BST";
+    const formattedLondonDate = londonDate.format(
+      includeSecs ? "DD/MM/YYYY HH:mm:ss" : "DD/MM/YYYY HH:mm"
+    );
+    return `${formattedLondonDate} (${daylightSavingStr})`;
   }
 
   private static gSorter<T>(

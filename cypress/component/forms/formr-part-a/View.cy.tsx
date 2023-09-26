@@ -25,6 +25,7 @@ describe("View", () => {
     cy.get("[data-cy=warningConfirmation]").should("not.exist");
   });
   it("should render view component with save PDF btn/link for submitted form.", () => {
+    const expectedSubStr = "Form submitted on: 02/07/2022 14:12 (BST)";
     const MockedView = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormA(submittedFormRPartAs[0]));
@@ -57,13 +58,10 @@ describe("View", () => {
     cy.get("[data-cy=submissionDateTop]").should("exist");
     cy.get("[data-cy=submissionDateTop]").should(
       "include.text",
-      "Form Submitted on: 02/07/2022"
+      expectedSubStr
     );
     cy.get("[data-cy=submissionDate]").should("exist");
-    cy.get("[data-cy=submissionDate]").should(
-      "include.text",
-      "Form Submitted on: 02/07/2022"
-    );
+    cy.get("[data-cy=submissionDate]").should("include.text", expectedSubStr);
   });
   it("should render view component with no save PDF btn/link for unsubmitted form", () => {
     const MockedViewUnsubmitted = () => {

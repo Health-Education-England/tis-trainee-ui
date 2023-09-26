@@ -24,6 +24,7 @@ describe("View", () => {
     cy.get("[data-cy=sectionHeader1]").should("not.exist");
   });
   it("should render view component with save PDF btn/link and declarations for submitted form.", () => {
+    const expectedSubStr = "Form submitted on: 22/04/2020 01:00 (BST)";
     const MockedView = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedFormB(submittedFormRPartBs[0]));
@@ -56,13 +57,10 @@ describe("View", () => {
     cy.get("[data-cy=submissionDateTop]").should("exist");
     cy.get("[data-cy=submissionDateTop]").should(
       "include.text",
-      "Form Submitted on: 22/04/2020"
+      expectedSubStr
     );
     cy.get("[data-cy=submissionDate]").should("exist");
-    cy.get("[data-cy=submissionDate]").should(
-      "include.text",
-      "Form Submitted on: 22/04/2020"
-    );
+    cy.get("[data-cy=submissionDate]").should("include.text", expectedSubStr);
     cy.get("[data-cy=sectionHeader8]")
       .should("exist")
       .should("include.text", "Declarations");

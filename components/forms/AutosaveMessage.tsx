@@ -23,8 +23,8 @@ export const AutosaveMessage: React.FC<AutoSaveMessageProps> = ({
   const statusMessages: { [key in AutosaveStatusProps]: string } = {
     idle: "Waiting for new changes...",
     saving: "In progress...",
-    succeeded: `Success (${latestTimeStamp})`,
-    failed: `Fail (last autosave success: ${latestTimeStamp})`
+    succeeded: `Success - ${latestTimeStamp}`,
+    failed: `Fail - Last autosave success: ${latestTimeStamp}`
   };
 
   const message = statusMessages[autoSaveStatus];

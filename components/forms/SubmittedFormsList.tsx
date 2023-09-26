@@ -37,9 +37,9 @@ const SubmittedFormsList = ({
             }
             data-cy="submittedForm"
           >
-            {`Form submitted on ${DateUtilities.ToLocalDateTime(
+            {`Form submitted on ${DateUtilities.ConvertToLondonTime(
               formData.submissionDate
-            )} (GMT)`}
+            )}`}
           </ActionLink>
         </td>
       </Table.Row>
@@ -67,9 +67,9 @@ const SubmittedFormsList = ({
             </WarningCallout.Label>
             {isWithinRange(latestSubDate, 31, "d") && (
               <p>
-                {`Your previous form was submitted recently on ${DateUtilities.ToLocalDateTime(
+                {`Your previous form was submitted recently on ${DateUtilities.ConvertToLondonTime(
                   latestSubDate
-                )} (GMT).`}
+                )}`}
               </p>
             )}
             <h4>Need to amend a recently-submitted form?</h4>

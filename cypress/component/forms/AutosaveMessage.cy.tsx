@@ -15,7 +15,8 @@ import {
 import { DateUtilities } from "../../../utilities/DateUtilities";
 
 describe("AutosaveMessage", () => {
-  const timeStamp = DateUtilities.NowToGbDateTimeString();
+  const lastModDate: string = "2023-09-26T09:54:27.47";
+  const timeStamp = DateUtilities.ConvertToLondonTime(lastModDate, true);
   const renderAutosaveMessage = (autosaveStatus: AutosaveStatusProps) => {
     const MockedAutosaveMessage = () => {
       const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ describe("AutosaveMessage", () => {
       .should("exist")
       .should(
         "contain",
-        `Autosave status: Fail (last autosave success: none this session)`
+        `Autosave status: Fail - Last autosave success: none this session`
       );
   });
   it("should render the 'saving' autosave message when the form is being saved", () => {
@@ -68,7 +69,7 @@ describe("AutosaveMessage", () => {
     );
     cy.get('[data-cy="autosaveStatusMsg"]')
       .should("exist")
-      .should("contain", `Autosave status: Success (${timeStamp})`);
+      .should("contain", `Autosave status: Success - ${timeStamp}`);
   });
   it("should render the 'failed' autosave message and last successful timestamp when the form is saved unsuccessfully after one successful autosave.", () => {
     renderAutosaveMessage("failed");
@@ -76,7 +77,7 @@ describe("AutosaveMessage", () => {
       .should("exist")
       .should(
         "contain",
-        `Autosave status: Fail (last autosave success: ${timeStamp})`
+        `Autosave status: Fail - Last autosave success: ${timeStamp}`
       );
   });
 });

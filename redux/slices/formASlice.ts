@@ -159,7 +159,10 @@ const formASlice = createSlice({
       .addCase(autoSaveFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formAData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+          action.payload.lastModifiedDate,
+          true
+        );
       })
       .addCase(autoSaveFormA.rejected, state => {
         state.autosaveStatus = "failed";
@@ -170,7 +173,10 @@ const formASlice = createSlice({
       .addCase(autoUpdateFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formAData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+          action.payload.lastModifiedDate,
+          true
+        );
       })
       .addCase(autoUpdateFormA.rejected, state => {
         state.autosaveStatus = "failed";

@@ -53,10 +53,10 @@ describe("SubmittedFormsList", () => {
     cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
     cy.get(
       ":nth-child(1) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
-    ).should("contain.text", "Form submitted on 02/07/2022 13:12 (GMT)");
+    ).should("contain.text", "Form submitted on 02/07/2022 14:12 (BST)");
     cy.get(
       ":nth-child(4) > td > .nhsuk-action-link > [data-cy=submittedForm] > .nhsuk-action-link__text"
-    ).should("contain.text", "Form submitted on 22/04/2020 00:00 (GMT)");
+    ).should("contain.text", "Form submitted on 22/04/2020 01:00 (BST)");
     cy.get("[data-cy=formsListWarning]")
       .should("exist")
       .should("contain.text", "Important")
