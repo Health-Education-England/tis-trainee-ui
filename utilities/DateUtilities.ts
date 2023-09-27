@@ -121,6 +121,15 @@ export class DateUtilities {
     return true;
   }
 
+  private static isAmbiguousOctoberDate(date: day.Dayjs): boolean {
+    const octoberDate = day(date).month(9).date(31);
+    const lastSundayInOctober = octoberDate.day(0);
+    return date.isBetween(
+      lastSundayInOctober.hour(1).minute(0),
+      lastSundayInOctober.hour(2).minute(0)
+    );
+  }
+
   public static ConvertToLondonTime(
     givenDate: DateType,
     includeSecs?: boolean
@@ -128,13 +137,20 @@ export class DateUtilities {
     if (!givenDate) return "No date provided";
     const utcDate = day.utc(givenDate);
     if (!utcDate.isValid()) return "Invalid date provided";
-    const londonDate = utcDate.tz("Europe/London");
-    const offset = londonDate.utcOffset();
-    const daylightSavingStr = offset === 0 ? "GMT" : "BST";
-    const formattedLondonDate = londonDate.format(
-      includeSecs ? "DD/MM/YYYY HH:mm:ss" : "DD/MM/YYYY HH:mm"
-    );
-    return `${formattedLondonDate} (${daylightSavingStr})`;
+    const isOctAmbiguous = this.isAmbiguousOctoberDate(utcDate);
+    if (isOctAmbiguous) {
+      return `${utcDate.format(
+        includeSecs ? "DD/MM/YYYY HH:mm:ss" : "DD/MM/YYYY HH:mm"
+      )} (GMT)`;
+    } else {
+      const londonDate = utcDate.tz("Europe/London");
+      const offset = londonDate.utcOffset();
+      const daylightSavingStr = offset === 0 ? "GMT" : "BST";
+      const formattedLondonDate = londonDate.format(
+        includeSecs ? "DD/MM/YYYY HH:mm:ss" : "DD/MM/YYYY HH:mm"
+      );
+      return `${formattedLondonDate} (${daylightSavingStr})`;
+    }
   }
 
   private static gSorter<T>(

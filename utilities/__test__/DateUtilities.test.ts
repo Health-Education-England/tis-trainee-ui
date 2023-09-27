@@ -140,12 +140,12 @@ describe("DateUtilities", () => {
     const expectedDate = "29/10/2023 02:00 (GMT)";
     expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
   });
-  it("should return the UK timezone date plus BST for a given date that falls within BST", () => {
+  it("should default to GMT when an ambiguous October UTC date provided", () => {
     const inputDate = new Date("2023-10-29T01:59:59.995683500Z");
-    const expectedDate = "29/10/2023 01:59 (BST)";
+    const expectedDate = "29/10/2023 01:59 (GMT)";
     expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
   });
-  it("should return a valid date for a valid date string type ", () => {
+  it("should return a valid BST date for a valid date string type ", () => {
     const inputDate = "2023-03-26T01:00:00.065683500Z";
     const expectedDate = "26/03/2023 02:00 (BST)";
     expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
