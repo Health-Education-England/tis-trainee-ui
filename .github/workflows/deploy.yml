@@ -171,6 +171,8 @@ jobs:
     uses: health-education-england/.github/.github/workflows/clear-runs.yml@main
     with:
       environment: prod
+    secrets:
+      reject-pat: ${{ secrets.PAT_REJECT_APPROVALS }}
 
   deploy-prod:
     name: Deploy to Prod
