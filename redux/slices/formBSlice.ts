@@ -184,7 +184,10 @@ const formBSlice = createSlice({
       .addCase(autoSaveFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formBData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+          action.payload.lastModifiedDate,
+          true
+        );
       })
       .addCase(autoSaveFormB.rejected, state => {
         state.autosaveStatus = "failed";
@@ -195,7 +198,10 @@ const formBSlice = createSlice({
       .addCase(autoUpdateFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
         state.formBData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.NowToGbDateTimeString();
+        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+          action.payload.lastModifiedDate,
+          true
+        );
       })
       .addCase(autoUpdateFormB.rejected, state => {
         state.autosaveStatus = "failed";

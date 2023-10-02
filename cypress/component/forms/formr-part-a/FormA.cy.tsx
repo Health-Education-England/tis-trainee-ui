@@ -343,14 +343,14 @@ describe("FormA (form creation)", () => {
       .get(".react-select__menu")
       .find(".react-select__option")
       .first()
-      .click();  
+      .click();
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.wait(2000);
     cy.get('[data-cy="autosaveStatusMsg"]')
       .should("exist")
       .should(
         "contain.text",
-        "Autosave status: Fail (last autosave success: none this session)"
+        "Autosave status: Fail - Last autosave success: none this session"
       );
   });
 });

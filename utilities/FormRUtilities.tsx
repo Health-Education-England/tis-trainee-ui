@@ -21,6 +21,7 @@ import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAI
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
 import { DateType, DateUtilities } from "./DateUtilities";
+import { Label } from "nhsuk-react-components";
 export class FormRUtilities {
   public static makeFormRBSections(covidFlag: boolean) {
     if (!covidFlag) return defaultSections;
@@ -64,9 +65,9 @@ export class FormRUtilities {
 
   public static displaySubmissionDate(date: DateType, cyTag: string) {
     return (
-      <h3 data-cy={cyTag}>
-        Form Submitted on: {DateUtilities.ToLocalDate(date)}
-      </h3>
+      <Label data-cy={cyTag}>
+        Form submitted on: {DateUtilities.ConvertToLondonTime(date)}
+      </Label>
     );
   }
 

@@ -96,7 +96,6 @@ describe("DateUtilities", () => {
   it("IsMoreThanMinDate should return true if null value ", () => {
     expect(DateUtilities.IsLessThanMaxDate(null)).toEqual(true);
   });
-  // isWithinRange
   it("isWithinRange should return false if given date is undefined", () => {
     expect(isWithinRange(undefined)).toEqual(false);
   });
@@ -136,6 +135,41 @@ describe("DateUtilities", () => {
       DateUtilities.genericSort(mockPlacements, "startDate", false)
     ).toEqual(mockPlacements);
   });
+  it("should return the UK timezone date plus GMT for a given date that falls within GMT", () => {
+    const inputDate = new Date("2023-10-29T02:00:00.995683500Z");
+    const expectedDate = "29/10/2023 02:00 (GMT)";
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+  });
+  it("should default to GMT when an ambiguous October UTC date provided", () => {
+    const inputDate = new Date("2023-10-29T01:59:59.995683500Z");
+    const expectedDate = "29/10/2023 01:59 (GMT)";
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+  });
+  it("should return a valid BST date for a valid date string type ", () => {
+    const inputDate = "2023-03-26T01:00:00.065683500Z";
+    const expectedDate = "26/03/2023 02:00 (BST)";
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+  });
+  it("should return the UK timezone date plus seconds if the includeSecs param is true ", () => {
+    const inputDate = new Date("2023-03-26T00:59:59.065683500Z");
+    const expectedDate = "26/03/2023 00:59:59 (GMT)";
+    expect(DateUtilities.ConvertToLondonTime(inputDate, true)).toEqual(
+      expectedDate
+    );
+  });
+  it("should return No date provided msg for no date ", () => {
+    let inputDate = undefined;
+    const expectedDate = "No date provided";
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+    inputDate = null;
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+  });
+  it("should return Invalid date provided msg for invalid date ", () => {
+    const inputDate = "invalid date";
+    const expectedDate = "Invalid date provided";
+    expect(DateUtilities.ConvertToLondonTime(inputDate)).toEqual(expectedDate);
+  });
+
   // Note: Some test conditions covered by cypress comp tests so tried not to duplicate.
   // See coverage.json generated on PR or locally via 'npm run local:report-combined' for more info.
 });
