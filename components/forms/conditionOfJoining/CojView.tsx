@@ -107,7 +107,7 @@ function CojDeclarationSection({ signedDate }: { signedDate: Date | null }) {
               <SummaryList noBorder>
                 <SummaryList.Row>
                   <SummaryList.Value data-cy="cojSignedOn">
-                    Signed On: {DateUtilities.ToLocalDateTime(signedDate)}
+                    Signed On: {DateUtilities.ConvertToLondonTime(signedDate)}
                   </SummaryList.Value>
                 </SummaryList.Row>
               </SummaryList>

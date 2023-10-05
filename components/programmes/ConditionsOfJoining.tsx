@@ -27,7 +27,9 @@ export function ConditionsOfJoining({
   return conditionsOfJoining.signedAt ? (
     <React.Fragment>
       <p data-cy="cojSignedDate">
-        {`Signed: ${DateUtilities.ToLocalDate(conditionsOfJoining.signedAt)}`}
+        {`Signed: ${DateUtilities.ConvertToLondonTime(
+          conditionsOfJoining.signedAt
+        )}`}
       </p>
       <p data-cy="cojSignedVersion">
         {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}

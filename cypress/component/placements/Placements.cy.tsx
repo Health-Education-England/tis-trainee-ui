@@ -25,6 +25,8 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
+import { updatedCredentials } from "../../../redux/slices/dspSlice";
+import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
 
 describe("Placements with no MFA set up", () => {
   it("should not display Placements page if NOMFA", () => {
@@ -369,7 +371,7 @@ describe("Placements - dsp membership", () => {
     );
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
   });
-  it("should not show the dsp issue btn if member of no group ", () => {
+  it("should not show the dsp section if member of no group ", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -377,11 +379,12 @@ describe("Placements - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnplacements316"]').should("not.exist");
+    cy.get('[data-cy="dsp-btn-placements-316"]').should("not.exist");
   });
-  it("should show the dsp issue btn is member of the dsp beta group", () => {
+  it("should show the dsp section if member of the dsp beta group", () => {
     const MockedPlacementsDspBetaGp = () => {
       store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
+      store.dispatch(updatedCredentials(mockDspPlacementCredentials));
       return <Placements />;
     };
     mount(
@@ -391,9 +394,9 @@ describe("Placements - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnplacements316"]').should("exist");
+    cy.get('[data-cy="dsp-btn-placements-316"]').should("exist");
   });
-  it("should not show the dsp issue btn if member of another test gp ", () => {
+  it("should not show the dsp section if member of another test gp ", () => {
     const MockedPlacementsOtherGp = () => {
       store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
       return <Placements />;
@@ -405,6 +408,6 @@ describe("Placements - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnplacements316"]').should("not.exist");
+    cy.get('[data-cy="dsp-btn-placements-316"]').should("not.exist");
   });
 });

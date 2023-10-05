@@ -31,7 +31,10 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojSignedDate]")
         .should("exist")
-        .and("have.text", `Signed: ${DateUtilities.ToLocalDate(COJ_EPOCH)}`);
+        .and(
+          "have.text",
+          `Signed: ${DateUtilities.ConvertToLondonTime(COJ_EPOCH)}`
+        );
       cy.get("[data-cy=cojSignedVersion]").should("exist");
       cy.get("[data-cy=cojViewBtn-1]").should("exist");
       cy.get("[data-cy=cojStatusText]").should("not.exist");

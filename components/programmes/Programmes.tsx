@@ -15,6 +15,7 @@ import {
 import { TraineeProfileName } from "../../models/TraineeProfile";
 import { PANEL_KEYS } from "../../utilities/Constants";
 import Loading from "../common/Loading";
+import { fetchCredentials } from "../../utilities/DspUtilities";
 
 const Programmes = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,10 @@ const Programmes = () => {
   useEffect(() => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
+
+  useEffect(() => {
+    fetchCredentials("programme-membership");
+  }, []);
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const dspStatus = useAppSelector(state => state.dsp.status);

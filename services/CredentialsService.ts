@@ -3,6 +3,7 @@ import { PersonalDetails } from "../models/PersonalDetails";
 import { Placement } from "../models/Placement";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import ApiService from "./apiService";
+import { CredentialDsp, CredentialDspType } from "../models/Dsp";
 
 export class CredentialsService extends ApiService {
   constructor() {
@@ -23,5 +24,11 @@ export class CredentialsService extends ApiService {
     iState?: any
   ): Promise<AxiosResponse<any>> {
     return this.post(`/verify/identity`, iData, { params: iState });
+  }
+
+  async fetchDspCredentials(
+    credentialType: CredentialDspType
+  ): Promise<AxiosResponse<CredentialDsp[]>> {
+    return this.get(`/${credentialType}`);
   }
 }
