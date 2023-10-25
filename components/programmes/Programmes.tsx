@@ -25,7 +25,7 @@ const Programmes = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchCredentials("programme-membership");
+    fetchCredentials("programme");
   }, []);
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
