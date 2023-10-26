@@ -30,10 +30,9 @@ const GlobalAlert = () => {
   }, [alerts]);
 
   return hasAlerts ? (
-    <div
+    <aside
       className="app-global-alert"
       id="app-global-alert"
-      role="complementary"
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
@@ -44,7 +43,7 @@ const GlobalAlert = () => {
             )
         )}
       </div>
-    </div>
+    </aside>
   ) : null;
 };
 

@@ -86,7 +86,7 @@ export default function FormBuilder({
   options,
   validationSchema,
   history
-}: FormBuilderProps) {
+}: Readonly<FormBuilderProps>) {
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const [fields, setFields] = useState<Field[]>([]);
@@ -530,11 +530,9 @@ export default function FormBuilder({
                 {currentPage === lastPage ? (
                   <>{"Review & submit"}</>
                 ) : (
-                  <>
-                    <div>{`${currentPage + 2}. ${
-                      pages[currentPage + 1].pageName
-                    }`}</div>
-                  </>
+                  <div>{`${currentPage + 2}. ${
+                    pages[currentPage + 1].pageName
+                  }`}</div>
                 )}
               </span>
               <ArrowRightIcon />
@@ -570,7 +568,7 @@ interface FormErrorsProps {
   formErrors: Record<string, string>;
 }
 
-function FormErrors({ formErrors }: FormErrorsProps) {
+function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
   return (
     <div className="error-summary" data-cy="errorSummary">
       <p>

@@ -24,7 +24,7 @@ export const ToastMessage = ({
   msg,
   type,
   actionErrorMsg
-}: ToastMessageProps) => {
+}: Readonly<ToastMessageProps>) => {
   const { personalDetails, traineeTisId } =
     useAppSelector(selectTraineeProfile);
   const gmcNo = personalDetails?.gmcNumber ?? "Not available";
@@ -88,7 +88,7 @@ export const showToast = (
 };
 
 type FontAwesomeIconWrapperProps = {
-  messageType: ToastType;
+  readonly messageType: ToastType;
 };
 
 export function FontAwesomeIconWrapper({

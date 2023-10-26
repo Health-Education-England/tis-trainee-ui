@@ -18,7 +18,10 @@ type LoSupportProps = {
   userAgentData: string;
 };
 
-export function LoSupport({ emailIds, userAgentData }: LoSupportProps) {
+export function LoSupport({
+  emailIds,
+  userAgentData
+}: Readonly<LoSupportProps>) {
   const combinedRefData: CombinedReferenceData =
     useAppSelector(selectAllReference);
   const localOfficeOptions =
@@ -61,15 +64,13 @@ export function LoSupport({ emailIds, userAgentData }: LoSupportProps) {
           />
           {localOfficeContacts[values.localOffice] ===
             "PGMDE support portal" && (
-            <>
-              <ActionLink
-                data-cy="pgdmeLink"
-                href="https://lasepgmdesupport.hee.nhs.uk/support/tickets/new?form_7=true"
-              >
-                Click here to email your support request via the PGMDE Support
-                Portal
-              </ActionLink>
-            </>
+            <ActionLink
+              data-cy="pgdmeLink"
+              href="https://lasepgmdesupport.hee.nhs.uk/support/tickets/new?form_7=true"
+            >
+              Click here to email your support request via the PGMDE Support
+              Portal
+            </ActionLink>
           )}
 
           {localOfficeContacts[values.localOffice] !== "PGMDE support portal" &&

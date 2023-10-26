@@ -6,7 +6,6 @@ import { displayListVal } from "../common/PanelsCreator";
 type DSPPanelProps = {
   profName: string;
   profData: any;
-  paramState?: string;
 };
 
 const plKeys = [

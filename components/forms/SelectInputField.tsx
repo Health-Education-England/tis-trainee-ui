@@ -17,39 +17,35 @@ const SelectInputField: React.FC<Props> = props => {
   const [field, { error }, helpers] = useField(props);
   const { name, id, label, onChange, hint, footer } = props;
   return (
-    <>
-      <div
-        className={
-          error
-            ? "nhsuk-form-group nhsuk-form-group--error"
-            : "nhsuk-form-group"
-        }
+    <div
+      className={
+        error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
+      }
+    >
+      <Select
+        name={name}
+        id={id ?? name}
+        onBlur={() => {
+          helpers.setTouched(true);
+        }}
+        error={error ?? ""}
+        label={label}
+        onChange={onChange ?? field.onChange}
+        hint={hint}
+        value={field.value ?? ""}
+        data-cy={name}
       >
-        <Select
-          name={name}
-          id={id ?? name}
-          onBlur={() => {
-            helpers.setTouched(true);
-          }}
-          error={error ?? ""}
-          label={label}
-          onChange={onChange ?? field.onChange}
-          hint={hint}
-          value={field.value ?? ""}
-          data-cy={name}
-        >
-          <Select.Option value="">-- Please select --</Select.Option>
-          {props.options
-            ? props.options.map((option, _index) => (
-                <Select.Option key={option.label} value={option.value}>
-                  {option.label}
-                </Select.Option>
-              ))
-            : null}
-        </Select>
-        <InputFooterLabel label={footer || ""} />
-      </div>
-    </>
+        <Select.Option value="">-- Please select --</Select.Option>
+        {props.options
+          ? props.options.map((option, _index) => (
+              <Select.Option key={option.label} value={option.value}>
+                {option.label}
+              </Select.Option>
+            ))
+          : null}
+      </Select>
+      <InputFooterLabel label={footer || ""} />
+    </div>
   );
 };
 

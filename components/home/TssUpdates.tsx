@@ -20,6 +20,7 @@ export const TssUpdates: React.FC = () => {
           <b>
             <i>{whatsNewHeader}</i>
           </b>
+          {/* */}
           ...
         </p>
       </div>

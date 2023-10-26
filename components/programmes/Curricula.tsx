@@ -6,7 +6,7 @@ type CurriculaProps = {
   curricula: Curriculum[];
 };
 
-export function Curricula({ curricula }: CurriculaProps) {
+export function Curricula({ curricula }: Readonly<CurriculaProps>) {
   if (curricula?.length > 0) {
     return (
       <>

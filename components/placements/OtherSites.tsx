@@ -5,7 +5,7 @@ type OtherSitesProps = {
   otherSites: Site[];
 };
 
-export function OtherSites({ otherSites }: OtherSitesProps) {
+export function OtherSites({ otherSites }: Readonly<OtherSitesProps>) {
   if (otherSites?.length > 0) {
     return (
       <>

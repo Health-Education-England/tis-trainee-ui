@@ -26,6 +26,7 @@
     "@types/react-dom": "^18.0.9",
     "@types/react-gtm-module": "^2.0.1",
     "@types/react-helmet": "^6.1.5",
+    "@types/react-phone-number-input": "^3.0.16",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-test-renderer": "^18.0.2",
     "aws-amplify": "^5.3.11",

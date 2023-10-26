@@ -7,7 +7,6 @@ import { useField } from "formik";
 interface Props {
   index: number;
   removeWork: any;
-  onBlur?: any;
 }
 
 const WorkPanel: FunctionComponent<Props> = (props: Props) => {

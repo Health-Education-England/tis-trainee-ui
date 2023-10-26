@@ -25,7 +25,7 @@ export function PanelsCreator({
   panelsName,
   panelsTitle,
   panelKeys
-}: PanelsCreatorProps) {
+}: Readonly<PanelsCreatorProps>) {
   const cognitoGroups = store.getState().user.cognitoGroups;
   const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
     "dsp-beta-consultants"
