@@ -17,7 +17,8 @@ const panelData = {
   startDate: "2020-01-01",
   endDate: "2028-01-01",
   managingDeanery: "West of England",
-  curricula: []
+  curricula: [],
+  conditionsOfJoining: { signedAt: new Date(), version: "blaa" }
 };
 
 describe("CredentialIssued success", () => {

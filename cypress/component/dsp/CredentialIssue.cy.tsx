@@ -10,8 +10,9 @@ import {
 } from "../../../redux/slices/dspSlice";
 import { mount } from "cypress/react18";
 import RenderSearchParams from "./RenderSearchParams";
+import { ProfileType } from "../../../models/TraineeProfile";
 
-const panelData = {
+const panelData: ProfileType = {
   tisId: "321",
   programmeTisId: "2",
   programmeName: "General Practice",
@@ -19,7 +20,8 @@ const panelData = {
   startDate: "2020-01-01",
   endDate: "2028-01-01",
   managingDeanery: "West of England",
-  curricula: []
+  curricula: [],
+  conditionsOfJoining: { signedAt: new Date(), version: "blaa" }
 };
 
 describe("CredentialIssue", () => {
