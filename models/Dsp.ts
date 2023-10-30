@@ -4,7 +4,7 @@ export interface Signature {
   validUntil: Date | string | null;
 }
 
-export type CredentialDspType = "programme" | "placement";
+export type CredentialDspType = "programme-membership" | "placement";
 
 export type CredentialDsp = {
   credentialId: string;
