@@ -128,9 +128,11 @@ function chooseProfileArr(pName: string, id: string) {
     pName === TraineeProfileName.Programmes
       ? store.getState().traineeProfile.traineeProfileData.programmeMemberships
       : store.getState().traineeProfile.traineeProfileData.placements;
-  const matchedProfile = profileArr.find(
+  const matchedIndex = profileArr.findIndex(
     (pObj: ProfileType) => pObj.tisId === id
   );
+  const matchedProfile = profileArr[matchedIndex];
+
   if (matchedProfile) store.dispatch(updatedDspPanelObj(matchedProfile));
 }
 
