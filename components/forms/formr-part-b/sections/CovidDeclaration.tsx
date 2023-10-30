@@ -374,16 +374,16 @@ const CovidDeclaration = ({
                     <Label>
                       <p>
                         Please provide details of your Educational Supervisor in
-                        this section.
+                        this section.{" "}
                         <strong>
                           {" "}
                           A PDF copy of this form will need to be sent to your
                           ES when you submit this form (If applicable)
                         </strong>
-                        . This will give your ES the opportunity to review the
-                        information provided in the self-assessment declaration,
-                        comment and confirm / validate them and make a
-                        recommendation for the ARCP during COVID 19. This will
+                        {/**/}. This will give your ES the opportunity to review
+                        the information provided in the self-assessment
+                        declaration, comment and confirm/validate them and make
+                        a recommendation for the ARCP during COVID 19. This will
                         be completed by the ES in your ePortfolio.
                       </p>
                     </Label>

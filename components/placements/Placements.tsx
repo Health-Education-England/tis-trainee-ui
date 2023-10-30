@@ -16,6 +16,7 @@ import { PANEL_KEYS } from "../../utilities/Constants";
 import style from "../Common.module.scss";
 import Loading from "../common/Loading";
 import { ProfileUtilities } from "../../utilities/ProfileUtilities";
+import { fetchCredentials } from "../../utilities/DspUtilities";
 
 const Placements = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,10 @@ const Placements = () => {
   useEffect(() => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
+
+  useEffect(() => {
+    fetchCredentials("placement");
+  }, []);
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const dspStatus = useAppSelector(state => state.dsp.status);

@@ -7,7 +7,7 @@ type SpecialtyProps = {
   index: number;
 };
 
-export function Specialty(specialtyProps: SpecialtyProps) {
+export function Specialty(specialtyProps: Readonly<SpecialtyProps>) {
   let specialtyText = specialtyProps.specialty
     ? specialtyProps.specialty
     : "None provided";

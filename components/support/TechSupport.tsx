@@ -10,7 +10,10 @@ type TechSupportProps = {
   userAgentData: string;
 };
 
-export function TechSupport({ emailIds, userAgentData }: TechSupportProps) {
+export function TechSupport({
+  emailIds,
+  userAgentData
+}: Readonly<TechSupportProps>) {
   return (
     <Formik
       initialValues={{

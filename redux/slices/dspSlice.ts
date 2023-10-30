@@ -5,7 +5,7 @@ import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { ProfileType } from "../../models/TraineeProfile";
 import { CredentialsService } from "../../services/CredentialsService";
 import { RootState } from "../store/store";
-
+import { CredentialDsp, CredentialDspType } from "../../models/Dsp";
 interface IDsp {
   dspPanelObj: ProfileType | null;
   dspPanelObjName: string;
@@ -15,6 +15,7 @@ interface IDsp {
   errorCode: any;
   stateId: string | null;
   successCode: number | null;
+  credentials: CredentialDsp[];
 }
 
 export const initialState: IDsp = {
@@ -25,7 +26,8 @@ export const initialState: IDsp = {
   error: "",
   errorCode: null,
   stateId: null,
-  successCode: null
+  successCode: null,
+  credentials: []
 };
 
 export const issueDspCredential = createAsyncThunk(
@@ -73,6 +75,15 @@ export const verifyDspIdentity = createAsyncThunk(
   }
 );
 
+export const loadCredentials = createAsyncThunk(
+  "dsp/loadCredentials",
+  async (credType: CredentialDspType) => {
+    const credentialsService = new CredentialsService();
+    const response = await credentialsService.fetchDspCredentials(credType);
+    return response.data;
+  }
+);
+
 const dspSlice = createSlice({
   name: "dsp",
   initialState,
@@ -88,6 +99,9 @@ const dspSlice = createSlice({
     },
     updatedDspGatewayUri(state, action: PayloadAction<string>) {
       return { ...state, gatewayUri: action.payload };
+    },
+    updatedCredentials(state, action: PayloadAction<CredentialDsp[]>) {
+      return { ...state, credentials: action.payload };
     },
     resetDspSlice() {
       return initialState;
@@ -120,6 +134,18 @@ const dspSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
         state.errorCode = action.error.message?.slice(-3);
+      })
+      .addCase(loadCredentials.pending, (state, _action) => {
+        state.status = "loading";
+      })
+      .addCase(loadCredentials.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.credentials = action.payload;
+      })
+      .addCase(loadCredentials.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        state.errorCode = action.error.message?.slice(-3);
       });
   }
 });
@@ -131,5 +157,6 @@ export const {
   updatedDspPanelObj,
   updatedDspPanelObjName,
   updatedDspGatewayUri,
+  updatedCredentials,
   resetDspSlice
 } = dspSlice.actions;

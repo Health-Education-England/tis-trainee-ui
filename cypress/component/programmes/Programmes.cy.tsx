@@ -22,6 +22,8 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
+import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
+import { updatedCredentials } from "../../../redux/slices/dspSlice";
 
 describe("Programmes with no MFA set up", () => {
   it("should not display Programmes page if NOMFA", () => {
@@ -201,7 +203,7 @@ describe("Programmes - dsp membership", () => {
     );
     store.dispatch(updatedTraineeProfileStatus("succeeded"));
   });
-  it("should not show the dsp issue btn if member of no group ", () => {
+  it("should not show the dsp section if member of no group ", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -209,11 +211,12 @@ describe("Programmes - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
+    cy.get('[data-cy="dsp-btn-programmes-2"]').should("not.exist");
   });
-  it("should show the dsp issue btn is member of the dsp beta group", () => {
+  it("should show the dsp section if member of the dsp beta group", () => {
     const MockedProgrammesDspBetaGp = () => {
       store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
+      store.dispatch(updatedCredentials(mockDspPlacementCredentials));
       return <Programmes />;
     };
     mount(
@@ -223,9 +226,9 @@ describe("Programmes - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("exist");
+    cy.get('[data-cy="dsp-btn-programmes-2"]').should("exist");
   });
-  it("should not show the dsp issue btn if member of another test gp ", () => {
+  it("should not show the dsp section if member of another test gp ", () => {
     const MockedProgrammesOtherGp = () => {
       store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
       return <Programmes />;
@@ -237,7 +240,7 @@ describe("Programmes - dsp membership", () => {
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="dspBtnprogrammeMemberships2"]').should("not.exist");
+    cy.get('[data-cy="dsp-btn-programmes-2"]').should("not.exist");
   });
 });
 
@@ -280,7 +283,7 @@ describe("Programme summary panel", () => {
     cy.get('[data-cy="conditionsOfJoining1Val"]')
       .children('[data-cy="cojSignedDate"]')
       .should("exist")
-      .and("have.text", "Signed: 14/10/2010");
+      .and("have.text", "Signed: 14/10/2010 01:00 (BST)");
   });
 
   it("should display the view COJ button for placements with signed COJ forms", () => {

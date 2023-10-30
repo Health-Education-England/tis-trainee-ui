@@ -107,7 +107,7 @@ const ChooseMfa = () => {
 export default ChooseMfa;
 
 type MfaWarningProps = {
-  preferredMfa: string;
+  readonly preferredMfa: string;
 };
 
 function MfaWarning({ preferredMfa }: MfaWarningProps) {
@@ -125,11 +125,11 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
         </p>
       ) : (
         <p data-cy="mfaAlreadyText">
-          You have already set up
+          You have already set up{/* */}
           <b>{getPrefMfa(preferredMfa)}</b>
-          to verify your identity when you log in to TIS Self-Service. If you
-          want to redo the process or verify your identity a different way then
-          please continue.
+          {/* */}to verify your identity when you log in to TIS Self-Service. If
+          you want to redo the process or verify your identity a different way
+          then please continue.
         </p>
       )}
     </WarningCallout>

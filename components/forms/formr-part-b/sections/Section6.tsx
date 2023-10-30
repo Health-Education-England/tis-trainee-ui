@@ -55,7 +55,7 @@ const Section6 = ({
                     Compliments are another important piece of feedback. You may
                     wish to detail here any compliments that you have received
                     which are not already recorded in your portfolio, to help
-                    give a better picture of your practice as a whole.
+                    give a better picture of your practice as a whole.{" "}
                     <strong>This section is not compulsory.</strong>
                   </span>
                 }

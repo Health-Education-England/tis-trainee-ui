@@ -25,7 +25,7 @@ export function PanelsCreator({
   panelsName,
   panelsTitle,
   panelKeys
-}: PanelsCreatorProps) {
+}: Readonly<PanelsCreatorProps>) {
   const cognitoGroups = store.getState().user.cognitoGroups;
   const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
     "dsp-beta-consultants"
@@ -54,15 +54,15 @@ export function PanelsCreator({
                       </SummaryList.Value>
                     </SummaryList.Row>
                   ))}
+                  {inDspBetaConsultantsGp ? (
+                    <DspIssueBtn
+                      panelName={panelsName}
+                      panelId={panel.tisId}
+                      isPastDate={DateUtilities.IsPastDate(panel.endDate)}
+                      data-cy={`dspIssueBtn-${panelsName}-${panel.tisId}`}
+                    />
+                  ) : null}
                 </SummaryList>
-                {inDspBetaConsultantsGp ? (
-                  <DspIssueBtn
-                    panelName={panelsName}
-                    panelId={panel.tisId}
-                    isPastDate={DateUtilities.IsPastDate(panel.endDate)}
-                    data-cy={`dspIssueBtn-${panelsName}-${panel.tisId}`}
-                  />
-                ) : null}
               </Card>
             </Card.GroupItem>
           );
