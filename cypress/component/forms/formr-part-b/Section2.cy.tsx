@@ -84,6 +84,15 @@ describe("Section2", () => {
       "Short and Long-term sickness absence must be rounded up to a whole number"
     );
 
+    cy.get("[data-cy=sicknessAbsence]").clear().type("99999");
+    cy.get("#sicknessAbsence--error-message").should(
+      "contain.text",
+      "Short and Long-term sickness absence must not be more than 9999"
+    );
+
+    cy.get("[data-cy=sicknessAbsence]").clear().type("9999");
+    cy.get("#sicknessAbsence--error-message").should("not.exist");
+
     cy.get("[data-cy=sicknessAbsence]").click().clear().type("1");
     cy.get("#sicknessAbsence--error-message").should("not.exist");
     cy.get("[data-cy=otherLeave]").click().clear().type("1");
