@@ -23,9 +23,7 @@ const AuthFooter = (): JSX.Element => {
     <>
       <Flex className={styles.authFooterLinks}>{addFooterLinks()}</Flex>
       <Flex className={styles.authFooterText}>
-        <View data-cy="footerCopy">
-          &copy; Health Education England {dayjs().year()}
-        </View>
+        <View data-cy="footerCopy">&copy; NHS England {dayjs().year()}</View>
       </Flex>
     </>
   );

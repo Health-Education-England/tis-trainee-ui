@@ -11,7 +11,7 @@ interface IUser {
   totpSection: number;
   error: any;
   totpCode: string;
-  preferredMfa: any;
+  preferredMfa: string;
   username: string;
   cognitoGroups: string[] | undefined;
   signingCojProgName: string | null;

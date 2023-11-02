@@ -1,13 +1,13 @@
 import { mount } from "cypress/react18";
 import { Router } from "react-router-dom";
-import HEEFooter from "../../../components/navigation/HEEFooter";
+import TSSFooter from "../../../components/navigation/TSSFooter";
 import history from "../../../components/navigation/history";
 
 describe("Footer", () => {
   beforeEach(() => {
     mount(
       <Router history={history}>
-        <HEEFooter appVersion={"0.0.1"} />
+        <TSSFooter appVersion={"0.0.1"} />
       </Router>
     );
   });

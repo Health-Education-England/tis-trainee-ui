@@ -22,7 +22,9 @@ export const HomeHeaderSection = () => {
                   data-cy="homeWelcomeHeaderText"
                   className="nhsuk-u-margin-bottom-4"
                 >
-                  Welcome to TIS Self-Service
+                  Welcome to
+                  <br />
+                  TIS Self-Service
                 </h1>
                 <p
                   data-cy="homeWelcomeSubHeaderText"
