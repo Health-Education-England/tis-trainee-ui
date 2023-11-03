@@ -12,7 +12,7 @@ const TSSHeader = () => {
           <a
             href="/"
             aria-label="TSS home page"
-            className="nhsuk-header__navigation-link"
+            className="nhsuk-header__navigation-link header-logo-link"
           >
             <NHSEnglandLogoWhite />
           </a>

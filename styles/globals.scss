@@ -171,6 +171,10 @@ button:disabled {
   }
 }
 
+.header-logo-link {
+  padding: 0 !important;
+}
+
 .nhsuk-header__menu-toggle {
   &.closeMenu {
     text-indent: -9999px;
