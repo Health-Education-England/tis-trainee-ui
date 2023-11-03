@@ -8,18 +8,26 @@ const TSSHeader = () => {
   return (
     <Header>
       <Header.Container>
-        <div className="nhsuk-header__logo">
+        <div className="nhsuk-header__logo" data-cy="headerLogo">
           <a href="/" aria-label="TSS home page">
             <NHSEnglandLogoWhite />
           </a>
         </div>
         <Header.Content>
-          <Header.MenuToggle />
+          <Header.MenuToggle data-cy="menuToggleBtn" />
           <div className="top-nav-container">
-            <NavLink className="nhsuk-header__navigation-link" to="/support">
+            <NavLink
+              className="nhsuk-header__navigation-link"
+              data-cy="topNavSupport"
+              to="/support"
+            >
               Support
             </NavLink>
-            <NavLink className="nhsuk-header__navigation-link" to="/mfa">
+            <NavLink
+              className="nhsuk-header__navigation-link"
+              data-cy="topNavMfaSetup"
+              to="/mfa"
+            >
               MFA set-up
             </NavLink>
             <SignOutBtn />
@@ -27,7 +35,9 @@ const TSSHeader = () => {
         </Header.Content>
       </Header.Container>
       <div className="nhsuk-width-container">
-        <span className="tss-name">TIS Self-Service</span>
+        <span className="tss-name" data-cy="tssName">
+          TIS Self-Service
+        </span>
       </div>
       <Header.Nav className="header-nav">
         {makeTSSHeaderLinks()}

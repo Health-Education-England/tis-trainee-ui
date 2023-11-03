@@ -21,7 +21,6 @@ declare global {
       checkAndFillSection6(compliments: string): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
-      logout(): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
       signIn(): Chainable<Element>;
@@ -32,7 +31,7 @@ declare global {
       ): Chainable<Element>;
       getTotp(): Chainable<Element>;
       useTotp(): Chainable<Element>;
-      logoutDesktop(): Chainable<Element>;
+
       testDataSourceLink(): Chainable<Element>;
       testData(dataToTest: any, index?: number): Chainable<Element>;
     }

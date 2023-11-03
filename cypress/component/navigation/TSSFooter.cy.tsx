@@ -35,10 +35,7 @@ describe("Footer", () => {
   });
 
   it("Copyright notice should contain HEE text", () => {
-    cy.get("[data-cy=copyrightText]").should(
-      "contain.text",
-      "Health Education England"
-    );
+    cy.get("[data-cy=copyrightText]").should("contain.text", "NHS England");
   });
 
   it("should have the correct version shown in the footer", () => {

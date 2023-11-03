@@ -13,20 +13,12 @@ describe("Desktop/ tablet header", () => {
   sizes.forEach((size: any) => {
     it(`should have menu items after successfull sign-in on ${size} screen`, () => {
       cy.viewport(size);
-      if (size === mobileView) {
-        cy.get(".nhsuk-header__menu-toggle").should("exist");
 
-        cy.get(".nhsuk-header__menu-toggle").click();
-      }
       cy.get(".nhsuk-header__navigation-link")
         .should("exist")
         .contains(/Profile/);
-      cy.get(".nhsuk-header__navigation-link")
-        .should("exist")
-        .contains(/Part A/);
-      cy.get(".nhsuk-header__navigation-link")
-        .should("exist")
-        .contains(/Part B/);
+      cy.get(".nhsuk-header__navigation-link").should("exist").contains(/A/);
+      cy.get(".nhsuk-header__navigation-link").should("exist").contains(/B/);
       cy.get(".nhsuk-header__navigation-link")
         .should("exist")
         .contains(/Support/);
@@ -34,15 +26,13 @@ describe("Desktop/ tablet header", () => {
       cy.get(".nhsuk-button")
         .should("exist")
         .contains(/Sign out/);
+      if (size === mobileView) {
+        cy.get(".nhsuk-header__menu-toggle").should("exist").click();
+        cy.get(':nth-child(8) > [data-cy="signOutBtn"]');
+      } else {
+        cy.get('.top-nav-container > [data-cy="signOutBtn"]').click();
+      }
     });
-  });
-
-  it("should sign out of the desktop", () => {
-    cy.logoutDesktop();
-  });
-
-  it("should sign out of mobile", () => {
-    cy.logout();
   });
 });
 

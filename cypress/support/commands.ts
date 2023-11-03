@@ -438,16 +438,6 @@ Cypress.Commands.add("addWorkPanel", (startDate: string, endDate: string) => {
     .type("Site location");
 });
 
-Cypress.Commands.add("logout", () => {
-  cy.viewport("iphone-6");
-  cy.get("[data-cy=BtnMenu]").should("exist").click();
-  cy.get("[data-cy=logoutBtn]").click();
-});
-
-Cypress.Commands.add("logoutDesktop", () => {
-  cy.get("[data-cy=logoutBtn]").click();
-});
-
 Cypress.Commands.add("checkFlags", (name: string) => {
   return cy
     .request({
