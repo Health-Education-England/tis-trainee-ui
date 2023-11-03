@@ -9,7 +9,11 @@ const TSSHeader = () => {
     <Header>
       <Header.Container>
         <div className="nhsuk-header__logo" data-cy="headerLogo">
-          <a href="/" aria-label="TSS home page">
+          <a
+            href="/"
+            aria-label="TSS home page"
+            className="nhsuk-header__navigation-link"
+          >
             <NHSEnglandLogoWhite />
           </a>
         </div>
