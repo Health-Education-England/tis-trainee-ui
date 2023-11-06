@@ -6,8 +6,8 @@ const AuthHeader = (): JSX.Element => {
   return (
     <>
       <Flex className={styles.authLogo}>
-        <span className={styles.authLogo}>
-          <NHSEnglandLogoWhite data-cy="authLogo" />
+        <span className={styles.authLogo} data-cy="authLogo">
+          <NHSEnglandLogoWhite />
         </span>
       </Flex>
       <Flex className={styles.authTitle}>

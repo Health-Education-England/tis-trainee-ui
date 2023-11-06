@@ -15,14 +15,10 @@ describe("Home", () => {
   });
 
   it("should find profile button and click in to the profile section", () => {
-    cy.get(".nhsuk-u-margin-bottom-4").should(
-      "contain.text",
-      "Welcome to TIS Self-Service"
-    );
     cy.get('[data-cy="homeLink"]').should("not.exist");
     cy.get('[data-cy="homeWelcomeHeaderText"]')
       .should("exist")
-      .should("contain.text", "Welcome to TIS Self-Service");
+      .should("contain.html", "Welcome to<br>TIS Self-Service");
     cy.get('[data-cy="tssUpdatesContainer"]').should("exist");
 
     homeArr.forEach(section => {

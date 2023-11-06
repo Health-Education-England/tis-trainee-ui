@@ -4,6 +4,27 @@ import day from "dayjs";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../utilities/BooleanUtilities";
 
+Cypress.Commands.add("checkForRecentForm", () => {
+  cy.get("body").then($body => {
+    if ($body.find(".MuiDialog-container").length) {
+      cy.get(".MuiDialogContentText-root").should(
+        "include.text",
+        "You recently submitted a form"
+      );
+      cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    }
+  });
+});
+
+Cypress.Commands.add("startOver", () => {
+  cy.get('[data-cy="startOverButton"]').click();
+  cy.get(".MuiDialogContentText-root").should(
+    "include.text",
+    "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
+  );
+  cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+});
+
 Cypress.Commands.add("testDataSourceLink", () => {
   cy.get("[data-cy=dataSourceSummary]")
     .should("exist")
@@ -28,12 +49,10 @@ Cypress.Commands.add(
     visitUrl?: string,
     viewport?: Cypress.ViewportPreset
   ) => {
-    if (waitTimeMs) {
-      if (waitTimeMs === 30) {
-        cy.log(
-          "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
-        );
-      }
+    if (waitTimeMs && waitTimeMs === 30000) {
+      cy.log(
+        "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
+      );
       cy.wait(waitTimeMs);
     }
     const urlString = visitUrl ?? "/";
@@ -42,23 +61,6 @@ Cypress.Commands.add(
     cy.signIn();
   }
 );
-
-const SignInToTss = (
-  visitUrl: string = "/",
-  waitTimeMs?: number,
-  viewport?: any
-) => {
-  if (waitTimeMs) {
-    if (waitTimeMs === 30) {
-      cy.log(
-        "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
-      );
-    }
-    cy.wait(waitTimeMs);
-  }
-  cy.visit(visitUrl);
-  if (viewport) cy.viewport(viewport);
-};
 
 Cypress.Commands.add("signIn", () => {
   cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
