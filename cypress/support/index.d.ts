@@ -20,6 +20,7 @@ declare global {
       checkAndFillSection5(pastDate: string): Chainable<Element>;
       checkAndFillSection6(compliments: string): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
+      checkForRecentForm(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
@@ -29,6 +30,7 @@ declare global {
         visitUrl?: string,
         viewport?: Cypress.ViewportPreset
       ): Chainable<Element>;
+      startOver(): Chainable<Element>;
       getTotp(): Chainable<Element>;
       useTotp(): Chainable<Element>;
 

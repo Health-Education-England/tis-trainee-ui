@@ -41,7 +41,7 @@ describe("MFA set-up", () => {
       )
       .click();
     cy.get("[data-cy=Profile]").click();
-    cy.get('[data-cy="MFA"]').click();
+    cy.get('[data-cy="topNavMfaSetup"]').should("exist").click();
     cy.get(".nhsuk-fieldset__heading").should("include.text", "MFA");
   });
 });

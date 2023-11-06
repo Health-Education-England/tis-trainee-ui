@@ -43,10 +43,7 @@ describe("Authenticator", () => {
         });
         expect(hrefs.get()).to.deep.eq(links);
       });
-    cy.get("[data-cy=footerCopy]").should(
-      "contain.text",
-      "Health Education England"
-    );
+    cy.get("[data-cy=footerCopy]").should("contain.text", "© NHS England 2023");
   });
 
   it("should remove the privacy & cookies error message and show the Create an account button if checkbox checked", () => {
