@@ -1,6 +1,6 @@
 {
   "name": "trainee-ui-app",
-  "version": "0.85.2",
+  "version": "0.85.3",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^5.3.0",
@@ -84,7 +84,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "bash build.sh && next export",
+    "build": "bash build.sh",
     "start": "next start",
     "lint": "next lint",
     "stylelint": "stylelint \"**/*.scss\" \"**/*.css\" --fix",
