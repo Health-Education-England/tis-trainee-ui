@@ -25,12 +25,9 @@ import { Router } from "react-router-dom";
 import { Main } from "../main/Main";
 import browserUpdateConfig from "../../browser-update-config.json";
 import TagManager from "react-gtm-module";
-import packageJson from "../../package.json";
 import history from "../navigation/history";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const appVersion = packageJson.version;
 
 const tagManagerArgs = {
   gtmId: "GTM-5PWDC87"
@@ -125,7 +122,7 @@ function CRAEntryPoint() {
       className={style.authAuthenticator}
       formFields={formFields}
     >
-      {({ signOut }) => (
+      {() => (
         <Router history={history}>
           <>
             <ToastContainer
@@ -133,7 +130,7 @@ function CRAEntryPoint() {
               limit={4}
               hideProgressBar={true}
             />
-            <Main signOut={signOut} appVersion={appVersion} />
+            <Main />
           </>
         </Router>
       )}

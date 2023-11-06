@@ -1,13 +1,13 @@
 import dayjs from "dayjs";
 import { Col, Footer, Row } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
-import styles from "./HEEFooter.module.scss";
+import styles from "./TSSFooter.module.scss";
 
-interface HEEFooterProps {
+interface TSSFooterProps {
   appVersion: string;
 }
 
-const HEEFooter = ({ appVersion }: HEEFooterProps) => {
+const TSSFooter = ({ appVersion }: TSSFooterProps) => {
   return (
     <Footer>
       <Footer.List>
@@ -46,7 +46,7 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
         </Row>
       </Footer.List>
       <Footer.Copyright data-cy="copyrightText">
-        &copy; Health Education England {dayjs().year()}
+        &copy; NHS England {dayjs().year()}
       </Footer.Copyright>
       {appVersion ? (
         <Footer.List>
@@ -62,4 +62,4 @@ const HEEFooter = ({ appVersion }: HEEFooterProps) => {
   );
 };
 
-export default HEEFooter;
+export default TSSFooter;

@@ -1,12 +1,14 @@
 import { Flex, View } from "@aws-amplify/ui-react";
-import { NHSHEELogoRev } from "../../../../public/NHSHEELogoRev";
 import styles from "../../Auth.module.scss";
+import { NHSEnglandLogoWhite } from "../../../../public/NHSEnglandLogoWhite";
 
 const AuthHeader = (): JSX.Element => {
   return (
     <>
       <Flex className={styles.authLogo}>
-        <NHSHEELogoRev className={styles.authLogo} data-cy="authLogo" />
+        <span className={styles.authLogo}>
+          <NHSEnglandLogoWhite data-cy="authLogo" />
+        </span>
       </Flex>
       <Flex className={styles.authTitle}>
         <View>

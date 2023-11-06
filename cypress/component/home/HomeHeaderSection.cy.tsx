@@ -15,8 +15,8 @@ describe("HomeHeaderSection", () => {
       </Provider>
     );
     cy.get("[data-cy=homeWelcomeHeaderText]").should(
-      "contain",
-      "Welcome to TIS Self-Service"
+      "include.text",
+      "Welcome toTIS Self-Service" // with line break
     );
     cy.get("[data-cy=homeWelcomeSubHeaderText]").should(
       "contain",

@@ -5,8 +5,7 @@ import FormRPartB from "../forms/formr-part-b/FormRPartB";
 import Support from "../support/Support";
 import PageNotFound from "../common/PageNotFound";
 import PageTitle from "../common/PageTitle";
-import HEEHeader from "../navigation/HEEHeader";
-import HEEFooter from "../navigation/HEEFooter";
+import TSSFooter from "../navigation/TSSFooter";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
 import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
@@ -26,13 +25,12 @@ import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";
 import CojView from "../forms/conditionOfJoining/CojView";
+import TSSHeader from "../navigation/TSSHeader";
+import packageJson from "../../package.json";
 
-interface IMain {
-  signOut: any;
-  appVersion: string;
-}
+const appVersion = packageJson.version;
 
-export const Main = ({ signOut, appVersion }: IMain) => {
+export const Main = () => {
   const dispatch = useAppDispatch();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
@@ -97,7 +95,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
     content = (
       <>
         <PageTitle />
-        <HEEHeader signOut={signOut} />
+        <TSSHeader />
         {pathname !== "/home" ? <GlobalAlert /> : null}
         <Breadcrumbs />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">
@@ -140,7 +138,7 @@ export const Main = ({ signOut, appVersion }: IMain) => {
             <Route path="/*" component={PageNotFound} />
           </Switch>
         </main>
-        <HEEFooter appVersion={appVersion} />
+        <TSSFooter appVersion={appVersion} />
       </>
     );
   return <ConfirmProvider>{content}</ConfirmProvider>;
