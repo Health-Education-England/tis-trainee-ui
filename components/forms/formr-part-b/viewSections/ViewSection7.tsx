@@ -30,7 +30,9 @@ const ViewSection7 = ({ makeSectionEditButton, formData }: IViewSection7) => {
           </Card.Heading>
           <SummaryList>
             <SummaryList.Row>
-              <SummaryList.Key>Has your training been impacted by Covid 19?</SummaryList.Key>
+              <SummaryList.Key>
+                Has your training been impacted by Covid 19?
+              </SummaryList.Key>
               <SummaryList.Value data-cy="haveCovidDeclarations">
                 {BooleanUtilities.ToYesNo(formData.haveCovidDeclarations)}
               </SummaryList.Value>
