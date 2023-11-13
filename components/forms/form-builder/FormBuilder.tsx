@@ -32,6 +32,7 @@ import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
+import { WorkPanelBuilder } from "./form-comps/WorkPanelBuilder";
 
 export interface Field {
   name: string;
@@ -58,7 +59,7 @@ interface Page {
 }
 interface Section {
   sectionHeader: string;
-  fields: Field[];
+  fields: Field[] | any[];
 }
 export interface Form {
   name: string;
@@ -94,7 +95,6 @@ export default function FormBuilder({
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
   const lastSavedFormData = store.getState().formA.formAData;
-
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
     () => getEditPageNumber(jsonFormName),
@@ -102,9 +102,14 @@ export default function FormBuilder({
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
-  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
-    (section: Section) => section.fields.map((field: Field) => field.name)
+  const fieldNamesForCurrentPage = useMemo(
+    () =>
+      pages[currentPage].sections.flatMap((section: Section) =>
+        section.fields.map((field: Field) => field.name)
+      ),
+    [pages, currentPage]
   );
+
   const fieldNamesForCurrentPageSet = useMemo(
     () => new Set(fieldNamesForCurrentPage),
     [fieldNamesForCurrentPage]
@@ -200,6 +205,16 @@ export default function FormBuilder({
               label={label}
               formFields={formFields}
               handleChange={handleChange}
+            />
+          );
+        // NOTE The most logical way I can think atm is to add the panels section  here as another option and encapsulate all the change/validation logic in the panel builder component which will then update the formFields state with the updated array.
+        // (just using workArray as an example here but ideally make generic for any panel arrray)
+        case "workArray":
+          return (
+            <WorkPanelBuilder
+              formFields={formFields}
+              setFormFields={setFormFields}
+              isFormDirty={isFormDirty}
             />
           );
       }
@@ -433,7 +448,7 @@ export default function FormBuilder({
   }, [jsonForm, fetchedFormData, pages]);
 
   return (
-    <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+    <form acceptCharset="UTF-8">
       {pages && (
         <>
           <div>
