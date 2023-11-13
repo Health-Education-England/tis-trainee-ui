@@ -50,8 +50,18 @@ export const WorkPanelBuilder = ({
         work: newWorkPanels
       };
     });
-    // TODO - remove the work panel from the form errors
-
+    setWorkFormErrors((prevWorkFormErrors: Map<number, string>) => {
+      const newWorkFormErrors = new Map<number, string>();
+      prevWorkFormErrors.forEach((value, key) => {
+        // Update the keys in the error map to reflect the shift in indices
+        if (key > index) {
+          newWorkFormErrors.set(key - 1, value);
+        } else if (key < index) {
+          newWorkFormErrors.set(key, value);
+        }
+      });
+      return newWorkFormErrors;
+    });
     isFormDirty.current = true;
   };
 
