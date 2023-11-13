@@ -10,6 +10,8 @@ import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import React from "react";
+import { Button } from "nhsuk-react-components";
+import history from "../navigation/history";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
@@ -24,6 +26,14 @@ export function ConditionsOfJoining({
   programmeMembershipId,
   programmeName
 }: ConditionsOfJoiningProps) {
+  const handleClick = () => {
+    setCojState(
+      programmeMembershipId,
+      programmeName,
+      conditionsOfJoining.signedAt
+    );
+    history.push(`/programmes/${programmeMembershipId}/sign-coj`);
+  };
   return conditionsOfJoining.signedAt ? (
     <React.Fragment>
       <p data-cy="cojSignedDate">
@@ -52,19 +62,13 @@ export function ConditionsOfJoining({
     <React.Fragment>
       <p data-cy="cojStatusText">{CojUtilities.getStatusText(startDate)}</p>
       {startDate && CojUtilities.canBeSigned(new Date(startDate)) && (
-        <Link
-          to={`/programmes/${programmeMembershipId}/sign-coj`}
-          onClick={() =>
-            setCojState(
-              programmeMembershipId,
-              programmeName,
-              conditionsOfJoining.signedAt
-            )
-          }
+        <Button
+          className="btn_full-width"
+          onClick={handleClick}
           data-cy={`cojSignBtn-${programmeMembershipId}`}
         >
           Sign
-        </Link>
+        </Button>
       )}
     </React.Fragment>
   );
