@@ -143,6 +143,18 @@ jobs:
           SLACK_FOOTER: It's impossible to be unhappy in a poncho.
           MSG_MINIMAL: true
 
+  analyse-quality:
+    needs: [cypress-e2e]
+    name: Analyse quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Analyse quality
+        uses: SonarSource/sonarcloud-github-action@v2.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   backup-artifacts:
     needs: [cypress-e2e]
     name: Backup build artifacts
