@@ -5,6 +5,9 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import history from "../navigation/history";
 import style from "../Common.module.scss";
+import ActionSummary from "./actionSummary/ActionSummary";
+import { loadFormAList } from "../../redux/slices/formASlice";
+import { loadFormBList } from "../../redux/slices/formBSlice";
 
 const handleClick = (route: string) => history.push(route);
 
@@ -22,6 +25,11 @@ const Home = () => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(loadFormAList());
+    dispatch(loadFormBList());
+  }, [dispatch]);
+
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   if (preferredMfa === "NOMFA") {
@@ -29,6 +37,7 @@ const Home = () => {
   }
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
+      <ActionSummary />
       <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard isClickable={true} route="/profile" linkHeader="Profile">

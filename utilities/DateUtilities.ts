@@ -11,7 +11,7 @@ day.extend(timezone);
 day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
-const todayDate = day().toDate();
+export const todayDate = day().toDate();
 export type DateType = Date | string | null | undefined;
 export type DateUnitType =
   | "millisecond"

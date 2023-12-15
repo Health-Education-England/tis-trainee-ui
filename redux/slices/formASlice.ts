@@ -4,6 +4,7 @@ import {
   FormRPartA,
   initialFormRABeforeProfileData
 } from "../../models/FormRPartA";
+import { IFormR } from "../../models/IFormR";
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
@@ -11,6 +12,7 @@ import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 
 interface IFormA {
+  formAList: IFormR[];
   formAData: FormRPartA;
   status: string;
   error: any;
@@ -21,6 +23,7 @@ interface IFormA {
 }
 
 export const initialState: IFormA = {
+  formAList: [],
   formAData: initialFormRABeforeProfileData,
   status: "idle",
   error: "",
@@ -29,6 +32,16 @@ export const initialState: IFormA = {
   autosaveStatus: "idle",
   autoSaveLatestTimeStamp: "none this session"
 };
+
+export const loadFormAList = createAsyncThunk(
+  "formA/fetchFormAList",
+  async () => {
+    const formsService = new FormsService();
+    const response: AxiosResponse<IFormR[]> =
+      await formsService.getTraineeFormRPartAList();
+    return DateUtilities.genericSort(response.data, "submissionDate", true);
+  }
+);
 
 export const loadSavedFormA = createAsyncThunk(
   "formA/fetchFormA",
@@ -84,8 +97,8 @@ const formASlice = createSlice({
   name: "formA",
   initialState,
   reducers: {
-    resetToInitFormA() {
-      return initialState;
+    resetToInitFormA(state) {
+      return { ...initialState, formAList: state.formAList };
     },
     updatedFormA(state, action: PayloadAction<FormRPartA>) {
       return { ...state, formAData: action.payload };
@@ -105,6 +118,22 @@ const formASlice = createSlice({
   },
   extraReducers(builder): void {
     builder
+      .addCase(loadFormAList.pending, (state, _action) => {
+        state.status = "loading";
+      })
+      .addCase(loadFormAList.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.formAList = action.payload;
+      })
+      .addCase(loadFormAList.rejected, (state, { error }) => {
+        state.status = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchForms,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
       .addCase(loadSavedFormA.pending, (state, _action) => {
         state.status = "loading";
       })

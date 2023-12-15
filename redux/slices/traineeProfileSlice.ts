@@ -12,6 +12,7 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IProfile {
   traineeProfileData: TraineeProfile;
   hasSignableCoj: boolean;
+  unsignedCojs: ProgrammeMembership[];
   status: string;
   error: any;
 }
@@ -24,6 +25,7 @@ export const initialState: IProfile = {
     placements: []
   },
   hasSignableCoj: false,
+  unsignedCojs: [],
   status: "idle",
   error: ""
 };
@@ -91,6 +93,9 @@ const traineeProfileSlice = createSlice({
         );
         state.traineeProfileData.placements = sortedPlacements;
         state.hasSignableCoj = CojUtilities.canAnyBeSigned(sortedProgrammes);
+        state.unsignedCojs = CojUtilities.unsignedCojs(
+          state.traineeProfileData.programmeMemberships
+        );
       })
       .addCase(fetchTraineeProfileData.rejected, (state, { error }) => {
         state.status = "failed";

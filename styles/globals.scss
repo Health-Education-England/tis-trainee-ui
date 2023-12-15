@@ -561,3 +561,9 @@ ol[type="a"] {
   min-width: 100%;
   max-width: 100%;
 }
+
+//ul
+.no-bullet {
+  list-style-type: none;
+  margin-left: -1em;
+}

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { Status } from "../models/Status";
@@ -5,12 +6,11 @@ import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { Placement } from "../models/Placement";
 import {
   oneWeekAgo,
-  today,
+  todayDate,
   twelveWeeksAhead,
   twelveWeeksAheadPlusOneDay,
   yesterday
 } from "../utilities/DateUtilities";
-import dayjs from "dayjs";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -516,8 +516,8 @@ export const mockPlacementsForGrouping: Placement[] = [
     siteLocation: "siteLocation2",
     siteKnownAs: "siteKnownAs2",
     otherSites: [],
-    startDate: today,
-    endDate: today,
+    startDate: todayDate,
+    endDate: todayDate,
     wholeTimeEquivalent: "wholeTimeEquivalent2",
     specialty: "specialty2",
     subSpecialty: "subSpecialty2",
