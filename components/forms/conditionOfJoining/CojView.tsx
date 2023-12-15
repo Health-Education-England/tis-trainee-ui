@@ -1,6 +1,9 @@
 import { Formik } from "formik";
 import { Button, SummaryList } from "nhsuk-react-components";
-import { signCoj } from "../../../redux/slices/traineeProfileSlice";
+import {
+  signCoj,
+  updatedTraineeProfileStatus
+} from "../../../redux/slices/traineeProfileSlice";
 import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import MultiChoiceInputField from "../MultiChoiceInputField";
@@ -15,9 +18,11 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
 
 export default function CojView() {
-  const signingCoj = store.getState().user.signingCoj;
-  const progName = store.getState().user.signingCojProgName;
-  const signedDate = store.getState().user.signingCojSignedDate;
+  const {
+    signingCojProgName: progName,
+    signingCojSignedDate: signedDate,
+    signingCoj
+  } = store.getState().user;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
   return progName ? (
@@ -57,6 +62,7 @@ function CojDeclarationSection({
         const signingCojPmId = store.getState().user.signingCojPmId;
         await store.dispatch(signCoj(signingCojPmId));
         store.dispatch(updatedsigningCoj(false));
+        store.dispatch(updatedTraineeProfileStatus("idle"));
         history.push("/programmes");
       }}
     >
