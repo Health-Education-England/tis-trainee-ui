@@ -38,11 +38,10 @@ export function getAllInfoFormRSubmissionSummaryActions(
   formListA: IFormR[],
   formListB: IFormR[]
 ) {
-  const { noSubFormRA, noSubFormRB } = noSubFormR(formListA, formListB);
-
+  const noSubFormRA = noSubmittedForms(formListA);
+  const noSubFormRB = noSubmittedForms(formListB);
   const infoA = getInfoActions(formListA, noSubFormRA);
   const infoB = getInfoActions(formListB, noSubFormRB);
-
   return {
     noSubFormRA,
     noSubFormRB,
@@ -76,10 +75,18 @@ function getInfoActions(formList: IFormR[], noSubFormR: boolean) {
   };
 }
 
-export function filterSubmittedFormList(formList: IFormR[]) {
+function filterSubmittedFormList(formList: IFormR[]) {
   return formList.filter(
     form => form.lifecycleState === LifeCycleState.Submitted
   );
+}
+
+export function noSubmittedForms(formList: IFormR[]) {
+  if (!formList || formList.length < 1) {
+    return true;
+  }
+  const filteredSubList = filterSubmittedFormList(formList);
+  return filteredSubList.length < 1;
 }
 
 function isAnyFormInProgress(formList: IFormR[]): boolean {
@@ -87,14 +94,6 @@ function isAnyFormInProgress(formList: IFormR[]): boolean {
     formList.filter(form => form.lifecycleState !== LifeCycleState.Submitted)
       .length > 0
   );
-}
-
-function noSubFormR(formListA: IFormR[], formListB: IFormR[]) {
-  const filteredSumittedFormListA = filterSubmittedFormList(formListA);
-  const filteredSumittedFormListB = filterSubmittedFormList(formListB);
-  const noSubFormRA = filteredSumittedFormListA.length < 1;
-  const noSubFormRB = filteredSumittedFormListB.length < 1;
-  return { noSubFormRA, noSubFormRB };
 }
 
 export function getLatestSubDate(formList: IFormR[]) {

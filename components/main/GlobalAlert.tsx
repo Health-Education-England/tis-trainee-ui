@@ -6,6 +6,9 @@ import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActi
 import { useInProgressActions } from "../../utilities/hooks/action-summary/useInProgressActions";
 
 const GlobalAlert = () => {
+  // Don't show the Global alert if the user has not set their MFA
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  // BOOKMARK
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   // ACTION SUMMARY
   const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
@@ -16,18 +19,14 @@ const GlobalAlert = () => {
     isInProgressFormA || isInProgressFormB || draftFormProps;
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
     useInfoActions();
-
   const importantInfo: boolean =
     !!infoActionsA.isForInfoYearPlusSubForm ||
-    !!infoActionsB.isForInfoYearPlusSubForm;
+    !!infoActionsB.isForInfoYearPlusSubForm ||
+    noSubFormRA ||
+    noSubFormRB;
 
   const showActionsSummaryAlert =
-    unsignedCoJ ||
-    inProgressFormR ||
-    draftFormProps ||
-    noSubFormRA ||
-    noSubFormRB ||
-    importantInfo;
+    unsignedCoJ || inProgressFormR || draftFormProps || importantInfo;
 
   const alerts = {
     bookmark: {
@@ -49,14 +48,13 @@ const GlobalAlert = () => {
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
   const { bookmark, outstandingActions } = alerts;
 
-  return hasAlerts ? (
+  return hasAlerts && preferredMfa !== "NOMFA" ? (
     <aside
       className="app-global-alert"
       id="app-global-alert"
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container" style={{ marginBottom: "0.5em" }}>
-        {bookmark.status && <BookmarkAlert />}
         {outstandingActions.status && (
           <ActionsSummaryAlert
             unsignedCoJ={unsignedCoJ}
@@ -64,6 +62,7 @@ const GlobalAlert = () => {
             importantInfo={importantInfo}
           />
         )}
+        {bookmark.status && <BookmarkAlert />}
       </div>
     </aside>
   ) : null;
@@ -92,7 +91,7 @@ function BookmarkAlert() {
   );
 }
 
-type OutstandingActionsAlertProps = {
+type ActionsAlertProps = {
   unsignedCoJ: boolean;
   inProgressFormR: boolean;
   importantInfo: boolean;
@@ -102,7 +101,7 @@ function ActionsSummaryAlert({
   unsignedCoJ,
   inProgressFormR,
   importantInfo
-}: Readonly<OutstandingActionsAlertProps>) {
+}: Readonly<ActionsAlertProps>) {
   const ACTION_LINK = (
     <span>
       Please click <Link to="/">here</Link> for details.
@@ -113,34 +112,30 @@ function ActionsSummaryAlert({
   const conditions = [
     {
       check: () => unsignedCoJ && !inProgressFormR,
-      header: "Action Required",
       body: <span>You have outstanding actions to complete.</span>
     },
     {
       check: () => !unsignedCoJ && inProgressFormR,
-      header: "Action Required",
       body: <span>You have in progress actions to complete.</span>
     },
     {
       check: () => unsignedCoJ && inProgressFormR,
-      header: "Action Required",
       body: (
         <span>You have outstanding and in progress actions to complete.</span>
       )
     }
   ];
 
-  const { header, body } = conditions.find(({ check }) => check()) ?? {
-    header: "",
-    body: ""
+  const { body } = conditions.find(({ check }) => check()) ?? {
+    body: null
   };
 
   return (
-    <div className="nhsuk-grid-row" data-cy="outstandingActionsAlert">
+    <div className="nhsuk-grid-row" data-cy="actionsSummaryAlert">
       <div className="nhsuk-grid-column-full">
         <div className="app-global-alert__content">
           <div className="app-global-alert__message">
-            <h2>{header}</h2>
+            <h2>Attention</h2>
             <p>{body}</p>
             {importantInfo && <p>{importantInfoText}</p>}
             <p>{ACTION_LINK}</p>
