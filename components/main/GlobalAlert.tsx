@@ -47,6 +47,7 @@ const GlobalAlert = () => {
   };
 
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
+  const { bookmark, outstandingActions } = alerts;
 
   return hasAlerts ? (
     <aside
@@ -55,8 +56,8 @@ const GlobalAlert = () => {
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container" style={{ marginBottom: "0.5em" }}>
-        {alerts.bookmark.status && <BookmarkAlert />}
-        {alerts.outstandingActions.status && (
+        {bookmark.status && <BookmarkAlert />}
+        {outstandingActions.status && (
           <ActionsSummaryAlert
             unsignedCoJ={unsignedCoJ}
             inProgressFormR={inProgressFormR}

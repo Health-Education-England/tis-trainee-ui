@@ -45,6 +45,10 @@ describe("Home with MFA set up", () => {
     );
   });
 
+  it("should display the Action Summary card on the Home page", () => {
+    cy.get("[data-cy=actionSummary]").should("exist");
+  });
+
   homeCards.forEach(card => {
     it(`should display the ${card} card on the Home page`, () => {
       cy.get(`[data-cy="${card}"]`).should("exist");

@@ -20,12 +20,12 @@ export default function ActionSummary() {
   // OUTSTANDING ACTIONS
   const { unsignedCojCount } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
 
-  // IN PROGRESS
-  const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
-
-  // FOR INFORMATION
+  // FORM R SUBMISSIONS (FOR INFO)
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
     useInfoActions();
+
+  // IN PROGRESS
+  const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
 
   const isformRListLoading = useAppSelector(
     state =>
@@ -35,7 +35,7 @@ export default function ActionSummary() {
   if (isformRListLoading) return <Loading />;
 
   return (
-    <div>
+    <div data-cy="actionSummary">
       <Fieldset>
         <Fieldset.Legend
           isPageHeading
@@ -51,7 +51,9 @@ export default function ActionSummary() {
             <Card.Content>
               <Card feature>
                 <Card.Content>
-                  <Card.Heading>Outstanding</Card.Heading>
+                  <Card.Heading data-cy="outstandingHeading">
+                    Outstanding
+                  </Card.Heading>
                   {/* ----------------- outstanding ------------- */}
                   {/* **** COJ unsigned ********* */}
                   <ul className="no-bullet">
@@ -59,7 +61,7 @@ export default function ActionSummary() {
                       Conditions of Joining (Programme)
                     </Label>
                     {unsignedCojCount > 0 && (
-                      <li>
+                      <li data-cy="unsignedCoJ">
                         <Label size="s">
                           <FontAwesomeIcon
                             icon={faExclamationCircle}
@@ -77,7 +79,7 @@ export default function ActionSummary() {
                       </li>
                     )}
                     {unsignedCojCount < 1 && (
-                      <li>
+                      <li data-cy="allCoJSigned">
                         <Label size="s">
                           <FontAwesomeIcon
                             icon={faCheckCircle}
@@ -95,12 +97,18 @@ export default function ActionSummary() {
                   </ul>
                 </Card.Content>
               </Card>
-              {/* ----------------- For information ---------------------- */}
+              {/* ----------------- Form R submissions (for info) ------ */}
               <Card feature>
                 <Card.Content>
-                  <Card.Heading>Form R submissions</Card.Heading>
+                  <Card.Heading data-cy="formRSubsHeading">
+                    Form R submissions
+                  </Card.Heading>
                   {/* **** Form A - LABEL ****/}
-                  <Label size="l" style={{ color: "#005EB8" }}>
+                  <Label
+                    size="l"
+                    style={{ color: "#005EB8" }}
+                    data-cy="formASubHeader"
+                  >
                     Form R (Part A)
                   </Label>
                   {/* **** Form A - NO SUB ****/}
@@ -131,7 +139,11 @@ export default function ActionSummary() {
                       />
                     )}
                   {/* **** Form B - LABEL ****/}
-                  <Label size="l" style={{ color: "#005EB8" }}>
+                  <Label
+                    size="l"
+                    style={{ color: "#005EB8" }}
+                    data-cy="formASubHeader"
+                  >
                     Form R (Part B)
                   </Label>
                   {/* **** Form B - NO SUB ****/}
@@ -166,7 +178,9 @@ export default function ActionSummary() {
               {/* ----------------- In progress ---------------------- */}
               <Card feature>
                 <Card.Content>
-                  <Card.Heading>In progress</Card.Heading>
+                  <Card.Heading data-cy="inProgressHeading">
+                    In progress
+                  </Card.Heading>
 
                   <ul className="no-bullet">
                     {isInProgressFormA && (
@@ -207,7 +221,9 @@ export default function ActionSummary() {
               </Card>
               <Card feature>
                 <Card.Content>
-                  <Card.Heading>Other checks</Card.Heading>
+                  <Card.Heading data-cy="otherChecksHeading">
+                    Other checks
+                  </Card.Heading>
                   <ul className="no-bullet">
                     <li>
                       <Label size="s">

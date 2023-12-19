@@ -114,6 +114,12 @@ const formASlice = createSlice({
     },
     updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
       return { ...state, autoSaveLatestTimeStamp: action.payload };
+    },
+    updatedFormAStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
+    },
+    updatedFormAList(state, action: PayloadAction<IFormR[]>) {
+      return { ...state, formAList: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -237,7 +243,9 @@ export const {
   updatedEditPageNumber,
   updatedCanEdit,
   updatedAutosaveStatus,
-  updatedAutoSaveLatestTimeStamp
+  updatedAutoSaveLatestTimeStamp,
+  updatedFormAStatus,
+  updatedFormAList
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>

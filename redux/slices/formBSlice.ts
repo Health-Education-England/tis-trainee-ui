@@ -139,6 +139,12 @@ const formBSlice = createSlice({
     },
     updatedIsDirty(state, action: PayloadAction<boolean>) {
       return { ...state, isDirty: action.payload };
+    },
+    updatedFormBStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
+    },
+    updatedFormBList(state, action: PayloadAction<IFormR[]>) {
+      return { ...state, formBList: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -268,7 +274,9 @@ export const {
   updatedCanEditB,
   updatedAutosaveStatus,
   updatedAutoSaveLatestTimeStamp,
-  updatedIsDirty
+  updatedIsDirty,
+  updatedFormBStatus,
+  updatedFormBList
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>

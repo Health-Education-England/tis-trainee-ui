@@ -307,3 +307,21 @@ describe("CojUtilities", () => {
     });
   });
 });
+
+describe("CojUtilities (for Action Summary and Alert) - unsignedCojs", () => {
+  it("should return an unsigned CoJ Programme when no signedAt date", () => {
+    expect(
+      CojUtilities.unsignedCojs([mockProgrammeMembershipCojNotSigned])
+    ).toEqual([mockProgrammeMembershipCojNotSigned]);
+  });
+  it("should return an empty array when all CoJ Programmes are signed", () => {
+    expect(
+      CojUtilities.unsignedCojs([
+        {
+          ...mockProgrammeMembershipCojSigned,
+          conditionsOfJoining: { signedAt: new Date(), version: "GG1" }
+        }
+      ])
+    ).toEqual([]);
+  });
+});

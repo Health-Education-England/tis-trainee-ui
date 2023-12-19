@@ -63,11 +63,11 @@ export default function FormMessage({
       color = "#ED8B00";
       text = (
         <>
-          Your latest{" "}
+          It is a year at least since you submitted a{" "}
           <Link
             to={`/formr-${formType.toLowerCase()}`}
           >{`Form R (${formType})`}</Link>{" "}
-          was submitted more than a year ago on {latestSubFormDate}.
+          on {latestSubFormDate}.
         </>
       );
       break;
@@ -87,7 +87,7 @@ export default function FormMessage({
   }
 
   return (
-    <li>
+    <li data-cy={`${message}-${formType}`}>
       <Label size="s">
         <FontAwesomeIcon icon={icon} color={color} size={iconSize} /> {text}
       </Label>
