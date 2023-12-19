@@ -127,12 +127,12 @@ export default function ActionSummary() {
                         )}
                       />
                     )}
-                  {/* **** Form A - LATEST SUB DATE MORE THAN YEAR AGO ****/}
+                  {/* **** Form A - LATEST SUB DATE YEAR PLUS ****/}
                   {infoActionsA.latestSubDateForm &&
-                    infoActionsA.isForInfoMoreThanYearSubForm && (
+                    infoActionsA.isForInfoYearPlusSubForm && (
                       <FormMessage
                         formType="A"
-                        message="infoLatestSubFormRMoreThanYear"
+                        message="infoLatestSubFormRYearPlus"
                         latestSubFormDate={DateUtilities.ConvertToLondonTime(
                           infoActionsA.latestSubDateForm
                         )}
@@ -164,10 +164,10 @@ export default function ActionSummary() {
                     )}
                   {/* **** Form B - MORE THAN YEAR AGO ****/}
                   {infoActionsB.latestSubDateForm &&
-                    infoActionsB.isForInfoMoreThanYearSubForm && (
+                    infoActionsB.isForInfoYearPlusSubForm && (
                       <FormMessage
                         formType="B"
-                        message="infoLatestSubFormRMoreThanYear"
+                        message="infoLatestSubFormRYearPlus"
                         latestSubFormDate={DateUtilities.ConvertToLondonTime(
                           infoActionsB.latestSubDateForm
                         )}

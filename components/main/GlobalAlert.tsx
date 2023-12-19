@@ -18,8 +18,8 @@ const GlobalAlert = () => {
     useInfoActions();
 
   const importantInfo: boolean =
-    !!infoActionsA.isForInfoMoreThanYearSubForm ||
-    !!infoActionsB.isForInfoMoreThanYearSubForm;
+    !!infoActionsA.isForInfoYearPlusSubForm ||
+    !!infoActionsB.isForInfoYearPlusSubForm;
 
   const showActionsSummaryAlert =
     unsignedCoJ ||

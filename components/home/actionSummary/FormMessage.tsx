@@ -13,7 +13,7 @@ type FormType = "A" | "B";
 type Message =
   | "in progress"
   | "infoLatestSubFormRWithinYear"
-  | "infoLatestSubFormRMoreThanYear"
+  | "infoLatestSubFormRYearPlus"
   | "infoNoFormEver";
 
 type FormMsgProps = {
@@ -58,7 +58,7 @@ export default function FormMessage({
         </>
       );
       break;
-    case "infoLatestSubFormRMoreThanYear":
+    case "infoLatestSubFormRYearPlus":
       icon = faExclamationTriangle;
       color = "#ED8B00";
       text = (

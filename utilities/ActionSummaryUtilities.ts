@@ -55,7 +55,7 @@ function getInfoActions(formList: IFormR[], noSubFormR: boolean) {
   if (noSubFormR) {
     return {
       isForInfoWithinYearSubForm: false,
-      isForInfoMoreThanYearSubForm: false,
+      isForInfoYearPlusSubForm: false,
       latestSubDateForm: null
     };
   }
@@ -66,12 +66,12 @@ function getInfoActions(formList: IFormR[], noSubFormR: boolean) {
     latestSubDateForm &&
     isLatestSubmissionDateWithinLastYear(latestSubDateForm);
 
-  const isForInfoMoreThanYearSubForm =
-    latestSubDateForm && isLatestSubmissionDateMoreThanYear(latestSubDateForm);
+  const isForInfoYearPlusSubForm =
+    latestSubDateForm && isLatestSubmissionDateYearPlus(latestSubDateForm);
 
   return {
     isForInfoWithinYearSubForm,
-    isForInfoMoreThanYearSubForm,
+    isForInfoYearPlusSubForm,
     latestSubDateForm
   };
 }
@@ -111,13 +111,13 @@ export function isLatestSubmissionDateWithinLastYear(
   const oneYearAgo = today.subtract(1, "year");
   return (
     lastSubDate.isAfter(oneYearAgo) &&
-    (lastSubDate.isBefore(today) || lastSubDate.isSame(today))
+    (lastSubDate.isBefore(today, "day") || lastSubDate.isSame(today, "day"))
   );
 }
 
-export function isLatestSubmissionDateMoreThanYear(subDate: DateType) {
+export function isLatestSubmissionDateYearPlus(subDate: DateType) {
   const lastSubDate = dayjs(subDate);
   const today = dayjs();
   const oneYearAgo = today.subtract(1, "year");
-  return lastSubDate.isBefore(oneYearAgo);
+  return lastSubDate.isSameOrBefore(oneYearAgo, "day");
 }

@@ -22,6 +22,7 @@ import {
   updatedFormBStatus
 } from "../../../../redux/slices/formBSlice";
 import { IFormR } from "../../../../models/IFormR";
+import { ProgrammeMembership } from "../../../../models/ProgrammeMembership";
 
 type FormType = "A" | "B";
 
@@ -50,21 +51,34 @@ describe("Action Summary", () => {
     });
   });
 
-  it("should not display the number of CoJ's to sign when there are no CoJ's to sign", () => {
-    store.dispatch(updatedFormAStatus("success"));
-    store.dispatch(updatedUnsignedCojs([]));
-    cy.get("[data-cy=unsignedCoJ]").should("not.exist");
-    cy.get("[data-cy=allCoJSigned]")
-      .should("exist")
-      .should("contain", "signed");
-  });
-  it("should display the number of CoJ's to sign when there are CoJ's to sign", () => {
-    store.dispatch(updatedFormAStatus("success"));
-    store.dispatch(updatedUnsignedCojs([mockProgrammeMembershipCojNotSigned]));
-    cy.get("[data-cy=unsignedCoJ]")
-      .should("exist")
-      .should("contain", "You have 1 unsigned");
-  });
+  const testCojSign = (
+    cojToSign: ProgrammeMembership[],
+    shouldExist: boolean,
+    message: string
+  ) => {
+    it(`should display the ${
+      shouldExist ? "'CoJ to sign'" : "'all CoJ signed'"
+    } message when there are ${shouldExist ? "" : "no"} CoJ to sign`, () => {
+      store.dispatch(updatedFormAStatus("success"));
+      store.dispatch(updatedUnsignedCojs(cojToSign));
+      cy.get("[data-cy=unsignedCoJ]").should(
+        shouldExist ? "exist" : "not.exist"
+      );
+      if (shouldExist) {
+        cy.get("[data-cy=unsignedCoJ]").should("contain", message);
+      } else {
+        cy.get("[data-cy=allCoJSigned]")
+          .should("exist")
+          .should("contain", message);
+      }
+    });
+  };
+  testCojSign([], false, "signed");
+  testCojSign(
+    [mockProgrammeMembershipCojNotSigned],
+    true,
+    "You have 1 unsigned"
+  );
 
   const testFormNoSubmissions = (formType: FormType) => {
     it(`should display the 'yet to submit' message when there are no submitted ${formType}`, () => {
@@ -120,7 +134,7 @@ describe("Action Summary", () => {
   testFormSubmissionWithinYear("B", formListWithinYear, "within a year ago");
   testFormSubmissionWithinYear("B", formListToday, "today");
 
-  const testFormSubmissionMoreThanYear = (
+  const testFormSubmissionYearPlus = (
     formType: FormType,
     formList: IFormR[],
     message: string
@@ -134,7 +148,7 @@ describe("Action Summary", () => {
           ? updatedFormAList(formList)
           : updatedFormBList(formList)
       );
-      cy.get(`[data-cy=infoLatestSubFormRMoreThanYear-${formType}]`)
+      cy.get(`[data-cy=infoLatestSubFormRYearPlus-${formType}]`)
         .should("exist")
         .should("contain", "It is a year at least since you submitted");
     });
@@ -148,10 +162,10 @@ describe("Action Summary", () => {
   ];
   const formListYearAgoExactly = [{ ...mockFormList[2] }];
 
-  testFormSubmissionMoreThanYear("A", formListMoreThanYear, "more than");
-  testFormSubmissionMoreThanYear("A", formListYearAgoExactly, "exactly");
-  testFormSubmissionMoreThanYear("B", formListMoreThanYear, "more than");
-  testFormSubmissionMoreThanYear("B", formListYearAgoExactly, "exactly");
+  testFormSubmissionYearPlus("A", formListMoreThanYear, "more than");
+  testFormSubmissionYearPlus("A", formListYearAgoExactly, "exactly");
+  testFormSubmissionYearPlus("B", formListMoreThanYear, "more than");
+  testFormSubmissionYearPlus("B", formListYearAgoExactly, "exactly");
 
   it("should display the loading spinner when data is loading", () => {
     store.dispatch(updatedFormAStatus("loading"));
