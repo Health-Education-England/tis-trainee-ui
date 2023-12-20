@@ -26,7 +26,8 @@ const GlobalAlert = () => {
     noSubFormRB;
 
   const showActionsSummaryAlert =
-    unsignedCoJ || inProgressFormR || draftFormProps || importantInfo;
+    (unsignedCoJ || inProgressFormR || draftFormProps || importantInfo) &&
+    preferredMfa !== "NOMFA";
 
   const alerts = {
     bookmark: {
@@ -48,7 +49,7 @@ const GlobalAlert = () => {
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
   const { bookmark, outstandingActions } = alerts;
 
-  return hasAlerts && preferredMfa !== "NOMFA" ? (
+  return hasAlerts ? (
     <aside
       className="app-global-alert"
       id="app-global-alert"

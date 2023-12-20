@@ -21,7 +21,6 @@ import {
 } from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
-import path from "path";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();

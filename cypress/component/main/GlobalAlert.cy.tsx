@@ -15,12 +15,35 @@ import {
 import { updatedFormAList } from "../../../redux/slices/formASlice";
 import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
+import { IFormR } from "../../../models/IFormR";
+import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 
 describe("GlobalAlert", () => {
-  it("should not render the Global Alert if the user has not set their MFA", () => {
-    const MockedGlobalAlert = () => {
+  const mountComponent = (
+    redirected: boolean,
+    preferredMfa?: string,
+    formAList?: IFormR[],
+    formBList?: IFormR[],
+    unsignedCojs?: ProgrammeMembership[]
+  ) => {
+    const MockedGlobalAlert: React.FC = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedRedirected(redirected));
+      if (preferredMfa) {
+        dispatch(updatedPreferredMfa(preferredMfa));
+      }
+      if (formAList) {
+        dispatch(updatedFormAList(formAList));
+      }
+      if (formBList) {
+        dispatch(updatedFormBList(formBList));
+      }
+      if (unsignedCojs) {
+        dispatch(updatedUnsignedCojs(unsignedCojs));
+      }
       return <GlobalAlert />;
     };
+
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -28,79 +51,50 @@ describe("GlobalAlert", () => {
         </Router>
       </Provider>
     );
+  };
+
+  it("should not render the Global Action Summary Alert if the user has not set their MFA", () => {
+    mountComponent(false);
     cy.get("[data-cy=globalAlert]").should("not.exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
+    cy.get("[data-cy=bookmarkAlert]").should("not.exist");
   });
 
-  it("should render the Global Action Summary Alert but no Action Summary if bookmark is false (no redirect) and the Action Summary is true (no submitted Form R)", () => {
-    const MockedGlobalNoBookmarkButAction = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedPreferredMfa("SMS"));
-      return <GlobalAlert />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedGlobalNoBookmarkButAction />
-        </Router>
-      </Provider>
-    );
+  it("should still render the Global Bookmark alert (redirect is true) even when the user has not set their MFA", () => {
+    mountComponent(true);
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
+  });
+
+  it("should render the Global Action Summary Alert but no Bookmark alert if bookmark is false (no redirect) and the Action Summary is true (no submitted Form R)", () => {
+    mountComponent(false, "SMS");
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("not.exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
   });
 
-  it("should render the Global Action Summary Alert but no Bookmark if bookmark is false (no redirect) and the Action Summary is true (year plus since last submitted Form R)", () => {
-    const MockedGlobalNoBookmarkButAction = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedFormAList([mockFormList[2]]));
-      dispatch(updatedFormAList([mockFormList[3]]));
-      return <GlobalAlert />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedGlobalNoBookmarkButAction />
-        </Router>
-      </Provider>
-    );
+  it("should render the Global Action Summary Alert but no Bookmark alert if bookmark is false (no redirect) and the Action Summary is true (year plus since last submitted Form R)", () => {
+    mountComponent(false, "SMS", [mockFormList[2]], [mockFormList[3]]);
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("not.exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
   });
 
   it("should render Global Bookmark alert (redirect is true) but no Action Summary (recent submitted Form R, no unsigned CoJ)", () => {
-    const MockedGlobalBookmarkNoAction = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedRedirected(true));
-      dispatch(updatedFormAList([mockFormList[0]]));
-      dispatch(updatedFormBList([mockFormList[1]]));
-      return <GlobalAlert />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedGlobalBookmarkNoAction />
-        </Router>
-      </Provider>
-    );
+    mountComponent(true, "SMS", [mockFormList[0]], [mockFormList[1]]);
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
   });
 
   it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is true", () => {
-    const MockedGlobalAlertRedirectAndUnsignedCoj = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedRedirected(true));
-      dispatch(updatedUnsignedCojs([mockProgrammeMembershipCojNotSigned]));
-      return <GlobalAlert />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedGlobalAlertRedirectAndUnsignedCoj />
-        </Router>
-      </Provider>
+    mountComponent(
+      true,
+      "SMS",
+      [mockFormList[0]],
+      [mockFormList[1]],
+      [mockProgrammeMembershipCojNotSigned]
     );
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");

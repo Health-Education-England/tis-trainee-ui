@@ -116,7 +116,7 @@ export default function ActionSummary() {
                     <FormMessage formType="A" message="infoNoFormEver" />
                   )}
                   {/* **** Form A - SUBMITTED ****/}
-                  {/* **** Form A - LATEST SUB DATE WITHIN LAST YEAR****/}
+                  {/* **** Form A - LATEST SUB DATE WITHIN LAST YEAR ****/}
                   {infoActionsA.latestSubDateForm &&
                     infoActionsA.isForInfoWithinYearSubForm && (
                       <FormMessage
@@ -151,7 +151,7 @@ export default function ActionSummary() {
                     <FormMessage formType="B" message="infoNoFormEver" />
                   )}
                   {/* **** Form B - SUBMITTED ****/}
-                  {/* **** Form B - WITHIN LAST YEAR ****/}
+                  {/* **** Form B - LATEST SUB DATE WITHIN LAST YEAR ****/}
                   {infoActionsB.latestSubDateForm &&
                     infoActionsB.isForInfoWithinYearSubForm && (
                       <FormMessage
@@ -162,7 +162,7 @@ export default function ActionSummary() {
                         )}
                       />
                     )}
-                  {/* **** Form B - MORE THAN YEAR AGO ****/}
+                  {/* **** Form B - LATEST SUB DATE YEAR PLUS ****/}
                   {infoActionsB.latestSubDateForm &&
                     infoActionsB.isForInfoYearPlusSubForm && (
                       <FormMessage
