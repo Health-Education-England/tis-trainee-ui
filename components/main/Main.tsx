@@ -27,6 +27,8 @@ import GlobalAlert from "./GlobalAlert";
 import CojView from "../forms/conditionOfJoining/CojView";
 import TSSHeader from "../navigation/TSSHeader";
 import packageJson from "../../package.json";
+import { loadFormAList } from "../../redux/slices/formASlice";
+import { loadFormBList } from "../../redux/slices/formBSlice";
 
 const appVersion = packageJson.version;
 
@@ -35,6 +37,8 @@ export const Main = () => {
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
+  const formAListStatus = useAppSelector(state => state.formA.status);
+  const formBListStatus = useAppSelector(state => state.formB.status);
   const redirected = useAppSelector(state => state.user.redirected);
   let content;
   const pathname = useLocation().pathname;
@@ -48,6 +52,15 @@ export const Main = () => {
   useEffect(() => {
     dispatch(getCognitoGroups());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (formAListStatus === "idle") {
+      dispatch(loadFormAList());
+    }
+    if (formBListStatus === "idle") {
+      dispatch(loadFormBList());
+    }
+  }, [dispatch, formAListStatus, formBListStatus]);
 
   useEffect(() => {
     // Store whether the user was redirected.
