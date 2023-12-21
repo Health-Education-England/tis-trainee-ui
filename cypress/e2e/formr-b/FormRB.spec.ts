@@ -75,7 +75,7 @@ describe("Form R (Part B) - desktop", () => {
   });
 
   it("should complete a new form", () => {
-    isCovid = true;
+    isCovid = false;
 
     // -------- Section 1 - Doctor's details -----------
     cy.get(".progress-step")
@@ -203,22 +203,22 @@ describe("Form R (Part B) - desktop", () => {
       "contain.text",
       dayjs(farFutureDate).format("DD/MM/YYYY")
     );
-    // check if Covid section exists or not depending on flag
-    // if (isCovid) {
-    //   cy.get("[data-cy=sectionHeader7]").should("exist");
-    //   cy.get("[data-cy=BtnEditSection7]").should("exist");
-    //   cy.get("[data-cy=educationSupervisorName]").should(
-    //     "contain.text",
-    //     "No supervisor name provided"
-    //   );
-    //   cy.get("[data-cy=educationSupervisorEmail]").should(
-    //     "contain.text",
-    //     "No supervisor email provided"
-    //   );
-    // } else {
-    //   cy.get("[data-cy=sectionHeader7]").should("not.exist");
-    //   cy.get("[data-cy=BtnEditSection7]").should("not.exist");
-    // }
+    //check if Covid section exists or not depending on flag
+    if (isCovid) {
+      cy.get("[data-cy=sectionHeader7]").should("exist");
+      cy.get("[data-cy=BtnEditSection7]").should("exist");
+      cy.get("[data-cy=educationSupervisorName]").should(
+        "contain.text",
+        "No supervisor name provided"
+      );
+      cy.get("[data-cy=educationSupervisorEmail]").should(
+        "contain.text",
+        "No supervisor email provided"
+      );
+    } else {
+      cy.get("[data-cy=sectionHeader7]").should("not.exist");
+      cy.get("[data-cy=BtnEditSection7]").should("not.exist");
+    }
 
     //check the health statment populates correctly when empty
     for (let x = 0; x < 4; x++) {
