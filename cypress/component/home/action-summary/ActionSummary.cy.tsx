@@ -11,7 +11,7 @@ import {
 } from "../../../../redux/slices/formASlice";
 import { updatedUnsignedCojs } from "../../../../redux/slices/traineeProfileSlice";
 import { mockProgrammeMembershipCojNotSigned } from "../../../../mock-data/trainee-profile";
-import { mockFormList } from "../../../../mock-data/formr-list";
+import { mockFormList, mockForms } from "../../../../mock-data/formr-list";
 import {
   dateMoreThanYearAgo,
   dateWithinYear,
@@ -26,6 +26,28 @@ import { ProgrammeMembership } from "../../../../models/ProgrammeMembership";
 
 type FormType = "A" | "B";
 
+const ActionSummaryComponent = (
+  <Provider store={store}>
+    <Router history={history}>
+      <ActionSummary />
+    </Router>
+  </Provider>
+);
+
+describe("Action Summary - loading", () => {
+  beforeEach(() => {
+    mount(ActionSummaryComponent);
+  });
+  afterEach(() => {
+    store.dispatch(updatedFormAStatus("success"));
+  });
+
+  it("should display the loading spinner when data is loading", () => {
+    store.dispatch(updatedFormAStatus("loading"));
+    cy.get("[data-cy=loading]").should("exist");
+  });
+});
+
 describe("Action Summary", () => {
   const selectors = [
     "actionSummaryHeading",
@@ -36,13 +58,7 @@ describe("Action Summary", () => {
   ];
 
   beforeEach(() => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <ActionSummary />
-        </Router>
-      </Provider>
-    );
+    mount(ActionSummaryComponent);
   });
 
   selectors.forEach(selector => {
@@ -167,8 +183,73 @@ describe("Action Summary", () => {
   testFormSubmissionYearPlus("B", formListMoreThanYear, "more than");
   testFormSubmissionYearPlus("B", formListYearAgoExactly, "exactly");
 
-  it("should display the loading spinner when data is loading", () => {
-    store.dispatch(updatedFormAStatus("loading"));
-    cy.get("[data-cy=loading]").should("exist");
-  });
+  type ConditionsType = {
+    [key: string]: { cyCommand: string; text: string };
+  };
+
+  function testInProgressMessage(
+    formType: FormType,
+    formList: IFormR[],
+    message: string
+  ) {
+    const conditions: ConditionsType = {
+      "no previous": {
+        cyCommand: `[data-cy=infoNoFormEver-${formType}]`,
+        text: "yet to submit"
+      },
+      "within a year": {
+        cyCommand: `[data-cy=infoLatestSubFormRWithinYear-${formType}]`,
+        text: "submitted within the last year"
+      },
+      "year at least": {
+        cyCommand: `[data-cy=infoLatestSubFormRYearPlus-${formType}]`,
+        text: "It is a year at least since you submitted"
+      }
+    };
+
+    it(`should display the 'in progress' message when there is a saved draft ${formType} and ${message}`, () => {
+      formType === "A"
+        ? store.dispatch(updatedFormAStatus("success"))
+        : store.dispatch(updatedFormBStatus("success"));
+      store.dispatch(
+        formType === "A"
+          ? updatedFormAList(formList)
+          : updatedFormBList(formList)
+      );
+      cy.get(`[data-cy=inProgress-${formType}]`)
+        .should("exist")
+        .should("contain", "You have a saved draft");
+
+      for (let condition in conditions) {
+        if (message.includes(condition)) {
+          cy.get(conditions[condition].cyCommand)
+            .should("exist")
+            .should("contain", conditions[condition].text);
+        }
+      }
+    });
+  }
+
+  testInProgressMessage("A", [mockForms[3]], "no previous submitted Form A");
+  testInProgressMessage("B", [mockForms[3]], "no previous submitted Form B");
+  testInProgressMessage(
+    "A",
+    [...formListWithinYear, mockForms[3]],
+    "a previous submitted Form A within a year"
+  );
+  testInProgressMessage(
+    "B",
+    [...formListWithinYear, mockForms[3]],
+    "a previous submitted Form B within a year"
+  );
+  testInProgressMessage(
+    "A",
+    [...formListMoreThanYear, mockForms[3]],
+    "it is a year at least since the last submitted Form A"
+  );
+  testInProgressMessage(
+    "B",
+    [...formListMoreThanYear, mockForms[3]],
+    "it is a year at least since the last submitted Form B"
+  );
 });

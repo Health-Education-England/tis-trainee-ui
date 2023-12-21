@@ -188,7 +188,7 @@ export default function ActionSummary() {
                         <Label size="l" style={{ color: "#005EB8" }}>
                           Form R (Part A)
                         </Label>
-                        <FormMessage formType="A" message="in progress" />
+                        <FormMessage formType="A" message="inProgress" />
                       </>
                     )}
                     {isInProgressFormB && (
@@ -196,7 +196,7 @@ export default function ActionSummary() {
                         <Label size="l" style={{ color: "#005EB8" }}>
                           Form R (Part B)
                         </Label>
-                        <FormMessage formType="B" message="in progress" />
+                        <FormMessage formType="B" message="inProgress" />
                       </>
                     )}
                     {!isInProgressFormA && !isInProgressFormB && (

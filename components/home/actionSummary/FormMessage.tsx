@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 type FormType = "A" | "B";
 type Message =
-  | "in progress"
+  | "inProgress"
   | "infoLatestSubFormRWithinYear"
   | "infoLatestSubFormRYearPlus"
   | "infoNoFormEver";
@@ -32,7 +32,7 @@ export default function FormMessage({
   let color: string = "#000000";
   let text: JSX.Element = <></>;
   switch (message) {
-    case "in progress":
+    case "inProgress":
       icon = faClock;
       color = "#ED8B00";
       text = (
