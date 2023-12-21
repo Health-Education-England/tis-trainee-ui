@@ -188,18 +188,11 @@ describe("Form R (Part B) - desktop", () => {
     cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
 
     // -------- COVID Section ------------------------------------------------
+    //should be disabled whilst covide declaration flag is disabled in trainee-forms
     if (isCovid) {
       cy.log("### COVID SECTION CHECK ###");
-      cy.get(".progress-step")
-        .eq(6)
-        .should("have.class", "progress-step-active");
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-      cy.get("#haveCovidDeclarations--error-message").should("exist");
-      cy.get(".progress-step")
-        .eq(6)
-        .should("have.class", "progress-step-active");
-      cy.checkAndFillCovidSection();
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").should("not.exist");
+      cy.get("#haveCovidDeclarations--error-message").should("not.exist");
     }
 
     // -------- Confirm / Review Section --------------------------------------
@@ -211,30 +204,30 @@ describe("Form R (Part B) - desktop", () => {
       dayjs(farFutureDate).format("DD/MM/YYYY")
     );
     // check if Covid section exists or not depending on flag
-    if (isCovid) {
-      cy.get("[data-cy=sectionHeader7]").should("exist");
-      cy.get("[data-cy=BtnEditSection7]").should("exist");
-      cy.get("[data-cy=educationSupervisorName]").should(
-        "contain.text",
-        "No supervisor name provided"
-      );
-      cy.get("[data-cy=educationSupervisorEmail]").should(
-        "contain.text",
-        "No supervisor email provided"
-      );
-    } else {
-      cy.get("[data-cy=sectionHeader7]").should("not.exist");
-      cy.get("[data-cy=BtnEditSection7]").should("not.exist");
-    }
+    // if (isCovid) {
+    //   cy.get("[data-cy=sectionHeader7]").should("exist");
+    //   cy.get("[data-cy=BtnEditSection7]").should("exist");
+    //   cy.get("[data-cy=educationSupervisorName]").should(
+    //     "contain.text",
+    //     "No supervisor name provided"
+    //   );
+    //   cy.get("[data-cy=educationSupervisorEmail]").should(
+    //     "contain.text",
+    //     "No supervisor email provided"
+    //   );
+    // } else {
+    //   cy.get("[data-cy=sectionHeader7]").should("not.exist");
+    //   cy.get("[data-cy=BtnEditSection7]").should("not.exist");
+    // }
 
     //check the health statment populates correctly when empty
-    for (let x = 0; x < 5; x++) {
+    for (let x = 0; x < 4; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get(".nhsuk-form-group > [data-cy=healthStatement]").clear();
-    for (let x = 0; x < 5; x++) {
+    for (let x = 0; x < 4; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get("[data-cy=healthStatement]").should(
@@ -252,13 +245,13 @@ describe("Form R (Part B) - desktop", () => {
 
     //go back to section 4 and click no previous unresolved declarations
     //check option dissapears from view
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get(
@@ -267,13 +260,13 @@ describe("Form R (Part B) - desktop", () => {
 
     //go back to section 5 and click no previous unresolved declarations
     //check option dissapears from view
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 2; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 2; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get(
@@ -332,7 +325,7 @@ describe("Form R (Part B) - desktop", () => {
     cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
     cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
 
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
       cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
     }
@@ -353,7 +346,7 @@ describe("Form R (Part B) - desktop", () => {
     cy.get(".nhsuk-warning-callout").should("exist");
     cy.get("[data-cy=gmcNumber]").should("exist");
 
-    for (let x = 0; x < 7; x++) {
+    for (let x = 0; x < 6; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
       cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
     }
