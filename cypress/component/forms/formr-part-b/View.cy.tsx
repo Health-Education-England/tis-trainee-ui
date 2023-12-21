@@ -3,7 +3,10 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import {
   submittedFormRPartBs,
-  submittedFormRPartBsWithDraft
+  submittedFormRPartBsWithDraft,
+  submittedFormRPartBwithCovid,
+  submittedFormRPartBwithFalseCovidDeclaration,
+  submittedFormRPartBwithNullCovidDeclaration
 } from "../../../../mock-data/submitted-formr-partb";
 import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
@@ -83,5 +86,62 @@ describe("View", () => {
     cy.get("[data-cy=savePdfBtn]").should("not.exist");
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
     cy.get("[data-cy=sectionHeader8]").should("not.exist");
+  });
+
+  it("should render covid declaration section when haveCovidDeclaration is true", () => {
+    const MockedView = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormB(submittedFormRPartBwithCovid[0]));
+
+      return <View canEdit={false} history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedView />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=haveCovidDeclarations]")
+      .should("exist")
+      .should("include.text", "Yes");
+    cy.get("[data-cy=covidTrainingSection2]").should("exist");
+  });
+
+  it("should render covid declaration section when haveCovidDeclaration is false", () => {
+    const MockedView = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormB(submittedFormRPartBwithFalseCovidDeclaration[0]));
+
+      return <View canEdit={false} history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedView />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=haveCovidDeclarations]")
+      .should("exist")
+      .should("include.text", "No");
+    cy.get("[data-cy=covidTrainingSection2]").should("not.exist");
+  });
+
+  it("should not render covid declaration section haveCovidDeclaration is null", () => {
+    const MockedViewNoFlag = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedFormB(submittedFormRPartBwithNullCovidDeclaration[0]));
+
+      return <View canEdit={false} history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedViewNoFlag />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=haveCovidDeclarations]").should("not.exist");
   });
 });
