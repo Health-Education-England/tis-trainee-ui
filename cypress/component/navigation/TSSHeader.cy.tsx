@@ -37,7 +37,15 @@ describe("Header with MFA set up", () => {
     cy.get("[data-cy=headerLogo] > a")
       .should("exist")
       .should("have.attr", "href", "/");
-    cy.get("[data-cy=tssName]").should("contain.text", "TIS Self-Service");
+    cy.get("[data-cy=tssName]").should(
+      "contain.text",
+      "TIS Self-Service (Private Beta)"
+    );
+    cy.get("[data-cy=tssName] > a").should(
+      "have.attr",
+      "href",
+      "https://architecture.digital.nhs.uk/information/glossary"
+    );
   });
 
   navLinks.forEach(link => {

@@ -33,6 +33,8 @@ describe("Home", () => {
       cy.get(".nhsuk-u-margin-bottom-4").should("exist");
     });
 
+    cy.get("[data-cy=actionSummaryHeading]").should("exist");
+
     cy.visit("/home/nonsense", { failOnStatusCode: false });
     cy.get('[data-cy="pageNotFoundText"]')
       .should("exist")

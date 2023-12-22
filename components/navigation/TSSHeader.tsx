@@ -40,7 +40,15 @@ const TSSHeader = () => {
       </Header.Container>
       <div className="nhsuk-width-container">
         <span className="tss-name" data-cy="tssName">
-          TIS Self-Service
+          TIS Self-Service{" "}
+          <a
+            className="tss-beta-link"
+            href="https://architecture.digital.nhs.uk/information/glossary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <i>(Private Beta)</i>
+          </a>
         </span>
       </div>
       <Header.Nav className="header-nav">
