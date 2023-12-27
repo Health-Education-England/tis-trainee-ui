@@ -29,7 +29,9 @@ interface IView {
 const View = ({ canEdit, history }: IView) => {
   const dispatch = useAppDispatch();
   const formData = useAppSelector(selectSavedFormB);
-  const isCovidDeclarationNull = formData.haveCovidDeclarations === null;
+  const enableCovidDeclaration = useAppSelector(state =>
+    state.featureFlags.featureFlags.formRPartB.covidDeclaration.valueOf()
+  );
   const viewCompSection: number = store.getState().formB.sectionNumber;
   let content;
 
@@ -80,7 +82,7 @@ const View = ({ canEdit, history }: IView) => {
         <ViewSection4 {...viewSectionProps} />
         <ViewSection5 {...viewSectionProps} />
         <ViewSection6 {...viewSectionProps} />
-        {isCovidDeclarationNull ? <ViewSection7 {...viewSectionProps} /> : null}
+        {enableCovidDeclaration ? <ViewSection7 {...viewSectionProps} /> : null}
         {!canEdit && <ViewSection8 {...viewSectionProps} />}
         {!canEdit &&
           FormRUtilities.displaySubmissionDate(
