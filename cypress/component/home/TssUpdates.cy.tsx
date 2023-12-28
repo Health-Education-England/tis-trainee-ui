@@ -62,7 +62,7 @@ describe("TssUpdates", () => {
         </Router>
       </Provider>
     );
-    cy.get("h2").should("contain", "What's New");
+    cy.get('[data-cy="whatsNewHeader"]').should("contain", "What's New");
     cy.get("[data-cy=noUpdates]").should(
       "contain",
       "No new updates available at the moment."
