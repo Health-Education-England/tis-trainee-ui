@@ -25,7 +25,7 @@ import { Label } from "nhsuk-react-components";
 export class FormRUtilities {
   public static makeFormRBSections(
     covidFlag: boolean,
-    haveCovidDeclarations: boolean | null | string
+    haveCovidDeclarations: boolean | null
   ) {
     if (covidFlag || haveCovidDeclarations !== null)
       return [
