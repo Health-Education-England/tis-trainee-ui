@@ -122,7 +122,7 @@ export default function ActionSummary() {
                       <FormMessage
                         formType="A"
                         message="infoLatestSubFormRWithinYear"
-                        latestSubFormDate={DateUtilities.ConvertToLondonTime(
+                        latestSubFormDate={DateUtilities.ToLocalDate(
                           infoActionsA.latestSubDateForm
                         )}
                       />
@@ -133,7 +133,7 @@ export default function ActionSummary() {
                       <FormMessage
                         formType="A"
                         message="infoLatestSubFormRYearPlus"
-                        latestSubFormDate={DateUtilities.ConvertToLondonTime(
+                        latestSubFormDate={DateUtilities.ToLocalDate(
                           infoActionsA.latestSubDateForm
                         )}
                       />
@@ -157,7 +157,7 @@ export default function ActionSummary() {
                       <FormMessage
                         formType="B"
                         message="infoLatestSubFormRWithinYear"
-                        latestSubFormDate={DateUtilities.ConvertToLondonTime(
+                        latestSubFormDate={DateUtilities.ToLocalDate(
                           infoActionsB.latestSubDateForm
                         )}
                       />
@@ -168,7 +168,7 @@ export default function ActionSummary() {
                       <FormMessage
                         formType="B"
                         message="infoLatestSubFormRYearPlus"
-                        latestSubFormDate={DateUtilities.ConvertToLondonTime(
+                        latestSubFormDate={DateUtilities.ToLocalDate(
                           infoActionsB.latestSubDateForm
                         )}
                       />
