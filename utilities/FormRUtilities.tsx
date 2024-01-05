@@ -23,14 +23,17 @@ import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBI
 import { DateType, DateUtilities } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
 export class FormRUtilities {
-  public static makeFormRBSections(covidFlag: boolean) {
-    if (!covidFlag) return defaultSections;
-    else
+  public static makeFormRBSections(
+    covidFlag: boolean,
+    haveCovidDeclarations: boolean | null
+  ) {
+    if (covidFlag || haveCovidDeclarations !== null)
       return [
         ...defaultSections.slice(0, 6),
         covidSection,
         ...defaultSections.slice(6)
       ];
+    else return defaultSections;
   }
 
   public static async handleRowClick(

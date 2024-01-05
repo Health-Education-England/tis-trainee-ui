@@ -23,11 +23,15 @@ const Create = ({ history }: { history: string[] }) => {
   const previousSection: number | null = useAppSelector(
     state => state.formB.previousSectionNumber
   );
-  const tisId: string | undefined = useAppSelector(
-    state => state.formB.formBData.traineeTisId
+  const formBData: FormRPartB | undefined = useAppSelector(
+    state => state.formB.formBData
   );
+  const { traineeTisId: tisId, haveCovidDeclarations } = formBData;
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
-  const finalSections = FormRUtilities.makeFormRBSections(isfeatFlagCovid);
+  const finalSections = FormRUtilities.makeFormRBSections(
+    isfeatFlagCovid,
+    haveCovidDeclarations
+  );
 
   const handleSectionSubmit = (formValues: FormRPartB) => {
     const lastSavedFormData = store.getState().formB.formBData;

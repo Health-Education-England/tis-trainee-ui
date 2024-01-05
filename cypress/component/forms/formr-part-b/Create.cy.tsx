@@ -60,12 +60,17 @@ describe("Create form B", () => {
     ).should("include.text", "Section 6");
     cy.get("[data-cy=BtnSaveDraft]").should("exist");
   });
-  it("should show the Confirm section when Covid feature flag is false", () => {
+  it("should show the Confirm section when Covid feature flag is false and hasCovidDec is null", () => {
     const MockedCreateNoFlag = () => {
       const dispatch = useAppDispatch();
       dispatch(
         updatedFeatureFlags({ formRPartB: { covidDeclaration: false } })
       );
+      const updatedFormRPartB = {
+        ...submittedFormRPartBs[0],
+        haveCovidDeclarations: null
+      };
+      dispatch(updatedFormB(updatedFormRPartB));
       return <Create history={[]} />;
     };
     mount(
@@ -152,5 +157,59 @@ describe("Create form B", () => {
     );
     cy.get(".MuiDialogActions-root > :nth-child(1)").click();
     cy.get(".MuiDialog-container").should("not.exist");
+  });
+  it("should render a stepper with Covid Section if Covid feature flag is false and hasCovidDec is not null", () => {
+    const MockedCreate = () => {
+      const dispatch = useAppDispatch();
+
+      const updatedFormRPartB = {
+        ...submittedFormRPartBs[0],
+        haveCovidDeclarations: true
+      };
+
+      dispatch(
+        updatedFeatureFlags({ formRPartB: { covidDeclaration: false } })
+      );
+      dispatch(updatedFormB(updatedFormRPartB));
+      dispatch(updatedReference(mockedCombinedReference));
+      dispatch(updateFormBSection(7));
+
+      return <Create history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedCreate />
+        </Router>
+      </Provider>
+    );
+    cy.get(".progress-step").eq(6).should("have.class", "progress-step-active");
+    cy.get("[data-cy=BtnSubmitForm]").should("not.exist");
+  });
+  it("should render a stepper with Covid Section if Covid feature flag is true and hasCovidDec is not null", () => {
+    const MockedCreate = () => {
+      const dispatch = useAppDispatch();
+
+      const updatedFormRPartB = {
+        ...submittedFormRPartBs[0],
+        haveCovidDeclarations: true
+      };
+
+      dispatch(updatedFeatureFlags({ formRPartB: { covidDeclaration: true } }));
+      dispatch(updatedFormB(updatedFormRPartB));
+      dispatch(updatedReference(mockedCombinedReference));
+      dispatch(updateFormBSection(7));
+
+      return <Create history={[]} />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedCreate />
+        </Router>
+      </Provider>
+    );
+    cy.get(".progress-step").eq(6).should("have.class", "progress-step-active");
+    cy.get("[data-cy=BtnSubmitForm]").should("not.exist");
   });
 });

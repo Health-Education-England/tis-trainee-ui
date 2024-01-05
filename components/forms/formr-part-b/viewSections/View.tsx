@@ -82,7 +82,9 @@ const View = ({ canEdit, history }: IView) => {
         <ViewSection4 {...viewSectionProps} />
         <ViewSection5 {...viewSectionProps} />
         <ViewSection6 {...viewSectionProps} />
-        {enableCovidDeclaration ? <ViewSection7 {...viewSectionProps} /> : null}
+        {enableCovidDeclaration || formData.haveCovidDeclarations != null ? (
+          <ViewSection7 {...viewSectionProps} />
+        ) : null}
         {!canEdit && <ViewSection8 {...viewSectionProps} />}
         {!canEdit &&
           FormRUtilities.displaySubmissionDate(

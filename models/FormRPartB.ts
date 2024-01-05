@@ -37,7 +37,7 @@ export interface FormRPartB extends IFormR {
   currentDeclarations: Declaration[];
   currentDeclarationSummary: string;
   compliments: string;
-  haveCovidDeclarations: boolean | string | null;
+  haveCovidDeclarations: boolean | null;
   covidDeclarationDto: CovidDeclaration | null;
   isDeclarationAccepted?: boolean;
   isConsentAccepted?: boolean;
@@ -108,7 +108,7 @@ export const initialFormRBBeforeProfileData: FormRPartB = {
   havePreviousUnresolvedDeclarations: "",
   currentDeclarationSummary: "",
   compliments: "",
-  haveCovidDeclarations: "",
+  haveCovidDeclarations: null,
   covidDeclarationDto: null,
   lifecycleState: LifeCycleState.New,
   submissionDate: "",
