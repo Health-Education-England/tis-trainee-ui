@@ -10,6 +10,7 @@ import {
   twelveWeeksAheadPlusOneDay,
   yesterday
 } from "../utilities/DateUtilities";
+import dayjs from "dayjs";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -92,8 +93,8 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     }
   },
   {
-    startDate: new Date("2022-01-01"),
-    endDate: new Date("2024-01-01"),
+    startDate: new Date("1902-01-01"),
+    endDate: dayjs().add(1, "year").toDate(),
     programmeCompletionDate: new Date("2021-12-31"),
     tisId: "2",
     programmeName: "General Practice",
