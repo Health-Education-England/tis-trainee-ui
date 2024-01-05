@@ -16,7 +16,8 @@ export const WorkPanelBuilder = ({
   isFormDirty
 }: WorkPanelBuilderProps) => {
   const [workFormErrors, setWorkFormErrors] = useState(new Map());
-  console.log("workFormErrors", workFormErrors);
+  const workFormErrorsArray = Array.from(workFormErrors.entries());
+  console.log("workFormErrorsArray", Array.from(workFormErrors.entries()));
 
   // Define a function to add a new work panel
   const addWorkPanel = () => {
@@ -192,7 +193,54 @@ export const WorkPanelBuilder = ({
       >
         Add Work Panel
       </button>
-      <div>error summary will go here</div>
+      {/* display the error summary here*/}
+      <WorkPanelErrors workPanelErrorsArrayFromMap={workFormErrorsArray} />
     </>
   );
 };
+
+type ErrorMap = {
+  [key: string]: string;
+};
+
+type WorkPanelError = {
+  [index: number]: ErrorMap;
+};
+
+type WorkPanelErrorsProps = {
+  workPanelErrorsArrayFromMap: WorkPanelError[];
+};
+
+const WorkPanelErrors: React.FC<WorkPanelErrorsProps> = ({
+  workPanelErrorsArrayFromMap
+}) => {
+  return (
+    <div
+      className="nhsuk-error-summary"
+      aria-labelledby="error-summary-title"
+      role="alert"
+      tabIndex={-1}
+      data-cy="errorSummary"
+    >
+      <p>
+        <b>Please fix the following errors before proceeding:</b>
+      </p>
+      {Object.entries(workPanelErrorsArrayFromMap).map(error => {
+        console.log("error", error);
+        return (
+          <div key={error[0]}>
+            <p>
+              <strong>{`Work panel ${Number(error[1][0]) + 1}`}</strong>
+            </p>
+            {Object.values(error[1][1]).map((value, i) => {
+              console.log("value", value);
+              return <p key={i}>{value}</p>;
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default WorkPanelErrors;
