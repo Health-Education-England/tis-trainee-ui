@@ -228,13 +228,13 @@ describe("Form R (Part B) - desktop", () => {
     }
 
     //check the health statment populates correctly when empty
-    for (let x = 0; x < 5; x++) {
+    for (let x = 0; x < 4; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get(".nhsuk-form-group > [data-cy=healthStatement]").clear();
-    for (let x = 0; x < 5; x++) {
+    for (let x = 0; x < 4; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get("[data-cy=healthStatement]").should(
@@ -252,13 +252,13 @@ describe("Form R (Part B) - desktop", () => {
 
     //go back to section 4 and click no previous unresolved declarations
     //check option dissapears from view
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get(
@@ -267,13 +267,13 @@ describe("Form R (Part B) - desktop", () => {
 
     //go back to section 5 and click no previous unresolved declarations
     //check option dissapears from view
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 2; x++) {
       cy.get(
         "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
       ).click();
     }
     cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < 2; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
     }
     cy.get(
@@ -332,7 +332,7 @@ describe("Form R (Part B) - desktop", () => {
     cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
     cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
 
-    for (let x = 0; x < 4; x++) {
+    for (let x = 0; x < 3; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
       cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
     }
@@ -353,7 +353,7 @@ describe("Form R (Part B) - desktop", () => {
     cy.get(".nhsuk-warning-callout").should("exist");
     cy.get("[data-cy=gmcNumber]").should("exist");
 
-    for (let x = 0; x < 7; x++) {
+    for (let x = 0; x < 6; x++) {
       cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
       cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
     }
