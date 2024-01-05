@@ -75,7 +75,7 @@ describe("Form R (Part B) - desktop", () => {
   });
 
   it("should complete a new form", () => {
-    isCovid = true;
+    isCovid = false;
 
     // -------- Section 1 - Doctor's details -----------
     cy.get(".progress-step")
