@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Work } from "../../../../models/FormRPartB";
 import { WorkValidationSchema } from "../form-r/part-b/formBValidationSchema";
 import { Button, Card, CloseIcon } from "nhsuk-react-components";
@@ -8,20 +8,18 @@ type WorkPanelBuilderProps = {
   formFields: any;
   setFormFields: React.Dispatch<React.SetStateAction<any>>;
   isFormDirty: React.MutableRefObject<boolean>;
+  workFormErrors: Map<number, any>;
+  setWorkFormErrors: React.Dispatch<React.SetStateAction<Map<number, any>>>;
 };
 
 export const WorkPanelBuilder = ({
   formFields,
   setFormFields,
-  isFormDirty
+  isFormDirty,
+  workFormErrors,
+  setWorkFormErrors
 }: WorkPanelBuilderProps) => {
-  const [workFormErrors, setWorkFormErrors] = useState(new Map());
-  const workFormErrorsArray = Array.from(workFormErrors.entries());
-  console.log("workFormErrorsArray", Array.from(workFormErrors.entries()));
-
-  // Define a function to add a new work panel
   const addWorkPanel = () => {
-    // Create a new work panel object
     const newWorkPanel: Work = {
       typeOfWork: "",
       startDate: "",
@@ -97,9 +95,13 @@ export const WorkPanelBuilder = ({
           if (workFormErrors.has(index)) {
             const currentErrors = { ...workFormErrors.get(index) };
             delete currentErrors[fieldName];
-            const newWorkFormErrors = new Map(workFormErrors);
-            newWorkFormErrors.set(index, currentErrors);
-            setWorkFormErrors(newWorkFormErrors);
+            if (Object.keys(currentErrors).length === 0) {
+              // If there are no errors for this index, delete the entry from the Map
+              workFormErrors.delete(index);
+            } else {
+              workFormErrors.set(index, currentErrors);
+            }
+            setWorkFormErrors(new Map(workFormErrors));
           }
         })
         .catch((error: any) => {
@@ -194,7 +196,9 @@ export const WorkPanelBuilder = ({
         Add Work Panel
       </button>
       {/* display the error summary here*/}
-      <WorkPanelErrors workPanelErrorsArrayFromMap={workFormErrorsArray} />
+      <WorkPanelErrors
+        workPanelErrorsArrayFromMap={Array.from(workFormErrors.entries())}
+      />
     </>
   );
 };
@@ -214,7 +218,7 @@ type WorkPanelErrorsProps = {
 const WorkPanelErrors: React.FC<WorkPanelErrorsProps> = ({
   workPanelErrorsArrayFromMap
 }) => {
-  return (
+  return workPanelErrorsArrayFromMap.length > 0 ? (
     <div
       className="nhsuk-error-summary"
       aria-labelledby="error-summary-title"
@@ -225,22 +229,18 @@ const WorkPanelErrors: React.FC<WorkPanelErrorsProps> = ({
       <p>
         <b>Please fix the following errors before proceeding:</b>
       </p>
-      {Object.entries(workPanelErrorsArrayFromMap).map(error => {
-        console.log("error", error);
-        return (
-          <div key={error[0]}>
-            <p>
-              <strong>{`Work panel ${Number(error[1][0]) + 1}`}</strong>
-            </p>
-            {Object.values(error[1][1]).map((value, i) => {
-              console.log("value", value);
-              return <p key={i}>{value}</p>;
-            })}
-          </div>
-        );
-      })}
+      {Object.entries(workPanelErrorsArrayFromMap).map(error => (
+        <div key={error[0]}>
+          <p>
+            <strong>{`Work panel ${Number(error[1][0]) + 1}`}</strong>
+          </p>
+          {Object.values(error[1][1]).map((value, i) => (
+            <p key={i}>{value}</p>
+          ))}
+        </div>
+      ))}
     </div>
-  );
+  ) : null;
 };
 
 export default WorkPanelErrors;

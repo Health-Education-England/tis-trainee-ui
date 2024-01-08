@@ -124,7 +124,12 @@ export default function FormBuilder({
     jsonFormName,
     isFormDirty
   );
+  // main form errors (not work panel errors)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  // work panel errors
+  const [workFormErrors, setWorkFormErrors] = useState(new Map());
+  const arrFromWorkFormErrors = Array.from(workFormErrors.entries());
+
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
   );
@@ -215,6 +220,8 @@ export default function FormBuilder({
               formFields={formFields}
               setFormFields={setFormFields}
               isFormDirty={isFormDirty}
+              workFormErrors={workFormErrors}
+              setWorkFormErrors={setWorkFormErrors}
             />
           );
       }
@@ -532,7 +539,9 @@ export default function FormBuilder({
             <Link
               to="#"
               className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
-                isSubmitting || Object.keys(formErrors).length > 0
+                isSubmitting ||
+                Object.keys(formErrors).length > 0 ||
+                arrFromWorkFormErrors.length > 0
                   ? "disabled-link"
                   : ""
               }`}
