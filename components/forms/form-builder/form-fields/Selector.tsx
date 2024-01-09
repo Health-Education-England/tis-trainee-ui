@@ -11,6 +11,7 @@ type SelectorProps = {
   options: any;
   formFields: Record<string, string>;
   handleChange: (event: any, selectedOption?: any) => void;
+  fieldValue?: string | undefined;
 };
 
 export const Selector = ({
@@ -18,8 +19,10 @@ export const Selector = ({
   label,
   options,
   formFields,
-  handleChange
+  handleChange,
+  fieldValue
 }: SelectorProps) => {
+  console.log("options in Selector: ", options);
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -28,7 +31,8 @@ export const Selector = ({
       <Select
         onKeyDown={handleKeyDown}
         options={options}
-        onChange={selectedOption =>
+        onChange={selectedOption => {
+          console.log("selectedOption: ", selectedOption);
           handleChange(
             {
               currentTarget: {
@@ -37,8 +41,8 @@ export const Selector = ({
               }
             },
             selectedOption
-          )
-        }
+          );
+        }}
         className="autocomplete-select"
         classNamePrefix="react-select"
         theme={theme => ({
@@ -47,7 +51,8 @@ export const Selector = ({
         })}
         styles={colourStyles}
         value={options?.filter(
-          (option: any) => option.value === formFields[name]
+          (option: any) =>
+            option.value === formFields[name] || option.value === fieldValue
         )}
         isClearable={true}
       />

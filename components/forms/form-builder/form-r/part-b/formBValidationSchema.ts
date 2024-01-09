@@ -174,7 +174,8 @@ export const WorkValidationSchema: any = yup.object().shape({
     .required("Start date is required")
     .test("startDate", "The date is outside the allowed date range", value =>
       DateUtilities.IsInsideDateRange(value)
-    ),
+    )
+    .nullable(),
   endDate: yup
     .date()
     .required("End date is required")
@@ -182,6 +183,7 @@ export const WorkValidationSchema: any = yup.object().shape({
     .test("endDate", "The date is outside the allowed date range", value =>
       DateUtilities.IsInsideDateRange(value)
     )
+    .nullable()
 });
 
 export const TOOTValidationSchema = yup.object({

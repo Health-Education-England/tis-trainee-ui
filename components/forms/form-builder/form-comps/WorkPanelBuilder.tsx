@@ -3,6 +3,8 @@ import { Work } from "../../../../models/FormRPartB";
 import { WorkValidationSchema } from "../form-r/part-b/formBValidationSchema";
 import { Button, Card, CloseIcon } from "nhsuk-react-components";
 import { Text } from "../../form-builder/form-fields/Text";
+import { Dates } from "../form-fields/Dates";
+import { Selector } from "../form-fields/Selector";
 
 type WorkPanelBuilderProps = {
   formFields: any;
@@ -130,6 +132,35 @@ export const WorkPanelBuilder = ({
     validateCurrentField(field, index, currentValue);
   };
 
+  const handleNextClick = async () => {
+    try {
+      // Validate all work panels using the schema
+      await WorkValidationSchema.validate(formFields.work, {
+        abortEarly: false
+      });
+      // If no errors, clear the workFormErrors state
+      setWorkFormErrors(new Map());
+      // Proceed to the next step
+      // ...
+    } catch (errors: any) {
+      // If there are errors, map them to the workFormErrors state
+      const newWorkFormErrors = new Map();
+      errors.inner.forEach((error: any) => {
+        // Get the index and the field name from the error path
+        const [index, fieldName] = error.path.split(".");
+        // Get the current errors for this index, or create a new object if none
+        const currentErrors = newWorkFormErrors.get(index) || {};
+        // Add the error message for this field
+        currentErrors[fieldName] = error.message;
+        // Set the new errors for this index
+        newWorkFormErrors.set(index, currentErrors);
+      });
+      // Update the workFormErrors state
+      // setWorkFormErrors(newWorkFormErrors);
+      console.log(newWorkFormErrors);
+    }
+  };
+
   return (
     <>
       {formFields?.work?.length > 0 ? (
@@ -156,6 +187,31 @@ export const WorkPanelBuilder = ({
                   </Button>
                 </div>
               </div>
+
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Selector
+                    name={`work[${index}].trainingPost`}
+                    label="Training Post"
+                    formFields={formFields}
+                    options={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" }
+                    ]}
+                    handleChange={handleChange}
+                    fieldValue={work.trainingPost}
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).trainingPost}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
                 <div className="nhsuk-grid-column-three-quarters">
                   <Text
@@ -180,6 +236,127 @@ export const WorkPanelBuilder = ({
                   )}
                 </div>
               </div>
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Dates
+                    name={`work[${index}].startDate`}
+                    label="Start Date"
+                    formFields={formFields}
+                    handleChange={handleChange}
+                    fieldValue={work.startDate}
+                    fieldError={
+                      workFormErrors.get(index) &&
+                      workFormErrors.get(index).startDate
+                    }
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).startDate}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Dates
+                    name={`work[${index}].endDate`}
+                    label="End Date"
+                    formFields={formFields}
+                    handleChange={handleChange}
+                    fieldValue={work.endDate}
+                    fieldError={
+                      workFormErrors.get(index) &&
+                      workFormErrors.get(index).endDate
+                    }
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).endDate}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Text
+                    name={`work[${index}].site`}
+                    label="Site"
+                    formFields={formFields}
+                    handleChange={handleChange}
+                    placeholder={"type here..."}
+                    fieldValue={work.site}
+                    fieldError={
+                      workFormErrors.get(index) &&
+                      workFormErrors.get(index).site
+                    }
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).site}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Text
+                    name={`work[${index}].siteLocation`}
+                    label="Site Location"
+                    formFields={formFields}
+                    handleChange={handleChange}
+                    placeholder={"type here..."}
+                    fieldValue={work.siteLocation}
+                    fieldError={
+                      workFormErrors.get(index) &&
+                      workFormErrors.get(index).siteLocation
+                    }
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).siteLocation}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 10 }} className="nhsuk-grid-row">
+                <div className="nhsuk-grid-column-three-quarters">
+                  <Text
+                    name={`work[${index}].siteKnownAs`}
+                    label="Site Known As"
+                    formFields={formFields}
+                    handleChange={handleChange}
+                    placeholder={"type here..."}
+                    fieldValue={work.siteKnownAs ? work.siteKnownAs : ""}
+                    fieldError={
+                      workFormErrors.get(index) &&
+                      workFormErrors.get(index).siteKnownAs
+                    }
+                  />
+                  {workFormErrors.get(index) && (
+                    <div
+                      className="nhsuk-error-message"
+                      data-cy={`work${index}-inline-error-msg`}
+                    >
+                      {workFormErrors.get(index).siteKnownAs}
+                    </div>
+                  )}
+                </div>
+              </div>
             </Card.Content>
           </Card>
         ))
@@ -199,6 +376,15 @@ export const WorkPanelBuilder = ({
       <WorkPanelErrors
         workPanelErrorsArrayFromMap={Array.from(workFormErrors.entries())}
       />
+      <button
+        onClick={e => {
+          e.preventDefault();
+          console.log(formFields.work);
+          handleNextClick();
+        }}
+      >
+        test btn
+      </button>
     </>
   );
 };

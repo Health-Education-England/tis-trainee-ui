@@ -13,6 +13,7 @@ type DatesProps = {
   handleChange: (event: any, selectedOption?: any) => void;
   fieldError?: string;
   placeholder?: string;
+  fieldValue?: string | undefined;
 };
 
 export const Dates = ({
@@ -21,7 +22,8 @@ export const Dates = ({
   formFields,
   handleChange,
   fieldError,
-  placeholder
+  placeholder,
+  fieldValue
 }: DatesProps) => {
   return (
     <div data-cy={name}>
@@ -32,7 +34,7 @@ export const Dates = ({
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
         name={name}
-        selected={formFields[name] ? new Date(formFields[name]) : null}
+        selected={displaySelectedDate(name, formFields, fieldValue)}
         onChange={(date: Date) => {
           handleChange({
             currentTarget: {
@@ -51,3 +53,12 @@ export const Dates = ({
     </div>
   );
 };
+
+function displaySelectedDate(
+  formFieldsName: string,
+  formFields: Record<string, string>,
+  fieldValue: string | undefined
+) {
+  const date = formFields[formFieldsName] || fieldValue;
+  return date ? new Date(date) : null;
+}
