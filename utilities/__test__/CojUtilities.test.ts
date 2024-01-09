@@ -228,11 +228,11 @@ describe("CojUtilities", () => {
 
       const signed = mockProgrammeMembershipCojSigned;
       const preCojEpoch = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(PRE_COJ_EPOCH)
       };
       const preSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(
           currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
         )
@@ -250,11 +250,11 @@ describe("CojUtilities", () => {
 
       const signed = mockProgrammeMembershipCojSigned;
       const postCojEpoch = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
       const preSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(
           currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
         )
@@ -272,11 +272,11 @@ describe("CojUtilities", () => {
 
       const signed = mockProgrammeMembershipCojSigned;
       const preCojEpoch = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(PRE_COJ_EPOCH)
       };
       const postSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
       };
 
@@ -291,11 +291,11 @@ describe("CojUtilities", () => {
       const currentDate = new Date(COJ_EPOCH);
 
       const postCojEpoch = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
       const postSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned,
+        ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
       };
 
@@ -311,8 +311,8 @@ describe("CojUtilities", () => {
 describe("CojUtilities (for Action Summary and Alert) - unsignedCojs", () => {
   it("should return an unsigned CoJ Programme when no signedAt date", () => {
     expect(
-      CojUtilities.unsignedCojs([mockProgrammeMembershipCojNotSigned])
-    ).toEqual([mockProgrammeMembershipCojNotSigned]);
+      CojUtilities.unsignedCojs([mockProgrammeMembershipCojNotSigned[0]])
+    ).toEqual([mockProgrammeMembershipCojNotSigned[0]]);
   });
   it("should return an empty array when all CoJ Programmes are signed", () => {
     expect(
