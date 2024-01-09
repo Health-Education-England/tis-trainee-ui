@@ -3,6 +3,7 @@ import ApiService from "./apiService";
 import { FormRPartA } from "../models/FormRPartA";
 import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
+import { IFormR } from "../models/IFormR";
 
 export class FormsService extends ApiService {
   constructor() {
@@ -21,8 +22,8 @@ export class FormsService extends ApiService {
     return this.put<FormRPartA>("/formr-parta", formData);
   }
 
-  async getTraineeFormRPartAList(): Promise<AxiosResponse<FormRPartA[]>> {
-    return this.get<FormRPartA[]>("/formr-partas");
+  async getTraineeFormRPartAList(): Promise<AxiosResponse<IFormR[]>> {
+    return this.get<IFormR[]>("/formr-partas");
   }
 
   async getTraineeFormRPartAByFormId(
@@ -38,8 +39,8 @@ export class FormsService extends ApiService {
     return this.post<FormRPartB>("/formr-partb", newFormData);
   }
 
-  async getTraineeFormRPartBList(): Promise<AxiosResponse<FormRPartB[]>> {
-    return this.get<FormRPartB[]>("/formr-partbs");
+  async getTraineeFormRPartBList(): Promise<AxiosResponse<IFormR[]>> {
+    return this.get<IFormR[]>("/formr-partbs");
   }
 
   async getTraineeFormRPartBByFormId(

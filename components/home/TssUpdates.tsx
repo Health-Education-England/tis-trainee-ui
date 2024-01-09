@@ -76,21 +76,21 @@ function extractTextFromHTML(html: string): string {
   return html;
 }
 
-function WhatsNewHeader(): JSX.Element {
+export function WhatsNewHeader(): JSX.Element {
   const wpUpdatesUrl =
     "https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/";
   return (
-    <h2 data-cy="whatsNewHeader">
+    <p data-cy="whatsNewHeader" className="nhsuk-header whats-new-header">
       <a
         data-cy="anchorEl_What's New"
         title="Click here for more details"
-        className="nhsuk-link custom-link"
+        className="nhsuk-link custom-link whats-new-link"
         href={wpUpdatesUrl}
         target="_blank"
         rel="noopener noreferrer"
       >
         What&apos;s New
       </a>
-    </h2>
+    </p>
   );
 }

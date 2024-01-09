@@ -1,55 +1,88 @@
 import { useEffect } from "react";
-import GlobalAlert from "../main/GlobalAlert";
-import { TssUpdates } from "./TssUpdates";
+import { TssUpdates, WhatsNewHeader } from "./TssUpdates";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { fetchWhatsNew } from "../../redux/slices/tssUpdatesSlice";
+import { useIsMobile } from "../../utilities/hooks/useIsMobile";
 
 export const HomeHeaderSection = () => {
   const dispatch = useAppDispatch();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
-    dispatch(fetchWhatsNew());
-  }, [dispatch]);
+    if (!isMobile) dispatch(fetchWhatsNew());
+  }, [dispatch, isMobile]);
 
   return (
-    <>
-      <section className="nhsuk-hero">
-        <div className="nhsuk-width-container nhsuk-hero--border app-width-container">
-          <div className="nhsuk-grid-row">
-            <div className="nhsuk-grid-column-two-thirds">
-              <div className="nhsuk-hero__wrapper app-hero__wrapper">
-                <h1
-                  data-cy="homeWelcomeHeaderText"
-                  className="nhsuk-u-margin-bottom-4"
-                >
-                  Welcome to
+    <section className="nhsuk-hero">
+      <div className="nhsuk-width-container nhsuk-hero--border app-width-container">
+        <div className="nhsuk-grid-row">
+          <div
+            className={
+              isMobile
+                ? "nhsuk-grid-column-full"
+                : "nhsuk-grid-column-two-thirds"
+            }
+          >
+            <div
+              className={
+                isMobile
+                  ? "header-wrapper"
+                  : "nhsuk-hero__wrapper app-hero__wrapper"
+              }
+            >
+              <HomeWelcomeHeaderText />
+              <HomeWelcomeSubHeaderText />
+              {isMobile ? (
+                <>
                   <br />
-                  TIS Self-Service
-                </h1>
-                <p
-                  data-cy="homeWelcomeSubHeaderText"
-                  className="nhsuk-body-l nhsuk-u-margin-bottom-1"
-                >
-                  Your post-graduate training programme resource
-                </p>
-                <p
-                  data-cy="homeWelcomeBodyText"
-                  className="nhsuk-body-m nhsuk-u-margin-bottom-1"
-                >
-                  Our goal is to improve your training experience by making TIS
-                  Self-Service a one-stop-shop for your training-related admin
-                  tasks. We are in the Private Beta phase of delivery so expect
-                  more features soon.
-                </p>
-              </div>
+                  <WhatsNewHeader />
+                </>
+              ) : (
+                <HomeWelcomeBodyText />
+              )}
             </div>
+          </div>
+          {!isMobile && (
             <div className="nhsuk-grid-column-one-third tss-update-column">
               <TssUpdates />
             </div>
-          </div>
+          )}
         </div>
-      </section>
-      <GlobalAlert />
-    </>
+      </div>
+    </section>
   );
 };
+
+function HomeWelcomeHeaderText() {
+  return (
+    <h1 data-cy="homeWelcomeHeaderText" className="nhsuk-u-margin-bottom-4">
+      Welcome to
+      <br />
+      TIS Self-Service
+    </h1>
+  );
+}
+
+function HomeWelcomeSubHeaderText() {
+  return (
+    <p
+      data-cy="homeWelcomeSubHeaderText"
+      className="nhsuk-body-l nhsuk-u-margin-bottom-1"
+    >
+      Your post-graduate training programme resource
+    </p>
+  );
+}
+
+function HomeWelcomeBodyText() {
+  return (
+    <p
+      data-cy="homeWelcomeBodyText"
+      className="nhsuk-body-m nhsuk-u-margin-bottom-1"
+    >
+      Our goal is to improve your training experience by making TIS Self-Service
+      a one-stop-shop for your training-related admin tasks. We are in the
+      Private Beta phase of delivery so expect more features soon.
+    </p>
+  );
+}

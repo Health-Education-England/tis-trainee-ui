@@ -1,36 +1,46 @@
 import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
-import { MemoryRouter, Router } from "react-router-dom";
+import { Router } from "react-router-dom";
 import GlobalAlert from "../../../components/main/GlobalAlert";
 import history from "../../../components/navigation/history";
-import {
-  mockPersonalDetails,
-  mockProgrammeMembershipCojNotSigned,
-  mockProgrammeMembershipCojSigned
-} from "../../../mock-data/trainee-profile";
+import { mockProgrammeMembershipCojNotSigned } from "../../../mock-data/trainee-profile";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
-import { updatedTraineeProfileData } from "../../../redux/slices/traineeProfileSlice";
+import { updatedUnsignedCojs } from "../../../redux/slices/traineeProfileSlice";
 import store from "../../../redux/store/store";
 import React from "react";
-import { COJ_EPOCH } from "../../../utilities/Constants";
-import { updatedRedirected } from "../../../redux/slices/userSlice";
+import {
+  updatedPreferredMfa,
+  updatedRedirected
+} from "../../../redux/slices/userSlice";
+import { updatedFormAList } from "../../../redux/slices/formASlice";
+import { mockFormList } from "../../../mock-data/formr-list";
+import { updatedFormBList } from "../../../redux/slices/formBSlice";
+import { IFormR } from "../../../models/IFormR";
+import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 
 describe("GlobalAlert", () => {
-  beforeEach(() => {
-    cy.clock(COJ_EPOCH);
-  });
-
-  it("should not render when no alerts", () => {
-    const MockedGlobalAlert = () => {
+  const mountComponent = (
+    redirected: boolean,
+    preferredMfa?: string,
+    formAList?: IFormR[],
+    formBList?: IFormR[],
+    unsignedCojs?: ProgrammeMembership[]
+  ) => {
+    const MockedGlobalAlert: React.FC = () => {
       const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipCojSigned],
-          placements: []
-        })
-      );
+      dispatch(updatedRedirected(redirected));
+      if (preferredMfa) {
+        dispatch(updatedPreferredMfa(preferredMfa));
+      }
+      if (formAList) {
+        dispatch(updatedFormAList(formAList));
+      }
+      if (formBList) {
+        dispatch(updatedFormBList(formBList));
+      }
+      if (unsignedCojs) {
+        dispatch(updatedUnsignedCojs(unsignedCojs));
+      }
       return <GlobalAlert />;
     };
 
@@ -41,202 +51,56 @@ describe("GlobalAlert", () => {
         </Router>
       </Provider>
     );
+  };
 
+  it("should not render the Global Action Summary Alert if the user has not set their MFA", () => {
+    mountComponent(false);
     cy.get("[data-cy=globalAlert]").should("not.exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
+    cy.get("[data-cy=bookmarkAlert]").should("not.exist");
   });
 
-  it("should render when alerts available", () => {
-    const MockedGlobalAlert = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            {
-              ...mockProgrammeMembershipCojNotSigned,
-              startDate: COJ_EPOCH
-            }
-          ],
-          placements: []
-        })
-      );
-      return <GlobalAlert />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedGlobalAlert />
-        </Router>
-      </Provider>
-    );
-
+  it("should still render the Global Bookmark alert (redirect is true) even when the user has not set their MFA", () => {
+    mountComponent(true);
     cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
   });
 
-  describe("BookmarkAlert", () => {
-    it("should not render when user not redirected", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(updatedRedirected(false));
-        return <GlobalAlert />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedGlobalAlert />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy=bookmarkAlert]").should("not.exist");
-    });
-
-    it("should render when user redirected", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(updatedRedirected(true));
-        return <GlobalAlert />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedGlobalAlert />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy=bookmarkAlert]").should("exist");
-    });
+  it("should render the Global Action Summary Alert but no Bookmark alert if bookmark is false (no redirect) and the Action Summary is true (no submitted Form R)", () => {
+    mountComponent(false, "SMS");
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("not.exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=checkFormRSubs]").should("exist");
   });
 
-  describe("CojAlert", () => {
-    it("should not render when no signable COJ", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [mockProgrammeMembershipCojSigned],
-            placements: []
-          })
-        );
-        return <GlobalAlert />;
-      };
+  it("should render the Global Action Summary Alert but no Bookmark alert if bookmark is false (no redirect) and the Action Summary is true (year plus since last submitted Form R)", () => {
+    mountComponent(false, "SMS", [mockFormList[2]], [mockFormList[3]]);
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("not.exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=checkFormRSubs]").should("exist");
+  });
 
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedGlobalAlert />
-          </Router>
-        </Provider>
-      );
+  it("should render Global Bookmark alert (redirect is true) but no Action Summary (recent submitted Form R, no unsigned CoJ)", () => {
+    mountComponent(true, "SMS", [mockFormList[0]], [mockFormList[1]]);
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
+  });
 
-      cy.get("[data-cy=cojAlert]").should("not.exist");
-    });
-
-    it("should render when signable COJ available", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [
-              {
-                ...mockProgrammeMembershipCojNotSigned,
-                startDate: COJ_EPOCH
-              }
-            ],
-            placements: []
-          })
-        );
-        return <GlobalAlert />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedGlobalAlert />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy=cojAlert]").should("exist");
-    });
-
-    it("should include programmes nav link when not on programmes view", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [
-              {
-                ...mockProgrammeMembershipCojNotSigned,
-                startDate: COJ_EPOCH
-              }
-            ],
-            placements: []
-          })
-        );
-        return <GlobalAlert />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={["/home"]}>
-            <MockedGlobalAlert />
-          </MemoryRouter>
-        </Provider>
-      );
-
-      cy.get("[data-cy=cojLink]").should("exist");
-    });
-
-    it("should not include programmes nav link when on programmes view", () => {
-      const MockedGlobalAlert = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [
-              {
-                ...mockProgrammeMembershipCojNotSigned,
-                startDate: COJ_EPOCH
-              }
-            ],
-            placements: []
-          })
-        );
-        return <GlobalAlert />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={["/programmes"]}>
-            <MockedGlobalAlert />
-          </MemoryRouter>
-        </Provider>
-      );
-
-      cy.get("[data-cy=cojLink]").should("not.exist");
-    });
-    it("should not render the Coj alert when on the Coj form page", () => {
-      mount(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={["/121/sign-coj"]}>
-            <GlobalAlert />
-          </MemoryRouter>
-        </Provider>
-      );
-      cy.get("[data-cy=cojAlert]").should("not.exist");
-    });
+  it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is true", () => {
+    mountComponent(
+      true,
+      "SMS",
+      [mockFormList[0]],
+      [mockFormList[1]],
+      [mockProgrammeMembershipCojNotSigned[0]]
+    );
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=unsignedCoJ]").should("exist");
   });
 });

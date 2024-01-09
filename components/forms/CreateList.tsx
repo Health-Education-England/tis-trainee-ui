@@ -11,8 +11,14 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
-import { resetToInitFormA } from "../../redux/slices/formASlice";
-import { resetToInitFormB } from "../../redux/slices/formBSlice";
+import {
+  resetToInitFormA,
+  updatedFormAStatus
+} from "../../redux/slices/formASlice";
+import {
+  resetToInitFormB,
+  updatedFormBStatus
+} from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
 
@@ -33,6 +39,9 @@ const CreateList = () => {
   useEffect(() => {
     dispatch(fetchForms(pathname));
     dispatch(updatedFormsRefreshNeeded(false));
+    if (pathname === "/formr-a") {
+      dispatch(updatedFormAStatus("idle"));
+    } else dispatch(updatedFormBStatus("idle"));
   }, [dispatch, pathname, needFormsRefresh]);
 
   useEffect(() => {

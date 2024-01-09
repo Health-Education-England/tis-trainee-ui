@@ -480,6 +480,12 @@ ol[type="a"] {
 }
 
 // Home header section
+@media (max-width: 768px) {
+  .header-wrapper {
+    padding: 1.5rem 0;
+  }
+}
+
 .tss-update-column {
   padding: 56px 16px;
 }
@@ -510,7 +516,32 @@ ol[type="a"] {
   text-decoration: none;
 }
 
+.whats-new-header {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.whats-new-link:focus:visited {
+  color: black !important;
+}
+
+@media (max-width: 768px) {
+  .whats-new-header {
+    font-size: 1.25rem;
+    font-weight: normal;
+  }
+}
+
 // nav header
+.tss-beta-link {
+  color: #fff !important; // needed to override NHSUK default
+  font-size: 1rem;
+}
+
+.tss-beta-link:focus:visited {
+  color: black !important;
+}
+
 .top-nav-container {
   display: flex;
   justify-content: space-between;
@@ -553,6 +584,12 @@ ol[type="a"] {
   margin-bottom: 1rem;
 }
 
+@media (max-width: 768px) {
+  .tss-name {
+    font-size: 1.25rem;
+  }
+}
+
 .header-nav {
   margin-top: 0.25rem;
 }
@@ -560,4 +597,10 @@ ol[type="a"] {
 .btn_full-width {
   min-width: 100%;
   max-width: 100%;
+}
+
+//ul
+.no-bullet {
+  list-style-type: none;
+  margin-left: -1em;
 }

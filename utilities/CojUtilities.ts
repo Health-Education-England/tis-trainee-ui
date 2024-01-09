@@ -39,6 +39,14 @@ export class CojUtilities {
     );
   }
 
+  public static unsignedCojs(programmeMemberships: ProgrammeMembership[]) {
+    return programmeMemberships.filter(
+      pm =>
+        !pm.conditionsOfJoining.signedAt &&
+        this.canBeSigned(new Date(pm.startDate))
+    );
+  }
+
   public static canBeSigned(startDate: Date): boolean {
     const now = new Date();
     const signableFrom = this.getSignableFromDate(startDate);

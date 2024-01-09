@@ -12,6 +12,7 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 interface IProfile {
   traineeProfileData: TraineeProfile;
   hasSignableCoj: boolean;
+  unsignedCojs: ProgrammeMembership[];
   status: string;
   error: any;
 }
@@ -24,6 +25,7 @@ export const initialState: IProfile = {
     placements: []
   },
   hasSignableCoj: false,
+  unsignedCojs: [],
   status: "idle",
   error: ""
 };
@@ -66,6 +68,9 @@ const traineeProfileSlice = createSlice({
     },
     updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
+    },
+    updatedUnsignedCojs(state, action: PayloadAction<ProgrammeMembership[]>) {
+      return { ...state, unsignedCojs: action.payload };
     }
   },
   extraReducers(builder) {
@@ -91,6 +96,9 @@ const traineeProfileSlice = createSlice({
         );
         state.traineeProfileData.placements = sortedPlacements;
         state.hasSignableCoj = CojUtilities.canAnyBeSigned(sortedProgrammes);
+        state.unsignedCojs = CojUtilities.unsignedCojs(
+          state.traineeProfileData.programmeMemberships
+        );
       })
       .addCase(fetchTraineeProfileData.rejected, (state, { error }) => {
         state.status = "failed";
@@ -130,7 +138,8 @@ export default traineeProfileSlice.reducer;
 export const {
   resetToInit,
   updatedTraineeProfileData,
-  updatedTraineeProfileStatus
+  updatedTraineeProfileStatus,
+  updatedUnsignedCojs
 } = traineeProfileSlice.actions;
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>

@@ -11,7 +11,13 @@ day.extend(timezone);
 day.extend(isBetween);
 day.extend(isSameOrBefore);
 day.extend(isSameOrAfter);
-const todayDate = day().toDate();
+export const todayDate = day().toDate();
+export const dateWithinYear = day().subtract(1, "year").add(1, "day").toDate();
+export const dateExactlyYearAgo = day().subtract(1, "year").toDate();
+export const dateMoreThanYearAgo = day()
+  .subtract(1, "year")
+  .subtract(1, "day")
+  .toDate();
 export type DateType = Date | string | null | undefined;
 export type DateUnitType =
   | "millisecond"
