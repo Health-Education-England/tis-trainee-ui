@@ -253,7 +253,7 @@ describe("Programme summary panel", () => {
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
           programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned,
+            mockProgrammeMembershipCojNotSigned[0],
             mockProgrammeMembershipCojSigned
           ],
           placements: []
@@ -294,7 +294,7 @@ describe("Programme summary panel", () => {
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
           programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned,
+            mockProgrammeMembershipCojNotSigned[0],
             mockProgrammeMembershipCojSigned
           ],
           placements: []

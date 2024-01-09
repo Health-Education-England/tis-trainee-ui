@@ -108,26 +108,28 @@ function ActionsSummaryAlert({
       Please click <Link to="/">here</Link> for details.
     </span>
   );
-  const importantInfoText =
-    "You have important information about your Form R submission dates you might want to check.";
+  const importantInfoText = "Please review your Form R submissions.";
   const conditions = [
     {
       check: () => unsignedCoJ && !inProgressFormR,
-      body: <span>You have outstanding actions to complete.</span>
+      body: <span>You have outstanding actions to complete.</span>,
+      cyTag: "unsignedCoJ"
     },
     {
       check: () => !unsignedCoJ && inProgressFormR,
-      body: <span>You have in progress actions to complete.</span>
+      body: <span>You have in progress actions to complete.</span>,
+      cyTag: "inProgressFormR"
     },
     {
       check: () => unsignedCoJ && inProgressFormR,
       body: (
         <span>You have outstanding and in progress actions to complete.</span>
-      )
+      ),
+      cyTag: "unsignedCoJAndInProgressFormR"
     }
   ];
 
-  const { body } = conditions.find(({ check }) => check()) ?? {
+  const { body, cyTag } = conditions.find(({ check }) => check()) ?? {
     body: null
   };
 
@@ -137,8 +139,10 @@ function ActionsSummaryAlert({
         <div className="app-global-alert__content">
           <div className="app-global-alert__message">
             <h2>Attention</h2>
-            <p>{body}</p>
-            {importantInfo && <p>{importantInfoText}</p>}
+            <p data-cy={cyTag}>{body}</p>
+            {importantInfo && (
+              <p data-cy={"checkFormRSubs"}>{importantInfoText}</p>
+            )}
             <p>{ACTION_LINK}</p>
           </div>
         </div>

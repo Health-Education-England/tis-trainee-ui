@@ -72,6 +72,7 @@ describe("GlobalAlert", () => {
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("not.exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=checkFormRSubs]").should("exist");
   });
 
   it("should render the Global Action Summary Alert but no Bookmark alert if bookmark is false (no redirect) and the Action Summary is true (year plus since last submitted Form R)", () => {
@@ -79,6 +80,7 @@ describe("GlobalAlert", () => {
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("not.exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=checkFormRSubs]").should("exist");
   });
 
   it("should render Global Bookmark alert (redirect is true) but no Action Summary (recent submitted Form R, no unsigned CoJ)", () => {
@@ -94,10 +96,11 @@ describe("GlobalAlert", () => {
       "SMS",
       [mockFormList[0]],
       [mockFormList[1]],
-      [mockProgrammeMembershipCojNotSigned]
+      [mockProgrammeMembershipCojNotSigned[0]]
     );
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=unsignedCoJ]").should("exist");
   });
 });

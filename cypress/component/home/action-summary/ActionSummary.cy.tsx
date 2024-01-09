@@ -70,7 +70,8 @@ describe("Action Summary", () => {
   const testCojSign = (
     cojToSign: ProgrammeMembership[],
     shouldExist: boolean,
-    message: string
+    message: string,
+    message2?: string
   ) => {
     it(`should display the ${
       shouldExist ? "'CoJ to sign'" : "'all CoJ signed'"
@@ -81,7 +82,9 @@ describe("Action Summary", () => {
         shouldExist ? "exist" : "not.exist"
       );
       if (shouldExist) {
-        cy.get("[data-cy=unsignedCoJ]").should("contain", message);
+        cy.get("[data-cy=unsignedCoJ]")
+          .should("contain", message)
+          .should("contain", message2);
       } else {
         cy.get("[data-cy=allCoJSigned]")
           .should("exist")
@@ -91,9 +94,16 @@ describe("Action Summary", () => {
   };
   testCojSign([], false, "signed");
   testCojSign(
-    [mockProgrammeMembershipCojNotSigned],
+    [mockProgrammeMembershipCojNotSigned[0]],
     true,
-    "You have 1 unsigned"
+    "1 unsigned",
+    "Agreement"
+  );
+  testCojSign(
+    mockProgrammeMembershipCojNotSigned,
+    true,
+    "You have 2 unsigned",
+    "Agreements"
   );
 
   const testFormNoSubmissions = (formType: FormType) => {

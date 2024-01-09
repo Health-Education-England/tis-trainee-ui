@@ -71,7 +71,7 @@ export default function ActionSummary() {
                           You have {unsignedCojCount} unsigned{" "}
                           <Link to="/programmes">
                             {`Conditions of Joining Agreement${
-                              unsignedCojCount > 0 ? "s" : ""
+                              unsignedCojCount > 1 ? "s" : ""
                             }`}
                           </Link>
                           .
