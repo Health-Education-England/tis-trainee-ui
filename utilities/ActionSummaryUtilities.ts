@@ -91,8 +91,11 @@ export function noSubmittedForms(formList: IFormR[]) {
 
 function isAnyFormInProgress(formList: IFormR[]): boolean {
   return (
-    formList.filter(form => form.lifecycleState !== LifeCycleState.Submitted)
-      .length > 0
+    formList.filter(
+      form =>
+        form.lifecycleState === LifeCycleState.Draft ||
+        form.lifecycleState === LifeCycleState.Unsubmitted
+    ).length > 0
   );
 }
 

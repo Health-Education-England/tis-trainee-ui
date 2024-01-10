@@ -66,8 +66,6 @@ function chooseBtnText(lifecycleState: LifeCycleState | undefined) {
   switch (lifecycleState) {
     case LifeCycleState.Draft:
       return "Edit saved draft form";
-    case LifeCycleState.Local:
-      return "Edit unsaved draft form";
     case LifeCycleState.Unsubmitted:
       return "Edit unsubmitted form";
     default:
