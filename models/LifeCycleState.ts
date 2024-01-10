@@ -2,6 +2,5 @@ export enum LifeCycleState {
   New = "NEW",
   Draft = "DRAFT",
   Submitted = "SUBMITTED",
-  Unsubmitted = "UNSUBMITTED",
-  Local = "LOCAL"
+  Unsubmitted = "UNSUBMITTED"
 }
