@@ -7,6 +7,8 @@ describe("DateUtilities", () => {
   const yesterday = now.subtract(1, "day").toDate();
   const tomorrow = now.add(1, "day").toDate();
   const today = now.toDate();
+  const belowLegalAge = now.subtract(17, "year").toDate();
+  const legalAge = now.subtract(18, "year").toDate();
 
   it("ToLocalDateTime should return date in DD/MM/YYYY HH:mm format", () => {
     expect(DateUtilities.ToLocalDateTime(new Date("2020-04-20 12:42"))).toEqual(
@@ -40,12 +42,12 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsLegalAge(null)).toEqual(true);
   });
 
-  it("IsLegalAge should return true if age is above 18", () => {
-    expect(DateUtilities.IsLegalAge(new Date("2000-04-20"))).toEqual(true);
+  it("IsLegalAge should return true if age is 18 or above", () => {
+    expect(DateUtilities.IsLegalAge(legalAge)).toEqual(true);
   });
 
   it("IsLegalAge should return false if age is below 18", () => {
-    expect(DateUtilities.IsLegalAge(new Date("2019-04-20"))).toEqual(false);
+    expect(DateUtilities.IsLegalAge(belowLegalAge)).toEqual(false);
   });
 
   it("IsPastDate should return true if date is null", () => {
