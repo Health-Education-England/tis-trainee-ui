@@ -15,7 +15,7 @@ export const formAValidationSchema = yup.object({
   gmcNumber: StringValidationSchema("GMC number", 20),
   localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   dateOfBirth: dateValidationSchema("Your date of birth")
-    .test("dateOfBirth", "You must be 17 years or above", value =>
+    .test("dateOfBirth", "You must be 18 years or above", value =>
       DateUtilities.IsLegalAge(value)
     )
     .test(

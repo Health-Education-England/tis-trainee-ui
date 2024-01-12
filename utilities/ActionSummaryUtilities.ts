@@ -111,10 +111,7 @@ export function isLatestSubmissionDateWithinLastYear(
   const lastSubDate = dayjs(lastSubStartDate);
   const today = dayjs();
   const oneYearAgo = today.subtract(1, "year");
-  return (
-    lastSubDate.isAfter(oneYearAgo) &&
-    (lastSubDate.isBefore(today, "day") || lastSubDate.isSame(today, "day"))
-  );
+  return lastSubDate.isAfter(oneYearAgo);
 }
 
 export function isLatestSubmissionDateYearPlus(subDate: DateType) {
