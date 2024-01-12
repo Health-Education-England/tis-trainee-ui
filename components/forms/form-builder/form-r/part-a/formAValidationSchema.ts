@@ -92,5 +92,4 @@ export const formAValidationSchema = yup.object({
       "Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)",
       value => (value ? CHECK_WHOLE_TIME_EQUIVALENT_REGEX.test(value) : false)
     )
-    .nullable()
 });
