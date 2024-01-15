@@ -115,6 +115,7 @@ describe("View", () => {
       "have.class",
       "nhsuk-error-message"
     );
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
   });
   it("should display no error message when form passes validation", () => {
     const MockedViewNoErrors = () => {
@@ -137,5 +138,6 @@ describe("View", () => {
       </Provider>
     );
     cy.get(".nhsuk-error-summary").should("not.exist");
+    cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled");
   });
 });
