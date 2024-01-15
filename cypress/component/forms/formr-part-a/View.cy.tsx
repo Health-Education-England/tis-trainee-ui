@@ -66,7 +66,9 @@ describe("View", () => {
   it("should render view component with no save PDF btn/link for unsubmitted form", () => {
     const MockedViewUnsubmitted = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedFormA(submittedFormRPartAs[1]));
+      dispatch(
+        updatedFormA({ ...submittedFormRPartAs[1], wholeTimeEquivalent: "" })
+      );
       dispatch(updatedCanEdit(true));
       return <FormAView />;
     };
@@ -80,5 +82,60 @@ describe("View", () => {
     cy.get("[data-cy=backLink]").should("not.exist");
     cy.get("[data-cy=savePdfBtn]").should("not.exist");
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
+  });
+
+  it("should display the error messages for any fields failing validation", () => {
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <FormAView />
+        </Router>
+      </Provider>
+    );
+
+    cy.get(".nhsuk-error-summary").should("exist");
+    cy.get(
+      '[data-cy="error-txt-dateOfBirth,This date is before the minimum date allowed"]'
+    ).should("exist");
+    cy.get(
+      '[data-cy="error-txt-completionDate,Anticipated completion date - please choose a future date"]'
+    ).should("exist");
+    cy.get(
+      '[data-cy="error-txt-wholeTimeEquivalent,Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+    ).should("exist");
+    cy.get('[data-cy="dateOfBirth-label"]').should(
+      "have.class",
+      "nhsuk-error-message"
+    );
+    cy.get('[data-cy="completionDate-label"]').should(
+      "have.class",
+      "nhsuk-error-message"
+    );
+    cy.get('[data-cy="wholeTimeEquivalent-label"]').should(
+      "have.class",
+      "nhsuk-error-message"
+    );
+  });
+  it("should display no error message when form passes validation", () => {
+    const MockedViewNoErrors = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedFormA({
+          ...submittedFormRPartAs[1],
+          dateOfBirth: "01/01/2000",
+          completionDate: "01/01/2030",
+          wholeTimeEquivalent: "0.5"
+        })
+      );
+      return <FormAView />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedViewNoErrors />
+        </Router>
+      </Provider>
+    );
+    cy.get(".nhsuk-error-summary").should("not.exist");
   });
 });

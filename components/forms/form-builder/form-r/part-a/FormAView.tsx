@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import {
   selectCanEditStatus,
@@ -26,6 +26,9 @@ import {
   submitForm
 } from "../../../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../../../StartOverButton";
+import { formAValidationSchemaView } from "./formAValidationSchema";
+import { ValidationError } from "yup";
+import { FormErrors } from "../../FormBuilder";
 
 const FormAView = () => {
   const confirm = useConfirm();
@@ -33,6 +36,28 @@ const FormAView = () => {
   const canEdit = useAppSelector(selectCanEditStatus);
   const formAData = useAppSelector(selectSavedFormA);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (canEdit) {
+      formAValidationSchemaView
+        .validate(formAData, { abortEarly: false })
+        .then(() => {
+          setErrors({});
+        })
+        .catch(err => {
+          if (err) {
+            const errorMessages: { [key: string]: string } = {};
+            err.inner.forEach((error: ValidationError) => {
+              if (error.path) {
+                errorMessages[error.path] = error.message;
+              }
+            });
+            setErrors(errorMessages);
+          }
+        });
+    }
+  }, [canEdit, formAData]);
 
   const handleSubClick = (formData: FormRPartA) => {
     setIsSubmitting(false);
@@ -69,7 +94,9 @@ const FormAView = () => {
         jsonForm={formAJson}
         formData={formAData}
         canEdit={canEdit}
+        formErrors={errors}
       />
+      {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
       {canEdit && (
         <WarningCallout data-cy="warningSubmit">
           <WarningCallout.Label visuallyHiddenText={false}>
@@ -92,7 +119,7 @@ const FormAView = () => {
                   setIsSubmitting(true);
                   handleSubClick(formAData);
                 }}
-                disabled={isSubmitting}
+                disabled={isSubmitting || Object.keys(errors).length > 0}
                 data-cy="BtnSubmit"
               >
                 Submit Form
