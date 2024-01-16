@@ -477,15 +477,8 @@ export default function FormBuilder({
           </div>
         </>
       )}
-      {/* Render error summary for the entire form */}
       {Object.keys(formErrors).length > 0 && (
-        <ErrorSummary
-          aria-labelledby="errorSummaryTitle"
-          role="alert"
-          tabIndex={-1}
-        >
-          <FormErrors formErrors={formErrors} />
-        </ErrorSummary>
+        <FormErrors formErrors={formErrors} />
       )}
       <nav className="nhsuk-pagination">
         <ul className="nhsuk-list nhsuk-pagination__list">
@@ -568,17 +561,26 @@ interface FormErrorsProps {
   formErrors: Record<string, string>;
 }
 
-function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
+export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
   return (
-    <div className="error-summary" data-cy="errorSummary">
-      <p>
-        <b>Please fix the following errors before proceeding:</b>
-      </p>
-      <ul>
-        {Object.entries(formErrors).map(error => (
-          <li data-cy={`error-txt-${error}`} key={error[0]}>{`${error[1]}`}</li>
-        ))}
-      </ul>
-    </div>
+    <ErrorSummary
+      aria-labelledby="errorSummaryTitle"
+      role="alert"
+      tabIndex={-1}
+    >
+      <div className="error-summary" data-cy="errorSummary">
+        <p>
+          <b>Please fix the following errors before proceeding:</b>
+        </p>
+        <ul>
+          {Object.entries(formErrors).map(error => (
+            <li
+              data-cy={`error-txt-${error}`}
+              key={error[0]}
+            >{`${error[1]}`}</li>
+          ))}
+        </ul>
+      </div>
+    </ErrorSummary>
   );
 }

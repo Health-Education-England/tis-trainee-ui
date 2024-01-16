@@ -8,12 +8,14 @@ interface FormViewBuilderProps {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
+  formErrors: { [key: string]: string };
 }
 
 const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
   jsonForm,
   formData,
-  canEdit
+  canEdit,
+  formErrors
 }: FormViewBuilderProps) => {
   return (
     <div>
@@ -22,7 +24,7 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
           <Card feature>
             <Card.Content>
               <Card.Heading>{page.pageName}</Card.Heading>
-              {page.sections.map((section, sectionIndex) => (
+              {page.sections.map((section, _sectionIndex) => (
                 <div key={section.sectionHeader}>
                   {canEdit && (
                     <Button
@@ -36,19 +38,21 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
                     </Button>
                   )}
                   <SummaryList>
-                    {section.fields.map(field =>
-                      // viewWhenEmpty json field prop is used when we want to to display empty fields as "Not provided"
-                      formData[field.name] || field.viewWhenEmpty ? (
-                        <SummaryList.Row key={field.name}>
-                          <SummaryList.Key data-cy={`${field.name}-label`}>
-                            {field.label}
-                          </SummaryList.Key>
-                          <SummaryList.Value data-cy={`${field.name}-value`}>
-                            {displayListValue(formData[field.name], field.type)}
-                          </SummaryList.Value>
-                        </SummaryList.Row>
-                      ) : null
-                    )}
+                    {section.fields.map(field => (
+                      <SummaryList.Row key={field.name}>
+                        <SummaryList.Key
+                          data-cy={`${field.name}-label`}
+                          className={
+                            formErrors[field.name] ? "nhsuk-error-message" : ""
+                          }
+                        >
+                          {field.label}
+                        </SummaryList.Key>
+                        <SummaryList.Value data-cy={`${field.name}-value`}>
+                          {displayListValue(formData[field.name], field.type)}
+                        </SummaryList.Value>
+                      </SummaryList.Row>
+                    ))}
                   </SummaryList>
                 </div>
               ))}
@@ -62,10 +66,10 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
 
 export default FormViewBuilder;
 
-function displayListValue(fieldName: string, fieldType: string) {
-  if (!fieldName) return "Not provided";
-  if (fieldType === "date" && fieldName) {
-    return DateUtilities.ToLocalDate(fieldName);
+function displayListValue(fieldVal: string, fieldType: string) {
+  if (!fieldVal) return "Not provided";
+  if (fieldType === "date" && fieldVal) {
+    return DateUtilities.ToLocalDate(fieldVal);
   }
-  return fieldName;
+  return fieldVal;
 }

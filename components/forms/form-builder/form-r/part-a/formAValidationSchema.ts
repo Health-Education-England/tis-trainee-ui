@@ -9,7 +9,7 @@ import {
 const dateValidationSchema = (fieldName: string) =>
   yup.date().nullable().required(`${fieldName} is required`);
 
-export const formAValidationSchema = yup.object({
+const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
@@ -92,4 +92,14 @@ export const formAValidationSchema = yup.object({
       "Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)",
       value => (value ? CHECK_WHOLE_TIME_EQUIVALENT_REGEX.test(value) : false)
     )
+};
+
+export const formAValidationSchema = yup.object(formAValidationSchemaDefault);
+
+export const formAValidationSchemaView = yup.object({
+  ...formAValidationSchemaDefault,
+  cctSpecialty1: yup.string().when("declarationType", {
+    is: "I have been appointed to a programme leading to award of CCT",
+    then: yup.string().required("Specialty 1 for Award of CCT is required")
+  })
 });
