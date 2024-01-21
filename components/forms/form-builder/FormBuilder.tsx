@@ -46,6 +46,8 @@ export interface Field {
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
   parent?: string;
+  objectFields?: Field[];
+  value?: unknown;
 }
 export interface FormData {
   [key: string]: any;
@@ -59,6 +61,7 @@ interface Page {
 interface Section {
   sectionHeader: string;
   fields: Field[];
+  objectFields?: Field[];
 }
 export interface Form {
   name: string;
@@ -131,7 +134,7 @@ export default function FormBuilder({
       : [];
   };
 
-  const renderFormField = (field: Field) => {
+  const renderFormField = (field: Field, value: unknown) => {
     const {
       name,
       type,
@@ -151,12 +154,12 @@ export default function FormBuilder({
             <Text
               name={name}
               label={label}
-              formFields={formFields}
               handleChange={handleChange}
               fieldError={fieldError}
               placeholder={placeholder}
               fieldWarning={fieldWarning}
               handleBlur={handleBlur}
+              value={value as string}
             />
           );
         case "radio":
@@ -202,6 +205,17 @@ export default function FormBuilder({
               handleChange={handleChange}
             />
           );
+        case "array":
+          return formFields[name].map((objFields: Field[], index: number) => (
+            <div key={index}>
+              {objFields.map((objectField: Field) =>
+                renderFormField(
+                  objectField,
+                  formFields[name][index][objectField.name]
+                )
+              )}
+            </div>
+          ));
       }
     } else return null;
   };
@@ -458,15 +472,41 @@ export default function FormBuilder({
                     <Card.Heading>{section.sectionHeader}</Card.Heading>
                     {section?.fields.map((field: Field) => (
                       <div key={field.name} className="nhsuk-form-group">
-                        {formFields && renderFormField(field)}
-                        {formErrors[field.name] && (
+                        {formFields &&
+                        field.type === "array" &&
+                        field.objectFields
+                          ? formFields[field.name].map(
+                              (_arrObj: any, index: number) => (
+                                <Card key={index}>
+                                  <Card.Content>
+                                    {field.objectFields?.map(
+                                      (objField: Field) => (
+                                        <div
+                                          key={objField.name}
+                                          className="nhsuk-form-group"
+                                        >
+                                          {renderFormField(
+                                            objField,
+                                            formFields[field.name][index][
+                                              objField.name
+                                            ]
+                                          )}
+                                        </div>
+                                      )
+                                    )}
+                                  </Card.Content>
+                                </Card>
+                              )
+                            )
+                          : renderFormField(field, formFields[field.name])}
+                        {/* {formErrors[field.name] && (
                           <div
                             className="nhsuk-error-message"
                             data-cy={`${field.name}-inline-error-msg`}
                           >
                             {formErrors[field.name]}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     ))}
                   </Card.Content>

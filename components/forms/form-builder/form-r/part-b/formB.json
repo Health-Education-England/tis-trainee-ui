@@ -1,0 +1,164 @@
+{
+  "name": "formB",
+  "pages": [
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "FormBImportantNotice",
+      "msgLinkName": "DataSource",
+      "sections": [
+        {
+          "sectionHeader": "Personal Details",
+          "fields": [
+            {
+              "name": "forename",
+              "label": "Forename ",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "surname",
+              "label": "GMC-Registered Surname",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "gmcNumber",
+              "label": "GMC Number",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "email",
+              "label": "Primary contact email address",
+              "hint": "For reasons of security and due to frequent system failures with internet email accounts, you are strongly advised to provide an NHS.net email address.",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "localOfficeName",
+              "label": "Deanery / Local Office",
+              "type": "select",
+              "optionsKey": "localOffice",
+              "visible": true
+            },
+            {
+              "name": "prevRevalBody",
+              "label": "Previous Designated Body for Revalidation (if applicable)",
+              "type": "select",
+              "optionsKey": "dbcInternal",
+              "dependencies": ["prevRevalBodyOther"],
+              "visible": true
+            },
+            {
+              "name": "prevRevalBodyOther",
+              "label": "Please Specify 'Other'",
+              "type": "select",
+              "visible": false,
+              "visibleIf": ["other"],
+              "parent": "prevRevalBody",
+              "optionsKey": "dbcExternal"
+            },
+            {
+              "name": "currRevalDate",
+              "label": "Current Revalidation Date",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "prevRevalDate",
+              "label": "Date of Previous Revalidation (if applicable)",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "programmeSpecialty",
+              "label": "Programme/Training Specialty",
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
+            },
+            {
+              "name": "dualSpecialty",
+              "label": "Dual Specialty (if applicable)",
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Whole Scope of Practice",
+      "sections": [
+        {
+          "sectionHeader": "Type of Work",
+          "fields": [
+            {
+              "name": "work",
+              "type": "array",
+              "label": "Type of Work",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "typeOfWork",
+                  "label": "Type of Work",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "trainingPost",
+                  "label": "Training Post",
+                  "type": "select",
+                  "optionsKey": "trainingPost",
+                  "visible": true
+                },
+                {
+                  "name": "startDate",
+                  "label": "Start Date",
+                  "type": "date",
+                  "visible": true
+                },
+
+                {
+                  "name": "endDate",
+                  "label": "End Date",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "site",
+                  "label": "Site Name",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "siteLocation",
+                  "label": "Site Location",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "siteKnownAs",
+                  "label": "Site Known As",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

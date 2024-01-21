@@ -6,23 +6,23 @@ import { FieldWarning } from "../FormBuilder";
 type TextProps = {
   name: string;
   label: string | undefined;
-  formFields: Record<string, string>;
   handleChange: (event: any, selectedOption?: any) => void;
   fieldError?: string;
   placeholder?: string;
   fieldWarning?: FieldWarning;
   handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  value?: string;
 };
 
 export const Text: React.FC<TextProps> = ({
   name,
   label,
-  formFields,
   handleChange,
   fieldError,
   placeholder,
   fieldWarning,
-  handleBlur
+  handleBlur,
+  value
 }: TextProps) => {
   return (
     <>
@@ -34,7 +34,7 @@ export const Text: React.FC<TextProps> = ({
         onKeyDown={handleKeyDown}
         type="text"
         name={name}
-        value={formFields[name]}
+        value={value}
         onChange={handleChange}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
