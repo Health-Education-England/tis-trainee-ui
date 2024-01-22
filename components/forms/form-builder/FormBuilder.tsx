@@ -167,9 +167,9 @@ export default function FormBuilder({
             <Radios
               name={name}
               label={label}
-              formFields={formFields}
               options={filteredOptions(optionsKey, options)}
               handleChange={handleChange}
+              value={value as string}
             />
           );
 
@@ -178,9 +178,9 @@ export default function FormBuilder({
             <Selector
               name={name}
               label={label}
-              formFields={formFields}
               options={filteredOptions(optionsKey, options)}
               handleChange={handleChange}
+              value={value as string}
             />
           );
 
@@ -201,8 +201,8 @@ export default function FormBuilder({
             <Phone
               name={name}
               label={label}
-              formFields={formFields}
               handleChange={handleChange}
+              value={value as string}
             />
           );
         case "array":
@@ -492,7 +492,7 @@ export default function FormBuilder({
                                             objField,
                                             formFields[field.name][index][
                                               objField.name
-                                            ]
+                                            ] || ""
                                           )}
                                         </div>
                                       )

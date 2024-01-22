@@ -5,16 +5,16 @@ type RadiosProps = {
   name: string;
   label: string | undefined;
   options: any;
-  formFields: Record<string, string>;
   handleChange: (event: any, selectedOption?: any) => void;
+  value: string;
 };
 
 export const Radios: React.FC<RadiosProps> = ({
   name,
   label,
   options,
-  formFields,
-  handleChange
+  handleChange,
+  value
 }: RadiosProps) => {
   return (
     <div className="nhsuk-radios">
@@ -31,7 +31,7 @@ export const Radios: React.FC<RadiosProps> = ({
             type="radio"
             name={name}
             value={option.value}
-            checked={formFields[name] === option.value}
+            checked={value === option.value}
             onChange={handleChange}
             placeholder={option.value}
             aria-labelledby={`${option.value}--label`}

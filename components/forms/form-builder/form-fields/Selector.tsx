@@ -9,16 +9,16 @@ type SelectorProps = {
   name: string;
   label: string | undefined;
   options: any;
-  formFields: Record<string, string>;
   handleChange: (event: any, selectedOption?: any) => void;
+  value: string;
 };
 
 export const Selector = ({
   name,
   label,
   options,
-  formFields,
-  handleChange
+  handleChange,
+  value
 }: SelectorProps) => {
   return (
     <div data-cy={name}>
@@ -46,9 +46,7 @@ export const Selector = ({
           borderRadius: 0
         })}
         styles={colourStyles}
-        value={options?.filter(
-          (option: any) => option.value === formFields[name]
-        )}
+        value={options?.filter((option: any) => option.value === value)}
         isClearable={true}
       />
     </div>
