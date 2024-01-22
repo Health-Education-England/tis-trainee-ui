@@ -134,7 +134,12 @@ export default function FormBuilder({
       : [];
   };
 
-  const renderFormField = (field: Field, value: unknown) => {
+  const renderFormField = (
+    field: Field,
+    value: unknown,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => {
     const {
       name,
       type,
@@ -160,6 +165,8 @@ export default function FormBuilder({
               fieldWarning={fieldWarning}
               handleBlur={handleBlur}
               value={value as string}
+              arrayIndex={arrayIndex}
+              arrayName={arrayName}
             />
           );
         case "radio":
@@ -211,7 +218,9 @@ export default function FormBuilder({
               {objFields.map((objectField: Field) =>
                 renderFormField(
                   objectField,
-                  formFields[name][index][objectField.name]
+                  formFields[name][index][objectField.name],
+                  index,
+                  name
                 )
               )}
             </div>
@@ -320,26 +329,36 @@ export default function FormBuilder({
     } else setFieldWarning(undefined);
   };
 
-  const updateCurrentField = (fieldName: string, currVal: string) => {
-    // update the value of the current field
-    setFormFields((prevFormData: FormData) => {
-      return { ...prevFormData, [fieldName]: currVal };
-    });
-  };
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    selectedOption?: any
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
   ) => {
     const { name, value } = event.currentTarget;
     const currentValue = selectedOption ? selectedOption.value : value;
     const primaryField = fields.find(field => field.name === name);
     const inputValue = selectedOption ? selectedOption.value : value;
-    handleTextFieldWidth(event, currentValue, primaryField);
-    handleDependantFieldVisibility(currentValue, primaryField);
-    handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
-    updateCurrentField(name, currentValue);
-    validateCurrentField(name, currentValue);
+    // handleTextFieldWidth(event, currentValue, primaryField);
+    // handleDependantFieldVisibility(currentValue, primaryField);
+    // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
+
+    // WIP - works with Text fields in array atm
+    if (typeof arrayIndex === "number" && arrayName) {
+      setFormFields((prevFormData: FormData) => {
+        const newArray = [...prevFormData[arrayName]];
+        newArray[arrayIndex] = {
+          ...newArray[arrayIndex],
+          [name]: currentValue
+        };
+        return { ...prevFormData, [arrayName]: newArray };
+      });
+    } else {
+      setFormFields((prevFormData: FormData) => {
+        return { ...prevFormData, [name]: currentValue };
+      });
+    }
+    // validateCurrentField(name, currentValue);
     isFormDirty.current = true;
   };
 
@@ -492,7 +511,9 @@ export default function FormBuilder({
                                             objField,
                                             formFields[field.name][index][
                                               objField.name
-                                            ] || ""
+                                            ] || "",
+                                            index,
+                                            field.name
                                           )}
                                         </div>
                                       )

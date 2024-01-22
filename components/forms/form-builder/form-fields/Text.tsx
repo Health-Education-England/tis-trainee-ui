@@ -6,12 +6,19 @@ import { FieldWarning } from "../FormBuilder";
 type TextProps = {
   name: string;
   label: string | undefined;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    index?: number | undefined,
+    name?: string | undefined
+  ) => void;
   fieldError?: string;
   placeholder?: string;
   fieldWarning?: FieldWarning;
   handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   value?: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -22,7 +29,9 @@ export const Text: React.FC<TextProps> = ({
   placeholder,
   fieldWarning,
   handleBlur,
-  value
+  value,
+  arrayIndex,
+  arrayName
 }: TextProps) => {
   return (
     <>
@@ -35,7 +44,10 @@ export const Text: React.FC<TextProps> = ({
         type="text"
         name={name}
         value={value}
-        onChange={handleChange}
+        onChange={
+          ((event: any) =>
+            handleChange(event, undefined, arrayIndex, arrayName)) as any
+        }
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
         }`}
