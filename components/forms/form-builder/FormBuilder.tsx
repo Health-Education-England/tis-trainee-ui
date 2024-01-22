@@ -189,10 +189,10 @@ export default function FormBuilder({
             <Dates
               name={name}
               label={label}
-              formFields={formFields}
               handleChange={handleChange}
               fieldError={fieldError}
               placeholder={placeholder}
+              value={value as string | Date}
             />
           );
 
@@ -479,6 +479,9 @@ export default function FormBuilder({
                               (_arrObj: any, index: number) => (
                                 <Card key={index}>
                                   <Card.Content>
+                                    <p>
+                                      <b>{`${field.name} ${index + 1}`}</b>
+                                    </p>
                                     {field.objectFields?.map(
                                       (objField: Field) => (
                                         <div

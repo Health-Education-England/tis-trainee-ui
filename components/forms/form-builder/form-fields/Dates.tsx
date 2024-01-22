@@ -9,19 +9,19 @@ import "react-datepicker/dist/react-datepicker.css";
 type DatesProps = {
   name: string;
   label: string | undefined;
-  formFields: Record<string, string>;
   handleChange: (event: any, selectedOption?: any) => void;
   fieldError?: string;
   placeholder?: string;
+  value: string | Date;
 };
 
 export const Dates = ({
   name,
   label,
-  formFields,
   handleChange,
   fieldError,
-  placeholder
+  placeholder,
+  value
 }: DatesProps) => {
   return (
     <div data-cy={name}>
@@ -32,7 +32,7 @@ export const Dates = ({
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
         name={name}
-        selected={formFields[name] ? new Date(formFields[name]) : null}
+        selected={value ? new Date(value) : null}
         onChange={(date: Date) => {
           handleChange({
             currentTarget: {

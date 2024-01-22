@@ -20,11 +20,16 @@ export default function FormB() {
   const dbcExternal = referenceData.dbc.filter(
     (db: DesignatedBodyKeyValue) => !db.internal
   );
+  const trainingPost = [
+    { label: "Yes", value: "Yes" },
+    { label: "No", value: "No" }
+  ];
 
   const formBOptions = transformReferenceData({
     ...referenceData,
     dbcInternal,
-    dbcExternal
+    dbcExternal,
+    trainingPost
   });
 
   return formBData.traineeTisId ? (
