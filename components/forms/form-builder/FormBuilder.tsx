@@ -32,6 +32,7 @@ import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
+import PanelBuilder from "./form-array/PanelBuilder";
 
 export interface Field {
   name: string;
@@ -139,7 +140,7 @@ export default function FormBuilder({
     value: unknown,
     arrayIndex?: number,
     arrayName?: string
-  ) => {
+  ): React.ReactElement | null => {
     const {
       name,
       type,
@@ -220,19 +221,8 @@ export default function FormBuilder({
               arrayName={arrayName}
             />
           );
-        case "array":
-          return formFields[name].map((objFields: Field[], index: number) => (
-            <div key={index}>
-              {objFields.map((objectField: Field) =>
-                renderFormField(
-                  objectField,
-                  formFields[name][index][objectField.name],
-                  index,
-                  name
-                )
-              )}
-            </div>
-          ));
+        default:
+          return null;
       }
     } else return null;
   };
@@ -351,7 +341,6 @@ export default function FormBuilder({
     // handleDependantFieldVisibility(currentValue, primaryField);
     // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
 
-    // WIP - works with Text fields in array atm
     if (typeof arrayIndex === "number" && arrayName) {
       setFormFields((prevFormData: FormData) => {
         const newArray = [...prevFormData[arrayName]];
@@ -474,64 +463,54 @@ export default function FormBuilder({
   }, [jsonForm, fetchedFormData, pages]);
 
   return (
-    <form onSubmit={handlePageChange} acceptCharset="UTF-8">
-      {pages && (
-        <>
-          <div>
-            {pages[currentPage].importantTxtName && (
-              <ImportantText
-                txtName={pages[currentPage].importantTxtName as string}
-              />
-            )}
-          </div>
-          {pages[currentPage].msgLinkName && <DataSourceMsg />}
-          <div data-cy="progress-header">
-            {pages[currentPage].pageName && (
-              <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
-                pages[currentPage].pageName
-              }`}</h3>
-            )}
-            {pages[currentPage]?.sections.map((section: Section) => (
-              <React.Fragment key={section.sectionHeader}>
-                <AutosaveNote />
-                <Card feature>
-                  <Card.Content>
-                    <Card.Heading>{section.sectionHeader}</Card.Heading>
-                    {section?.fields.map((field: Field) => (
-                      <div key={field.name} className="nhsuk-form-group">
-                        {formFields &&
-                        field.type === "array" &&
-                        field.objectFields
-                          ? formFields[field.name].map(
-                              (_arrObj: any, index: number) => (
-                                <Card key={index}>
-                                  <Card.Content>
-                                    <p>
-                                      <b>{`${field.name} ${index + 1}`}</b>
-                                    </p>
-                                    {field.objectFields?.map(
-                                      (objField: Field) => (
-                                        <div
-                                          key={objField.name}
-                                          className="nhsuk-form-group"
-                                        >
-                                          {renderFormField(
-                                            objField,
-                                            formFields[field.name][index][
-                                              objField.name
-                                            ] || "",
-                                            index,
-                                            field.name
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                  </Card.Content>
-                                </Card>
-                              )
-                            )
-                          : renderFormField(field, formFields[field.name])}
-                        {/* {formErrors[field.name] && (
+    formFields && (
+      <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+        {pages && (
+          <>
+            <div>
+              {pages[currentPage].importantTxtName && (
+                <ImportantText
+                  txtName={pages[currentPage].importantTxtName as string}
+                />
+              )}
+            </div>
+            {pages[currentPage].msgLinkName && <DataSourceMsg />}
+            <div data-cy="progress-header">
+              {pages[currentPage].pageName && (
+                <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
+                  pages[currentPage].pageName
+                }`}</h3>
+              )}
+              {pages[currentPage]?.sections.map((section: Section) => (
+                <React.Fragment key={section.sectionHeader}>
+                  <AutosaveNote />
+                  <Card feature>
+                    <Card.Content>
+                      <Card.Heading>{section.sectionHeader}</Card.Heading>
+                      {section?.fields.map((field: Field) => (
+                        <div key={field.name} className="nhsuk-form-group">
+                          {field.type === "array" ? (
+                            <PanelBuilder
+                              field={field}
+                              formFields={formFields}
+                              renderFormField={(
+                                field: Field,
+                                value: unknown,
+                                arrayIndex?: number,
+                                arrayName?: string
+                              ) =>
+                                renderFormField(
+                                  field,
+                                  value,
+                                  arrayIndex,
+                                  arrayName
+                                )
+                              }
+                            />
+                          ) : (
+                            renderFormField(field, formFields[field.name])
+                          )}
+                          {/* {formErrors[field.name] && (
                           <div
                             className="nhsuk-error-message"
                             data-cy={`${field.name}-inline-error-msg`}
@@ -539,93 +518,94 @@ export default function FormBuilder({
                             {formErrors[field.name]}
                           </div>
                         )} */}
-                      </div>
-                    ))}
-                  </Card.Content>
-                </Card>
-                <AutosaveMessage formName={jsonFormName} />
-              </React.Fragment>
-            ))}
-          </div>
-        </>
-      )}
-      {Object.keys(formErrors).length > 0 && (
-        <FormErrors formErrors={formErrors} />
-      )}
-      <nav className="nhsuk-pagination">
-        <ul className="nhsuk-list nhsuk-pagination__list">
-          <li className="nhsuk-pagination-item--previous">
-            {currentPage > 0 && pages.length > 1 && (
+                        </div>
+                      ))}
+                    </Card.Content>
+                  </Card>
+                  <AutosaveMessage formName={jsonFormName} />
+                </React.Fragment>
+              ))}
+            </div>
+          </>
+        )}
+        {Object.keys(formErrors).length > 0 && (
+          <FormErrors formErrors={formErrors} />
+        )}
+        <nav className="nhsuk-pagination">
+          <ul className="nhsuk-list nhsuk-pagination__list">
+            <li className="nhsuk-pagination-item--previous">
+              {currentPage > 0 && pages.length > 1 && (
+                <Link
+                  to="#"
+                  className={
+                    "nhsuk-pagination__link nhsuk-pagination__link--prev"
+                  }
+                  onClick={() => {
+                    setFormErrors({});
+                    setCurrentPage(currentPage - 1);
+                  }}
+                  data-cy="navPrevious"
+                >
+                  <span className="nhsuk-pagination__title">{"Previous"}</span>
+                  <span className="nhsuk-u-visually-hidden">:</span>
+                  <span className="nhsuk-pagination__page">
+                    <div>{`${currentPage}. ${
+                      pages[currentPage - 1].pageName
+                    }`}</div>
+                  </span>
+                  <ArrowLeftIcon />
+                </Link>
+              )}
+            </li>
+            <li className="nhsuk-pagination-item--next">
               <Link
                 to="#"
-                className={
-                  "nhsuk-pagination__link nhsuk-pagination__link--prev"
-                }
-                onClick={() => {
-                  setFormErrors({});
-                  setCurrentPage(currentPage - 1);
-                }}
-                data-cy="navPrevious"
+                className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
+                  isSubmitting || Object.keys(formErrors).length > 0
+                    ? "disabled-link"
+                    : ""
+                }`}
+                onClick={handlePageChange}
+                data-cy="navNext"
               >
-                <span className="nhsuk-pagination__title">{"Previous"}</span>
+                <span className="nhsuk-pagination__title">{"Next"}</span>
                 <span className="nhsuk-u-visually-hidden">:</span>
                 <span className="nhsuk-pagination__page">
-                  <div>{`${currentPage}. ${
-                    pages[currentPage - 1].pageName
-                  }`}</div>
+                  {currentPage === lastPage ? (
+                    <>{"Review & submit"}</>
+                  ) : (
+                    <div>{`${currentPage + 2}. ${
+                      pages[currentPage + 1].pageName
+                    }`}</div>
+                  )}
                 </span>
-                <ArrowLeftIcon />
+                <ArrowRightIcon />
               </Link>
-            )}
-          </li>
-          <li className="nhsuk-pagination-item--next">
-            <Link
-              to="#"
-              className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
-                isSubmitting || Object.keys(formErrors).length > 0
-                  ? "disabled-link"
-                  : ""
-              }`}
-              onClick={handlePageChange}
-              data-cy="navNext"
-            >
-              <span className="nhsuk-pagination__title">{"Next"}</span>
-              <span className="nhsuk-u-visually-hidden">:</span>
-              <span className="nhsuk-pagination__page">
-                {currentPage === lastPage ? (
-                  <>{"Review & submit"}</>
-                ) : (
-                  <div>{`${currentPage + 2}. ${
-                    pages[currentPage + 1].pageName
-                  }`}</div>
-                )}
-              </span>
-              <ArrowRightIcon />
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <Container>
-        <Row>
-          <Col width="one-quarter">
-            <Button
-              secondary
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSaveBtnClick();
-              }}
-              disabled={isSubmitting || isAutosaving}
-              data-cy="BtnSaveDraft"
-            >
-              {"Save & exit"}
-            </Button>
-          </Col>
-          <Col width="one-quarter">
-            <StartOverButton />
-          </Col>
-        </Row>
-      </Container>
-    </form>
+            </li>
+          </ul>
+        </nav>
+        <Container>
+          <Row>
+            <Col width="one-quarter">
+              <Button
+                secondary
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSaveBtnClick();
+                }}
+                disabled={isSubmitting || isAutosaving}
+                data-cy="BtnSaveDraft"
+              >
+                {"Save & exit"}
+              </Button>
+            </Col>
+            <Col width="one-quarter">
+              <StartOverButton />
+            </Col>
+          </Row>
+        </Container>
+      </form>
+    )
   );
 }
 
