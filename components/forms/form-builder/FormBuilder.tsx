@@ -493,6 +493,7 @@ export default function FormBuilder({
                             <PanelBuilder
                               field={field}
                               formFields={formFields}
+                              setFormFields={setFormFields}
                               renderFormField={(
                                 field: Field,
                                 value: unknown,

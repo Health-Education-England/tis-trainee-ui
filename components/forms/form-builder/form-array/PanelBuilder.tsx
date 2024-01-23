@@ -5,6 +5,7 @@ import { Card } from "nhsuk-react-components";
 interface PanelBuilderProps {
   field: Field;
   formFields: any;
+  setFormFields: React.Dispatch<any>;
   renderFormField: (
     field: Field,
     value: unknown,
@@ -16,8 +17,29 @@ interface PanelBuilderProps {
 export default function PanelBuilder({
   field,
   formFields,
+  setFormFields,
   renderFormField
 }: PanelBuilderProps) {
+  const newPanel = () => {
+    const arrPanel = field.objectFields?.reduce((panel, objField) => {
+      panel[objField.name] = "";
+      return panel;
+    }, {} as { [key: string]: string });
+    return arrPanel;
+  };
+
+  const addPanel = () => {
+    const newPanelsArray = [...formFields[field.name], newPanel()];
+    setFormFields({ ...formFields, [field.name]: newPanelsArray });
+  };
+
+  const removePanel = (index: number) => {
+    const newPanelsArray = formFields[field.name].filter(
+      (_arrObj: any, i: number) => i !== index
+    );
+    setFormFields({ ...formFields, [field.name]: newPanelsArray });
+  };
+
   return (
     <>
       {formFields[field.name].map((_arrObj: any, index: number) => (
@@ -36,9 +58,25 @@ export default function PanelBuilder({
                 )}
               </div>
             ))}
+            <button
+              onClick={e => {
+                e.preventDefault();
+                removePanel(index);
+              }}
+            >
+              Remove Panel
+            </button>
           </Card.Content>
         </Card>
       ))}
+      <button
+        onClick={e => {
+          e.preventDefault();
+          addPanel();
+        }}
+      >
+        Add Panel
+      </button>
     </>
   );
 }
