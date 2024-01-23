@@ -9,8 +9,15 @@ type SelectorProps = {
   name: string;
   label: string | undefined;
   options: any;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
   value: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Selector = ({
@@ -18,7 +25,9 @@ export const Selector = ({
   label,
   options,
   handleChange,
-  value
+  value,
+  arrayIndex,
+  arrayName
 }: SelectorProps) => {
   return (
     <div data-cy={name}>
@@ -36,7 +45,9 @@ export const Selector = ({
                 value: selectedOption ?? ""
               }
             },
-            selectedOption
+            selectedOption,
+            arrayIndex,
+            arrayName
           )
         }
         className="autocomplete-select"

@@ -5,8 +5,15 @@ type RadiosProps = {
   name: string;
   label: string | undefined;
   options: any;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
   value: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Radios: React.FC<RadiosProps> = ({
@@ -14,7 +21,9 @@ export const Radios: React.FC<RadiosProps> = ({
   label,
   options,
   handleChange,
-  value
+  value,
+  arrayIndex,
+  arrayName
 }: RadiosProps) => {
   return (
     <div className="nhsuk-radios">
@@ -32,7 +41,9 @@ export const Radios: React.FC<RadiosProps> = ({
             name={name}
             value={option.value}
             checked={value === option.value}
-            onChange={handleChange}
+            onChange={event =>
+              handleChange(event, undefined, arrayIndex, arrayName)
+            }
             placeholder={option.value}
             aria-labelledby={`${option.value}--label`}
           />

@@ -9,10 +9,17 @@ import "react-datepicker/dist/react-datepicker.css";
 type DatesProps = {
   name: string;
   label: string | undefined;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
   fieldError?: string;
   placeholder?: string;
   value: string | Date;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Dates = ({
@@ -21,7 +28,9 @@ export const Dates = ({
   handleChange,
   fieldError,
   placeholder,
-  value
+  value,
+  arrayIndex,
+  arrayName
 }: DatesProps) => {
   return (
     <div data-cy={name}>
@@ -34,12 +43,17 @@ export const Dates = ({
         name={name}
         selected={value ? new Date(value) : null}
         onChange={(date: Date) => {
-          handleChange({
-            currentTarget: {
-              name,
-              value: toISOIgnoreTimezone(date)
-            }
-          });
+          handleChange(
+            {
+              currentTarget: {
+                name,
+                value: toISOIgnoreTimezone(date)
+              }
+            },
+            undefined,
+            arrayIndex,
+            arrayName
+          );
         }}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""

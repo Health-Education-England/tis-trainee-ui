@@ -177,6 +177,8 @@ export default function FormBuilder({
               options={filteredOptions(optionsKey, options)}
               handleChange={handleChange}
               value={value as string}
+              arrayIndex={arrayIndex}
+              arrayName={arrayName}
             />
           );
 
@@ -188,6 +190,8 @@ export default function FormBuilder({
               options={filteredOptions(optionsKey, options)}
               handleChange={handleChange}
               value={value as string}
+              arrayIndex={arrayIndex}
+              arrayName={arrayName}
             />
           );
 
@@ -200,6 +204,8 @@ export default function FormBuilder({
               fieldError={fieldError}
               placeholder={placeholder}
               value={value as string | Date}
+              arrayIndex={arrayIndex}
+              arrayName={arrayName}
             />
           );
 
@@ -210,6 +216,8 @@ export default function FormBuilder({
               label={label}
               handleChange={handleChange}
               value={value as string}
+              arrayIndex={arrayIndex}
+              arrayName={arrayName}
             />
           );
         case "array":

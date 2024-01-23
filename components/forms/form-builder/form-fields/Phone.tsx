@@ -5,11 +5,25 @@ import PhoneInput from "react-phone-number-input";
 type PhoneProps = {
   name: string;
   label: string | undefined;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
   value: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
-export const Phone = ({ name, label, handleChange, value }: PhoneProps) => {
+export const Phone = ({
+  name,
+  label,
+  handleChange,
+  value,
+  arrayIndex,
+  arrayName
+}: PhoneProps) => {
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -22,7 +36,12 @@ export const Phone = ({ name, label, handleChange, value }: PhoneProps) => {
         name={name}
         defaultCountry="GB"
         onChange={value => {
-          handleChange({ currentTarget: { name, value } });
+          handleChange(
+            { currentTarget: { name, value } },
+            undefined,
+            arrayIndex,
+            arrayName
+          );
         }}
         value={value}
         initialValueFormat="national"
