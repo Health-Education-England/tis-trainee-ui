@@ -19,7 +19,7 @@ export default function PanelBuilder({
   formFields,
   setFormFields,
   renderFormField
-}: PanelBuilderProps) {
+}: Readonly<PanelBuilderProps>) {
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
       panel[objField.name] = "";

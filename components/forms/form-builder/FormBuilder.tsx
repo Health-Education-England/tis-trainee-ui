@@ -292,21 +292,50 @@ export default function FormBuilder({
     });
   };
 
-  const validateCurrentField = (fieldName: string, currentVal: string) => {
+  const validateCurrentField = (
+    fieldName: string,
+    currentVal: string,
+    arrayName?: string,
+    arrayIndex?: number
+  ) => {
     // validate the current field only if validation is needed on that field
-    if (Object.keys(validationSchema.fields).includes(fieldName)) {
+
+    // Is object field part of an array?
+    if (
+      arrayName &&
+      Object.keys(validationSchema.fields[arrayName].innerType.fields).includes(
+        fieldName
+      )
+    ) {
+      // WIP - logic to validate object field within an array
+      let arrayItem: any = {};
+      arrayItem[fieldName] = currentVal;
+      validationSchema.fields[arrayName].innerType
+        .validateAt(fieldName, arrayItem)
+        .then(() => {
+          console.log("no error");
+        })
+        .catch((err: { message: string }) => {
+          console.log("error message", err.message);
+        });
+
+      // existing validation logic for other non-array fields
+    } else if (Object.keys(validationSchema.fields).includes(fieldName)) {
+      console.log("currentVal", currentVal);
       validationSchema
         .validateAt(fieldName, { [fieldName]: currentVal })
         .then(() => {
           // remove error for the current field
           setFormErrors((prev: FormData) => {
             const { [fieldName]: val, ...newErrors } = prev;
+            console.log("newErrors", newErrors);
             return newErrors;
           });
         })
         .catch((err: { message: string }) => {
           // set error for the current field
           setFormErrors((prev: FormData) => {
+            console.log("error message", err.message);
             return { ...prev, [fieldName]: err.message };
           });
         });
@@ -355,7 +384,7 @@ export default function FormBuilder({
         return { ...prevFormData, [name]: currentValue };
       });
     }
-    // validateCurrentField(name, currentValue);
+    validateCurrentField(name, currentValue, arrayName, arrayIndex);
     isFormDirty.current = true;
   };
 

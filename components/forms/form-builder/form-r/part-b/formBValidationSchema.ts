@@ -43,7 +43,29 @@ const acceptanceValidation = yup
   .oneOf([true], "Please confirm your acceptance")
   .required("Please confirm your acceptance");
 
+const WorkValidationSchema = yup.object().shape({
+  typeOfWork: StringValidationSchema("Type of Work"),
+  trainingPost: StringValidationSchema("Training Post"),
+  site: StringValidationSchema("Site Name"),
+  siteLocation: StringValidationSchema("Site Location"),
+  siteKnownAs: StringValidationSchemaOptional("Site Known As"),
+  startDate: yup
+    .date()
+    .required("Start date is required")
+    .test("startDate", "The date is outside the allowed date range", value =>
+      DateUtilities.IsInsideDateRange(value)
+    ),
+  endDate: yup
+    .date()
+    .required("End date is required")
+    .min(yup.ref("startDate"), "End date must be later than Start date")
+    .test("endDate", "The date is outside the allowed date range", value =>
+      DateUtilities.IsInsideDateRange(value)
+    )
+});
+
 export const formBValidationSchema = yup.object({
+  // section 1
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
@@ -72,6 +94,9 @@ export const formBValidationSchema = yup.object({
     ),
   programmeSpecialty: StringValidationSchema("Programme / Training Specialty"),
   dualSpecialty: yup.string(),
+
+  // section 2
+  work: yup.array().of(WorkValidationSchema),
 
   // section 3
   isHonest: acceptanceValidation,
@@ -161,27 +186,6 @@ export const formBValidationSchema = yup.object({
         })
         .nullable()
     })
-});
-
-export const WorkValidationSchema: any = yup.object().shape({
-  typeOfWork: StringValidationSchema("Type of Work"),
-  trainingPost: StringValidationSchema("Training Post"),
-  site: StringValidationSchema("Site Name"),
-  siteLocation: StringValidationSchema("Site Location"),
-  siteKnownAs: StringValidationSchemaOptional("Site Known As"),
-  startDate: yup
-    .date()
-    .required("Start date is required")
-    .test("startDate", "The date is outside the allowed date range", value =>
-      DateUtilities.IsInsideDateRange(value)
-    ),
-  endDate: yup
-    .date()
-    .required("End date is required")
-    .min(yup.ref("startDate"), "End date must be later than Start date")
-    .test("endDate", "The date is outside the allowed date range", value =>
-      DateUtilities.IsInsideDateRange(value)
-    )
 });
 
 export const TOOTValidationSchema = yup.object({
