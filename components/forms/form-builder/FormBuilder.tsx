@@ -123,7 +123,8 @@ export default function FormBuilder({
     jsonFormName,
     isFormDirty
   );
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formErrors, setFormErrors] = useState<any>({});
+  console.log("formErrors...", formErrors);
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
   );
@@ -303,20 +304,40 @@ export default function FormBuilder({
     // Is object field part of an array?
     if (
       arrayName &&
+      typeof arrayIndex === "number" &&
       Object.keys(validationSchema.fields[arrayName].innerType.fields).includes(
         fieldName
       )
     ) {
-      // WIP - logic to validate object field within an array
       let arrayItem: any = {};
       arrayItem[fieldName] = currentVal;
       validationSchema.fields[arrayName].innerType
         .validateAt(fieldName, arrayItem)
         .then(() => {
           console.log("no error");
+
+          // remove error for the current field at the correct object index
+          setFormErrors((prev: FormData) => {
+            const newArray = [...(prev[arrayName] ?? [])];
+            const { [fieldName]: _val, ...newErrors } =
+              newArray[arrayIndex] || {};
+            newArray[arrayIndex] = newErrors;
+            const updatedErrors = { ...prev, [arrayName]: newArray };
+            console.log("updatedErrors", updatedErrors);
+            return updatedErrors;
+          });
         })
         .catch((err: { message: string }) => {
           console.log("error message", err.message);
+          // set error for the current field at the correct object index
+          setFormErrors((prev: FormData) => {
+            const newErrors = { ...prev };
+            newErrors[arrayName] = newErrors[arrayName] ?? [];
+            newErrors[arrayName][arrayIndex] =
+              newErrors[arrayName][arrayIndex] ?? {};
+            newErrors[arrayName][arrayIndex][fieldName] = err.message;
+            return newErrors;
+          });
         });
 
       // existing validation logic for other non-array fields
@@ -327,7 +348,7 @@ export default function FormBuilder({
         .then(() => {
           // remove error for the current field
           setFormErrors((prev: FormData) => {
-            const { [fieldName]: val, ...newErrors } = prev;
+            const { [fieldName]: _val, ...newErrors } = prev;
             console.log("newErrors", newErrors);
             return newErrors;
           });
