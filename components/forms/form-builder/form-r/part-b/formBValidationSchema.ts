@@ -6,7 +6,11 @@ import {
 } from "../../../StringValidationSchema";
 
 const dateValidationSchema = (fieldName: string) =>
-  yup.date().nullable().required(`${fieldName} is required`);
+  yup
+    .date()
+    .typeError(`${fieldName} must be a valid date`)
+    .nullable()
+    .required(`${fieldName} is required`);
 
 const leaveValidation = (fieldName: string) =>
   yup
@@ -51,14 +55,26 @@ const WorkValidationSchema = yup.object().shape({
   siteKnownAs: StringValidationSchemaOptional("Site Known As"),
   startDate: yup
     .date()
+    .typeError("Start date must be a valid date")
     .required("Start date is required")
     .test("startDate", "The date is outside the allowed date range", value =>
       DateUtilities.IsInsideDateRange(value)
     ),
   endDate: yup
     .date()
+    .typeError("End date must be a valid date")
     .required("End date is required")
-    .min(yup.ref("startDate"), "End date must be later than Start date")
+    .test(
+      "end-is-greater",
+      "End date must be later than Start date",
+      function (endDate) {
+        const { startDate } = this.parent;
+        if (startDate && endDate) {
+          return new Date(startDate).getTime() < new Date(endDate).getTime();
+        }
+        return false;
+      }
+    )
     .test("endDate", "The date is outside the allowed date range", value =>
       DateUtilities.IsInsideDateRange(value)
     )

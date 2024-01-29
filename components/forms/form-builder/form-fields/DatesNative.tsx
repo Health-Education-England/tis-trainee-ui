@@ -1,13 +1,7 @@
-import React from "react";
-import {
-  handleKeyDown,
-  toISOIgnoreTimezone
-} from "../../../../utilities/FormBuilderUtilities";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import FieldErrorInline from "./FieldErrorInline";
 
-type DatesProps = {
+type DatesNativeProps = {
   name: string;
   label: string | undefined;
   handleChange: (
@@ -16,14 +10,14 @@ type DatesProps = {
     arrayIndex?: number,
     arrayName?: string
   ) => void;
-  fieldError?: string;
+  fieldError: string;
   placeholder?: string;
   value: string | Date;
   arrayIndex?: number;
   arrayName?: string;
 };
 
-export const Dates = ({
+export const DatesNative = ({
   name,
   label,
   handleChange,
@@ -32,36 +26,26 @@ export const Dates = ({
   value,
   arrayIndex,
   arrayName
-}: DatesProps) => {
+}: DatesNativeProps) => {
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      <DatePicker
+      <input
+        type="date"
         data-cy={`${name}-input`}
-        onKeyDown={handleKeyDown}
         name={name}
-        selected={value ? new Date(value) : null}
-        onChange={(date: Date) => {
-          handleChange(
-            {
-              currentTarget: {
-                name,
-                value: toISOIgnoreTimezone(date)
-              }
-            },
-            undefined,
-            arrayIndex,
-            arrayName
-          );
+        value={value as string}
+        onChange={event => {
+          handleChange(event, undefined, arrayIndex, arrayName);
         }}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
         }`}
-        dateFormat="dd/MM/yyyy"
-        placeholderText={placeholder}
-        showYearDropdown
+        placeholder={placeholder}
+        min="1920-01-01"
+        max="2119-12-31"
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

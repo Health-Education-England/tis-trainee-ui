@@ -4,6 +4,7 @@ import {
   colourStyles,
   handleKeyDown
 } from "../../../../utilities/FormBuilderUtilities";
+import FieldErrorInline from "./FieldErrorInline";
 
 type SelectorProps = {
   name: string;
@@ -15,6 +16,7 @@ type SelectorProps = {
     arrayIndex?: number,
     arrayName?: string
   ) => void;
+  fieldError: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -25,6 +27,7 @@ export const Selector = ({
   label,
   options,
   handleChange,
+  fieldError,
   value,
   arrayIndex,
   arrayName
@@ -60,6 +63,9 @@ export const Selector = ({
         value={options?.filter((option: any) => option.value === value)}
         isClearable={true}
       />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
+      )}
     </div>
   );
 };

@@ -23,7 +23,6 @@ import DataSourceMsg from "../../common/DataSourceMsg";
 import { Text } from "./form-fields/Text";
 import { Radios } from "./form-fields/Radios";
 import { Selector } from "./form-fields/Selector";
-import { Dates } from "./form-fields/Dates";
 import { Phone } from "./form-fields/Phone";
 import { ImportantText } from "./form-sections/ImportantText";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
@@ -33,6 +32,7 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
+import { Dates } from "./form-fields/Dates";
 
 export interface Field {
   name: string;
@@ -124,7 +124,6 @@ export default function FormBuilder({
     isFormDirty
   );
   const [formErrors, setFormErrors] = useState<any>({});
-  console.log("formErrors...", formErrors);
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
   );
@@ -139,6 +138,7 @@ export default function FormBuilder({
   const renderFormField = (
     field: Field,
     value: unknown,
+    error: any,
     arrayIndex?: number,
     arrayName?: string
   ): React.ReactElement | null => {
@@ -152,7 +152,6 @@ export default function FormBuilder({
       parent,
       optionsKey
     } = field;
-    const fieldError = formErrors[name];
     // Note - Need to reference the parent field to ensure dependent fields are visible when they are meant to be shown (they default to hidden and are only shown via handleClick)
     if (visible || (parent && visibleIf?.includes(formFields[parent]))) {
       switch (type) {
@@ -162,7 +161,7 @@ export default function FormBuilder({
               name={name}
               label={label}
               handleChange={handleChange}
-              fieldError={fieldError}
+              fieldError={error ?? ""}
               placeholder={placeholder}
               fieldWarning={fieldWarning}
               handleBlur={handleBlur}
@@ -191,6 +190,7 @@ export default function FormBuilder({
               label={label}
               options={filteredOptions(optionsKey, options)}
               handleChange={handleChange}
+              fieldError={error ?? ""}
               value={value as string}
               arrayIndex={arrayIndex}
               arrayName={arrayName}
@@ -203,7 +203,7 @@ export default function FormBuilder({
               name={name}
               label={label}
               handleChange={handleChange}
-              fieldError={fieldError}
+              fieldError={error ?? ""}
               placeholder={placeholder}
               value={value as string | Date}
               arrayIndex={arrayIndex}
@@ -309,13 +309,13 @@ export default function FormBuilder({
         fieldName
       )
     ) {
-      let arrayItem: any = {};
+      // Note: The change below is important to ensure the WorkValidationSchema work.endDate can access the parent object to do the comparison with startDate. (previous .ref() method was not working).
+      // TODO: Still need to deal with the issue of stale error state for linked/compared fields.
+      let arrayItem = { ...formFields[arrayName][arrayIndex] };
       arrayItem[fieldName] = currentVal;
       validationSchema.fields[arrayName].innerType
         .validateAt(fieldName, arrayItem)
         .then(() => {
-          console.log("no error");
-
           // remove error for the current field at the correct object index
           setFormErrors((prev: FormData) => {
             const newArray = [...(prev[arrayName] ?? [])];
@@ -323,12 +323,10 @@ export default function FormBuilder({
               newArray[arrayIndex] || {};
             newArray[arrayIndex] = newErrors;
             const updatedErrors = { ...prev, [arrayName]: newArray };
-            console.log("updatedErrors", updatedErrors);
             return updatedErrors;
           });
         })
         .catch((err: { message: string }) => {
-          console.log("error message", err.message);
           // set error for the current field at the correct object index
           setFormErrors((prev: FormData) => {
             const newErrors = { ...prev };
@@ -342,21 +340,18 @@ export default function FormBuilder({
 
       // existing validation logic for other non-array fields
     } else if (Object.keys(validationSchema.fields).includes(fieldName)) {
-      console.log("currentVal", currentVal);
       validationSchema
         .validateAt(fieldName, { [fieldName]: currentVal })
         .then(() => {
           // remove error for the current field
           setFormErrors((prev: FormData) => {
             const { [fieldName]: _val, ...newErrors } = prev;
-            console.log("newErrors", newErrors);
             return newErrors;
           });
         })
         .catch((err: { message: string }) => {
           // set error for the current field
           setFormErrors((prev: FormData) => {
-            console.log("error message", err.message);
             return { ...prev, [fieldName]: err.message };
           });
         });
@@ -547,28 +542,27 @@ export default function FormBuilder({
                               renderFormField={(
                                 field: Field,
                                 value: unknown,
+                                error: any,
                                 arrayIndex?: number,
                                 arrayName?: string
                               ) =>
                                 renderFormField(
                                   field,
                                   value,
+                                  error,
                                   arrayIndex,
                                   arrayName
                                 )
                               }
+                              panelErrors={formErrors[field.name]}
                             />
                           ) : (
-                            renderFormField(field, formFields[field.name])
+                            renderFormField(
+                              field,
+                              formFields[field.name],
+                              formErrors[field.name]
+                            )
                           )}
-                          {/* {formErrors[field.name] && (
-                          <div
-                            className="nhsuk-error-message"
-                            data-cy={`${field.name}-inline-error-msg`}
-                          >
-                            {formErrors[field.name]}
-                          </div>
-                        )} */}
                         </div>
                       ))}
                     </Card.Content>

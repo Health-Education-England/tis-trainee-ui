@@ -9,16 +9,19 @@ interface PanelBuilderProps {
   renderFormField: (
     field: Field,
     value: unknown,
+    error: any,
     arrayIndex?: number,
     arrayName?: string
   ) => JSX.Element | null;
+  panelErrors: any;
 }
 
 export default function PanelBuilder({
   field,
   formFields,
   setFormFields,
-  renderFormField
+  renderFormField,
+  panelErrors
 }: Readonly<PanelBuilderProps>) {
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
@@ -52,7 +55,8 @@ export default function PanelBuilder({
               <div key={objField.name} className="nhsuk-form-group">
                 {renderFormField(
                   objField,
-                  formFields[field.name][index][objField.name] || "",
+                  formFields[field.name][index][objField.name] ?? "",
+                  panelErrors?.[index]?.[objField.name] ?? "",
                   index,
                   field.name
                 )}

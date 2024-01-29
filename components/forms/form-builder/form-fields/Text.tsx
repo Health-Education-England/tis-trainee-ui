@@ -2,6 +2,7 @@ import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { FieldWarning } from "../FormBuilder";
+import FieldErrorInline from "./FieldErrorInline";
 
 type TextProps = {
   name: string;
@@ -12,7 +13,7 @@ type TextProps = {
     index?: number | undefined,
     name?: string | undefined
   ) => void;
-  fieldError?: string;
+  fieldError: string;
   placeholder?: string;
   fieldWarning?: FieldWarning;
   handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -55,6 +56,9 @@ export const Text: React.FC<TextProps> = ({
         aria-labelledby={`${name}--label`}
         onBlur={handleBlur}
       />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
+      )}
       {fieldWarning?.fieldName === name ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}
