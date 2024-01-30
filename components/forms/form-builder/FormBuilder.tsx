@@ -105,17 +105,6 @@ export default function FormBuilder({
     [jsonFormName]
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-  // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
-  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
-    (section: Section) => section.fields.map((field: Field) => field.name)
-  );
-  const fieldNamesForCurrentPageSet = useMemo(
-    () => new Set(fieldNamesForCurrentPage),
-    [fieldNamesForCurrentPage]
-  );
-  const currentFields = useMemo(() => {
-    return fields.filter(field => fieldNamesForCurrentPageSet.has(field.name));
-  }, [fields, fieldNamesForCurrentPageSet]);
 
   // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 2s after last dirty change)
   const { formFields, setFormFields } = useFormAutosave(
@@ -123,6 +112,39 @@ export default function FormBuilder({
     jsonFormName,
     isFormDirty
   );
+
+  // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
+  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
+    (section: Section) => section.fields.map((field: Field) => field.name)
+  );
+  const fieldNamesForCurrentPageSet = new Set(fieldNamesForCurrentPage);
+  const currentFields = fields.filter(field =>
+    fieldNamesForCurrentPageSet.has(field.name)
+  );
+
+  // Initialize a state variable to hold the timestamp of the last field value change to ensure we can update the visble fields when handleChange is called
+  const [lastChange, setLastChange] = useState(Date.now());
+
+  // Initialise and track the fields (JSON) visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
+  useEffect(() => {
+    const updatedFields = pages[currentPage].sections
+      .flatMap((section: Section) => section.fields)
+      .map(field => {
+        if (field.visibleIf) {
+          const shouldShow = field.visibleIf.includes(
+            formFields[field.parent!!]
+          );
+          return {
+            ...field,
+            visible: shouldShow
+          };
+        }
+        return field;
+      })
+      .filter(field => field.visible);
+    setFields(updatedFields);
+  }, [formFields, pages, currentPage, lastChange]);
+
   const [formErrors, setFormErrors] = useState<any>({});
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
@@ -293,71 +315,6 @@ export default function FormBuilder({
     });
   };
 
-  const validateCurrentField = (
-    fieldName: string,
-    currentVal: string,
-    arrayName?: string,
-    arrayIndex?: number
-  ) => {
-    // validate the current field only if validation is needed on that field
-
-    // Is object field part of an array?
-    if (
-      arrayName &&
-      typeof arrayIndex === "number" &&
-      Object.keys(validationSchema.fields[arrayName].innerType.fields).includes(
-        fieldName
-      )
-    ) {
-      // Note: The change below is important to ensure the WorkValidationSchema work.endDate can access the parent object to do the comparison with startDate. (previous .ref() method was not working).
-      // TODO: Still need to deal with the issue of stale error state for linked/compared fields.
-      let arrayItem = { ...formFields[arrayName][arrayIndex] };
-      arrayItem[fieldName] = currentVal;
-      validationSchema.fields[arrayName].innerType
-        .validateAt(fieldName, arrayItem)
-        .then(() => {
-          // remove error for the current field at the correct object index
-          setFormErrors((prev: FormData) => {
-            const newArray = [...(prev[arrayName] ?? [])];
-            const { [fieldName]: _val, ...newErrors } =
-              newArray[arrayIndex] || {};
-            newArray[arrayIndex] = newErrors;
-            const updatedErrors = { ...prev, [arrayName]: newArray };
-            return updatedErrors;
-          });
-        })
-        .catch((err: { message: string }) => {
-          // set error for the current field at the correct object index
-          setFormErrors((prev: FormData) => {
-            const newErrors = { ...prev };
-            newErrors[arrayName] = newErrors[arrayName] ?? [];
-            newErrors[arrayName][arrayIndex] =
-              newErrors[arrayName][arrayIndex] ?? {};
-            newErrors[arrayName][arrayIndex][fieldName] = err.message;
-            return newErrors;
-          });
-        });
-
-      // existing validation logic for other non-array fields
-    } else if (Object.keys(validationSchema.fields).includes(fieldName)) {
-      validationSchema
-        .validateAt(fieldName, { [fieldName]: currentVal })
-        .then(() => {
-          // remove error for the current field
-          setFormErrors((prev: FormData) => {
-            const { [fieldName]: _val, ...newErrors } = prev;
-            return newErrors;
-          });
-        })
-        .catch((err: { message: string }) => {
-          // set error for the current field
-          setFormErrors((prev: FormData) => {
-            return { ...prev, [fieldName]: err.message };
-          });
-        });
-    }
-  };
-
   const handleSoftValidationWarningMsgVisibility = (
     inputVal: string | undefined,
     primaryFormField: Field | undefined,
@@ -372,6 +329,28 @@ export default function FormBuilder({
     } else setFieldWarning(undefined);
   };
 
+  const validateFields = (fields: Field[], values: FormData) => {
+    let visibleValidationSchema = Yup.object().shape({});
+    visibleValidationSchema = fields.reduce((schema, field) => {
+      const fieldSchema = validationSchema.fields[field.name];
+      schema = schema.shape({
+        [field.name]: fieldSchema
+      });
+      return schema;
+    }, visibleValidationSchema);
+    return visibleValidationSchema.validate(values, { abortEarly: false });
+  };
+
+  const handleErrorCatching = (e: any) => {
+    if (e) {
+      const errors: Record<string, string> = {};
+      e.inner.forEach((err: { path: string; message: string }) => {
+        errors[err.path] = err.message;
+      });
+      setFormErrors(errors);
+    }
+  };
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     selectedOption?: any,
@@ -380,11 +359,11 @@ export default function FormBuilder({
   ) => {
     const { name, value } = event.currentTarget;
     const currentValue = selectedOption ? selectedOption.value : value;
-    const primaryField = fields.find(field => field.name === name);
-    const inputValue = selectedOption ? selectedOption.value : value;
     // handleTextFieldWidth(event, currentValue, primaryField);
     // handleDependantFieldVisibility(currentValue, primaryField);
     // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
+    setLastChange(Date.now());
+    let updatedFormData: FormData = {};
 
     if (typeof arrayIndex === "number" && arrayName) {
       setFormFields((prevFormData: FormData) => {
@@ -393,30 +372,30 @@ export default function FormBuilder({
           ...newArray[arrayIndex],
           [name]: currentValue
         };
-        return { ...prevFormData, [arrayName]: newArray };
+        updatedFormData = { ...prevFormData, [arrayName]: newArray };
+        return updatedFormData;
       });
     } else {
       setFormFields((prevFormData: FormData) => {
-        return { ...prevFormData, [name]: currentValue };
+        updatedFormData = {
+          ...prevFormData,
+          [name]: currentValue
+        };
+        validateFields(fields, updatedFormData as FormData)
+          .then(() => {
+            // remove error for the current field if this passes the validation
+            setFormErrors((prev: FormData) => {
+              const { [name]: _val, ...newErrors } = prev;
+              return newErrors;
+            });
+          })
+          .catch(err => {
+            console.log("errors", err);
+            handleErrorCatching(err);
+          });
+        return updatedFormData;
       });
     }
-    validateCurrentField(name, currentValue, arrayName, arrayIndex);
-    isFormDirty.current = true;
-  };
-
-  const validateFields = (fields: Field[], values: FormData) => {
-    let visibleValidationSchema = Yup.object().shape({});
-    visibleValidationSchema = fields.reduce((schema, field) => {
-      if (field.visible) {
-        const fieldSchema = validationSchema.fields[field.name];
-        schema = schema.shape({
-          [field.name]: fieldSchema
-        });
-      }
-      return schema;
-    }, visibleValidationSchema);
-
-    return visibleValidationSchema.validate(values, { abortEarly: false });
   };
 
   const calculateVisibleFields = (formFields: {
@@ -448,16 +427,6 @@ export default function FormBuilder({
         };
   };
 
-  const handleErrorCatching = (e: any) => {
-    if (e) {
-      const errors: Record<string, string> = {};
-      e.inner.forEach((err: { path: string; message: string }) => {
-        errors[err.path] = err.message;
-      });
-      setFormErrors(errors);
-    }
-  };
-
   const handlePageChange = () => {
     if (currentPage === lastPage) {
       validateFields(fields, formFields)
@@ -484,28 +453,6 @@ export default function FormBuilder({
     saveDraftForm(jsonFormName, formFields, history);
     setIsSubmitting(false);
   };
-
-  // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
-  useEffect(() => {
-    const updatedFields = pages
-      .flatMap((page: Page) =>
-        page.sections.flatMap((section: Section) => section.fields)
-      )
-      .map(field => {
-        if (field.visibleIf) {
-          const shouldShow = field.visibleIf.includes(
-            fetchedFormData[field.parent!!]
-          );
-          return {
-            ...field,
-            visible: shouldShow
-          };
-        }
-        return field;
-      });
-
-    setFields(updatedFields);
-  }, [jsonForm, fetchedFormData, pages]);
 
   return (
     formFields && (
