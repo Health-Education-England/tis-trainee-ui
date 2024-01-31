@@ -259,18 +259,6 @@ export function showFieldMatchWarning(
   return !matcher.test(inputValue) ? { fieldName, warningMsg } : null;
 }
 
-export function toISOIgnoreTimezone(inputDate: Date) {
-  if (inputDate?.getFullYear().toString().length === 4) {
-    const newDate = new Date(
-      `${inputDate.getFullYear()}-${("0" + (inputDate.getMonth() + 1)).slice(
-        -2
-      )}-${("0" + inputDate.getDate()).slice(-2)}T00:00:00.000Z`
-    );
-    return newDate;
-  }
-  return inputDate;
-}
-
 export function setTextFieldWidth(width: number) {
   return width < 20 ? 20 : Math.floor(width / 10) * 10;
 }

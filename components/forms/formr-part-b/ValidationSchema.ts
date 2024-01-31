@@ -6,7 +6,11 @@ import {
 } from "../../../components/forms/StringValidationSchema";
 
 const dateValidationSchema = (fieldName: string) =>
-  yup.date().nullable().required(`${fieldName} is required`);
+  yup
+    .date()
+    .typeError(`${fieldName} must be a valid date`)
+    .nullable()
+    .required(`${fieldName} is required`);
 
 const leaveValidation = (fieldName: string) =>
   yup
@@ -79,6 +83,7 @@ export const Section2ValidationSchema = yup.object({
         siteKnownAs: StringValidationSchemaOptional("Site Known As"),
         startDate: yup
           .date()
+          .typeError("Start date must be a valid date")
           .required("Start date is required")
           .test(
             "startDate",
@@ -87,6 +92,7 @@ export const Section2ValidationSchema = yup.object({
           ),
         endDate: yup
           .date()
+          .typeError("End date must be a valid date")
           .required("End date is required")
           .min(yup.ref("startDate"), "End date must be later than Start date")
           .test(

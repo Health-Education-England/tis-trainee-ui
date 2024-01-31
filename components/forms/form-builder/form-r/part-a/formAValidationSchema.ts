@@ -7,7 +7,10 @@ import {
 } from "../../../../../utilities/Constants";
 
 const dateValidationSchema = (fieldName: string) =>
-  yup.date().nullable().required(`${fieldName} is required`);
+  yup
+    .date()
+    .typeError(`${fieldName} must be a valid date`)
+    .required(`${fieldName} is required`);
 
 const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
