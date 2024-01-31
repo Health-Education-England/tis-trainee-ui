@@ -330,15 +330,30 @@ export default function FormBuilder({
   };
 
   const validateFields = (fields: Field[], values: FormData) => {
-    let visibleValidationSchema = Yup.object().shape({});
-    visibleValidationSchema = fields.reduce((schema, field) => {
+    let finalValidationSchema = Yup.object().shape({});
+    finalValidationSchema = fields.reduce((schema, field) => {
       const fieldSchema = validationSchema.fields[field.name];
-      schema = schema.shape({
-        [field.name]: fieldSchema
-      });
+      if (field.type === "array") {
+        const nestedFields = Object.keys(values[field.name][0]).reduce(
+          (nestedSchema: { [key: string]: any }, nestedField: string) => {
+            nestedSchema[nestedField] =
+              fieldSchema.innerType.fields[nestedField];
+            return nestedSchema;
+          },
+          {}
+        );
+        const nestedSchema = Yup.object().shape(nestedFields);
+        schema = schema.shape({
+          [field.name]: Yup.array().of(nestedSchema)
+        });
+      } else {
+        schema = schema.shape({
+          [field.name]: fieldSchema
+        });
+      }
       return schema;
-    }, visibleValidationSchema);
-    return visibleValidationSchema.validate(values, { abortEarly: false });
+    }, finalValidationSchema);
+    return finalValidationSchema.validate(values, { abortEarly: false });
   };
 
   const handleErrorCatching = (e: any) => {
@@ -349,6 +364,37 @@ export default function FormBuilder({
       });
       setFormErrors(errors);
     }
+  };
+
+  // NOTE: bit hacky but does works for both nested and non-nested fields
+  const createErrorObject = (err: {
+    inner: { path: string; message: string }[];
+  }) => {
+    const newErrors: unknown = {};
+
+    const setNestedValue = (obj: any, path: string, value: string) => {
+      const keys = path.split(".");
+      const lastKey = keys.pop() as string;
+      const lastObj = keys.reduce((obj, key, i) => {
+        if (key.includes("[")) {
+          const [arrayKey, arrayIndex] = key.split(/[\[\]]/).filter(Boolean);
+          obj[arrayKey] = obj[arrayKey] || [];
+          obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] || {};
+          return obj[arrayKey][arrayIndex];
+        } else {
+          obj[key] =
+            obj[key] || (keys[i + 1] && keys[i + 1].includes("[") ? [] : {});
+          return obj[key];
+        }
+      }, obj);
+      lastObj[lastKey] = value;
+    };
+
+    err.inner.forEach(({ path, message }) => {
+      setNestedValue(newErrors, path, message);
+    });
+    console.log("createErrorObject: ", newErrors);
+    return newErrors;
   };
 
   const handleChange = (
@@ -362,6 +408,7 @@ export default function FormBuilder({
     // handleTextFieldWidth(event, currentValue, primaryField);
     // handleDependantFieldVisibility(currentValue, primaryField);
     // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
+
     setLastChange(Date.now());
     let updatedFormData: FormData = {};
 
@@ -373,6 +420,18 @@ export default function FormBuilder({
           [name]: currentValue
         };
         updatedFormData = { ...prevFormData, [arrayName]: newArray };
+
+        validateFields(fields, updatedFormData)
+          .then(() => {
+            console.log("empty error object (nested field trigger)");
+            setFormErrors({});
+          })
+          .catch((err: { inner: { path: string; message: string }[] }) => {
+            setFormErrors(() => {
+              const newErrors = createErrorObject(err);
+              return newErrors;
+            });
+          });
         return updatedFormData;
       });
     } else {
@@ -381,21 +440,21 @@ export default function FormBuilder({
           ...prevFormData,
           [name]: currentValue
         };
-        validateFields(fields, updatedFormData as FormData)
+        validateFields(fields, updatedFormData)
           .then(() => {
-            // remove error for the current field if this passes the validation
-            setFormErrors((prev: FormData) => {
-              const { [name]: _val, ...newErrors } = prev;
-              return newErrors;
-            });
+            console.log("empty error object");
+            setFormErrors({});
           })
           .catch(err => {
-            console.log("errors", err);
-            handleErrorCatching(err);
+            setFormErrors(() => {
+              const newErrors = createErrorObject(err);
+              return newErrors;
+            });
           });
         return updatedFormData;
       });
     }
+    isFormDirty.current = true;
   };
 
   const calculateVisibleFields = (formFields: {
