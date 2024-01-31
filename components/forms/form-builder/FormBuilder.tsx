@@ -94,6 +94,7 @@ export default function FormBuilder({
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const [fields, setFields] = useState<Field[]>([]);
+  console.log("fields (JSON): ", fields);
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
@@ -156,6 +157,22 @@ export default function FormBuilder({
       ? options[optionsKey]
       : [];
   };
+
+  useEffect(() => {
+    if (isFormDirty.current) {
+      validateFields(fields, formFields)
+        .then(() => {
+          console.log("empty error object");
+          setFormErrors({});
+        })
+        .catch((err: { inner: { path: string; message: string }[] }) => {
+          setFormErrors(() => {
+            const newErrors = createErrorObject(err);
+            return newErrors;
+          });
+        });
+    }
+  }, [formFields, fields]);
 
   const renderFormField = (
     field: Field,
@@ -272,49 +289,6 @@ export default function FormBuilder({
     }
   };
 
-  const updateFieldVisibility = (
-    field: Field,
-    fieldToShow: string,
-    currentValue: string
-  ) => {
-    if (field.name !== fieldToShow) return field;
-    const shouldShow = field.visibleIf
-      ? field.visibleIf.includes(currentValue)
-      : false;
-    return { ...field, visible: shouldShow };
-  };
-
-  const removeErrorsForInvisibleFields = (
-    updatedFields: Field[],
-    fieldToShow: string
-  ) => {
-    updatedFields.forEach(depField => {
-      if (depField.name === fieldToShow && !depField.visible) {
-        setFormErrors((prev: FormData) => {
-          const { [fieldToShow]: omittedField, ...newErrors } = prev;
-          return newErrors;
-        });
-      }
-    });
-  };
-
-  const handleDependantFieldVisibility = (
-    currentValue: string,
-    primaryField: Field | undefined
-  ) => {
-    if (!primaryField?.dependencies) return;
-
-    primaryField.dependencies.forEach(fieldToShow => {
-      setFields(prevFields => {
-        const updatedFields = prevFields.map(field =>
-          updateFieldVisibility(field, fieldToShow, currentValue)
-        );
-        removeErrorsForInvisibleFields(updatedFields, fieldToShow);
-        return updatedFields;
-      });
-    });
-  };
-
   const handleSoftValidationWarningMsgVisibility = (
     inputVal: string | undefined,
     primaryFormField: Field | undefined,
@@ -405,12 +379,12 @@ export default function FormBuilder({
   ) => {
     const { name, value } = event.currentTarget;
     const currentValue = selectedOption ? selectedOption.value : value;
+
     // handleTextFieldWidth(event, currentValue, primaryField);
-    // handleDependantFieldVisibility(currentValue, primaryField);
     // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
 
-    setLastChange(Date.now());
     let updatedFormData: FormData = {};
+    setLastChange(Date.now());
 
     if (typeof arrayIndex === "number" && arrayName) {
       setFormFields((prevFormData: FormData) => {
@@ -420,18 +394,6 @@ export default function FormBuilder({
           [name]: currentValue
         };
         updatedFormData = { ...prevFormData, [arrayName]: newArray };
-
-        validateFields(fields, updatedFormData)
-          .then(() => {
-            console.log("empty error object (nested field trigger)");
-            setFormErrors({});
-          })
-          .catch((err: { inner: { path: string; message: string }[] }) => {
-            setFormErrors(() => {
-              const newErrors = createErrorObject(err);
-              return newErrors;
-            });
-          });
         return updatedFormData;
       });
     } else {
@@ -440,17 +402,6 @@ export default function FormBuilder({
           ...prevFormData,
           [name]: currentValue
         };
-        validateFields(fields, updatedFormData)
-          .then(() => {
-            console.log("empty error object");
-            setFormErrors({});
-          })
-          .catch(err => {
-            setFormErrors(() => {
-              const newErrors = createErrorObject(err);
-              return newErrors;
-            });
-          });
         return updatedFormData;
       });
     }
