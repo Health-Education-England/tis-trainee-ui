@@ -550,12 +550,7 @@ export default function FormBuilder({
   );
 }
 
-interface FormErrorsProps {
-  formErrors: Record<string, string>;
-}
-
-// TODO - errors summary only works for non-nested fields
-export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
+export function FormErrors(formErrors: any) {
   return (
     <ErrorSummary
       aria-labelledby="errorSummaryTitle"
@@ -566,15 +561,45 @@ export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
         <p>
           <b>Please fix the following errors before proceeding:</b>
         </p>
-        <ul>
-          {Object.entries(formErrors).map(error => (
-            <li
-              data-cy={`error-txt-${error}`}
-              key={error[0]}
-            >{`${error[1]}`}</li>
-          ))}
-        </ul>
+        <FormErrorsList formErrors={formErrors} />
       </div>
     </ErrorSummary>
   );
+}
+
+interface FormErrorsListProps {
+  formErrors: any;
+}
+
+function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
+  const renderErrors = (formErrors: any) => {
+    return (
+      <ul>
+        {Object.keys(formErrors).map(key => {
+          if (typeof formErrors[key] === "string") {
+            return <div key={key}>{formErrors[key]}</div>;
+          } else if (Array.isArray(formErrors[key])) {
+            return formErrors[key].map((error: any, index: number) => {
+              return (
+                <li key={`${key}[${index}]`} className="no-bullet">
+                  <span>
+                    <b>{`${key} ${index + 1}`}</b>
+                  </span>
+                  <span>{renderErrors(error)}</span>
+                </li>
+              );
+            });
+          } else {
+            return (
+              <li key={key} className="no-bullet">
+                {renderErrors(formErrors[key])}
+              </li>
+            );
+          }
+        })}
+      </ul>
+    );
+  };
+
+  return <div>{renderErrors(formErrors)}</div>;
 }
