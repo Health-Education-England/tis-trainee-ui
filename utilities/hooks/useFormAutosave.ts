@@ -2,24 +2,24 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { autosaveFormR } from "../FormBuilderUtilities";
 
 const useFormAutosave = (
-  formData: any,
+  fetchedFormData: any,
   formName: string,
   isFormDirty: MutableRefObject<boolean>
 ) => {
-  const [formFields, setFormFields] = useState(formData);
+  const [formData, setFormData] = useState(fetchedFormData);
 
   useEffect(() => {
     if (isFormDirty.current) {
       const timeoutId = setTimeout(() => {
-        autosaveFormR(formName, formFields);
+        autosaveFormR(formName, formData);
       }, 2000);
       return () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [formFields]);
+  }, [formData]);
 
-  return { formFields, setFormFields };
+  return { formData, setFormData };
 };
 
 export default useFormAutosave;

@@ -93,76 +93,56 @@ export default function FormBuilder({
 }: Readonly<FormBuilderProps>) {
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
-  const [fields, setFields] = useState<Field[]>([]);
-  console.log("fields (JSON): ", fields);
+  const [visibleFields, setVisibleFields] = useState<Field[]>([]);
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
   const lastSavedFormData = store.getState().formA.formAData;
-
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
     () => getEditPageNumber(jsonFormName),
     [jsonFormName]
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-
-  // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 2s after last dirty change)
-  const { formFields, setFormFields } = useFormAutosave(
+  const { formData, setFormData } = useFormAutosave(
     fetchedFormData,
     jsonFormName,
     isFormDirty
   );
-
-  // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
-  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
-    (section: Section) => section.fields.map((field: Field) => field.name)
-  );
-  const fieldNamesForCurrentPageSet = new Set(fieldNamesForCurrentPage);
-  const currentFields = fields.filter(field =>
-    fieldNamesForCurrentPageSet.has(field.name)
-  );
-
-  // Initialize a state variable to hold the timestamp of the last field value change to ensure we can update the visble fields when handleChange is called
-  const [lastChange, setLastChange] = useState(Date.now());
-
-  // Initialise and track the fields (JSON) visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
-  useEffect(() => {
-    const updatedFields = pages[currentPage].sections
-      .flatMap((section: Section) => section.fields)
-      .map(field => {
-        if (field.visibleIf) {
-          const shouldShow = field.visibleIf.includes(
-            formFields[field.parent!!]
-          );
-          return {
-            ...field,
-            visible: shouldShow
-          };
-        }
-        return field;
-      })
-      .filter(field => field.visible);
-    setFields(updatedFields);
-  }, [formFields, pages, currentPage, lastChange]);
-
   const [formErrors, setFormErrors] = useState<any>({});
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const filteredOptions = (optionsKey: string | undefined, options: any) => {
     return optionsKey && options[optionsKey]?.length > 0
       ? options[optionsKey]
       : [];
   };
+  const [lastChange, setLastChange] = useState<number>(0);
+
+  // Initialise and track the visible fields (using JSON instructions and current formData state)
+  useEffect(() => {
+    const updatedFields = pages[currentPage].sections
+      .flatMap((section: Section) => section.fields)
+      .reduce((visibleFields: Field[], field: Field) => {
+        if (
+          field.visible ||
+          (field.visibleIf &&
+            field.visibleIf.includes(formData[field.parent!!]))
+        ) {
+          visibleFields.push(field);
+        }
+        return visibleFields;
+      }, []);
+
+    setVisibleFields(updatedFields);
+  }, [formData, pages, currentPage, lastChange]);
 
   useEffect(() => {
-    if (isFormDirty.current) {
-      validateFields(fields, formFields)
+    if (lastChange) {
+      validateFields(visibleFields, formData)
         .then(() => {
-          console.log("empty error object");
           setFormErrors({});
         })
         .catch((err: { inner: { path: string; message: string }[] }) => {
@@ -172,7 +152,7 @@ export default function FormBuilder({
           });
         });
     }
-  }, [formFields, fields]);
+  }, [formData, visibleFields, lastChange]);
 
   const renderFormField = (
     field: Field,
@@ -181,95 +161,83 @@ export default function FormBuilder({
     arrayIndex?: number,
     arrayName?: string
   ): React.ReactElement | null => {
-    const {
-      name,
-      type,
-      label,
-      placeholder,
-      visible,
-      visibleIf,
-      parent,
-      optionsKey
-    } = field;
-    // Note - Need to reference the parent field to ensure dependent fields are visible when they are meant to be shown (they default to hidden and are only shown via handleClick)
-    if (visible || (parent && visibleIf?.includes(formFields[parent]))) {
-      switch (type) {
-        case "text":
-          return (
-            <Text
-              name={name}
-              label={label}
-              handleChange={handleChange}
-              fieldError={error ?? ""}
-              placeholder={placeholder}
-              fieldWarning={fieldWarning}
-              handleBlur={handleBlur}
-              value={value as string}
-              arrayIndex={arrayIndex}
-              arrayName={arrayName}
-            />
-          );
-        case "radio":
-          return (
-            <Radios
-              name={name}
-              label={label}
-              options={filteredOptions(optionsKey, options)}
-              handleChange={handleChange}
-              value={value as string}
-              arrayIndex={arrayIndex}
-              arrayName={arrayName}
-            />
-          );
+    const { name, type, label, placeholder, optionsKey } = field;
+    switch (type) {
+      case "text":
+        return (
+          <Text
+            name={name}
+            label={label}
+            handleChange={handleChange}
+            fieldError={error ?? ""}
+            placeholder={placeholder}
+            fieldWarning={fieldWarning}
+            handleBlur={handleBlur}
+            value={value as string}
+            arrayIndex={arrayIndex}
+            arrayName={arrayName}
+          />
+        );
+      case "radio":
+        return (
+          <Radios
+            name={name}
+            label={label}
+            options={filteredOptions(optionsKey, options)}
+            handleChange={handleChange}
+            value={value as string}
+            arrayIndex={arrayIndex}
+            arrayName={arrayName}
+          />
+        );
 
-        case "select":
-          return (
-            <Selector
-              name={name}
-              label={label}
-              options={filteredOptions(optionsKey, options)}
-              handleChange={handleChange}
-              fieldError={error ?? ""}
-              value={value as string}
-              arrayIndex={arrayIndex}
-              arrayName={arrayName}
-            />
-          );
+      case "select":
+        return (
+          <Selector
+            name={name}
+            label={label}
+            options={filteredOptions(optionsKey, options)}
+            handleChange={handleChange}
+            fieldError={error ?? ""}
+            value={value as string}
+            arrayIndex={arrayIndex}
+            arrayName={arrayName}
+          />
+        );
 
-        case "date":
-          return (
-            <Dates
-              name={name}
-              label={label}
-              handleChange={handleChange}
-              fieldError={error ?? ""}
-              placeholder={placeholder}
-              value={value as string | Date}
-              arrayIndex={arrayIndex}
-              arrayName={arrayName}
-            />
-          );
+      case "date":
+        return (
+          <Dates
+            name={name}
+            label={label}
+            handleChange={handleChange}
+            fieldError={error ?? ""}
+            placeholder={placeholder}
+            value={value as string | Date}
+            arrayIndex={arrayIndex}
+            arrayName={arrayName}
+          />
+        );
 
-        case "phone":
-          return (
-            <Phone
-              name={name}
-              label={label}
-              handleChange={handleChange}
-              value={value as string}
-              arrayIndex={arrayIndex}
-              arrayName={arrayName}
-            />
-          );
-        default:
-          return null;
-      }
-    } else return null;
+      case "phone":
+        return (
+          <Phone
+            name={name}
+            label={label}
+            handleChange={handleChange}
+            value={value as string}
+            arrayIndex={arrayIndex}
+            arrayName={arrayName}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setFormFields((prev: FormData) => {
+    setFormData((prev: FormData) => {
       return { ...prev, [name]: value.trim() };
     });
   };
@@ -330,16 +298,6 @@ export default function FormBuilder({
     return finalValidationSchema.validate(values, { abortEarly: false });
   };
 
-  const handleErrorCatching = (e: any) => {
-    if (e) {
-      const errors: Record<string, string> = {};
-      e.inner.forEach((err: { path: string; message: string }) => {
-        errors[err.path] = err.message;
-      });
-      setFormErrors(errors);
-    }
-  };
-
   // NOTE: bit hacky but does works for both nested and non-nested fields
   const createErrorObject = (err: {
     inner: { path: string; message: string }[];
@@ -351,7 +309,7 @@ export default function FormBuilder({
       const lastKey = keys.pop() as string;
       const lastObj = keys.reduce((obj, key, i) => {
         if (key.includes("[")) {
-          const [arrayKey, arrayIndex] = key.split(/[\[\]]/).filter(Boolean);
+          const [arrayKey, arrayIndex] = key.split(/[[\]]/).filter(Boolean);
           obj[arrayKey] = obj[arrayKey] || [];
           obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] || {};
           return obj[arrayKey][arrayIndex];
@@ -367,7 +325,6 @@ export default function FormBuilder({
     err.inner.forEach(({ path, message }) => {
       setNestedValue(newErrors, path, message);
     });
-    console.log("createErrorObject: ", newErrors);
     return newErrors;
   };
 
@@ -380,14 +337,17 @@ export default function FormBuilder({
     const { name, value } = event.currentTarget;
     const currentValue = selectedOption ? selectedOption.value : value;
 
-    // handleTextFieldWidth(event, currentValue, primaryField);
-    // handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
+    // TODO this only works for non-nested fields
+    const primaryField = visibleFields.find(field => field.name === name);
+    handleTextFieldWidth(event, currentValue, primaryField);
+    handleSoftValidationWarningMsgVisibility(currentValue, primaryField, name);
+    //-----------------------------------------------------------
 
     let updatedFormData: FormData = {};
     setLastChange(Date.now());
 
     if (typeof arrayIndex === "number" && arrayName) {
-      setFormFields((prevFormData: FormData) => {
+      setFormData((prevFormData: FormData) => {
         const newArray = [...prevFormData[arrayName]];
         newArray[arrayIndex] = {
           ...newArray[arrayIndex],
@@ -397,7 +357,7 @@ export default function FormBuilder({
         return updatedFormData;
       });
     } else {
-      setFormFields((prevFormData: FormData) => {
+      setFormData((prevFormData: FormData) => {
         updatedFormData = {
           ...prevFormData,
           [name]: currentValue
@@ -408,64 +368,43 @@ export default function FormBuilder({
     isFormDirty.current = true;
   };
 
-  const calculateVisibleFields = (formFields: {
-    [fieldName: string]: string;
-  }) => {
-    const visibleFormData = fields.reduce((formData, field: Field) => {
-      if (
-        field.visible ||
-        (field.parent && field.visibleIf?.includes(formFields[field.parent]))
-      ) {
-        formData[field.name] = formFields[field.name];
-      } else {
-        formData[field.name] = "";
+  const finalFormFields = lastSavedFormData.id
+    ? {
+        ...formData,
+        id: lastSavedFormData.id,
+        lastModifiedDate: lastSavedFormData.lastModifiedDate,
+        lifecycleState: lastSavedFormData.lifecycleState,
+        traineeTisId: lastSavedFormData.traineeTisId
       }
-      return formData;
-    }, {} as FormData);
-    // Need to add these vals listed below (from last lastSavedFormData) to ensure latest autosave data is included)
-    return lastSavedFormData.id
-      ? {
-          ...visibleFormData,
-          id: lastSavedFormData.id,
-          lastModifiedDate: lastSavedFormData.lastModifiedDate,
-          lifecycleState: lastSavedFormData.lifecycleState,
-          traineeTisId: lastSavedFormData.traineeTisId
-        }
-      : {
-          ...visibleFormData,
-          traineeTisId: lastSavedFormData.traineeTisId
-        };
-  };
+    : { ...formData, traineeTisId: lastSavedFormData.traineeTisId };
 
   const handlePageChange = () => {
-    if (currentPage === lastPage) {
-      validateFields(fields, formFields)
-        .then(() => {
-          const visibleFormData = calculateVisibleFields(formFields);
-          continueToConfirm(jsonFormName, visibleFormData, history);
-        })
-        .catch(err => {
-          handleErrorCatching(err);
-        });
-    } else {
-      validateFields(currentFields, formFields)
-        .then(() => {
+    validateFields(visibleFields, formData)
+      .then(() => {
+        setFormErrors({});
+        if (currentPage === lastPage) {
+          continueToConfirm(jsonFormName, finalFormFields, history);
+        } else {
           setCurrentPage(currentPage + 1);
-        })
-        .catch(err => {
-          handleErrorCatching(err);
+        }
+      })
+      .catch((err: { inner: { path: string; message: string }[] }) => {
+        setFormErrors(() => {
+          const newErrors = createErrorObject(err);
+          return newErrors;
         });
-    }
+      });
+    setLastChange(0);
   };
 
   const handleSaveBtnClick = () => {
     setIsSubmitting(true);
-    saveDraftForm(jsonFormName, formFields, history);
+    saveDraftForm(jsonFormName, formData, history);
     setIsSubmitting(false);
   };
 
   return (
-    formFields && (
+    formData && (
       <form onSubmit={handlePageChange} acceptCharset="UTF-8">
         {pages && (
           <>
@@ -494,8 +433,8 @@ export default function FormBuilder({
                           {field.type === "array" ? (
                             <PanelBuilder
                               field={field}
-                              formFields={formFields}
-                              setFormFields={setFormFields}
+                              formData={formData}
+                              setFormData={setFormData}
                               renderFormField={(
                                 field: Field,
                                 value: unknown,
@@ -516,7 +455,7 @@ export default function FormBuilder({
                           ) : (
                             renderFormField(
                               field,
-                              formFields[field.name],
+                              formData[field.name],
                               formErrors[field.name]
                             )
                           )}
@@ -615,6 +554,7 @@ interface FormErrorsProps {
   formErrors: Record<string, string>;
 }
 
+// TODO - errors summary only works for non-nested fields
 export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
   return (
     <ErrorSummary

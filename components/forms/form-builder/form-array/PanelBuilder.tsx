@@ -4,8 +4,8 @@ import { Card } from "nhsuk-react-components";
 
 interface PanelBuilderProps {
   field: Field;
-  formFields: any;
-  setFormFields: React.Dispatch<any>;
+  formData: any;
+  setFormData: React.Dispatch<any>;
   renderFormField: (
     field: Field,
     value: unknown,
@@ -18,8 +18,8 @@ interface PanelBuilderProps {
 
 export default function PanelBuilder({
   field,
-  formFields,
-  setFormFields,
+  formData,
+  setFormData,
   renderFormField,
   panelErrors
 }: Readonly<PanelBuilderProps>) {
@@ -32,20 +32,20 @@ export default function PanelBuilder({
   };
 
   const addPanel = () => {
-    const newPanelsArray = [...formFields[field.name], newPanel()];
-    setFormFields({ ...formFields, [field.name]: newPanelsArray });
+    const newPanelsArray = [...formData[field.name], newPanel()];
+    setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
   const removePanel = (index: number) => {
-    const newPanelsArray = formFields[field.name].filter(
+    const newPanelsArray = formData[field.name].filter(
       (_arrObj: any, i: number) => i !== index
     );
-    setFormFields({ ...formFields, [field.name]: newPanelsArray });
+    setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
   return (
     <>
-      {formFields[field.name].map((_arrObj: any, index: number) => (
+      {formData[field.name].map((_arrObj: any, index: number) => (
         <Card key={index}>
           <Card.Content>
             <p>
@@ -55,7 +55,7 @@ export default function PanelBuilder({
               <div key={objField.name} className="nhsuk-form-group">
                 {renderFormField(
                   objField,
-                  formFields[field.name][index][objField.name] ?? "",
+                  formData[field.name][index][objField.name] ?? "",
                   panelErrors?.[index]?.[objField.name] ?? "",
                   index,
                   field.name

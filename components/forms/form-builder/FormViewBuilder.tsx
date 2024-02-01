@@ -1,5 +1,4 @@
-import React from "react";
-import { Form, FormData } from "./FormBuilder";
+import { Field, Form, FormData } from "./FormBuilder";
 import { Button, Card, SummaryList } from "nhsuk-react-components";
 import { handleEditSection } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
@@ -10,6 +9,31 @@ interface FormViewBuilderProps {
   canEdit: boolean;
   formErrors: { [key: string]: string };
 }
+
+const showVisibleField = (
+  field: Field,
+  formData: FormData,
+  formErrors: { [key: string]: string }
+) => {
+  if (
+    field.visible ||
+    (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]))
+  ) {
+    return (
+      <SummaryList.Row key={field.name}>
+        <SummaryList.Key
+          data-cy={`${field.name}-label`}
+          className={formErrors[field.name] ? "nhsuk-error-message" : ""}
+        >
+          {field.label}
+        </SummaryList.Key>
+        <SummaryList.Value data-cy={`${field.name}-value`}>
+          {displayListValue(formData[field.name], field.type)}
+        </SummaryList.Value>
+      </SummaryList.Row>
+    );
+  }
+};
 
 const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
   jsonForm,
@@ -38,21 +62,9 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
                     </Button>
                   )}
                   <SummaryList>
-                    {section.fields.map(field => (
-                      <SummaryList.Row key={field.name}>
-                        <SummaryList.Key
-                          data-cy={`${field.name}-label`}
-                          className={
-                            formErrors[field.name] ? "nhsuk-error-message" : ""
-                          }
-                        >
-                          {field.label}
-                        </SummaryList.Key>
-                        <SummaryList.Value data-cy={`${field.name}-value`}>
-                          {displayListValue(formData[field.name], field.type)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                    ))}
+                    {section.fields.map(field =>
+                      showVisibleField(field, formData, formErrors)
+                    )}
                   </SummaryList>
                 </div>
               ))}
