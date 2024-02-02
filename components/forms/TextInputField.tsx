@@ -34,7 +34,7 @@ const TextInputField: FunctionComponent<Props> = props => {
     }
     return props.hidelabel ? "hide-label nhsuk-form-group" : "nhsuk-form-group";
   };
-
+  // TODO update logic around limiting characters allowed to numbers when isNumberField
   return (
     <div className={setCorrectLabelClass()}>
       <FormElement
@@ -45,6 +45,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         onBlur={field.onBlur}
         onChange={field.onChange}
         value={field.value ?? ""}
+        maxLength={props.isNumberField ? 5 : undefined}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"

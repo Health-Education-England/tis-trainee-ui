@@ -57,6 +57,12 @@ describe("Section2", () => {
         "contain.text",
         "Short and Long-term sickness absence is required"
       );
+
+    //check that TOOT only allowes 5 digits
+    cy.get('[data-cy="parentalLeave"]').clear().type("123456789");
+    cy.get('[data-cy="parentalLeave"]').should("have.value", "12345");
+    cy.get('[data-cy="parentalLeave"]').clear().type("0");
+
     cy.get("[data-cy=sicknessAbsence]").type(".0");
     cy.get("#sicknessAbsence--error-message").should(
       "contain.text",
@@ -72,12 +78,11 @@ describe("Section2", () => {
       "contain.text",
       "Whole numbers only. No decimals please"
     );
-    cy.get("[data-cy=sicknessAbsence]").clear().type("1.9999999999999999");
+    cy.get("[data-cy=sicknessAbsence]").clear().type("1.99");
     cy.get("#sicknessAbsence--error-message").should(
       "contain.text",
-      "Whole numbers only. No decimals please"
+      "Error: Short and Long-term sickness absence must be rounded up to a whole number"
     );
-
     cy.get("[data-cy=sicknessAbsence]").clear().type("0.1");
     cy.get("#sicknessAbsence--error-message").should(
       "contain.text",
