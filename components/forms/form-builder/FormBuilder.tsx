@@ -428,7 +428,7 @@ export default function FormBuilder({
                   <Card feature>
                     <Card.Content>
                       <Card.Heading>{section.sectionHeader}</Card.Heading>
-                      {section?.fields.map((field: Field) => (
+                      {visibleFields.map((field: Field) => (
                         <div key={field.name} className="nhsuk-form-group">
                           {field.type === "array" ? (
                             <PanelBuilder
@@ -577,7 +577,11 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
       <ul>
         {Object.keys(formErrors).map(key => {
           if (typeof formErrors[key] === "string") {
-            return <div key={key}>{formErrors[key]}</div>;
+            return (
+              <div key={key} className="error-spacing_div">
+                {formErrors[key]}
+              </div>
+            );
           } else if (Array.isArray(formErrors[key])) {
             return formErrors[key].map((error: any, index: number) => {
               return (
