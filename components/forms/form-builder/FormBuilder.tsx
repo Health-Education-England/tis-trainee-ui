@@ -581,7 +581,10 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
           } else if (Array.isArray(formErrors[key])) {
             return formErrors[key].map((error: any, index: number) => {
               return (
-                <li key={`${key}[${index}]`} className="no-bullet">
+                <li
+                  key={`${key}[${index}]`}
+                  className="error-summary_li_nested"
+                >
                   <span>
                     <b>{`${key} ${index + 1}`}</b>
                   </span>
@@ -591,7 +594,7 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
             });
           } else {
             return (
-              <li key={key} className="no-bullet">
+              <li key={key} className="error-summary_li">
                 {renderErrors(formErrors[key])}
               </li>
             );

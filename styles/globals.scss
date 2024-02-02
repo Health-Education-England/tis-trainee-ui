@@ -604,3 +604,20 @@ ol[type="a"] {
   list-style-type: none;
   margin-left: -1em;
 }
+
+// error summary
+.error-summary_li {
+  list-style-type: none;
+  margin-left: -2em;
+}
+
+@media (max-width: 640px) {
+  .error-summary_li {
+    list-style-type: none;
+    margin-left: -2.5em;
+  }
+}
+
+.error-summary_li_nested {
+  list-style-type: none;
+}
