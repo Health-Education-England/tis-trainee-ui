@@ -18,6 +18,7 @@ interface Props {
   disabled?: boolean;
   validate?: any;
   onBlur?: any;
+  isNumberField?: boolean;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
@@ -26,7 +27,7 @@ const TextInputField: FunctionComponent<Props> = props => {
   const setFieldWidth = (width: number) => {
     return width < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, ...rest } = props;
+  const { hidelabel, isNumberField, ...rest } = props;
   const setCorrectLabelClass = () => {
     if (error) {
       return "nhsuk-form-group nhsuk-form-group--error";
@@ -37,9 +38,7 @@ const TextInputField: FunctionComponent<Props> = props => {
   return (
     <div className={setCorrectLabelClass()}>
       <FormElement
-        width={
-          field.value ? props.width || setFieldWidth(field.value.length) : 20
-        }
+        width={props.isNumberField ? 3 : props.width}
         disabled={props.disabled}
         error={error ?? ""}
         id={props.id ?? props.name}
