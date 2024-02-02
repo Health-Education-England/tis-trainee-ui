@@ -167,12 +167,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .find(".react-select__option")
           .first()
           .click();
-        cy.get(
-          '[data-cy="completionDate"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-        )
-          .click()
-          .clear()
-          .type(completionDate);
+        cy.get('[data-cy="completionDate-input"]').type(completionDate);
         cy.get('[data-cy="navNext"]').click();
 
         // section 3 - Programme details
@@ -189,13 +184,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
           .first()
           .click();
 
-        cy.get(
-          '[data-cy="startDate"]> .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-        )
-          .click()
-          .clear()
-          .type(startDate);
-        cy.get(".nhsuk-card__heading").click(); // to remove date picker focus
+        cy.get('[data-cy="startDate-input"]').type(startDate);
         cy.get(
           '[data-cy="programmeMembershipType"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
         )
@@ -316,9 +305,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
       .find(".react-select__option")
       .first()
       .click();
-    cy.get(
-      '[data-cy="completionDate"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    )
+    cy.get('[data-cy="completionDate-input"]')
       .click()
       .clear()
       .type(completionDate);
@@ -331,13 +318,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
       .find(".react-select__option")
       .first()
       .click();
-    cy.get(
-      '[data-cy="startDate"]> .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    )
-      .click()
-      .clear()
-      .type(startDate);
-    cy.get(".nhsuk-card__heading").click(); // to remove date picker focus
+    cy.get('[data-cy="startDate-input"]').type(startDate);
     cy.get(
       '[data-cy="programmeMembershipType"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     )

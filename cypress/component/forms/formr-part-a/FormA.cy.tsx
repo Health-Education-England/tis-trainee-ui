@@ -120,18 +120,7 @@ describe("FormA (form creation)", () => {
       .click();
     cy.get(".react-select__value-container").contains("British");
 
-    // test datepicker
-    cy.get('[data-cy="dateAttained-label"]').should("exist");
-    cy.get(
-      '[data-cy="dateAttained"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    ).click();
-    cy.get(".react-datepicker__year-read-view--down-arrow").click();
-    cy.get(".react-datepicker__year-dropdown > :nth-child(2)").click();
-    cy.get(":nth-child(1) > .react-datepicker__day--001").click();
-    cy.get(
-      '[data-cy="dateAttained"] >.react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    ).should("have.value", "01/05/2023");
-
+    cy.get('[data-cy="dateAttained-input"]').should("exist").type("2023-05-01");
     cy.get('[data-cy="medicalSchool-input"]').clear();
     cy.get('[data-cy="medicalSchool-inline-error-msg"]')
       .should("exist")
@@ -173,13 +162,7 @@ describe("FormA (form creation)", () => {
     cy.get('[data-cy="error-txt-email,Email address is required"]').should(
       "exist"
     );
-
-    cy.get(
-      '[data-cy="dateOfBirth"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    )
-      .click()
-      .clear()
-      .type("02/05/2003");
+    cy.get('[data-cy="dateOfBirth-input"]').type("2003-05-01");
     cy.get('[data-cy="email-input"]').type("a@a.a");
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
@@ -258,12 +241,7 @@ describe("FormA (form creation)", () => {
     ).should("exist");
     cy.get('[data-cy="completionDate-inline-error-msg"]').should("exist");
 
-    cy.get(
-      '[data-cy="completionDate"] > .react-datepicker-wrapper > .react-datepicker__input-container > .nhsuk-input'
-    )
-      .click()
-      .clear()
-      .type("20/03/2032");
+    cy.get('[data-cy="completionDate-input"]').type("2032-12-30");
     // Note - Although a default value for Programme Specialty was provided via the Curriculum data it did not match a select option so was reset to ""
     cy.get('[data-cy="programmeSpecialty-inline-error-msg"]')
       .should("exist")

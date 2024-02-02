@@ -1,17 +1,10 @@
-import React from "react";
-import {
-  handleKeyDown,
-  toISOIgnoreTimezone
-} from "../../../../utilities/FormBuilderUtilities";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
+import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 type DatesProps = {
   name: string;
   label: string | undefined;
   formFields: Record<string, string>;
-  handleChange: (event: any, selectedOption?: any) => void;
-  fieldError?: string;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  fieldError: string;
   placeholder?: string;
 };
 
@@ -28,25 +21,21 @@ export const Dates = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      <DatePicker
-        data-cy={`${name}-input`}
+      <input
         onKeyDown={handleKeyDown}
+        type="date"
+        data-cy={`${name}-input`}
         name={name}
-        selected={formFields[name] ? new Date(formFields[name]) : null}
-        onChange={(date: Date) => {
-          handleChange({
-            currentTarget: {
-              name,
-              value: toISOIgnoreTimezone(date)
-            }
-          });
+        value={formFields[name]}
+        onChange={event => {
+          handleChange(event);
         }}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
         }`}
-        dateFormat="dd/MM/yyyy"
-        placeholderText={placeholder}
-        showYearDropdown
+        placeholder={placeholder}
+        min="1920-01-01"
+        max="2119-12-31"
       />
     </div>
   );
