@@ -604,3 +604,13 @@ ol[type="a"] {
   list-style-type: none;
   margin-left: -1em;
 }
+
+.total-field {
+  border: none;
+  background-color: lightgray;
+}
+
+.total-field:focus {
+  outline: none;
+  border: none;
+}

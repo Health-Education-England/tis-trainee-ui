@@ -19,6 +19,7 @@ interface Props {
   validate?: any;
   onBlur?: any;
   isNumberField?: boolean;
+  isTotal?: boolean;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
@@ -27,14 +28,14 @@ const TextInputField: FunctionComponent<Props> = props => {
   const setFieldWidth = (width: number) => {
     return width < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, isNumberField, ...rest } = props;
+  const { hidelabel, isNumberField, isTotal, ...rest } = props;
   const setCorrectLabelClass = () => {
     if (error) {
       return "nhsuk-form-group nhsuk-form-group--error";
     }
     return props.hidelabel ? "hide-label nhsuk-form-group" : "nhsuk-form-group";
   };
-  // TODO update logic around limiting characters allowed to numbers when isNumberField
+
   return (
     <div className={setCorrectLabelClass()}>
       <FormElement
@@ -45,12 +46,13 @@ const TextInputField: FunctionComponent<Props> = props => {
         onBlur={field.onBlur}
         onChange={field.onChange}
         value={field.value ?? ""}
-        maxLength={props.isNumberField ? 5 : undefined}
+        maxLength={isNumberField ? 5 : undefined}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"
         max="2119-12-31"
         data-cy={props.name}
+        className={isTotal ? "total-field" : ""}
       />
       <InputFooterLabel label={props.footer || ""} />
     </div>
