@@ -15,11 +15,8 @@ const dateValidationSchema = (fieldName: string) =>
 const leaveValidation = (fieldName: string) =>
   yup
     .number()
-    .integer(`${fieldName} must be rounded up to a whole number`)
-    .typeError(`${fieldName} must be a positive number or zero`)
-    .min(0, `${fieldName} must be a positive number or zero`)
-    .max(9999, `${fieldName} must not be more than 9999`)
-    .required(`${fieldName} is required`);
+    .required(`${fieldName} is required`)
+    .typeError(`${fieldName} must be a positive number or zero`);
 
 const panelSchema = yup.object({
   declarationType: yup.string(),

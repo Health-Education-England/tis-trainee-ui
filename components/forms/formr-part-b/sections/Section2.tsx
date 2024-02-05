@@ -21,7 +21,6 @@ import DataSourceMsg from "../../../../components/common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
-import { StringUtilities } from "../../../../utilities/StringUtilities";
 import { AutosaveNote } from "../../AutosaveNote";
 import { AutosaveForFormB } from "../AutosaveForFormB";
 
@@ -138,7 +137,6 @@ const Section2 = ({
               <TextInputField
                 label="Short and Long-term sickness absence"
                 name="sicknessAbsence"
-                validate={StringUtilities.validateInteger}
                 hint="Days (Rounded up)"
                 isNumberField={true}
                 width={2}
@@ -146,7 +144,6 @@ const Section2 = ({
               <TextInputField
                 label="Parental leave (incl Maternity / Paternity leave)"
                 name="parentalLeave"
-                validate={StringUtilities.validateInteger}
                 hint="Days (Rounded up)"
                 isNumberField={true}
                 width={2}
@@ -154,7 +151,6 @@ const Section2 = ({
               <TextInputField
                 label="Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE)"
                 name="careerBreaks"
-                validate={StringUtilities.validateInteger}
                 hint="Days (Rounded up)"
                 isNumberField={true}
                 width={2}
@@ -162,7 +158,6 @@ const Section2 = ({
               <TextInputField
                 label="Paid / unpaid leave (e.g. compassionate, jury service)"
                 name="paidLeave"
-                validate={StringUtilities.validateInteger}
                 hint="Days (Rounded up)"
                 isNumberField={true}
                 width={2}
@@ -170,7 +165,6 @@ const Section2 = ({
               <TextInputField
                 label="Unpaid/unauthorised leave including industrial action"
                 name="unauthorisedLeave"
-                validate={StringUtilities.validateInteger}
                 hint="Days (Rounded up)"
                 isNumberField={true}
                 width={2}
@@ -179,7 +173,6 @@ const Section2 = ({
                 label="Other"
                 name="otherLeave"
                 hint="Days (Rounded up)"
-                validate={StringUtilities.validateInteger}
                 isNumberField={true}
                 width={2}
               />
