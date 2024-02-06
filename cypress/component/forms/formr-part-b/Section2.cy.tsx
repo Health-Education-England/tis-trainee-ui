@@ -57,41 +57,12 @@ describe("Section2", () => {
         "contain.text",
         "Short and Long-term sickness absence is required"
       );
-    cy.get("[data-cy=sicknessAbsence]").type(".0");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Whole numbers only. No decimals please"
-    );
-    cy.get("[data-cy=sicknessAbsence]").clear().type("0.");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Whole numbers only. No decimals please"
-    );
-    cy.get("[data-cy=sicknessAbsence]").clear().type("0.0");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Whole numbers only. No decimals please"
-    );
-    cy.get("[data-cy=sicknessAbsence]").clear().type("1.9999999999999999");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Whole numbers only. No decimals please"
-    );
 
-    cy.get("[data-cy=sicknessAbsence]").clear().type("0.1");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Short and Long-term sickness absence must be rounded up to a whole number"
-    );
+    cy.get("[data-cy=sicknessAbsence]").click().clear().type("12345678");
+    cy.get("[data-cy=sicknessAbsence]").should("have.value", 1234);
 
-    cy.get("[data-cy=sicknessAbsence]").clear().type("99999");
-    cy.get("#sicknessAbsence--error-message").should(
-      "contain.text",
-      "Short and Long-term sickness absence must not be more than 9999"
-    );
-
-    cy.get("[data-cy=sicknessAbsence]").clear().type("9999");
-    cy.get("#sicknessAbsence--error-message").should("not.exist");
+    cy.get("[data-cy=sicknessAbsence]").click().clear().type("awe123awe");
+    cy.get("[data-cy=sicknessAbsence]").should("have.value", 123);
 
     cy.get("[data-cy=sicknessAbsence]").click().clear().type("1");
     cy.get("#sicknessAbsence--error-message").should("not.exist");

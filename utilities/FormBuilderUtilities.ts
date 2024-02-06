@@ -263,7 +263,9 @@ export function setTextFieldWidth(width: number) {
   return width < 20 ? 20 : Math.floor(width / 10) * 10;
 }
 
-export function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+export function handleKeyDown(
+  e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+) {
   if (e.key === "Enter") {
     e.preventDefault();
   }

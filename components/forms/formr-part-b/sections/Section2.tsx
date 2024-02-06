@@ -21,7 +21,6 @@ import DataSourceMsg from "../../../../components/common/DataSourceMsg";
 import { IFormRPartBSection } from "../../../../models/IFormRPartBSection";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { ProfileUtilities } from "../../../../utilities/ProfileUtilities";
-import { StringUtilities } from "../../../../utilities/StringUtilities";
 import { AutosaveNote } from "../../AutosaveNote";
 import { AutosaveForFormB } from "../AutosaveForFormB";
 
@@ -129,41 +128,61 @@ const Section2 = ({
                   </b>
                 </p>
               </InsetText>
+              <WarningCallout data-cy="toot-note">
+                <WarningCallout.Label visuallyHiddenText={false}>
+                  Note
+                </WarningCallout.Label>
+                <p>{`TOOT does not include study leave, paid annual leave, prospectively approved Out of Programme Training/Research (OOPT/OOPR) or periods of time between training programmes (e.g. between core and higher training).`}</p>
+              </WarningCallout>
               <TextInputField
                 label="Short and Long-term sickness absence"
                 name="sicknessAbsence"
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Parental leave (incl Maternity / Paternity leave)"
                 name="parentalLeave"
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE)"
                 name="careerBreaks"
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Paid / unpaid leave (e.g. compassionate, jury service)"
                 name="paidLeave"
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Unpaid/unauthorised leave including industrial action"
                 name="unauthorisedLeave"
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Other"
                 name="otherLeave"
-                hint="TOOT does not include study leave, paid annual leave, prospectively approved Out of Programme Training/Research (OOPT/OOPR) or periods of time between training programmes (e.g. between core and higher training)."
-                validate={StringUtilities.validateInteger}
+                hint="Days (Rounded up)"
+                isNumberField={true}
+                width={2}
               />
               <TextInputField
                 label="Total"
                 name="totalLeave"
                 value={ProfileUtilities.getTotal(values)}
+                isNumberField={true}
+                width={3}
+                isTotal={true}
                 readOnly
               />
             </Card.Content>

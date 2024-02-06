@@ -33,20 +33,4 @@ describe("StringUtilities", () => {
       "Placement Type Placement Spec"
     );
   });
-
-  // validate integer
-  it("should return null if the value is null", () => {
-    expect(StringUtilities.validateInteger(null)).toBe(null);
-  });
-  it("should return null if the value is undefined", () => {
-    expect(StringUtilities.validateInteger(undefined)).toBe(null);
-  });
-  it("should return null if the value is a valid integer", () => {
-    expect(StringUtilities.validateInteger(42)).toBe(null);
-  });
-  it("should return an error message if the value is a decimal", () => {
-    expect(StringUtilities.validateInteger(3.14)).toBe(
-      "Whole numbers only. No decimals please."
-    );
-  });
 });
