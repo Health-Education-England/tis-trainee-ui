@@ -103,7 +103,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         cy.log("################ Error msg when no email ###################");
         cy.get('[data-cy="navNext"]').click();
         cy.get(".nhsuk-error-summary").should("exist");
-        cy.get('[data-cy="error-txt-email,Email address is required"]').should(
+        cy.get('[data-cy="error-txt-Email address is required"]').should(
           "exist"
         );
         cy.get('[data-cy="email-input"]')
