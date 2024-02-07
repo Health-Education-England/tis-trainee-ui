@@ -403,7 +403,11 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
         {Object.keys(formErrors).map(key => {
           if (typeof formErrors[key] === "string") {
             return (
-              <div key={key} className="error-spacing_div">
+              <div
+                key={key}
+                className="error-spacing_div"
+                data-cy={`error-txt-${formErrors[key]}`}
+              >
                 {formErrors[key]}
               </div>
             );

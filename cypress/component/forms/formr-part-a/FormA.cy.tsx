@@ -120,27 +120,34 @@ describe("FormA (form creation)", () => {
       .click();
     cy.get(".react-select__value-container").contains("British");
 
-    cy.get('[data-cy="dateAttained-input"]').should("exist").type("2023-05-01");
-    cy.get('[data-cy="medicalSchool-input"]').clear();
-    cy.get('[data-cy="medicalSchool-inline-error-msg"]')
+    cy.get('[data-cy="dateOfBirth-input"]').should("exist").type("1000-05-01");
+    cy.get('[data-cy="dateOfBirth-inline-error-msg"]')
       .should("exist")
       .should(
         "include.text",
-        "Medical School Awarding Primary Qualification is required"
+        "Date of Birth is before the minimum date allowed"
       );
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get(
-      '[data-cy="error-txt-medicalSchool,Medical School Awarding Primary Qualification is required"]'
-    ).should("exist");
+    cy.get('[data-cy="email-inline-error-msg"]').should("exist");
 
+    cy.get('[data-cy="errorSummary"] > p')
+      .should("exist")
+      .should(
+        "include.text",
+        "Please fix the following errors before proceeding:"
+      );
     cy.get(
-      '[data-cy="error-txt-dateOfBirth,This date is before the minimum date allowed"]'
+      '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
+    ).should("exist");
+    cy.get('[data-cy="error-txt-Email address is required"]').should("exist");
+
+    cy.get('[data-cy="dateOfBirth-input"]').type("2000-05-01");
+    cy.get('[data-cy="email-input"]').type("a@a.a");
+
+    cy.get('[data-cy="errorSummary"] > p').should("not.exist");
+    cy.get(
+      '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
     ).should("not.exist");
     cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
-
-    cy.get('[data-cy="medicalSchool-input"]').type("best medical school");
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get('[data-cy="medicalSchool-inline-error-msg"]').should("not.exist");
 
     // test soft validation
     cy.get('[data-cy="postCode-input"]').should("exist").clear().type("123456");
@@ -152,24 +159,18 @@ describe("FormA (form creation)", () => {
       );
     cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
 
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="email-input"]').clear().type("x@x");
+    cy.get('[data-cy="navNext"]').click({ force: true });
+    cy.get('[data-cy="navNext"]').should(
+      "have.class",
+      "nhsuk-pagination__link nhsuk-pagination__link--next disabled-link"
+    );
     cy.get(".nhsuk-error-summary").should("exist");
-    cy.get(
-      '[data-cy="error-txt-dateOfBirth,This date is before the minimum date allowed"]'
-    ).should("exist");
-    cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("exist");
-    cy.get('[data-cy="email-inline-error-msg"]').should("exist");
-    cy.get('[data-cy="error-txt-email,Email address is required"]').should(
-      "exist"
-    );
-    cy.get('[data-cy="dateOfBirth-input"]').type("2003-05-01");
-    cy.get('[data-cy="email-input"]').type("a@a.a");
+    cy.get('[data-cy="error-txt-Email address is invalid"]').should("exist");
+
+    cy.get('[data-cy="email-input"]').clear().type("in@refinement.coma");
+
     cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
-    cy.get('[data-cy="email-inline-error-msg"]').should("not.exist");
-    cy.get('[data-cy="error-txt-email,Email address is required"]').should(
-      "not.exist"
-    );
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="navNext"]').click();
 
@@ -231,13 +232,11 @@ describe("FormA (form creation)", () => {
     cy.get(
       '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     ).should("not.exist");
-    cy.get(".nhsuk-error-summary").should("not.exist");
+    cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
 
-    // catch any errors not ttriggered completing the form section
-    cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get(
-      '[data-cy="error-txt-completionDate,Anticipated completion date - please choose a future date"]'
+      '[data-cy="error-txt-Anticipated completion date - please choose a future date"]'
     ).should("exist");
     cy.get('[data-cy="completionDate-inline-error-msg"]').should("exist");
 
@@ -299,11 +298,11 @@ describe("FormA (form creation)", () => {
       "Please fix the following errors before proceeding:"
     );
     cy.get(
-      '[data-cy="error-txt-wholeTimeEquivalent,Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+      '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
     ).should("exist");
     cy.get('[data-cy="wholeTimeEquivalent-input"]').type("1.1");
     cy.get(
-      '[data-cy="error-txt-wholeTimeEquivalent,Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+      '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
     ).should("exist");
     cy.get('[data-cy="wholeTimeEquivalent-input"]').clear().type("0.5");
     cy.get(

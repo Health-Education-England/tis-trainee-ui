@@ -95,13 +95,13 @@ describe("View", () => {
 
     cy.get(".nhsuk-error-summary").should("exist");
     cy.get(
-      '[data-cy="error-txt-dateOfBirth,This date is before the minimum date allowed"]'
+      '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
     ).should("exist");
     cy.get(
-      '[data-cy="error-txt-completionDate,Anticipated completion date - please choose a future date"]'
+      '[data-cy="error-txt-Anticipated completion date - please choose a future date"]'
     ).should("exist");
     cy.get(
-      '[data-cy="error-txt-wholeTimeEquivalent,Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+      '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
     ).should("exist");
     cy.get('[data-cy="dateOfBirth-label"]').should(
       "have.class",
