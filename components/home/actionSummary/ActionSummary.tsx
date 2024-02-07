@@ -103,76 +103,78 @@ export default function ActionSummary() {
                   <Card.Heading data-cy="formRSubsHeading">
                     Form R submissions
                   </Card.Heading>
-                  {/* **** Form A - LABEL ****/}
-                  <Label
-                    size="l"
-                    style={{ color: "#005EB8" }}
-                    data-cy="formASubHeader"
-                  >
-                    Form R (Part A)
-                  </Label>
-                  {/* **** Form A - NO SUB ****/}
-                  {noSubFormRA && (
-                    <FormMessage formType="A" message="infoNoFormEver" />
-                  )}
-                  {/* **** Form A - SUBMITTED ****/}
-                  {/* **** Form A - LATEST SUB DATE WITHIN LAST YEAR ****/}
-                  {infoActionsA.latestSubDateForm &&
-                    infoActionsA.isForInfoWithinYearSubForm && (
-                      <FormMessage
-                        formType="A"
-                        message="infoLatestSubFormRWithinYear"
-                        latestSubFormDate={DateUtilities.ToLocalDate(
-                          infoActionsA.latestSubDateForm
-                        )}
-                      />
+                  <ul className="no-bullet">
+                    {/* **** Form A - LABEL ****/}
+                    <Label
+                      size="l"
+                      style={{ color: "#005EB8" }}
+                      data-cy="formASubHeader"
+                    >
+                      Form R (Part A)
+                    </Label>
+                    {/* **** Form A - NO SUB ****/}
+                    {noSubFormRA && (
+                      <FormMessage formType="A" message="infoNoFormEver" />
                     )}
-                  {/* **** Form A - LATEST SUB DATE YEAR PLUS ****/}
-                  {infoActionsA.latestSubDateForm &&
-                    infoActionsA.isForInfoYearPlusSubForm && (
-                      <FormMessage
-                        formType="A"
-                        message="infoLatestSubFormRYearPlus"
-                        latestSubFormDate={DateUtilities.ToLocalDate(
-                          infoActionsA.latestSubDateForm
-                        )}
-                      />
+                    {/* **** Form A - SUBMITTED ****/}
+                    {/* **** Form A - LATEST SUB DATE WITHIN LAST YEAR ****/}
+                    {infoActionsA.latestSubDateForm &&
+                      infoActionsA.isForInfoWithinYearSubForm && (
+                        <FormMessage
+                          formType="A"
+                          message="infoLatestSubFormRWithinYear"
+                          latestSubFormDate={DateUtilities.ToLocalDate(
+                            infoActionsA.latestSubDateForm
+                          )}
+                        />
+                      )}
+                    {/* **** Form A - LATEST SUB DATE YEAR PLUS ****/}
+                    {infoActionsA.latestSubDateForm &&
+                      infoActionsA.isForInfoYearPlusSubForm && (
+                        <FormMessage
+                          formType="A"
+                          message="infoLatestSubFormRYearPlus"
+                          latestSubFormDate={DateUtilities.ToLocalDate(
+                            infoActionsA.latestSubDateForm
+                          )}
+                        />
+                      )}
+                    {/* **** Form B - LABEL ****/}
+                    <Label
+                      size="l"
+                      style={{ color: "#005EB8" }}
+                      data-cy="formASubHeader"
+                    >
+                      Form R (Part B)
+                    </Label>
+                    {/* **** Form B - NO SUB ****/}
+                    {noSubFormRB && (
+                      <FormMessage formType="B" message="infoNoFormEver" />
                     )}
-                  {/* **** Form B - LABEL ****/}
-                  <Label
-                    size="l"
-                    style={{ color: "#005EB8" }}
-                    data-cy="formASubHeader"
-                  >
-                    Form R (Part B)
-                  </Label>
-                  {/* **** Form B - NO SUB ****/}
-                  {noSubFormRB && (
-                    <FormMessage formType="B" message="infoNoFormEver" />
-                  )}
-                  {/* **** Form B - SUBMITTED ****/}
-                  {/* **** Form B - LATEST SUB DATE WITHIN LAST YEAR ****/}
-                  {infoActionsB.latestSubDateForm &&
-                    infoActionsB.isForInfoWithinYearSubForm && (
-                      <FormMessage
-                        formType="B"
-                        message="infoLatestSubFormRWithinYear"
-                        latestSubFormDate={DateUtilities.ToLocalDate(
-                          infoActionsB.latestSubDateForm
-                        )}
-                      />
-                    )}
-                  {/* **** Form B - LATEST SUB DATE YEAR PLUS ****/}
-                  {infoActionsB.latestSubDateForm &&
-                    infoActionsB.isForInfoYearPlusSubForm && (
-                      <FormMessage
-                        formType="B"
-                        message="infoLatestSubFormRYearPlus"
-                        latestSubFormDate={DateUtilities.ToLocalDate(
-                          infoActionsB.latestSubDateForm
-                        )}
-                      />
-                    )}
+                    {/* **** Form B - SUBMITTED ****/}
+                    {/* **** Form B - LATEST SUB DATE WITHIN LAST YEAR ****/}
+                    {infoActionsB.latestSubDateForm &&
+                      infoActionsB.isForInfoWithinYearSubForm && (
+                        <FormMessage
+                          formType="B"
+                          message="infoLatestSubFormRWithinYear"
+                          latestSubFormDate={DateUtilities.ToLocalDate(
+                            infoActionsB.latestSubDateForm
+                          )}
+                        />
+                      )}
+                    {/* **** Form B - LATEST SUB DATE YEAR PLUS ****/}
+                    {infoActionsB.latestSubDateForm &&
+                      infoActionsB.isForInfoYearPlusSubForm && (
+                        <FormMessage
+                          formType="B"
+                          message="infoLatestSubFormRYearPlus"
+                          latestSubFormDate={DateUtilities.ToLocalDate(
+                            infoActionsB.latestSubDateForm
+                          )}
+                        />
+                      )}
+                  </ul>
                 </Card.Content>
               </Card>
               {/* ----------------- In progress ---------------------- */}

@@ -5,15 +5,24 @@ import PhoneInput from "react-phone-number-input";
 type PhoneProps = {
   name: string;
   label: string | undefined;
-  formFields: Record<string, string>;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
+  value: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Phone = ({
   name,
   label,
-  formFields,
-  handleChange
+  handleChange,
+  value,
+  arrayIndex,
+  arrayName
 }: PhoneProps) => {
   return (
     <div data-cy={name}>
@@ -27,9 +36,14 @@ export const Phone = ({
         name={name}
         defaultCountry="GB"
         onChange={value => {
-          handleChange({ currentTarget: { name, value } });
+          handleChange(
+            { currentTarget: { name, value } },
+            undefined,
+            arrayIndex,
+            arrayName
+          );
         }}
-        value={formFields[name]}
+        value={value}
         initialValueFormat="national"
       />
     </div>

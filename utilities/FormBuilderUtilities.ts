@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import { CombinedReferenceData } from "../models/CombinedReferenceData";
 import { FormRPartA } from "../models/FormRPartA";
 import { KeyValue } from "../models/KeyValue";
@@ -14,7 +15,11 @@ import {
   updatedFormA
 } from "../redux/slices/formASlice";
 import store from "../redux/store/store";
-import { FormData } from "../components/forms/form-builder/FormBuilder";
+import {
+  Field,
+  FieldWarning,
+  FormData
+} from "../components/forms/form-builder/FormBuilder";
 import {
   autoSaveFormB,
   autoUpdateFormB,
@@ -259,15 +264,40 @@ export function showFieldMatchWarning(
   return !matcher.test(inputValue) ? { fieldName, warningMsg } : null;
 }
 
+export function handleSoftValidationWarningMsgVisibility(
+  inputVal: string,
+  primaryFormField: Field | undefined,
+  fieldName: string,
+  setFieldWarning: (warning: FieldWarning) => void
+) {
+  if (inputVal?.length && primaryFormField?.warning) {
+    const matcher = new RegExp(primaryFormField.warning.matcher, "i");
+    const msg = primaryFormField.warning.msgText;
+    const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
+    setFieldWarning(warning as FieldWarning);
+  }
+}
+
 export function setTextFieldWidth(width: number) {
   return width < 20 ? 20 : Math.floor(width / 10) * 10;
 }
 
-export function handleKeyDown(
-  e: React.KeyboardEvent<
-    HTMLInputElement | HTMLTextAreaElement | HTMLDivElement
-  >
+export function handleTextFieldWidth(
+  event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLDivElement>,
+  currentValue: string,
+  primaryField: Field | undefined
 ) {
+  if (
+    primaryField?.type === "text" &&
+    currentValue.length >= 20 &&
+    primaryField?.canGrow
+  ) {
+    const thisFieldWidth = setTextFieldWidth(currentValue?.length);
+    event.currentTarget.className = `nhsuk-input nhsuk-input--width-${thisFieldWidth}`;
+  }
+}
+
+export function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
   if (e.key === "Enter") {
     e.preventDefault();
   }
@@ -362,6 +392,70 @@ export async function autosaveFormR(
   } else {
     await saveForm(preppedFormData, formName);
   }
+}
+
+export function createErrorObject(err: {
+  inner: { path: string; message: string }[];
+}) {
+  const newErrors: unknown = {};
+  const setNestedValue = (obj: any, path: string, value: string) => {
+    const keys = path.split(".");
+    const lastKey = keys.pop() as string;
+    const lastObj = keys.reduce((obj, key, i) => {
+      if (key.includes("[")) {
+        const [arrayKey, arrayIndex] = key.split(/[[\]]/).filter(Boolean);
+        obj[arrayKey] = obj[arrayKey] || [];
+        obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] || {};
+        return obj[arrayKey][arrayIndex];
+      } else {
+        obj[key] =
+          obj[key] || (keys[i + 1] && keys[i + 1].includes("[") ? [] : {});
+        return obj[key];
+      }
+    }, obj);
+    lastObj[lastKey] = value;
+  };
+
+  err.inner.forEach(({ path, message }) => {
+    setNestedValue(newErrors, path, message);
+  });
+  return newErrors;
+}
+
+export function validateFields(
+  fields: Field[],
+  values: FormData,
+  validationSchema: any
+) {
+  let finalValidationSchema = Yup.object().shape({});
+  finalValidationSchema = fields.reduce((schema, field) => {
+    const fieldSchema = validationSchema.fields[field.name];
+    if (field.type === "array") {
+      const nestedFields = Object.keys(values[field.name][0]).reduce(
+        (nestedSchema: { [key: string]: any }, nestedField: string) => {
+          nestedSchema[nestedField] = fieldSchema.innerType.fields[nestedField];
+          return nestedSchema;
+        },
+        {}
+      );
+      const nestedSchema = Yup.object().shape(nestedFields);
+      schema = schema.shape({
+        [field.name]: Yup.array().of(nestedSchema)
+      });
+    } else {
+      schema = schema.shape({
+        [field.name]: fieldSchema
+      });
+    }
+    return schema;
+  }, finalValidationSchema);
+  return finalValidationSchema.validate(values, { abortEarly: false });
+}
+
+export function filteredOptions(optionsKey: string | undefined, options: any) {
+  return optionsKey && options[optionsKey]?.length > 0
+    ? options[optionsKey]
+    : [];
 }
 
 // react-select styles
