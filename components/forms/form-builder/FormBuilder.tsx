@@ -278,9 +278,8 @@ export default function FormBuilder({
                               )
                             : renderFormField(
                                 field,
-                                handleChange,
+                                { handleChange, handleBlur },
                                 fieldWarning,
-                                handleBlur,
                                 options,
                                 formData[field.name],
                                 formErrors[field.name]
@@ -442,15 +441,18 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 
 function renderFormField(
   field: Field,
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  handlers: {
+    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  },
   fieldWarning: FieldWarning | undefined,
-  handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void,
   options: any,
   value: unknown,
   error: any,
-  arrayIndex?: number,
-  arrayName?: string
+  arrayDetails?: { arrayIndex: number; arrayName: string }
 ): React.ReactElement | null {
+  const { handleChange, handleBlur } = handlers;
+  const { arrayIndex, arrayName } = arrayDetails ?? {};
   const { name, type, label, placeholder, optionsKey } = field;
   switch (type) {
     case "text":

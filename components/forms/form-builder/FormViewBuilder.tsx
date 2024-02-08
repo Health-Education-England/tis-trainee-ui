@@ -40,7 +40,7 @@ export default function FormViewBuilder({
   formData,
   canEdit,
   formErrors
-}: FormViewBuilder) {
+}: Readonly<FormViewBuilder>) {
   return (
     <div>
       {jsonForm.pages.map((page, pageIndex) => (

@@ -102,7 +102,7 @@ export class ProfileUtilities {
     return trimmedWork;
   }
 
-  public static groupPlacementsByDate = (
+  public static readonly groupPlacementsByDate = (
     placements: Placement[]
   ): PlacementGroup => {
     const groupedPlacements: PlacementGroup = {

@@ -8,11 +8,10 @@ type PanelBuilder = {
   setFormData: React.Dispatch<any>;
   renderFormField: (
     field: Field,
-    value: unknown,
-    error: any,
-    arrayIndex?: number,
-    arrayName?: string
-  ) => JSX.Element | null;
+    value: any,
+    error: string,
+    arrayDetails: { index: number; parent: string }
+  ) => JSX.Element;
   panelErrors: any;
 };
 
@@ -57,8 +56,7 @@ export default function PanelBuilder({
                   objField,
                   formData[field.name][index][objField.name] ?? "",
                   panelErrors?.[index]?.[objField.name] ?? "",
-                  index,
-                  field.name
+                  { index, parent: field.name }
                 )}
               </div>
             ))}
