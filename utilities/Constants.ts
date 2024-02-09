@@ -188,6 +188,8 @@ export const toastErrText = {
   saveFormB: "Couldn't save your Form R (Part B).",
   updateFormA: "Couldn't update your Form R (Part A).",
   updateFormB: "Couldn't update your Form R (Part B).",
+  fetchTraineeActionsData:
+    "Couldn't load your task checklist (to-do actions).",
   fetchTraineeProfileData:
     "Couldn't load your personal details (profile data).",
   updateUserAttributes:

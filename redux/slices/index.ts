@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import traineeActionsReducer from "./traineeActionsSlice";
 import traineeProfileReducer from "./traineeProfileSlice";
 import referenceReducer from "./referenceSlice";
 import formsReducer from "./formsSlice";
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
   reference: referenceReducer,
   forms: formsReducer,
+  traineeActions: traineeActionsReducer,
   formA: formAReducer,
   formB: formBReducer,
   featureFlags: featureFlagsReducer,
