@@ -6,13 +6,16 @@ import { initialPersonalDetails } from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
-import { toastErrText } from "../../utilities/Constants";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
+import { Action } from "../../models/Action";
+import { TraineeActionsService } from "../../services/TraineeActionsService";
 
 interface IProfile {
   traineeProfileData: TraineeProfile;
   hasSignableCoj: boolean;
   unsignedCojs: ProgrammeMembership[];
+  incompleteActions: Action[];
   status: string;
   error: any;
 }
@@ -26,6 +29,7 @@ export const initialState: IProfile = {
   },
   hasSignableCoj: false,
   unsignedCojs: [],
+  incompleteActions: [],
   status: "idle",
   error: ""
 };
@@ -46,6 +50,26 @@ export const signCoj = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<ProgrammeMembership> =
       await traineeProfileService.signCoj(programmeMembershipId);
+    return response.data;
+  }
+);
+
+export const loadIncompleteTraineeActions = createAsyncThunk(
+  "traineeProfile/loadIncompleteTraineeActions",
+  async () => {
+    const actionService = new TraineeActionsService();
+    const response: AxiosResponse<Action[]> =
+      await actionService.getIncompleteTraineeActions();
+    return response.data;
+  }
+);
+
+export const completeTraineeAction = createAsyncThunk(
+  "traineeProfile/traineeAction/complete",
+  async (actionId: string) => {
+    const actionService = new TraineeActionsService();
+    const response: AxiosResponse<Action> =
+      await actionService.completeTraineeAction(actionId);
     return response.data;
   }
 );
@@ -129,6 +153,38 @@ const traineeProfileSlice = createSlice({
       .addCase(signCoj.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(loadIncompleteTraineeActions.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(loadIncompleteTraineeActions.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.incompleteActions = action.payload;
+      })
+      .addCase(loadIncompleteTraineeActions.rejected, (state, { error }) => {
+        state.status = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.loadIncompleteTraineeActions,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(completeTraineeAction.pending, state => {
+        state.status = "saving";
+      })
+      .addCase(completeTraineeAction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.completeTraineeAction, ToastType.SUCCESS);
+      })
+      .addCase(completeTraineeAction.rejected, (state, { error }) => {
+        state.status = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.completeTraineeAction,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
       });
   }
 });

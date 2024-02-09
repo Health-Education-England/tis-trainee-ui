@@ -201,7 +201,9 @@ export const toastErrText = {
     "Couldn't continue. MFA set-up session has expired. Please refresh the page and try again.",
   verifyTotp:
     "Couldn't verify your identification with that Authentication code.",
-  signCoj: "Couldn't sign your Conditions of Joining."
+  signCoj: "Couldn't sign your Conditions of Joining.",
+  loadIncompleteTraineeActions: "Couldn't fetch incompleted trainee actions.",
+  completeTraineeAction: "Couldn't update trainee actions."
 };
 
 export const toastSuccessText = {
@@ -219,7 +221,8 @@ export const toastSuccessText = {
     "SMS MFA is now set up. When prompted, provide a new 6-digit code (sent to your phone) when you next log in.",
   getPreferredMfaTotp:
     "Authenticator MFA is now set up. When prompted, provide a new 6-digit code from your app when you next log in.",
-  signCoj: "Your Conditions of Joining has been signed."
+  signCoj: "Your Conditions of Joining has been signed.",
+  completeTraineeAction: "Your Outstanding Action has been updated."
 };
 
 export const supportCatOptions = [

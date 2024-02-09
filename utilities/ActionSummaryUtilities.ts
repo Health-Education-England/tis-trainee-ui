@@ -4,19 +4,24 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { DateType } from "./DateUtilities";
 import { IFormR } from "../models/IFormR";
+import { Action } from "../models/Action";
 dayjs.extend(isBetween);
 
 export type OutstandingSummaryActions = {
   unsignedCojCount: number;
+  incompleteActionCount: number;
 };
 
 // OUTSTANDING (and Global Alert)
 export function getAllOutstandingSummaryActions(
-  unsignedCojs: ProgrammeMembership[]
+  unsignedCojs: ProgrammeMembership[],
+  incompleteActions: Action[]
 ): OutstandingSummaryActions {
   const unsignedCojCount = unsignedCojs.length;
+  const incompleteActionCount = incompleteActions.length;
   return {
-    unsignedCojCount
+    unsignedCojCount,
+    incompleteActionCount
   };
 }
 

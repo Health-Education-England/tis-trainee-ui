@@ -8,7 +8,10 @@ import PageTitle from "../common/PageTitle";
 import TSSFooter from "../navigation/TSSFooter";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
-import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
+import {
+  fetchTraineeProfileData,
+  loadIncompleteTraineeActions
+} from "../../redux/slices/traineeProfileSlice";
 import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
@@ -83,6 +86,7 @@ export const Main = () => {
   useEffect(() => {
     if (traineeProfileDataStatus === "idle") {
       dispatch(fetchTraineeProfileData());
+      dispatch(loadIncompleteTraineeActions());
     }
   }, [traineeProfileDataStatus, dispatch]);
 

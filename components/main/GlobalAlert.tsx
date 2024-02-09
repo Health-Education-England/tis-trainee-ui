@@ -12,7 +12,7 @@ const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   // ACTION SUMMARY
   const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
-  const { unsignedCojCount } = useOutstandingActions();
+  const { unsignedCojCount, incompleteActionCount } = useOutstandingActions();
   const unsignedCoJ = unsignedCojCount > 0;
   const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
   const inProgressFormR =
