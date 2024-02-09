@@ -3,18 +3,18 @@ import { Button, Card, SummaryList } from "nhsuk-react-components";
 import { handleEditSection } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
-type FormViewBuilder = {
-  jsonForm: Form;
+
+type VisibleFieldProps = {
+  field: Field;
   formData: FormData;
-  canEdit: boolean;
   formErrors: { [key: string]: string };
 };
 
-const showVisibleField = (
-  field: Field,
-  formData: FormData,
-  formErrors: { [key: string]: string }
-) => {
+function VisibleField({
+  field,
+  formData,
+  formErrors
+}: Readonly<VisibleFieldProps>) {
   if (
     field.visible ||
     (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]))
@@ -33,6 +33,14 @@ const showVisibleField = (
       </SummaryList.Row>
     );
   }
+  return null;
+}
+
+type FormViewBuilder = {
+  jsonForm: Form;
+  formData: FormData;
+  canEdit: boolean;
+  formErrors: { [key: string]: string };
 };
 
 export default function FormViewBuilder({
@@ -62,9 +70,14 @@ export default function FormViewBuilder({
                     </Button>
                   )}
                   <SummaryList>
-                    {section.fields.map(field =>
-                      showVisibleField(field, formData, formErrors)
-                    )}
+                    {section.fields.map(field => (
+                      <VisibleField
+                        key={field.name}
+                        field={field}
+                        formData={formData}
+                        formErrors={formErrors}
+                      />
+                    ))}
                   </SummaryList>
                 </div>
               ))}

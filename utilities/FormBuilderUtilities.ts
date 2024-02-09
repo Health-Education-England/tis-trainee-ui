@@ -18,6 +18,7 @@ import store from "../redux/store/store";
 import {
   Field,
   FieldWarning,
+  Form,
   FormData
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -98,42 +99,107 @@ export function resetForm(formName: string, history: any) {
   }
 }
 
+// NOTE- First stab at making this a bit more generic for all forms.
+type FormActionsAndTypes<T> = {
+  [key: string]: {
+    update: any;
+    save: any;
+    state: () => string | undefined;
+    type: T;
+  };
+};
+
+const formActionsAndTypes: FormActionsAndTypes<FormRPartA | FormRPartB> = {
+  formA: {
+    update: updateFormA,
+    save: saveFormA,
+    state: () => store.getState().formA?.formAData?.id,
+    type: {} as FormRPartA
+  },
+  formB: {
+    update: updateFormB,
+    save: saveFormB,
+    state: () => store.getState().formB?.formBData?.id,
+    type: {} as FormRPartB
+  }
+};
+
+export function makeSubObj(
+  jsonForm: Form,
+  formData: FormData,
+  savedId: string | undefined
+) {
+  const subFields = {
+    submissionDate: new Date(),
+    lifecycleState: LifeCycleState.Submitted,
+    lastModifiedDate: new Date(),
+    traineeTisId: formData.traineeTisId
+  };
+  let newFormData: FormData = {};
+  jsonForm.pages.forEach(page => {
+    page.sections.forEach(section => {
+      section.fields.forEach(field => {
+        if (
+          field.visible ||
+          (field.parent &&
+            field.visibleIf &&
+            field?.visibleIf.includes(newFormData[field.parent]))
+        ) {
+          newFormData[field.name] = formData[field.name];
+        } else newFormData[field.name] = null;
+      });
+    });
+  });
+  const formType = jsonForm.name;
+  const formTypeObject = formActionsAndTypes[formType].type;
+  return savedId
+    ? ({ ...newFormData, ...subFields, id: savedId } as typeof formTypeObject)
+    : ({ ...newFormData, ...subFields } as typeof formTypeObject);
+}
+
 export async function submitForm(
+  jsonForm: Form,
+  formData: FormData,
+  history: any
+) {
+  const formName = jsonForm.name;
+
+  const lastSavedFormDataId = formActionsAndTypes[formName].state();
+
+  const subObject = makeSubObj(jsonForm, formData, lastSavedFormDataId);
+
+  const action = lastSavedFormDataId
+    ? formActionsAndTypes[formName].update
+    : formActionsAndTypes[formName].save;
+
+  await store.dispatch(action(subObject));
+  resetForm(formName, history);
+}
+
+// *** NOTE: Remove this code when form B is built with the form builder ***
+export async function tempSubFormB(
   formName: string,
   formData: FormData,
   history: any
 ) {
-  const lastSavedFormData =
-    formName === "formA"
-      ? store.getState().formA?.formAData
-      : store.getState().formB?.formBData;
+  const lastSavedFormData = store.getState().formB?.formBData;
   const updatedFormData = {
     ...formData,
     submissionDate: new Date(),
     lifecycleState: LifeCycleState.Submitted,
     lastModifiedDate: new Date()
   };
-  if (formName === "formA") {
-    lastSavedFormData.id
-      ? await store.dispatch(
-          updateFormA({
-            ...updatedFormData,
-            id: lastSavedFormData.id
-          } as FormRPartA)
-        )
-      : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
-  } else {
-    lastSavedFormData.id
-      ? await store.dispatch(
-          updateFormB({
-            ...updatedFormData,
-            id: lastSavedFormData.id
-          } as FormRPartB)
-        )
-      : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
-  }
+  lastSavedFormData.id
+    ? await store.dispatch(
+        updateFormB({
+          ...updatedFormData,
+          id: lastSavedFormData.id
+        } as FormRPartB)
+      )
+    : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
   resetForm(formName, history);
 }
+// ----------------------------------------------------------
 
 export async function saveDraftForm(
   formName: string,

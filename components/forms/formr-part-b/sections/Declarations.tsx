@@ -19,7 +19,7 @@ import FormRPartBPagination from "../FormRPartBPagination";
 import store from "../../../../redux/store/store";
 import { IProgSection } from "../../../../models/IProgressSection";
 import { useConfirm } from "material-ui-confirm";
-import { submitForm } from "../../../../utilities/FormBuilderUtilities";
+import { tempSubFormB } from "../../../../utilities/FormBuilderUtilities";
 interface IDeclarations {
   prevSectionLabel: string;
   history: any;
@@ -39,7 +39,7 @@ const Declarations = ({
   const handleFormBSubmit = async (formVals: FormRPartB) => {
     if (!saveBtnActive) {
       dispatch(updatesaveBtnActive());
-      await submitForm("formB", formVals, history);
+      await tempSubFormB("formB", formVals, history);
       const formBStatus = store.getState().formB.status;
       if (formBStatus === "succeeded") {
         history.push("/formr-b");
