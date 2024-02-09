@@ -268,22 +268,28 @@ export default function FormBuilder({
                       <Card.Heading>{section.sectionHeader}</Card.Heading>
                       {visibleFields.map((field: Field) => (
                         <div key={field.name} className="nhsuk-form-group">
-                          {field.type === "array"
-                            ? renderArrayField(
-                                field,
-                                formData,
-                                setFormData,
-                                formErrors,
-                                renderFormField
-                              )
-                            : renderFormField(
-                                field,
-                                { handleChange, handleBlur },
-                                fieldWarning,
-                                options,
-                                formData[field.name],
-                                formErrors[field.name]
-                              )}
+                          {field.type === "array" ? (
+                            <PanelBuilder
+                              field={field}
+                              formData={formData}
+                              setFormData={setFormData}
+                              renderFormField={renderFormField}
+                              handleChange={handleChange}
+                              handleBlur={handleBlur}
+                              panelErrors={formErrors[field.name]}
+                              fieldWarning={fieldWarning}
+                              options={options}
+                            />
+                          ) : (
+                            renderFormField(
+                              field,
+                              formData[field.name],
+                              formErrors[field.name],
+                              fieldWarning,
+                              { handleChange, handleBlur },
+                              options
+                            )
+                          )}
                         </div>
                       ))}
                     </Card.Content>
@@ -307,6 +313,7 @@ export default function FormBuilder({
                     "nhsuk-pagination__link nhsuk-pagination__link--prev"
                   }
                   onClick={() => {
+                    setFormErrors({});
                     setCurrentPage(currentPage - 1);
                   }}
                   data-cy="navPrevious"
@@ -441,19 +448,29 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 
 function renderFormField(
   field: Field,
-  handlers: {
-    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
-  },
-  fieldWarning: FieldWarning | undefined,
-  options: any,
   value: unknown,
   error: any,
+  fieldWarning: FieldWarning | undefined,
+  handlers: {
+    handleChange: (
+      event: any,
+      selectedOption?: any,
+      index?: number,
+      name?: string
+    ) => void;
+    handleBlur: (
+      event: any,
+      selectedOption?: any,
+      index?: number,
+      name?: string
+    ) => void;
+  },
+  options?: any,
   arrayDetails?: { arrayIndex: number; arrayName: string }
 ): React.ReactElement | null {
+  const { name, type, label, placeholder, optionsKey } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
-  const { name, type, label, placeholder, optionsKey } = field;
   switch (type) {
     case "text":
       return (
@@ -462,8 +479,8 @@ function renderFormField(
           label={label}
           handleChange={handleChange}
           fieldError={error ?? ""}
-          placeholder={placeholder}
           fieldWarning={fieldWarning}
+          placeholder={placeholder}
           handleBlur={handleBlur}
           value={value as string}
           arrayIndex={arrayIndex}
@@ -477,6 +494,7 @@ function renderFormField(
           label={label}
           options={filteredOptions(optionsKey, options)}
           handleChange={handleChange}
+          fieldError={error ?? ""}
           value={value as string}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
@@ -517,6 +535,7 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
+          fieldError={error ?? ""}
           value={value as string}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
@@ -525,22 +544,4 @@ function renderFormField(
     default:
       return null;
   }
-}
-
-function renderArrayField(
-  field: Field,
-  formData: any,
-  setFormData: any,
-  formErrors: any,
-  renderFormField: any
-) {
-  return (
-    <PanelBuilder
-      field={field}
-      formData={formData}
-      setFormData={setFormData}
-      renderFormField={renderFormField}
-      panelErrors={formErrors[field.name]}
-    />
-  );
 }

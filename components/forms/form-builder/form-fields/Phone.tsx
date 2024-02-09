@@ -1,6 +1,7 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import PhoneInput from "react-phone-number-input";
+import FieldErrorInline from "./FieldErrorInline";
 
 type PhoneProps = {
   name: string;
@@ -11,6 +12,7 @@ type PhoneProps = {
     arrayIndex?: number,
     arrayName?: string
   ) => void;
+  fieldError: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -20,6 +22,7 @@ export const Phone = ({
   name,
   label,
   handleChange,
+  fieldError,
   value,
   arrayIndex,
   arrayName
@@ -46,6 +49,9 @@ export const Phone = ({
         value={value}
         initialValueFormat="national"
       />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
+      )}
     </div>
   );
 };

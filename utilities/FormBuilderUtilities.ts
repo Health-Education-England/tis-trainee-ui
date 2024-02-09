@@ -459,7 +459,7 @@ export function validateFields(
 }
 
 export function filteredOptions(optionsKey: string | undefined, options: any) {
-  return optionsKey && options[optionsKey]?.length > 0
+  return optionsKey && options?.[optionsKey]?.length > 0
     ? options[optionsKey]
     : [];
 }

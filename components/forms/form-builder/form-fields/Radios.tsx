@@ -1,5 +1,6 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
+import FieldErrorInline from "./FieldErrorInline";
 
 type RadiosProps = {
   name: string;
@@ -11,6 +12,7 @@ type RadiosProps = {
     arrayIndex?: number,
     arrayName?: string
   ) => void;
+  fieldError: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -21,6 +23,7 @@ export const Radios: React.FC<RadiosProps> = ({
   label,
   options,
   handleChange,
+  fieldError,
   value,
   arrayIndex,
   arrayName
@@ -52,6 +55,9 @@ export const Radios: React.FC<RadiosProps> = ({
           </label>
         </div>
       ))}
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
+      )}
     </div>
   );
 };

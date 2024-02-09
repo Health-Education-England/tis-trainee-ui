@@ -1,18 +1,28 @@
 import React from "react";
-import { Field } from "../FormBuilder";
+import { Field, FieldWarning } from "../FormBuilder";
 import { Card } from "nhsuk-react-components";
 
 type PanelBuilder = {
+  fieldWarning: FieldWarning | undefined;
   field: Field;
   formData: any;
   setFormData: React.Dispatch<any>;
   renderFormField: (
     field: Field,
-    value: any,
+    value: unknown,
     error: string,
-    arrayDetails: { index: number; parent: string }
-  ) => JSX.Element;
+    FieldWarning: FieldWarning | undefined,
+    handlers: {
+      handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+      handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+    },
+    options?: any,
+    arrayDetails?: { arrayIndex: number; arrayName: string }
+  ) => JSX.Element | null;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   panelErrors: any;
+  options?: any;
 };
 
 export default function PanelBuilder({
@@ -20,7 +30,11 @@ export default function PanelBuilder({
   formData,
   setFormData,
   renderFormField,
-  panelErrors
+  handleChange,
+  handleBlur,
+  panelErrors,
+  fieldWarning,
+  options
 }: Readonly<PanelBuilder>) {
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
@@ -56,7 +70,10 @@ export default function PanelBuilder({
                   objField,
                   formData[field.name][index][objField.name] ?? "",
                   panelErrors?.[index]?.[objField.name] ?? "",
-                  { index, parent: field.name }
+                  fieldWarning,
+                  { handleChange, handleBlur },
+                  options,
+                  { arrayIndex: index, arrayName: field.name }
                 )}
               </div>
             ))}
