@@ -8,12 +8,12 @@ export function useOutstandingActions() {
   const unsignedCojs = useAppSelector(
     state => state.traineeProfile.unsignedCojs
   );
-  const incompleteActions = useAppSelector(
-    state => state.traineeProfile.incompleteActions
+  const traineeActionsData = useAppSelector(
+    state => state.traineeActions.traineeActionsData
   );
 
   const { unsignedCojCount, incompleteActionCount }: OutstandingSummaryActions =
-    getAllOutstandingSummaryActions(unsignedCojs, incompleteActions);
+    getAllOutstandingSummaryActions(unsignedCojs, traineeActionsData);
 
   return { unsignedCojCount, incompleteActionCount };
 }

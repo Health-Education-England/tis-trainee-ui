@@ -8,10 +8,7 @@ import PageTitle from "../common/PageTitle";
 import TSSFooter from "../navigation/TSSFooter";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
-import {
-  fetchTraineeProfileData,
-  loadIncompleteTraineeActions
-} from "../../redux/slices/traineeProfileSlice";
+import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
 import { fetchReference } from "../../redux/slices/referenceSlice";
 import Loading from "../common/Loading";
 import MFA from "../authentication/setMfa/MFA";
@@ -32,6 +29,7 @@ import TSSHeader from "../navigation/TSSHeader";
 import packageJson from "../../package.json";
 import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
+import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
 
 const appVersion = packageJson.version;
 
@@ -39,6 +37,9 @@ export const Main = () => {
   const dispatch = useAppDispatch();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
+  );
+  const traineeActionsDataStatus = useAppSelector(
+    state => state.traineeActions.status
   );
   const formAListStatus = useAppSelector(state => state.formA.status);
   const formBListStatus = useAppSelector(state => state.formB.status);
@@ -86,9 +87,14 @@ export const Main = () => {
   useEffect(() => {
     if (traineeProfileDataStatus === "idle") {
       dispatch(fetchTraineeProfileData());
-      dispatch(loadIncompleteTraineeActions());
     }
   }, [traineeProfileDataStatus, dispatch]);
+
+  useEffect(() => {
+    if (traineeActionsDataStatus === "idle") {
+      dispatch(fetchTraineeActionsData());
+    }
+  }, [traineeActionsDataStatus, dispatch]);
 
   // combined Reference data
   const referenceStatus = useAppSelector(state => state.reference.status);
@@ -99,7 +105,11 @@ export const Main = () => {
     }
   }, [referenceStatus, dispatch]);
 
-  if (traineeProfileDataStatus === "loading" || referenceStatus === "loading")
+  if (
+    traineeProfileDataStatus === "loading" ||
+    referenceStatus === "loading" ||
+    traineeActionsDataStatus === "loading"
+  )
     return (
       <div className="centreSpinner">
         <Loading />
@@ -107,7 +117,8 @@ export const Main = () => {
     );
   else if (
     traineeProfileDataStatus === "succeeded" &&
-    referenceStatus === "succeeded"
+    referenceStatus === "succeeded" &&
+    traineeActionsDataStatus === "succeeded"
   )
     content = (
       <>

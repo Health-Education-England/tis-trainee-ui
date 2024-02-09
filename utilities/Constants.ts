@@ -202,7 +202,7 @@ export const toastErrText = {
   verifyTotp:
     "Couldn't verify your identification with that Authentication code.",
   signCoj: "Couldn't sign your Conditions of Joining.",
-  loadIncompleteTraineeActions: "Couldn't fetch incompleted trainee actions.",
+  fetchTraineeActionsData: "Couldn't load your task checklist (to-do actions).",
   completeTraineeAction: "Couldn't update trainee actions."
 };
 

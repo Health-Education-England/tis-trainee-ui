@@ -1,4 +1,4 @@
-export interface Action {
+export interface TraineeAction {
   id: string;
   type: string;
   traineeTisId: string;

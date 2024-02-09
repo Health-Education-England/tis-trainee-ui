@@ -4,7 +4,7 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { DateType } from "./DateUtilities";
 import { IFormR } from "../models/IFormR";
-import { Action } from "../models/Action";
+import { TraineeAction } from "../models/TraineeAction";
 dayjs.extend(isBetween);
 
 export type OutstandingSummaryActions = {
@@ -15,10 +15,10 @@ export type OutstandingSummaryActions = {
 // OUTSTANDING (and Global Alert)
 export function getAllOutstandingSummaryActions(
   unsignedCojs: ProgrammeMembership[],
-  incompleteActions: Action[]
+  traineeActionsData: TraineeAction[]
 ): OutstandingSummaryActions {
   const unsignedCojCount = unsignedCojs.length;
-  const incompleteActionCount = incompleteActions.length;
+  const incompleteActionCount = traineeActionsData.length;
   return {
     unsignedCojCount,
     incompleteActionCount
