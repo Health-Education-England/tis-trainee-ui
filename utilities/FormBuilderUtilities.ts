@@ -327,7 +327,9 @@ export function showFieldMatchWarning(
   warningMsg: string,
   fieldName: string
 ) {
-  return !matcher.test(inputValue) ? { fieldName, warningMsg } : null;
+  return !matcher.test(inputValue)
+    ? { fieldName, warningMsg }
+    : ({} as FieldWarning);
 }
 
 export function handleSoftValidationWarningMsgVisibility(
@@ -336,11 +338,14 @@ export function handleSoftValidationWarningMsgVisibility(
   fieldName: string,
   setFieldWarning: (warning: FieldWarning) => void
 ) {
-  if (inputVal?.length && primaryFormField?.warning) {
+  if (inputVal.length > 0 && primaryFormField?.warning) {
     const matcher = new RegExp(primaryFormField.warning.matcher, "i");
     const msg = primaryFormField.warning.msgText;
-    const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
-    setFieldWarning(warning as FieldWarning);
+    if (!matcher.test(inputVal)) {
+      setFieldWarning({ fieldName, warningMsg: msg });
+    }
+  } else {
+    setFieldWarning({} as FieldWarning);
   }
 }
 

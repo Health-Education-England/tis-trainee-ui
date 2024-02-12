@@ -3,7 +3,7 @@ import { Field, FieldWarning } from "../FormBuilder";
 import { Card } from "nhsuk-react-components";
 
 type PanelBuilder = {
-  fieldWarning: FieldWarning | undefined;
+  fieldWarning: FieldWarning;
   field: Field;
   formData: any;
   setFormData: React.Dispatch<any>;
@@ -11,7 +11,7 @@ type PanelBuilder = {
     field: Field,
     value: string,
     error: string,
-    FieldWarning: FieldWarning | undefined,
+    FieldWarning: FieldWarning,
     handlers: {
       handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
       handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;

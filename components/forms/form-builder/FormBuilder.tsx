@@ -45,7 +45,7 @@ export type Field = {
   dependencies?: string[];
   visibleIf?: string[];
   placeholder?: string;
-  warning?: Warning;
+  warning: Warning;
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
   parent?: string;
@@ -116,8 +116,8 @@ export default function FormBuilder({
     isFormDirty
   );
   const [formErrors, setFormErrors] = useState<any>({});
-  const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
-    undefined
+  const [fieldWarning, setFieldWarning] = useState<FieldWarning>(
+    {} as FieldWarning
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -454,7 +454,7 @@ function renderFormField(
   field: Field,
   value: string,
   error: string,
-  fieldWarning: FieldWarning | undefined,
+  fieldWarning: FieldWarning,
   handlers: {
     handleChange: (
       event: any,
