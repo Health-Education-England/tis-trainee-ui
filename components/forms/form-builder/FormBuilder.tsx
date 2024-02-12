@@ -51,6 +51,10 @@ export type Field = {
   parent?: string;
   objectFields?: Field[];
   value?: unknown;
+  width?: number;
+  isNumberField?: boolean;
+  total?: string[];
+  readOnly?: boolean;
 };
 export type FormData = {
   [key: string]: any;
@@ -468,7 +472,17 @@ function renderFormField(
   options?: any,
   arrayDetails?: { arrayIndex: number; arrayName: string }
 ): React.ReactElement | null {
-  const { name, type, label, placeholder, optionsKey } = field;
+  const {
+    name,
+    type,
+    label,
+    placeholder,
+    optionsKey,
+    width,
+    isNumberField,
+    total,
+    readOnly
+  } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
   switch (type) {
@@ -485,6 +499,10 @@ function renderFormField(
           value={value as string}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          width={width}
+          isNumberField={isNumberField}
+          total={total}
+          readOnly={readOnly}
         />
       );
     case "radio":

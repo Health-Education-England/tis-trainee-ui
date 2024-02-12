@@ -155,6 +155,32 @@
                   "visible": true
                 }
               ]
+            },
+            {
+              "name": "parentalLeave",
+              "type": "text",
+              "label": "Parental Leave",
+              "visible": true,
+              "width": 3,
+              "isNumberField": true
+            },
+            {
+              "name": "sicknessAbsence",
+              "type": "text",
+              "label": "Sickness Absence",
+              "visible": true,
+              "width": 3,
+              "isNumberField": true
+            },
+            {
+              "name": "totalLeave",
+              "type": "text",
+              "label": "Total Leave",
+              "visible": true,
+              "width": 4,
+              "isNumberField": true,
+              "total": ["sicknessAbsence", "parentalLeave"],
+              "readOnly": true
             }
           ]
         }
