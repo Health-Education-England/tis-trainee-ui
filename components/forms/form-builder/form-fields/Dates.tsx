@@ -12,7 +12,7 @@ type DatesProps = {
   ) => void;
   fieldError: string;
   placeholder?: string;
-  value: string | Date;
+  value: string;
   arrayIndex?: number;
   arrayName?: string;
 };
@@ -37,7 +37,7 @@ export const Dates = ({
         type="date"
         data-cy={`${name}-input`}
         name={name}
-        value={value as string}
+        value={value}
         onChange={event => {
           handleChange(event, undefined, arrayIndex, arrayName);
         }}

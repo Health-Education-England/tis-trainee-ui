@@ -50,7 +50,7 @@ export type Field = {
   viewWhenEmpty?: boolean;
   parent?: string;
   objectFields?: Field[];
-  value?: unknown;
+  value: string;
   width?: number;
   isNumberField?: boolean;
   total?: string[];
@@ -287,8 +287,8 @@ export default function FormBuilder({
                           ) : (
                             renderFormField(
                               field,
-                              formData[field.name],
-                              formErrors[field.name],
+                              formData[field.name] ?? "",
+                              formErrors[field.name] ?? "",
                               fieldWarning,
                               { handleChange, handleBlur },
                               options
@@ -452,8 +452,8 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 
 function renderFormField(
   field: Field,
-  value: unknown,
-  error: any,
+  value: string,
+  error: string,
   fieldWarning: FieldWarning | undefined,
   handlers: {
     handleChange: (
@@ -492,11 +492,11 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
+          fieldError={error}
           fieldWarning={fieldWarning}
           placeholder={placeholder}
           handleBlur={handleBlur}
-          value={value as string}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           width={width}
@@ -512,8 +512,8 @@ function renderFormField(
           label={label}
           options={filteredOptions(optionsKey, options)}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -526,8 +526,8 @@ function renderFormField(
           label={label}
           options={filteredOptions(optionsKey, options)}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -539,9 +539,9 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
+          fieldError={error}
           placeholder={placeholder}
-          value={value as string | Date}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -553,8 +553,8 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />

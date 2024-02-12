@@ -9,7 +9,7 @@ type PanelBuilder = {
   setFormData: React.Dispatch<any>;
   renderFormField: (
     field: Field,
-    value: unknown,
+    value: string,
     error: string,
     FieldWarning: FieldWarning | undefined,
     handlers: {

@@ -17,7 +17,7 @@ type TextProps = {
   placeholder?: string;
   fieldWarning?: FieldWarning;
   handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  value?: string;
+  value: string;
   arrayIndex?: number;
   arrayName?: string;
   width?: number;
