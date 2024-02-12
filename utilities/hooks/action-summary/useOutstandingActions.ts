@@ -12,8 +12,8 @@ export function useOutstandingActions() {
     state => state.traineeActions.traineeActionsData
   );
 
-  const { unsignedCojCount, incompleteActionCount }: OutstandingSummaryActions =
+  const { unsignedCojCount, programmeActions }: OutstandingSummaryActions =
     getAllOutstandingSummaryActions(unsignedCojs, traineeActionsData);
 
-  return { unsignedCojCount, incompleteActionCount };
+  return { unsignedCojCount, programmeActions };
 }

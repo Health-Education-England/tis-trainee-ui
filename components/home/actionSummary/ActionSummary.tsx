@@ -18,7 +18,7 @@ import DataSourceMsg from "../../common/DataSourceMsg";
 
 export default function ActionSummary() {
   // OUTSTANDING ACTIONS
-  const { unsignedCojCount, incompleteActionCount } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
+  const { unsignedCojCount, programmeActions } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
 
   // FORM R SUBMISSIONS (FOR INFO)
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
@@ -95,11 +95,11 @@ export default function ActionSummary() {
                       </li>
                     )}
                   </ul>
-                  <ul className="no-bullet">
-                    <Label size="l" style={{ color: "#005EB8" }}>
-                      Programme Membership
-                    </Label>
-                    {incompleteActionCount > 0 && (
+                  {programmeActions.length > 0 && (
+                    <ul className="no-bullet">
+                      <Label size="l" style={{ color: "#005EB8" }}>
+                        Programme Membership
+                      </Label>
                       <li data-cy="incompleteAction">
                         <Label size="s">
                           <FontAwesomeIcon
@@ -107,17 +107,17 @@ export default function ActionSummary() {
                             color="#DA291C"
                             size="lg"
                           />{" "}
-                          You have {incompleteActionCount}{" "}
+                          You have {programmeActions.length}{" "}
                           <Link to="/programmes">
                             {`Programme Membership${
-                              incompleteActionCount > 1 ? "s" : ""
+                              programmeActions.length > 1 ? "s" : ""
                             }`}
                           </Link>{" "}
                           to review.
                         </Label>
                       </li>
-                    )}
-                  </ul>
+                    </ul>
+                  )}
                 </Card.Content>
               </Card>
               {/* ----------------- Form R submissions (for info) ------ */}
