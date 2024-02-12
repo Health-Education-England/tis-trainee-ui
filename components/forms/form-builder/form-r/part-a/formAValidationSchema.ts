@@ -23,7 +23,7 @@ const formAValidationSchemaDefault = {
     )
     .test(
       "dateOfBirth",
-      "This date is before the minimum date allowed",
+      "Date of Birth is before the minimum date allowed",
       value => DateUtilities.IsMoreThanMinDate(value)
     ),
   gender: StringValidationSchema("Gender"),
@@ -37,7 +37,7 @@ const formAValidationSchemaDefault = {
     )
     .test(
       "dateAttained",
-      "This date is before the minimum date allowed",
+      "Date awarded is before the minimum date allowed",
       value => DateUtilities.IsMoreThanMinDate(value)
     ),
   medicalSchool: StringValidationSchema(

@@ -1,20 +1,32 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
+import FieldErrorInline from "./FieldErrorInline";
 
 type RadiosProps = {
   name: string;
   label: string | undefined;
   options: any;
-  formFields: Record<string, string>;
-  handleChange: (event: any, selectedOption?: any) => void;
+  handleChange: (
+    event: any,
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
+  ) => void;
+  fieldError: string;
+  value: string;
+  arrayIndex?: number;
+  arrayName?: string;
 };
 
 export const Radios: React.FC<RadiosProps> = ({
   name,
   label,
   options,
-  formFields,
-  handleChange
+  handleChange,
+  fieldError,
+  value,
+  arrayIndex,
+  arrayName
 }: RadiosProps) => {
   return (
     <div className="nhsuk-radios">
@@ -31,8 +43,10 @@ export const Radios: React.FC<RadiosProps> = ({
             type="radio"
             name={name}
             value={option.value}
-            checked={formFields[name] === option.value}
-            onChange={handleChange}
+            checked={value === option.value}
+            onChange={event =>
+              handleChange(event, undefined, arrayIndex, arrayName)
+            }
             placeholder={option.value}
             aria-labelledby={`${option.value}--label`}
           />
@@ -41,6 +55,9 @@ export const Radios: React.FC<RadiosProps> = ({
           </label>
         </div>
       ))}
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
+      )}
     </div>
   );
 };

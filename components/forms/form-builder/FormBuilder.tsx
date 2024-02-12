@@ -12,12 +12,14 @@ import {
 } from "nhsuk-react-components";
 import {
   continueToConfirm,
+  createErrorObject,
+  filteredOptions,
   getEditPageNumber,
+  handleSoftValidationWarningMsgVisibility,
+  handleTextFieldWidth,
   saveDraftForm,
-  setTextFieldWidth,
-  showFieldMatchWarning
+  validateFields
 } from "../../../utilities/FormBuilderUtilities";
-import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import DataSourceMsg from "../../common/DataSourceMsg";
 import { Text } from "./form-fields/Text";
@@ -32,8 +34,9 @@ import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
+import PanelBuilder from "./form-array/PanelBuilder";
 
-export interface Field {
+export type Field = {
   name: string;
   label?: string;
   type: string;
@@ -46,39 +49,42 @@ export interface Field {
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
   parent?: string;
-}
-export interface FormData {
+  objectFields?: Field[];
+  value?: unknown;
+};
+export type FormData = {
   [key: string]: any;
-}
-interface Page {
+};
+type Page = {
   pageName: string;
   importantTxtName?: string;
   msgLinkName?: string;
   sections: Section[];
-}
-interface Section {
+};
+type Section = {
   sectionHeader: string;
   fields: Field[];
-}
-export interface Form {
+  objectFields?: Field[];
+};
+export type Form = {
   name: string;
   pages: Page[];
-}
-interface FormBuilderProps {
+};
+type FormBuilderProps = {
   jsonForm: Form;
   fetchedFormData: FormData;
   options: any;
   validationSchema: any;
   history: string[];
-}
-export interface FieldWarning {
+};
+export type FieldWarning = {
   fieldName: string;
   warningMsg: string;
-}
-export interface Warning {
+};
+export type Warning = {
   matcher: string;
   msgText: string;
-}
+};
 
 export default function FormBuilder({
   jsonForm,
@@ -89,479 +95,293 @@ export default function FormBuilder({
 }: Readonly<FormBuilderProps>) {
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
-  const [fields, setFields] = useState<Field[]>([]);
+  const [visibleFields, setVisibleFields] = useState<Field[]>([]);
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
   const lastSavedFormData = store.getState().formA.formAData;
-
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
     () => getEditPageNumber(jsonFormName),
     [jsonFormName]
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-  // Get the current field names from the JSON and then get the current fields (which includes their visibility status) for validation purposes
-  const fieldNamesForCurrentPage = pages[currentPage].sections.flatMap(
-    (section: Section) => section.fields.map((field: Field) => field.name)
-  );
-  const fieldNamesForCurrentPageSet = useMemo(
-    () => new Set(fieldNamesForCurrentPage),
-    [fieldNamesForCurrentPage]
-  );
-  const currentFields = useMemo(() => {
-    return fields.filter(field => fieldNamesForCurrentPageSet.has(field.name));
-  }, [fields, fieldNamesForCurrentPageSet]);
-
-  // Custom hook that tracks data changes and autosaves draft form data to db (currently triggered 2s after last dirty change)
-  const { formFields, setFormFields } = useFormAutosave(
+  const { formData, setFormData } = useFormAutosave(
     fetchedFormData,
     jsonFormName,
     isFormDirty
   );
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formErrors, setFormErrors] = useState<any>({});
   const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
     undefined
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const filteredOptions = (optionsKey: string | undefined, options: any) => {
-    return optionsKey && options[optionsKey]?.length > 0
-      ? options[optionsKey]
-      : [];
-  };
+  const flatFields = useMemo(
+    () =>
+      pages[currentPage].sections.flatMap((section: Section) => section.fields),
+    [currentPage, pages]
+  );
 
-  const renderFormField = (field: Field) => {
-    const {
-      name,
-      type,
-      label,
-      placeholder,
-      visible,
-      visibleIf,
-      parent,
-      optionsKey
-    } = field;
-    const fieldError = formErrors[name];
-    // Note - Need to reference the parent field to ensure dependent fields are visible when they are meant to be shown (they default to hidden and are only shown via handleClick)
-    if (visible || (parent && visibleIf?.includes(formFields[parent]))) {
-      switch (type) {
-        case "text":
-          return (
-            <Text
-              name={name}
-              label={label}
-              formFields={formFields}
-              handleChange={handleChange}
-              fieldError={fieldError}
-              placeholder={placeholder}
-              fieldWarning={fieldWarning}
-              handleBlur={handleBlur}
-            />
-          );
-        case "radio":
-          return (
-            <Radios
-              name={name}
-              label={label}
-              formFields={formFields}
-              options={filteredOptions(optionsKey, options)}
-              handleChange={handleChange}
-            />
-          );
+  // Initialise and track the visible fields (using JSON instructions and current formData state)
+  useEffect(() => {
+    const updatedFields = flatFields.reduce(
+      (visibleFields: Field[], field: Field) => {
+        if (
+          field.visible ||
+          (field.visibleIf &&
+            field.visibleIf.includes(formData[field.parent!!]))
+        ) {
+          visibleFields.push(field);
+        }
+        return visibleFields;
+      },
+      []
+    );
 
-        case "select":
-          return (
-            <Selector
-              name={name}
-              label={label}
-              formFields={formFields}
-              options={filteredOptions(optionsKey, options)}
-              handleChange={handleChange}
-            />
-          );
+    setVisibleFields(updatedFields);
+  }, [formData, flatFields, currentPage]);
 
-        case "date":
-          return (
-            <Dates
-              name={name}
-              label={label}
-              formFields={formFields}
-              handleChange={handleChange}
-              fieldError={fieldError}
-              placeholder={placeholder}
-            />
-          );
-
-        case "phone":
-          return (
-            <Phone
-              name={name}
-              label={label}
-              formFields={formFields}
-              handleChange={handleChange}
-            />
-          );
-      }
-    } else return null;
-  };
+  useEffect(() => {
+    if (isFormDirty.current) {
+      validateFields(visibleFields, formData, validationSchema)
+        .then(() => {
+          setFormErrors({});
+        })
+        .catch((err: { inner: { path: string; message: string }[] }) => {
+          setFormErrors(() => {
+            const newErrors = createErrorObject(err);
+            return newErrors;
+          });
+        });
+    }
+  }, [formData, visibleFields, validationSchema]);
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
-    setFormFields((prev: FormData) => {
+    setFormData((prev: FormData) => {
       return { ...prev, [name]: value.trim() };
-    });
-  };
-
-  const handleTextFieldWidth = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    currentValue: string,
-    primaryField: Field | undefined
-  ) => {
-    if (
-      primaryField?.type === "text" &&
-      currentValue.length >= 20 &&
-      primaryField?.canGrow
-    ) {
-      const thisFieldWidth = setTextFieldWidth(currentValue?.length);
-      event.currentTarget.className = `nhsuk-input nhsuk-input--width-${thisFieldWidth}`;
-    }
-  };
-
-  const updateFieldVisibility = (
-    field: Field,
-    fieldToShow: string,
-    currentValue: string
-  ) => {
-    if (field.name !== fieldToShow) return field;
-    const shouldShow = field.visibleIf
-      ? field.visibleIf.includes(currentValue)
-      : false;
-    return { ...field, visible: shouldShow };
-  };
-
-  const removeErrorsForInvisibleFields = (
-    updatedFields: Field[],
-    fieldToShow: string
-  ) => {
-    updatedFields.forEach(depField => {
-      if (depField.name === fieldToShow && !depField.visible) {
-        setFormErrors((prev: FormData) => {
-          const { [fieldToShow]: omittedField, ...newErrors } = prev;
-          return newErrors;
-        });
-      }
-    });
-  };
-
-  const handleDependantFieldVisibility = (
-    currentValue: string,
-    primaryField: Field | undefined
-  ) => {
-    if (!primaryField?.dependencies) return;
-
-    primaryField.dependencies.forEach(fieldToShow => {
-      setFields(prevFields => {
-        const updatedFields = prevFields.map(field =>
-          updateFieldVisibility(field, fieldToShow, currentValue)
-        );
-        removeErrorsForInvisibleFields(updatedFields, fieldToShow);
-        return updatedFields;
-      });
-    });
-  };
-
-  const validateCurrentField = (fieldName: string, currentVal: string) => {
-    // validate the current field only if validation is needed on that field
-    if (Object.keys(validationSchema.fields).includes(fieldName)) {
-      validationSchema
-        .validateAt(fieldName, { [fieldName]: currentVal })
-        .then(() => {
-          // remove error for the current field
-          setFormErrors((prev: FormData) => {
-            const { [fieldName]: val, ...newErrors } = prev;
-            return newErrors;
-          });
-        })
-        .catch((err: { message: string }) => {
-          // set error for the current field
-          setFormErrors((prev: FormData) => {
-            return { ...prev, [fieldName]: err.message };
-          });
-        });
-    }
-  };
-
-  const handleSoftValidationWarningMsgVisibility = (
-    inputVal: string | undefined,
-    primaryFormField: Field | undefined,
-    fieldName: string
-  ) => {
-    // show warning if the value of the current field matches the warning criteria
-    if (inputVal?.length && primaryFormField?.warning) {
-      const matcher = new RegExp(primaryFormField.warning.matcher, "i");
-      const msg = primaryFormField.warning.msgText;
-      const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
-      setFieldWarning(warning as FieldWarning);
-    } else setFieldWarning(undefined);
-  };
-
-  const updateCurrentField = (fieldName: string, currVal: string) => {
-    // update the value of the current field
-    setFormFields((prevFormData: FormData) => {
-      return { ...prevFormData, [fieldName]: currVal };
     });
   };
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    selectedOption?: any
+    selectedOption?: any,
+    arrayIndex?: number,
+    arrayName?: string
   ) => {
     const { name, value } = event.currentTarget;
     const currentValue = selectedOption ? selectedOption.value : value;
-    const primaryField = fields.find(field => field.name === name);
-    const inputValue = selectedOption ? selectedOption.value : value;
+
+    // Note this code still only works for non-nested text fields
+    const primaryField = visibleFields.find(field => field.name === name);
     handleTextFieldWidth(event, currentValue, primaryField);
-    handleDependantFieldVisibility(currentValue, primaryField);
-    handleSoftValidationWarningMsgVisibility(inputValue, primaryField, name);
-    updateCurrentField(name, currentValue);
-    validateCurrentField(name, currentValue);
+    handleSoftValidationWarningMsgVisibility(
+      currentValue,
+      primaryField,
+      name,
+      setFieldWarning
+    );
+    //-----------------------------------------------------------
+
+    let updatedFormData: FormData = {};
+    if (typeof arrayIndex === "number" && arrayName) {
+      setFormData((prevFormData: FormData) => {
+        const newArray = [...prevFormData[arrayName]];
+        newArray[arrayIndex] = {
+          ...newArray[arrayIndex],
+          [name]: currentValue
+        };
+        updatedFormData = { ...prevFormData, [arrayName]: newArray };
+        return updatedFormData;
+      });
+    } else {
+      setFormData((prevFormData: FormData) => {
+        updatedFormData = {
+          ...prevFormData,
+          [name]: currentValue
+        };
+        return updatedFormData;
+      });
+    }
     isFormDirty.current = true;
   };
 
-  const validateFields = (fields: Field[], values: FormData) => {
-    let visibleValidationSchema = Yup.object().shape({});
-    visibleValidationSchema = fields.reduce((schema, field) => {
-      if (field.visible) {
-        const fieldSchema = validationSchema.fields[field.name];
-        schema = schema.shape({
-          [field.name]: fieldSchema
-        });
+  const finalFormFields = lastSavedFormData.id
+    ? {
+        ...formData,
+        id: lastSavedFormData.id,
+        lastModifiedDate: lastSavedFormData.lastModifiedDate,
+        lifecycleState: lastSavedFormData.lifecycleState,
+        traineeTisId: lastSavedFormData.traineeTisId
       }
-      return schema;
-    }, visibleValidationSchema);
-
-    return visibleValidationSchema.validate(values, { abortEarly: false });
-  };
-
-  const calculateVisibleFields = (formFields: {
-    [fieldName: string]: string;
-  }) => {
-    const visibleFormData = fields.reduce((formData, field: Field) => {
-      if (
-        field.visible ||
-        (field.parent && field.visibleIf?.includes(formFields[field.parent]))
-      ) {
-        formData[field.name] = formFields[field.name];
-      } else {
-        formData[field.name] = "";
-      }
-      return formData;
-    }, {} as FormData);
-    // Need to add these vals listed below (from last lastSavedFormData) to ensure latest autosave data is included)
-    return lastSavedFormData.id
-      ? {
-          ...visibleFormData,
-          id: lastSavedFormData.id,
-          lastModifiedDate: lastSavedFormData.lastModifiedDate,
-          lifecycleState: lastSavedFormData.lifecycleState,
-          traineeTisId: lastSavedFormData.traineeTisId
-        }
-      : {
-          ...visibleFormData,
-          traineeTisId: lastSavedFormData.traineeTisId
-        };
-  };
-
-  const handleErrorCatching = (e: any) => {
-    if (e) {
-      const errors: Record<string, string> = {};
-      e.inner.forEach((err: { path: string; message: string }) => {
-        errors[err.path] = err.message;
-      });
-      setFormErrors(errors);
-    }
-  };
+    : { ...formData, traineeTisId: lastSavedFormData.traineeTisId };
 
   const handlePageChange = () => {
-    if (currentPage === lastPage) {
-      validateFields(fields, formFields)
-        .then(() => {
-          const visibleFormData = calculateVisibleFields(formFields);
-          continueToConfirm(jsonFormName, visibleFormData, history);
-        })
-        .catch(err => {
-          handleErrorCatching(err);
-        });
-    } else {
-      validateFields(currentFields, formFields)
-        .then(() => {
+    isFormDirty.current = false;
+    validateFields(visibleFields, formData, validationSchema)
+      .then(() => {
+        if (currentPage === lastPage) {
+          continueToConfirm(jsonFormName, finalFormFields, history);
+        } else {
           setCurrentPage(currentPage + 1);
-        })
-        .catch(err => {
-          handleErrorCatching(err);
+        }
+      })
+      .catch((err: { inner: { path: string; message: string }[] }) => {
+        setFormErrors(() => {
+          const newErrors = createErrorObject(err);
+          return newErrors;
         });
-    }
+      });
   };
 
   const handleSaveBtnClick = () => {
     setIsSubmitting(true);
-    saveDraftForm(jsonFormName, formFields, history);
+    saveDraftForm(jsonFormName, formData, history);
     setIsSubmitting(false);
   };
 
-  // Initialise the dependent JSON form fields visibility based on the fetchedFormData state (which is needed if you load a saved draft where dependent fields would default back to hidden).
-  useEffect(() => {
-    const updatedFields = pages
-      .flatMap((page: Page) =>
-        page.sections.flatMap((section: Section) => section.fields)
-      )
-      .map(field => {
-        if (field.visibleIf) {
-          const shouldShow = field.visibleIf.includes(
-            fetchedFormData[field.parent!!]
-          );
-          return {
-            ...field,
-            visible: shouldShow
-          };
-        }
-        return field;
-      });
-
-    setFields(updatedFields);
-  }, [jsonForm, fetchedFormData, pages]);
-
   return (
-    <form onSubmit={handlePageChange} acceptCharset="UTF-8">
-      {pages && (
-        <>
-          <div>
-            {pages[currentPage].importantTxtName && (
-              <ImportantText
-                txtName={pages[currentPage].importantTxtName as string}
-              />
-            )}
-          </div>
-          {pages[currentPage].msgLinkName && <DataSourceMsg />}
-          <div data-cy="progress-header">
-            {pages[currentPage].pageName && (
-              <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
-                pages[currentPage].pageName
-              }`}</h3>
-            )}
-            {pages[currentPage]?.sections.map((section: Section) => (
-              <React.Fragment key={section.sectionHeader}>
-                <AutosaveNote />
-                <Card feature>
-                  <Card.Content>
-                    <Card.Heading>{section.sectionHeader}</Card.Heading>
-                    {section?.fields.map((field: Field) => (
-                      <div key={field.name} className="nhsuk-form-group">
-                        {formFields && renderFormField(field)}
-                        {formErrors[field.name] && (
-                          <div
-                            className="nhsuk-error-message"
-                            data-cy={`${field.name}-inline-error-msg`}
-                          >
-                            {formErrors[field.name]}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </Card.Content>
-                </Card>
-                <AutosaveMessage formName={jsonFormName} />
-              </React.Fragment>
-            ))}
-          </div>
-        </>
-      )}
-      {Object.keys(formErrors).length > 0 && (
-        <FormErrors formErrors={formErrors} />
-      )}
-      <nav className="nhsuk-pagination">
-        <ul className="nhsuk-list nhsuk-pagination__list">
-          <li className="nhsuk-pagination-item--previous">
-            {currentPage > 0 && pages.length > 1 && (
+    formData && (
+      <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+        {pages && (
+          <>
+            <div>
+              {pages[currentPage].importantTxtName && (
+                <ImportantText
+                  txtName={pages[currentPage].importantTxtName as string}
+                />
+              )}
+            </div>
+            {pages[currentPage].msgLinkName && <DataSourceMsg />}
+            <div data-cy="progress-header">
+              {pages[currentPage].pageName && (
+                <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
+                  pages[currentPage].pageName
+                }`}</h3>
+              )}
+              {pages[currentPage]?.sections.map((section: Section) => (
+                <React.Fragment key={section.sectionHeader}>
+                  <AutosaveNote />
+                  <Card feature>
+                    <Card.Content>
+                      <Card.Heading>{section.sectionHeader}</Card.Heading>
+                      {visibleFields.map((field: Field) => (
+                        <div key={field.name} className="nhsuk-form-group">
+                          {field.type === "array" ? (
+                            <PanelBuilder
+                              field={field}
+                              formData={formData}
+                              setFormData={setFormData}
+                              renderFormField={renderFormField}
+                              handleChange={handleChange}
+                              handleBlur={handleBlur}
+                              panelErrors={formErrors[field.name]}
+                              fieldWarning={fieldWarning}
+                              options={options}
+                            />
+                          ) : (
+                            renderFormField(
+                              field,
+                              formData[field.name],
+                              formErrors[field.name],
+                              fieldWarning,
+                              { handleChange, handleBlur },
+                              options
+                            )
+                          )}
+                        </div>
+                      ))}
+                    </Card.Content>
+                  </Card>
+                  <AutosaveMessage formName={jsonFormName} />
+                </React.Fragment>
+              ))}
+            </div>
+          </>
+        )}
+        {Object.keys(formErrors).length > 0 && (
+          <FormErrors formErrors={formErrors} />
+        )}
+        <nav className="nhsuk-pagination">
+          <ul className="nhsuk-list nhsuk-pagination__list">
+            <li className="nhsuk-pagination-item--previous">
+              {currentPage > 0 && pages.length > 1 && (
+                <Link
+                  to="#"
+                  className={
+                    "nhsuk-pagination__link nhsuk-pagination__link--prev"
+                  }
+                  onClick={() => {
+                    setFormErrors({});
+                    setCurrentPage(currentPage - 1);
+                  }}
+                  data-cy="navPrevious"
+                >
+                  <span className="nhsuk-pagination__title">{"Previous"}</span>
+                  <span className="nhsuk-u-visually-hidden">:</span>
+                  <span className="nhsuk-pagination__page">
+                    <div>{`${currentPage}. ${
+                      pages[currentPage - 1].pageName
+                    }`}</div>
+                  </span>
+                  <ArrowLeftIcon />
+                </Link>
+              )}
+            </li>
+            <li className="nhsuk-pagination-item--next">
               <Link
                 to="#"
-                className={
-                  "nhsuk-pagination__link nhsuk-pagination__link--prev"
-                }
-                onClick={() => {
-                  setFormErrors({});
-                  setCurrentPage(currentPage - 1);
-                }}
-                data-cy="navPrevious"
+                className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
+                  isSubmitting || Object.keys(formErrors).length > 0
+                    ? "disabled-link"
+                    : ""
+                }`}
+                onClick={handlePageChange}
+                data-cy="navNext"
               >
-                <span className="nhsuk-pagination__title">{"Previous"}</span>
+                <span className="nhsuk-pagination__title">{"Next"}</span>
                 <span className="nhsuk-u-visually-hidden">:</span>
                 <span className="nhsuk-pagination__page">
-                  <div>{`${currentPage}. ${
-                    pages[currentPage - 1].pageName
-                  }`}</div>
+                  {currentPage === lastPage ? (
+                    <>{"Review & submit"}</>
+                  ) : (
+                    <div>{`${currentPage + 2}. ${
+                      pages[currentPage + 1].pageName
+                    }`}</div>
+                  )}
                 </span>
-                <ArrowLeftIcon />
+                <ArrowRightIcon />
               </Link>
-            )}
-          </li>
-          <li className="nhsuk-pagination-item--next">
-            <Link
-              to="#"
-              className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
-                isSubmitting || Object.keys(formErrors).length > 0
-                  ? "disabled-link"
-                  : ""
-              }`}
-              onClick={handlePageChange}
-              data-cy="navNext"
-            >
-              <span className="nhsuk-pagination__title">{"Next"}</span>
-              <span className="nhsuk-u-visually-hidden">:</span>
-              <span className="nhsuk-pagination__page">
-                {currentPage === lastPage ? (
-                  <>{"Review & submit"}</>
-                ) : (
-                  <div>{`${currentPage + 2}. ${
-                    pages[currentPage + 1].pageName
-                  }`}</div>
-                )}
-              </span>
-              <ArrowRightIcon />
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <Container>
-        <Row>
-          <Col width="one-quarter">
-            <Button
-              secondary
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSaveBtnClick();
-              }}
-              disabled={isSubmitting || isAutosaving}
-              data-cy="BtnSaveDraft"
-            >
-              {"Save & exit"}
-            </Button>
-          </Col>
-          <Col width="one-quarter">
-            <StartOverButton />
-          </Col>
-        </Row>
-      </Container>
-    </form>
+            </li>
+          </ul>
+        </nav>
+        <Container>
+          <Row>
+            <Col width="one-quarter">
+              <Button
+                secondary
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  handleSaveBtnClick();
+                }}
+                disabled={isSubmitting || isAutosaving}
+                data-cy="BtnSaveDraft"
+              >
+                {"Save & exit"}
+              </Button>
+            </Col>
+            <Col width="one-quarter">
+              <StartOverButton />
+            </Col>
+          </Row>
+        </Container>
+      </form>
+    )
   );
 }
 
-interface FormErrorsProps {
-  formErrors: Record<string, string>;
-}
-
-export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
+export function FormErrors(formErrors: any) {
   return (
     <ErrorSummary
       aria-labelledby="errorSummaryTitle"
@@ -572,15 +392,156 @@ export function FormErrors({ formErrors }: Readonly<FormErrorsProps>) {
         <p>
           <b>Please fix the following errors before proceeding:</b>
         </p>
-        <ul>
-          {Object.entries(formErrors).map(error => (
-            <li
-              data-cy={`error-txt-${error}`}
-              key={error[0]}
-            >{`${error[1]}`}</li>
-          ))}
-        </ul>
+        <FormErrorsList formErrors={formErrors} />
       </div>
     </ErrorSummary>
   );
+}
+
+type FormErrorsListProps = {
+  formErrors: any;
+};
+
+function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
+  const renderErrors = (formErrors: any) => {
+    return (
+      <ul>
+        {Object.keys(formErrors).map(key => {
+          if (typeof formErrors[key] === "string") {
+            return (
+              <div
+                key={key}
+                className="error-spacing_div"
+                data-cy={`error-txt-${formErrors[key]}`}
+              >
+                {formErrors[key]}
+              </div>
+            );
+          } else if (Array.isArray(formErrors[key])) {
+            return formErrors[key].map((error: any, index: number) => {
+              return (
+                <li
+                  key={`${key}[${index}]`}
+                  className="error-summary_li_nested"
+                >
+                  <span>
+                    <b>{`${key} ${index + 1}`}</b>
+                  </span>
+                  <span>{renderErrors(error)}</span>
+                </li>
+              );
+            });
+          } else {
+            return (
+              <li key={key} className="error-summary_li">
+                {renderErrors(formErrors[key])}
+              </li>
+            );
+          }
+        })}
+      </ul>
+    );
+  };
+
+  return <div>{renderErrors(formErrors)}</div>;
+}
+
+function renderFormField(
+  field: Field,
+  value: unknown,
+  error: any,
+  fieldWarning: FieldWarning | undefined,
+  handlers: {
+    handleChange: (
+      event: any,
+      selectedOption?: any,
+      index?: number,
+      name?: string
+    ) => void;
+    handleBlur: (
+      event: any,
+      selectedOption?: any,
+      index?: number,
+      name?: string
+    ) => void;
+  },
+  options?: any,
+  arrayDetails?: { arrayIndex: number; arrayName: string }
+): React.ReactElement | null {
+  const { name, type, label, placeholder, optionsKey } = field;
+  const { handleChange, handleBlur } = handlers;
+  const { arrayIndex, arrayName } = arrayDetails ?? {};
+  switch (type) {
+    case "text":
+      return (
+        <Text
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error ?? ""}
+          fieldWarning={fieldWarning}
+          placeholder={placeholder}
+          handleBlur={handleBlur}
+          value={value as string}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+    case "radio":
+      return (
+        <Radios
+          name={name}
+          label={label}
+          options={filteredOptions(optionsKey, options)}
+          handleChange={handleChange}
+          fieldError={error ?? ""}
+          value={value as string}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+
+    case "select":
+      return (
+        <Selector
+          name={name}
+          label={label}
+          options={filteredOptions(optionsKey, options)}
+          handleChange={handleChange}
+          fieldError={error ?? ""}
+          value={value as string}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+
+    case "date":
+      return (
+        <Dates
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error ?? ""}
+          placeholder={placeholder}
+          value={value as string | Date}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+
+    case "phone":
+      return (
+        <Phone
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error ?? ""}
+          value={value as string}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+    default:
+      return null;
+  }
 }

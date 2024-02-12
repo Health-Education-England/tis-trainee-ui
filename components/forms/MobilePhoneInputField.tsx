@@ -6,32 +6,30 @@ interface IMobilePhoneInputField {
   name: string;
   label?: string;
   hidelabel?: boolean;
-  id?: string;
-  placeholder?: string;
   footer?: any;
-  value?: any;
   disabled?: boolean;
 }
 const MobilePhoneInputField: FunctionComponent<
   IMobilePhoneInputField
 > = props => {
   const [field, { error }, helpers] = useField(props);
+  const { name, label, hidelabel, footer, disabled } = props;
   return (
     <div
       className={`nhsuk-form-group ${error && "nhsuk-form-group--error"} ${
-        props.hidelabel && "hide-label"
+        hidelabel && "hide-label"
       }`}
     >
-      {props.label && (
+      {label && (
         <label htmlFor="mobilePhoneNumber" className="nhsuk-label">
-          {props.label}
+          {label}
         </label>
       )}
       <PhoneInput
         placeholder="Enter mobile number..."
         onBlur={field.onBlur}
-        disabled={props.disabled}
-        name="mobilePhoneNumber"
+        disabled={disabled}
+        name={name}
         defaultCountry="GB"
         onChange={value => {
           helpers.setValue(value);
@@ -45,7 +43,7 @@ const MobilePhoneInputField: FunctionComponent<
         <span className="nhsuk-u-visually-hidden">Error: </span>
         {error}
       </span>
-      <InputFooterLabel label={props.footer || ""} />
+      <InputFooterLabel label={footer || ""} />
     </div>
   );
 };

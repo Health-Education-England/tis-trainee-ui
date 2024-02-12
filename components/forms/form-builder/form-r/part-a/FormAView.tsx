@@ -30,9 +30,10 @@ import { formAValidationSchemaView } from "./formAValidationSchema";
 import { ValidationError } from "yup";
 import { FormErrors } from "../../FormBuilder";
 
+//NOTE TO FUTURE SELF - make this comp more generic
 const FormAView = () => {
   const confirm = useConfirm();
-  const formName: string = "formA";
+  const formName = formAJson.name;
   const canEdit = useAppSelector(selectCanEditStatus);
   const formAData = useAppSelector(selectSavedFormA);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +65,7 @@ const FormAView = () => {
     confirm({
       description: dialogBoxWarnings.formSubMsg
     })
-      .then(() => submitForm(formName, formData, history))
+      .then(() => submitForm(formAJson, formData, history))
       .catch(() => {
         console.log("form a submit cancelled");
       });

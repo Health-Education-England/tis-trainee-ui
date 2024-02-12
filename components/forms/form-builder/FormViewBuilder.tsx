@@ -1,22 +1,54 @@
-import React from "react";
-import { Form, FormData } from "./FormBuilder";
+import { Field, Form, FormData } from "./FormBuilder";
 import { Button, Card, SummaryList } from "nhsuk-react-components";
 import { handleEditSection } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
-interface FormViewBuilderProps {
+
+type VisibleFieldProps = {
+  field: Field;
+  formData: FormData;
+  formErrors: { [key: string]: string };
+};
+
+function VisibleField({
+  field,
+  formData,
+  formErrors
+}: Readonly<VisibleFieldProps>) {
+  if (
+    field.visible ||
+    (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]))
+  ) {
+    return (
+      <SummaryList.Row key={field.name}>
+        <SummaryList.Key
+          data-cy={`${field.name}-label`}
+          className={formErrors[field.name] ? "nhsuk-error-message" : ""}
+        >
+          {field.label}
+        </SummaryList.Key>
+        <SummaryList.Value data-cy={`${field.name}-value`}>
+          {displayListValue(formData[field.name], field.type)}
+        </SummaryList.Value>
+      </SummaryList.Row>
+    );
+  }
+  return null;
+}
+
+type FormViewBuilder = {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
   formErrors: { [key: string]: string };
-}
+};
 
-const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
+export default function FormViewBuilder({
   jsonForm,
   formData,
   canEdit,
   formErrors
-}: FormViewBuilderProps) => {
+}: Readonly<FormViewBuilder>) {
   return (
     <div>
       {jsonForm.pages.map((page, pageIndex) => (
@@ -39,19 +71,12 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
                   )}
                   <SummaryList>
                     {section.fields.map(field => (
-                      <SummaryList.Row key={field.name}>
-                        <SummaryList.Key
-                          data-cy={`${field.name}-label`}
-                          className={
-                            formErrors[field.name] ? "nhsuk-error-message" : ""
-                          }
-                        >
-                          {field.label}
-                        </SummaryList.Key>
-                        <SummaryList.Value data-cy={`${field.name}-value`}>
-                          {displayListValue(formData[field.name], field.type)}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
+                      <VisibleField
+                        key={field.name}
+                        field={field}
+                        formData={formData}
+                        formErrors={formErrors}
+                      />
                     ))}
                   </SummaryList>
                 </div>
@@ -62,9 +87,7 @@ const FormViewBuilder: React.FC<FormViewBuilderProps> = ({
       ))}
     </div>
   );
-};
-
-export default FormViewBuilder;
+}
 
 function displayListValue(fieldVal: string, fieldType: string) {
   if (!fieldVal) return "Not provided";
