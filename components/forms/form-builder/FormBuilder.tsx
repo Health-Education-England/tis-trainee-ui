@@ -51,7 +51,6 @@ export type Field = {
   viewWhenEmpty?: boolean;
   parent?: string;
   objectFields?: Field[];
-  value: string;
   width?: number;
   isNumberField?: boolean;
   total?: string[];
