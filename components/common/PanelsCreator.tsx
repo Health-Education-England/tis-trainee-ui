@@ -1,4 +1,10 @@
-import { BodyText, Card, SummaryList } from "nhsuk-react-components";
+import {
+  BodyText,
+  Button,
+  Card,
+  Label,
+  SummaryList
+} from "nhsuk-react-components";
 import { placementPanelTemplate } from "../../models/Placement";
 import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
@@ -12,6 +18,12 @@ import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 import { OtherSites } from "../placements/OtherSites";
 import { Specialty } from "../placements/Specialty";
+import { useConfirm } from "material-ui-confirm";
+import {
+  completeTraineeAction,
+  resetTraineeAction
+} from "../../redux/slices/traineeActionsSlice";
+import dayjs from "dayjs";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -30,6 +42,25 @@ export function PanelsCreator({
   const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
     "dsp-beta-consultants"
   );
+
+  const confirm = useConfirm();
+  const handleReview = async (actionId: string) => {
+    confirm({
+      description: `Are you sure you have verified the details is correct?`
+    })
+      .then(() => {
+        store.dispatch(completeTraineeAction(actionId));
+        store.dispatch(resetTraineeAction());
+      })
+      .catch(() => console.log("Review action cancelled"));
+  };
+
+  const today = dayjs().format("YYYY-MM-DD");
+  const unreviewedActions = store
+    .getState()
+    .traineeActions.traineeActionsData.filter(
+      action => today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
+    );
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
@@ -40,6 +71,10 @@ export function PanelsCreator({
             postAllowsSubspecialty,
             ...filteredPanel
           } = panel;
+          const currentAction = unreviewedActions.filter(
+            action => action.tisReferenceInfo.id === panel.tisId
+          );
+
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
@@ -61,6 +96,26 @@ export function PanelsCreator({
                       isPastDate={DateUtilities.IsPastDate(panel.endDate)}
                       data-cy={`dspIssueBtn-${panelsName}-${panel.tisId}`}
                     />
+                  ) : null}
+                  {currentAction.length > 0 ? (
+                    <SummaryList.Row>
+                      <SummaryList.Key>
+                        <Label data-cy={`${index}Key`}>
+                          <b>{"Review Actions"}</b>
+                        </Label>
+                      </SummaryList.Key>
+                      <SummaryList.Value>
+                        <Button
+                          onClick={(e: { preventDefault: () => void }) => {
+                            e.preventDefault();
+                            handleReview(currentAction[0].id);
+                          }}
+                          data-cy={`${index}Key`}
+                        >
+                          {"Mark As Read"}
+                        </Button>
+                      </SummaryList.Value>
+                    </SummaryList.Row>
                   ) : null}
                 </SummaryList>
               </Card>

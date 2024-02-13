@@ -42,7 +42,7 @@ const traineeActionsSlice = createSlice({
   name: "traineeActions",
   initialState,
   reducers: {
-    resetToInit() {
+    resetTraineeAction() {
       return initialState;
     },
     updatedActionsData(state, action: PayloadAction<TraineeAction[]>) {
@@ -60,11 +60,6 @@ const traineeActionsSlice = createSlice({
       .addCase(fetchTraineeActionsData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.traineeActionsData = action.payload;
-        // state.traineeActionsData = DateUtilities.genericSort(
-        //   action.payload,
-        //   "availableFrom",
-        //   false
-        // );
       })
       .addCase(fetchTraineeActionsData.rejected, (state, { error }) => {
         state.status = "failed";
@@ -96,7 +91,8 @@ const traineeActionsSlice = createSlice({
 
 export default traineeActionsSlice.reducer;
 
-export const { updatedActionsData } = traineeActionsSlice.actions;
+export const { updatedActionsData, resetTraineeAction } =
+  traineeActionsSlice.actions;
 
 export const selectTraineeActions = (state: { traineeActions: IAction }) =>
   state.traineeActions.traineeActionsData;

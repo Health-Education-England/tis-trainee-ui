@@ -14,6 +14,6 @@ export class TraineeActionsService extends ApiService {
   async completeTraineeAction(
     actionId: string
   ): Promise<AxiosResponse<TraineeAction>> {
-    return this.post<TraineeAction>(`/${actionId}/complete`);
+    return this.post<TraineeAction>(`/action/${actionId}/complete`);
   }
 }
