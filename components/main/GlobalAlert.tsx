@@ -122,7 +122,7 @@ function ActionsSummaryAlert({
     {
       check: () => (unsignedCoJ || unreviewedProgramme) && !inProgressFormR,
       body: <span>You have outstanding actions to complete.</span>,
-      cyTag: "unsignedCoJ"
+      cyTag: "outstandingAction"
     },
     {
       check: () => !(unsignedCoJ || unreviewedProgramme) && inProgressFormR,

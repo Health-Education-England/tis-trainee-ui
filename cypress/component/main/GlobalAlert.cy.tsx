@@ -3,7 +3,10 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import GlobalAlert from "../../../components/main/GlobalAlert";
 import history from "../../../components/navigation/history";
-import { mockProgrammeMembershipCojNotSigned } from "../../../mock-data/trainee-profile";
+import {
+  mockOutstandingActions,
+  mockProgrammeMembershipCojNotSigned
+} from "../../../mock-data/trainee-profile";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { updatedUnsignedCojs } from "../../../redux/slices/traineeProfileSlice";
 import store from "../../../redux/store/store";
@@ -17,6 +20,8 @@ import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
 import { IFormR } from "../../../models/IFormR";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
+import { TraineeAction } from "../../../models/TraineeAction";
+import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 
 describe("GlobalAlert", () => {
   const mountComponent = (
@@ -24,7 +29,8 @@ describe("GlobalAlert", () => {
     preferredMfa?: string,
     formAList?: IFormR[],
     formBList?: IFormR[],
-    unsignedCojs?: ProgrammeMembership[]
+    unsignedCojs?: ProgrammeMembership[],
+    unreviewedActions?: TraineeAction[]
   ) => {
     const MockedGlobalAlert: React.FC = () => {
       const dispatch = useAppDispatch();
@@ -40,6 +46,9 @@ describe("GlobalAlert", () => {
       }
       if (unsignedCojs) {
         dispatch(updatedUnsignedCojs(unsignedCojs));
+      }
+      if (unreviewedActions) {
+        dispatch(updatedActionsData(unreviewedActions));
       }
       return <GlobalAlert />;
     };
@@ -101,6 +110,21 @@ describe("GlobalAlert", () => {
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("exist");
-    cy.get("[data-cy=unsignedCoJ]").should("exist");
+    cy.get("[data-cy=outstandingAction]").should("exist");
+  });
+
+  it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is false and unreviewed action is true", () => {
+    mountComponent(
+      true,
+      "SMS",
+      [mockFormList[0]],
+      [mockFormList[1]],
+      [],
+      [mockOutstandingActions[1]]
+    );
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=outstandingAction]").should("exist");
   });
 });

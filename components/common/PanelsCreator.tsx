@@ -74,7 +74,6 @@ export function PanelsCreator({
           const currentAction = unreviewedActions.filter(
             action => action.tisReferenceInfo.id === panel.tisId
           );
-
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
@@ -110,7 +109,7 @@ export function PanelsCreator({
                             e.preventDefault();
                             handleReview(currentAction[0].id);
                           }}
-                          data-cy={`${index}Key`}
+                          data-cy={`reviewActionBtn-${panelsName}-${panel.tisId}`}
                         >
                           {"Mark As Read"}
                         </Button>
