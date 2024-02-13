@@ -37,5 +37,6 @@ export default defineConfig({
       require("cypress-localstorage-commands/plugin")(on, config);
       return config;
     }
-  }
+  },
+  blockHosts: ["*.google-analytics.com", "*.hotjar.com"]
 });
