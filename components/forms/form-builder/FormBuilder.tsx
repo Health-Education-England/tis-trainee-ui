@@ -286,6 +286,7 @@ export default function FormBuilder({
                             />
                           ) : (
                             renderFormField(
+                              formData,
                               field,
                               formData[field.name] ?? "",
                               formErrors[field.name] ?? "",
@@ -451,6 +452,7 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 }
 
 function renderFormField(
+  formData: FormData,
   field: Field,
   value: string,
   error: string,
@@ -485,6 +487,12 @@ function renderFormField(
   } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
+
+  if (total && total.length > 0) {
+    value = total
+      .reduce((sum, fieldName) => sum + Number(formData[fieldName] || 0), 0)
+      .toString();
+  }
   switch (type) {
     case "text":
       return (
