@@ -35,6 +35,7 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
+import { TextArea } from "./form-fields/TextArea";
 
 export type Field = {
   name: string;
@@ -55,6 +56,7 @@ export type Field = {
   isNumberField?: boolean;
   total?: string[];
   readOnly?: boolean;
+  rows?: number;
 };
 export type FormData = {
   [key: string]: any;
@@ -483,7 +485,8 @@ function renderFormField(
     width,
     isNumberField,
     total,
-    readOnly
+    readOnly,
+    rows
   } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
@@ -513,6 +516,22 @@ function renderFormField(
           readOnly={readOnly}
         />
       );
+    case "textArea":
+      return (
+        <TextArea
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error}
+          placeholder={placeholder}
+          handleBlur={handleBlur}
+          value={value}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+          rows={rows}
+        />
+      );
+
     case "radio":
       return (
         <Radios

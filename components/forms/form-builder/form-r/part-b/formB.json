@@ -161,7 +161,7 @@
               "type": "text",
               "label": "Parental Leave",
               "visible": true,
-              "width": 3,
+              "width": 2,
               "isNumberField": true
             },
             {
@@ -169,7 +169,7 @@
               "type": "text",
               "label": "Sickness Absence",
               "visible": true,
-              "width": 3,
+              "width": 2,
               "isNumberField": true
             },
             {
@@ -177,10 +177,17 @@
               "type": "text",
               "label": "Total Leave",
               "visible": true,
-              "width": 4,
+              "width": 3,
               "isNumberField": true,
               "total": ["sicknessAbsence", "parentalLeave"],
               "readOnly": true
+            },
+            {
+              "name": "compliments",
+              "type": "textArea",
+              "label": "Compliments",
+              "visible": true,
+              "rows": 3
             }
           ]
         }

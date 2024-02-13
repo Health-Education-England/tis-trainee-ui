@@ -26,7 +26,11 @@ const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
   const setFieldWidth = (valueLength: number | undefined) => {
-    return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
+    const returnedWidth =
+      valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
+    if (Number.isNaN(returnedWidth)) {
+      return 20;
+    } else return returnedWidth;
   };
   const { hidelabel, isNumberField, width, isTotal, ...rest } = props;
   const setCorrectLabelClass = () => {
