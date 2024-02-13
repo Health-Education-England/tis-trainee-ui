@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, FieldWarning } from "../FormBuilder";
+import { Field, FieldWarning, FormData } from "../FormBuilder";
 import { Card } from "nhsuk-react-components";
 
 type PanelBuilder = {
@@ -8,8 +8,9 @@ type PanelBuilder = {
   formData: any;
   setFormData: React.Dispatch<any>;
   renderFormField: (
+    formData: FormData,
     field: Field,
-    value: unknown,
+    value: string,
     error: string,
     FieldWarning: FieldWarning | undefined,
     handlers: {
@@ -67,6 +68,7 @@ export default function PanelBuilder({
             {field.objectFields?.map((objField: Field) => (
               <div key={objField.name} className="nhsuk-form-group">
                 {renderFormField(
+                  formData,
                   objField,
                   formData[field.name][index][objField.name] ?? "",
                   panelErrors?.[index]?.[objField.name] ?? "",

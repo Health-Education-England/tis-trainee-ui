@@ -1,5 +1,8 @@
 import React from "react";
-import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
+import {
+  handleKeyDown,
+  handleNumberInput
+} from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { FieldWarning } from "../FormBuilder";
 import FieldErrorInline from "./FieldErrorInline";
@@ -17,9 +20,13 @@ type TextProps = {
   placeholder?: string;
   fieldWarning?: FieldWarning;
   handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  value?: string;
+  value: string;
   arrayIndex?: number;
   arrayName?: string;
+  width?: number;
+  isNumberField?: boolean;
+  total?: string[];
+  readOnly?: boolean;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -32,7 +39,11 @@ export const Text: React.FC<TextProps> = ({
   handleBlur,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  width,
+  isNumberField,
+  total,
+  readOnly
 }: TextProps) => {
   return (
     <>
@@ -42,19 +53,23 @@ export const Text: React.FC<TextProps> = ({
       <input
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
+        onInput={e => handleNumberInput(isNumberField, e)}
         type="text"
         name={name}
-        value={value}
+        value={value ?? ""}
         onChange={
           ((event: any) =>
             handleChange(event, undefined, arrayIndex, arrayName)) as any
         }
-        className={`nhsuk-input nhsuk-input--width-20 ${
+        className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
           fieldError ? "nhsuk-input--error" : ""
-        }`}
+        } ${total ? "total-field" : ""}`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
         onBlur={handleBlur}
+        width={width}
+        maxLength={isNumberField ? 4 : 4096}
+        readOnly={readOnly}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
