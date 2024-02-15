@@ -117,8 +117,7 @@ export const Main = () => {
     );
   else if (
     traineeProfileDataStatus === "succeeded" &&
-    referenceStatus === "succeeded" &&
-    traineeActionsDataStatus === "succeeded"
+    referenceStatus === "succeeded"
   )
     content = (
       <>
