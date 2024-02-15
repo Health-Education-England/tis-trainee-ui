@@ -17,6 +17,7 @@ import {
   getEditPageNumber,
   handleSoftValidationWarningMsgVisibility,
   handleTextFieldWidth,
+  sumFieldValues,
   saveDraftForm,
   validateFields
 } from "../../../utilities/FormBuilderUtilities";
@@ -35,6 +36,7 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
+import { TextArea } from "./form-fields/TextArea";
 
 export type Field = {
   name: string;
@@ -50,7 +52,11 @@ export type Field = {
   viewWhenEmpty?: boolean;
   parent?: string;
   objectFields?: Field[];
-  value?: unknown;
+  width?: number;
+  isNumberField?: boolean;
+  total?: string[];
+  readOnly?: boolean;
+  rows?: number;
 };
 export type FormData = {
   [key: string]: any;
@@ -282,9 +288,10 @@ export default function FormBuilder({
                             />
                           ) : (
                             renderFormField(
+                              formData,
                               field,
-                              formData[field.name],
-                              formErrors[field.name],
+                              formData[field.name] ?? "",
+                              formErrors[field.name] ?? "",
                               fieldWarning,
                               { handleChange, handleBlur },
                               options
@@ -447,9 +454,10 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 }
 
 function renderFormField(
+  formData: FormData,
   field: Field,
-  value: unknown,
-  error: any,
+  value: string,
+  error: string,
   fieldWarning: FieldWarning | undefined,
   handlers: {
     handleChange: (
@@ -468,9 +476,24 @@ function renderFormField(
   options?: any,
   arrayDetails?: { arrayIndex: number; arrayName: string }
 ): React.ReactElement | null {
-  const { name, type, label, placeholder, optionsKey } = field;
+  const {
+    name,
+    type,
+    label,
+    placeholder,
+    optionsKey,
+    width,
+    isNumberField,
+    total,
+    readOnly,
+    rows
+  } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
+
+  if (total && total.length > 0) {
+    value = sumFieldValues(formData, total);
+  }
   switch (type) {
     case "text":
       return (
@@ -478,15 +501,36 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
+          fieldError={error}
           fieldWarning={fieldWarning}
           placeholder={placeholder}
           handleBlur={handleBlur}
-          value={value as string}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          width={width}
+          isNumberField={isNumberField}
+          total={total}
+          readOnly={readOnly}
         />
       );
+
+    case "textArea":
+      return (
+        <TextArea
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error}
+          placeholder={placeholder}
+          handleBlur={handleBlur}
+          value={value}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+          rows={rows}
+        />
+      );
+
     case "radio":
       return (
         <Radios
@@ -494,8 +538,8 @@ function renderFormField(
           label={label}
           options={filteredOptions(optionsKey, options)}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -508,8 +552,8 @@ function renderFormField(
           label={label}
           options={filteredOptions(optionsKey, options)}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -521,9 +565,9 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
+          fieldError={error}
           placeholder={placeholder}
-          value={value as string | Date}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />
@@ -535,8 +579,8 @@ function renderFormField(
           name={name}
           label={label}
           handleChange={handleChange}
-          fieldError={error ?? ""}
-          value={value as string}
+          fieldError={error}
+          value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
         />

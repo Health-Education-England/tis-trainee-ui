@@ -375,6 +375,22 @@ export function handleKeyDown(
   }
 }
 
+export function handleNumberInput(
+  isNumberField: boolean | undefined,
+  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+) {
+  if (isNumberField) {
+    const input = e.target as HTMLInputElement;
+    input.value = input.value.replace(/\D/g, "");
+  }
+}
+
+export function sumFieldValues(formData: FormData, fieldNames: string[]) {
+  return fieldNames
+    .reduce((sum, fieldName) => sum + Number(formData[fieldName] || 0), 0)
+    .toString();
+}
+
 export interface DraftFormProps {
   id?: string;
   lifecycleState: LifeCycleState;
