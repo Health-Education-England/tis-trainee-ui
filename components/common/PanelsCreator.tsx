@@ -18,7 +18,6 @@ import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 import { OtherSites } from "../placements/OtherSites";
 import { Specialty } from "../placements/Specialty";
-import { useConfirm } from "material-ui-confirm";
 import {
   completeTraineeAction,
   resetTraineeAction
@@ -42,18 +41,6 @@ export function PanelsCreator({
   const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
     "dsp-beta-consultants"
   );
-
-  const confirm = useConfirm();
-  const handleReview = async (actionId: string) => {
-    confirm({
-      description: `Are you sure you have verified the details is correct?`
-    })
-      .then(() => {
-        store.dispatch(completeTraineeAction(actionId));
-        store.dispatch(resetTraineeAction());
-      })
-      .catch(() => console.log("Review action cancelled"));
-  };
 
   const today = dayjs().format("YYYY-MM-DD");
   const unreviewedActions = store
@@ -130,6 +117,11 @@ export function PanelsCreator({
       )}
     </Card.Group>
   );
+}
+
+export async function handleReview(actionId: string) {
+  await store.dispatch(completeTraineeAction(actionId));
+  store.dispatch(resetTraineeAction());
 }
 
 export function displayListVal<T extends Date | string>(val: T, k: string) {
