@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeActionsService } from "../../services/TraineeActionsService";
 import { TraineeAction } from "../../models/TraineeAction";
-import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 
