@@ -606,5 +606,29 @@ export const mockOutstandingActions: TraineeAction[] = [
     },
     availableFrom: new Date(yesterday),
     dueBy: new Date("2024-10-14")
+  },
+  // Future action
+  {
+    id: "2",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "1",
+      type: TisReferenceType.placement
+    },
+    availableFrom: new Date(twelveWeeksAhead),
+    dueBy: new Date("2024-10-14")
+  },
+  // Outstanding action
+  {
+    id: "3",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "315",
+      type: TisReferenceType.placement
+    },
+    availableFrom: new Date(yesterday),
+    dueBy: new Date("2024-10-14")
   }
 ];

@@ -5,6 +5,7 @@ import store from "../../../redux/store/store";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import Placements from "../../../components/placements/Placements";
 import {
+  mockOutstandingActions,
   mockPlacements,
   mockPlacementNonTemplatedField,
   mockPersonalDetails,
@@ -27,6 +28,7 @@ import {
 } from "../../../redux/slices/traineeProfileSlice";
 import { updatedCredentials } from "../../../redux/slices/dspSlice";
 import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
+import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 
 describe("Placements with no MFA set up", () => {
   it("should not display Placements page if NOMFA", () => {
@@ -409,5 +411,63 @@ describe("Placements - dsp membership", () => {
       </Provider>
     );
     cy.get('[data-cy="dsp-btn-placements-316"]').should("not.exist");
+  });
+
+  describe("Placement review action", () => {
+    it("should not display the placement review button for unavailable placement", () => {
+      const MockedPlacements = () => {
+        const dispatch = useAppDispatch();
+        dispatch(
+          updatedTraineeProfileData({
+            traineeTisId: "12345",
+            personalDetails: mockPersonalDetails,
+            programmeMemberships: [],
+            placements: [mockPlacements[0]]
+          })
+        );
+        dispatch(updatedActionsData([mockOutstandingActions[2]]));
+        return <Placements />;
+      };
+  
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedPlacements />
+          </Router>
+        </Provider>
+      );
+  
+      cy.get("[data-cy='reviewActionBtn-placements-315']").should(
+        "not.exist"
+      );
+    });
+  
+    it("should display the placement review button for unreviewed placement", () => {
+      const MockedPlacements = () => {
+        const dispatch = useAppDispatch();
+        dispatch(
+          updatedTraineeProfileData({
+            traineeTisId: "12345",
+            personalDetails: mockPersonalDetails,
+            programmeMemberships: [],
+            placements: [mockPlacements[0]]
+          })
+        );
+        dispatch(updatedActionsData([mockOutstandingActions[3]]));
+        return <Placements />;
+      };
+  
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedPlacements />
+          </Router>
+        </Provider>
+      );
+  
+      cy.get("[data-cy='reviewActionBtn-placements-315']").should(
+        "exist"
+      );
+    });
   });
 });

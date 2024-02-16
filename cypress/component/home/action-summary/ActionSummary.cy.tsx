@@ -138,6 +138,33 @@ describe("Action Summary", () => {
     "You have 1 Programme Membership to review"
   );
 
+  const testPlacementAction = (
+    unreviewedActions: TraineeAction[],
+    shouldExist: boolean,
+    message: string
+  ) => {
+    it(`should display the ${
+      shouldExist ? "'Placement to review'" : "'no Placements to review'"
+    } message when there are ${
+      shouldExist ? "" : "no"
+    } Placements to review`, () => {
+      store.dispatch(updatedActionsData(unreviewedActions));
+      cy.get("[data-cy=incompleteAction]").should(
+        shouldExist ? "exist" : "not.exist"
+      );
+      if (shouldExist) {
+        cy.get("[data-cy=incompleteAction]").should("contain", message);
+      }
+    });
+  };
+  testPlacementAction([], false, "signed");
+  testPlacementAction([mockOutstandingActions[2]], false, "");
+  testPlacementAction(
+    mockOutstandingActions,
+    true,
+    "You have 1 Placement to review"
+  );
+
   const testFormNoSubmissions = (formType: FormType) => {
     it(`should display the 'yet to submit' message when there are no submitted ${formType}`, () => {
       formType === "A"

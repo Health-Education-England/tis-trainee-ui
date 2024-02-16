@@ -18,7 +18,7 @@ import DataSourceMsg from "../../common/DataSourceMsg";
 
 export default function ActionSummary() {
   // OUTSTANDING ACTIONS
-  const { unsignedCojCount, programmeActions } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
+  const { unsignedCojCount, programmeActions, placementActions } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
 
   // FORM R SUBMISSIONS (FOR INFO)
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
@@ -111,6 +111,29 @@ export default function ActionSummary() {
                           <Link to="/programmes">
                             {`Programme Membership${
                               programmeActions.length > 1 ? "s" : ""
+                            }`}
+                          </Link>{" "}
+                          to review.
+                        </Label>
+                      </li>
+                    </ul>
+                  )}
+                  {placementActions.length > 0 && (
+                    <ul className="no-bullet">
+                      <Label size="l" style={{ color: "#005EB8" }}>
+                        Placement
+                      </Label>
+                      <li data-cy="incompleteAction">
+                        <Label size="s">
+                          <FontAwesomeIcon
+                            icon={faExclamationCircle}
+                            color="#DA291C"
+                            size="lg"
+                          />{" "}
+                          You have {placementActions.length}{" "}
+                          <Link to="/placements">
+                            {`Placement${
+                              placementActions.length > 1 ? "s" : ""
                             }`}
                           </Link>{" "}
                           to review.
