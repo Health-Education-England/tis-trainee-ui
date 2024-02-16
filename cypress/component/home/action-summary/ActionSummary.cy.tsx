@@ -10,7 +10,10 @@ import {
   updatedFormAStatus
 } from "../../../../redux/slices/formASlice";
 import { updatedUnsignedCojs } from "../../../../redux/slices/traineeProfileSlice";
-import { mockProgrammeMembershipCojNotSigned } from "../../../../mock-data/trainee-profile";
+import {
+  mockOutstandingActions,
+  mockProgrammeMembershipCojNotSigned
+} from "../../../../mock-data/trainee-profile";
 import { mockFormList, mockForms } from "../../../../mock-data/formr-list";
 import {
   dateMoreThanYearAgo,
@@ -23,6 +26,8 @@ import {
 } from "../../../../redux/slices/formBSlice";
 import { IFormR } from "../../../../models/IFormR";
 import { ProgrammeMembership } from "../../../../models/ProgrammeMembership";
+import { TraineeAction } from "../../../../models/TraineeAction";
+import { updatedActionsData } from "../../../../redux/slices/traineeActionsSlice";
 
 type FormType = "A" | "B";
 
@@ -104,6 +109,33 @@ describe("Action Summary", () => {
     true,
     "You have 2 unsigned",
     "Agreements"
+  );
+
+  const testProgrammeAction = (
+    unreviewedActions: TraineeAction[],
+    shouldExist: boolean,
+    message: string
+  ) => {
+    it(`should display the ${
+      shouldExist ? "'CoJ to sign'" : "'all CoJ signed'"
+    } message when there are ${
+      shouldExist ? "" : "no"
+    } Programme Memberships to review`, () => {
+      store.dispatch(updatedActionsData(unreviewedActions));
+      cy.get("[data-cy=incompleteAction]").should(
+        shouldExist ? "exist" : "not.exist"
+      );
+      if (shouldExist) {
+        cy.get("[data-cy=incompleteAction]").should("contain", message);
+      }
+    });
+  };
+  testProgrammeAction([], false, "signed");
+  testProgrammeAction([mockOutstandingActions[0]], false, "");
+  testProgrammeAction(
+    mockOutstandingActions,
+    true,
+    "You have 1 Programme Membership to review"
   );
 
   const testFormNoSubmissions = (formType: FormType) => {

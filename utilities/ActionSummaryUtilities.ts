@@ -4,19 +4,29 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { DateType } from "./DateUtilities";
 import { IFormR } from "../models/IFormR";
+import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
 dayjs.extend(isBetween);
 
 export type OutstandingSummaryActions = {
   unsignedCojCount: number;
+  programmeActions: TraineeAction[];
 };
 
 // OUTSTANDING (and Global Alert)
 export function getAllOutstandingSummaryActions(
-  unsignedCojs: ProgrammeMembership[]
+  unsignedCojs: ProgrammeMembership[],
+  traineeActionsData: TraineeAction[]
 ): OutstandingSummaryActions {
+  const today = dayjs().format("YYYY-MM-DD");
   const unsignedCojCount = unsignedCojs.length;
+  const programmeActions = traineeActionsData.filter(
+    action =>
+      action.tisReferenceInfo.type === TisReferenceType.programmeMembership &&
+      today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
+  );
   return {
-    unsignedCojCount
+    unsignedCojCount,
+    programmeActions
   };
 }
 

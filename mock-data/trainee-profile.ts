@@ -6,11 +6,13 @@ import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { Placement } from "../models/Placement";
 import {
   oneWeekAgo,
+  today,
   todayDate,
   twelveWeeksAhead,
   twelveWeeksAheadPlusOneDay,
   yesterday
 } from "../utilities/DateUtilities";
+import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -577,5 +579,32 @@ export const mockPlacementsForGrouping: Placement[] = [
     placementType: "placementType4",
     employingBody: "employingBody4",
     trainingBody: "trainingBody4"
+  }
+];
+
+export const mockOutstandingActions: TraineeAction[] = [
+  // Future action
+  {
+    id: "0",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "1",
+      type: TisReferenceType.programmeMembership
+    },
+    availableFrom: new Date(twelveWeeksAhead),
+    dueBy: new Date("2024-10-14")
+  },
+  // Outstanding action
+  {
+    id: "1",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "1",
+      type: TisReferenceType.programmeMembership
+    },
+    availableFrom: new Date(yesterday),
+    dueBy: new Date("2024-10-14")
   }
 ];

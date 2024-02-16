@@ -10,7 +10,8 @@ import {
   mockProgrammeMembershipNoCurricula,
   mockProgrammeMembershipNonTemplatedField,
   mockProgrammeMembershipCojNotSigned,
-  mockProgrammeMembershipCojSigned
+  mockProgrammeMembershipCojSigned,
+  mockOutstandingActions
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -24,6 +25,7 @@ import {
 } from "../../../redux/slices/traineeProfileSlice";
 import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
 import { updatedCredentials } from "../../../redux/slices/dspSlice";
+import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 
 describe("Programmes with no MFA set up", () => {
   it("should not display Programmes page if NOMFA", () => {
@@ -314,5 +316,69 @@ describe("Programme summary panel", () => {
     cy.get("[data-cy='cojSignedDate']").should("exist");
 
     cy.get("[data-cy='cojViewBtn-1']").should("exist").and("have.text", "View");
+  });
+});
+
+describe("Programme review action", () => {
+  it("should not display the programme review button for unavailable programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [
+            mockProgrammeMembershipCojNotSigned[0],
+            mockProgrammeMembershipCojSigned
+          ],
+          placements: []
+        })
+      );
+      dispatch(updatedActionsData([mockOutstandingActions[0]]));
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
+      "not.exist"
+    );
+  });
+
+  it("should display the programme review button for unreviewed programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [
+            mockProgrammeMembershipCojNotSigned[0],
+            mockProgrammeMembershipCojSigned
+          ],
+          placements: []
+        })
+      );
+      dispatch(updatedActionsData([mockOutstandingActions[1]]));
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
+      "exist"
+    );
   });
 });

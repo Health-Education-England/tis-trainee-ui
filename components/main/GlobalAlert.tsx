@@ -12,8 +12,9 @@ const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   // ACTION SUMMARY
   const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
-  const { unsignedCojCount } = useOutstandingActions();
+  const { unsignedCojCount, programmeActions } = useOutstandingActions();
   const unsignedCoJ = unsignedCojCount > 0;
+  const unreviewedProgramme = programmeActions.length > 0;
   const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
   const inProgressFormR =
     isInProgressFormA || isInProgressFormB || draftFormProps;
@@ -26,7 +27,11 @@ const GlobalAlert = () => {
     noSubFormRB;
 
   const showActionsSummaryAlert =
-    (unsignedCoJ || inProgressFormR || draftFormProps || importantInfo) &&
+    (unsignedCoJ ||
+      inProgressFormR ||
+      draftFormProps ||
+      importantInfo ||
+      unreviewedProgramme) &&
     preferredMfa !== "NOMFA";
 
   const alerts = {
@@ -41,6 +46,7 @@ const GlobalAlert = () => {
           unsignedCoJ={unsignedCoJ}
           inProgressFormR={inProgressFormR}
           importantInfo={importantInfo}
+          unreviewedProgramme={unreviewedProgramme}
         />
       )
     }
@@ -61,6 +67,7 @@ const GlobalAlert = () => {
             unsignedCoJ={unsignedCoJ}
             inProgressFormR={inProgressFormR}
             importantInfo={importantInfo}
+            unreviewedProgramme={unreviewedProgramme}
           />
         )}
         {bookmark.status && <BookmarkAlert />}
@@ -96,12 +103,14 @@ type ActionsAlertProps = {
   unsignedCoJ: boolean;
   inProgressFormR: boolean;
   importantInfo: boolean;
+  unreviewedProgramme: boolean;
 };
 
 function ActionsSummaryAlert({
   unsignedCoJ,
   inProgressFormR,
-  importantInfo
+  importantInfo,
+  unreviewedProgramme
 }: Readonly<ActionsAlertProps>) {
   const ACTION_LINK = (
     <span>
@@ -111,17 +120,17 @@ function ActionsSummaryAlert({
   const importantInfoText = "Please review your Form R submissions.";
   const conditions = [
     {
-      check: () => unsignedCoJ && !inProgressFormR,
+      check: () => (unsignedCoJ || unreviewedProgramme) && !inProgressFormR,
       body: <span>You have outstanding actions to complete.</span>,
-      cyTag: "unsignedCoJ"
+      cyTag: "outstandingAction"
     },
     {
-      check: () => !unsignedCoJ && inProgressFormR,
+      check: () => !(unsignedCoJ || unreviewedProgramme) && inProgressFormR,
       body: <span>You have in progress actions to complete.</span>,
       cyTag: "inProgressFormR"
     },
     {
-      check: () => unsignedCoJ && inProgressFormR,
+      check: () => (unsignedCoJ || unreviewedProgramme) && inProgressFormR,
       body: (
         <span>You have outstanding and in progress actions to complete.</span>
       ),

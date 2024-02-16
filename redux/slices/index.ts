@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import traineeProfileReducer from "./traineeProfileSlice";
+import traineeActionsReducer from "./traineeActionsSlice";
 import referenceReducer from "./referenceSlice";
 import formsReducer from "./formsSlice";
 import formAReducer from "./formASlice";
@@ -11,6 +12,7 @@ import tssUpdatesReducer from "./tssUpdatesSlice";
 
 const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
+  traineeActions: traineeActionsReducer,
   reference: referenceReducer,
   forms: formsReducer,
   formA: formAReducer,

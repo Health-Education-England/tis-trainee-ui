@@ -29,6 +29,7 @@ import TSSHeader from "../navigation/TSSHeader";
 import packageJson from "../../package.json";
 import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
+import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
 
 const appVersion = packageJson.version;
 
@@ -36,6 +37,9 @@ export const Main = () => {
   const dispatch = useAppDispatch();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
+  );
+  const traineeActionsDataStatus = useAppSelector(
+    state => state.traineeActions.status
   );
   const formAListStatus = useAppSelector(state => state.formA.status);
   const formBListStatus = useAppSelector(state => state.formB.status);
@@ -86,6 +90,12 @@ export const Main = () => {
     }
   }, [traineeProfileDataStatus, dispatch]);
 
+  useEffect(() => {
+    if (traineeActionsDataStatus === "idle") {
+      dispatch(fetchTraineeActionsData());
+    }
+  }, [traineeActionsDataStatus, dispatch]);
+
   // combined Reference data
   const referenceStatus = useAppSelector(state => state.reference.status);
 
@@ -95,7 +105,11 @@ export const Main = () => {
     }
   }, [referenceStatus, dispatch]);
 
-  if (traineeProfileDataStatus === "loading" || referenceStatus === "loading")
+  if (
+    traineeProfileDataStatus === "loading" ||
+    referenceStatus === "loading" ||
+    traineeActionsDataStatus === "loading"
+  )
     return (
       <div className="centreSpinner">
         <Loading />
