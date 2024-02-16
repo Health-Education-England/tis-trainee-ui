@@ -18,7 +18,8 @@ import DataSourceMsg from "../../common/DataSourceMsg";
 
 export default function ActionSummary() {
   // OUTSTANDING ACTIONS
-  const { unsignedCojCount, programmeActions, placementActions } = useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
+  const { unsignedCojCount, programmeActions, placementActions } =
+    useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
 
   // FORM R SUBMISSIONS (FOR INFO)
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =

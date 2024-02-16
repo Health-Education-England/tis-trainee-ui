@@ -12,7 +12,8 @@ const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   // ACTION SUMMARY
   const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
-  const { unsignedCojCount, programmeActions, placementActions } = useOutstandingActions();
+  const { unsignedCojCount, programmeActions, placementActions } =
+    useOutstandingActions();
   const unsignedCoJ = unsignedCojCount > 0;
   const unreviewedProgramme = programmeActions.length > 0;
   const unreviewedPlacement = placementActions.length > 0;
@@ -126,17 +127,23 @@ function ActionsSummaryAlert({
   const importantInfoText = "Please review your Form R submissions.";
   const conditions = [
     {
-      check: () => (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) && !inProgressFormR,
+      check: () =>
+        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        !inProgressFormR,
       body: <span>You have outstanding actions to complete.</span>,
       cyTag: "outstandingAction"
     },
     {
-      check: () => !(unsignedCoJ || unreviewedProgramme || unreviewedPlacement) && inProgressFormR,
+      check: () =>
+        !(unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        inProgressFormR,
       body: <span>You have in progress actions to complete.</span>,
       cyTag: "inProgressFormR"
     },
     {
-      check: () => (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) && inProgressFormR,
+      check: () =>
+        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        inProgressFormR,
       body: (
         <span>You have outstanding and in progress actions to complete.</span>
       ),
