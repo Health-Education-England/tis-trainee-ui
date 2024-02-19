@@ -37,6 +37,7 @@ import { StartOverButton } from "../StartOverButton";
 import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
 import { TextArea } from "./form-fields/TextArea";
+import ScrollToTop from "../../common/ScrollToTop";
 
 export type Field = {
   name: string;
@@ -250,6 +251,11 @@ export default function FormBuilder({
   return (
     formData && (
       <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+        <ScrollToTop
+          errors={formErrors}
+          page={currentPage}
+          isPageDirty={isFormDirty.current}
+        />
         {pages && (
           <>
             <div>
@@ -320,6 +326,7 @@ export default function FormBuilder({
                     "nhsuk-pagination__link nhsuk-pagination__link--prev"
                   }
                   onClick={() => {
+                    isFormDirty.current = false;
                     setFormErrors({});
                     setCurrentPage(currentPage - 1);
                   }}
