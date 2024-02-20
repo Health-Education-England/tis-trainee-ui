@@ -10,6 +10,7 @@ dayjs.extend(isBetween);
 export type OutstandingSummaryActions = {
   unsignedCojCount: number;
   programmeActions: TraineeAction[];
+  placementActions: TraineeAction[];
 };
 
 // OUTSTANDING (and Global Alert)
@@ -24,9 +25,15 @@ export function getAllOutstandingSummaryActions(
       action.tisReferenceInfo.type === TisReferenceType.programmeMembership &&
       today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
   );
+  const placementActions = traineeActionsData.filter(
+    action =>
+      action.tisReferenceInfo.type === TisReferenceType.placement &&
+      today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
+  );
   return {
     unsignedCojCount,
-    programmeActions
+    programmeActions,
+    placementActions
   };
 }
 

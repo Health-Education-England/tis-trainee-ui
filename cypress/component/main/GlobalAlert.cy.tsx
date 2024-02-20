@@ -113,7 +113,7 @@ describe("GlobalAlert", () => {
     cy.get("[data-cy=outstandingAction]").should("exist");
   });
 
-  it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is false and unreviewed action is true", () => {
+  it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is false and unreviewed programme is true", () => {
     mountComponent(
       true,
       "SMS",
@@ -121,6 +121,21 @@ describe("GlobalAlert", () => {
       [mockFormList[1]],
       [],
       [mockOutstandingActions[1]]
+    );
+    cy.get("[data-cy=globalAlert]").should("exist");
+    cy.get("[data-cy=bookmarkAlert]").should("exist");
+    cy.get("[data-cy=actionsSummaryAlert]").should("exist");
+    cy.get("[data-cy=outstandingAction]").should("exist");
+  });
+
+  it("should render Global Bookmark and Action Summary alerts if redirect is true and unsigned CoJ is false and unreviewed placement is true", () => {
+    mountComponent(
+      true,
+      "SMS",
+      [mockFormList[0]],
+      [mockFormList[1]],
+      [],
+      [mockOutstandingActions[3]]
     );
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");

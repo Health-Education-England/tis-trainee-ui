@@ -12,9 +12,11 @@ const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   // ACTION SUMMARY
   const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
-  const { unsignedCojCount, programmeActions } = useOutstandingActions();
+  const { unsignedCojCount, programmeActions, placementActions } =
+    useOutstandingActions();
   const unsignedCoJ = unsignedCojCount > 0;
   const unreviewedProgramme = programmeActions.length > 0;
+  const unreviewedPlacement = placementActions.length > 0;
   const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
   const inProgressFormR =
     isInProgressFormA || isInProgressFormB || draftFormProps;
@@ -31,7 +33,8 @@ const GlobalAlert = () => {
       inProgressFormR ||
       draftFormProps ||
       importantInfo ||
-      unreviewedProgramme) &&
+      unreviewedProgramme ||
+      unreviewedPlacement) &&
     preferredMfa !== "NOMFA";
 
   const alerts = {
@@ -47,6 +50,7 @@ const GlobalAlert = () => {
           inProgressFormR={inProgressFormR}
           importantInfo={importantInfo}
           unreviewedProgramme={unreviewedProgramme}
+          unreviewedPlacement={unreviewedPlacement}
         />
       )
     }
@@ -68,6 +72,7 @@ const GlobalAlert = () => {
             inProgressFormR={inProgressFormR}
             importantInfo={importantInfo}
             unreviewedProgramme={unreviewedProgramme}
+            unreviewedPlacement={unreviewedPlacement}
           />
         )}
         {bookmark.status && <BookmarkAlert />}
@@ -104,13 +109,15 @@ type ActionsAlertProps = {
   inProgressFormR: boolean;
   importantInfo: boolean;
   unreviewedProgramme: boolean;
+  unreviewedPlacement: boolean;
 };
 
 function ActionsSummaryAlert({
   unsignedCoJ,
   inProgressFormR,
   importantInfo,
-  unreviewedProgramme
+  unreviewedProgramme,
+  unreviewedPlacement
 }: Readonly<ActionsAlertProps>) {
   const ACTION_LINK = (
     <span>
@@ -120,17 +127,23 @@ function ActionsSummaryAlert({
   const importantInfoText = "Please review your Form R submissions.";
   const conditions = [
     {
-      check: () => (unsignedCoJ || unreviewedProgramme) && !inProgressFormR,
+      check: () =>
+        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        !inProgressFormR,
       body: <span>You have outstanding actions to complete.</span>,
       cyTag: "outstandingAction"
     },
     {
-      check: () => !(unsignedCoJ || unreviewedProgramme) && inProgressFormR,
+      check: () =>
+        !(unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        inProgressFormR,
       body: <span>You have in progress actions to complete.</span>,
       cyTag: "inProgressFormR"
     },
     {
-      check: () => (unsignedCoJ || unreviewedProgramme) && inProgressFormR,
+      check: () =>
+        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
+        inProgressFormR,
       body: (
         <span>You have outstanding and in progress actions to complete.</span>
       ),
