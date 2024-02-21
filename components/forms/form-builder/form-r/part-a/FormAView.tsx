@@ -82,8 +82,9 @@ const FormAView = () => {
             Confirmation
           </WarningCallout.Label>
           <p>
-            Check the information entered below is correct and click Submit at
-            the bottom of the page.
+            Please check the information entered below is correct, agree to the
+            Declarations at the bottom of the page, and then click 'Submit
+            Form'.
           </p>
         </WarningCallout>
       )}
@@ -107,14 +108,16 @@ const FormAView = () => {
             canEdit={canEdit}
             formJson={formAJson}
           />
-          {canEdit && canSubmit && (
+          {canEdit && (
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
                 handleSubClick(formAData);
               }}
-              disabled={isSubmitting || Object.keys(errors).length > 0}
+              disabled={
+                !canSubmit || isSubmitting || Object.keys(errors).length > 0
+              }
               data-cy="BtnSubmit"
             >
               Submit Form
