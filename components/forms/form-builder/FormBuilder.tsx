@@ -76,6 +76,7 @@ type Section = {
 export type Form = {
   name: string;
   pages: Page[];
+  declarations: { name: string; label: string }[];
 };
 type FormBuilderProps = {
   jsonForm: Form;
