@@ -91,7 +91,18 @@ export function PanelsCreator({
                         </Label>
                       </SummaryList.Key>
                       <SummaryList.Value>
+                        <p
+                          data-cy={`actionDueDate-${panelsName}-${panel.tisId}`}
+                        >
+                          Due by{" "}
+                          {DateUtilities.ToLocalDate(currentAction[0].dueBy)}{" "}
+                          {today >
+                          dayjs(currentAction[0].dueBy).format("YYYY-MM-DD")
+                            ? "(overdue)"
+                            : ""}
+                        </p>
                         <Button
+                          className="btn_full-width"
                           onClick={(e: { preventDefault: () => void }) => {
                             e.preventDefault();
                             handleReview(currentAction[0].id);

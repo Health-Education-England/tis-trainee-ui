@@ -349,6 +349,9 @@ describe("Programme review action", () => {
     cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
       "not.exist"
     );
+    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
+      "not.exist"
+    );
   });
 
   it("should display the programme review button for unreviewed programme", () => {
@@ -379,6 +382,47 @@ describe("Programme review action", () => {
 
     cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
       "exist"
+    );
+    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
+    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
+      "not.contain",
+      "(overdue)"
+    );
+  });
+
+  it("should display the programme review button and overdue label for overdue programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [
+            mockProgrammeMembershipCojNotSigned[0],
+            mockProgrammeMembershipCojSigned
+          ],
+          placements: []
+        })
+      );
+      dispatch(updatedActionsData([mockOutstandingActions[2]]));
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
+      "exist"
+    );
+    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
+    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
+      "contain",
+      "(overdue)"
     );
   });
 });
