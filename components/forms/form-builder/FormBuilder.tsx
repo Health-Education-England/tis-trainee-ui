@@ -38,6 +38,7 @@ import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
 import { TextArea } from "./form-fields/TextArea";
 import ScrollToTop from "../../common/ScrollToTop";
+import { Checkboxes } from "./form-fields/Checkboxes";
 
 export type Field = {
   name: string;
@@ -174,21 +175,31 @@ export default function FormBuilder({
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     selectedOption?: any,
+    checkedStatus?: boolean,
     arrayIndex?: number,
     arrayName?: string
   ) => {
     const { name, value } = event.currentTarget;
-    const currentValue = selectedOption ? selectedOption.value : value;
+    let currentValue: string | boolean;
+    if (selectedOption) {
+      currentValue = selectedOption.value;
+    } else if (checkedStatus !== undefined) {
+      currentValue = checkedStatus;
+    } else {
+      currentValue = value;
+    }
 
     // Note this code still only works for non-nested text fields
     const primaryField = visibleFields.find(field => field.name === name);
-    handleTextFieldWidth(event, currentValue, primaryField);
-    handleSoftValidationWarningMsgVisibility(
-      currentValue,
-      primaryField,
-      name,
-      setFieldWarning
-    );
+    if (typeof currentValue === "string") {
+      handleTextFieldWidth(event, currentValue, primaryField);
+      handleSoftValidationWarningMsgVisibility(
+        currentValue,
+        primaryField,
+        name,
+        setFieldWarning
+      );
+    }
     //-----------------------------------------------------------
 
     let updatedFormData: FormData = {};
@@ -470,12 +481,14 @@ function renderFormField(
     handleChange: (
       event: any,
       selectedOption?: any,
+      checkedStatus?: boolean,
       index?: number,
       name?: string
     ) => void;
     handleBlur: (
       event: any,
       selectedOption?: any,
+      checkedStatus?: boolean,
       index?: number,
       name?: string
     ) => void;
@@ -583,6 +596,18 @@ function renderFormField(
     case "phone":
       return (
         <Phone
+          name={name}
+          label={label}
+          handleChange={handleChange}
+          fieldError={error}
+          value={value}
+          arrayIndex={arrayIndex}
+          arrayName={arrayName}
+        />
+      );
+    case "checkbox":
+      return (
+        <Checkboxes
           name={name}
           label={label}
           handleChange={handleChange}

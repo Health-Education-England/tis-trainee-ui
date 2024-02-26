@@ -7,6 +7,7 @@ type TextAreaProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     index?: number | undefined,
     name?: string | undefined
   ) => void;
@@ -42,7 +43,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
         name={name}
         value={value ?? ""}
         onChange={event =>
-          handleChange(event, undefined, arrayIndex, arrayName)
+          handleChange(event, undefined, undefined, arrayIndex, arrayName)
         }
         onBlur={handleBlur}
         placeholder={placeholder}
