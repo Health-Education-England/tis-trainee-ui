@@ -95,11 +95,7 @@ export function PanelsCreator({
                           data-cy={`actionDueDate-${panelsName}-${panel.tisId}`}
                         >
                           Due by{" "}
-                          {DateUtilities.ToLocalDate(currentAction[0].dueBy)}{" "}
-                          {today >
-                          dayjs(currentAction[0].dueBy).format("YYYY-MM-DD")
-                            ? "(overdue)"
-                            : ""}
+                          {DateUtilities.ToLocalDate(currentAction[0].dueBy)}
                         </p>
                         <Button
                           className="btn_full-width"

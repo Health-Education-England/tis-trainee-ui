@@ -384,13 +384,9 @@ describe("Programme review action", () => {
       "exist"
     );
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
-    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
-      "not.contain",
-      "(overdue)"
-    );
   });
 
-  it("should display the programme review button and overdue label for overdue programme", () => {
+  it("should display the programme review button for overdue programme", () => {
     const MockedProgrammes = () => {
       const dispatch = useAppDispatch();
       dispatch(
@@ -420,9 +416,5 @@ describe("Programme review action", () => {
       "exist"
     );
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
-    cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
-      "contain",
-      "(overdue)"
-    );
   });
 });

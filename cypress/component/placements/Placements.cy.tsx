@@ -465,13 +465,10 @@ describe("Placements - dsp membership", () => {
       );
 
       cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
-      cy.get("[data-cy='actionDueDate-placements-315']").should(
-        "not.contain",
-        "(overdue)"
-      );
+      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
     });
 
-    it("should display the placement review button and overdue label for unreviewed overdue placement", () => {
+    it("should display the placement review button for unreviewed overdue placement", () => {
       const MockedPlacements = () => {
         const dispatch = useAppDispatch();
         dispatch(
@@ -495,10 +492,7 @@ describe("Placements - dsp membership", () => {
       );
 
       cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
-      cy.get("[data-cy='actionDueDate-placements-315']").should(
-        "contain",
-        "(overdue)"
-      );
+      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
     });
   });
 });
