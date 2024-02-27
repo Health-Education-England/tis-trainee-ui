@@ -82,9 +82,9 @@ const FormAView = () => {
             Confirmation
           </WarningCallout.Label>
           <p>
-            Please check the information entered below is correct, agree to the
+            {`Please check the information entered below is correct, agree to the
             Declarations at the bottom of the page, and then click 'Submit
-            Form'.
+            Form'.`}
           </p>
         </WarningCallout>
       )}
