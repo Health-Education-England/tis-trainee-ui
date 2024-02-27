@@ -583,7 +583,7 @@ export const mockPlacementsForGrouping: Placement[] = [
 ];
 
 export const mockOutstandingActions: TraineeAction[] = [
-  // Future action
+  // Future action (not to show)
   {
     id: "0",
     type: "REVIEW_DATA",
@@ -593,9 +593,9 @@ export const mockOutstandingActions: TraineeAction[] = [
       type: TisReferenceType.programmeMembership
     },
     availableFrom: new Date(twelveWeeksAhead),
-    dueBy: new Date("2024-10-14")
+    dueBy: new Date(twelveWeeksAhead)
   },
-  // Outstanding action
+  // Non-due Outstanding action
   {
     id: "1",
     type: "REVIEW_DATA",
@@ -604,12 +604,24 @@ export const mockOutstandingActions: TraineeAction[] = [
       id: "1",
       type: TisReferenceType.programmeMembership
     },
-    availableFrom: new Date(yesterday),
-    dueBy: new Date("2024-10-14")
+    availableFrom: new Date(oneWeekAgo),
+    dueBy: new Date(today)
   },
-  // Future action
+  // Overdue action
   {
     id: "2",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "1",
+      type: TisReferenceType.programmeMembership
+    },
+    availableFrom: new Date(oneWeekAgo),
+    dueBy: new Date(yesterday)
+  },
+  // Future action (not to show)
+  {
+    id: "3",
     type: "REVIEW_DATA",
     traineeTisId: "12345",
     tisReferenceInfo: {
@@ -617,18 +629,30 @@ export const mockOutstandingActions: TraineeAction[] = [
       type: TisReferenceType.placement
     },
     availableFrom: new Date(twelveWeeksAhead),
-    dueBy: new Date("2024-10-14")
+    dueBy: new Date(twelveWeeksAhead)
   },
-  // Outstanding action
+  // Non-due Outstanding action
   {
-    id: "3",
+    id: "4",
     type: "REVIEW_DATA",
     traineeTisId: "12345",
     tisReferenceInfo: {
       id: "315",
       type: TisReferenceType.placement
     },
-    availableFrom: new Date(yesterday),
-    dueBy: new Date("2024-10-14")
+    availableFrom: new Date(oneWeekAgo),
+    dueBy: new Date(today)
+  },
+  // Overdue action
+  {
+    id: "5",
+    type: "REVIEW_DATA",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "315",
+      type: TisReferenceType.placement
+    },
+    availableFrom: new Date(oneWeekAgo),
+    dueBy: new Date(yesterday)
   }
 ];

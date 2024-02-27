@@ -425,10 +425,10 @@ describe("Placements - dsp membership", () => {
             placements: [mockPlacements[0]]
           })
         );
-        dispatch(updatedActionsData([mockOutstandingActions[2]]));
+        dispatch(updatedActionsData([mockOutstandingActions[3]]));
         return <Placements />;
       };
-  
+
       mount(
         <Provider store={store}>
           <Router history={history}>
@@ -436,12 +436,11 @@ describe("Placements - dsp membership", () => {
           </Router>
         </Provider>
       );
-  
-      cy.get("[data-cy='reviewActionBtn-placements-315']").should(
-        "not.exist"
-      );
+
+      cy.get("[data-cy='reviewActionBtn-placements-315']").should("not.exist");
+      cy.get("[data-cy='actionDueDate-placements-315']").should("not.exist");
     });
-  
+
     it("should display the placement review button for unreviewed placement", () => {
       const MockedPlacements = () => {
         const dispatch = useAppDispatch();
@@ -453,10 +452,10 @@ describe("Placements - dsp membership", () => {
             placements: [mockPlacements[0]]
           })
         );
-        dispatch(updatedActionsData([mockOutstandingActions[3]]));
+        dispatch(updatedActionsData([mockOutstandingActions[4]]));
         return <Placements />;
       };
-  
+
       mount(
         <Provider store={store}>
           <Router history={history}>
@@ -464,10 +463,36 @@ describe("Placements - dsp membership", () => {
           </Router>
         </Provider>
       );
-  
-      cy.get("[data-cy='reviewActionBtn-placements-315']").should(
-        "exist"
+
+      cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
+      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
+    });
+
+    it("should display the placement review button for unreviewed overdue placement", () => {
+      const MockedPlacements = () => {
+        const dispatch = useAppDispatch();
+        dispatch(
+          updatedTraineeProfileData({
+            traineeTisId: "12345",
+            personalDetails: mockPersonalDetails,
+            programmeMemberships: [],
+            placements: [mockPlacements[0]]
+          })
+        );
+        dispatch(updatedActionsData([mockOutstandingActions[5]]));
+        return <Placements />;
+      };
+
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedPlacements />
+          </Router>
+        </Provider>
       );
+
+      cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
+      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
     });
   });
 });

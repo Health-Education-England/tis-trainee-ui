@@ -135,7 +135,7 @@ describe("GlobalAlert", () => {
       [mockFormList[0]],
       [mockFormList[1]],
       [],
-      [mockOutstandingActions[3]]
+      [mockOutstandingActions[4]]
     );
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");

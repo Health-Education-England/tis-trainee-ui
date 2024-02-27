@@ -135,7 +135,7 @@ describe("Action Summary", () => {
   testProgrammeAction(
     mockOutstandingActions,
     true,
-    "You have 1 Programme Membership to review"
+    "You have 2 Programme Memberships to review"
   );
 
   const testPlacementAction = (
@@ -158,11 +158,11 @@ describe("Action Summary", () => {
     });
   };
   testPlacementAction([], false, "signed");
-  testPlacementAction([mockOutstandingActions[2]], false, "");
+  testPlacementAction([mockOutstandingActions[3]], false, "");
   testPlacementAction(
     mockOutstandingActions,
     true,
-    "You have 1 Placement to review"
+    "You have 2 Placements to review"
   );
 
   const testFormNoSubmissions = (formType: FormType) => {
