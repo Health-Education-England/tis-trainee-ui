@@ -9,6 +9,7 @@ type PhoneProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     arrayIndex?: number,
     arrayName?: string
   ) => void;
@@ -41,6 +42,7 @@ export const Phone = ({
         onChange={value => {
           handleChange(
             { currentTarget: { name, value } },
+            undefined,
             undefined,
             arrayIndex,
             arrayName

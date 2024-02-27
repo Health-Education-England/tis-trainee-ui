@@ -13,6 +13,7 @@ type TextProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     index?: number | undefined,
     name?: string | undefined
   ) => void;
@@ -59,7 +60,13 @@ export const Text: React.FC<TextProps> = ({
         value={value ?? ""}
         onChange={
           ((event: any) =>
-            handleChange(event, undefined, arrayIndex, arrayName)) as any
+            handleChange(
+              event,
+              undefined,
+              undefined,
+              arrayIndex,
+              arrayName
+            )) as any
         }
         className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
           fieldError ? "nhsuk-input--error" : ""

@@ -13,6 +13,7 @@ type SelectorProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     arrayIndex?: number,
     arrayName?: string
   ) => void;
@@ -49,6 +50,7 @@ export const Selector = ({
               }
             },
             selectedOption,
+            undefined,
             arrayIndex,
             arrayName
           )

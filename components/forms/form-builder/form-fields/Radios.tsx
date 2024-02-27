@@ -9,6 +9,7 @@ type RadiosProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     arrayIndex?: number,
     arrayName?: string
   ) => void;
@@ -45,7 +46,7 @@ export const Radios: React.FC<RadiosProps> = ({
             value={option.value}
             checked={value === option.value}
             onChange={event =>
-              handleChange(event, undefined, arrayIndex, arrayName)
+              handleChange(event, undefined, undefined, arrayIndex, arrayName)
             }
             placeholder={option.value}
             aria-labelledby={`${option.value}--label`}

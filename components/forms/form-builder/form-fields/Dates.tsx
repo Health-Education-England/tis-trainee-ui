@@ -7,6 +7,7 @@ type DatesProps = {
   handleChange: (
     event: any,
     selectedOption?: any,
+    checkedStatus?: boolean,
     arrayIndex?: number,
     arrayName?: string
   ) => void;
@@ -39,7 +40,7 @@ export const Dates = ({
         name={name}
         value={value}
         onChange={event => {
-          handleChange(event, undefined, arrayIndex, arrayName);
+          handleChange(event, undefined, undefined, arrayIndex, arrayName);
         }}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
