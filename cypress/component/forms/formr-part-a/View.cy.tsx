@@ -138,6 +138,9 @@ describe("View", () => {
       </Provider>
     );
     cy.get(".nhsuk-error-summary").should("not.exist");
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
+    cy.get('[data-cy="isCorrect"]').should("exist").click();
+    cy.get('[data-cy="willKeepInformed"]').should("exist").click();
     cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled");
   });
 });

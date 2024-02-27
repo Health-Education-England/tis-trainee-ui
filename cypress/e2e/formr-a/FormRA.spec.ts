@@ -207,7 +207,13 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         cy.get('[data-cy="edit-Personal Details"]').should("exist");
 
         // Submit form
-        cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
+        cy.get("[data-cy=BtnSubmit]")
+          .scrollIntoView()
+          .should("exist")
+          .should("be.disabled");
+        cy.get('[data-cy="isCorrect"]').should("exist").click();
+        cy.get('[data-cy="willKeepInformed"]').should("exist").click();
+        cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled").click();
         cy.get(".MuiDialog-container")
           .should("exist")
           .should("include.text", "Please think carefully before submitting");
