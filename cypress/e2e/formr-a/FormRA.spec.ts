@@ -342,7 +342,9 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.log(
       "################ Cancel submit and start over/delete draft ###################"
     );
-    cy.get("[data-cy=BtnSubmit]").scrollIntoView().should("exist").click();
+    cy.get('[data-cy="isCorrect"]').should("exist").click();
+    cy.get('[data-cy="willKeepInformed"]').should("exist").click();
+    cy.get("[data-cy=BtnSubmit]").should("exist").click();
     cy.get(".MuiDialog-container")
       .should("exist")
       .should("include.text", "Please think carefully before submitting");
