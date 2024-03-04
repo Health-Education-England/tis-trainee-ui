@@ -29,8 +29,8 @@ import { StartOverButton } from "../../../StartOverButton";
 import { formAValidationSchemaView } from "./formAValidationSchema";
 import { ValidationError } from "yup";
 import { FormErrors } from "../../FormBuilder";
+import Declarations from "../../Declarations";
 
-//NOTE TO FUTURE SELF - make this comp more generic
 const FormAView = () => {
   const confirm = useConfirm();
   const formName = formAJson.name;
@@ -38,6 +38,7 @@ const FormAView = () => {
   const formAData = useAppSelector(selectSavedFormA);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [canSubmit, setCanSubmit] = useState(false);
 
   useEffect(() => {
     if (canEdit) {
@@ -81,8 +82,9 @@ const FormAView = () => {
             Confirmation
           </WarningCallout.Label>
           <p>
-            Check the information entered below is correct and click Submit at
-            the bottom of the page.
+            {`Please check the information entered below is correct, agree to the
+            Declarations at the bottom of the page, and then click 'Submit
+            Form'.`}
           </p>
         </WarningCallout>
       )}
@@ -98,34 +100,36 @@ const FormAView = () => {
         formErrors={errors}
       />
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
-      {canEdit && (
-        <WarningCallout data-cy="warningSubmit">
-          <WarningCallout.Label visuallyHiddenText={false}>
-            Important
-          </WarningCallout.Label>
-          <p>
-            By submitting this form, I confirm that the information above is
-            correct and I will keep my Designated Body and the GMC informed as
-            soon as possible of any change to my contact details.
-          </p>
-        </WarningCallout>
-      )}
+
+      <WarningCallout>
+        <WarningCallout.Label>Declarations</WarningCallout.Label>
+        <form onSubmit={() => setIsSubmitting(true)}>
+          <Declarations
+            setCanSubmit={setCanSubmit}
+            canEdit={canEdit}
+            formJson={formAJson}
+          />
+          {canEdit && (
+            <Button
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                handleSubClick(formAData);
+              }}
+              disabled={
+                !canSubmit || isSubmitting || Object.keys(errors).length > 0
+              }
+              data-cy="BtnSubmit"
+            >
+              Submit Form
+            </Button>
+          )}
+        </form>
+      </WarningCallout>
+
       {canEdit && (
         <Container>
           <Row>
-            <Col width="one-quarter">
-              <Button
-                onClick={(e: { preventDefault: () => void }) => {
-                  e.preventDefault();
-                  setIsSubmitting(true);
-                  handleSubClick(formAData);
-                }}
-                disabled={isSubmitting || Object.keys(errors).length > 0}
-                data-cy="BtnSubmit"
-              >
-                Submit Form
-              </Button>
-            </Col>
             <Col width="one-quarter">
               <Button
                 secondary

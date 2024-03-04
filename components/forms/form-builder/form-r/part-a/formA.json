@@ -250,5 +250,15 @@
         }
       ]
     }
+  ],
+  "declarations": [
+    {
+      "name": "isCorrect",
+      "label": "I confirm that the above information is correct."
+    },
+    {
+      "name": "willKeepInformed",
+      "label": "I will keep my Designated Body and the GMC informed as soon as possible of any change to my contact details."
+    }
   ]
 }
