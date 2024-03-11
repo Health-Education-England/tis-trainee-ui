@@ -634,3 +634,101 @@ ol[type="a"] {
 .error-spacing_div {
   padding-top: 0.5em;
 }
+
+// ---- Notifications table ----
+
+// Global search
+.table-search-input {
+  margin: 1rem 0;
+}
+
+// Header
+.table-header-btn {
+  color: #425563;
+  padding: 0;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    color: #005eb8;
+  }
+}
+
+.table-header-btn-icon {
+  color: #425563;
+  padding-left: 8px;
+  &:hover {
+    color: #005eb8;
+  }
+}
+
+// Row
+.table-row {
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: #cbe0d9;
+  }
+}
+.row-read {
+  font-weight: normal;
+  background-color: #d8dde0;
+}
+
+.row-unread {
+  font-weight: bold;
+  background-color: white;
+}
+
+.table-data {
+  border-top: solid 1px #bfc3c6;
+}
+
+// Status column
+.table-status {
+  padding-left: 4px;
+}
+
+.table-status-desktop {
+  padding-left: 16px;
+}
+
+.status-read {
+  color: #006400;
+}
+
+.status-unread {
+  color: #005eb8;
+}
+
+.table-actions-icon {
+  padding-right: 12px;
+}
+
+.tooltip {
+  background-color: #005eb8 !important;
+  border-radius: 4px !important;
+  padding: 6px !important;
+  margin: 0 !important;
+  color: white !important;
+}
+
+.tooltip-header {
+  opacity: 0.25 !important;
+}
+
+.tooltip-row {
+  opacity: 0.8 !important;
+}
+
+.back-link {
+  cursor: pointer;
+}
+
+.container {
+  color: #425563;
+  background-color: whitesmoke;
+  border: solid 2px white;
+  box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 32px;
+  padding: 16px;
+}
