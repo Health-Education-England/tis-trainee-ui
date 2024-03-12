@@ -732,3 +732,16 @@ ol[type="a"] {
   margin-bottom: 32px;
   padding: 16px;
 }
+
+// pagination
+.pagination-btn {
+  background-color: #005eb8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 4px;
+  &:hover {
+    background-color: #002f5c;
+  }
+}

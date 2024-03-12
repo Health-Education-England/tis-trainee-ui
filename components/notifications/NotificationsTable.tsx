@@ -4,16 +4,22 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   createColumnHelper,
   flexRender,
   SortingState,
   ColumnFiltersState,
   Column,
-  Header
+  Header,
+  PaginationState,
+  Table
 } from "@tanstack/react-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEllipsisV,
+  faAngleLeft,
+  faAngleRight,
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
   faEnvelope,
   faEnvelopeOpen,
   faSort,
@@ -21,7 +27,6 @@ import {
   faSortUp
 } from "@fortawesome/free-solid-svg-icons";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import { useIsMobile } from "../../utilities/hooks/useIsMobile";
 import { Tooltip } from "react-tooltip";
 import {
   NotificationType,
@@ -32,6 +37,7 @@ import history from "../navigation/history";
 import store from "../../redux/store/store";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { StringUtilities } from "../../utilities/StringUtilities";
+import { Col, Container, Row } from "nhsuk-react-components";
 
 type NotificationsTableProps = {
   data: NotificationType[];
@@ -40,13 +46,16 @@ type NotificationsTableProps = {
 export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
   const notificationsData = useAppSelector(state => state.notifications.data);
   const memoData = useMemo(() => notificationsData, []); // TODO - add notifDataStatus to dependency array to update data when e.g. mark as unread
-  const isMobile = useIsMobile();
   const columnHelper = createColumnHelper<NotificationType>();
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
     { id: "sendDate", desc: true }
   ]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5
+  });
 
   const columns = [
     columnHelper.accessor("status", {
@@ -57,9 +66,8 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
           props.row.original.status === "read"
             ? "status-read"
             : "status-unread";
-        const deviceClass = isMobile ? "" : "table-status-desktop";
         return (
-          <span className={`table-status ${statusClass} ${deviceClass}`}>
+          <span className={`table-status ${statusClass} nhsuk-margin-left-1`}>
             {props.row.original.status === "read" ? (
               <FontAwesomeIcon icon={faEnvelopeOpen} size="xl" />
             ) : (
@@ -103,9 +111,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
     }),
     columnHelper.display({
       id: "moreActions",
-      cell: props => (
-        <MoreActions status={props.row.original.status} isMobile={isMobile} />
-      )
+      cell: props => <MoreActions status={props.row.original.status} />
     })
   ];
 
@@ -115,14 +121,17 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
-      globalFilter
+      globalFilter,
+      pagination
     },
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter
+    onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: setPagination
   });
   return (
     <>
@@ -176,6 +185,8 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
           })}
         </tbody>
       </table>
+      <TablePagination table={table} />
+      <hr />
     </>
   );
 };
@@ -224,46 +235,31 @@ function TableColumnHeader<TData, TValue>({
 
 type MoreActionsProps = {
   status: NotificationStatus;
-  isMobile: boolean;
 };
 
-function MoreActions({ status, isMobile }: Readonly<MoreActionsProps>) {
-  return (
-    <span>
-      {status === "read" && isMobile && (
+function MoreActions({ status }: Readonly<MoreActionsProps>) {
+  if (status === "read") {
+    return (
+      <>
         <FontAwesomeIcon
-          data-tooltip-id="mark-unread-mobile"
+          data-tooltip-id="mark-unread-desktop"
           className="table-actions-icon"
-          icon={faEllipsisV}
-          size="lg"
+          icon={faEnvelope}
+          size="sm"
           onClick={(event: React.MouseEvent) => {
             event.stopPropagation();
-            console.log("mark as unread (mobile) clicked");
+            console.log("mark as unread (desktop) clicked");
           }}
         />
-      )}
-      {status === "read" && !isMobile && (
-        <>
-          <FontAwesomeIcon
-            data-tooltip-id="mark-unread-desktop"
-            className="table-actions-icon"
-            icon={faEnvelope}
-            size="sm"
-            onClick={(event: React.MouseEvent) => {
-              event.stopPropagation();
-              console.log("mark as unread (desktop) clicked");
-            }}
-          />
-          <Tooltip
-            className="tooltip tooltip-row"
-            id="mark-unread-desktop"
-            place="top"
-            content="Mark as unread"
-          />
-        </>
-      )}
-    </span>
-  );
+        <Tooltip
+          className="tooltip tooltip-row"
+          id="mark-unread-desktop"
+          place="top"
+          content="Mark as unread"
+        />
+      </>
+    );
+  } else return null;
 }
 
 function DebouncedInput({
@@ -317,5 +313,93 @@ function AllUnreadCheckbox({ header }: Readonly<AllUnreadCheckboxProps>) {
         }
       ></input>
     </div>
+  );
+}
+
+type TablePaginationType = {
+  table: Table<NotificationType>;
+};
+
+function TablePagination({ table }: Readonly<TablePaginationType>) {
+  return (
+    <Container>
+      <Row>
+        <Col width="two-thirds">
+          <button
+            type="button"
+            className="nhsuk-u-margin-right-2 pagination-btn"
+            onClick={() => table.firstPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </button>
+          <button
+            type="button"
+            className="nhsuk-u-margin-right-1 pagination-btn"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
+          <button
+            type="button"
+            className="nhsuk-u-margin-right-2 pagination-btn"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <FontAwesomeIcon icon={faAngleRight} />
+          </button>
+          <button
+            type="button"
+            className="nhsuk-u-margin-right-2 pagination-btn"
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </button>
+          <select
+            className="nhsuk-select nhsuk-u-margin-left-1"
+            value={table.getState().pagination.pageSize}
+            onChange={e => {
+              table.setPageSize(Number(e.target.value));
+            }}
+          >
+            {[5, 10, 20, 30].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                {`Show ${pageSize} rows`}
+              </option>
+            ))}
+          </select>
+        </Col>
+        <Col width="one-third">
+          {table.getPageCount() >= 2 && (
+            <span className="nhsuk-u-font-size-19">
+              {`Go to page: `}
+              <input
+                type="number"
+                defaultValue={table.getState().pagination.pageIndex + 1}
+                onChange={e => {
+                  const target = e.target as HTMLInputElement;
+                  const page = target.value ? Number(target.value) - 1 : 0;
+                  table.setPageIndex(page);
+                }}
+                onInput={e => {
+                  const target = e.target as HTMLInputElement;
+                  const enteredPage = Number(target.value);
+                  if (enteredPage > table.getPageCount()) {
+                    target.value = table.getPageCount().toString();
+                  }
+                }}
+                onFocus={e => {
+                  e.target.value = "";
+                }}
+                className="nhsuk-input nhsuk-input--width-2"
+              />
+              {` of ${table.getPageCount()}`}
+            </span>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 }
