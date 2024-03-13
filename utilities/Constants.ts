@@ -203,7 +203,8 @@ export const toastErrText = {
     "Couldn't verify your identification with that Authentication code.",
   signCoj: "Couldn't sign your Conditions of Joining.",
   fetchTraineeActionsData: "Couldn't load your task checklist (to-do actions).",
-  completeTraineeAction: "Couldn't update trainee actions."
+  completeTraineeAction: "Couldn't update trainee actions.",
+  fetchAllNotifications: "Couldn't load your notifications."
 };
 
 export const toastSuccessText = {

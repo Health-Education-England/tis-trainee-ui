@@ -3,8 +3,13 @@ import { NavLink } from "react-router-dom";
 import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
 import store from "../../redux/store/store";
+import { NotificationBtn } from "../common/NotificationBtn";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 const TSSHeader = () => {
+  const unreadNotificationCount = useAppSelector(
+    state => state.notifications.unreadNotificationCount
+  );
   return (
     <Header>
       <Header.Container>
@@ -18,8 +23,16 @@ const TSSHeader = () => {
           </a>
         </div>
         <Header.Content>
+          <NotificationBtn
+            unreadNotificationCount={unreadNotificationCount}
+            data-cy="notificationBtnHDR"
+          />
           <Header.MenuToggle data-cy="menuToggleBtn" />
           <div className="top-nav-container">
+            <NotificationBtn
+              unreadNotificationCount={unreadNotificationCount}
+              data-cy="notificationBtnHDR"
+            />
             <NavLink
               className="nhsuk-header__navigation-link"
               data-cy="topNavSupport"

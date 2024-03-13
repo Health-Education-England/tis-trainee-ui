@@ -30,6 +30,7 @@ import packageJson from "../../package.json";
 import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
 import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
+import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { Notifications } from "../notifications/Notifications";
 
 const appVersion = packageJson.version;
@@ -100,12 +101,11 @@ export const Main = () => {
     }
   }, [traineeActionsDataStatus, dispatch]);
 
-  // // TODO - Implement a thunk to fetch notifications from the DB.
-  // useEffect(() => {
-  //   if (notificationsStatus === "idle") {
-  //     dispatch(fetchNotifications());
-  //   }
-  // }, [notificationsStatus, dispatch]);
+  useEffect(() => {
+    if (notificationsStatus === "idle") {
+      dispatch(getNotifications());
+    }
+  }, [traineeActionsDataStatus, dispatch]);
 
   // combined Reference data
   const referenceStatus = useAppSelector(state => state.reference.status);
