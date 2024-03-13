@@ -23,10 +23,6 @@ const TSSHeader = () => {
           </a>
         </div>
         <Header.Content>
-          <NotificationBtn
-            unreadNotificationCount={unreadNotificationCount}
-            data-cy="notificationBtnHDR"
-          />
           <Header.MenuToggle data-cy="menuToggleBtn" />
           <div className="top-nav-container">
             <NotificationBtn

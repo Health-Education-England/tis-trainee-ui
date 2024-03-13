@@ -51,10 +51,10 @@ const columns = [
     header: "",
     cell: props => {
       const statusClass =
-        props.row.original.status === "read" ? "status-read" : "status-unread";
+        props.row.original.status === "READ" ? "status-read" : "status-unread";
       return (
         <span className={`table-status ${statusClass} nhsuk-margin-left-1`}>
-          {props.row.original.status === "read" ? (
+          {props.row.original.status === "READ" ? (
             <FontAwesomeIcon icon={faEnvelopeOpen} size="xl" />
           ) : (
             <FontAwesomeIcon icon={faEnvelope} size="xl" />
@@ -63,8 +63,8 @@ const columns = [
       );
     }
   }),
-  columnHelper.accessor("title", {
-    id: "title",
+  columnHelper.accessor("subject", {
+    id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Title" />,
     cell: props => (
       <span>
@@ -74,15 +74,15 @@ const columns = [
     enableColumnFilter: false
   }),
 
-  columnHelper.accessor("category", {
-    id: "category",
+  columnHelper.accessor("type", {
+    id: "type",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
     cell: props => <span>{props.renderValue()}</span>,
     enableColumnFilter: false
   }),
 
-  columnHelper.accessor("sendDate", {
-    id: "sendDate",
+  columnHelper.accessor("sentAt", {
+    id: "sentAt",
     header: ({ column }) => <TableColumnHeader column={column} title="Date" />,
     cell: info => DateUtilities.ToLocalDate(info.renderValue()),
     sortingFn: "datetime",
@@ -160,7 +160,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
         <tbody>
           {table.getRowModel().rows.map(row => {
             const statusClass =
-              row.original.status === "read"
+              row.original.status === "READ"
                 ? "table-row row-read"
                 : "table-row row-unread";
             return (
@@ -187,7 +187,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
 
 function handleRowClick(row: NotificationType) {
   const activeNotification: NotificationType =
-    row.status === "unread" ? { ...row, status: "read" } : row;
+    row.status === "UNREAD" ? { ...row, status: "READ" } : row;
   // Optimistic update
   store.dispatch(updatedActiveNotification(activeNotification));
   // TODO - If current status is unread then need to trigger a thunk to update DB with new status for this notification.
@@ -232,7 +232,7 @@ type MoreActionsProps = {
 };
 
 function MoreActions({ status }: Readonly<MoreActionsProps>) {
-  if (status === "read") {
+  if (status === "READ") {
     return (
       <>
         <FontAwesomeIcon

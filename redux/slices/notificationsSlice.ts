@@ -2,20 +2,26 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { TraineeNotificationsService } from "../../services/TraineeNotificationsService";
-export type NotificationStatus = "READ" | "UNREAD" | "FAILED" | "SENT";
-import { notificationsData } from "../../mock-data/notifications";
-export type NotificationStatus = "read" | "unread";
+// import { notificationsData } from "../../mock-data/notifications";
+
+export type NotificationStatus =
+  | "READ"
+  | "UNREAD"
+  | "FAILED"
+  | "SENT"
+  | "ARCHIVED";
+
+// just placeholders for now
+export type NotificationMsgType = "WELCOME" | "UPDATES" | "NEW_STARTER";
 
 // TODO - Finalise the NotificationType
 export type NotificationType = {
   id: string;
-  category: string;
-  title: string;
-  message: string;
+  type: NotificationMsgType;
+  subject: string;
   status: NotificationStatus;
-  sendDate: Date;
-  readDate: Date | null;
-  archiveDate: Date | null;
+  sentAt: Date;
+  message?: string;
 };
 
 export type NotificationsState = {
@@ -26,8 +32,8 @@ export type NotificationsState = {
   unreadNotificationCount: number;
 };
 
+// TODO - Replace with actual data from the backend
 export const initialState: NotificationsState = {
-  // TODO - remove this temp mock data and replace with async thunk
   data: [],
   status: "idle",
   error: "",
@@ -40,7 +46,6 @@ export const getNotifications = createAsyncThunk(
   async () => {
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getAllNotifications();
-    console.log(response.data);
     return response.data;
   }
 );
@@ -62,7 +67,7 @@ const notificationsSlice = createSlice({
         state.status = "succeeded";
         state.data = action.payload;
         state.unreadNotificationCount = unreadNotificationsCount(
-          action.payload
+          action.payload ?? 0
         );
       })
       .addCase(getNotifications.rejected, (state, { error }) => {
@@ -82,6 +87,7 @@ export default notificationsSlice.reducer;
 export const { updatedActiveNotification } = notificationsSlice.actions;
 
 function unreadNotificationsCount(notificationsData: any[]) {
+  if (!Array.isArray(notificationsData)) return 0;
   const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
   );
