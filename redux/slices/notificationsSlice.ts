@@ -2,8 +2,9 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { TraineeNotificationsService } from "../../services/TraineeNotificationsService";
-
 export type NotificationStatus = "READ" | "UNREAD" | "FAILED" | "SENT";
+import { notificationsData } from "../../mock-data/notifications";
+export type NotificationStatus = "read" | "unread";
 
 // TODO - Finalise the NotificationType
 export type NotificationType = {
