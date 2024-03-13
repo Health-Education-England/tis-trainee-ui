@@ -43,10 +43,62 @@ type NotificationsTableProps = {
   data: NotificationType[];
 };
 
+const columnHelper = createColumnHelper<NotificationType>();
+
+const columns = [
+  columnHelper.accessor("status", {
+    id: "status",
+    header: "",
+    cell: props => {
+      const statusClass =
+        props.row.original.status === "read" ? "status-read" : "status-unread";
+      return (
+        <span className={`table-status ${statusClass} nhsuk-margin-left-1`}>
+          {props.row.original.status === "read" ? (
+            <FontAwesomeIcon icon={faEnvelopeOpen} size="xl" />
+          ) : (
+            <FontAwesomeIcon icon={faEnvelope} size="xl" />
+          )}
+        </span>
+      );
+    }
+  }),
+  columnHelper.accessor("title", {
+    id: "title",
+    header: ({ column }) => <TableColumnHeader column={column} title="Title" />,
+    cell: props => (
+      <span>
+        {StringUtilities.truncateString(props.renderValue() as string, 40)}
+      </span>
+    ),
+    enableColumnFilter: false
+  }),
+
+  columnHelper.accessor("category", {
+    id: "category",
+    header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
+    cell: props => <span>{props.renderValue()}</span>,
+    enableColumnFilter: false
+  }),
+
+  columnHelper.accessor("sendDate", {
+    id: "sendDate",
+    header: ({ column }) => <TableColumnHeader column={column} title="Date" />,
+    cell: info => DateUtilities.ToLocalDate(info.renderValue()),
+    sortingFn: "datetime",
+    sortDescFirst: false,
+    enableColumnFilter: false
+  }),
+  columnHelper.display({
+    id: "moreActions",
+    cell: props => <MoreActions status={props.row.original.status} />
+  })
+];
+
 export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
   const notificationsData = useAppSelector(state => state.notifications.data);
   const memoData = useMemo(() => notificationsData, []); // TODO - add notifDataStatus to dependency array to update data when e.g. mark as unread
-  const columnHelper = createColumnHelper<NotificationType>();
+
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
@@ -56,64 +108,6 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
     pageIndex: 0,
     pageSize: 5
   });
-
-  const columns = [
-    columnHelper.accessor("status", {
-      id: "status",
-      header: "",
-      cell: props => {
-        const statusClass =
-          props.row.original.status === "read"
-            ? "status-read"
-            : "status-unread";
-        return (
-          <span className={`table-status ${statusClass} nhsuk-margin-left-1`}>
-            {props.row.original.status === "read" ? (
-              <FontAwesomeIcon icon={faEnvelopeOpen} size="xl" />
-            ) : (
-              <FontAwesomeIcon icon={faEnvelope} size="xl" />
-            )}
-          </span>
-        );
-      }
-    }),
-    columnHelper.accessor("title", {
-      id: "title",
-      header: ({ column }) => (
-        <TableColumnHeader column={column} title="Title" />
-      ),
-      cell: props => (
-        <span>
-          {StringUtilities.truncateString(props.renderValue() as string, 40)}
-        </span>
-      ),
-      enableColumnFilter: false
-    }),
-
-    columnHelper.accessor("category", {
-      id: "category",
-      header: ({ column }) => (
-        <TableColumnHeader column={column} title="Type" />
-      ),
-      cell: props => <span>{props.renderValue()}</span>,
-      enableColumnFilter: false
-    }),
-
-    columnHelper.accessor("sendDate", {
-      id: "sendDate",
-      header: ({ column }) => (
-        <TableColumnHeader column={column} title="Date" />
-      ),
-      cell: info => DateUtilities.ToLocalDate(info.renderValue()),
-      sortingFn: "datetime",
-      sortDescFirst: false,
-      enableColumnFilter: false
-    }),
-    columnHelper.display({
-      id: "moreActions",
-      cell: props => <MoreActions status={props.row.original.status} />
-    })
-  ];
 
   const table = useReactTable({
     data: memoData,
