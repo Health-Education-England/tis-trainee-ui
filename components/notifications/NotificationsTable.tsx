@@ -96,7 +96,9 @@ const columns = [
 ];
 
 export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
-  const notificationsData = useAppSelector(state => state.notifications.data);
+  const notificationsData = useAppSelector(
+    state => state.notifications.notificationsList
+  );
   const memoData = useMemo(() => notificationsData, []); // TODO - add notifDataStatus to dependency array to update data when e.g. mark as unread
 
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -190,8 +192,8 @@ function handleRowClick(row: NotificationType) {
     row.status === "UNREAD" ? { ...row, status: "READ" } : row;
   // Optimistic update
   store.dispatch(updatedActiveNotification(activeNotification));
-  // TODO - If current status is unread then need to trigger a thunk to update DB with new status for this notification.
   history.push(`/notifications/${row.id}`);
+  // TODO some async calls to update/re-fetch data
 }
 
 type TableColumnHeaderProps<TData, TValue> = {

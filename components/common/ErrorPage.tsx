@@ -1,6 +1,6 @@
 type ErrorPageProps = {
   message: string;
-  header: string;
+  header?: string;
 };
 
 export default function ErrorPage({
@@ -8,7 +8,7 @@ export default function ErrorPage({
   header = "Oops! Something went wrong"
 }: ErrorPageProps) {
   return (
-    // TODO - add a button to return to previous page
+    // TODO - add a button when needed e.g return to previous page
     <>
       <div
         className="nhsuk-error-summary"

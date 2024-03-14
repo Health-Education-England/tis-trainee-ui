@@ -204,7 +204,10 @@ export const toastErrText = {
   signCoj: "Couldn't sign your Conditions of Joining.",
   fetchTraineeActionsData: "Couldn't load your task checklist (to-do actions).",
   completeTraineeAction: "Couldn't update trainee actions.",
-  fetchAllNotifications: "Couldn't load your notifications."
+  fetchAllNotifications: "Couldn't load your notifications.",
+  markNotificationAsRead: "Couldn't mark this notification as read.",
+  markNotificationAsUnread: "Couldn't mark this notification as unread.",
+  archiveNotification: "Couldn't archive this notification."
 };
 
 export const toastSuccessText = {

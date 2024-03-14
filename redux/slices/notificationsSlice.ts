@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { TraineeNotificationsService } from "../../services/TraineeNotificationsService";
-// import { notificationsData } from "../../mock-data/notifications";
 
 export type NotificationStatus =
   | "READ"
@@ -21,12 +20,14 @@ export type NotificationType = {
   subject: string;
   status: NotificationStatus;
   sentAt: Date;
-  message?: string;
 };
 
 export type NotificationsState = {
-  data: NotificationType[];
+  notificationsList: NotificationType[];
   status: string;
+  notificationUpdateStatus: string;
+  notificationMsg: string;
+  msgStatus: string;
   error: any;
   activeNotification: NotificationType | null;
   unreadNotificationCount: number;
@@ -34,8 +35,11 @@ export type NotificationsState = {
 
 // TODO - Replace with actual data from the backend
 export const initialState: NotificationsState = {
-  data: [],
+  notificationsList: [],
   status: "idle",
+  notificationUpdateStatus: "idle",
+  notificationMsg: "",
+  msgStatus: "idle",
   error: "",
   activeNotification: null,
   unreadNotificationCount: 0
@@ -47,6 +51,30 @@ export const getNotifications = createAsyncThunk(
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getAllNotifications();
     return response.data;
+  }
+);
+
+export const markNotificationAsRead = createAsyncThunk(
+  "notifications/markNotificationAsRead",
+  async (notificationId: string) => {
+    const notificationService = new TraineeNotificationsService();
+    return await notificationService.markNotificationAsRead(notificationId);
+  }
+);
+
+export const markNotificationAsUnread = createAsyncThunk(
+  "notifications/markNotificationAsUnread",
+  async (notificationId: string) => {
+    const notificationService = new TraineeNotificationsService();
+    return await notificationService.markNotificationAsUnread(notificationId);
+  }
+);
+
+export const archiveNotification = createAsyncThunk(
+  "notifications/archiveNotification",
+  async (notificationId: string) => {
+    const notificationService = new TraineeNotificationsService();
+    return await notificationService.archiveNotification(notificationId);
   }
 );
 
@@ -65,7 +93,7 @@ const notificationsSlice = createSlice({
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.notificationsList = action.payload;
         state.unreadNotificationCount = unreadNotificationsCount(
           action.payload ?? 0
         );
@@ -75,6 +103,51 @@ const notificationsSlice = createSlice({
         state.error = error.message;
         showToast(
           toastErrText.fetchAllNotifications,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(markNotificationAsRead.pending, (state, _action) => {
+        state.notificationUpdateStatus = "loading";
+      })
+      .addCase(markNotificationAsRead.fulfilled, (state, _action) => {
+        state.notificationUpdateStatus = "succeeded";
+      })
+      .addCase(markNotificationAsRead.rejected, (state, { error }) => {
+        state.notificationUpdateStatus = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.markNotificationAsRead,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(markNotificationAsUnread.pending, (state, _action) => {
+        state.notificationUpdateStatus = "loading";
+      })
+      .addCase(markNotificationAsUnread.fulfilled, (state, _action) => {
+        state.notificationUpdateStatus = "succeeded";
+      })
+      .addCase(markNotificationAsUnread.rejected, (state, { error }) => {
+        state.notificationUpdateStatus = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.markNotificationAsUnread,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(archiveNotification.pending, (state, _action) => {
+        state.notificationUpdateStatus = "loading";
+      })
+      .addCase(archiveNotification.fulfilled, (state, _action) => {
+        state.notificationUpdateStatus = "succeeded";
+      })
+      .addCase(archiveNotification.rejected, (state, { error }) => {
+        state.notificationUpdateStatus = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.archiveNotification,
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );
