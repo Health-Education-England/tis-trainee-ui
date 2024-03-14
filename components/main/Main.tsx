@@ -105,7 +105,7 @@ export const Main = () => {
     if (notificationsStatus === "idle") {
       dispatch(getNotifications());
     }
-  }, [traineeActionsDataStatus, dispatch]);
+  }, [notificationsStatus, dispatch]);
 
   // combined Reference data
   const referenceStatus = useAppSelector(state => state.reference.status);

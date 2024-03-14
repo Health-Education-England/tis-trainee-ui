@@ -6,21 +6,20 @@ import history from "../navigation/history";
 import { DateUtilities } from "../../utilities/DateUtilities";
 
 export const NotificationMessage = () => {
-  // parse id from params
   const { id } = useParams<{ id: string }>();
-
-  // retrive the notificationStatus from the store
-
-  // retrieve active notification from store
+  //active notification (from previous page row click)
   const activeNotification = useAppSelector(
     state => state.notifications.activeNotification
   );
+  // notification message
+  const notificationMessage = useAppSelector(
+    state => state.notifications.notificationMsg
+  );
+  // notification message status (message fetch not implemented yet)
+  const notificationMessageStatus = useAppSelector(
+    state => state.notifications.msgStatus
+  );
 
-  // TODO Placeholder for now
-  const notificationMessage =
-    "This is a placeholder for the notification message";
-
-  // TODO poss useEffect to call thunk to update notifications list with new read status for this notification (if previously unread)
   return (
     <div>
       <Row>
@@ -50,9 +49,10 @@ export const NotificationMessage = () => {
             </Col>
           </Row>
           <Row>
-            {/* <Col width="full">
-              <p>{notificationMessage}</p>
-            </Col> */}
+            <NotificationMessageText
+              notificationMessageStatus={notificationMessageStatus}
+              notificationMessageText={notificationMessage}
+            />
           </Row>
         </Container>
       ) : (
@@ -67,10 +67,15 @@ export const NotificationMessage = () => {
 
 export default NotificationMessage;
 
-function NotificationMessageText(
-  notificationMessageStatus: string,
-  notificationMessageText: string
-) {
+type NotificationMessageTextType = {
+  notificationMessageStatus: string;
+  notificationMessageText: string;
+};
+
+function NotificationMessageText({
+  notificationMessageStatus,
+  notificationMessageText
+}: NotificationMessageTextType) {
   if (notificationMessageStatus === "loading") {
     return <p>Loading...</p>;
   } else if (notificationMessageStatus === "failed") {

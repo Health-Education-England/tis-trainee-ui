@@ -30,8 +30,10 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { Tooltip } from "react-tooltip";
 import {
   NotificationType,
-  NotificationStatus,
-  updatedActiveNotification
+  markNotificationAsRead,
+  updatedNotificationsList,
+  resetNotificationsStatus,
+  markNotificationAsUnread
 } from "../../redux/slices/notificationsSlice";
 import history from "../navigation/history";
 import store from "../../redux/store/store";
@@ -91,7 +93,7 @@ const columns = [
   }),
   columnHelper.display({
     id: "moreActions",
-    cell: props => <MoreActions status={props.row.original.status} />
+    cell: props => <MoreActions row={props.row.original} />
   })
 ];
 
@@ -99,12 +101,12 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
   const notificationsData = useAppSelector(
     state => state.notifications.notificationsList
   );
-  const memoData = useMemo(() => notificationsData, []); // TODO - add notifDataStatus to dependency array to update data when e.g. mark as unread
+  const memoData = useMemo(() => notificationsData, [notificationsData]);
 
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "sendDate", desc: true }
+    { id: "sentAt", desc: true }
   ]);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -187,13 +189,24 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
   );
 };
 
-function handleRowClick(row: NotificationType) {
-  const activeNotification: NotificationType =
-    row.status === "UNREAD" ? { ...row, status: "READ" } : row;
-  // Optimistic update
-  store.dispatch(updatedActiveNotification(activeNotification));
-  history.push(`/notifications/${row.id}`);
-  // TODO some async calls to update/re-fetch data
+async function handleRowClick(row: NotificationType) {
+  // mark as read
+  // optimistic FE updates (not sure about the implementation of this part yet)
+  if (row.status === "UNREAD") {
+    const activeNotification: NotificationType = {
+      ...row,
+      status: "READ"
+    };
+    store.dispatch(updatedNotificationsList(activeNotification));
+  }
+
+  // BE updates
+  await store.dispatch(markNotificationAsRead(row.id));
+  if (store.getState().notifications.notificationUpdateStatus === "succeeded") {
+    // trigger a re-fetch of notifications
+    store.dispatch(resetNotificationsStatus());
+    history.push(`/notifications/${row.id}`);
+  }
 }
 
 type TableColumnHeaderProps<TData, TValue> = {
@@ -230,11 +243,11 @@ function TableColumnHeader<TData, TValue>({
 }
 
 type MoreActionsProps = {
-  status: NotificationStatus;
+  row: NotificationType;
 };
 
-function MoreActions({ status }: Readonly<MoreActionsProps>) {
-  if (status === "READ") {
+function MoreActions({ row }: Readonly<MoreActionsProps>) {
+  if (row.status === "READ") {
     return (
       <>
         <FontAwesomeIcon
@@ -242,9 +255,24 @@ function MoreActions({ status }: Readonly<MoreActionsProps>) {
           className="table-actions-icon"
           icon={faEnvelope}
           size="sm"
-          onClick={(event: React.MouseEvent) => {
+          onClick={async (event: React.MouseEvent) => {
             event.stopPropagation();
-            console.log("mark as unread (desktop) clicked");
+            console.log("mark as unread clicked");
+            // Optimistic updates
+            const activeNotification: NotificationType = {
+              ...row,
+              status: "UNREAD"
+            };
+            store.dispatch(updatedNotificationsList(activeNotification));
+            // BE call to mark as unread
+            // then fetch notifications
+            await store.dispatch(markNotificationAsUnread(row.id));
+            if (
+              store.getState().notifications.notificationUpdateStatus ===
+              "succeeded"
+            ) {
+              store.dispatch(resetNotificationsStatus());
+            }
           }}
         />
         <Tooltip
@@ -280,7 +308,7 @@ function DebouncedInput({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [value, onChange, debounce]); // TODO check these dependencies
 
   return (
     <input {...props} value={value} onChange={e => setValue(e.target.value)} />

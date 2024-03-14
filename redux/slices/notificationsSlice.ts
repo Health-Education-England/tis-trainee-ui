@@ -58,7 +58,8 @@ export const markNotificationAsRead = createAsyncThunk(
   "notifications/markNotificationAsRead",
   async (notificationId: string) => {
     const notificationService = new TraineeNotificationsService();
-    return await notificationService.markNotificationAsRead(notificationId);
+    return (await notificationService.markNotificationAsRead(notificationId))
+      .data;
   }
 );
 
@@ -84,6 +85,19 @@ const notificationsSlice = createSlice({
   reducers: {
     updatedActiveNotification(state, action: PayloadAction<NotificationType>) {
       return { ...state, activeNotification: action.payload };
+    },
+    updatedNotificationsList(state, action: PayloadAction<NotificationType>) {
+      const updatedNotification = action.payload;
+      const updatedNotificationsList = state.notificationsList.map(
+        notification =>
+          notification.id === updatedNotification.id
+            ? updatedNotification
+            : notification
+      );
+      return { ...state, notificationsList: updatedNotificationsList };
+    },
+    resetNotificationsStatus(state) {
+      return { ...state, status: "idle" };
     }
   },
   extraReducers(builder): void {
@@ -110,8 +124,9 @@ const notificationsSlice = createSlice({
       .addCase(markNotificationAsRead.pending, (state, _action) => {
         state.notificationUpdateStatus = "loading";
       })
-      .addCase(markNotificationAsRead.fulfilled, (state, _action) => {
+      .addCase(markNotificationAsRead.fulfilled, (state, action) => {
         state.notificationUpdateStatus = "succeeded";
+        state.activeNotification = action.payload;
       })
       .addCase(markNotificationAsRead.rejected, (state, { error }) => {
         state.notificationUpdateStatus = "failed";
@@ -157,9 +172,13 @@ const notificationsSlice = createSlice({
 
 export default notificationsSlice.reducer;
 
-export const { updatedActiveNotification } = notificationsSlice.actions;
+export const {
+  updatedActiveNotification,
+  updatedNotificationsList,
+  resetNotificationsStatus
+} = notificationsSlice.actions;
 
-function unreadNotificationsCount(notificationsData: any[]) {
+export function unreadNotificationsCount(notificationsData: any[]) {
   if (!Array.isArray(notificationsData)) return 0;
   const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
