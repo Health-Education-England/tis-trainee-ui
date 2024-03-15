@@ -576,6 +576,24 @@ ol[type="a"] {
   }
 }
 
+.mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+@media (min-width: 989px) {
+  .mobile-header {
+    display: none;
+  }
+
+  .sign-out-btn {
+    margin: 1rem 0 1rem 1rem;
+    color: white;
+    padding: 0.75rem 1rem;
+  }
+}
+
 .notification-btn:hover .notification-badge {
   background-color: darken(#ed8b00, 7%);
 }
@@ -600,14 +618,6 @@ ol[type="a"] {
   margin: 0 0 0 1rem;
   padding: 0 1rem;
   box-shadow: 0 1px 0 #00401e;
-}
-
-@media (max-width: 989px) {
-  .sign-out-btn {
-    margin: 1rem 0 1rem 1rem;
-    color: white;
-    padding: 0.75rem 1rem;
-  }
 }
 
 .tss-name {
@@ -776,8 +786,4 @@ ol[type="a"] {
   &:hover {
     background-color: #002f5c;
   }
-}
-
-.notification-message {
-  margin-top: 1rem;
 }

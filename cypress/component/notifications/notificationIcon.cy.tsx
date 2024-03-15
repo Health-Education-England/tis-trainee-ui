@@ -29,3 +29,21 @@ describe("Notification Icon and Badge display", () => {
     cy.get(".notification-badge").should("exist").should("contain", "12");
   });
 });
+
+describe("Notification display in mobile view", () => {
+  beforeEach(() => {
+    cy.viewport(900, 768);
+  });
+
+  it("should contain notification Icon & badge not exist", () => {
+    mount(comp(0));
+    cy.get(".notification-btn").should("be.visible");
+    cy.get(".notification-badge").should("not.exist");
+  });
+
+  it("should contain notification Icon and badge displaying value of 12", () => {
+    mount(comp(12));
+    cy.get(".notification-btn").should("be.visible");
+    cy.get(".notification-badge").should("exist").should("contain", "12");
+  });
+});
