@@ -207,7 +207,8 @@ export const toastErrText = {
   fetchAllNotifications: "Couldn't load your notifications.",
   markNotificationAsRead: "Couldn't mark this notification as read.",
   markNotificationAsUnread: "Couldn't mark this notification as unread.",
-  archiveNotification: "Couldn't archive this notification."
+  archiveNotification: "Couldn't archive this notification.",
+  fetchNotificationMessage: "Couldn't load this notification message."
 };
 
 export const toastSuccessText = {

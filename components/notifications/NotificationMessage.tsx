@@ -4,6 +4,9 @@ import ErrorPage from "../common/ErrorPage";
 import { BackLink, Col, Container, Label, Row } from "nhsuk-react-components";
 import history from "../navigation/history";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { useEffect } from "react";
+import store from "../../redux/store/store";
+import { getNotificationMessage } from "../../redux/slices/notificationsSlice";
 
 export const NotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +22,10 @@ export const NotificationMessage = () => {
   const notificationMessageStatus = useAppSelector(
     state => state.notifications.msgStatus
   );
+
+  useEffect(() => {
+    store.dispatch(getNotificationMessage(id));
+  }, [id]);
 
   return (
     <div>
@@ -49,10 +56,12 @@ export const NotificationMessage = () => {
             </Col>
           </Row>
           <Row>
-            <NotificationMessageText
-              notificationMessageStatus={notificationMessageStatus}
-              notificationMessageText={notificationMessage}
-            />
+            <Col width="full" className="notification-message">
+              <NotificationMessageText
+                notificationMessageStatus={notificationMessageStatus}
+                notificationMessageText={notificationMessage}
+              />
+            </Col>
           </Row>
         </Container>
       ) : (

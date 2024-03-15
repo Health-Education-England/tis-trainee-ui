@@ -79,6 +79,15 @@ export const archiveNotification = createAsyncThunk(
   }
 );
 
+export const getNotificationMessage = createAsyncThunk(
+  "notifications/getNotificationMessage",
+  async (notificationId: string) => {
+    const notificationService = new TraineeNotificationsService();
+    return (await notificationService.getNotificationMessage(notificationId))
+      .data;
+  }
+);
+
 const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
@@ -163,6 +172,22 @@ const notificationsSlice = createSlice({
         state.error = error.message;
         showToast(
           toastErrText.archiveNotification,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(getNotificationMessage.pending, (state, _action) => {
+        state.msgStatus = "loading";
+      })
+      .addCase(getNotificationMessage.fulfilled, (state, action) => {
+        state.msgStatus = "succeeded";
+        state.notificationMsg = action.payload;
+      })
+      .addCase(getNotificationMessage.rejected, (state, { error }) => {
+        state.msgStatus = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.fetchNotificationMessage,
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );

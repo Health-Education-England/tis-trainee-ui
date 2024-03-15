@@ -27,4 +27,10 @@ export class TraineeNotificationsService extends ApiService {
   ): Promise<AxiosResponse<any>> {
     return this.put<any>(`/notifications/${notificationId}/archive`);
   }
+
+  async getNotificationMessage(
+    notificationId: string
+  ): Promise<AxiosResponse<any>> {
+    return this.get<any>(`/notifications/${notificationId}/message`);
+  }
 }

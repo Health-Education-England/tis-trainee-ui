@@ -191,7 +191,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
 
 async function handleRowClick(row: NotificationType) {
   // mark as read
-  // optimistic FE updates (not sure about the implementation of this part yet)
+  // FE updates
   if (row.status === "UNREAD") {
     const activeNotification: NotificationType = {
       ...row,
@@ -251,21 +251,20 @@ function MoreActions({ row }: Readonly<MoreActionsProps>) {
     return (
       <>
         <FontAwesomeIcon
-          data-tooltip-id="mark-unread-desktop"
+          data-tooltip-id="mark-unread"
           className="table-actions-icon"
           icon={faEnvelope}
           size="sm"
           onClick={async (event: React.MouseEvent) => {
             event.stopPropagation();
             console.log("mark as unread clicked");
-            // Optimistic updates
+            // FE updates
             const activeNotification: NotificationType = {
               ...row,
               status: "UNREAD"
             };
             store.dispatch(updatedNotificationsList(activeNotification));
-            // BE call to mark as unread
-            // then fetch notifications
+            // BE - mark as unread, then fetch notifications
             await store.dispatch(markNotificationAsUnread(row.id));
             if (
               store.getState().notifications.notificationUpdateStatus ===
@@ -277,7 +276,7 @@ function MoreActions({ row }: Readonly<MoreActionsProps>) {
         />
         <Tooltip
           className="tooltip tooltip-row"
-          id="mark-unread-desktop"
+          id="mark-unread"
           place="top"
           content="Mark as unread"
         />
