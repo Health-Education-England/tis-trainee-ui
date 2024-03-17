@@ -10,10 +10,8 @@ export type NotificationStatus =
   | "SENT"
   | "ARCHIVED";
 
-// just placeholders for now
-export type NotificationMsgType = "WELCOME" | "UPDATES" | "NEW_STARTER";
+export type NotificationMsgType = "WELCOME";
 
-// TODO - Finalise the NotificationType
 export type NotificationType = {
   id: string;
   type: NotificationMsgType;
@@ -33,7 +31,6 @@ export type NotificationsState = {
   unreadNotificationCount: number;
 };
 
-// TODO - Replace with actual data from the backend
 export const initialState: NotificationsState = {
   notificationsList: [],
   status: "idle",

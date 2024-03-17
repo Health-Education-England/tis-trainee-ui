@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 import { NotificationType } from "../../redux/slices/notificationsSlice";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { handleTableRowClick } from "../../utilities/NotificationsUtilities";
+import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
@@ -96,7 +96,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
                   : "table-row row-unread";
               return (
                 <tr
-                  onClick={() => handleTableRowClick(row.original)}
+                  onClick={() => updateNotificationStatus(row.original, "READ")}
                   key={row.id}
                   className={`${statusClass}`}
                 >

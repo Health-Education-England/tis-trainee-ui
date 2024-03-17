@@ -1,29 +1,47 @@
 import {
+  NotificationStatus,
   NotificationType,
   markNotificationAsRead,
+  markNotificationAsUnread,
   resetNotificationsStatus,
   updatedNotificationsList
 } from "../redux/slices/notificationsSlice";
 import store from "../redux/store/store";
 import history from "../components/navigation/history";
 
-export async function handleTableRowClick(row: NotificationType) {
-  // mark as read
-  // FE updates
-  if (row.status === "UNREAD") {
-    const activeNotification: NotificationType = {
-      ...row,
-      status: "READ"
-    };
-    store.dispatch(updatedNotificationsList(activeNotification));
+export async function updateNotificationStatus(
+  row: NotificationType,
+  newStatus: NotificationStatus,
+  event?: React.MouseEvent<HTMLButtonElement>
+) {
+  if (event) {
+    event.stopPropagation();
   }
 
+  // FE updates
+  const activeNotification: NotificationType = {
+    ...row,
+    status: newStatus
+  };
+  store.dispatch(updatedNotificationsList(activeNotification));
+
   // BE updates
-  await store.dispatch(markNotificationAsRead(row.id));
+  const action =
+    newStatus === "READ" ? markNotificationAsRead : markNotificationAsUnread;
+  await store.dispatch(action(row.id));
+
   if (store.getState().notifications.notificationUpdateStatus === "succeeded") {
-    // trigger a re-fetch of notifications
     store.dispatch(resetNotificationsStatus());
-    history.push(`/notifications/${row.id}`);
+    if (newStatus === "READ") {
+      history.push(`/notifications/${row.id}`);
+    }
+  } else if (
+    store.getState().notifications.notificationUpdateStatus === "failed"
+  ) {
+    const reversedNotification: NotificationType = {
+      ...row,
+      status: newStatus === "READ" ? "UNREAD" : "READ"
+    };
+    store.dispatch(updatedNotificationsList(reversedNotification));
   }
-  // TODO handle fail to reverse the FE updates
 }
