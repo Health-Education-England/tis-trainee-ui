@@ -4,12 +4,25 @@ import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
 import store from "../../redux/store/store";
 import { NotificationBtn } from "../common/NotificationBtn";
-import { useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { useEffect } from "react";
+import { getNotifications } from "../../redux/slices/notificationsSlice";
 
 const TSSHeader = () => {
+  const dispatch = useAppDispatch();
+  const notificationsStatus = useAppSelector(
+    state => state.notifications.status
+  );
   const unreadNotificationCount = useAppSelector(
     state => state.notifications.unreadNotificationCount
   );
+
+  useEffect(() => {
+    if (notificationsStatus === "idle") {
+      dispatch(getNotifications());
+    }
+  }, [notificationsStatus, dispatch]);
+
   return (
     <Header>
       <Header.Container>

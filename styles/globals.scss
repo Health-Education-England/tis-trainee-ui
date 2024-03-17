@@ -552,12 +552,6 @@ ol[type="a"] {
   cursor: pointer;
 }
 
-@media (max-width: 989px) {
-  .top-nav-container {
-    display: none;
-  }
-}
-
 @media (min-width: 990px) {
   .mobile-only-nav {
     display: none;
@@ -586,11 +580,19 @@ ol[type="a"] {
   .mobile-header {
     display: none;
   }
-
   .sign-out-btn {
     margin: 1rem 0 1rem 1rem;
     color: white;
     padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 989px) {
+  .top-nav-container {
+    display: none;
+  }
+  .notification-btn {
+    margin-right: 1rem;
   }
 }
 
@@ -607,11 +609,17 @@ ol[type="a"] {
   min-height: 30%;
   min-width: 30%;
   border-radius: 16px;
-  padding: 1% 10%;
+  padding: 2% 10%;
   font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 645px) {
+  .notification-badge {
+    min-width: 50%;
+  }
 }
 
 .sign-out-btn {
@@ -678,6 +686,9 @@ ol[type="a"] {
 }
 
 // ---- Notifications table ----
+.table-wrapper {
+  overflow-x: auto;
+}
 
 // Global search
 .table-search-input {
@@ -697,7 +708,6 @@ ol[type="a"] {
 
 .table-header-btn-icon {
   color: #425563;
-  padding-left: 8px;
   &:hover {
     color: #005eb8;
   }
@@ -725,41 +735,12 @@ ol[type="a"] {
   border-top: solid 1px #bfc3c6;
 }
 
-// Status column
-.table-status {
-  padding-left: 4px;
-}
-
-.table-status-desktop {
-  padding-left: 16px;
-}
-
 .status-read {
   color: #006400;
 }
 
 .status-unread {
   color: #005eb8;
-}
-
-.table-actions-icon {
-  padding-right: 12px;
-}
-
-.tooltip {
-  background-color: #005eb8 !important;
-  border-radius: 4px !important;
-  padding: 6px !important;
-  margin: 0 !important;
-  color: white !important;
-}
-
-.tooltip-header {
-  opacity: 0.25 !important;
-}
-
-.tooltip-row {
-  opacity: 0.8 !important;
 }
 
 .back-link {
@@ -771,8 +752,6 @@ ol[type="a"] {
   background-color: whitesmoke;
   border: solid 2px white;
   box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
-  margin-bottom: 32px;
-  padding: 16px;
 }
 
 // pagination
@@ -785,5 +764,34 @@ ol[type="a"] {
   border-radius: 4px;
   &:hover {
     background-color: #002f5c;
+    transform: scale(1.1);
   }
+}
+
+.unread-btn {
+  min-width: 190px;
+  max-width: 190px;
+  margin-right: 16px;
+  border: 1px solid white;
+  box-shadow: 0 1px 0 #4c6272;
+  border-radius: 4px;
+  background-color: #f0f4f5;
+  color: #425563;
+  transition: all 0.3s ease;
+  &:hover {
+    border: 1px solid darken(whitesmoke, 5%);
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #212b32;
+    background-color: whitesmoke;
+  }
+  &:active {
+    background-color: #003f6d;
+    color: whitesmoke;
+  }
+}
+
+.unread-icon {
+  color: #425563;
+  margin-right: 0.5em;
 }

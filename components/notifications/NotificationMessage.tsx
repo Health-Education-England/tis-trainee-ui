@@ -14,11 +14,9 @@ export const NotificationMessage = () => {
   const activeNotification = useAppSelector(
     state => state.notifications.activeNotification
   );
-  // notification message
   const notificationMessage = useAppSelector(
     state => state.notifications.notificationMsg
   );
-  // notification message status (message fetch not implemented yet)
   const notificationMessageStatus = useAppSelector(
     state => state.notifications.msgStatus
   );
@@ -41,7 +39,7 @@ export const NotificationMessage = () => {
         </Col>
       </Row>
       {id === activeNotification?.id ? (
-        <Container className="container">
+        <Container className="nhsuk-u-margin-bottom-5 nhsuk-u-padding-3 container">
           <Row>
             <Col width="three-quarters">
               <Label size="m">
@@ -56,7 +54,7 @@ export const NotificationMessage = () => {
             </Col>
           </Row>
           <Row>
-            <Col width="full" className="notification-message">
+            <Col width="full">
               <NotificationMessageText
                 notificationMessageStatus={notificationMessageStatus}
                 notificationMessageText={notificationMessage}
@@ -90,5 +88,9 @@ function NotificationMessageText({
   } else if (notificationMessageStatus === "failed") {
     return <ErrorPage message="Failed to load this notification" />;
   }
-  return <p>{notificationMessageText}</p>;
+  return (
+    <div className="nhsuk-u-margin-top-2">
+      <p className="nhsuk-body"> {notificationMessageText}</p>
+    </div>
+  );
 }
