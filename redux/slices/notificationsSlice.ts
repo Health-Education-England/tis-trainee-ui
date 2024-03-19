@@ -10,14 +10,19 @@ export type NotificationStatus =
   | "SENT"
   | "ARCHIVED";
 
-export type NotificationMsgType = "WELCOME";
+export type NotificationMsgType = "IN_APP";
 
 export type NotificationType = {
   id: string;
+  tisReference: string | null;
   type: NotificationMsgType;
   subject: string;
+  subjectText: string;
+  contact: string | null;
   status: NotificationStatus;
   sentAt: Date;
+  statusDetail: string | null;
+  readAt?: Date;
 };
 
 export type NotificationsState = {
@@ -104,6 +109,9 @@ const notificationsSlice = createSlice({
     },
     resetNotificationsStatus(state) {
       return { ...state, status: "idle" };
+    },
+    loadedNotificationsList(state, action: PayloadAction<NotificationType[]>) {
+      return { ...state, notificationsList: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -197,7 +205,8 @@ export default notificationsSlice.reducer;
 export const {
   updatedActiveNotification,
   updatedNotificationsList,
-  resetNotificationsStatus
+  resetNotificationsStatus,
+  loadedNotificationsList
 } = notificationsSlice.actions;
 
 export function unreadNotificationsCount(notificationsData: any[]) {

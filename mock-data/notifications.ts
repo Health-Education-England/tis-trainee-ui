@@ -2,75 +2,123 @@ import { NotificationType } from "../redux/slices/notificationsSlice";
 
 export const notificationsData: NotificationType[] = [
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "UPDATES",
-    subject: "New Features but not as you know them",
-    message: "We have released some new features. Check them out!",
+    id: "65f1d6bd3f7898e099514187",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "UNREAD",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "WELCOME",
-    subject: "Welcome to the TSS",
-    message: "You are now a trainee. Welcome to the TSS!",
+    id: "65f1d6bd3f7898e099514188",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "READ",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "NEW_STARTER",
-    subject: "New Starter",
-    message: "A new starter has joined the TSS",
+    id: "65f1d6bd3f7898e099514189",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "UNREAD",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "UPDATES",
-    subject: "New Features but not as you know them",
-    message: "We have released some new features. Check them out!",
-    status: "UNREAD",
-    sentAt: new Date("2024-03-02T00:00:00Z")
-  },
-  {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "WELCOME",
-    subject: "Welcome to the TSS",
-    message: "You are now a trainee. Welcome to the TSS!",
+    id: "65f1d6bd3f7898e099514190",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "READ",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "NEW_STARTER",
-    subject: "New Starter",
-    message: "A new starter has joined the TSS",
+    id: "65f1d6bd3f7898e099514191",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "UNREAD",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "UPDATES",
-    subject: "New Features but not as you know them",
-    message: "We have released some new features. Check them out!",
-    status: "UNREAD",
-    sentAt: new Date("2024-03-01T00:00:00Z")
-  },
-  {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "WELCOME",
-    subject: "Welcome to the TSS",
-    message: "You are now a trainee. Welcome to the TSS!",
+    id: "65f1d6bd3f7898e099514192",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "READ",
-    sentAt: new Date("2024-03-04T00:00:00Z")
+    statusDetail: null
   },
   {
-    id: "d2b9e0c8-4f5c-5f2c-0d1e-6a7b9e3a8b1e",
-    type: "NEW_STARTER",
-    subject: "New Starter",
-    message: "A new starter has joined the TSS",
+    id: "65f1d6bd3f7898e099514193",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "SOME TIMES ONLY TIS Self-Service will do",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
     status: "UNREAD",
-    sentAt: new Date("2024-03-10T00:00:00Z")
+    statusDetail: null
+  },
+  {
+    id: "65f1d6bd3f7898e099514194",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
+    status: "READ",
+    statusDetail: null
+  },
+  {
+    id: "65f1d6bd3f7898e099514195",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Welcome to TIS Self-Service",
+    contact: null,
+    sentAt: new Date("2024-03-01T15:21:02.939Z"),
+    readAt: new Date("2024-03-19T13:41:14.750Z"),
+    status: "UNREAD",
+    statusDetail: null
+  },
+  {
+    id: "65f1d6bd3f7898e099514196",
+    tisReference: null,
+    type: "IN_APP",
+    subject: "WELCOME",
+    subjectText: "Something else to test the filter",
+    contact: null,
+    sentAt: new Date("2024-03-02T15:21:02.939Z"),
+    readAt: new Date("2024-03-18T13:41:14.750Z"),
+    status: "UNREAD",
+    statusDetail: null
   }
 ];

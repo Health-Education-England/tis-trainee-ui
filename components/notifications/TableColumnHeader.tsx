@@ -19,9 +19,17 @@ export function TableColumnHeader<TData, TValue>({
     const sort = column.getIsSorted();
     if (!sort) return <FontAwesomeIcon icon={faSort} size="sm" />;
     return sort === "asc" ? (
-      <FontAwesomeIcon icon={faSortUp} size="sm" />
+      <FontAwesomeIcon
+        icon={faSortUp}
+        size="sm"
+        data-cy={`${title}-fa-sort-up`}
+      />
     ) : (
-      <FontAwesomeIcon icon={faSortDown} size="sm" />
+      <FontAwesomeIcon
+        icon={faSortDown}
+        size="sm"
+        data-cy={`${title}-fa-sort-down`}
+      />
     );
   };
   if (!column.getCanSort()) return <div>{title}</div>;

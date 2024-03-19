@@ -10,7 +10,6 @@ import {
   ColumnFiltersState,
   PaginationState
 } from "@tanstack/react-table";
-import { NotificationType } from "../../redux/slices/notificationsSlice";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
@@ -18,11 +17,7 @@ import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
 import { columns } from "./columns";
 
-type NotificationsTableProps = {
-  data: NotificationType[];
-};
-
-export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
+export const NotificationsTable: React.FC = () => {
   const notificationsData = useAppSelector(
     state => state.notifications.notificationsList
   );
@@ -64,16 +59,21 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
         onChange={value => setGlobalFilter(String(value))}
         placeholder="Search notifications..."
         className="nhsuk-input nhsuk-input--width-20 table-search-input"
+        data-cy="NotificationsSearchInput"
       />
       <div className="table-wrapper">
-        <table>
+        <table data-cy="notificationsTable">
           <thead>
             {table.getHeaderGroups().map(headerGroup => {
               return (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
                     return (
-                      <th key={header.id} className="nhsuk-u-padding-left-3">
+                      <th
+                        key={header.id}
+                        className="nhsuk-u-padding-left-3"
+                        data-cy={`notificationsTable-${header.id}`}
+                      >
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
@@ -99,6 +99,7 @@ export const NotificationsTable: React.FC<NotificationsTableProps> = () => {
                   onClick={() => updateNotificationStatus(row.original, "READ")}
                   key={row.id}
                   className={`${statusClass}`}
+                  data-cy={`notificationsTableRow-${row.id}`}
                 >
                   {row.getVisibleCells().map(cell => (
                     <td

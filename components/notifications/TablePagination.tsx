@@ -23,6 +23,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
             className="nhsuk-u-margin-right-2 pagination-btn"
             onClick={() => table.firstPage()}
             disabled={!table.getCanPreviousPage()}
+            data-cy="NotificationsTableFirstPageBtn"
           >
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
           </button>
@@ -31,6 +32,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
             className="nhsuk-u-margin-right-1 pagination-btn"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            data-cy="NotificationsTablePreviousPageBtn"
           >
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
@@ -39,6 +41,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
             className="nhsuk-u-margin-right-2 pagination-btn"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            data-cy="NotificationsTableNextPageBtn"
           >
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
@@ -47,6 +50,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
             className="nhsuk-u-margin-right-2 pagination-btn"
             onClick={() => table.lastPage()}
             disabled={!table.getCanNextPage()}
+            data-cy="NotificationsTableLastPageBtn"
           >
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </button>
@@ -56,6 +60,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
             onChange={e => {
               table.setPageSize(Number(e.target.value));
             }}
+            data-cy="NotificationsTablePageSizeSelect"
           >
             {[5, 10, 20, 30].map(pageSize => (
               <option key={pageSize} value={pageSize}>
@@ -87,6 +92,7 @@ export function TablePagination({ table }: Readonly<TablePaginationType>) {
                   e.target.value = "";
                 }}
                 className="nhsuk-input nhsuk-input--width-2"
+                data-cy="NotificationsTablePageInput"
               />
               {` of ${table.getPageCount()}`}
             </span>
