@@ -10,20 +10,15 @@ import {
   ColumnFiltersState,
   PaginationState
 } from "@tanstack/react-table";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { useAppSelector } from "../../redux/hooks/hooks";
 import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
 import { columns } from "./columns";
-import { updatedNotificationUpdateInProgress } from "../../redux/slices/notificationsSlice";
 import { Label } from "nhsuk-react-components";
 
 export const NotificationsTable: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const inProgressUpdate = useAppSelector(
-    state => state.notifications.notificationUpdateInProgress
-  );
   const notificationsData = useAppSelector(
     state => state.notifications.notificationsList
   );
@@ -104,15 +99,13 @@ export const NotificationsTable: React.FC = () => {
               return (
                 <tr
                   onClick={async e => {
-                    if (inProgressUpdate) return;
-                    dispatch(updatedNotificationUpdateInProgress(true));
                     e.stopPropagation();
-                    await updateNotificationStatus(row.original, "READ");
-                    dispatch(updatedNotificationUpdateInProgress(false));
+                    updateNotificationStatus(row.original, "READ");
                   }}
                   key={row.id}
                   className={`${statusClass}`}
                   data-cy={`notificationsTableRow-${row.id}`}
+                  data-testid={`notificationsTableRow-${row.original.id}`}
                 >
                   {row.getVisibleCells().map(cell => (
                     <td
