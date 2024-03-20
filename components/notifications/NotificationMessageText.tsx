@@ -1,3 +1,4 @@
+import { toastErrText } from "../../utilities/Constants";
 import ErrorPage from "../common/ErrorPage";
 
 type NotificationMessageTextType = {
@@ -12,7 +13,7 @@ export function NotificationMessageText({
   if (notificationMessageStatus === "loading") {
     return <p>Loading...</p>;
   } else if (notificationMessageStatus === "failed") {
-    return <ErrorPage message="Failed to load this message." />;
+    return <ErrorPage message={toastErrText.fetchNotificationMessage} />;
   }
   return (
     <div className="nhsuk-u-margin-top-2">

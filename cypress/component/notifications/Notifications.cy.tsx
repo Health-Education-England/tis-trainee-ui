@@ -17,13 +17,13 @@ describe("Notification Icon and Badge display", () => {
     cy.viewport(1024, 768);
   });
 
-  it("should contain notification Icon & badge not exist", () => {
+  it("should contain notification Icon & badge not exist when zero unread notifications", () => {
     mount(comp(0));
     cy.get(".notification-btn").should("be.visible");
     cy.get(".notification-badge").should("not.exist");
   });
 
-  it("should contain notification Icon and badge displaying value of 12", () => {
+  it("should contain notification Icon and badge when unread notifications", () => {
     mount(comp(12));
     cy.get(".notification-btn").should("be.visible");
     cy.get(".notification-badge").should("exist").should("contain", "12");
@@ -35,13 +35,13 @@ describe("Notification display in mobile view", () => {
     cy.viewport(900, 768);
   });
 
-  it("should contain notification Icon & badge not exist", () => {
+  it("should contain notification Icon & badge not exist when zero unread notifications", () => {
     mount(comp(0));
     cy.get(".notification-btn").should("be.visible");
     cy.get(".notification-badge").should("not.exist");
   });
 
-  it("should contain notification Icon and badge displaying value of 12", () => {
+  it("should contain notification Icon and badge when unread notifications", () => {
     mount(comp(12));
     cy.get(".notification-btn").should("be.visible");
     cy.get(".notification-badge").should("exist").should("contain", "12");

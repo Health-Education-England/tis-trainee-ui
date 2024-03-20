@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import store from "../../redux/store/store";
 import { getNotificationMessage } from "../../redux/slices/notificationsSlice";
 import { NotificationMessageText } from "./NotificationMessageText";
+import { toastErrText } from "../../utilities/Constants";
 
 export const NotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
@@ -65,7 +66,7 @@ export const NotificationMessage = () => {
           </Row>
         </Container>
       ) : (
-        <ErrorPage message="This message could not be loaded." />
+        <ErrorPage message={toastErrText.fetchNotificationMessage} />
       )}
     </div>
   );

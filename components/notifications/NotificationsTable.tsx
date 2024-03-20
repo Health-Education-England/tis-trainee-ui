@@ -135,6 +135,6 @@ export const NotificationsTable: React.FC = () => {
       <hr />
     </>
   ) : (
-    <Label>{`You currently don't have any notifications to read.`}</Label>
+    <Label data-cy="notificationsTableNoNotifs">{`You currently don't have any notifications to read.`}</Label>
   );
 };
