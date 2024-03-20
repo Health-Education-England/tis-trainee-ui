@@ -27,8 +27,8 @@ export const columns = [
       );
     }
   }),
-  columnHelper.accessor("subject", {
-    id: "subject",
+  columnHelper.accessor("subjectText", {
+    id: "subjectText",
     header: ({ column }) => <TableColumnHeader column={column} title="Title" />,
     cell: props => (
       <span>
@@ -38,8 +38,8 @@ export const columns = [
     enableColumnFilter: false
   }),
 
-  columnHelper.accessor("type", {
-    id: "type",
+  columnHelper.accessor("subject", {
+    id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
     cell: props => <span>{props.renderValue()}</span>,
     enableColumnFilter: false

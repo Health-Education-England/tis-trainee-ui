@@ -17,6 +17,7 @@ import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
 import { columns } from "./columns";
 import { updatedNotificationUpdateInProgress } from "../../redux/slices/notificationsSlice";
+import { Label } from "nhsuk-react-components";
 
 export const NotificationsTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -58,7 +59,7 @@ export const NotificationsTable: React.FC = () => {
     autoResetPageIndex: false
   });
 
-  return (
+  return notificationsData.length > 0 ? (
     <>
       <DebouncedInput
         value={globalFilter}
@@ -133,5 +134,7 @@ export const NotificationsTable: React.FC = () => {
       <TablePagination table={table} />
       <hr />
     </>
+  ) : (
+    <Label>{`You currently don't have any notifications to read.`}</Label>
   );
 };
