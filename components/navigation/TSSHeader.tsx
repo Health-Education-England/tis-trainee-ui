@@ -6,9 +6,13 @@ import store from "../../redux/store/store";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
+import { NotificationsBtn } from "../notifications/NotificationsBtn";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
+  const unreadNotificationCount = useAppSelector(
+    state => state.notifications.unreadNotificationCount
+  );
   const notificationsStatus = useAppSelector(
     state => state.notifications.status
   );
@@ -31,23 +35,35 @@ const TSSHeader = () => {
           </a>
         </div>
         <Header.Content>
-          <Header.MenuToggle data-cy="menuToggleBtn" />
+          <div className="mobile-header">
+            <NotificationsBtn
+              unreadNotificationCount={unreadNotificationCount}
+              data-cy="notificationBtnHDR"
+            />
+            <Header.MenuToggle data-cy="menuToggleBtn" />
+          </div>
           <div className="top-nav-container">
-            <NavLink
-              className="nhsuk-header__navigation-link"
-              data-cy="topNavSupport"
-              to="/support"
-            >
-              Support
-            </NavLink>
-            <NavLink
-              className="nhsuk-header__navigation-link"
-              data-cy="topNavMfaSetup"
-              to="/mfa"
-            >
-              MFA set-up
-            </NavLink>
-            <SignOutBtn />
+            <NotificationsBtn
+              unreadNotificationCount={unreadNotificationCount}
+              data-cy="notificationBtnHDR"
+            />
+            <div className="top-nav-container">
+              <NavLink
+                className="nhsuk-header__navigation-link"
+                data-cy="topNavSupport"
+                to="/support"
+              >
+                Support
+              </NavLink>
+              <NavLink
+                className="nhsuk-header__navigation-link"
+                data-cy="topNavMfaSetup"
+                to="/mfa"
+              >
+                MFA set-up
+              </NavLink>
+              <SignOutBtn />
+            </div>
           </div>
         </Header.Content>
       </Header.Container>
