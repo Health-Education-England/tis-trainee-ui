@@ -9,6 +9,7 @@ import featureFlagsReducer from "./featureFlagsSlice";
 import userReducer from "./userSlice";
 import dspReducer from "./dspSlice";
 import tssUpdatesReducer from "./tssUpdatesSlice";
+import notificationsReducer from "./notificationsSlice";
 
 const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   featureFlags: featureFlagsReducer,
   user: userReducer,
   dsp: dspReducer,
-  tssUpdates: tssUpdatesReducer
+  tssUpdates: tssUpdatesReducer,
+  notifications: notificationsReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
