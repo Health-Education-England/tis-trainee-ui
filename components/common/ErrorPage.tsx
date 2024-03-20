@@ -6,20 +6,23 @@ type ErrorPageProps = {
 export default function ErrorPage({
   message,
   header = "Oops! Something went wrong"
-}: ErrorPageProps) {
+}: Readonly<ErrorPageProps>) {
   return (
-    // TODO - add a button when needed e.g return to previous page
-    <>
-      <div
-        className="nhsuk-error-summary"
-        aria-labelledby="error-summary-title"
-        role="alert"
+    <div
+      className="nhsuk-error-summary"
+      aria-labelledby="error-summary-title"
+      role="alert"
+    >
+      <h2
+        className="nhsuk-error-summary__title"
+        id="error-summary-title"
+        data-cy="error-header-text"
       >
-        <h2 className="nhsuk-error-summary__title" id="error-summary-title">
-          {header}
-        </h2>
-        <div className="nhsuk-error-summary__body">{message}</div>
+        {header}
+      </h2>
+      <div className="nhsuk-error-summary__body" data-cy="error-message-text">
+        {message}
       </div>
-    </>
+    </div>
   );
 }

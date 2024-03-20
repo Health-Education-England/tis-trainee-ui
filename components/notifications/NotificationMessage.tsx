@@ -7,6 +7,7 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { useEffect } from "react";
 import store from "../../redux/store/store";
 import { getNotificationMessage } from "../../redux/slices/notificationsSlice";
+import { NotificationMessageText } from "./NotificationMessageText";
 
 export const NotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +31,7 @@ export const NotificationMessage = () => {
       <Row>
         <Col width="three-quarters">
           <BackLink
+            data-testid="backLink-to-notifications"
             className="back-link"
             data-cy="backLink"
             onClick={() => history.push("/notifications")}
@@ -38,19 +40,19 @@ export const NotificationMessage = () => {
           </BackLink>
         </Col>
       </Row>
-      {id === activeNotification?.id ? (
+      {id && id === activeNotification?.id ? (
         <Container className="nhsuk-u-margin-bottom-5 nhsuk-u-padding-3 container">
           <Row>
             <Col width="three-quarters">
               <Label size="m">
-                <b>{activeNotification.subject}</b>
+                <b>{activeNotification?.subjectText}</b>
               </Label>
             </Col>
             <Col width="one-quarter">
               <Label>
-                {DateUtilities.ToLocalDateTime(activeNotification.sentAt)}
+                {DateUtilities.ToLocalDateTime(activeNotification?.sentAt)}
               </Label>
-              <span>{activeNotification.type}</span>
+              <span>{activeNotification?.subject}</span>
             </Col>
           </Row>
           <Row>
@@ -63,34 +65,10 @@ export const NotificationMessage = () => {
           </Row>
         </Container>
       ) : (
-        <ErrorPage
-          message="This notification is not available"
-          header="Notification not found"
-        />
+        <ErrorPage message="This message could not be loaded." />
       )}
     </div>
   );
 };
 
 export default NotificationMessage;
-
-type NotificationMessageTextType = {
-  notificationMessageStatus: string;
-  notificationMessageText: string;
-};
-
-function NotificationMessageText({
-  notificationMessageStatus,
-  notificationMessageText
-}: NotificationMessageTextType) {
-  if (notificationMessageStatus === "loading") {
-    return <p>Loading...</p>;
-  } else if (notificationMessageStatus === "failed") {
-    return <ErrorPage message="Failed to load this notification" />;
-  }
-  return (
-    <div className="nhsuk-u-margin-top-2">
-      <p className="nhsuk-body"> {notificationMessageText}</p>
-    </div>
-  );
-}

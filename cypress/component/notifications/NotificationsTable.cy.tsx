@@ -41,6 +41,8 @@ describe("NotificationsTable", () => {
       .should("exist")
       .select("10");
     cy.get("tr.table-row.row-unread").should("have.length", 6);
+    // page input doesn't exist when all rows are shown
+    cy.get('[data-cy="NotificationsTablePageInput"]').should("not.exist");
   });
 
   it("should go to the correct page when the page input is changed", () => {

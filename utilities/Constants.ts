@@ -174,6 +174,8 @@ export const PANEL_KEYS: any = {
   conditionsOfJoining: "Conditions of Joining"
 };
 
+const dodgyConnection = "Please check your internet connection and try again.";
+
 export const toastErrText = {
   deleteFormA: "Couldn't delete your draft Form R (Part A).",
   deleteFormB: "Couldn't delete your draft Form R (Part B).",
@@ -205,10 +207,10 @@ export const toastErrText = {
   fetchTraineeActionsData: "Couldn't load your task checklist (to-do actions).",
   completeTraineeAction: "Couldn't update trainee actions.",
   fetchAllNotifications: "Couldn't load your notifications.",
-  markNotificationAsRead: "Couldn't mark this notification as read.",
-  markNotificationAsUnread: "Couldn't mark this notification as unread.",
-  archiveNotification: "Couldn't archive this notification.",
-  fetchNotificationMessage: "Couldn't load this notification message."
+  markNotificationAsRead: `Couldn't open this message and mark as read. ${dodgyConnection}`,
+  markNotificationAsUnread: `Couldn't mark this message as unread. ${dodgyConnection}`,
+  archiveNotification: `Couldn't archive this message. ${dodgyConnection}`,
+  fetchNotificationMessage: `Couldn't load this message. ${dodgyConnection}`
 };
 
 export const toastSuccessText = {
