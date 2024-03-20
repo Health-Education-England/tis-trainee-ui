@@ -34,6 +34,7 @@ export type NotificationsState = {
   error: any;
   activeNotification: NotificationType | null;
   unreadNotificationCount: number;
+  notificationUpdateInProgress: boolean;
 };
 
 export const initialState: NotificationsState = {
@@ -44,7 +45,8 @@ export const initialState: NotificationsState = {
   msgStatus: "idle",
   error: "",
   activeNotification: null,
-  unreadNotificationCount: 0
+  unreadNotificationCount: 0,
+  notificationUpdateInProgress: false
 };
 
 export const getNotifications = createAsyncThunk(
@@ -112,6 +114,9 @@ const notificationsSlice = createSlice({
     },
     loadedNotificationsList(state, action: PayloadAction<NotificationType[]>) {
       return { ...state, notificationsList: action.payload };
+    },
+    updatedNotificationUpdateInProgress(state, action: PayloadAction<boolean>) {
+      return { ...state, notificationUpdateInProgress: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -206,7 +211,8 @@ export const {
   updatedActiveNotification,
   updatedNotificationsList,
   resetNotificationsStatus,
-  loadedNotificationsList
+  loadedNotificationsList,
+  updatedNotificationUpdateInProgress
 } = notificationsSlice.actions;
 
 export function unreadNotificationsCount(notificationsData: any[]) {

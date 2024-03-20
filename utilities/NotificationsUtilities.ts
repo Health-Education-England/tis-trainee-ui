@@ -11,13 +11,8 @@ import history from "../components/navigation/history";
 
 export async function updateNotificationStatus(
   row: NotificationType,
-  newStatus: NotificationStatus,
-  event?: React.MouseEvent<HTMLButtonElement>
+  newStatus: NotificationStatus
 ) {
-  if (event) {
-    event.stopPropagation();
-  }
-
   // FE updates
   const activeNotification: NotificationType = {
     ...row,

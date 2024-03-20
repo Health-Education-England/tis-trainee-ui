@@ -10,14 +10,19 @@ import {
   ColumnFiltersState,
   PaginationState
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
 import { columns } from "./columns";
+import { updatedNotificationUpdateInProgress } from "../../redux/slices/notificationsSlice";
 
 export const NotificationsTable: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const inProgressUpdate = useAppSelector(
+    state => state.notifications.notificationUpdateInProgress
+  );
   const notificationsData = useAppSelector(
     state => state.notifications.notificationsList
   );
@@ -28,7 +33,7 @@ export const NotificationsTable: React.FC = () => {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "sentAt", desc: true }
   ]);
-  const [pagination, setPagination] = React.useState<PaginationState>({
+  const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 5
   });
@@ -49,7 +54,8 @@ export const NotificationsTable: React.FC = () => {
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
-    onPaginationChange: setPagination
+    onPaginationChange: setPagination,
+    autoResetPageIndex: false
   });
 
   return (
@@ -96,7 +102,13 @@ export const NotificationsTable: React.FC = () => {
                   : "table-row row-unread";
               return (
                 <tr
-                  onClick={() => updateNotificationStatus(row.original, "READ")}
+                  onClick={async e => {
+                    if (inProgressUpdate) return;
+                    dispatch(updatedNotificationUpdateInProgress(true));
+                    e.stopPropagation();
+                    await updateNotificationStatus(row.original, "READ");
+                    dispatch(updatedNotificationUpdateInProgress(false));
+                  }}
                   key={row.id}
                   className={`${statusClass}`}
                   data-cy={`notificationsTableRow-${row.id}`}
