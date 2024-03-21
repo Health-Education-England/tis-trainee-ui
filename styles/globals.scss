@@ -700,6 +700,27 @@ ol[type="a"] {
   overflow-x: auto;
 }
 
+// ---- Notifications table pagination ----
+
+.nhsuk-mobile-pagination-col {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-wrap: wrap;
+  @include nhsuk-responsive-padding(3);
+  @include nhsuk-responsive-padding(0, "bottom");
+}
+
+.nhsuk-mobile-pagination-row {
+  @include nhsuk-responsive-padding(6, "right");
+  @media (max-width: 440px) {
+    @include nhsuk-responsive-padding(2, "top");
+  }
+  @media (max-width: 345px) {
+    @include nhsuk-responsive-padding(3, "top");
+    @include nhsuk-responsive-padding(0, "left");
+  }
+}
 // Global search
 .table-search-input {
   margin: 1rem 0;
