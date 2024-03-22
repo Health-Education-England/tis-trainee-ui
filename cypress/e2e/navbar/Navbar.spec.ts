@@ -30,7 +30,7 @@ describe("Desktop/ tablet header", () => {
         cy.get(".nhsuk-header__menu-toggle").should("exist").click();
         cy.get(':nth-child(8) > [data-cy="signOutBtn"]');
       } else {
-        cy.get('.top-nav-container > [data-cy="signOutBtn"]').click();
+        cy.get('.top-nav-container > .top-nav-container > [data-cy="signOutBtn"]').click();
       }
     });
   });
