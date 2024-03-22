@@ -30,6 +30,7 @@ import packageJson from "../../package.json";
 import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
 import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
+import { Notifications } from "../notifications/Notifications";
 
 const appVersion = packageJson.version;
 
@@ -137,6 +138,7 @@ export const Main = () => {
             <Route path="/formr-b" component={FormRPartB} />
             <Route exact path="/support" component={Support} />
             <Route path="/mfa" component={MFA} />
+            <Route path="/notifications" component={Notifications} />
             <Redirect exact path="/" to="/home" />
             <Redirect
               exact

@@ -24,4 +24,8 @@ export class StringUtilities {
 
     return sortedValues.join(", ");
   }
+
+  public static truncateString(str: string, length: number) {
+    return str.length > length ? `${str.substring(0, length)}...` : str;
+  }
 }
