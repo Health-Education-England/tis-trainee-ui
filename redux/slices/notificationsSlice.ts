@@ -54,7 +54,7 @@ export const getNotifications = createAsyncThunk(
   async () => {
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getAllNotifications();
-    return response.data;
+    return response.data.filter(n => n.type == "IN_APP");
   }
 );
 
