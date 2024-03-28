@@ -14,17 +14,19 @@ describe("Notifications", () => {
         body: notificationsMixedTypeData
       }
     ).as("getNotifications");
-    cy.signInToTss(300000, "/notifications");
-    cy.wait("@getNotifications");
+    cy.wait(30000);
+    cy.signInToTss(30000, "/notifications");
   });
 
   it("should load the notifications page", () => {
+    cy.wait("@getNotifications");
     cy.get('[data-cy="notificationsHeading"]')
       .should("exist")
       .should("contain.text", "Notifications");
   });
 
   it("should filter the recived list of notifications so that only IN_APP are visiable", () => {
+    cy.wait("@getNotifications");
     cy.get('[data-cy="NotificationsTablePageSizeSelect"]').select(
       "Show 30 rows"
     );
