@@ -2,7 +2,7 @@ import { mount } from "cypress/react18";
 import { NotificationMessageText } from "../../../components/notifications/NotificationMessageText";
 
 describe("NotificationMessageText", () => {
-  it("displays loading state", () => {
+  it("should display loading state", () => {
     mount(
       <NotificationMessageText
         notificationMessageStatus="loading"
@@ -12,7 +12,7 @@ describe("NotificationMessageText", () => {
     cy.contains("p", "Loading...");
   });
 
-  it("displays error state", () => {
+  it("should display error state", () => {
     mount(
       <NotificationMessageText
         notificationMessageStatus="failed"
@@ -29,14 +29,24 @@ describe("NotificationMessageText", () => {
       );
   });
 
-  it("displays notification message", () => {
+  it("should display notification message", () => {
     const message = "This is a test notification message";
     mount(
       <NotificationMessageText
         notificationMessageStatus="success"
-        notificationMessageText={message}
+        notificationMessageText={`<p>${message}</p>`}
       />
     );
     cy.contains("p", message);
+  });
+
+  it("should sanitize notification message", () => {
+    mount(
+      <NotificationMessageText
+        notificationMessageStatus="success"
+        notificationMessageText="Test:<script>alert(1);</script>"
+      />
+    );
+    cy.contains("div", "Test:");
   });
 });

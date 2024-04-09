@@ -1,4 +1,5 @@
 import { toastErrText } from "../../utilities/Constants";
+import DOMPurify from "dompurify";
 import ErrorPage from "../common/ErrorPage";
 
 type NotificationMessageTextType = {
@@ -16,8 +17,11 @@ export function NotificationMessageText({
     return <ErrorPage message={toastErrText.fetchNotificationMessage} />;
   }
   return (
-    <div className="nhsuk-u-margin-top-2">
-      <p className="nhsuk-body"> {notificationMessageText}</p>
-    </div>
+    <div
+      className="nhsuk-u-margin-top-2"
+      dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(notificationMessageText)
+      }}
+    />
   );
 }
