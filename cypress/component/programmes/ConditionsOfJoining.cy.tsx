@@ -136,31 +136,7 @@ describe("ConditionsOfJoining", () => {
         .and("have.text", "Follow Local Office process");
     });
 
-    it("should show available signing date when start date after COJ epoch but outside 13 weeks", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={new Date(
-              COJ_EPOCH.getTime() + 14 * 7 * 24 * 60 * 60 * 1000
-            ).toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=cojStatusText]")
-        .should("exist")
-        .and(
-          "have.text",
-          `Not signed, available from ${DateUtilities.ToLocalDate(
-            new Date(COJ_EPOCH.getTime() + 7 * 24 * 60 * 60 * 1000)
-          )}`
-        );
-    });
-
-    it("should show not signed when start date after COJ epoch and inside 13 weeks", () => {
+    it("should show not signed when start date after COJ epoch", () => {
       mount(
         <BrowserRouter>
           <ConditionsOfJoining
@@ -177,7 +153,7 @@ describe("ConditionsOfJoining", () => {
         .and("have.text", "Not signed");
     });
 
-    it("should allow signing when start date after COJ epoch and inside 13 weeks", () => {
+    it("should allow signing when start date after COJ epoch", () => {
       mount(
         <BrowserRouter>
           <ConditionsOfJoining

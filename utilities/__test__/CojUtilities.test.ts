@@ -6,9 +6,6 @@ import { CojUtilities } from "../CojUtilities";
 import { DateUtilities } from "../DateUtilities";
 
 describe("CojUtilities", () => {
-  const SIGNING_WINDOW_OFFSET_IN_MS = 13 * 7 * 24 * 60 * 60 * 1000; // 13 weeks
-  const DAY_IN_MS = 24 * 60 * 60 * 1000;
-
   // Dates based on env.test value.
   const COJ_EPOCH = "2010-10-14";
   const PRE_COJ_EPOCH = "2010-10-13";
@@ -34,55 +31,15 @@ describe("CojUtilities", () => {
       );
     });
 
-    it("should return not signed with available date when start date equal to coj epoch and currently before signing window opens", () => {
+    it("should return not signed when start date equal to coj epoch", () => {
       const startDate = new Date(COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
-
-      const availableDate = DateUtilities.ToLocalDate(signableDate);
-      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
-        `Not signed, available from ${availableDate}`
-      );
-    });
-
-    it("should return not signed with available date when start date after coj epoch and currently before signing window opens", () => {
-      const startDate = new Date(POST_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
-
-      const availableDate = DateUtilities.ToLocalDate(signableDate);
-      expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
-        `Not signed, available from ${availableDate}`
-      );
-    });
-
-    it("should return not signed when start date equal to coj epoch and currently after signing window opens", () => {
-      const startDate = new Date(COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(signableDate);
-
       expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
         "Not signed"
       );
     });
 
-    it("should return not signed when start date after coj epoch and currently after signing window opens", () => {
+    it("should return not signed when start date after coj epoch", () => {
       const startDate = new Date(POST_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(signableDate);
-
       expect(CojUtilities.getStatusText(startDate.toISOString())).toEqual(
         "Not signed"
       );
@@ -118,102 +75,18 @@ describe("CojUtilities", () => {
   });
 
   describe("canBeSigned", () => {
-    it("should return false when start date before coj epoch and currently before signing window", () => {
+    it("should return false when start date before coj epoch", () => {
       const startDate = new Date(PRE_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(signableDate);
-
       expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
     });
 
-    it("should return false when start date before coj epoch and currently equal to signing window", () => {
-      const startDate = new Date(PRE_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
-    });
-
-    it("should return false when start date before coj epoch and currently after signing window", () => {
-      const startDate = new Date(PRE_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() + DAY_IN_MS));
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
-    });
-
-    it("should return false when start date equal to coj epoch and currently before signing window", () => {
+    it("should return true when start date equal to coj epoch", () => {
       const startDate = new Date(COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
-    });
-
-    it("should return false when start date equal to coj epoch and currently equal to signing window", () => {
-      const startDate = new Date(COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(signableDate);
-
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
     });
 
-    it("should return false when start date equal to coj epoch and currently after signing window", () => {
-      const startDate = new Date(COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() + DAY_IN_MS));
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
-    });
-
-    it("should return false when start date after coj epoch and currently before signing window", () => {
+    it("should return true when start date after coj epoch", () => {
       const startDate = new Date(POST_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() - DAY_IN_MS));
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(false);
-    });
-
-    it("should return true when start date after coj epoch and currently equal to signing window", () => {
-      const startDate = new Date(POST_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(signableDate);
-
-      expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
-    });
-
-    it("should return true when start date after coj epoch and currently after signing window", () => {
-      const startDate = new Date(POST_COJ_EPOCH);
-      const signableDate = new Date(
-        startDate.getTime() - SIGNING_WINDOW_OFFSET_IN_MS
-      );
-
-      jest.setSystemTime(new Date(signableDate.getTime() + DAY_IN_MS));
-
       expect(CojUtilities.canBeSigned(startDate)).toEqual(true);
     });
   });
@@ -231,17 +104,11 @@ describe("CojUtilities", () => {
         ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(PRE_COJ_EPOCH)
       };
-      const preSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned[0],
-        startDate: new Date(
-          currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
-        )
-      };
 
       jest.setSystemTime(currentDate);
 
       expect(
-        CojUtilities.canAnyBeSigned([signed, preCojEpoch, preSignableDate])
+        CojUtilities.canAnyBeSigned([signed, preCojEpoch])
       ).toEqual(false);
     });
 
@@ -253,37 +120,11 @@ describe("CojUtilities", () => {
         ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
-      const preSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned[0],
-        startDate: new Date(
-          currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS + DAY_IN_MS
-        )
-      };
-
+      
       jest.setSystemTime(currentDate);
 
       expect(
-        CojUtilities.canAnyBeSigned([signed, postCojEpoch, preSignableDate])
-      ).toEqual(true);
-    });
-
-    it("should return true when a programme membership is post-signable date", () => {
-      const currentDate = new Date(COJ_EPOCH);
-
-      const signed = mockProgrammeMembershipCojSigned;
-      const preCojEpoch = {
-        ...mockProgrammeMembershipCojNotSigned[0],
-        startDate: new Date(PRE_COJ_EPOCH)
-      };
-      const postSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned[0],
-        startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
-      };
-
-      jest.setSystemTime(currentDate);
-
-      expect(
-        CojUtilities.canAnyBeSigned([signed, preCojEpoch, postSignableDate])
+        CojUtilities.canAnyBeSigned([signed, postCojEpoch])
       ).toEqual(true);
     });
 
@@ -294,15 +135,11 @@ describe("CojUtilities", () => {
         ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
-      const postSignableDate = {
-        ...mockProgrammeMembershipCojNotSigned[0],
-        startDate: new Date(currentDate.getTime() + SIGNING_WINDOW_OFFSET_IN_MS)
-      };
-
+      
       jest.setSystemTime(currentDate);
 
       expect(
-        CojUtilities.canAnyBeSigned([postCojEpoch, postSignableDate])
+        CojUtilities.canAnyBeSigned([postCojEpoch, postCojEpoch])
       ).toEqual(true);
     });
   });
