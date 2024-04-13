@@ -12,7 +12,7 @@ const dateValidationSchema = (fieldName: string) =>
     .typeError(`${fieldName} must be a valid date`)
     .required(`${fieldName} is required`);
 
-const formAValidationSchemaDefault = {
+export const formAValidationSchema = yup.object({
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
@@ -65,7 +65,10 @@ const formAValidationSchemaDefault = {
     .required("You need to choose at least one Declaration")
     .nullable(),
   programmeSpecialty: StringValidationSchema("Programme specialty"),
-  cctSpecialty1: StringValidationSchema("Specialty 1 for Award of CCT"),
+  cctSpecialty1: yup.string().when("declarationType", {
+    is: "I have been appointed to a programme leading to award of CCT",
+    then: yup.string().required("Specialty 1 for Award of CCT is required")
+  }),
   college: StringValidationSchema("Royal College / Faculty Assessing Training"),
   completionDate: yup
     .string()
@@ -95,14 +98,4 @@ const formAValidationSchemaDefault = {
       "Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)",
       value => (value ? CHECK_WHOLE_TIME_EQUIVALENT_REGEX.test(value) : false)
     )
-};
-
-export const formAValidationSchema = yup.object(formAValidationSchemaDefault);
-
-export const formAValidationSchemaView = yup.object({
-  ...formAValidationSchemaDefault,
-  cctSpecialty1: yup.string().when("declarationType", {
-    is: "I have been appointed to a programme leading to award of CCT",
-    then: yup.string().required("Specialty 1 for Award of CCT is required")
-  })
 });
