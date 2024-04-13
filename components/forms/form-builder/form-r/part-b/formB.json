@@ -1,0 +1,573 @@
+{
+  "name": "formB",
+  "pages": [
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "FormBImportantNotice",
+      "msgLinkName": "DataSource",
+      "sections": [
+        {
+          "sectionHeader": "Personal Details",
+          "fields": [
+            {
+              "name": "forename",
+              "label": "Forename ",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "surname",
+              "label": "GMC-Registered Surname",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true,
+              "canGrow": true
+            },
+            {
+              "name": "gmcNumber",
+              "label": "GMC Number",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "email",
+              "label": "Primary contact email address",
+              "hint": "For reasons of security and due to frequent system failures with internet email accounts, you are strongly advised to provide an NHS.net email address.",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "localOfficeName",
+              "label": "Deanery / Local Office",
+              "type": "select",
+              "optionsKey": "localOffice",
+              "visible": true
+            },
+            {
+              "name": "prevRevalBody",
+              "label": "Previous Designated Body for Revalidation (if applicable)",
+              "type": "select",
+              "optionsKey": "dbcInternal",
+              "dependencies": ["prevRevalBodyOther"],
+              "visible": true
+            },
+            {
+              "name": "prevRevalBodyOther",
+              "label": "Please Specify 'Other'",
+              "type": "select",
+              "visible": false,
+              "visibleIf": ["other"],
+              "parent": "prevRevalBody",
+              "optionsKey": "dbcExternal"
+            },
+            {
+              "name": "currRevalDate",
+              "label": "Current Revalidation Date",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "prevRevalDate",
+              "label": "Date of Previous Revalidation (if applicable)",
+              "type": "date",
+              "visible": true
+            },
+            {
+              "name": "programmeSpecialty",
+              "label": "Programme/Training Specialty",
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
+            },
+            {
+              "name": "dualSpecialty",
+              "label": "Dual Specialty (if applicable)",
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Whole Scope of Practice: Work",
+      "sections": [
+        {
+          "sectionHeader": "Type of Work",
+          "fields": [
+            {
+              "name": "work",
+              "type": "array",
+              "label": "Type of Work",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "typeOfWork",
+                  "label": "Type of Work",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "trainingPost",
+                  "label": "Training Post",
+                  "type": "select",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                },
+                {
+                  "name": "startDate",
+                  "label": "Start Date",
+                  "type": "date",
+                  "visible": true
+                },
+
+                {
+                  "name": "endDate",
+                  "label": "End Date",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "site",
+                  "label": "Site Name",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "siteLocation",
+                  "label": "Site Location",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "siteKnownAs",
+                  "label": "Site Known As",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Whole Scope of Practice: Time Out Of Training (TOOT)",
+      "sections": [
+        {
+          "sectionHeader": "TOOT days (round up to the nearest whole day)",
+          "fields": [
+            {
+              "name": "sicknessAbsence",
+              "type": "text",
+              "label": "Short and Long-term sickness absence (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "parentalLeave",
+              "type": "text",
+              "label": "Parental leave - incl Maternity / Paternity leave (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "careerBreaks",
+              "type": "text",
+              "label": "Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE) (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "paidLeave",
+              "type": "text",
+              "label": "Paid / unpaid leave (e.g. compassionate, jury service) (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "unauthorisedLeave",
+              "type": "text",
+              "label": "Unpaid/unauthorised leave including industrial action (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "otherLeave",
+              "type": "text",
+              "label": "Other Absence (whole days)",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true,
+              "contributesToTotal": "totalLeave"
+            },
+            {
+              "name": "totalLeave",
+              "type": "text",
+              "label": "Total Leave (days)",
+              "visible": true,
+              "width": 3,
+              "isNumberField": true,
+              "isTotal": true,
+              "readOnly": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Declarations relating to Good Medical Practice",
+      "sections": [
+        {
+          "sectionHeader": "Declarations",
+          "fields": [
+            {
+              "name": "isHonest",
+              "label": "I accept the professional obligations placed on me in Good Medical Practice in relation to honesty and integrity.",
+              "type": "checkbox",
+              "visible": true
+            },
+            {
+              "name": "isHealthy",
+              "label": "I accept the professional obligations placed on me in Good Medical Practice about my personal health.",
+              "type": "checkbox",
+              "visible": true
+            },
+            {
+              "name": "isWarned",
+              "label": "Do you have any GMC conditions, warnings or undertakings placed on you by the GMC, employing organisation or other organisations?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["isComplying"]
+            },
+            {
+              "name": "isComplying",
+              "label": "Are you complying with these conditions, warnings or undertakings?",
+              "type": "checkbox",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "isWarned"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Summary of previous resolved Form R Declarations",
+      "sections": [
+        {
+          "sectionHeader": "Resolved Declarations (declared on previous Form R)",
+          "fields": [
+            {
+              "name": "havePreviousDeclarations",
+              "label": "Did you declare any Significant Events, Complaints, Other investigations on your PREVIOUS Form R that have since been RESOLVED?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["previousDeclarations"]
+            },
+            {
+              "name": "previousDeclarations",
+              "type": "array",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "havePreviousDeclarations",
+              "label": "Previous Resolved Declarations",
+              "objectFields": [
+                {
+                  "name": "declarationType",
+                  "label": "Declation Type",
+                  "type": "select",
+                  "optionsKey": "declarationType",
+                  "visible": true
+                },
+                {
+                  "name": "dateOfEntry",
+                  "label": "Date of entry in portfolio",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "title",
+                  "label": "Title/ Topic of reflection/ event",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "locationOfEntry",
+                  "label": "Location of entry in portfolio",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Summary of previous unresolved Form R Declarations",
+      "sections": [
+        {
+          "sectionHeader": "Unresolved Declarations (declared on previous Form R)",
+          "fields": [
+            {
+              "name": "havePreviousUnresolvedDeclarations",
+              "label": "Do you have any Significant Events, Complaints, or other investigations detailed on your PREVIOUS Form R still UNRESOLVED?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["previousDeclarationSummary"]
+            },
+            {
+              "name": "previousDeclarationSummary",
+              "type": "textArea",
+              "placeholder": "type here...",
+              "label": "Please provide a brief summary below, including where working, the date of the event, and your where appropriate. If known, identify what investigations are pending relating to the to the event and which organisation is undertaking the investigation.",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "havePreviousUnresolvedDeclarations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Summary of current resolved Form R Declarations",
+      "sections": [
+        {
+          "sectionHeader": "Resolved Declarations (current)",
+          "fields": [
+            {
+              "name": "haveCurrentDeclarations",
+              "label": "Do you have any NEW Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal that have since been RESOLVED?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["currentDeclarations"]
+            },
+            {
+              "name": "currentDeclarations",
+              "type": "array",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "haveCurrentDeclarations",
+              "label": "Current Resolved Declarations",
+              "objectFields": [
+                {
+                  "name": "declarationType",
+                  "label": "Declation Type",
+                  "type": "select",
+                  "optionsKey": "declarationType",
+                  "visible": true
+                },
+                {
+                  "name": "dateOfEntry",
+                  "label": "Date of entry in portfolio",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "title",
+                  "label": "Title/ Topic of reflection/ event",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "locationOfEntry",
+                  "label": "Location of entry in portfolio",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Summary of current unresolved Form R Declarations",
+      "sections": [
+        {
+          "sectionHeader": "Unresolved Declarations (current)",
+          "fields": [
+            {
+              "name": "haveCurrentUnresolvedDeclarations",
+              "label": "Do you have any NEW DECLARED Significant Events, Complaints, or other investigations still UNRESOLVED?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["currentDeclarationSummary"]
+            },
+            {
+              "name": "currentDeclarationSummary",
+              "type": "textArea",
+              "placeholder": "type here...",
+              "label": "Please provide a brief summary below, including where working, the date of the event, and your where appropriate. If known, identify what investigations are pending relating to the to the event and which organisation is undertaking the investigation.",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "haveCurrentUnresolvedDeclarations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "COVID 19 self-assessment & declarations",
+      "importantTxtName": "Covid19ImportantNotice",
+      "sections": [
+        {
+          "sectionHeader": "COVID 19 self-assessment & declarations",
+          "fields": [
+            {
+              "name": "haveCovidDeclarations",
+              "label": "I want to complete the Covid 19 self declaration",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "dependencies": ["covidDeclarationDto"]
+            },
+            {
+              "name": "covidDeclarationDto",
+              "type": "dto",
+              "visible": false,
+              "visibleIf": [true],
+              "parent": "haveCovidDeclarations",
+              "objectFields": [
+                {
+                  "name": "selfRateForCovid",
+                  "label": "Please self-rate your progress in your training since your last ARCP",
+                  "type": "select",
+                  "optionsKey": "covidProgressSelfRate",
+                  "visible": true
+                },
+                {
+                  "name": "reasonOfSelfRate",
+                  "label": "Please provide a brief explanation of the reasons for your self-rating",
+                  "type": "textArea",
+                  "placeholder": "type here...",
+                  "visible": false,
+                  "visibleIf": [
+                    "Below expectations for stage of training - needs further development",
+                    "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
+                  ],
+                  "parent": "selfRateForCovid"
+                },
+                {
+                  "name": "otherInformationForPanel",
+                  "label": "Please provide any other information you would like the panel to consider",
+                  "type": "textArea",
+                  "placeholder": "Please include as much information as possible including details of any periods of self-isolation with dates...",
+                  "visible": true
+                },
+                {
+                  "name": "discussWithSupervisorChecked",
+                  "label": "I would like to discuss my training or current situation with my supervisor",
+                  "type": "radio",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                },
+                {
+                  "name": "discussWithSomeoneChecked",
+                  "label": "I have concerns with my training and/or wellbeing at the moment and would like to discuss them with someone",
+                  "type": "radio",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                },
+                {
+                  "name": "haveChangesToPlacement",
+                  "label": "Changes were made to my placement due to my individual circumstances",
+                  "type": "radio",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                },
+                {
+                  "name": "changeCircumstances",
+                  "label": "Circumstance of change",
+                  "type": "select",
+                  "optionsKey": "covidChangeCircs",
+                  "visible": false,
+                  "visibleIf": [true],
+                  "parent": "haveChangesToPlacement"
+                },
+                {
+                  "name": "changeCircumstanceOther",
+                  "label": "Please Specify 'Other'",
+                  "type": "textArea",
+                  "visible": false,
+                  "visibleIf": ["Other"],
+                  "parent": "changeCircumstances"
+                },
+                {
+                  "name": "howPlacementAdjusted",
+                  "label": "Please explain further how your placement was adjusted",
+                  "type": "textArea",
+                  "visible": true
+                },
+                {
+                  "name": "educationSupervisorName",
+                  "label": "Educational Supervisor's name (if applicable)",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "educationSupervisorEmail",
+                  "label": "Educational Supervisor's email (if applicable)",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Compliments",
+      "sections": [
+        {
+          "sectionHeader": "Compliments (Not compulsory)",
+          "fields": [
+            {
+              "name": "compliments",
+              "label": "Compliments are another important piece of feedback. You may wish to detail here any compliments that you have received which are not already recorded in your portfolio, to help give a better picture of your practice as a whole. This section is not compulsory.",
+              "placeholder": "type here...",
+              "type": "textArea",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "declarations": [
+    {
+      "name": "isDeclarationAccepted",
+      "label": "This form is a true and accurate declaration at this point in time and will immediately notify the Deanery/HEE local team and my employer if I am aware of any changes to the information provided in this form."
+    },
+    {
+      "name": "isConsentAccepted",
+      "label": "I give permission for my past and present ARCP/RITA portfolios and / or appraisal documentation to be viewed by my Responsible Officer and any appropriate person nominated by the Responsible Officer. Additionally if my Responsible Officer or Designated Body changes during my training period, I give permission for my current Responsible Officer to share this information with my new Responsible Officer for the purposes of Revalidation."
+    }
+  ]
+}

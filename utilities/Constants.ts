@@ -80,9 +80,18 @@ export const FORMR_PARTB_CONSENT =
   "I give permission for my past and present ARCP/RITA portfolios and / or appraisal documentation to be viewed by my Responsible Officer and any appropriate person nominated by the Responsible Officer. Additionally if my Responsible Officer or Designated Body changes during my training period, I give permission for my current Responsible Officer to share this information with my new Responsible Officer for the purposes of Revalidation.";
 
 export const COVID_RESULT_DECLARATIONS = [
-  "Below expectations for stage of training - needs further development",
-  "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19",
-  "Satisfactory progress for stage of training and required competencies met"
+  {
+    label:
+      "Below expectations for stage of training - needs further development"
+  },
+  {
+    label:
+      "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
+  },
+  {
+    label:
+      "Satisfactory progress for stage of training and required competencies met"
+  }
 ];
 
 export const NEED_DISCUSSION_WITH_SUPERVISOR =
