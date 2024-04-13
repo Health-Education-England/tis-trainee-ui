@@ -15,7 +15,7 @@ export const StartOverButton = () => {
 
   // get id from updated form r data when autosaved form
   const formId = useAppSelector(state =>
-    formName === "formr-a" ? state.formA.formAData.id : state.formB.formBData.id
+    formName === "formr-a" ? state.formA.formData.id : state.formB.formData.id
   );
   // get id from forms draftFormProps when forms are loaded from db
   const formIdFromDraftFormProps = useAppSelector(

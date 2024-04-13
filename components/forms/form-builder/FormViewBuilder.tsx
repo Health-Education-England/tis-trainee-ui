@@ -1,6 +1,18 @@
+import { Fragment } from "react";
 import { Field, Form, FormData } from "./FormBuilder";
-import { Button, Card, SummaryList } from "nhsuk-react-components";
-import { handleEditSection } from "../../../utilities/FormBuilderUtilities";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Label,
+  Row,
+  SummaryList
+} from "nhsuk-react-components";
+import {
+  formatFieldName,
+  handleEditSection
+} from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
 
@@ -15,10 +27,25 @@ function VisibleField({
   formData,
   formErrors
 }: Readonly<VisibleFieldProps>) {
-  if (
+  const isVisible =
     field.visible ||
-    (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]))
-  ) {
+    (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]));
+
+  if (isVisible) {
+    if (field.type === "dto") {
+      return (
+        <Fragment>
+          {field.objectFields?.map(nestedField => (
+            <VisibleField
+              key={nestedField.name}
+              field={nestedField}
+              formData={formData[field.name]}
+              formErrors={formErrors}
+            />
+          ))}
+        </Fragment>
+      );
+    }
     return (
       <SummaryList.Row key={field.name}>
         <SummaryList.Key
@@ -89,10 +116,35 @@ export default function FormViewBuilder({
   );
 }
 
-function displayListValue(fieldVal: string, fieldType: string) {
-  if (!fieldVal) return "Not provided";
+function displayListValue(fieldVal: any, fieldType?: string) {
+  if (fieldVal === null || fieldVal === "") return "Not provided";
+  if (fieldType === "array") {
+    return fieldVal.map((item: any, index: number) => (
+      <Card key={index} className="container-form-view">
+        <Card.Content>
+          {Object.entries(item).map((entry: any, index: number) => (
+            <Container key={index}>
+              <Row style={{ marginBottom: "0.5em" }}>
+                <Col width="one-half">
+                  <Label>
+                    <b>{formatFieldName(entry[0])}</b>
+                  </Label>
+                </Col>
+                <Col width="one-half">
+                  {displayListValue(entry[1], entry[1]?.type ?? "")}
+                </Col>
+              </Row>
+            </Container>
+          ))}
+        </Card.Content>
+      </Card>
+    ));
+  }
   if (fieldType === "date" && fieldVal) {
     return DateUtilities.ToLocalDate(fieldVal);
   }
-  return fieldVal;
+  if (typeof fieldVal === "boolean") {
+    return fieldVal ? "Yes" : "No";
+  }
+  return fieldVal.toString();
 }

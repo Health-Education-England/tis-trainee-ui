@@ -12,7 +12,7 @@ import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 interface IFormB {
   formBList: IFormR[];
-  formBData: FormRPartB;
+  formData: FormRPartB;
   sectionNumber: number;
   previousSectionNumber: number | null;
   status: string;
@@ -27,7 +27,7 @@ interface IFormB {
 
 export const initialState: IFormB = {
   formBList: [],
-  formBData: initialFormRBBeforeProfileData,
+  formData: initialFormRBBeforeProfileData,
   sectionNumber: 1,
   previousSectionNumber: null,
   status: "idle",
@@ -108,7 +108,7 @@ const formBSlice = createSlice({
       return { ...initialState, formBList: state.formBList };
     },
     updatedFormB(state, action: PayloadAction<FormRPartB>) {
-      return { ...state, formBData: action.payload };
+      return { ...state, formData: action.payload };
     },
     decrementFormBSection: state => {
       state.sectionNumber -= 1;
@@ -170,7 +170,7 @@ const formBSlice = createSlice({
       })
       .addCase(loadSavedFormB.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formBData = action.payload;
+        state.formData = action.payload;
       })
       .addCase(loadSavedFormB.rejected, (state, { error }) => {
         state.status = "failed";
@@ -218,7 +218,7 @@ const formBSlice = createSlice({
       })
       .addCase(autoSaveFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
-        state.formBData = action.payload;
+        state.formData = action.payload;
         state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
           action.payload.lastModifiedDate,
           true
@@ -232,7 +232,7 @@ const formBSlice = createSlice({
       })
       .addCase(autoUpdateFormB.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
-        state.formBData = action.payload;
+        state.formData = action.payload;
         state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
           action.payload.lastModifiedDate,
           true
@@ -280,7 +280,10 @@ export const {
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>
-  state.formB.formBData;
+  state.formB.formData;
 
 export const selectSaveBtnActive = (state: { formB: IFormB }) =>
   state.formB.saveBtnActive;
+
+export const selectCanEditStatusB = (state: { formB: IFormB }) =>
+  state.formB.canEdit;

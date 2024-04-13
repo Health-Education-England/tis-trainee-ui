@@ -11,12 +11,14 @@ type PhoneProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => void;
   fieldError: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
+  dtoName?: string;
 };
 
 export const Phone = ({
@@ -26,7 +28,8 @@ export const Phone = ({
   fieldError,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  dtoName
 }: PhoneProps) => {
   return (
     <div data-cy={name}>
@@ -45,7 +48,8 @@ export const Phone = ({
             undefined,
             undefined,
             arrayIndex,
-            arrayName
+            arrayName,
+            dtoName
           );
         }}
         value={value}

@@ -113,13 +113,13 @@ const formActionsAndTypes: FormActionsAndTypes<FormRPartA | FormRPartB> = {
   formA: {
     update: updateFormA,
     save: saveFormA,
-    state: () => store.getState().formA?.formAData?.id,
+    state: () => store.getState().formA?.formData?.id,
     type: {} as FormRPartA
   },
   formB: {
     update: updateFormB,
     save: saveFormB,
-    state: () => store.getState().formB?.formBData?.id,
+    state: () => store.getState().formB?.formData?.id,
     type: {} as FormRPartB
   }
 };
@@ -176,31 +176,6 @@ export async function submitForm(
   resetForm(formName, history);
 }
 
-// *** NOTE: Remove this code when form B is built with the form builder ***
-export async function tempSubFormB(
-  formName: string,
-  formData: FormData,
-  history: any
-) {
-  const lastSavedFormData = store.getState().formB?.formBData;
-  const updatedFormData = {
-    ...formData,
-    submissionDate: new Date(),
-    lifecycleState: LifeCycleState.Submitted,
-    lastModifiedDate: new Date()
-  };
-  lastSavedFormData.id
-    ? await store.dispatch(
-        updateFormB({
-          ...updatedFormData,
-          id: lastSavedFormData.id
-        } as FormRPartB)
-      )
-    : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
-  resetForm(formName, history);
-}
-// ----------------------------------------------------------
-
 export async function saveDraftForm(
   formName: string,
   formData: FormData,
@@ -209,8 +184,8 @@ export async function saveDraftForm(
   const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
   const lastSavedFormData =
     formName === "formA"
-      ? store.getState().formA?.formAData
-      : store.getState().formB?.formBData;
+      ? store.getState().formA?.formData
+      : store.getState().formB?.formData;
   let updatedFormData: FormData;
   if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
     updatedFormData = {
@@ -385,10 +360,11 @@ export function handleNumberInput(
   }
 }
 
-export function sumFieldValues(formData: FormData, fieldNames: string[]) {
-  return fieldNames
-    .reduce((sum, fieldName) => sum + Number(formData[fieldName] || 0), 0)
-    .toString();
+export function sumFieldValues(formData: FormData, fields: Field[]) {
+  return fields.reduce(
+    (sum, field) => sum + Number(formData[field.name] || 0),
+    0
+  );
 }
 
 export interface DraftFormProps {
@@ -466,8 +442,8 @@ export async function autosaveFormR(
 ) {
   const lastSavedFormData =
     formName === "formA"
-      ? store.getState().formA?.formAData
-      : store.getState().formB?.formBData;
+      ? store.getState().formA?.formData
+      : store.getState().formB?.formData;
 
   // update form data for submission
   const preppedFormData = prepFormData(formData);
@@ -518,7 +494,7 @@ export function validateFields(
   let finalValidationSchema = Yup.object().shape({});
   finalValidationSchema = fields.reduce((schema, field) => {
     const fieldSchema = validationSchema.fields[field.name];
-    if (field.type === "array") {
+    if (field.type === "array" && values[field.name].length > 0) {
       const nestedFields = Object.keys(values[field.name][0]).reduce(
         (nestedSchema: { [key: string]: any }, nestedField: string) => {
           nestedSchema[nestedField] = fieldSchema.innerType.fields[nestedField];
@@ -544,6 +520,12 @@ export function filteredOptions(optionsKey: string | undefined, options: any) {
   return optionsKey && options?.[optionsKey]?.length > 0
     ? options[optionsKey]
     : [];
+}
+
+export function formatFieldName(fieldName: string) {
+  let words = fieldName.split(/(?=[A-Z])/);
+  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return words.join(" ");
 }
 
 // react-select styles

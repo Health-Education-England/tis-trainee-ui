@@ -1,6 +1,7 @@
 import React from "react";
-import { Field, FieldWarning, FormData } from "../FormBuilder";
-import { Card } from "nhsuk-react-components";
+import { Field, FieldWarning } from "../FormBuilder";
+import { Button, Card } from "nhsuk-react-components";
+import { formatFieldName } from "../../../../utilities/FormBuilderUtilities";
 
 type PanelBuilder = {
   fieldWarning: FieldWarning | undefined;
@@ -8,7 +9,6 @@ type PanelBuilder = {
   formData: any;
   setFormData: React.Dispatch<any>;
   renderFormField: (
-    formData: FormData,
     field: Field,
     value: string,
     error: string,
@@ -18,12 +18,15 @@ type PanelBuilder = {
       handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
     },
     options?: any,
-    arrayDetails?: { arrayIndex: number; arrayName: string }
+    arrayDetails?: { arrayIndex: number; arrayName: string },
+    dtoName?: string
   ) => JSX.Element | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   panelErrors: any;
   options?: any;
+  isFormDirty: React.MutableRefObject<boolean>;
+  dtoName?: string;
 };
 
 export default function PanelBuilder({
@@ -35,7 +38,9 @@ export default function PanelBuilder({
   handleBlur,
   panelErrors,
   fieldWarning,
-  options
+  options,
+  isFormDirty,
+  dtoName
 }: Readonly<PanelBuilder>) {
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
@@ -46,58 +51,65 @@ export default function PanelBuilder({
   };
 
   const addPanel = () => {
+    isFormDirty.current = true;
     const newPanelsArray = [...formData[field.name], newPanel()];
     setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
   const removePanel = (index: number) => {
+    isFormDirty.current = true;
     const newPanelsArray = formData[field.name].filter(
       (_arrObj: any, i: number) => i !== index
     );
     setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
+  const formattedFieldName = formatFieldName(field.name);
+
   return (
     <>
       {formData[field.name].map((_arrObj: any, index: number) => (
-        <Card key={index}>
+        <Card key={index} className="container">
           <Card.Content>
             <p>
-              <b>{`${field.name} ${index + 1}`}</b>
+              <b>{`${formattedFieldName} ${index + 1}`}</b>
             </p>
             {field.objectFields?.map((objField: Field) => (
               <div key={objField.name} className="nhsuk-form-group">
                 {renderFormField(
-                  formData,
                   objField,
                   formData[field.name][index][objField.name] ?? "",
                   panelErrors?.[index]?.[objField.name] ?? "",
                   fieldWarning,
                   { handleChange, handleBlur },
                   options,
-                  { arrayIndex: index, arrayName: field.name }
+                  { arrayIndex: index, arrayName: field.name },
+                  dtoName
                 )}
               </div>
             ))}
-            <button
-              onClick={e => {
-                e.preventDefault();
-                removePanel(index);
-              }}
-            >
-              Remove Panel
-            </button>
+            <div>
+              <Button
+                secondary
+                onClick={(e: { preventDefault: () => void }) => {
+                  e.preventDefault();
+                  removePanel(index);
+                }}
+              >
+                {`Remove ${formattedFieldName} ${index + 1}`}
+              </Button>
+            </div>
           </Card.Content>
         </Card>
       ))}
-      <button
-        onClick={e => {
+      <Button
+        onClick={(e: { preventDefault: () => void }) => {
           e.preventDefault();
           addPanel();
         }}
       >
-        Add Panel
-      </button>
+        {`Add a ${formattedFieldName} panel`}
+      </Button>
     </>
   );
 }

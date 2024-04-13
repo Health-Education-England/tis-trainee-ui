@@ -11,12 +11,14 @@ type RadiosProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => void;
   fieldError: string;
-  value: string;
+  value: string | boolean | null;
   arrayIndex?: number;
   arrayName?: string;
+  dtoName?: string;
 };
 
 export const Radios: React.FC<RadiosProps> = ({
@@ -27,7 +29,8 @@ export const Radios: React.FC<RadiosProps> = ({
   fieldError,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  dtoName
 }: RadiosProps) => {
   return (
     <div className="nhsuk-radios">
@@ -44,9 +47,16 @@ export const Radios: React.FC<RadiosProps> = ({
             type="radio"
             name={name}
             value={option.value}
-            checked={value === option.value}
+            checked={isChecked(value, option.value)}
             onChange={event =>
-              handleChange(event, undefined, undefined, arrayIndex, arrayName)
+              handleChange(
+                event,
+                undefined,
+                undefined,
+                arrayIndex,
+                arrayName,
+                dtoName
+              )
             }
             placeholder={option.value}
             aria-labelledby={`${option.value}--label`}
@@ -62,3 +72,14 @@ export const Radios: React.FC<RadiosProps> = ({
     </div>
   );
 };
+
+function isChecked(
+  formDataValue: string | boolean | null,
+  optionValue: string
+) {
+  if (formDataValue === null || formDataValue === "") return false;
+  return (
+    (formDataValue === true ? "Yes" : "No") === optionValue ||
+    formDataValue === optionValue
+  );
+}

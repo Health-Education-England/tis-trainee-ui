@@ -15,7 +15,8 @@ type TextProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     index?: number | undefined,
-    name?: string | undefined
+    name?: string | undefined,
+    dtoName?: string
   ) => void;
   fieldError: string;
   placeholder?: string;
@@ -26,8 +27,9 @@ type TextProps = {
   arrayName?: string;
   width?: number;
   isNumberField?: boolean;
-  total?: string[];
+  isTotal?: boolean;
   readOnly?: boolean;
+  dtoName?: string;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -43,8 +45,9 @@ export const Text: React.FC<TextProps> = ({
   arrayName,
   width,
   isNumberField,
-  total,
-  readOnly
+  isTotal,
+  readOnly,
+  dtoName
 }: TextProps) => {
   return (
     <>
@@ -65,12 +68,13 @@ export const Text: React.FC<TextProps> = ({
               undefined,
               undefined,
               arrayIndex,
-              arrayName
+              arrayName,
+              dtoName
             )) as any
         }
         className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
           fieldError ? "nhsuk-input--error" : ""
-        } ${total ? "total-field" : ""}`}
+        } ${isTotal ? "total-field" : ""}`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
         onBlur={handleBlur}
