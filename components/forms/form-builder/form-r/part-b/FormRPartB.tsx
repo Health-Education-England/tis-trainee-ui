@@ -25,14 +25,11 @@ export default function FormB() {
   const formJson = formBJson as Form;
   const formData = useSelectFormData(formJson.name as FormName) as FormRPartB;
 
-  // Note: No point using a JSON feature flag here as we need to check the form data anyways
-  // 1. Determine Covid status
-  const activeCovid =
-    useAppSelector(
-      state => state.featureFlags.featureFlags.formRPartB.covidDeclaration
-    ) || formData.haveCovidDeclarations !== null;
+  // 1. Determine Covid status (logic is in the slice reducer)
+  const activeCovid = useAppSelector(state => state.formB.displayCovid);
+  // 2. Set the validation schema based on the Covid status
   const formValidationSchema = getFormBValidationSchema(activeCovid);
-  // 2. Set the json form fields based on the Covid status
+  // 3. Set the json form fields based on the Covid status
   const finalFormJson = activeCovid
     ? formJson
     : {

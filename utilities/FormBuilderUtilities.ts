@@ -528,6 +528,10 @@ export function formatFieldName(fieldName: string) {
   return words.join(" ");
 }
 
+export function showFormField(field: Field, formData: FormData) {
+  return field.visible || field.visibleIf?.includes(formData[field.parent!!]);
+}
+
 // react-select styles
 export const colourStyles = {
   option: (baseStyles: any, { isFocused }: any) => ({

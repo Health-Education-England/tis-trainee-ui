@@ -1,5 +1,6 @@
 import React from "react";
 import { Field, FieldWarning } from "../FormBuilder";
+import { showFormField } from "../../../../utilities/FormBuilderUtilities";
 
 type DtoBuilder = {
   field: Field;
@@ -34,10 +35,6 @@ export default function DtoBuilder({
   options,
   dtoName
 }: Readonly<DtoBuilder>) {
-  const showFormField = (dtoField: any, formData: any) =>
-    dtoField.visible ||
-    dtoField.visibleIf?.includes(formData[dtoField.parent!!]);
-
   return (
     <div>
       <h2>{field.label}</h2>

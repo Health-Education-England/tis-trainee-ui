@@ -20,7 +20,8 @@ import {
   sumFieldValues,
   saveDraftForm,
   validateFields,
-  formatFieldName
+  formatFieldName,
+  showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import DataSourceMsg from "../../common/DataSourceMsg";
@@ -78,10 +79,14 @@ type Section = {
   objectFields?: Field[];
 };
 export type FormName = "formA" | "formB";
+export type FormDeclaration = {
+  name: string;
+  label: string;
+};
 export type Form = {
   name: FormName;
   pages: Page[];
-  declarations: { name: string; label: string }[];
+  declarations: FormDeclaration[];
 };
 type FormBuilderProps = {
   jsonForm: Form;
@@ -135,9 +140,7 @@ export default function FormBuilder({
     );
   }, [currentPage, formData]);
 
-  const canEditStatus =
-    useAppSelector(state => state.formA.canEdit) ||
-    useAppSelector(state => state.formB.canEdit);
+  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
     if (isFormDirty.current) {
@@ -358,8 +361,7 @@ export default function FormBuilder({
                         }
                         return (
                           <div key={field.name} className="nhsuk-form-group">
-                            {field.visible ||
-                            field.visibleIf?.includes(formData[field.parent!!])
+                            {showFormField(field, formData)
                               ? fieldComponent
                               : null}
                           </div>

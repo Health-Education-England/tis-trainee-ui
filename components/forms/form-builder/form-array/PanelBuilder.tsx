@@ -1,7 +1,10 @@
 import React from "react";
 import { Field, FieldWarning } from "../FormBuilder";
 import { Button, Card } from "nhsuk-react-components";
-import { formatFieldName } from "../../../../utilities/FormBuilderUtilities";
+import {
+  formatFieldName,
+  showFormField
+} from "../../../../utilities/FormBuilderUtilities";
 
 type PanelBuilder = {
   fieldWarning: FieldWarning | undefined;
@@ -76,16 +79,18 @@ export default function PanelBuilder({
             </p>
             {field.objectFields?.map((objField: Field) => (
               <div key={objField.name} className="nhsuk-form-group">
-                {renderFormField(
-                  objField,
-                  formData[field.name][index][objField.name] ?? "",
-                  panelErrors?.[index]?.[objField.name] ?? "",
-                  fieldWarning,
-                  { handleChange, handleBlur },
-                  options,
-                  { arrayIndex: index, arrayName: field.name },
-                  dtoName
-                )}
+                {showFormField(objField, formData[field.name][index])
+                  ? renderFormField(
+                      objField,
+                      formData[field.name][index][objField.name] ?? "",
+                      panelErrors?.[index]?.[objField.name] ?? "",
+                      fieldWarning,
+                      { handleChange, handleBlur },
+                      options,
+                      { arrayIndex: index, arrayName: field.name },
+                      dtoName
+                    )
+                  : null}
               </div>
             ))}
             <div>
