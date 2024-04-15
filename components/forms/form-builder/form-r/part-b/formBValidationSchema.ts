@@ -88,6 +88,50 @@ const WorkValidationSchema = yup.object().shape({
     )
 });
 
+const covid19ValidationSchema = yup.object().shape({
+  selfRateForCovid: yup
+    .string()
+    .nullable()
+    .required("Self-rating your own preformance is required"),
+  reasonOfSelfRate: yup
+    .string()
+    .nullable()
+    .required("Reason for self-rate is required"),
+  discussWithSupervisorChecked: yup
+    .boolean()
+    .nullable()
+    .required("Please select yes or no to discuss with supervisor"),
+  discussWithSomeoneChecked: yup
+    .boolean()
+    .nullable()
+    .required("Please select yes or no to discuss with someone"),
+  otherInformationForPanel: yup
+    .string()
+    .nullable()
+    .max(1000, "You have reached the maximum length allowed"),
+  educationSupervisorEmail: yup
+    .string()
+    .nullable()
+    .email("Email address is invalid")
+    .max(255, "Email must be shorter than 255 characters"),
+  haveChangesToPlacement: yup
+    .boolean()
+    .nullable()
+    .required("Please select yes or no"),
+  changeCircumstances: yup
+    .string()
+    .nullable()
+    .required("Circumstance of change is required"),
+  changeCircumstanceOther: yup
+    .string()
+    .nullable()
+    .required("Other circumstance is required"),
+  howPlacementAdjusted: yup
+    .string()
+    .nullable()
+    .required("How your placement was adjusted is required")
+});
+
 const formBValidationSchemaDefault = yup.object({
   // Personal details - section 1
   forename: StringValidationSchema("Forename"),
@@ -148,14 +192,7 @@ const formBValidationSchemaDefault = yup.object({
     .boolean()
     .typeError(warningsValidationString)
     .required(warningsValidationString),
-  isComplying: yup
-    .boolean()
-    .nullable()
-    .when("isWarned", {
-      is: true,
-      then: booleanValidationSchema(complyingValidationString)
-    }),
-
+  isComplying: booleanValidationSchema(complyingValidationString),
   // Summary of previous resolved/unresolved Form R Declarations - section 5/6
   havePreviousDeclarations: yup
     .boolean()
@@ -197,76 +234,7 @@ const formBValidationSchemaDefault = yup.object({
     .boolean()
     .nullable()
     .required(hasCovidDeclarationString),
-  covidDeclarationDto: yup
-    .object()
-    .nullable()
-    .when("haveCovidDeclarations", {
-      is: true,
-      then: yup
-        .object({
-          selfRateForCovid: yup
-            .string()
-            .nullable()
-            .required("Self-rating your own preformance is required"),
-          reasonOfSelfRate: yup
-            .string()
-            .nullable()
-            .when("selfRateForCovid", {
-              is: (selfRate: string) =>
-                selfRate !==
-                "Satisfactory progress for stage of training and required competencies met",
-              then: yup
-                .string()
-                .nullable()
-                .required("Reason for self-rate is required")
-            }),
-          otherInformationForPanel: yup
-            .string()
-            .nullable()
-            .max(1000, "You have reached the maximum length allowed"),
-          educationSupervisorEmail: yup
-            .string()
-            .nullable()
-            .email("Email address is invalid")
-            .max(255, "Email must be shorter than 255 characters"),
-          haveChangesToPlacement: yup
-            .boolean()
-            .nullable()
-            .required("Please select yes or no"),
-          changeCircumstances: yup
-            .string()
-            .nullable()
-            .when("haveChangesToPlacement", {
-              is: true,
-              then: yup
-                .string()
-                .nullable()
-                .required("Circumstance of change is required")
-            }),
-          changeCircumstanceOther: yup
-            .string()
-            .nullable()
-            .when("changeCircumstances", {
-              is: (changeCircumstance: string) =>
-                changeCircumstance === "Other",
-              then: yup
-                .string()
-                .nullable()
-                .required("Other circumstance is required")
-            }),
-          howPlacementAdjusted: yup
-            .string()
-            .nullable()
-            .when("haveChangesToPlacement", {
-              is: true,
-              then: yup
-                .string()
-                .nullable()
-                .required("How your placement was adjusted is required")
-            })
-        })
-        .nullable()
-    })
+  covidDeclarationDto: covid19ValidationSchema
 });
 
 export function getFormBValidationSchema(activeCovidSection: boolean) {

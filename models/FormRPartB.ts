@@ -26,7 +26,7 @@ export interface FormRPartB extends IFormR {
   isHonest: boolean | string;
   isHealthy: boolean | string;
   isWarned: boolean | string;
-  isComplying: boolean | string;
+  isComplying: boolean | string | null;
   healthStatement: string;
   havePreviousDeclarations: boolean | string;
   previousDeclarations: Declaration[];

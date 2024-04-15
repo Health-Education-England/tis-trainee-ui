@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Redirect } from "react-router-dom";
 import FormViewBuilder from "./FormViewBuilder";
 import ScrollTo from "../ScrollTo";
@@ -15,8 +15,10 @@ import { useConfirm } from "material-ui-confirm";
 import { dialogBoxWarnings } from "../../../utilities/Constants";
 import history from "../../navigation/history";
 import {
+  createErrorObject,
   saveDraftForm,
-  submitForm
+  submitForm,
+  validateFields
 } from "../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../StartOverButton";
 import { ValidationError } from "yup";
@@ -44,23 +46,23 @@ export const FormView = ({
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
+  const allPagesFields = useMemo(() => {
+    return formJson.pages.flatMap(page =>
+      page.sections.flatMap(section => section.fields)
+    );
+  }, [formData]);
+
   useEffect(() => {
     if (canEditStatus) {
-      validationSchemaForView
-        .validate(formData, { abortEarly: false })
+      validateFields(allPagesFields, formData, validationSchemaForView)
         .then(() => {
           setErrors({});
         })
-        .catch((err: any) => {
-          if (err) {
-            const errorMessages: { [key: string]: string } = {};
-            err.inner.forEach((error: ValidationError) => {
-              if (error.path) {
-                errorMessages[error.path] = error.message;
-              }
-            });
-            setErrors(errorMessages);
-          }
+        .catch((err: { inner: { path: string; message: string }[] }) => {
+          setErrors(() => {
+            const newErrors = createErrorObject(err);
+            return newErrors;
+          });
         });
     }
   }, [canEditStatus, formData, validationSchemaForView]);

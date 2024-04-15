@@ -65,10 +65,9 @@ export const formAValidationSchema = yup.object({
     .required("You need to choose at least one Declaration")
     .nullable(),
   programmeSpecialty: StringValidationSchema("Programme specialty"),
-  cctSpecialty1: yup.string().when("declarationType", {
-    is: "I have been appointed to a programme leading to award of CCT",
-    then: yup.string().required("Specialty 1 for Award of CCT is required")
-  }),
+  cctSpecialty1: yup
+    .string()
+    .required("Specialty 1 for Award of CCT is required"),
   college: StringValidationSchema("Royal College / Faculty Assessing Training"),
   completionDate: yup
     .string()

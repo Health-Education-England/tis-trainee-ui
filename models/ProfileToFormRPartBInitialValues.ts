@@ -52,7 +52,7 @@ export function ProfileToFormRPartBInitialValues(
     isHonest: "",
     isHealthy: "",
     isWarned: "",
-    isComplying: "",
+    isComplying: null,
     healthStatement: "",
     havePreviousDeclarations: "",
     previousDeclarations: [],

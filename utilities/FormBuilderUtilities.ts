@@ -494,22 +494,27 @@ export function validateFields(
   let finalValidationSchema = Yup.object().shape({});
   finalValidationSchema = fields.reduce((schema, field) => {
     const fieldSchema = validationSchema.fields[field.name];
-    if (field.type === "array" && values[field.name].length > 0) {
-      const nestedFields = Object.keys(values[field.name][0]).reduce(
-        (nestedSchema: { [key: string]: any }, nestedField: string) => {
-          nestedSchema[nestedField] = fieldSchema.innerType.fields[nestedField];
-          return nestedSchema;
-        },
-        {}
-      );
-      const nestedSchema = Yup.object().shape(nestedFields);
-      schema = schema.shape({
-        [field.name]: Yup.array().of(nestedSchema)
-      });
-    } else {
-      schema = schema.shape({
-        [field.name]: fieldSchema
-      });
+    const isVisible =
+      field.visible || field.visibleIf?.includes(values[field.parent!!]);
+    if (isVisible) {
+      if (field.type === "array" && values[field.name].length > 0) {
+        const nestedFields = Object.keys(values[field.name][0]).reduce(
+          (nestedSchema: { [key: string]: any }, nestedField: string) => {
+            nestedSchema[nestedField] =
+              fieldSchema.innerType.fields[nestedField];
+            return nestedSchema;
+          },
+          {}
+        );
+        const nestedSchema = Yup.object().shape(nestedFields);
+        schema = schema.shape({
+          [field.name]: Yup.array().of(nestedSchema)
+        });
+      } else {
+        schema = schema.shape({
+          [field.name]: fieldSchema
+        });
+      }
     }
     return schema;
   }, finalValidationSchema);
