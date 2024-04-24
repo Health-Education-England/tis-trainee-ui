@@ -43,10 +43,21 @@ import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import DtoBuilder from "./form-dto/DtoBuilder";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 
+type FieldType =
+  | "text"
+  | "textArea"
+  | "radio"
+  | "select"
+  | "date"
+  | "phone"
+  | "checkbox"
+  | "array"
+  | "dto";
+
 export type Field = {
   name: string;
   label?: string;
-  type: string;
+  type: FieldType;
   visible: boolean;
   optionsKey?: string;
   dependencies?: string[];

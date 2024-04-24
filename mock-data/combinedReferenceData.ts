@@ -245,6 +245,10 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     {
       label: "Limited opportunities to curricula requirements",
       value: "Limited opportunities to curricula requirements"
+    },
+    {
+      label: "Other",
+      value: "Other"
     }
   ],
   curriculum: [
@@ -355,6 +359,10 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     {
       label: "You are the partner/civil partner/spouse of a UK/EEA national",
       value: "You are the partner/civil partner/spouse of a UK/EEA national"
+    },
+    {
+      label: "Refugee in the UK",
+      value: "Refugee in the UK"
     }
   ],
   localOffice: [
