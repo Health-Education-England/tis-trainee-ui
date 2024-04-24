@@ -15,6 +15,7 @@ import {
 } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
+import { strDateRegex } from "../../../utilities/Constants";
 
 type VisibleFieldProps = {
   field: Field;
@@ -130,9 +131,7 @@ function displayListValue(fieldVal: any, fieldType?: string) {
                     <b>{formatFieldName(entry[0])}</b>
                   </Label>
                 </Col>
-                <Col width="one-half">
-                  {displayListValue(entry[1], entry[1]?.type ?? "")}
-                </Col>
+                <Col width="one-half">{displayListValue(entry[1])}</Col>
               </Row>
             </Container>
           ))}
@@ -140,7 +139,7 @@ function displayListValue(fieldVal: any, fieldType?: string) {
       </Card>
     ));
   }
-  if (fieldType === "date" && fieldVal) {
+  if (fieldVal && (fieldType === "date" || strDateRegex.test(fieldVal))) {
     return DateUtilities.ToLocalDate(fieldVal);
   }
   if (typeof fieldVal === "boolean") {

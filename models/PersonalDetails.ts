@@ -7,10 +7,10 @@ export interface PersonalDetails {
   maidenName: ProfileSType;
   title: ProfileSType;
   personOwner: ProfileSType;
-  dateOfBirth: Date | null;
+  dateOfBirth: Date | string | null;
   gender: ProfileSType;
   qualification: ProfileSType;
-  dateAttained: Date | null;
+  dateAttained: Date | string | null;
   medicalSchool: ProfileSType;
   telephoneNumber: ProfileSType;
   mobileNumber: ProfileSType;
@@ -32,8 +32,8 @@ export interface PersonalDetails {
   detailsNumber: ProfileSType;
   prevRevalBody: ProfileSType;
   prevRevalBodyOther: ProfileSType;
-  currRevalDate: Date | null;
-  prevRevalDate: Date | null;
+  currRevalDate: Date | string | null;
+  prevRevalDate: Date | string | null;
   signature: Signature;
 }
 

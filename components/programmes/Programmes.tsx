@@ -7,7 +7,6 @@ import { resetMfaJourney } from "../../redux/slices/userSlice";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import style from "../Common.module.scss";
-import DataSourceMsg from "../common/DataSourceMsg";
 import {
   PanelsCreator,
   prepareProfilePanelsData
@@ -16,6 +15,7 @@ import { TraineeProfileName } from "../../models/TraineeProfile";
 import { PANEL_KEYS } from "../../utilities/Constants";
 import Loading from "../common/Loading";
 import { fetchCredentials } from "../../utilities/DspUtilities";
+import { ExpanderMsg } from "../common/ExpanderMsg";
 
 const Programmes = () => {
   const dispatch = useAppDispatch();
@@ -60,7 +60,7 @@ function ProgrammesPanels() {
           Programmes
         </Fieldset.Legend>
       </Fieldset>
-      <DataSourceMsg />
+      <ExpanderMsg expanderName="dataSource" />
       <PanelsCreator
         panelsArr={prepareProfilePanelsData(
           programmesArr,

@@ -41,8 +41,10 @@ const leaveValidation = (fieldName: string) =>
     .integer(`${fieldName} must be rounded up to a whole number`)
     .typeError(`${fieldName} must be a positive number or zero`)
     .min(0, `${fieldName} must be a positive number or zero`)
-    .max(9999, `${fieldName} must not be more than 9999`)
     .required(`${fieldName} is required`);
+
+const leaveTotalValidation = (fieldName: string) =>
+  yup.number().max(9999, `${fieldName} cannot exceed 9999 days`);
 
 const panelSchemaValidation = yup.object().shape({
   declarationType: StringValidationSchema("Declaration type"),
@@ -117,7 +119,7 @@ const covid19ValidationSchema = yup.object().shape({
   haveChangesToPlacement: yup
     .boolean()
     .nullable()
-    .required("Please select yes or no"),
+    .required("Please select yes or no to changes made to placement"),
   changeCircumstances: yup
     .string()
     .nullable()
@@ -145,9 +147,14 @@ const formBValidationSchemaDefault = yup.object({
   localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   prevRevalBody: yup.string().nullable(),
   prevRevalBodyOther: yup.string().nullable(),
-  currRevalDate: dateValidationSchema("Current Revalidation date")
-    .test("currRevalDate", "The date has to be on or after today", value =>
-      DateUtilities.IsFutureDate(value)
+  currRevalDate: yup
+    .date()
+    .typeError("Current Revalidation date must be a valid date")
+    .required("Current Revalidation is required")
+    .test(
+      "currRevalDate",
+      "Current Revalidation date has to be on or after today",
+      value => DateUtilities.IsFutureDate(value)
     )
     .test(
       "currRevalDate",
@@ -157,8 +164,10 @@ const formBValidationSchemaDefault = yup.object({
   prevRevalDate: yup
     .string()
     .nullable()
-    .test("prevRevalDate", " please choose a date from the past", value =>
-      DateUtilities.IsPastDate(value)
+    .test(
+      "prevRevalDate",
+      " please choose a previous Revalidation date from the past",
+      value => DateUtilities.IsPastDate(value)
     ),
   programmeSpecialty: StringValidationSchema("Programme / Training Specialty"),
   dualSpecialty: yup.string(),
@@ -184,6 +193,7 @@ const formBValidationSchemaDefault = yup.object({
     "Unpaid/unauthorised leave including industrial action"
   ),
   otherLeave: leaveValidation("Other"),
+  totalLeave: leaveTotalValidation("Total leave"),
 
   // Declarations relating to Good Medical Practice - section 4
   isHonest: booleanValidationSchema(honestValidationString),

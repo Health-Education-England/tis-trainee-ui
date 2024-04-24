@@ -168,6 +168,11 @@ export const mockedCombinedReference: CombinedReferenceData = {
       id: "614b612cdf97ed1355c73a10",
       tisId: "33",
       label: "You are the partner/civil partner/spouse of a UK/EEA national"
+    },
+    {
+      id: "614b612cdf97ed1355c73a0d",
+      tisId: "1",
+      label: "Refugee in the UK"
     }
   ],
   curriculum: [
@@ -203,13 +208,17 @@ export const mockedCombinedReference: CombinedReferenceData = {
     {
       id: "614b6140e0f4f2685df397bb",
       label: "Limited opportunities to curricula requirements"
+    },
+    {
+      id: "614b6140e0f4f2685df397bc",
+      label: "Other"
     }
   ],
   programmeMembershipType: [
-    { id: "1", label: "Substantive"},
-    { id: "2", label: "LAT"},
-    { id: "4", label: "Military"},
-    { id: "5", label: "Visitor"}
+    { id: "1", label: "Substantive" },
+    { id: "2", label: "LAT" },
+    { id: "4", label: "Military" },
+    { id: "5", label: "Visitor" }
   ]
 };
 
@@ -379,20 +388,20 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     }
   ],
   programmeMembershipType: [
-    { 
-      label: "Substantive", 
+    {
+      label: "Substantive",
       value: "Substantive"
     },
-    { 
-      label: "LAT", 
+    {
+      label: "LAT",
       value: "LAT"
     },
-    { 
-      label: "Military", 
+    {
+      label: "Military",
       value: "Military"
     },
-    { 
-      label: "Visitor", 
+    {
+      label: "Visitor",
       value: "Visitor"
     }
   ]

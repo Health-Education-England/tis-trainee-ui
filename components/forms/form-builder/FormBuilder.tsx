@@ -24,7 +24,6 @@ import {
   showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
-import DataSourceMsg from "../../common/DataSourceMsg";
 import { Text } from "./form-fields/Text";
 import { Radios } from "./form-fields/Radios";
 import { Selector } from "./form-fields/Selector";
@@ -42,6 +41,7 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { Checkboxes } from "./form-fields/Checkboxes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import DtoBuilder from "./form-dto/DtoBuilder";
+import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 
 export type Field = {
   name: string;
@@ -70,7 +70,7 @@ export type FormData = {
 type Page = {
   pageName: string;
   importantTxtName?: string;
-  msgLinkName?: string;
+  expanderLinkName?: string;
   sections: Section[];
 };
 type Section = {
@@ -138,7 +138,7 @@ export default function FormBuilder({
     return pages[currentPage].sections.flatMap(
       (section: Section) => section.fields
     );
-  }, [currentPage, formData]);
+  }, [currentPage, pages]);
 
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
@@ -295,86 +295,88 @@ export default function FormBuilder({
           isPageDirty={isFormDirty.current}
         />
         {pages && (
-          <>
-            <div>
-              {pages[currentPage].importantTxtName && (
-                <ImportantText
-                  txtName={pages[currentPage].importantTxtName as string}
-                />
-              )}
-            </div>
-            {pages[currentPage].msgLinkName && <DataSourceMsg />}
-            <div data-cy="progress-header">
-              {pages[currentPage].pageName && (
-                <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
-                  pages[currentPage].pageName
-                }`}</h3>
-              )}
-              {pages[currentPage]?.sections.map((section: Section) => (
-                <React.Fragment key={section.sectionHeader}>
-                  <AutosaveNote />
-                  <Card feature>
-                    <Card.Content>
-                      <Card.Heading>{section.sectionHeader}</Card.Heading>
-                      {currentPageFields.map((field: Field) => {
-                        let fieldComponent = null;
-                        switch (field.type) {
-                          case "array":
-                            fieldComponent = (
-                              <PanelBuilder
-                                field={field}
-                                formData={formData}
-                                setFormData={setFormData}
-                                renderFormField={renderFormField}
-                                handleChange={handleChange}
-                                handleBlur={handleBlur}
-                                panelErrors={formErrors[field.name]}
-                                fieldWarning={fieldWarning}
-                                options={options}
-                                isFormDirty={isFormDirty}
-                              />
-                            );
-                            break;
-                          case "dto":
-                            fieldComponent = (
-                              <DtoBuilder
-                                field={field}
-                                formData={formData}
-                                renderFormField={renderFormField}
-                                handleChange={handleChange}
-                                handleBlur={handleBlur}
-                                errors={formErrors[field.name]}
-                                options={options}
-                                dtoName={field.name}
-                              />
-                            );
-                            break;
-                          default:
-                            fieldComponent = renderFormField(
-                              field,
-                              formData[field.name] ?? "",
-                              formErrors[field.name] ?? "",
-                              fieldWarning,
-                              { handleChange, handleBlur },
-                              options
-                            );
-                        }
-                        return (
-                          <div key={field.name} className="nhsuk-form-group">
-                            {showFormField(field, formData)
-                              ? fieldComponent
-                              : null}
-                          </div>
-                        );
-                      })}
-                    </Card.Content>
-                  </Card>
-                  <AutosaveMessage formName={jsonFormName} />
-                </React.Fragment>
-              ))}
-            </div>
-          </>
+          <div data-cy="progress-header">
+            {pages[currentPage].pageName && (
+              <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
+                pages[currentPage].pageName
+              }`}</h3>
+            )}
+            {pages[currentPage].importantTxtName && (
+              <ImportantText
+                txtName={pages[currentPage].importantTxtName as string}
+              />
+            )}
+            {pages[currentPage].expanderLinkName && (
+              <ExpanderMsg
+                expanderName={
+                  pages[currentPage].expanderLinkName as ExpanderNameType
+                }
+              />
+            )}
+            <AutosaveNote />
+            {pages[currentPage]?.sections.map((section: Section) => (
+              <React.Fragment key={section.sectionHeader}>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>{section.sectionHeader}</Card.Heading>
+                    {section.fields.map((field: Field) => {
+                      let fieldComponent = null;
+                      switch (field.type) {
+                        case "array":
+                          fieldComponent = (
+                            <PanelBuilder
+                              field={field}
+                              formData={formData}
+                              setFormData={setFormData}
+                              renderFormField={renderFormField}
+                              handleChange={handleChange}
+                              handleBlur={handleBlur}
+                              panelErrors={formErrors[field.name]}
+                              fieldWarning={fieldWarning}
+                              options={options}
+                              isFormDirty={isFormDirty}
+                            />
+                          );
+                          break;
+                        case "dto":
+                          fieldComponent = (
+                            <DtoBuilder
+                              field={field}
+                              formData={formData}
+                              renderFormField={renderFormField}
+                              handleChange={handleChange}
+                              handleBlur={handleBlur}
+                              errors={formErrors[field.name]}
+                              options={options}
+                              dtoName={field.name}
+                            />
+                          );
+                          break;
+                        default:
+                          fieldComponent = renderFormField(
+                            field,
+                            formData[field.name] ?? "",
+                            formErrors[field.name] ?? "",
+                            fieldWarning,
+                            { handleChange, handleBlur },
+                            options
+                          );
+                      }
+                      return (
+                        <div key={field.name} className="nhsuk-form-group">
+                          {showFormField(field, formData)
+                            ? fieldComponent
+                            : null}
+                        </div>
+                      );
+                    })}
+                  </Card.Content>
+                </Card>
+              </React.Fragment>
+            ))}
+          </div>
         )}
+        <AutosaveMessage formName={jsonFormName} />
         {Object.keys(formErrors).length > 0 && (
           <FormErrors formErrors={formErrors} />
         )}

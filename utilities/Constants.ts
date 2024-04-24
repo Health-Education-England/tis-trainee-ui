@@ -275,3 +275,5 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England West Midlands": "england.tis.wm@nhs.net",
   "Health Education England Yorkshire and the Humber": "england.tis.yh@nhs.net"
 };
+
+export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;

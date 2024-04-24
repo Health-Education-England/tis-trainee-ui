@@ -21,12 +21,11 @@ import {
   validateFields
 } from "../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../StartOverButton";
-import { ValidationError } from "yup";
 import { Form, FormData, FormErrors, FormName } from "./FormBuilder";
 import Declarations from "./Declarations";
-import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 
 type FormViewProps = {
+  formData: FormData;
   canEditStatus: boolean;
   formJson: Form;
   redirectPath: string;
@@ -34,6 +33,7 @@ type FormViewProps = {
 };
 
 export const FormView = ({
+  formData,
   canEditStatus,
   formJson,
   validationSchemaForView,
@@ -41,7 +41,6 @@ export const FormView = ({
 }: FormViewProps) => {
   const confirm = useConfirm();
   const formName = formJson.name as FormName;
-  const formData = useSelectFormData(formName);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
@@ -50,7 +49,7 @@ export const FormView = ({
     return formJson.pages.flatMap(page =>
       page.sections.flatMap(section => section.fields)
     );
-  }, [formData]);
+  }, [formJson.pages]);
 
   useEffect(() => {
     if (canEditStatus) {
@@ -65,7 +64,7 @@ export const FormView = ({
           });
         });
     }
-  }, [canEditStatus, formData, validationSchemaForView]);
+  }, [canEditStatus, formData, validationSchemaForView, allPagesFields]);
 
   const handleSubClick = (formData: FormData) => {
     setIsSubmitting(false);
@@ -76,7 +75,7 @@ export const FormView = ({
       .catch(() => setIsSubmitting(false));
   };
 
-  return formData.traineeTisId ? (
+  return formData?.traineeTisId ? (
     <>
       <ScrollTo />
       {!canEditStatus && <FormSavePDF history={history} path={redirectPath} />}

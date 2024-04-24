@@ -74,7 +74,7 @@ export default function PanelBuilder({
       {formData[field.name].map((_arrObj: any, index: number) => (
         <Card key={index} className="container">
           <Card.Content>
-            <p>
+            <p data-cy={`${formattedFieldName} ${index + 1}`}>
               <b>{`${formattedFieldName} ${index + 1}`}</b>
             </p>
             {field.objectFields?.map((objField: Field) => (
@@ -100,6 +100,7 @@ export default function PanelBuilder({
                   e.preventDefault();
                   removePanel(index);
                 }}
+                data-cy={`remove-${formattedFieldName}-${index + 1}-button`}
               >
                 {`Remove ${formattedFieldName} ${index + 1}`}
               </Button>
@@ -112,6 +113,7 @@ export default function PanelBuilder({
           e.preventDefault();
           addPanel();
         }}
+        data-cy={`add-${formattedFieldName}-button`}
       >
         {`Add a ${formattedFieldName} panel`}
       </Button>

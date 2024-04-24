@@ -87,6 +87,7 @@ export default function FormA() {
           path="/formr-a/confirm"
           render={() => (
             <FormView
+              formData={formData}
               canEditStatus={canEditStatus}
               formJson={formJson}
               redirectPath={redirectPath}
@@ -99,6 +100,7 @@ export default function FormA() {
           path="/formr-a/:id"
           render={() => (
             <FormView
+              formData={formData}
               canEditStatus={canEditStatus}
               formJson={formJson}
               redirectPath={redirectPath}

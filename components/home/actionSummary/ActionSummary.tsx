@@ -14,7 +14,7 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useOutstandingActions } from "../../../utilities/hooks/action-summary/useOutstandingActions";
 import { useInfoActions } from "../../../utilities/hooks/action-summary/useInfoActions";
 import { useInProgressActions } from "../../../utilities/hooks/action-summary/useInProgressActions";
-import DataSourceMsg from "../../common/DataSourceMsg";
+import { ExpanderMsg } from "../../common/ExpanderMsg";
 
 export default function ActionSummary() {
   // OUTSTANDING ACTIONS
@@ -290,7 +290,7 @@ export default function ActionSummary() {
                       </Label>
                     </li>
                   </ul>
-                  <DataSourceMsg />
+                  <ExpanderMsg expanderName="dataSource" />
                 </Card.Content>
               </Card>
             </Card.Content>

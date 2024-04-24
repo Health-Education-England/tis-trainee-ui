@@ -64,9 +64,9 @@ export interface CovidDeclaration {
   selfRateForCovid: string;
   reasonOfSelfRate: string;
   otherInformationForPanel: string;
-  discussWithSupervisorChecked: boolean | string;
-  discussWithSomeoneChecked: boolean | string;
-  haveChangesToPlacement: boolean | string;
+  discussWithSupervisorChecked: boolean | null;
+  discussWithSomeoneChecked: boolean | null;
+  haveChangesToPlacement: boolean | null;
   changeCircumstances: string;
   changeCircumstanceOther: string;
   howPlacementAdjusted: string;

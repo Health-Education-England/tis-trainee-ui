@@ -27,13 +27,13 @@ interface IFormB {
   displayCovid: boolean;
 }
 
-const defaultCovidObject = {
+export const defaultCovidObject = {
   selfRateForCovid: "",
   reasonOfSelfRate: "",
   otherInformationForPanel: "",
-  discussWithSupervisorChecked: "",
-  discussWithSomeoneChecked: "",
-  haveChangesToPlacement: "",
+  discussWithSupervisorChecked: null,
+  discussWithSomeoneChecked: null,
+  haveChangesToPlacement: null,
   changeCircumstances: "",
   changeCircumstanceOther: "",
   howPlacementAdjusted: "",
@@ -71,6 +71,7 @@ export const loadSavedFormB = createAsyncThunk(
   "formB/fetchFormB",
   async (formId: string) => {
     const state = store.getState();
+    // Grab the Covid flag status from the feature flags slice to use to deterimine if the Covid section should be displayed and if a default Covid object should be added to the form data
     const covidFlagStatus =
       state.featureFlags.featureFlags.formRPartB.covidDeclaration;
     const formsService = new FormsService();
@@ -165,6 +166,9 @@ const formBSlice = createSlice({
     },
     updatedFormBList(state, action: PayloadAction<IFormR[]>) {
       return { ...state, formBList: action.payload };
+    },
+    updatedDisplayCovid(state, action: PayloadAction<boolean>) {
+      return { ...state, displayCovid: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -306,7 +310,8 @@ export const {
   updatedAutoSaveLatestTimeStamp,
   updatedIsDirty,
   updatedFormBStatus,
-  updatedFormBList
+  updatedFormBList,
+  updatedDisplayCovid
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>

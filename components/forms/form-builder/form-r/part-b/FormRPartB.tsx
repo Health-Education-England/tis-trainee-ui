@@ -16,6 +16,7 @@ import history from "../../../../navigation/history";
 import { FormView } from "../../FormView";
 import { FormRPartB } from "../../../../../models/FormRPartB";
 import { COVID_RESULT_DECLARATIONS } from "../../../../../utilities/Constants";
+import { ProfileUtilities } from "../../../../../utilities/ProfileUtilities";
 
 export default function FormB() {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
@@ -24,6 +25,11 @@ export default function FormB() {
   const redirectPath = "/formr-b";
   const formJson = formBJson as Form;
   const formData = useSelectFormData(formJson.name as FormName) as FormRPartB;
+
+  const formDataWithSortedWork = {
+    ...formData,
+    work: ProfileUtilities.sortWorkDesc(formData.work)
+  };
 
   // 1. Determine Covid status (logic is in the slice reducer)
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
@@ -88,7 +94,7 @@ export default function FormB() {
             return formData.traineeTisId ? (
               <FormBuilder
                 jsonForm={finalFormJson}
-                fetchedFormData={formData}
+                fetchedFormData={formDataWithSortedWork}
                 options={formOptions}
                 validationSchema={formValidationSchema}
                 history={history}
@@ -103,6 +109,7 @@ export default function FormB() {
           path="/formr-b/confirm"
           render={() => (
             <FormView
+              formData={formDataWithSortedWork}
               canEditStatus={canEditStatus}
               formJson={finalFormJson}
               redirectPath={redirectPath}
@@ -115,6 +122,7 @@ export default function FormB() {
           path="/formr-b/:id"
           render={() => (
             <FormView
+              formData={formDataWithSortedWork}
               canEditStatus={canEditStatus}
               formJson={finalFormJson}
               redirectPath={redirectPath}

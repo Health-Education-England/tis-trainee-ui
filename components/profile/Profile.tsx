@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Fieldset, SummaryList } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
-import DataSourceMsg from "../common/DataSourceMsg";
 import { Redirect } from "react-router-dom";
 import style from "../Common.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
@@ -11,6 +10,7 @@ import { PersonalDetails } from "../../models/PersonalDetails";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { ExpanderMsg } from "../common/ExpanderMsg";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -102,7 +102,7 @@ const Profile = () => {
           Profile
         </Fieldset.Legend>
       </Fieldset>
-      <DataSourceMsg />
+      <ExpanderMsg expanderName="dataSource" />
       <SummaryList>
         <SummaryList.Row>
           <SummaryList.Key data-cy="fullNameKey">Full name</SummaryList.Key>

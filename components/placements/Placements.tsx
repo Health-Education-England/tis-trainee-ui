@@ -6,7 +6,6 @@ import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import { Details, Fieldset, WarningCallout } from "nhsuk-react-components";
-import DataSourceMsg from "../common/DataSourceMsg";
 import {
   PanelsCreator,
   prepareProfilePanelsData
@@ -17,6 +16,7 @@ import style from "../Common.module.scss";
 import Loading from "../common/Loading";
 import { ProfileUtilities } from "../../utilities/ProfileUtilities";
 import { fetchCredentials } from "../../utilities/DspUtilities";
+import { ExpanderMsg } from "../common/ExpanderMsg";
 
 const Placements = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +64,7 @@ function PlacementsPanels() {
           Placements
         </Fieldset.Legend>
       </Fieldset>
-      <DataSourceMsg />
+      <ExpanderMsg expanderName="dataSource" />
       <Details.ExpanderGroup>
         <Details expander open data-cy="currentExpand">
           <Details.Summary>Your current placements</Details.Summary>

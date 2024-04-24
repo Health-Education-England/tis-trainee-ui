@@ -3,7 +3,10 @@ import { LifeCycleState } from "./LifeCycleState";
 import { TraineeProfile } from "./TraineeProfile";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import store from "../redux/store/store";
-import { filterCurriculumOptions } from "../utilities/FormBuilderUtilities";
+import {
+  filterCurriculumOptions,
+  isValidOption
+} from "../utilities/FormBuilderUtilities";
 import { CombinedReferenceData } from "./CombinedReferenceData";
 
 export function ProfileToFormRPartAInitialValues(
@@ -62,18 +65,4 @@ export function ProfileToFormRPartAInitialValues(
     submissionDate: null,
     lastModifiedDate: null
   };
-}
-
-// Bug fix to also reset the option to empty string where no match against filtered curric data e.g. programmeSpecialty field.
-function isValidOption(
-  key: string,
-  option: string | null | undefined,
-  refData?: any,
-  filteredCurriculumData?: any
-): string {
-  const searchedArray = refData ? refData[key] : filteredCurriculumData;
-  const result = searchedArray?.some(
-    (item: { label: string | null | undefined }) => item.label === option
-  );
-  return result ? option!! : "";
 }

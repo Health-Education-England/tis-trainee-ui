@@ -494,8 +494,7 @@ export function validateFields(
   let finalValidationSchema = Yup.object().shape({});
   finalValidationSchema = fields.reduce((schema, field) => {
     const fieldSchema = validationSchema.fields[field.name];
-    const isVisible =
-      field.visible || field.visibleIf?.includes(values[field.parent!!]);
+    const isVisible = showFormField(field, values);
     if (isVisible) {
       if (field.type === "array" && values[field.name].length > 0) {
         const nestedFields = Object.keys(values[field.name][0]).reduce(
@@ -509,6 +508,22 @@ export function validateFields(
         const nestedSchema = Yup.object().shape(nestedFields);
         schema = schema.shape({
           [field.name]: Yup.array().of(nestedSchema)
+        });
+      } else if (field.type === "dto") {
+        const dtoFields = field.objectFields ?? [];
+        const visibleDtoFields = dtoFields.filter(
+          dtoField =>
+            dtoField.visible ||
+            dtoField.visibleIf?.includes(values[field.name][dtoField.parent!!])
+        );
+        const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
+          const dtoFieldSchema = fieldSchema.fields[dtoField.name];
+          return dtoSchema.shape({
+            [dtoField.name]: dtoFieldSchema
+          });
+        }, Yup.object().shape({}));
+        schema = schema.shape({
+          [field.name]: dtoSchema
         });
       } else {
         schema = schema.shape({
@@ -535,6 +550,20 @@ export function formatFieldName(fieldName: string) {
 
 export function showFormField(field: Field, formData: FormData) {
   return field.visible || field.visibleIf?.includes(formData[field.parent!!]);
+}
+
+// Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.
+export function isValidOption(
+  key: "curriculum" | "localOffice" | "gender",
+  option: string | null | undefined,
+  refData?: any,
+  filteredCurriculumData?: any
+): string {
+  const searchedArray = refData ? refData[key] : filteredCurriculumData;
+  const result = searchedArray?.some(
+    (item: { label: string | null | undefined }) => item.label === option
+  );
+  return result ? option!! : "";
 }
 
 // react-select styles

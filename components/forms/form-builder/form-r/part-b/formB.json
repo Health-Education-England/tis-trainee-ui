@@ -3,8 +3,8 @@
   "pages": [
     {
       "pageName": "Personal Details",
-      "importantTxtName": "FormBImportantNotice",
-      "msgLinkName": "DataSource",
+      "importantTxtName": "formBImportantNotice",
+      "expanderLinkName": "dataSource",
       "sections": [
         {
           "sectionHeader": "Personal Details",
@@ -96,6 +96,7 @@
     },
     {
       "pageName": "Whole Scope of Practice: Work",
+      "importantTxtName": "workInstructions",
       "sections": [
         {
           "sectionHeader": "Type of Work",
@@ -162,6 +163,7 @@
     },
     {
       "pageName": "Whole Scope of Practice: Time Out Of Training (TOOT)",
+      "importantTxtName": "tootInstructions",
       "sections": [
         {
           "sectionHeader": "TOOT days (round up to the nearest whole day)",
@@ -235,7 +237,8 @@
       ]
     },
     {
-      "pageName": "Declarations relating to Good Medical Practice",
+      "pageName": "Good Medical Practice: Declarations",
+      "importantTxtName": "gmpDeclarationsInstructions",
       "sections": [
         {
           "sectionHeader": "Declarations",
@@ -273,7 +276,26 @@
       ]
     },
     {
+      "pageName": "Good Medical Practice: Health Statement",
+      "sections": [
+        {
+          "sectionHeader": "Health Statement (not compulsory)",
+          "fields": [
+            {
+              "name": "healthStatement",
+              "label": "Please use this section to declare any information relating to your health which you feel would be beneficial to the ARCP/RITA panel or Responsible Officer.",
+              "placeholder": "type here...",
+              "type": "textArea",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "pageName": "Summary of previous resolved Form R Declarations",
+      "expanderLinkName": "formRDeclarationsExplained",
+      "importantTxtName": "previousResolvedDecsInstructions",
       "sections": [
         {
           "sectionHeader": "Resolved Declarations (declared on previous Form R)",
@@ -296,7 +318,7 @@
               "objectFields": [
                 {
                   "name": "declarationType",
-                  "label": "Declation Type",
+                  "label": "Declaration Type",
                   "type": "select",
                   "optionsKey": "declarationType",
                   "visible": true
@@ -327,6 +349,8 @@
     },
     {
       "pageName": "Summary of previous unresolved Form R Declarations",
+      "importantTxtName": "previousUnresolvedDecsInstructions",
+      "expanderLinkName": "formRDeclarationsExplained",
       "sections": [
         {
           "sectionHeader": "Unresolved Declarations (declared on previous Form R)",
@@ -343,7 +367,7 @@
               "name": "previousDeclarationSummary",
               "type": "textArea",
               "placeholder": "type here...",
-              "label": "Please provide a brief summary below, including where working, the date of the event, and your where appropriate. If known, identify what investigations are pending relating to the to the event and which organisation is undertaking the investigation.",
+              "label": "Summary of unresolved declarations",
               "visible": false,
               "visibleIf": [true],
               "parent": "havePreviousUnresolvedDeclarations"
@@ -353,10 +377,12 @@
       ]
     },
     {
-      "pageName": "Summary of current resolved Form R Declarations",
+      "pageName": "Summary of new resolved Form R Declarations",
+      "importantTxtName": "newResolvedDecsInstructions",
+      "expanderLinkName": "formRDeclarationsExplained",
       "sections": [
         {
-          "sectionHeader": "Resolved Declarations (current)",
+          "sectionHeader": "Resolved Declarations (new)",
           "fields": [
             {
               "name": "haveCurrentDeclarations",
@@ -376,7 +402,7 @@
               "objectFields": [
                 {
                   "name": "declarationType",
-                  "label": "Declation Type",
+                  "label": "Declaration Type",
                   "type": "select",
                   "optionsKey": "declarationType",
                   "visible": true
@@ -406,10 +432,12 @@
       ]
     },
     {
-      "pageName": "Summary of current unresolved Form R Declarations",
+      "pageName": "Summary of new unresolved Form R Declarations",
+      "importantTxtName": "newUnresolvedDecsInstructions",
+      "expanderLinkName": "formRDeclarationsExplained",
       "sections": [
         {
-          "sectionHeader": "Unresolved Declarations (current)",
+          "sectionHeader": "Unresolved Declarations (new)",
           "fields": [
             {
               "name": "haveCurrentUnresolvedDeclarations",
@@ -423,7 +451,7 @@
               "name": "currentDeclarationSummary",
               "type": "textArea",
               "placeholder": "type here...",
-              "label": "Please provide a brief summary below, including where working, the date of the event, and your where appropriate. If known, identify what investigations are pending relating to the to the event and which organisation is undertaking the investigation.",
+              "label": "Summary of new unresolved declarations",
               "visible": false,
               "visibleIf": [true],
               "parent": "haveCurrentUnresolvedDeclarations"
@@ -434,14 +462,14 @@
     },
     {
       "pageName": "COVID 19 self-assessment & declarations",
-      "importantTxtName": "Covid19ImportantNotice",
+      "importantTxtName": "covid19ImportantNotice",
       "sections": [
         {
           "sectionHeader": "COVID 19 self-assessment & declarations",
           "fields": [
             {
               "name": "haveCovidDeclarations",
-              "label": "I want to complete the Covid 19 self declaration",
+              "label": "I want to complete the Covid-19 self-declaration",
               "type": "radio",
               "optionsKey": "yesNo",
               "visible": true,
@@ -522,7 +550,9 @@
                   "name": "howPlacementAdjusted",
                   "label": "Please explain further how your placement was adjusted",
                   "type": "textArea",
-                  "visible": true
+                  "visible": false,
+                  "visibleIf": [true],
+                  "parent": "haveChangesToPlacement"
                 },
                 {
                   "name": "educationSupervisorName",
