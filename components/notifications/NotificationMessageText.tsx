@@ -20,7 +20,9 @@ export function NotificationMessageText({
     <div
       className="nhsuk-u-margin-top-2"
       dangerouslySetInnerHTML={{
-        __html: DOMPurify.sanitize(notificationMessageText)
+        __html: DOMPurify.sanitize(notificationMessageText, {
+          ADD_ATTR: ["target"]
+        })
       }}
     />
   );
