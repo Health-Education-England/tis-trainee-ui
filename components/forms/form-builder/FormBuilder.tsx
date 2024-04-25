@@ -19,10 +19,11 @@ import {
   handleTextFieldWidth,
   sumFieldValues,
   saveDraftForm,
-  validateFields
+  validateFields,
+  formatFieldName,
+  showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
-import DataSourceMsg from "../../common/DataSourceMsg";
 import { Text } from "./form-fields/Text";
 import { Radios } from "./form-fields/Radios";
 import { Selector } from "./form-fields/Selector";
@@ -34,20 +35,33 @@ import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
-import store from "../../../redux/store/store";
 import PanelBuilder from "./form-array/PanelBuilder";
 import { TextArea } from "./form-fields/TextArea";
 import ScrollToTop from "../../common/ScrollToTop";
 import { Checkboxes } from "./form-fields/Checkboxes";
+import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
+import DtoBuilder from "./form-dto/DtoBuilder";
+import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
+
+type FieldType =
+  | "text"
+  | "textArea"
+  | "radio"
+  | "select"
+  | "date"
+  | "phone"
+  | "checkbox"
+  | "array"
+  | "dto";
 
 export type Field = {
   name: string;
   label?: string;
-  type: string;
+  type: FieldType;
   visible: boolean;
   optionsKey?: string;
   dependencies?: string[];
-  visibleIf?: string[];
+  visibleIf?: unknown[];
   placeholder?: string;
   warning?: Warning;
   canGrow?: boolean;
@@ -56,7 +70,8 @@ export type Field = {
   objectFields?: Field[];
   width?: number;
   isNumberField?: boolean;
-  total?: string[];
+  contributesToTotal?: string;
+  isTotal?: boolean;
   readOnly?: boolean;
   rows?: number;
 };
@@ -66,7 +81,7 @@ export type FormData = {
 type Page = {
   pageName: string;
   importantTxtName?: string;
-  msgLinkName?: string;
+  expanderLinkName?: string;
   sections: Section[];
 };
 type Section = {
@@ -74,10 +89,15 @@ type Section = {
   fields: Field[];
   objectFields?: Field[];
 };
-export type Form = {
+export type FormName = "formA" | "formB";
+export type FormDeclaration = {
   name: string;
+  label: string;
+};
+export type Form = {
+  name: FormName;
   pages: Page[];
-  declarations: { name: string; label: string }[];
+  declarations: FormDeclaration[];
 };
 type FormBuilderProps = {
   jsonForm: Form;
@@ -104,11 +124,10 @@ export default function FormBuilder({
 }: Readonly<FormBuilderProps>) {
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
-  const [visibleFields, setVisibleFields] = useState<Field[]>([]);
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
-  const lastSavedFormData = store.getState().formA.formAData;
+  const lastSavedFormData = useSelectFormData(jsonFormName);
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
     () => getEditPageNumber(jsonFormName),
@@ -126,34 +145,17 @@ export default function FormBuilder({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const flatFields = useMemo(
-    () =>
-      pages[currentPage].sections.flatMap((section: Section) => section.fields),
-    [currentPage, pages]
-  );
-
-  // Initialise and track the visible fields (using JSON instructions and current formData state)
-  useEffect(() => {
-    const updatedFields = flatFields.reduce(
-      (visibleFields: Field[], field: Field) => {
-        if (
-          field.visible ||
-          (field.visibleIf &&
-            field.visibleIf.includes(formData[field.parent!!]))
-        ) {
-          visibleFields.push(field);
-        }
-        return visibleFields;
-      },
-      []
+  const currentPageFields = useMemo(() => {
+    return pages[currentPage].sections.flatMap(
+      (section: Section) => section.fields
     );
+  }, [currentPage, pages]);
 
-    setVisibleFields(updatedFields);
-  }, [formData, flatFields, currentPage]);
+  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
     if (isFormDirty.current) {
-      validateFields(visibleFields, formData, validationSchema)
+      validateFields(currentPageFields, formData, validationSchema)
         .then(() => {
           setFormErrors({});
         })
@@ -164,7 +166,7 @@ export default function FormBuilder({
           });
         });
     }
-  }, [formData, visibleFields, validationSchema]);
+  }, [formData, currentPageFields, validationSchema]);
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -178,9 +180,17 @@ export default function FormBuilder({
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => {
-    const { name, value } = event.currentTarget;
+    // Note - Bit of a faff, need to transform radio inputs ("Yes", "No") to boolean values (true, false) so that they can be stored in the database as such.
+    const name = event.currentTarget.name;
+    const primaryField = currentPageFields.find(field => field.name === name);
+    const totalName = primaryField?.contributesToTotal;
+
+    let value: string | boolean = event.currentTarget.value;
+    if (value === "Yes") value = true;
+    if (value === "No") value = false;
     let currentValue: string | boolean;
     if (selectedOption) {
       currentValue = selectedOption.value;
@@ -191,7 +201,6 @@ export default function FormBuilder({
     }
 
     // Note this code still only works for non-nested text fields
-    const primaryField = visibleFields.find(field => field.name === name);
     if (typeof currentValue === "string") {
       handleTextFieldWidth(event, currentValue, primaryField);
       handleSoftValidationWarningMsgVisibility(
@@ -214,6 +223,19 @@ export default function FormBuilder({
         updatedFormData = { ...prevFormData, [arrayName]: newArray };
         return updatedFormData;
       });
+    } else if (dtoName) {
+      setFormData((prevFormData: FormData) => {
+        const dto = prevFormData[dtoName];
+        const updatedDto = {
+          ...dto,
+          [name]: currentValue
+        };
+        updatedFormData = {
+          ...prevFormData,
+          [dtoName]: updatedDto
+        };
+        return updatedFormData;
+      });
     } else {
       setFormData((prevFormData: FormData) => {
         updatedFormData = {
@@ -223,6 +245,21 @@ export default function FormBuilder({
         return updatedFormData;
       });
     }
+
+    // Update total field if the field that triggers the handleChange contributes to a number total
+    if (totalName) {
+      const fieldsToTotal = currentPageFields.filter(
+        field => field.contributesToTotal === totalName
+      );
+      setFormData((prevFormData: FormData) => {
+        const total = sumFieldValues(prevFormData, fieldsToTotal);
+        return {
+          ...prevFormData,
+          [totalName]: total
+        };
+      });
+    }
+
     isFormDirty.current = true;
   };
 
@@ -238,7 +275,7 @@ export default function FormBuilder({
 
   const handlePageChange = () => {
     isFormDirty.current = false;
-    validateFields(visibleFields, formData, validationSchema)
+    validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage) {
           continueToConfirm(jsonFormName, finalFormFields, history);
@@ -269,30 +306,35 @@ export default function FormBuilder({
           isPageDirty={isFormDirty.current}
         />
         {pages && (
-          <>
-            <div>
-              {pages[currentPage].importantTxtName && (
-                <ImportantText
-                  txtName={pages[currentPage].importantTxtName as string}
-                />
-              )}
-            </div>
-            {pages[currentPage].msgLinkName && <DataSourceMsg />}
-            <div data-cy="progress-header">
-              {pages[currentPage].pageName && (
-                <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
-                  pages[currentPage].pageName
-                }`}</h3>
-              )}
-              {pages[currentPage]?.sections.map((section: Section) => (
-                <React.Fragment key={section.sectionHeader}>
-                  <AutosaveNote />
-                  <Card feature>
-                    <Card.Content>
-                      <Card.Heading>{section.sectionHeader}</Card.Heading>
-                      {visibleFields.map((field: Field) => (
-                        <div key={field.name} className="nhsuk-form-group">
-                          {field.type === "array" ? (
+          <div data-cy="progress-header">
+            {pages[currentPage].pageName && (
+              <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
+                pages[currentPage].pageName
+              }`}</h3>
+            )}
+            {pages[currentPage].importantTxtName && (
+              <ImportantText
+                txtName={pages[currentPage].importantTxtName as string}
+              />
+            )}
+            {pages[currentPage].expanderLinkName && (
+              <ExpanderMsg
+                expanderName={
+                  pages[currentPage].expanderLinkName as ExpanderNameType
+                }
+              />
+            )}
+            <AutosaveNote />
+            {pages[currentPage]?.sections.map((section: Section) => (
+              <React.Fragment key={section.sectionHeader}>
+                <Card feature>
+                  <Card.Content>
+                    <Card.Heading>{section.sectionHeader}</Card.Heading>
+                    {section.fields.map((field: Field) => {
+                      let fieldComponent = null;
+                      switch (field.type) {
+                        case "array":
+                          fieldComponent = (
                             <PanelBuilder
                               field={field}
                               formData={formData}
@@ -303,28 +345,49 @@ export default function FormBuilder({
                               panelErrors={formErrors[field.name]}
                               fieldWarning={fieldWarning}
                               options={options}
+                              isFormDirty={isFormDirty}
                             />
-                          ) : (
-                            renderFormField(
-                              formData,
-                              field,
-                              formData[field.name] ?? "",
-                              formErrors[field.name] ?? "",
-                              fieldWarning,
-                              { handleChange, handleBlur },
-                              options
-                            )
-                          )}
+                          );
+                          break;
+                        case "dto":
+                          fieldComponent = (
+                            <DtoBuilder
+                              field={field}
+                              formData={formData}
+                              renderFormField={renderFormField}
+                              handleChange={handleChange}
+                              handleBlur={handleBlur}
+                              errors={formErrors[field.name]}
+                              options={options}
+                              dtoName={field.name}
+                            />
+                          );
+                          break;
+                        default:
+                          fieldComponent = renderFormField(
+                            field,
+                            formData[field.name] ?? "",
+                            formErrors[field.name] ?? "",
+                            fieldWarning,
+                            { handleChange, handleBlur },
+                            options
+                          );
+                      }
+                      return (
+                        <div key={field.name} className="nhsuk-form-group">
+                          {showFormField(field, formData)
+                            ? fieldComponent
+                            : null}
                         </div>
-                      ))}
-                    </Card.Content>
-                  </Card>
-                  <AutosaveMessage formName={jsonFormName} />
-                </React.Fragment>
-              ))}
-            </div>
-          </>
+                      );
+                    })}
+                  </Card.Content>
+                </Card>
+              </React.Fragment>
+            ))}
+          </div>
         )}
+        <AutosaveMessage formName={jsonFormName} />
         {Object.keys(formErrors).length > 0 && (
           <FormErrors formErrors={formErrors} />
         )}
@@ -384,6 +447,19 @@ export default function FormBuilder({
         </nav>
         <Container>
           <Row>
+            {canEditStatus && (
+              <Col width="one-half">
+                <Button
+                  onClick={(e: { preventDefault: () => void }) => {
+                    e.preventDefault();
+                    continueToConfirm(jsonFormName, finalFormFields, history);
+                  }}
+                  data-cy="BtnShortcutToConfirm"
+                >
+                  {"Shortcut to Confirm"}
+                </Button>
+              </Col>
+            )}
             <Col width="one-quarter">
               <Button
                 secondary
@@ -416,7 +492,9 @@ export function FormErrors(formErrors: any) {
     >
       <div className="error-summary" data-cy="errorSummary">
         <p>
-          <b>Please fix the following errors before proceeding:</b>
+          <b>
+            Before proceeding to the next section please address the following:
+          </b>
         </p>
         <FormErrorsList formErrors={formErrors} />
       </div>
@@ -451,7 +529,7 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
                   className="error-summary_li_nested"
                 >
                   <span>
-                    <b>{`${key} ${index + 1}`}</b>
+                    <b>{`${formatFieldName(key)} ${index + 1}`}</b>
                   </span>
                   <span>{renderErrors(error)}</span>
                 </li>
@@ -473,7 +551,6 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
 }
 
 function renderFormField(
-  formData: FormData,
   field: Field,
   value: string,
   error: string,
@@ -495,7 +572,8 @@ function renderFormField(
     ) => void;
   },
   options?: any,
-  arrayDetails?: { arrayIndex: number; arrayName: string }
+  arrayDetails?: { arrayIndex: number; arrayName: string },
+  dtoName?: string
 ): React.ReactElement | null {
   const {
     name,
@@ -505,16 +583,13 @@ function renderFormField(
     optionsKey,
     width,
     isNumberField,
-    total,
+    isTotal,
     readOnly,
     rows
   } = field;
   const { handleChange, handleBlur } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
 
-  if (total && total.length > 0) {
-    value = sumFieldValues(formData, total);
-  }
   switch (type) {
     case "text":
       return (
@@ -529,9 +604,10 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
           width={width}
           isNumberField={isNumberField}
-          total={total}
+          isTotal={isTotal}
           readOnly={readOnly}
         />
       );
@@ -548,6 +624,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
           rows={rows}
         />
       );
@@ -563,6 +640,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
         />
       );
 
@@ -577,6 +655,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
         />
       );
 
@@ -591,6 +670,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
         />
       );
 
@@ -604,6 +684,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
         />
       );
     case "checkbox":
@@ -616,6 +697,7 @@ function renderFormField(
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
+          dtoName={dtoName}
         />
       );
     default:

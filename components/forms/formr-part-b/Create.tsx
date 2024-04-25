@@ -24,7 +24,7 @@ const Create = ({ history }: { history: string[] }) => {
     state => state.formB.previousSectionNumber
   );
   const formBData: FormRPartB | undefined = useAppSelector(
-    state => state.formB.formBData
+    state => state.formB.formData
   );
   const { traineeTisId: tisId, haveCovidDeclarations } = formBData;
   const saveBtnActive = useAppSelector(selectSaveBtnActive);
@@ -34,7 +34,7 @@ const Create = ({ history }: { history: string[] }) => {
   );
 
   const handleSectionSubmit = (formValues: FormRPartB) => {
-    const lastSavedFormData = store.getState().formB.formBData;
+    const lastSavedFormData = store.getState().formB.formData;
     if (!saveBtnActive) {
       dispatch(
         updatedFormB({

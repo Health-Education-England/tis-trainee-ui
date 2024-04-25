@@ -177,12 +177,14 @@ const CovidDeclaration = ({
                       name="covidDeclarationDto.selfRateForCovid"
                       data-jest="selfRateForCovid"
                       hint=""
-                      items={COVID_RESULT_DECLARATIONS.map<KeyValue>(d => {
-                        return {
-                          label: d,
-                          value: d
-                        };
-                      })}
+                      items={COVID_RESULT_DECLARATIONS.map<KeyValue>(
+                        (d: any) => {
+                          return {
+                            label: d,
+                            value: d
+                          };
+                        }
+                      )}
                       onChange={() => {
                         setFieldValue(
                           "covidDeclarationDto.reasonOfSelfRate",
@@ -193,7 +195,7 @@ const CovidDeclaration = ({
                     />
                     {values.covidDeclarationDto?.selfRateForCovid &&
                       values.covidDeclarationDto?.selfRateForCovid !==
-                        COVID_RESULT_DECLARATIONS[2] && (
+                        COVID_RESULT_DECLARATIONS[2].label && (
                         <TextInputField
                           label="Please explain your reason for your progress self-rating."
                           name="covidDeclarationDto.reasonOfSelfRate"

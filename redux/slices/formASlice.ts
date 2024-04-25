@@ -10,10 +10,9 @@ import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
-
 interface IFormA {
   formAList: IFormR[];
-  formAData: FormRPartA;
+  formData: FormRPartA;
   status: string;
   error: any;
   editPageNumber: number;
@@ -24,7 +23,7 @@ interface IFormA {
 
 export const initialState: IFormA = {
   formAList: [],
-  formAData: initialFormRABeforeProfileData,
+  formData: initialFormRABeforeProfileData,
   status: "idle",
   error: "",
   editPageNumber: 0,
@@ -101,7 +100,7 @@ const formASlice = createSlice({
       return { ...initialState, formAList: state.formAList };
     },
     updatedFormA(state, action: PayloadAction<FormRPartA>) {
-      return { ...state, formAData: action.payload };
+      return { ...state, formData: action.payload };
     },
     updatedEditPageNumber(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
@@ -145,7 +144,7 @@ const formASlice = createSlice({
       })
       .addCase(loadSavedFormA.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formAData = action.payload;
+        state.formData = action.payload;
       })
       .addCase(loadSavedFormA.rejected, (state, { error }) => {
         state.status = "failed";
@@ -193,7 +192,7 @@ const formASlice = createSlice({
       })
       .addCase(autoSaveFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
-        state.formAData = action.payload;
+        state.formData = action.payload;
         state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
           action.payload.lastModifiedDate,
           true
@@ -207,7 +206,7 @@ const formASlice = createSlice({
       })
       .addCase(autoUpdateFormA.fulfilled, (state, action) => {
         state.autosaveStatus = "succeeded";
-        state.formAData = action.payload;
+        state.formData = action.payload;
         state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
           action.payload.lastModifiedDate,
           true
@@ -249,7 +248,7 @@ export const {
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
-  state.formA.formAData;
+  state.formA.formData;
 
 export const selectCanEditStatus = (state: { formA: IFormA }) =>
   state.formA.canEdit;

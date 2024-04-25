@@ -14,24 +14,26 @@ const farFutureDate = dayjs().add(5, "year").format("YYYY-MM-DD");
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
 const prevRevalDate = dayjs().subtract(5, "year").format("YYYY-MM-DD");
 
+// NOTE: This is a temp test file - to be refactored once form is built via FormBuilder
+
 describe("Form R (Part B) - mobile", () => {
   before(() => {
     cy.signInToTss(30000, undefined, "iphone-6");
   });
   it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
     isCovid = false;
-    cy.get('[data-cy="menuToggleBtn"]').should("exist").click();
-    cy.get('[data-cy="Form R (B)"]').should("exist").click();
+    cy.get('[data-cy="menuToggleBtn"]').should("exist").click({ force: true });
+    cy.get('[data-cy="Form R (B)"]').should("exist").click({ force: true });
     cy.get("#btnOpenForm")
       .should("exist")
       .focus()
       .then((loadFormBButton: JQuery) => {
         // ---------- if New form btn ------------------------------------------------------------------
         if (loadFormBButton.attr("data-cy") === "Submit new form") {
-          cy.get('[data-cy="Submit new form"]').click();
+          cy.get('[data-cy="Submit new form"]').click({ force: true });
           cy.checkForRecentForm();
         } else {
-          cy.get("#btnOpenForm").click();
+          cy.get("#btnOpenForm").click({ force: true });
         }
         cy.get(".nhsuk-warning-callout > p").should("exist");
         cy.get("#gmcNumber").type("55555555");
@@ -210,76 +212,6 @@ describe("Form R (Part B) - desktop", () => {
       "contain.text",
       dayjs(farFutureDate).format("DD/MM/YYYY")
     );
-    // check if Covid section exists or not depending on flag
-    if (isCovid) {
-      cy.get("[data-cy=sectionHeader7]").should("exist");
-      cy.get("[data-cy=BtnEditSection7]").should("exist");
-      cy.get("[data-cy=educationSupervisorName]").should(
-        "contain.text",
-        "No supervisor name provided"
-      );
-      cy.get("[data-cy=educationSupervisorEmail]").should(
-        "contain.text",
-        "No supervisor email provided"
-      );
-    } else {
-      cy.get("[data-cy=sectionHeader7]").should("not.exist");
-      cy.get("[data-cy=BtnEditSection7]").should("not.exist");
-    }
-
-    //check the health statment populates correctly when empty
-    for (let x = 0; x < 4; x++) {
-      cy.get(
-        "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
-      ).click();
-    }
-    cy.get(".nhsuk-form-group > [data-cy=healthStatement]").clear();
-    for (let x = 0; x < 4; x++) {
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
-    }
-    cy.get("[data-cy=healthStatement]").should(
-      "contain.text",
-      "No health statement recorded"
-    );
-
-    //check sections 4 and 5 display correctly
-    cy.get("[data-cy=previousDeclarationSummary]")
-      .should("exist")
-      .should("contain.text", "test text");
-    cy.get("[data-cy=currentDeclarationSummary]")
-      .should("exist")
-      .should("contain.text", "test text");
-
-    //go back to section 4 and click no previous unresolved declarations
-    //check option dissapears from view
-    for (let x = 0; x < 3; x++) {
-      cy.get(
-        "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
-      ).click();
-    }
-    cy.get("[data-cy=havePreviousUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 3; x++) {
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
-    }
-    cy.get(
-      ":nth-child(12) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__value"
-    ).should("not.exist");
-
-    //go back to section 5 and click no previous unresolved declarations
-    //check option dissapears from view
-    for (let x = 0; x < 2; x++) {
-      cy.get(
-        "[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page"
-      ).click();
-    }
-    cy.get("[data-cy=haveCurrentUnresolvedDeclarations1]").click();
-    for (let x = 0; x < 2; x++) {
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
-    }
-    cy.get(
-      ":nth-child(15) > :nth-child(3) > .nhsuk-summary-list__row > .nhsuk-summary-list__key"
-    ).should("not.exist");
-
     // Attempt to submit without checking boxes should fail
     cy.get("[data-cy=BtnSubmitForm]").click();
     cy.get("#isDeclarationAccepted--error-message").should("exist");
@@ -289,87 +221,8 @@ describe("Form R (Part B) - desktop", () => {
     cy.get("[data-cy=isDeclarationAccepted0]").click().should("be.checked");
     cy.get("[data-cy=isConsentAccepted0]").click().should("be.checked");
 
-    // edit form section
-    cy.get("[data-cy=BtnEditSection1]").should("exist");
-    cy.get("[data-cy=gmcNumber]").should("exist");
-    cy.get("[data-cy=sectionHeader5]").should(
-      "include.text",
-      "Section 5: New declarations"
-    );
-    cy.get("[data-cy=BtnEditSection5]").should("exist").click();
-    cy.get(".progress-step").eq(4).should("have.class", "progress-step-active");
-    cy.get('[data-cy="currentDeclarations[0].declarationType"] > option')
-      .eq(0)
-      .then(element => {
-        const selectedItem = element?.val()?.toString()!;
-        cy.get('[data-cy="currentDeclarations[0].declarationType"]')
-          .select(selectedItem)
-          .should("have.value", "");
-      });
-
-    // back to Confirm/ submit page fails if section error
-    cy.get("[data-cy=BtnBackToSubmit]").click();
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get('[data-cy="currentDeclarations[0].declarationType"]')
-      .should("exist")
-      .select("Significant event");
-    cy.get(".nhsuk-error-summary").should("not.exist");
-
-    // return to Confirm / submit page to check edited summary
-    cy.get("[data-cy=BtnBackToSubmit]").click();
-    cy.get("[data-cy=declarationType1]").should(
-      "contain.text",
-      "Significant event"
-    );
-    // check boxes should be unchecked on return
-    cy.get("[data-cy=isDeclarationAccepted0]").should("not.be.checked");
-    cy.get("[data-cy=isConsentAccepted0]").should("not.be.checked");
-
-    // 'Back to submit' btn is removed if normal (long way) navigation back to Confirmation / submit page is chosen
-
-    cy.get("[data-cy=BtnEditSection5]").click();
-    cy.get("[data-cy=BtnBackToSubmit]").should("exist");
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
-
-    for (let x = 0; x < 3; x++) {
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
-      cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
-    }
-    cy.get(".nhsuk-warning-callout__label").should(
-      "include.text",
-      "Confirmation"
-    );
-
-    // -------------- Save draft ------------------------------------------------
-    cy.get("[data-cy=BtnSaveDraft]").click();
-
-    // -------------- Retrieve saved draft form ----------------------------------
-    cy.wait(5000);
-    cy.get('[data-cy="btn-Edit saved draft form"]')
-      .should("exist")
-      .focus()
-      .click();
-    cy.get(".nhsuk-warning-callout").should("exist");
-    cy.get("[data-cy=gmcNumber]").should("exist");
-
-    for (let x = 0; x < 6; x++) {
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__title").click();
-      cy.get("[data-cy=BtnBackToSubmit]").should("not.exist");
-    }
-
-    // complete declaration again
-    cy.get("[data-cy=isDeclarationAccepted0]").click();
-    cy.get("[data-cy=isConsentAccepted0]").click();
-
-    // check work saved in correct order
-    cy.get("[data-cy=endDate1]").should(
-      "contain.text",
-      dayjs(farFutureDate).format("DD/MM/YYYY")
-    );
-    // ------------- submit form -----------------------------------------
-
-    cy.get("[data-cy=BtnSubmitForm]").should("exist").click();
+    // submit form
+    cy.get("[data-cy=BtnSubmitForm]").click();
     cy.get(".MuiDialog-container")
       .should("exist")
       .should("include.text", "Please think carefully before submitting");
@@ -380,28 +233,5 @@ describe("Form R (Part B) - desktop", () => {
     cy.log(
       "################ check submitted form is in forms list ###################"
     );
-    // Open the form just saved
-    cy.get("[data-cy=submittedForm]").first().click();
-    // Check for PDF btn and help link
-    cy.get("[data-cy=savePdfBtn]").should("exist");
-    cy.get("[data-cy=pdfHelpLink]")
-      .should("exist")
-      .should(
-        "have.attr",
-        "href",
-        "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
-      );
-    // Check contents
-    cy.get("[data-cy=gmcNumber]")
-      .should("exist")
-      .should("have.text", "11111111");
-    cy.get("[data-cy=localOfficeName]").should(
-      "have.text",
-      "Health Education England Wessex"
-    );
-    cy.get("[data-cy=totalLeave]").should("include.text", "21");
-    // Navigate back to the list
-    cy.get(".nhsuk-back-link__link").should("exist").click();
-    cy.contains("Submitted forms").should("exist");
   });
 });

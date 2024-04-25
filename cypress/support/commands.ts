@@ -11,13 +11,13 @@ Cypress.Commands.add("checkForRecentForm", () => {
         "include.text",
         "You recently submitted a form"
       );
-      cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+      cy.get(".MuiDialogActions-root > :nth-child(2)").click({ force: true });
     }
   });
 });
 
 Cypress.Commands.add("startOver", () => {
-  cy.get('[data-cy="startOverButton"]').click();
+  cy.get('[data-cy="startOverButton"]').should("exist").click();
   cy.get(".MuiDialogContentText-root").should(
     "include.text",
     "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
@@ -56,11 +56,65 @@ Cypress.Commands.add(
       cy.wait(waitTimeMs);
     }
     const urlString = visitUrl ?? "/";
-    cy.visit(urlString, { failOnStatusCode: false });
+    cy.visit(urlString, { failOnStatusCode: false, timeout: 60000 });
     if (viewport) cy.viewport(viewport);
     cy.signIn();
   }
 );
+
+Cypress.Commands.add(
+  "clickSelect",
+  (selectorBeginningSegment, text, useFirst) => {
+    const selector = `${selectorBeginningSegment} > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container`;
+    if (text) {
+      cy.get(selector).type(text);
+    } else {
+      cy.get(selector).click();
+    }
+    cy.get(".react-select__menu")
+      .find(".react-select__option")
+      .then(options => {
+        if (useFirst) {
+          cy.wrap(options).first().click();
+        } else {
+          cy.wrap(options).last().click();
+        }
+      });
+  }
+);
+
+Cypress.Commands.add("clearAndType", (selector: string, text: string) => {
+  cy.get(selector).should("exist").click().clear().type(text);
+});
+
+Cypress.Commands.add("navigateBackToConfirm", (steps: number) => {
+  const s = steps;
+  for (let x = 0; x < s; x++) {
+    cy.navNext();
+  }
+});
+
+Cypress.Commands.add("navNext", (forceClick?: boolean) => {
+  cy.get('[data-cy="navNext"]').click({ force: forceClick });
+});
+
+Cypress.Commands.add("clickRadioCheck", (selector: string) => {
+  cy.get(selector).click();
+});
+
+export type ItemType = {
+  [key: number]: string;
+};
+export type CheckType = "value" | "label";
+
+Cypress.Commands.add("checkViewFields", (fields: string[][]) => {
+  fields.forEach(([label, value]) => {
+    cy.get(`[data-cy="${label}-label"]`).should("exist");
+    cy.get(`[data-cy="${label}-value"]`)
+      .should("exist")
+      .should("have.text", value);
+  });
+});
 
 Cypress.Commands.add("signIn", () => {
   cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
@@ -69,6 +123,242 @@ Cypress.Commands.add("signIn", () => {
   cy.task("generateOTP").then(token => {
     cy.get('[type="number"]').type(`${token}{enter}`);
   });
+});
+
+// ### Form A ###
+Cypress.Commands.add("checkAndFillFormASection1", () => {
+  // Header section
+
+  const containedEls = [
+    [".nhsuk-fieldset__heading", "Form R (Part A)"],
+    [
+      '[data-cy="formraLabel"]',
+      "Trainee registration for Postgraduate Speciality Training"
+    ],
+    [
+      '[data-cy="WarningCallout-formAImportantNotice-label"] > span',
+      "Important"
+    ],
+    [
+      ".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)",
+      "This form has been pre-populated using the information available against your records"
+    ],
+    [
+      '[data-cy="autosaveNote"]',
+      "Note: This form will autosave 2 seconds after you pause making changes."
+    ],
+    [
+      '[data-cy="autosaveStatusMsg"]',
+      "Autosave status: Waiting for new changes..."
+    ]
+  ];
+
+  containedEls.forEach(element => {
+    cy.get(element[0]).should("contain", element[1]);
+  });
+
+  // Personal details
+
+  const personalDetailsEls = [
+    ['[data-cy="progress-header"] > h3', "Part 1 of 3 - Personal Details"],
+    ['[data-cy="forename-label"]', "Forename"],
+    ['[data-cy="immigrationStatus-label"]', "Immigration Status"]
+  ];
+
+  personalDetailsEls.forEach(element => {
+    cy.get(element[0]).should("include.text", element[1]);
+  });
+
+  // test that the name fields grow and shrink with the input size
+  cy.get('[data-cy="forename-input"]').should("have.value", "Anthony Mara");
+  cy.clearAndType(
+    '[data-cy="forename-input"]',
+    "Terry terry terry terry terry terry"
+  );
+  cy.get('[data-cy="forename-input"]').should(
+    "have.class",
+    "nhsuk-input nhsuk-input--width-30"
+  );
+
+  cy.clearAndType('[data-cy="forename-input"]', "Terry");
+  cy.get('[data-cy="forename-input"]').should(
+    "have.class",
+    "nhsuk-input nhsuk-input--width-20"
+  );
+
+  // test that the whitespace is removed from the text input
+  cy.clearAndType('[data-cy="surname-input"]', "  John Terry  ");
+  cy.get('[data-cy="progress-header"] > h3').click();
+  cy.get('[data-cy="surname-input"]').should("have.value", "John Terry");
+
+  // test AutocompleteSelect
+  cy.clickSelect('[data-cy="immigrationStatus"]', "ref", true);
+  cy.get('[data-cy="immigrationStatus"]').contains("Refugee in the UK");
+
+  // test inline error
+  cy.clearAndType('[data-cy="dateOfBirth-input"]', "1000-05-01");
+  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should(
+    "have.text",
+    "Date of Birth is before the minimum date allowed"
+  );
+
+  cy.get('[data-cy="error-txt-Email address is required"]').should(
+    "have.text",
+    "Email address is required"
+  );
+
+  // test error summary
+  cy.get('[data-cy="errorSummary"] > p').should(
+    "have.text",
+    "Before proceeding to the next section please address the following:"
+  );
+  cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
+  cy.clearAndType('[data-cy="dateOfBirth-input"]', "2000-05-01");
+  cy.get('[data-cy="errorSummary"] > p').should("not.exist");
+  cy.get(
+    '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
+  ).should("not.exist");
+  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
+
+  // test soft validation
+  cy.clearAndType('[data-cy="postCode-input"]', "123456");
+  cy.get(".field-warning-msg").should(
+    "have.text",
+    "Warning: Non-UK postcode detected. Please ignore if valid."
+  );
+
+  cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
+
+  // check disabled next button
+  cy.clearAndType('[data-cy="email-input"]', "x@x");
+  cy.navNext(true);
+  cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
+
+  // check errors too
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get('[data-cy="error-txt-Email address is invalid"]').should("exist");
+  cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
+  cy.get(".nhsuk-error-summary").should("not.exist");
+
+  cy.get('[data-cy="BtnSaveDraft"]').should("not.be", "disabled");
+});
+
+Cypress.Commands.add("checkAndFillFormASection2", () => {
+  // Page 2
+  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"] > span').should(
+    "not.exist"
+  );
+
+  cy.get('[data-cy="progress-header"] > h3').should(
+    "have.text",
+    "Part 2 of 3 - Programme Declarations"
+  );
+
+  cy.get(
+    '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
+  ).should("exist");
+
+  cy.clickRadioCheck(
+    '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
+  );
+  cy.get('[data-cy="cctSpecialty1"]').should("be.visible");
+  cy.get('[data-cy="cctSpecialty2"]').should("be.visible");
+  cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
+  cy.get('[data-cy="cctSpecialty1"]').contains("ACCS - Anaesthetics");
+
+  // hide the cctSpecialty fields
+  cy.clickRadioCheck(
+    '[data-cy="declarationType-I will be seeking specialist registration by application for a CESR-input"]'
+  );
+  cy.get('[data-cy="cctSpecialty1]').should("not.exist");
+  cy.get('[data-cy="cctSpecialty2]').should("not.exist");
+  // unhide the cctSpecialty fields to see if the cct1 value is still there
+  cy.clickRadioCheck(
+    '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
+  );
+  cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
+  cy.get(
+    '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
+  ).contains("ACCS - Anaesthetics");
+
+  // hidden fields should not be validated
+  cy.clickRadioCheck(
+    '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
+  );
+  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("exist");
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.clickRadioCheck(
+    '[data-cy="declarationType-I will be seeking specialist registration by application for a CESR-input"]'
+  );
+  cy.get('[data-cy="cctSpecialty1]').should("not.exist");
+  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get(
+    '[data-cy="error-txt-Anticipated completion date - please choose a future date"]'
+  ).should("exist");
+  cy.get('[data-cy="completionDate-inline-error-msg"]').should("exist");
+  cy.clearAndType('[data-cy="completionDate-input"]', "2032-12-30");
+
+  const selector =
+    '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__indicators .react-select__clear-indicator';
+  cy.get("body").then($body => {
+    if ($body.find(selector).length > 0) {
+      cy.get(selector).click();
+    }
+  });
+  cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
+  cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
+  cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("not.exist");
+  cy.get('[data-cy="college-inline-error-msg"]').should("exist");
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.clickSelect('[data-cy="college"]', "dent", true);
+  cy.get(".nhsuk-error-summary").should("not.exist");
+});
+
+Cypress.Commands.add("checkAndFillFormASection3", () => {
+  // Page 3
+  cy.get('[data-cy="progress-header"] > h3').should(
+    "have.text",
+    "Part 3 of 3 - Programme Details"
+  );
+
+  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"] > span').should(
+    "not.exist"
+  );
+
+  // can navigate back to previous section without triggering validation
+  cy.get('[data-cy="navPrevious"]').click();
+  cy.get('[data-cy="progress-header"] > h3').should(
+    "have.text",
+    "Part 2 of 3 - Programme Declarations"
+  );
+
+  cy.navNext();
+  cy.get('[data-cy="progress-header"] > h3').should(
+    "have.text",
+    "Part 3 of 3 - Programme Details"
+  );
+  cy.navNext();
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get("b").contains(
+    "Before proceeding to the next section please address the following:"
+  );
+  cy.get(
+    '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+  ).should("exist");
+
+  // check wte field validation
+  cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "1.1");
+  cy.get(
+    '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
+  ).should("exist");
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "0.5");
+  cy.clickSelect('[data-cy="trainingGrade"]', null, true);
+  cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
+  cy.get(".nhsuk-error-summary").should("not.exist");
+  // wait to trigger autosave
+  cy.wait(2000);
 });
 
 // ### SECTION 1: CHECK AND FILL

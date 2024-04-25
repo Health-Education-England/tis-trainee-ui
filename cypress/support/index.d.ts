@@ -7,6 +7,9 @@ declare global {
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
        */
+      checkAndFillFormASection1(): Chainable<Element>;
+      checkAndFillFormASection2(): Chainable<Element>;
+      checkAndFillFormASection3(): Chainable<Element>;
       checkAndFillSection1(
         currRevalDate: string,
         prevRevalDate: string
@@ -23,7 +26,17 @@ declare global {
       checkForRecentForm(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
+      checkViewFields(fields: string[][]): Chainable<Element>;
+      clickSelect(
+        selectorBeginningSegment: string,
+        text: string | null,
+        useFirst: boolean
+      ): Chainable<Element>;
+      clearAndType(selector: string, text: string): Chainable<Element>;
+      clickRadioCheck(selector: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
+      navigateBackToConfirm(steps: number): Chainable<Element>;
+      navNext(forceClick?: boolean): Chainable<Element>;
       signIn(): Chainable<Element>;
       signInToTss(
         waitTimeMs?: number,

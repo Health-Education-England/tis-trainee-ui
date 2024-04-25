@@ -3,8 +3,8 @@
   "pages": [
     {
       "pageName": "Personal Details",
-      "importantTxtName": "FormAImportantNotice",
-      "msgLinkName": "DataSource",
+      "importantTxtName": "formAImportantNotice",
+      "expanderLinkName": "dataSource",
       "sections": [
         {
           "sectionHeader": "Personal Details",

@@ -10,13 +10,15 @@ type CheckboxesProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => void;
   fieldError: string;
   placeholder?: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
+  dtoName?: string;
 };
 
 export const Checkboxes: React.FC<CheckboxesProps> = ({
@@ -27,7 +29,8 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   placeholder,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  dtoName
 }: CheckboxesProps) => {
   return (
     <div className="nhsuk-checkboxes">
@@ -40,14 +43,15 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
           onKeyDown={handleKeyDown}
           type="checkbox"
           name={name}
-          value={value}
+          checked={Boolean(value)}
           onChange={event => {
             handleChange(
               event,
               undefined,
               event.currentTarget.checked,
               arrayIndex,
-              arrayName
+              arrayName,
+              dtoName
             );
           }}
           placeholder={placeholder}

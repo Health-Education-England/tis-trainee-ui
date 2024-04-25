@@ -15,12 +15,14 @@ type SelectorProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => void;
   fieldError: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
+  dtoName?: string;
 };
 
 export const Selector = ({
@@ -31,7 +33,8 @@ export const Selector = ({
   fieldError,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  dtoName
 }: SelectorProps) => {
   return (
     <div data-cy={name}>
@@ -52,7 +55,8 @@ export const Selector = ({
             selectedOption,
             undefined,
             arrayIndex,
-            arrayName
+            arrayName,
+            dtoName
           )
         }
         className="autocomplete-select"
