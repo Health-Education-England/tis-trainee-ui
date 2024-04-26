@@ -17,7 +17,10 @@ export class ProfileUtilities {
     progMems: ProgrammeMembership[] | null | undefined
   ): ProgrammeMembership | null {
     return progMems && progMems.length > 0
-      ? progMems.reduce((a, b) => (a.startDate > b.startDate ? a : b))
+      ? progMems.reduce(
+          (a, b) => (a.startDate > b.startDate ? a : b),
+          progMems[0]
+        )
       : null;
   }
 

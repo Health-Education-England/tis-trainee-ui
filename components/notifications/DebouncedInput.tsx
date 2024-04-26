@@ -22,7 +22,7 @@ export function DebouncedInput({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value, onChange, debounce]); // TODO check these dependencies
+  }, [value, onChange, debounce]);
 
   return (
     <input {...props} value={value} onChange={e => setValue(e.target.value)} />
