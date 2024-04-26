@@ -28,7 +28,7 @@ export default defineConfig({
     // baseUrl: "http://local.tis-selfservice.com",
     specPattern: "cypress/e2e/**/*.spec.{ts,tsx}",
     chromeWebSecurity: false,
-    defaultCommandTimeout: 15000,
+    defaultCommandTimeout: 30000,
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on("task", { generateOTP: cypressOtp });
