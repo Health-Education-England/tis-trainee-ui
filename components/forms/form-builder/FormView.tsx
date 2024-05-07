@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../../../../redux/hooks/hooks";
-import {
-  selectCanEditStatus,
-  selectSavedFormA
-} from "../../../../../redux/slices/formASlice";
+import React, { useEffect, useMemo, useState } from "react";
 import { Redirect } from "react-router-dom";
-import formAJson from "./formA.json";
-import FormViewBuilder from "../../FormViewBuilder";
-import ScrollTo from "../../../ScrollTo";
-import FormSavePDF from "../../../FormSavePDF";
+import FormViewBuilder from "./FormViewBuilder";
+import ScrollTo from "../ScrollTo";
+import FormSavePDF from "../FormSavePDF";
 import {
   Button,
   Col,
@@ -16,67 +10,76 @@ import {
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import { FormRUtilities } from "../../../../../utilities/FormRUtilities";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { useConfirm } from "material-ui-confirm";
-import { FormRPartA } from "../../../../../models/FormRPartA";
-import { dialogBoxWarnings } from "../../../../../utilities/Constants";
-import history from "../../../../navigation/history";
+import { dialogBoxWarnings } from "../../../utilities/Constants";
+import history from "../../navigation/history";
 import {
+  createErrorObject,
   saveDraftForm,
-  submitForm
-} from "../../../../../utilities/FormBuilderUtilities";
-import { StartOverButton } from "../../../StartOverButton";
-import { formAValidationSchemaView } from "./formAValidationSchema";
-import { ValidationError } from "yup";
-import { FormErrors } from "../../FormBuilder";
-import Declarations from "../../Declarations";
+  submitForm,
+  validateFields
+} from "../../../utilities/FormBuilderUtilities";
+import { StartOverButton } from "../StartOverButton";
+import { Form, FormData, FormErrors, FormName } from "./FormBuilder";
+import Declarations from "./Declarations";
 
-const FormAView = () => {
+type FormViewProps = {
+  formData: FormData;
+  canEditStatus: boolean;
+  formJson: Form;
+  redirectPath: string;
+  validationSchemaForView?: any;
+};
+
+export const FormView = ({
+  formData,
+  canEditStatus,
+  formJson,
+  validationSchemaForView,
+  redirectPath
+}: FormViewProps) => {
   const confirm = useConfirm();
-  const formName = formAJson.name;
-  const canEdit = useAppSelector(selectCanEditStatus);
-  const formAData = useAppSelector(selectSavedFormA);
+  const formName = formJson.name as FormName;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
 
+  const allPagesFields = useMemo(() => {
+    return formJson.pages.flatMap(page =>
+      page.sections.flatMap(section => section.fields)
+    );
+  }, [formJson.pages]);
+
   useEffect(() => {
-    if (canEdit) {
-      formAValidationSchemaView
-        .validate(formAData, { abortEarly: false })
+    if (canEditStatus) {
+      validateFields(allPagesFields, formData, validationSchemaForView)
         .then(() => {
           setErrors({});
         })
-        .catch(err => {
-          if (err) {
-            const errorMessages: { [key: string]: string } = {};
-            err.inner.forEach((error: ValidationError) => {
-              if (error.path) {
-                errorMessages[error.path] = error.message;
-              }
-            });
-            setErrors(errorMessages);
-          }
+        .catch((err: { inner: { path: string; message: string }[] }) => {
+          setErrors(() => {
+            const newErrors = createErrorObject(err);
+            return newErrors;
+          });
         });
     }
-  }, [canEdit, formAData]);
+  }, [canEditStatus, formData, validationSchemaForView, allPagesFields]);
 
-  const handleSubClick = (formData: FormRPartA) => {
+  const handleSubClick = (formData: FormData) => {
     setIsSubmitting(false);
     confirm({
       description: dialogBoxWarnings.formSubMsg
     })
-      .then(() => submitForm(formAJson, formData, history))
-      .catch(() => {
-        console.log("form a submit cancelled");
-      });
+      .then(() => submitForm(formJson, formData, history))
+      .catch(() => setIsSubmitting(false));
   };
 
-  return formAData.traineeTisId ? (
+  return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEdit && <FormSavePDF history={history} path={"/formr-a"} />}
-      {canEdit && (
+      {!canEditStatus && <FormSavePDF history={history} path={redirectPath} />}
+      {canEditStatus && (
         <WarningCallout data-cy="warningConfirmation">
           <WarningCallout.Label visuallyHiddenText={false}>
             Confirmation
@@ -88,15 +91,15 @@ const FormAView = () => {
           </p>
         </WarningCallout>
       )}
-      {!canEdit &&
+      {!canEditStatus &&
         FormRUtilities.displaySubmissionDate(
-          formAData.submissionDate,
+          formData.submissionDate,
           "submissionDateTop"
         )}
       <FormViewBuilder
-        jsonForm={formAJson}
-        formData={formAData}
-        canEdit={canEdit}
+        jsonForm={formJson}
+        formData={formData}
+        canEdit={canEditStatus}
         formErrors={errors}
       />
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
@@ -106,15 +109,15 @@ const FormAView = () => {
         <form onSubmit={() => setIsSubmitting(true)}>
           <Declarations
             setCanSubmit={setCanSubmit}
-            canEdit={canEdit}
-            formJson={formAJson}
+            canEdit={canEditStatus}
+            formJson={formJson}
           />
-          {canEdit && (
+          {canEditStatus && (
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
-                handleSubClick(formAData);
+                handleSubClick(formData);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
@@ -126,8 +129,7 @@ const FormAView = () => {
           )}
         </form>
       </WarningCallout>
-
-      {canEdit && (
+      {canEditStatus && (
         <Container>
           <Row>
             <Col width="one-quarter">
@@ -135,7 +137,7 @@ const FormAView = () => {
                 secondary
                 onClick={() => {
                   setIsSubmitting(true);
-                  saveDraftForm(formName, formAData, history);
+                  saveDraftForm(formName, formData, history);
                 }}
                 disabled={isSubmitting}
                 data-cy="BtnSaveDraft"
@@ -149,15 +151,13 @@ const FormAView = () => {
           </Row>
         </Container>
       )}
-      {!canEdit &&
+      {!canEditStatus &&
         FormRUtilities.displaySubmissionDate(
-          formAData.submissionDate,
+          formData.submissionDate,
           "submissionDate"
         )}
     </>
   ) : (
-    <Redirect to="/formr-a" />
+    <Redirect to={redirectPath} />
   );
 };
-
-export default FormAView;

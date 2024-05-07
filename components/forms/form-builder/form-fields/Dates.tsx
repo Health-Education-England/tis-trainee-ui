@@ -9,13 +9,15 @@ type DatesProps = {
     selectedOption?: any,
     checkedStatus?: boolean,
     arrayIndex?: number,
-    arrayName?: string
+    arrayName?: string,
+    dtoName?: string
   ) => void;
   fieldError: string;
   placeholder?: string;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
+  dtoName?: string;
 };
 
 export const Dates = ({
@@ -26,7 +28,8 @@ export const Dates = ({
   placeholder,
   value,
   arrayIndex,
-  arrayName
+  arrayName,
+  dtoName
 }: DatesProps) => {
   return (
     <div data-cy={name}>
@@ -40,7 +43,14 @@ export const Dates = ({
         name={name}
         value={value}
         onChange={event => {
-          handleChange(event, undefined, undefined, arrayIndex, arrayName);
+          handleChange(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          );
         }}
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""

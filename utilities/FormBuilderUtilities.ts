@@ -113,13 +113,13 @@ const formActionsAndTypes: FormActionsAndTypes<FormRPartA | FormRPartB> = {
   formA: {
     update: updateFormA,
     save: saveFormA,
-    state: () => store.getState().formA?.formAData?.id,
+    state: () => store.getState().formA?.formData?.id,
     type: {} as FormRPartA
   },
   formB: {
     update: updateFormB,
     save: saveFormB,
-    state: () => store.getState().formB?.formBData?.id,
+    state: () => store.getState().formB?.formData?.id,
     type: {} as FormRPartB
   }
 };
@@ -182,7 +182,7 @@ export async function tempSubFormB(
   formData: FormData,
   history: any
 ) {
-  const lastSavedFormData = store.getState().formB?.formBData;
+  const lastSavedFormData = store.getState().formB?.formData;
   const updatedFormData = {
     ...formData,
     submissionDate: new Date(),
@@ -199,7 +199,7 @@ export async function tempSubFormB(
     : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
   resetForm(formName, history);
 }
-// ----------------------------------------------------------
+// ---------------------------------------------------------
 
 export async function saveDraftForm(
   formName: string,
@@ -209,8 +209,8 @@ export async function saveDraftForm(
   const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
   const lastSavedFormData =
     formName === "formA"
-      ? store.getState().formA?.formAData
-      : store.getState().formB?.formBData;
+      ? store.getState().formA?.formData
+      : store.getState().formB?.formData;
   let updatedFormData: FormData;
   if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
     updatedFormData = {
@@ -385,10 +385,11 @@ export function handleNumberInput(
   }
 }
 
-export function sumFieldValues(formData: FormData, fieldNames: string[]) {
-  return fieldNames
-    .reduce((sum, fieldName) => sum + Number(formData[fieldName] || 0), 0)
-    .toString();
+export function sumFieldValues(formData: FormData, fields: Field[]) {
+  return fields.reduce(
+    (sum, field) => sum + Number(formData[field.name] || 0),
+    0
+  );
 }
 
 export interface DraftFormProps {
@@ -466,8 +467,8 @@ export async function autosaveFormR(
 ) {
   const lastSavedFormData =
     formName === "formA"
-      ? store.getState().formA?.formAData
-      : store.getState().formB?.formBData;
+      ? store.getState().formA?.formData
+      : store.getState().formB?.formData;
 
   // update form data for submission
   const preppedFormData = prepFormData(formData);
@@ -518,22 +519,42 @@ export function validateFields(
   let finalValidationSchema = Yup.object().shape({});
   finalValidationSchema = fields.reduce((schema, field) => {
     const fieldSchema = validationSchema.fields[field.name];
-    if (field.type === "array") {
-      const nestedFields = Object.keys(values[field.name][0]).reduce(
-        (nestedSchema: { [key: string]: any }, nestedField: string) => {
-          nestedSchema[nestedField] = fieldSchema.innerType.fields[nestedField];
-          return nestedSchema;
-        },
-        {}
-      );
-      const nestedSchema = Yup.object().shape(nestedFields);
-      schema = schema.shape({
-        [field.name]: Yup.array().of(nestedSchema)
-      });
-    } else {
-      schema = schema.shape({
-        [field.name]: fieldSchema
-      });
+    const isVisible = showFormField(field, values);
+    if (isVisible) {
+      if (field.type === "array" && values[field.name].length > 0) {
+        const nestedFields = Object.keys(values[field.name][0]).reduce(
+          (nestedSchema: { [key: string]: any }, nestedField: string) => {
+            nestedSchema[nestedField] =
+              fieldSchema.innerType.fields[nestedField];
+            return nestedSchema;
+          },
+          {}
+        );
+        const nestedSchema = Yup.object().shape(nestedFields);
+        schema = schema.shape({
+          [field.name]: Yup.array().of(nestedSchema)
+        });
+      } else if (field.type === "dto") {
+        const dtoFields = field.objectFields ?? [];
+        const visibleDtoFields = dtoFields.filter(
+          dtoField =>
+            dtoField.visible ||
+            dtoField.visibleIf?.includes(values[field.name][dtoField.parent!!])
+        );
+        const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
+          const dtoFieldSchema = fieldSchema.fields[dtoField.name];
+          return dtoSchema.shape({
+            [dtoField.name]: dtoFieldSchema
+          });
+        }, Yup.object().shape({}));
+        schema = schema.shape({
+          [field.name]: dtoSchema
+        });
+      } else {
+        schema = schema.shape({
+          [field.name]: fieldSchema
+        });
+      }
     }
     return schema;
   }, finalValidationSchema);
@@ -544,6 +565,30 @@ export function filteredOptions(optionsKey: string | undefined, options: any) {
   return optionsKey && options?.[optionsKey]?.length > 0
     ? options[optionsKey]
     : [];
+}
+
+export function formatFieldName(fieldName: string) {
+  let words = fieldName.split(/(?=[A-Z])/);
+  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return words.join(" ");
+}
+
+export function showFormField(field: Field, formData: FormData) {
+  return field.visible || field.visibleIf?.includes(formData[field.parent!!]);
+}
+
+// Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.
+export function isValidOption(
+  key: "curriculum" | "localOffice" | "gender",
+  option: string | null | undefined,
+  refData?: any,
+  filteredCurriculumData?: any
+): string {
+  const searchedArray = refData ? refData[key] : filteredCurriculumData;
+  const result = searchedArray?.some(
+    (item: { label: string | null | undefined }) => item.label === option
+  );
+  return result ? option!! : "";
 }
 
 // react-select styles
