@@ -179,7 +179,7 @@ export const mockedCombinedReference: CombinedReferenceData = {
     {
       id: "5e9724c1dd7b3ba860ba6533",
       tisId: "33",
-      label: "ACCS - Anaesthetics",
+      label: "ACCS Anaesthetics",
       curriculumSubType: null,
       status: null
     },
