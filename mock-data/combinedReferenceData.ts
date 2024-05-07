@@ -245,8 +245,8 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
   ],
   curriculum: [
     {
-      label: "ACCS - Anaesthetics",
-      value: "ACCS - Anaesthetics"
+      label: "ACCS Anaesthetics",
+      value: "ACCS Anaesthetics"
     },
     {
       label: "GP Returner",
