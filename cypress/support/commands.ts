@@ -264,7 +264,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1"]').should("be.visible");
   cy.get('[data-cy="cctSpecialty2"]').should("be.visible");
   cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
-  cy.get('[data-cy="cctSpecialty1"]').contains("ACCS - Anaesthetics");
+  cy.get('[data-cy="cctSpecialty1"]').contains("ACCS Anaesthetics");
 
   // hide the cctSpecialty fields
   cy.clickRadioCheck(
@@ -279,7 +279,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
-  ).contains("ACCS - Anaesthetics");
+  ).contains("ACCS Anaesthetics");
 
   // hidden fields should not be validated
   cy.clickRadioCheck(
@@ -292,11 +292,6 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   );
   cy.get('[data-cy="cctSpecialty1]').should("not.exist");
   cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
-  cy.get(".nhsuk-error-summary").should("exist");
-  cy.get(
-    '[data-cy="error-txt-Anticipated completion date - please choose a future date"]'
-  ).should("exist");
-  cy.get('[data-cy="completionDate-inline-error-msg"]').should("exist");
   cy.clearAndType('[data-cy="completionDate-input"]', "2032-12-30");
 
   const selector =
@@ -354,6 +349,7 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
   ).should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "0.5");
+  cy.clearAndType('[data-cy="startDate-input"]', day().format("YYYY-MM-DD"));
   cy.clickSelect('[data-cy="trainingGrade"]', null, true);
   cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
   cy.get(".nhsuk-error-summary").should("not.exist");

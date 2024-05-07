@@ -101,8 +101,11 @@ export const formAValidationSchema = yup.object(formAValidationSchemaDefault);
 
 export const formAValidationSchemaView = yup.object({
   ...formAValidationSchemaDefault,
-  cctSpecialty1: yup.string().when("declarationType", {
-    is: "I have been appointed to a programme leading to award of CCT",
-    then: yup.string().required("Specialty 1 for Award of CCT is required")
-  })
+  cctSpecialty1: yup
+    .string()
+    .nullable()
+    .when("declarationType", {
+      is: "I have been appointed to a programme leading to award of CCT",
+      then: yup.string().required("Specialty 1 for Award of CCT is required")
+    })
 });
