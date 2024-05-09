@@ -3,6 +3,7 @@ import { FormRPartB, Work } from "./FormRPartB";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
+import { isValidOption } from "../utilities/FormBuilderUtilities";
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile
@@ -38,7 +39,7 @@ export function ProfileToFormRPartBInitialValues(
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
     prevRevalDate: pd?.prevRevalDate,
-    programmeSpecialty: curriculum?.curriculumName || null,
+    programmeSpecialty: isValidOption("curriculum", curriculum?.curriculumName),
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
     work: workFilteredSorted,

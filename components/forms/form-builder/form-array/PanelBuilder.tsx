@@ -100,6 +100,7 @@ export default function PanelBuilder({
                   e.preventDefault();
                   removePanel(index);
                 }}
+                data-cy={`remove-${formattedFieldName}-${index + 1}-button`}
               >
                 {`Remove ${formattedFieldName} ${index + 1}`}
               </Button>
@@ -112,6 +113,7 @@ export default function PanelBuilder({
           e.preventDefault();
           addPanel();
         }}
+        data-cy={`add-${formattedFieldName}-button`}
       >
         {`Add a ${formattedFieldName} panel`}
       </Button>

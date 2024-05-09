@@ -4,6 +4,21 @@ import day from "dayjs";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { BooleanUtilities } from "../../utilities/BooleanUtilities";
 
+Cypress.Commands.add(
+  "checkElement",
+  (
+    selector: string,
+    message: string | number | null = null,
+    shouldExist: boolean = true
+  ) => {
+    const operation = shouldExist ? "exist" : "not.exist";
+    cy.get(`[data-cy="${selector}"]`).should(operation);
+    if (shouldExist && message) {
+      cy.get(`[data-cy="${selector}"]`).contains(message);
+    }
+  }
+);
+
 Cypress.Commands.add("checkForRecentForm", () => {
   cy.get("body").then($body => {
     if ($body.find(".MuiDialog-container").length) {
@@ -64,7 +79,7 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   "clickSelect",
-  (selectorBeginningSegment, text, useFirst) => {
+  (selectorBeginningSegment, text = null, useFirst = true) => {
     const selector = `${selectorBeginningSegment} > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container`;
     if (text) {
       cy.get(selector).type(text);

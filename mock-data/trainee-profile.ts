@@ -21,10 +21,10 @@ export const mockPersonalDetails: PersonalDetails = {
   maidenName: "N/A",
   title: "Mr",
   personOwner: "Health Education England Thames Valley",
-  dateOfBirth: new Date("1911-11-30"),
+  dateOfBirth: "1911-11-30",
   gender: "Male",
   qualification: "AKC - Association of King's College",
-  dateAttained: new Date("2018-05-30"),
+  dateAttained: "2018-05-30",
   medicalSchool: "University of Science and Technology",
   telephoneNumber: "01632960363",
   mobileNumber: "07465879348",
@@ -46,8 +46,8 @@ export const mockPersonalDetails: PersonalDetails = {
   detailsNumber: "",
   prevRevalBody: "",
   prevRevalBodyOther: "",
-  prevRevalDate: new Date("2021-12-31"),
-  currRevalDate: new Date("2021-12-31"),
+  prevRevalDate: "2021-12-31",
+  currRevalDate: "2021-12-31",
   signature: {
     signedAt: new Date(-8640000000000000),
     validUntil: new Date(8640000000000000),
@@ -656,3 +656,24 @@ export const mockOutstandingActions: TraineeAction[] = [
     dueBy: new Date(yesterday)
   }
 ];
+
+export const mockTraineeProfileCovid: TraineeProfile = {
+  traineeTisId: "321",
+  personalDetails: {
+    ...mockPersonalDetails,
+    dateOfBirth: "2020-01-01",
+    currRevalDate: "2028-01-01"
+  },
+  programmeMemberships: mockProgrammeMemberships,
+  placements: mockPlacements
+};
+
+export const mockTraineeProfileFormB: TraineeProfile = {
+  ...mockTraineeProfile,
+  placements: mockPlacementsForGrouping
+};
+
+export const mockTraineeProfileFormBCovid: TraineeProfile = {
+  ...mockTraineeProfileCovid,
+  placements: mockPlacementsForGrouping
+};

@@ -23,14 +23,19 @@ declare global {
       checkAndFillSection5(pastDate: string): Chainable<Element>;
       checkAndFillSection6(compliments: string): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
+      checkElement(
+        selector: string,
+        text: string | number | null = null,
+        shouldExist: boolean = true
+      ): Chainable<Element>;
       checkForRecentForm(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       checkViewFields(fields: string[][]): Chainable<Element>;
       clickSelect(
         selectorBeginningSegment: string,
-        text: string | null,
-        useFirst: boolean
+        text: string | null = null,
+        useFirst: boolean = true
       ): Chainable<Element>;
       clearAndType(selector: string, text: string): Chainable<Element>;
       clickRadioCheck(selector: string): Chainable<Element>;
