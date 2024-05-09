@@ -5,7 +5,7 @@ import {
   Label,
   SummaryList
 } from "nhsuk-react-components";
-import { placementPanelTemplate } from "../../models/Placement";
+import { placementPanelTemplate, SpecialtyType } from "../../models/Placement";
 import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import store from "../../redux/store/store";
@@ -214,6 +214,16 @@ function displayTheCorrectListItem(
           index={index}
         />
       );
+    case "otherSpecialties":
+      return panel[panelProp]?.length > 0
+        ? panel[panelProp].map(
+            ({ specialtyId, name }: SpecialtyType): JSX.Element => (
+              <div key={specialtyId}>
+                <div data-cy={`otherSpecialty${specialtyId}Val`}>{name}</div>
+              </div>
+            )
+          )
+        : "None provided";
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
