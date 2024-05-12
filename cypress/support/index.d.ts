@@ -10,18 +10,16 @@ declare global {
       checkAndFillFormASection1(): Chainable<Element>;
       checkAndFillFormASection2(): Chainable<Element>;
       checkAndFillFormASection3(): Chainable<Element>;
-      checkAndFillSection1(
-        currRevalDate: string,
-        prevRevalDate: string
-      ): Chainable<Element>;
-      checkAndFillSection2(
-        workStartDate: string,
-        endDate: string
-      ): Chainable<Element>;
+      checkAndFillSection1(): Chainable<Element>;
+      checkAndFillSection2(): Chainable<Element>;
       checkAndFillSection3(): Chainable<Element>;
-      checkAndFillSection4(pastDate: string): Chainable<Element>;
-      checkAndFillSection5(pastDate: string): Chainable<Element>;
-      checkAndFillSection6(compliments: string): Chainable<Element>;
+      checkAndFillSection4(): Chainable<Element>;
+      checkAndFillSection5(): Chainable<Element>;
+      checkAndFillSection6(): Chainable<Element>;
+      checkAndFillSection7(): Chainable<Element>;
+      checkAndFillSection8(): Chainable<Element>;
+      checkAndFillSection9(): Chainable<Element>;
+      checkAndFillSection10(): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
       checkElement(
         selector: string,
@@ -38,8 +36,10 @@ declare global {
         useFirst: boolean = true
       ): Chainable<Element>;
       clearAndType(selector: string, text: string): Chainable<Element>;
+      clickAllRemoveWorkButtons(): Chainable<Element>;
       clickRadioCheck(selector: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
+      deleteDraftForm(): Chainable<Element>;
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
       signIn(): Chainable<Element>;

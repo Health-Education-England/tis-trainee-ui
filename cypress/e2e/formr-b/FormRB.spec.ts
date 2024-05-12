@@ -2,236 +2,155 @@
 /// <reference path="../../support/index.d.ts" />
 
 import dayjs from "dayjs";
+const today = dayjs();
 
-let isCovid = false;
-const currentDate = dayjs().format("YYYY-MM-DD");
-const futureDate = dayjs().add(6, "month").format("YYYY-MM-DD");
-const pastDate = dayjs().subtract(6, "month").format("YYYY-MM-DD");
-const outOfRangeFutureDate = dayjs(futureDate)
-  .add(20, "year")
-  .format("YYYY-MM-DD");
-const farFutureDate = dayjs().add(5, "year").format("YYYY-MM-DD");
-const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
-const prevRevalDate = dayjs().subtract(5, "year").format("YYYY-MM-DD");
+// Things that can be tested here and not in the component tests are:
+// - autosave
+// - start over/ delete draft form
+// - form editing and navigation
+// - form submission
+// - checking submitted form
+// - shortcut btn
+// But Note: currently only the unit and component tests are included in the in the code coverage report
 
-// NOTE: This is a temp test file - to be refactored once form is built via FormBuilder
-
-describe("Form R (Part B) - mobile", () => {
-  before(() => {
-    cy.signInToTss(30000, undefined, "iphone-6");
-  });
-  it("Should successfully delete a draft form via 'start over' button on forms list page and then display the 'submit new form' button.", () => {
-    isCovid = false;
-    cy.get('[data-cy="menuToggleBtn"]').should("exist").click({ force: true });
-    cy.get('[data-cy="Form R (B)"]').should("exist").click({ force: true });
-    cy.get("#btnOpenForm")
-      .should("exist")
-      .focus()
-      .then((loadFormBButton: JQuery) => {
-        // ---------- if New form btn ------------------------------------------------------------------
-        if (loadFormBButton.attr("data-cy") === "Submit new form") {
-          cy.get('[data-cy="Submit new form"]').click({ force: true });
-          cy.checkForRecentForm();
-        } else {
-          cy.get("#btnOpenForm").click({ force: true });
-        }
-        cy.get(".nhsuk-warning-callout > p").should("exist");
-        cy.get("#gmcNumber").type("55555555");
-        cy.get("[data-cy=BtnSaveDraft]").click();
-        cy.wait(5000);
-        cy.startOver();
-        cy.get('[data-cy="Submit new form"]').should("exist");
-      });
-  });
-});
-
-describe("Form R (Part B) - desktop", () => {
-  beforeEach(() => {
-    cy.signInToTss(30000, "/formr-b", "macbook-15");
-    cy.get('[data-cy="Submit new form"]').click();
+describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
+  it("Should save a new draft form then delete it", () => {
+    cy.signInToTss(30000, "/formr-b", "iphone-6");
+    cy.deleteDraftForm();
+    cy.checkElement("Submit new form").click();
     cy.checkForRecentForm();
-  });
-  it("Should not autosave if no changes made", () => {
-    cy.get(".nhsuk-warning-callout > p").should("exist");
-    cy.get('[data-cy="homeLink"]').should("exist").click();
-    cy.get('[data-cy="Form R (B)"]').should("exist").click();
-    cy.get('[data-cy="Submit new form"]').should("exist");
-  });
 
-  it("should autosave if navigate away after editing", () => {
+    cy.log("No autosave if no changes made");
+    cy.get('[data-cy="homeLink"]').should("exist").click();
+    cy.get('[data-cy="menuToggleBtn"]').click();
+    cy.get('[data-cy="Form R (B)"]').click();
+    cy.get('[data-cy="Submit new form"]').scrollIntoView().click();
+    cy.checkForRecentForm();
+
+    cy.log("Autosave if navigate away after editing");
     cy.get('[data-cy="autosaveNote"]').should("exist");
     cy.get('[data-cy="autosaveStatusMsg"]')
       .should("exist")
       .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
-    cy.get("#email").type("test.reset@hee.nhs.uk");
+    cy.get('[data-cy="forename-input"]').clear();
+    cy.checkElement("forename-inline-error-msg");
+    cy.clearAndType('[data-cy="email-input"]', "test.reset@hee.nhs.uk");
+    cy.log("save still works with errors");
     cy.get('[data-cy="autosaveStatusMsg"]').should(
       "include.text",
       "Autosave status: Success"
     );
-    cy.get('[data-cy="topNavSupport"]').should("exist").click();
+    cy.get('[data-cy="Support"]').scrollIntoView().click();
+    cy.get(".nhsuk-header__navigation-close > .nhsuk-icon").click();
+    cy.get(".nhsuk-fieldset__heading").contains("Support");
+    cy.get('[data-cy="menuToggleBtn"]').click();
     cy.get('[data-cy="Form R (B)"]').should("exist").click();
-    cy.get('[data-cy="btn-Edit saved draft form"]').should("exist");
+    cy.checkElement("btn-Edit saved draft form").click();
+    cy.log(
+      "No error message should be displayed until new changes or navigation"
+    );
+    cy.checkElement("forename-inline-error-msg", null, false);
+    cy.get('[data-cy="email-input"]').should(
+      "have.value",
+      "test.reset@hee.nhs.uk"
+    );
+    cy.navNext();
+    cy.checkElement("forename-inline-error-msg");
+    cy.checkElement("error-txt-Forename is required");
+
+    cy.log("Delete draft form");
     cy.startOver();
-    cy.get('[data-cy="Submit new form"]').should("exist");
+    cy.checkElement("Submit new form");
+  });
+});
+
+describe("Form R (Part B) - Submit a new form", () => {
+  it("complete part of a new Form R Part B.", () => {
+    cy.signInToTss(30000, "/formr-b");
+    cy.checkElement("Submit new form").click();
+    cy.checkForRecentForm();
+    cy.checkElement("homeLink");
+    cy.navNext();
+    cy.checkElement("progress-header", "Part 1 of 10 - Personal Details");
+    cy.checkAndFillSection1();
+    cy.checkElement("startOverButton", "Start over");
+    cy.navNext();
+    cy.checkAndFillSection2();
+    cy.navNext();
+    cy.checkAndFillSection3();
+    cy.navNext();
+    cy.checkAndFillSection4();
+    cy.navNext();
+    cy.checkAndFillSection5();
+    cy.checkElement("BtnSaveDraft").click();
+    cy.checkElement("btn-Edit saved draft form");
   });
 
-  it("should complete a new form", () => {
-    isCovid = false;
-
-    // -------- Section 1 - Doctor's details -----------
-    cy.get(".progress-step")
-      .first()
-      .should("have.class", "progress-step-active");
-
-    cy.checkAndFillSection1(currRevalDate, prevRevalDate);
-
-    cy.get("#gmcNumber").focus().clear();
-    cy.get("#email").focus().clear();
-
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page")
-      .should("exist")
-      .click();
-
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get("#gmcNumber").type("11111111");
-    cy.get("#email").type("traineeui.tester@hee.nhs.uk");
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- Section 2 Whole Scope Types of Work -----------
-    cy.get(".progress-step").eq(1).should("have.class", "progress-step-active");
-    cy.checkAndFillSection2(pastDate, currentDate);
-
-    cy.get('[data-cy="work[0].startDate"]')
-      .should("exist")
-      .clear()
-      .type(outOfRangeFutureDate);
-
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page")
-      .should("exist")
-      .click();
-    cy.get(".nhsuk-error-summary").should("exist");
-
-    cy.get('[data-cy="work[0].startDate"]').clear().type(pastDate);
-    cy.get(".nhsuk-error-summary").should("not.exist");
-
-    cy.addWorkPanel(farFutureDate, farFutureDate);
-
-    // Navigate back to section 1
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get("[data-cy=mainWarning1]").should("exist");
-
-    // Return to section 2
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get('[data-cy="work[0].endDate"]').should("have.value", farFutureDate);
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- Section 3 Declarations relating to Good Medical Practice -----------
-    cy.get(".progress-step").eq(2).should("have.class", "progress-step-active");
-    cy.checkAndFillSection3();
-
-    // Navigate back to section 2
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=mainWarning2]").should("exist");
-    cy.get("#totalLeave").should("exist").should("contain.value", "21");
-
-    // Return to section 3
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- Section 4: Update to your previous Form R Part B -----------
-    cy.get(".progress-step").eq(3).should("have.class", "progress-step-active");
-    cy.checkAndFillSection4(pastDate);
-
-    // Navigate back to section 3
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=mainWarning3]").should("exist");
-    cy.get(".nhsuk-form-group > [data-cy=healthStatement]")
-      .should("exist")
-      .type("I'm in astonishingly excellent health.");
-
-    // Return to section 4
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- Section 5: Update to your previous Form R Part B -----------
-    cy.get(".progress-step").eq(4).should("have.class", "progress-step-active");
-    cy.checkAndFillSection5(pastDate);
-
-    // Navigate back to section 4
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=mainWarning4]").should("exist");
-
-    // Return to section 5
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- Section 6: Compliments --------------------------------------
-    cy.get(".progress-step").eq(5).should("have.class", "progress-step-active");
-    cy.checkAndFillSection6("This is the compliment text.");
-
-    // Navigate back to section 5
-    cy.get("[data-cy=LinkToPreviousSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=mainWarning5]").should("exist");
-
-    // Return to section 6
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-    cy.get("[data-cy=compliments]")
-      .should("exist")
-      .should("contain.value", "This is the compliment text.");
-
-    cy.get(".nhsuk-error-summary").should("not.exist");
-    cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-
-    // -------- COVID Section ------------------------------------------------
-    if (isCovid) {
-      cy.log("### COVID SECTION CHECK ###");
-      cy.get(".progress-step")
-        .eq(6)
-        .should("have.class", "progress-step-active");
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
-      cy.get("#haveCovidDeclarations--error-message").should("exist");
-      cy.get(".progress-step")
-        .eq(6)
-        .should("have.class", "progress-step-active");
-      cy.checkAndFillCovidSection();
-      cy.get("[data-cy=LinkToNextSection] > .nhsuk-pagination__page").click();
+  it("complete the rest of the Form R Part B.", () => {
+    cy.signInToTss(0, "/formr-b");
+    cy.checkElement("btn-Edit saved draft form").click();
+    cy.checkElement("BtnShortcutToConfirm", null, false);
+    for (let i = 0; i < 5; i++) {
+      cy.navNext();
     }
+    cy.checkAndFillSection6();
+    cy.navNext();
+    cy.checkAndFillSection7();
+    cy.navNext();
+    cy.checkAndFillSection8();
+    cy.navNext();
+    cy.checkAndFillSection9();
+    cy.navNext();
+    cy.checkAndFillSection10();
+    cy.navNext();
 
-    // -------- Confirm / Review Section --------------------------------------
-    cy.get(".nhsuk-warning-callout__label")
-      .should("exist")
-      .should("include.text", "Confirmation");
-    cy.get("[data-cy=endDate1]").should(
-      "contain.text",
-      dayjs(farFutureDate).format("DD/MM/YYYY")
+    cy.log(
+      "################ check Confirm page, edit, and submit ###################"
     );
-    // Attempt to submit without checking boxes should fail
-    cy.get("[data-cy=BtnSubmitForm]").click();
-    cy.get("#isDeclarationAccepted--error-message").should("exist");
-    cy.get("#isConsentAccepted--error-message").should("exist");
+    cy.checkElement(
+      "formrbLabel",
+      "Trainee registration for Postgraduate Speciality Training"
+    );
+    cy.checkElement("warningConfirmation");
+    cy.checkElement("forename-value", `Bob-${today.format("YYYY-MM-DD")}`);
+    cy.checkElement("edit-Personal Details").click();
+    cy.get('[data-cy="progress-header"] > h3').should(
+      "include.text",
+      "Personal Details"
+    );
+    cy.clearAndType('[data-cy="forename-input"]', "Bob-edited");
+    cy.checkElement("BtnShortcutToConfirm").click();
+    cy.checkElement("warningConfirmation");
+    cy.checkElement("forename-value", "Bob-edited");
+    cy.checkElement("prevRevalBodyOther-value", "Not provided");
 
-    // check declarations before editing a section
-    cy.get("[data-cy=isDeclarationAccepted0]").click().should("be.checked");
-    cy.get("[data-cy=isConsentAccepted0]").click().should("be.checked");
-
-    // submit form
-    cy.get("[data-cy=BtnSubmitForm]").click();
+    cy.get('[data-cy="isDeclarationAccepted"]').click();
+    cy.get('[data-cy="isConsentAccepted"]').click();
+    cy.checkElement("BtnSubmit", "Submit Form").click();
     cy.get(".MuiDialog-container")
       .should("exist")
       .should("include.text", "Please think carefully before submitting");
     cy.get(".MuiDialogActions-root > :nth-child(2)").click();
-    cy.get('[data-cy="Submit new form"]').should("exist");
+    cy.checkElement("Submit new form");
+  });
+
+  it("Should show the submitted form in the list", () => {
+    cy.signInToTss(0, "/formr-b");
+    cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
     cy.contains("Submitted forms").should("exist");
-    cy.get("[data-cy=formsTrueHint]").should("exist");
-    cy.log(
-      "################ check submitted form is in forms list ###################"
+    cy.checkElement("submittedForm").first().click();
+    cy.get('[data-cy="submissionDateTop"]').should(
+      "include.text",
+      `Form submitted on: ${today.format("DD/MM/YYYY")}`
     );
+    cy.checkElement("savePdfBtn");
+    cy.get(".nhsuk-action-link__text").click();
+    cy.checkElement("forename-value", "Bob-edited");
+    cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
+    cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
+    cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
+    cy.get('[data-cy="backLink"]').click();
+    cy.contains("Submitted forms").should("exist");
   });
 });
