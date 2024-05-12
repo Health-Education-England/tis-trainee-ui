@@ -21,7 +21,7 @@ import {
   validateFields
 } from "../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../StartOverButton";
-import { Form, FormData, FormErrors, FormName } from "./FormBuilder";
+import { Form, FormData, FormErrors } from "./FormBuilder";
 import Declarations from "./Declarations";
 
 type FormViewProps = {
@@ -40,7 +40,7 @@ export const FormView = ({
   redirectPath
 }: FormViewProps) => {
   const confirm = useConfirm();
-  const formName = formJson.name as FormName;
+  const formName = formJson.name;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
