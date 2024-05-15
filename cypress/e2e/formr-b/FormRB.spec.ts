@@ -88,7 +88,7 @@ describe("Form R (Part B) - Submit a new form", () => {
   });
 
   it("complete the rest of the Form R Part B.", () => {
-    cy.signInToTss(0, "/formr-b");
+    cy.signInToTss(10000, "/formr-b");
     cy.checkElement("btn-Edit saved draft form").click();
     cy.checkElement("BtnShortcutToConfirm", null, false);
     for (let i = 0; i < 5; i++) {
@@ -136,7 +136,7 @@ describe("Form R (Part B) - Submit a new form", () => {
   });
 
   it("Should show the submitted form in the list", () => {
-    cy.signInToTss(0, "/formr-b");
+    cy.signInToTss(20000, "/formr-b");
     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
     cy.contains("Submitted forms").should("exist");
     cy.checkElement("submittedForm").first().click();
