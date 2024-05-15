@@ -1,5 +1,7 @@
 export const YES_TO_PRIVACY =
   "To use TIS Self-Service you agree to the Privacy & Cookies Policy. We use necessary cookies to make our site work and analytics cookies to help us improve it. (Click on the 'Privacy & Cookies' policy link below for more details.)";
+export const YES_TO_PILOT =
+  "To use TIS Self-Service you need to have received a Welcome email inviting you to create an account.";
 export const FORM_FIELD_VALUES = {
   // log in screen:
   "Create Account": "Create an account (first time only)", //create account tab header
