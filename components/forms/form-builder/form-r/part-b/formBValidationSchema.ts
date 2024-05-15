@@ -94,7 +94,7 @@ const covid19ValidationSchema = yup.object().shape({
   selfRateForCovid: yup
     .string()
     .nullable()
-    .required("Self-rating your own preformance is required"),
+    .required("Self-rating your own performance is required"),
   reasonOfSelfRate: yup
     .string()
     .nullable()

@@ -71,7 +71,7 @@ export const loadSavedFormB = createAsyncThunk(
   "formB/fetchFormB",
   async (formId: string) => {
     const state = store.getState();
-    // Grab the Covid flag status from the feature flags slice to use to deterimine if the Covid section should be displayed and if a default Covid object should be added to the form data
+    // Grab the Covid flag status from the feature flags slice to use to determine if the Covid section should be displayed and if a default Covid object should be added to the form data
     const covidFlagStatus =
       state.featureFlags.featureFlags.formRPartB.covidDeclaration;
     const formsService = new FormsService();

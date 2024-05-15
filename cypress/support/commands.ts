@@ -970,7 +970,7 @@ Cypress.Commands.add("checkAndFillCovidSection", () => {
   cy.get(".nhsuk-error-summary").should("exist");
 
   const selectors = [
-    "error-txt-Self-rating your own preformance is required",
+    "error-txt-Self-rating your own performance is required",
     "selfRateForCovid-inline-error-msg",
     "error-txt-Please select yes or no to discuss with supervisor",
     "discussWithSupervisorChecked-inline-error-msg",
