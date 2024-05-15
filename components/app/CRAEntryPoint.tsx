@@ -16,6 +16,7 @@ import {
   SIGN_IN_FOOTER_BTN_LINK_TEXT,
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY,
+  YES_TO_PILOT,
   FORM_FIELD_VALUES
 } from "../authentication/signup/constants/AuthConstants";
 import style from "../authentication/Auth.module.scss";
@@ -78,6 +79,10 @@ const services = {
     if (!formData.yesToPrivacy) {
       validationMessage.yesToPrivacy = YES_TO_PRIVACY;
     }
+    if (!formData.yesToPilot) {
+      validationMessage.yesToPilot = YES_TO_PILOT;
+    }
+
     return validationMessage;
   }
 };
