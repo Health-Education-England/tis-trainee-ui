@@ -14,14 +14,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.signInToTss(30000, "/formr-a");
   });
   it("Should delete any existing draft forms if they exist", () => {
-    cy.get("#btnOpenForm")
-      .should("exist")
-      .focus()
-      .then((loadFormAButton: JQuery) => {
-        if (loadFormAButton.attr("data-cy") !== "Submit new form") {
-          cy.startOver();
-        }
-      });
+    cy.deleteDraftForm();
   });
 
   it("Should complete a new Form R Part A.", () => {

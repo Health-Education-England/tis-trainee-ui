@@ -30,7 +30,7 @@ function VisibleField({
 }: Readonly<VisibleFieldProps>) {
   const isVisible =
     field.visible ||
-    (field.visibleIf && field.visibleIf.includes(formData[field.parent!!]));
+    field?.visibleIf?.includes(formData[field.parent as string]);
 
   if (isVisible) {
     if (field.type === "dto") {

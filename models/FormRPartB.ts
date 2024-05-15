@@ -26,7 +26,7 @@ export interface FormRPartB extends IFormR {
   isHonest: boolean | string;
   isHealthy: boolean | string;
   isWarned: boolean | string;
-  isComplying: boolean | string;
+  isComplying: boolean | string | null;
   healthStatement: string;
   havePreviousDeclarations: boolean | string;
   previousDeclarations: Declaration[];
@@ -64,9 +64,9 @@ export interface CovidDeclaration {
   selfRateForCovid: string;
   reasonOfSelfRate: string;
   otherInformationForPanel: string;
-  discussWithSupervisorChecked: boolean | string;
-  discussWithSomeoneChecked: boolean | string;
-  haveChangesToPlacement: boolean | string;
+  discussWithSupervisorChecked: boolean | null;
+  discussWithSomeoneChecked: boolean | null;
+  haveChangesToPlacement: boolean | null;
   changeCircumstances: string;
   changeCircumstanceOther: string;
   howPlacementAdjusted: string;

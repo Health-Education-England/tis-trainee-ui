@@ -10,12 +10,16 @@ import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
 import CojGg9 from "./CojGg9";
 import * as Yup from "yup";
-import { acceptanceValidation } from "../formr-part-b/ValidationSchema";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 import { COJ_DECLARATIONS } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
+
+const acceptanceValidation = Yup.bool()
+  .nullable()
+  .oneOf([true], "Please confirm your acceptance")
+  .required("Please confirm your acceptance");
 
 export default function CojView() {
   const {

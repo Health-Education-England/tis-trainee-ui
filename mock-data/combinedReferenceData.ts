@@ -208,6 +208,10 @@ export const mockedCombinedReference: CombinedReferenceData = {
     {
       id: "614b6140e0f4f2685df397bb",
       label: "Limited opportunities to curricula requirements"
+    },
+    {
+      id: "614b6140e0f4f2685df397bc",
+      label: "Other"
     }
   ],
   programmeMembershipType: [
@@ -241,6 +245,10 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     {
       label: "Limited opportunities to curricula requirements",
       value: "Limited opportunities to curricula requirements"
+    },
+    {
+      label: "Other",
+      value: "Other"
     }
   ],
   curriculum: [

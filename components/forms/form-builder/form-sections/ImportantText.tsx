@@ -1,5 +1,4 @@
 import { WarningCallout } from "nhsuk-react-components";
-import { Fragment } from "react";
 
 type ImportantText = {
   txtName: string;

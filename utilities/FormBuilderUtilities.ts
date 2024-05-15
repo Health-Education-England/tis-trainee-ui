@@ -142,8 +142,7 @@ export function makeSubObj(
         if (
           field.visible ||
           (field.parent &&
-            field.visibleIf &&
-            field?.visibleIf.includes(newFormData[field.parent]))
+            field?.visibleIf?.includes(newFormData[field.parent]))
         ) {
           newFormData[field.name] = formData[field.name];
         } else newFormData[field.name] = null;
@@ -497,8 +496,7 @@ export function createErrorObject(err: {
         obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] || {};
         return obj[arrayKey][arrayIndex];
       } else {
-        obj[key] =
-          obj[key] || (keys[i + 1] && keys[i + 1].includes("[") ? [] : {});
+        obj[key] = obj[key] || (keys[i + 1]?.includes("[") ? [] : {});
         return obj[key];
       }
     }, obj);
@@ -539,7 +537,9 @@ export function validateFields(
         const visibleDtoFields = dtoFields.filter(
           dtoField =>
             dtoField.visible ||
-            dtoField.visibleIf?.includes(values[field.name][dtoField.parent!!])
+            dtoField.visibleIf?.includes(
+              values[field.name][dtoField.parent as string]
+            )
         );
         const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
           const dtoFieldSchema = fieldSchema.fields[dtoField.name];
@@ -574,7 +574,9 @@ export function formatFieldName(fieldName: string) {
 }
 
 export function showFormField(field: Field, formData: FormData) {
-  return field.visible || field.visibleIf?.includes(formData[field.parent!!]);
+  return (
+    field.visible || field.visibleIf?.includes(formData[field.parent as string])
+  );
 }
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.
@@ -588,7 +590,7 @@ export function isValidOption(
   const result = searchedArray?.some(
     (item: { label: string | null | undefined }) => item.label === option
   );
-  return result ? option!! : "";
+  return result ? (option as string) : "";
 }
 
 // react-select styles
