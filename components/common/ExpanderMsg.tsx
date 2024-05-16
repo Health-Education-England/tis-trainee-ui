@@ -1,6 +1,9 @@
 import { ActionLink, Details } from "nhsuk-react-components";
 
-export type ExpanderNameType = "dataSource" | "formRDeclarationsExplained";
+export type ExpanderNameType =
+  | "dataSource"
+  | "formRDeclarationsExplained"
+  | "postTypes";
 
 export const ExpanderMsg = ({
   expanderName
@@ -75,6 +78,38 @@ export const ExpanderMsg = ({
           </p>
         </>
       )
+    },
+    postTypes: {
+      summary: "Post Type or Appointment definitions",
+      text: (
+        <>
+          <p>
+            <b>Substantive post: </b>A role that a post graduate doctor in
+            training holds on a permanent basis.
+          </p>
+          <p>
+            <b>Locum Appointment for Training (LAT): </b>A standalone,
+            fixed-term contract that counts towards your training. LAT posts
+            exist to provide employers with medium-term cover for vacancies
+            within a training programme. A LAT post is a training opportunity
+            that does not normally run for a period of less than three months or
+            exceed one year.
+          </p>
+          <p>
+            <b>Military post: </b>Doctors undertaking their training in the
+            Royal Navy Medical Service, Army Medical Service, the Royal Air
+            Force Medical Service or the Headquarters Defence Medical Services
+            (HQ DMS).
+          </p>
+          <p>
+            <b>Visitor: </b> TBC
+          </p>
+        </>
+      ),
+      actionLinkText:
+        "See the latest Gold Guide for more details (opens a new tab)",
+      actionLinkHref:
+        "https://www.copmed.org.uk/images/docs/gold-guide-9th-edition/Gold-Guide-9th-Edition-August-2022.pdf"
     }
   };
 

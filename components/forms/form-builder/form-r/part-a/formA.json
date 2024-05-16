@@ -214,6 +214,7 @@
     },
     {
       "pageName": "Programme Details",
+      "expanderLinkName": "postTypes",
       "sections": [
         {
           "sectionHeader": "Programme",

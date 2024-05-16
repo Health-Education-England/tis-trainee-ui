@@ -374,6 +374,13 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
     "have.text",
     "Part 3 of 3 - Programme Details"
   );
+  cy.get('[data-cy="postTypesSummary"]').should("exist").click();
+  cy.get('[data-cy="postTypesText"] > :nth-child(1)')
+    .should("be.visible")
+    .should(
+      "include.text",
+      "Substantive post: A role that a post graduate doctor in training holds on a permanent basis."
+    );
   cy.navNext();
   cy.get(".nhsuk-error-summary").should("exist");
   cy.get("b").contains(
