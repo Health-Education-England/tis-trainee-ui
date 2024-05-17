@@ -4,6 +4,7 @@ import { notificationsMixedTypeData } from "../../../mock-data/notifications";
 
 describe("Notifications", () => {
   beforeEach(() => {
+    cy.signInToTss(30000, "/notifications");
     cy.intercept(
       {
         method: "GET",
@@ -14,8 +15,6 @@ describe("Notifications", () => {
         body: notificationsMixedTypeData
       }
     ).as("getNotifications");
-    cy.wait(30000);
-    cy.signInToTss(30000, "/notifications");
   });
 
   it("should load the notifications page", () => {
