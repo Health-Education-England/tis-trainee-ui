@@ -76,11 +76,11 @@ const WorkValidationSchema = yup.object().shape({
     .required("End date is required")
     .test(
       "end-is-greater",
-      "End date must be later than Start date",
+      "End date must be later than or equal to Start date",
       function (endDate) {
         const { startDate } = this.parent;
         if (startDate && endDate) {
-          return new Date(startDate).getTime() < new Date(endDate).getTime();
+          return new Date(startDate).getTime() <= new Date(endDate).getTime();
         }
         return false;
       }

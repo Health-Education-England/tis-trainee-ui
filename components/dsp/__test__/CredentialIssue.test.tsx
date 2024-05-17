@@ -61,7 +61,7 @@ describe("CredentialIssue component", () => {
     );
 
     const button = getByRole("button", {
-      name: /Click to add credential to your wallet/i
+      name: /Add credential to wallet/i
     });
 
     fireEvent.click(button);
