@@ -374,6 +374,13 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
     "have.text",
     "Part 3 of 3 - Programme Details"
   );
+  cy.get('[data-cy="postTypesSummary"]').should("exist").click();
+  cy.get('[data-cy="postTypesText"] > :nth-child(1)')
+    .should("be.visible")
+    .should(
+      "include.text",
+      "Substantive post: A role that a post graduate doctor in training holds on a permanent basis."
+    );
   cy.navNext();
   cy.get(".nhsuk-error-summary").should("exist");
   cy.get("b").contains(
@@ -391,8 +398,10 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "0.5");
   cy.clearAndType('[data-cy="startDate-input"]', dayjs().format("YYYY-MM-DD"));
-  cy.clickSelect('[data-cy="trainingGrade"]', null, true);
-  cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
+  cy.clickSelect('[data-cy="trainingGrade"]', null);
+  cy.checkElement("programmeMembershipType", "Substantive");
+  cy.clickSelect('[data-cy="programmeMembershipType"]', null);
+  cy.checkElement("programmeMembershipType", "Military");
   cy.get(".nhsuk-error-summary").should("not.exist");
   // wait to trigger autosave
   cy.wait(2000);

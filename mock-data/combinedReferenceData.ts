@@ -215,10 +215,8 @@ export const mockedCombinedReference: CombinedReferenceData = {
     }
   ],
   programmeMembershipType: [
-    { id: "1", label: "Substantive" },
-    { id: "2", label: "LAT" },
-    { id: "4", label: "Military" },
-    { id: "5", label: "Visitor" }
+    { id: "1", label: "Military" },
+    { id: "2", label: "Substantive" }
   ]
 };
 
@@ -397,20 +395,12 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
   ],
   programmeMembershipType: [
     {
-      label: "Substantive",
-      value: "Substantive"
-    },
-    {
-      label: "LAT",
-      value: "LAT"
-    },
-    {
       label: "Military",
       value: "Military"
     },
     {
-      label: "Visitor",
-      value: "Visitor"
+      label: "Substantive",
+      value: "Substantive"
     }
   ]
 };
