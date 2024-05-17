@@ -398,8 +398,10 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "0.5");
   cy.clearAndType('[data-cy="startDate-input"]', dayjs().format("YYYY-MM-DD"));
-  cy.clickSelect('[data-cy="trainingGrade"]', null, true);
-  cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
+  cy.clickSelect('[data-cy="trainingGrade"]', null);
+  cy.checkElement("programmeMembershipType", "Substantive");
+  cy.clickSelect('[data-cy="programmeMembershipType"]', null);
+  cy.checkElement("programmeMembershipType", "Military");
   cy.get(".nhsuk-error-summary").should("not.exist");
   // wait to trigger autosave
   cy.wait(2000);

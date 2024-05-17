@@ -88,21 +88,10 @@ export const ExpanderMsg = ({
             training holds on a permanent basis.
           </p>
           <p>
-            <b>Locum Appointment for Training (LAT): </b>A standalone,
-            fixed-term contract that counts towards your training. LAT posts
-            exist to provide employers with medium-term cover for vacancies
-            within a training programme. A LAT post is a training opportunity
-            that does not normally run for a period of less than three months or
-            exceed one year.
-          </p>
-          <p>
             <b>Military post: </b>Doctors undertaking their training in the
             Royal Navy Medical Service, Army Medical Service, the Royal Air
             Force Medical Service or the Headquarters Defence Medical Services
             (HQ DMS).
-          </p>
-          <p>
-            <b>Visitor: </b> TBC
           </p>
         </>
       ),
