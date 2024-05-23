@@ -636,7 +636,7 @@ Cypress.Commands.add("checkAndFillSection2", () => {
     ':nth-child(1) > .nhsuk-card__content > :nth-child(5) > [data-cy="endDate"] > [data-cy="endDate-inline-error-msg"]'
   )
     .should("exist")
-    .contains("End date must be later than Start date");
+    .contains("End date must be later than or equal to Start date");
 
   // fill in second panel
   cy.get('[data-cy="typeOfWork-input"]:last').type("Some Work 2");
