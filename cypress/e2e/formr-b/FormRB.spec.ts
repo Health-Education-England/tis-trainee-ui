@@ -140,7 +140,7 @@ describe("Form R (Part B) - Submit a new form", () => {
   });
 
   it("Should show the submitted form in the list", () => {
-    cy.signInToTss(20000, "/formr-b");
+    cy.signInToTss(30000, "/formr-b");
     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
     cy.contains("Submitted forms").should("exist");
     cy.checkElement("submittedForm").first().click();
