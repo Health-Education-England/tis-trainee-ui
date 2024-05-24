@@ -45,7 +45,7 @@ const CredentialIssue: React.FC = () => {
           }}
           data-cy="dspIssueCredBtn"
         >
-          Click to add credential to your wallet
+          Add credential to wallet
         </Button>
       </WarningCallout>
     );
@@ -84,7 +84,7 @@ const CredentialIssue: React.FC = () => {
             }}
             data-cy="dspIssueCredBtn"
           >
-            Click to add credential to your wallet
+            Add credential to wallet
           </Button>
         </WarningCallout>
       );

@@ -44,7 +44,7 @@ describe("DSP issue button", () => {
     );
     cy.get('[data-cy="dsp-btn-placements-17"]')
       .should("not.be.disabled")
-      .should("include.text", "Click to add")
+      .should("include.text", "Add to wallet")
       .click();
     cy.get('[data-cy="dsp-btn-placements-17"]').should(
       "include.text",
@@ -79,7 +79,7 @@ describe("DSP issue button", () => {
       "This placement credential was added to your wallet on 28/07/2023 18:40 (BST)"
     );
     cy.get('[data-cy="dsp-btn-placements-1"]')
-      .should("include.text", "Click to add again")
+      .should("include.text", "Add to wallet again")
       .click();
     cy.get(".MuiDialogContent-root > .MuiTypography-root").should(
       "include.text",
@@ -120,7 +120,7 @@ describe("DSP issue button", () => {
       "This placement credential was revoked on 14/08/2023 15:12 (BST)"
     );
     cy.get('[data-cy="dsp-btn-placements-2"]')
-      .should("include.text", "Click to add again")
+      .should("include.text", "Add to wallet again")
       .click();
     cy.get(".MuiDialogContent-root > .MuiTypography-root").should(
       "include.text",

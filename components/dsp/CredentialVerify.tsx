@@ -37,7 +37,7 @@ const CredentialVerify: React.FC = () => {
           }}
           data-cy="dspVerifyIdentityBtn"
         >
-          Click to verify your identity
+          Verify your identity
         </Button>
       </WarningCallout>
     );
