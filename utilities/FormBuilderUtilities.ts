@@ -175,31 +175,6 @@ export async function submitForm(
   resetForm(formName, history);
 }
 
-// *** NOTE: Remove this code when form B is built with the form builder ***
-export async function tempSubFormB(
-  formName: string,
-  formData: FormData,
-  history: any
-) {
-  const lastSavedFormData = store.getState().formB?.formData;
-  const updatedFormData = {
-    ...formData,
-    submissionDate: new Date(),
-    lifecycleState: LifeCycleState.Submitted,
-    lastModifiedDate: new Date()
-  };
-  lastSavedFormData.id
-    ? await store.dispatch(
-        updateFormB({
-          ...updatedFormData,
-          id: lastSavedFormData.id
-        } as FormRPartB)
-      )
-    : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
-  resetForm(formName, history);
-}
-// ---------------------------------------------------------
-
 export async function saveDraftForm(
   formName: string,
   formData: FormData,

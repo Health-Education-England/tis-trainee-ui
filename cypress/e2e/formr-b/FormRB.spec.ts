@@ -119,7 +119,11 @@ describe("Form R (Part B) - Submit a new form", () => {
       "include.text",
       "Personal Details"
     );
+    cy.get('[data-cy="forename-input"]').clear();
+    cy.get('[data-cy="BtnShortcutToConfirm"]').should("be.disabled");
+    cy.get(".error-summary").should("exist");
     cy.clearAndType('[data-cy="forename-input"]', "Bob-edited");
+    cy.get(".error-summary").should("not.exist");
     cy.checkElement("BtnShortcutToConfirm").click();
     cy.checkElement("warningConfirmation");
     cy.checkElement("forename-value", "Bob-edited");

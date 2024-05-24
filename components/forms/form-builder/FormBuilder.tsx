@@ -291,6 +291,20 @@ export default function FormBuilder({
       });
   };
 
+  const handleShortcutToConfirm = () => {
+    isFormDirty.current = false;
+    validateFields(currentPageFields, formData, validationSchema)
+      .then(() => {
+        continueToConfirm(jsonFormName, finalFormFields, history);
+      })
+      .catch((err: { inner: { path: string; message: string }[] }) => {
+        setFormErrors(() => {
+          const newErrors = createErrorObject(err);
+          return newErrors;
+        });
+      });
+  };
+
   const handleSaveBtnClick = () => {
     setIsSubmitting(true);
     saveDraftForm(jsonFormName, formData, history);
@@ -452,9 +466,10 @@ export default function FormBuilder({
                 <Button
                   onClick={(e: { preventDefault: () => void }) => {
                     e.preventDefault();
-                    continueToConfirm(jsonFormName, finalFormFields, history);
+                    handleShortcutToConfirm();
                   }}
                   data-cy="BtnShortcutToConfirm"
+                  disabled={isSubmitting || Object.keys(formErrors).length > 0}
                 >
                   {"Shortcut to Confirm"}
                 </Button>
