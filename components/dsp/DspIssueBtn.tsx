@@ -144,9 +144,9 @@ function populateButtonText(
     return "Please wait...";
   }
   if (matchedCredential) {
-    return "Click to add again";
+    return "Add to wallet again";
   }
-  return "Click to add";
+  return "Add to wallet";
 }
 
 function populateSummaryText(
