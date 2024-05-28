@@ -494,7 +494,7 @@ export function validateFields(
     const fieldSchema = validationSchema.fields[field.name];
     const isVisible = showFormField(field, values);
     if (isVisible) {
-      if (field.type === "array" && values[field.name].length > 0) {
+      if (field.type === "array" && values[field.name]?.length > 0) {
         const nestedFields = Object.keys(values[field.name][0]).reduce(
           (nestedSchema: { [key: string]: any }, nestedField: string) => {
             nestedSchema[nestedField] =

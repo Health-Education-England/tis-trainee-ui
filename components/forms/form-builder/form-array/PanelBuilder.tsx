@@ -55,7 +55,8 @@ export default function PanelBuilder({
 
   const addPanel = () => {
     isFormDirty.current = true;
-    const newPanelsArray = [...formData[field.name], newPanel()];
+    const currentPanelsArray = formData[field.name] ?? [];
+    const newPanelsArray = [...currentPanelsArray, newPanel()];
     setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
@@ -71,7 +72,7 @@ export default function PanelBuilder({
 
   return (
     <>
-      {formData[field.name].map((_arrObj: any, index: number) => (
+      {formData[field.name]?.map((_arrObj: any, index: number) => (
         <Card key={index} className="container">
           <Card.Content>
             <p>

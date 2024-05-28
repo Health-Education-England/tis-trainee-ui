@@ -29,12 +29,12 @@ export interface FormRPartB extends IFormR {
   isComplying: boolean | string | null;
   healthStatement: string;
   havePreviousDeclarations: boolean | string;
-  previousDeclarations: Declaration[];
+  previousDeclarations: Declaration[] | null;
   havePreviousUnresolvedDeclarations: boolean | string;
   previousDeclarationSummary: string;
   haveCurrentDeclarations: boolean | string;
   haveCurrentUnresolvedDeclarations: boolean | string;
-  currentDeclarations: Declaration[];
+  currentDeclarations: Declaration[] | null;
   currentDeclarationSummary: string;
   compliments: string;
   haveCovidDeclarations: boolean | null;
