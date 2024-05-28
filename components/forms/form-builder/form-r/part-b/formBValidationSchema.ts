@@ -214,6 +214,7 @@ const formBValidationSchemaDefault = yup.object({
     .required(havePreviousDeclarationsString),
   previousDeclarations: yup
     .array()
+    .typeError("At least one Previous Declaration is required")
     .of(panelSchemaValidation)
     .min(1, "At least one Previous Declaration is required"),
   previousDeclarationSummary: StringValidationSchema(
@@ -232,6 +233,7 @@ const formBValidationSchemaDefault = yup.object({
     .required(haveCurrentDeclarationsString),
   currentDeclarations: yup
     .array()
+    .typeError("At least one Current Declaration is required")
     .of(panelSchemaValidation)
     .min(1, "At least one Current Declaration is required"),
   currentDeclarationSummary: StringValidationSchema(
