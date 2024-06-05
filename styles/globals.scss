@@ -854,3 +854,51 @@ ol[type="a"] {
   color: #425563;
   margin-right: 0.5em;
 }
+
+// CCT calculator Cct.tsx
+
+// dialog
+.cct-dialog {
+  z-index: 1000;
+  background-color: whitesmoke;
+  position: relative;
+  top: 0;
+  margin: 2rem;
+  &.draggable {
+    cursor: move;
+  }
+}
+
+@media (min-width: 1900px) {
+  .cct-dialog {
+    position: absolute;
+    top: 17rem;
+    right: 75vw;
+  }
+}
+
+@media (max-width: 440px) {
+  .cct-dialog {
+    right: 0;
+    margin: 2rem 1rem;
+  }
+}
+
+.no-move {
+  cursor: default;
+}
+
+#cct-btns {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+// CctBtn.tsx
+#cct-card {
+  background-color: #fafbfd;
+}
+
+#cct-btn span {
+  margin-right: 0.5em;
+}

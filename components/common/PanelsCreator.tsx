@@ -23,6 +23,7 @@ import {
   resetTraineeAction
 } from "../../redux/slices/traineeActionsSlice";
 import dayjs from "dayjs";
+import { CctBtn } from "../programmes/CctBtn";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -64,6 +65,12 @@ export function PanelsCreator({
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
+                {panelsName === TraineeProfileName.Programmes && (
+                  <CctBtn
+                    progName={panel.programmeName}
+                    endDate={panel.endDate}
+                  />
+                )}
                 <SummaryList>
                   {Object.keys(filteredPanel).map((panelProp, _index) => (
                     <SummaryList.Row key={_index}>
@@ -143,7 +150,7 @@ export function displayListVal<T extends Date | string>(val: T, k: string) {
   if (transformation) {
     return transformation(val);
   } else {
-    return val ? val : "None provided";
+    return val ?? "None provided";
   }
 }
 
