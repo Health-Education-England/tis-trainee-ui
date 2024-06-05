@@ -1,6 +1,7 @@
 import { Label } from "nhsuk-react-components";
-import Select from "react-select";
+import Select, { Theme } from "react-select";
 import { colourStyles } from "../../utilities/FormBuilderUtilities";
+import CreatableSelect from "react-select/creatable";
 
 type AutocompleteSelectProps = {
   value: any;
@@ -15,6 +16,7 @@ type AutocompleteSelectProps = {
   label: string;
   isMulti: boolean;
   closeMenuOnSelect: boolean;
+  isCreatable?: boolean;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -25,12 +27,35 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   name,
   label,
   isMulti,
-  closeMenuOnSelect
+  closeMenuOnSelect,
+  isCreatable
 }) => {
   const handleChange = (val: any) => {
     onChange(name, val ? val.label : null);
   };
   const handleMultiChange = (val: any) => onChange(name, val);
+  const selectProps = {
+    options: options,
+    onChange: isMulti ? handleMultiChange : handleChange,
+    value: value?.label,
+    isClearable: true,
+    isMulti: isMulti,
+    closeMenuOnSelect: closeMenuOnSelect,
+    defaultValue: isMulti
+      ? null
+      : {
+          value: value,
+          label: value
+        },
+    placeholder: "Select or start typing...",
+    className: "autocomplete-select",
+    classNamePrefix: "react-select",
+    theme: (theme: Theme) => ({
+      ...theme,
+      borderRadius: 0
+    }),
+    styles: colourStyles
+  };
   return (
     <div
       data-cy={name}
@@ -45,31 +70,11 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
           {error}
         </span>
       ) : null}
-      <Select
-        data-cy={`${name}-select`}
-        options={options}
-        onChange={isMulti ? handleMultiChange : handleChange}
-        value={value?.label}
-        isClearable
-        isMulti={isMulti}
-        closeMenuOnSelect={closeMenuOnSelect}
-        defaultValue={
-          isMulti
-            ? null
-            : {
-                value: value,
-                label: value
-              }
-        }
-        placeholder="Select or start typing..."
-        className="autocomplete-select"
-        classNamePrefix="react-select"
-        theme={theme => ({
-          ...theme,
-          borderRadius: 0
-        })}
-        styles={colourStyles}
-      />
+      {isCreatable ? (
+        <CreatableSelect {...selectProps} />
+      ) : (
+        <Select {...selectProps} />
+      )}
     </div>
   );
 };
