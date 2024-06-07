@@ -12,6 +12,7 @@ export interface Placement {
   wholeTimeEquivalent: string;
   specialty: string;
   subSpecialty: string;
+  otherSpecialties: SpecialtyType[] | null;
   postAllowsSubspecialty: boolean;
   grade: string;
   placementType: string;
@@ -32,6 +33,7 @@ export const placementPanelTemplate: Placement = {
   wholeTimeEquivalent: "",
   specialty: "",
   subSpecialty: "",
+  otherSpecialties: [],
   postAllowsSubspecialty: false,
   grade: "",
   placementType: "",
@@ -51,3 +53,8 @@ export interface PlacementGroup {
   current: Placement[];
   past: Placement[];
 }
+
+export type SpecialtyType = {
+  specialtyId: string;
+  name: string;
+};

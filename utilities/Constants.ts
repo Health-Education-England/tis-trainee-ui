@@ -171,6 +171,7 @@ export const PANEL_KEYS: any = {
   wholeTimeEquivalent: "Whole Time Equivalent",
   specialty: "Specialty",
   subSpecialty: "Sub specialty",
+  otherSpecialties: "Other Specialties",
   grade: "Grade",
   placementType: "Placement Type",
   employingBody: "Employing Body",

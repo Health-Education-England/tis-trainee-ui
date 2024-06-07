@@ -124,6 +124,14 @@ describe("Placements with MFA set up", () => {
       "have.text",
       "The information we have for future placements with a start date more than 12 weeks from today is not yet finalised and may be subject to change."
     );
+    cy.get('[data-cy="otherSpecialties0Key"]').contains("Other Specialties");
+    cy.get('[data-cy="otherSpecialty176Val"]').contains("Allergy");
+    cy.get('[data-cy="otherSpecialty211Val"]').contains("Ophthalmology");
+    cy.get('[data-cy="otherSpecialty176Val"]')
+      .parent()
+      .next()
+      .get('[data-cy="otherSpecialty211Val"]')
+      .should("exist"); //alphabetic ordering
   });
 
   it("should show available data when partial Other Sites", () => {
@@ -168,6 +176,8 @@ describe("Placements with MFA set up", () => {
       .should("exist")
       .should("contain.text", "site with only name");
     cy.get('[data-cy="otherSiteLocation2Val"]').should("not.exist");
+    cy.get('[data-cy="otherSpecialties0Key"]').contains("Other Specialties");
+    cy.get('[data-cy="otherSpecialties0Val"]').contains("None provided");
   });
 
   it("should show alternative text when no Other Sites", () => {
