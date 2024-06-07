@@ -127,6 +127,11 @@ describe("Placements with MFA set up", () => {
     cy.get('[data-cy="otherSpecialties0Key"]').contains("Other Specialties");
     cy.get('[data-cy="otherSpecialty176Val"]').contains("Allergy");
     cy.get('[data-cy="otherSpecialty211Val"]').contains("Ophthalmology");
+    cy.get('[data-cy="otherSpecialty176Val"]')
+      .parent()
+      .next()
+      .get('[data-cy="otherSpecialty211Val"]')
+      .should("exist"); //alphabetic ordering
   });
 
   it("should show available data when partial Other Sites", () => {
