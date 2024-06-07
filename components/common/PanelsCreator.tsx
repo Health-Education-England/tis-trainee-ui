@@ -215,15 +215,20 @@ function displayTheCorrectListItem(
         />
       );
     case "otherSpecialties":
-      return panel[panelProp]?.length > 0
-        ? panel[panelProp].map(
+      if (panel[panelProp]?.length > 0) {
+        var otherSpecialties = [...panel[panelProp]];
+        return otherSpecialties
+          .sort((s1, s2) => s1.name.localeCompare(s2.name))
+          .map(
             ({ specialtyId, name }: SpecialtyType): JSX.Element => (
               <div key={specialtyId}>
                 <div data-cy={`otherSpecialty${specialtyId}Val`}>{name}</div>
               </div>
             )
-          )
-        : "None provided";
+          );
+      } else {
+        return "None provided";
+      }
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
