@@ -334,12 +334,12 @@ export const mockPlacements: Placement[] = [
     subSpecialty: "Sub specialty",
     otherSpecialties: [
       {
-        specialtyId: "176",
-        name: "Allergy"
-      },
-      {
         specialtyId: "211",
         name: "Ophthalmology"
+      },
+      {
+        specialtyId: "176",
+        name: "Allergy"
       }
     ],
     postAllowsSubspecialty: true,
