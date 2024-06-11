@@ -19,7 +19,8 @@ import {
   Field,
   FieldWarning,
   Form,
-  FormData
+  FormData,
+  MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
   autoSaveFormB,
@@ -37,6 +38,7 @@ import { FormRPartB } from "../models/FormRPartB";
 import { LifeCycleState } from "../models/LifeCycleState";
 import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
+import dayjs from "dayjs";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -297,11 +299,24 @@ export function transformReferenceData(
 
 export function showFieldMatchWarning(
   inputValue: string,
-  matcher: RegExp,
+  matcher: MatcherName,
   warningMsg: string,
   fieldName: string
 ) {
-  return !matcher.test(inputValue) ? { fieldName, warningMsg } : null;
+  if (matcher === "prevDateTest") {
+    const testDate = dayjs().subtract(1, "day");
+    const inputDate = dayjs(inputValue);
+    if (inputDate.isBefore(testDate)) {
+      return { fieldName, warningMsg };
+    } else return null;
+  } else if (matcher === "postcodeTest")
+    if (
+      !new RegExp("[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}", "i").test(
+        inputValue
+      )
+    )
+      return { fieldName, warningMsg };
+  return null;
 }
 
 export function handleSoftValidationWarningMsgVisibility(
@@ -311,7 +326,7 @@ export function handleSoftValidationWarningMsgVisibility(
   setFieldWarning: (warning: FieldWarning) => void
 ) {
   if (inputVal?.length && primaryFormField?.warning) {
-    const matcher = new RegExp(primaryFormField.warning.matcher, "i");
+    const matcher = primaryFormField.warning.matcher as MatcherName;
     const msg = primaryFormField.warning.msgText;
     const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
     setFieldWarning(warning as FieldWarning);

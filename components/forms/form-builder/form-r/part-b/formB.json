@@ -68,7 +68,11 @@
               "name": "currRevalDate",
               "label": "Current Revalidation Date",
               "type": "date",
-              "visible": true
+              "visible": true,
+              "warning": {
+                "matcher": "prevDateTest",
+                "msgText": "Warning: You have entered a past date. Please ignore if valid."
+              }
             },
             {
               "name": "prevRevalDate",

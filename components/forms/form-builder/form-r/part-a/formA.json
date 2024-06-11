@@ -122,7 +122,7 @@
               "type": "text",
               "visible": true,
               "warning": {
-                "matcher": "[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}",
+                "matcher": "postcodeTest",
                 "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
               }
             },
