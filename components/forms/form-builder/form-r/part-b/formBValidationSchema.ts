@@ -153,11 +153,6 @@ const formBValidationSchemaDefault = yup.object({
     .required("Current Revalidation is required")
     .test(
       "currRevalDate",
-      "Current Revalidation date has to be on or after today",
-      value => DateUtilities.IsFutureDate(value)
-    )
-    .test(
-      "currRevalDate",
       "The date is outside the allowed date range",
       value => DateUtilities.IsInsideDateRange(value)
     ),

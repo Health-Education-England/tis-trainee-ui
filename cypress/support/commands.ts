@@ -529,22 +529,12 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // more date validation
   cy.clearAndType('[data-cy="currRevalDate-input"]', prevRevalDate);
-  cy.checkElement(
-    "currRevalDate-inline-error-msg",
-    "Current Revalidation date has to be on or after today",
-    true
-  );
-  cy.get(".nhsuk-error-summary").contains(
-    "Current Revalidation date has to be on or after today"
-  );
+  cy.get(".field-warning-msg")
+    .should("exist")
+    .contains("Warning: You have entered a past date.");
 
   cy.clearAndType('[data-cy="currRevalDate-input"]', currRevalDate);
-  cy.get(".nhsuk-error-summary")
-    .scrollIntoView()
-    .should(
-      "not.contain",
-      "Current Revalidation date has to be on or after today"
-    );
+  cy.get(".field-warning-msg").should("not.exist");
   cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
 
   // check prev DB for reval - 'other' is not required

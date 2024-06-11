@@ -1,4 +1,6 @@
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
+import FieldWarningMsg from "../../FieldWarningMsg";
+import { FieldWarning } from "../FormBuilder";
 import FieldErrorInline from "./FieldErrorInline";
 
 type DatesProps = {
@@ -18,6 +20,7 @@ type DatesProps = {
   arrayIndex?: number;
   arrayName?: string;
   dtoName?: string;
+  fieldWarning?: FieldWarning;
 };
 
 export const Dates = ({
@@ -29,7 +32,8 @@ export const Dates = ({
   value,
   arrayIndex,
   arrayName,
-  dtoName
+  dtoName,
+  fieldWarning
 }: DatesProps) => {
   return (
     <div data-cy={name}>
@@ -62,6 +66,9 @@ export const Dates = ({
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
+      {fieldWarning?.fieldName === name ? (
+        <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
+      ) : null}
     </div>
   );
 };

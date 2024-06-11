@@ -106,8 +106,9 @@ type FormBuilderProps = {
   validationSchema: any;
   history: string[];
 };
+export type MatcherName = "prevDateTest" | "postcodeTest";
 export type FieldWarning = {
-  fieldName: string;
+  fieldName: MatcherName;
   warningMsg: string;
 };
 export type Warning = {
@@ -686,6 +687,7 @@ function renderFormField(
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           dtoName={dtoName}
+          fieldWarning={fieldWarning}
         />
       );
 
