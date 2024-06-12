@@ -5,10 +5,13 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { setNewEndDates } from "../../../redux/slices/cctCalcSlice";
 import ScrollToTop from "../../common/ScrollToTop";
 import { useIsMobile } from "../../../utilities/hooks/useIsMobile";
-import Draggable from "react-draggable";
+import Draggable, {
+  DraggableData,
+  DraggableEventHandler
+} from "react-draggable";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import { Fieldset } from "nhsuk-react-components";
-import { CalcForm } from "./CalcForm";
+import { CalcForm, CalcFormValues } from "./CalcForm";
 import {
   calculateNewEndDates,
   handleClose
@@ -33,7 +36,7 @@ export function Cct() {
     setPosition({ x: 0, y: 0 });
     setShouldPrint(true);
   };
-  const handleDrag = (_e: any, data: any) => {
+  const handleDrag = (_e: React.MouseEvent, data: DraggableData) => {
     setPosition({ x: data.x, y: data.y });
   };
 
@@ -50,7 +53,7 @@ export function Cct() {
 type CctChildProps = {
   handlePrint: () => void;
   position: { x: number; y: number };
-  handleDrag: (e: any, data: any) => void;
+  handleDrag: (e: React.MouseEvent, data: DraggableData) => void;
 };
 
 const CctChild = forwardRef(
@@ -67,7 +70,7 @@ const CctChild = forwardRef(
     const newEndDates = useAppSelector(state => state.cctCalc.newEndDates);
     const isMobile = useIsMobile(1024);
 
-    const handleCalculate = (values: any) => {
+    const handleCalculate = (values: CalcFormValues) => {
       const calculatedEndDates = calculateNewEndDates(
         Number(values.currentFtePercent.split("%")[0]),
         values.ftePercents,
@@ -149,7 +152,7 @@ const CctChild = forwardRef(
         content = (
           <Draggable
             position={position}
-            onStop={handleDrag}
+            onStop={handleDrag as DraggableEventHandler}
             cancel=".not-draggable"
           >
             {dialogContent}

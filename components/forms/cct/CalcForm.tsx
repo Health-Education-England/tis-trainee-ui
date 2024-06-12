@@ -11,14 +11,15 @@ type CalcFormProps = {
   currentProgEndDate: Date | string;
   propStartDate: Date | string;
   onCalculate: (values: CalcFormValues) => void;
-  newEndDates?: any[];
+  newEndDates?: string[];
   handlePrint: () => void;
 };
 
-type CalcFormValues = {
+export type CalcFormValues = {
   ftePercents: FtePercentsTypes[];
   propStartDate: Date | string;
   propEndDate: Date | string;
+  currentFtePercent: string;
 };
 
 export function CalcForm({
