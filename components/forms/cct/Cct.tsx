@@ -60,7 +60,9 @@ const CctChild = forwardRef(
     const currentProgEndDate = useAppSelector(
       state => state.cctCalc.currentProgEndDate
     );
-    const proposeStartDate = dayjs().add(16, "weeks").format("YYYY-MM-DD");
+    const proposeStartDate = useAppSelector(
+      state => state.cctCalc.propStartDate
+    );
     const progName = useAppSelector(state => state.cctCalc.progName);
     const newEndDates = useAppSelector(state => state.cctCalc.newEndDates);
     const isMobile = useIsMobile(1024);
@@ -85,8 +87,11 @@ const CctChild = forwardRef(
       >
         {isMobile && <ScrollToTop errors={[]} page={0} isPageDirty={false} />}
         <Fieldset>
-          <Fieldset.Legend size="m">{`CCT Calculator`}</Fieldset.Legend>
-          <p style={{ color: "#D5281B" }}>
+          <Fieldset.Legend
+            size="m"
+            data-cy="cct-header"
+          >{`CCT Calculator`}</Fieldset.Legend>
+          <p style={{ color: "#D5281B" }} data-cy="cct-disclaimer">
             <b>
               This calculator is intended to provide a quick rough estimate
               only. Your actual CCT date will be confirmed at your next ARCP.
@@ -94,28 +99,28 @@ const CctChild = forwardRef(
           </p>
           <ExpanderMsg expanderName="cctInfo" />
 
-          <p>
-            {`Programme: `} <b>{progName}</b>
+          <p data-cy="cct-curr-prog">
+            <b> {`Programme: `}</b> {progName}
           </p>
-          <p>
-            {`Current Programme end date: `}{" "}
-            <b>{dayjs(currentProgEndDate).format("DD/MM/YYYY")}</b>
+          <p data-cy="cct-curr-prog-end">
+            <b>{`Current Programme end date: `}</b>
+            {dayjs(currentProgEndDate).format("DD/MM/YYYY")}
           </p>
           {newEndDates.length > 0 && (
             <div>
               <table>
                 <thead>
                   <tr>
-                    <th>New WTE</th>
-                    <th>New End Date</th>
+                    <th data-cy="cct-th-wte">New WTE</th>
+                    <th data-cy="cct-th-new-date">New End Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {newEndDates.map(
                     (item: { ftePercent: string; newEndDate: string }) => (
                       <tr key={item.ftePercent}>
-                        <td>{item.ftePercent}</td>
-                        <td>{item.newEndDate}</td>
+                        <td data-cy="cct-td-new-percent">{item.ftePercent}</td>
+                        <td data-cy="cct-td-new-date">{item.newEndDate}</td>
                       </tr>
                     )
                   )}

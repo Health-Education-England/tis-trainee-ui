@@ -1,17 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 
 type CctCalcState = {
   modalOpen: boolean;
   progName: string;
   currentProgEndDate: Date | string;
   newEndDates: any[];
+  propStartDate: Date | string;
 };
 
 const initialState: CctCalcState = {
   modalOpen: false,
   progName: "",
   currentProgEndDate: "",
-  newEndDates: []
+  newEndDates: [],
+  propStartDate: dayjs().add(16, "weeks").format("YYYY-MM-DD")
 };
 
 const cctCalcSlice = createSlice({
@@ -21,12 +24,6 @@ const cctCalcSlice = createSlice({
     openCctModal(state) {
       return { ...state, modalOpen: true };
     },
-    closeCctModal(state) {
-      return {
-        ...state,
-        modalOpen: false
-      };
-    },
     setProgName(state, action: PayloadAction<string>) {
       return { ...state, progName: action.payload };
     },
@@ -35,6 +32,9 @@ const cctCalcSlice = createSlice({
     },
     setNewEndDates(state, action: PayloadAction<any[]>) {
       return { ...state, newEndDates: action.payload };
+    },
+    resetCctCalc() {
+      return initialState;
     }
   }
 });
@@ -43,8 +43,8 @@ export default cctCalcSlice.reducer;
 
 export const {
   openCctModal,
-  closeCctModal,
   setProgName,
   setCurrentProgEndDate,
-  setNewEndDates
+  setNewEndDates,
+  resetCctCalc
 } = cctCalcSlice.actions;

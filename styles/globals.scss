@@ -864,21 +864,29 @@ ol[type="a"] {
   position: relative;
   top: 0;
   margin: 2rem;
+
   &.draggable {
     cursor: move;
   }
-}
 
-@media (min-width: 1900px) {
-  .cct-dialog {
+  @media (min-width: 1025px) {
     position: absolute;
     top: 17rem;
+  }
+
+  @media (min-width: 1025px) and (max-width: 1199px) {
+    right: 50vw;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1899px) {
+    right: 70vw;
+  }
+
+  @media (min-width: 1900px) {
     right: 75vw;
   }
-}
 
-@media (max-width: 440px) {
-  .cct-dialog {
+  @media (max-width: 440px) {
     right: 0;
     margin: 2rem 1rem;
   }

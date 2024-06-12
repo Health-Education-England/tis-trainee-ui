@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import store from "../redux/store/store";
-import { closeCctModal } from "../redux/slices/cctCalcSlice";
+import { resetCctCalc } from "../redux/slices/cctCalcSlice";
 
 export type FtePercentsTypes = {
   value: number | string;
@@ -37,5 +37,5 @@ export function calculateNewEndDates(
 }
 
 export function handleClose() {
-  store.dispatch(closeCctModal());
+  store.dispatch(resetCctCalc());
 }

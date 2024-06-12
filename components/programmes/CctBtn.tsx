@@ -22,19 +22,20 @@ export function CctBtn({ progName, endDate }: Readonly<CctBtnProps>) {
     dispatch(openCctModal());
     dispatch(setProgName(progName));
     dispatch(setCurrentProgEndDate(endDate));
-    dispatch(setNewEndDates([]));
   };
   return (
     <Card className="cct-card">
       <Card.Content>
-        <Label size="s">Thinking of changing your hours?</Label>
+        <Label size="s" data-cy="cct-prompt-label">
+          Thinking of changing your hours?
+        </Label>
         <Button
           id="cct-btn"
           type="button"
-          data-cy="cctBtn"
+          data-cy={`cctBtn-${progName}`}
           onClick={handleClick}
           disabled={modalState}
-          title="Completion Date estimate button"
+          title="Get CCT estimate"
         >
           <span>{"Get CCT estimate"}</span>
           <FontAwesomeIcon

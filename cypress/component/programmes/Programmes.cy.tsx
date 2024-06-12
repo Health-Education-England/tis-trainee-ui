@@ -87,6 +87,16 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");
+    cy.get('[data-cy="cctBtn-Cardiology"]')
+      .should("exist")
+      .should("contain.text", "Get CCT estimate")
+      .should("have.attr", "title", "Get CCT estimate");
+    cy.get('[data-cy="cct-prompt-label"]')
+      .should("exist")
+      .should("contain.text", "Thinking of changing your hours?");
+    cy.get('[data-cy="cctBtn-Cardiology"]').first().click();
+    cy.get('[data-cy="cctBtn-Cardiology"]').first().should("be.disabled");
+    cy.get('[data-cy="cctBtn-Cardiology"]').last().should("be.disabled");
   });
 
   it("should show alternative text when no Programme data available", () => {

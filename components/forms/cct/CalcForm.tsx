@@ -75,8 +75,8 @@ export function CalcForm({
     { value: 60, label: "60%" },
     { value: 50, label: "50%" }
   ];
-  const today = dayjs();
-  const sixteenWksCriteria = dayjs().add(16, "weeks").subtract(1, "day");
+  const minPropStart = dayjs().subtract(1, "day");
+  const sixteenWkCriteria = dayjs().add(16, "weeks").subtract(1, "day");
 
   return (
     <Formik
@@ -131,13 +131,17 @@ export function CalcForm({
             (option: FtePercentsTypes) => option.value === 100
           ) &&
             values.currentFtePercent !== "100%" && (
-              <FieldWarningMsg warningMsg="Returning to 100% WTE might not be possible. See 'CCT Calculator further information' above." />
+              <span data-cy="ft-return-warn">
+                <FieldWarningMsg warningMsg="Returning to 100% WTE might not be possible. See 'CCT Calculator further information' above." />
+              </span>
             )}
           {values.ftePercents.some(
             (option: FtePercentsTypes) =>
               !fteOptions.some(fteOption => fteOption.value === option.value)
           ) && (
-            <FieldWarningMsg warningMsg="A bespoke WTE percentage might not be possible. See 'CCT Calculator further information' above." />
+            <span data-cy="bespoke-wte-warn">
+              <FieldWarningMsg warningMsg="A bespoke WTE percentage might not be possible. See 'CCT Calculator further information' above." />
+            </span>
           )}
 
           <TextInputField
@@ -146,10 +150,14 @@ export function CalcForm({
             name="propStartDate"
             width={10}
           />
-          {dayjs(values.propStartDate).isSameOrAfter(today) &&
-            dayjs(values.propStartDate).isBefore(sixteenWksCriteria) && (
+          {dayjs(values.propStartDate).isBetween(
+            minPropStart,
+            sixteenWkCriteria
+          ) && (
+            <span data-cy="start-date-warn">
               <FieldWarningMsg warningMsg="This Start Date might not be possible. See 'CCT Calculator further information' above." />
-            )}
+            </span>
+          )}
           <TextInputField
             label="When should the WTE change end?"
             type="date"
@@ -157,17 +165,28 @@ export function CalcForm({
             width={10}
           />
           <div id="cct-btns">
-            <Button type="submit" disabled={!dirty || !isValid}>
+            <Button
+              type="submit"
+              disabled={!dirty || !isValid}
+              data-cy="cct-calc-btn"
+            >
               Calculate
             </Button>
             <Button
               secondary
               onClick={handlePrint}
               disabled={!dirty || !isValid || newEndDates.length === 0}
+              data-cy="cct-pdf-btn"
             >
               Save PDF
             </Button>
-            <Button reverse type="button" onClick={handleClose} title="Close">
+            <Button
+              reverse
+              type="button"
+              onClick={handleClose}
+              title="Close"
+              data-cy="cct-close-btn"
+            >
               <CloseIcon />
             </Button>
           </div>
