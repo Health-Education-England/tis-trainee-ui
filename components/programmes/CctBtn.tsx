@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import {
   openCctModal,
   setCurrentProgEndDate,
-  setNewEndDates,
   setProgName
 } from "../../redux/slices/cctCalcSlice";
 import { Button, Card, Label } from "nhsuk-react-components";
