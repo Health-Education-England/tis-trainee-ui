@@ -1,12 +1,9 @@
 import { Redirect, Route, Switch } from "react-router-dom";
-import ScrollTo from "../../../ScrollTo";
-import PageTitle from "../../../../common/PageTitle";
-import { Fieldset, Label } from "nhsuk-react-components";
 import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
 import formBJson from "./formB.json";
-import FormBuilder, { Form, FormName } from "../../FormBuilder";
+import FormBuilder, { Form } from "../../FormBuilder";
 import { getFormBValidationSchema } from "./formBValidationSchema";
 import { useSelectFormData } from "../../../../../utilities/hooks/useSelectFormData";
 import { selectAllReference } from "../../../../../redux/slices/referenceSlice";
@@ -17,6 +14,7 @@ import { FormView } from "../../FormView";
 import { FormRPartB } from "../../../../../models/FormRPartB";
 import { COVID_RESULT_DECLARATIONS } from "../../../../../utilities/Constants";
 import { ProfileUtilities } from "../../../../../utilities/ProfileUtilities";
+import PageHeading from "../../../../common/PageHeading";
 
 export default function FormB() {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
@@ -24,7 +22,7 @@ export default function FormB() {
 
   const redirectPath = "/formr-b";
   const formJson = formBJson as Form;
-  const formData = useSelectFormData(formJson.name as FormName) as FormRPartB;
+  const formData = useSelectFormData(formJson.name) as FormRPartB;
 
   const formDataWithSortedWork = {
     ...formData,
@@ -72,20 +70,12 @@ export default function FormB() {
   }
   return (
     <>
-      <PageTitle title="Form R Part-B" />
-      <ScrollTo />
-      <Fieldset>
-        <Fieldset.Legend
-          isPageHeading
-          className="fieldset-legend__header"
-          data-cy="formRBHeading"
-        >
-          Form R (Part B)
-        </Fieldset.Legend>
-        <Label data-cy="formrbLabel" size="s">
-          Trainee registration for Postgraduate Speciality Training
-        </Label>
-      </Fieldset>
+      <PageHeading
+        title="Form R (Part B)"
+        headingDataCy="formRBHeading"
+        subHeadingDataCy="formrbLabel"
+        subHeadingText="Trainee registration for Postgraduate Speciality Training"
+      />
       <Switch>
         <Route
           exact

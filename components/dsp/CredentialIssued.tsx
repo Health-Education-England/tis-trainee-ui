@@ -40,6 +40,8 @@ const CredentialIssued: React.FC = () => {
           </p>
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
+            reverse
+            className="dsp-btn_panel"
             onClick={() => {
               localStorage.removeItem(stateParam);
               history.push(`/${storedPanelName}`);

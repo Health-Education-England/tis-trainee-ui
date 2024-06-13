@@ -1,6 +1,5 @@
 import { Button, Label, SummaryList } from "nhsuk-react-components";
 import store from "../../redux/store/store";
-import styles from "./Dsp.module.scss";
 import history from "../navigation/history";
 import {
   issueDspCredential,
@@ -107,7 +106,7 @@ export const DspIssueBtn: React.FC<IDspIssueBtn> = ({
         {!isPastDate && (
           <Button
             disabled={isIssuing || isPastDate}
-            className={styles.btn}
+            className="dsp-btn_issue"
             secondary
             onClick={(e: { preventDefault: () => void }) => {
               e.preventDefault();

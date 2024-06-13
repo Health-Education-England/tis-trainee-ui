@@ -31,6 +31,7 @@ const CredentialVerify: React.FC = () => {
         </p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
+          className="dsp-btn_panel"
           onClick={() => {
             setIsIssuing(true);
             handleVerifyClick();

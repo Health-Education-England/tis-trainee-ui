@@ -55,6 +55,7 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
             );
           }}
           placeholder={placeholder}
+          id={name}
         />
         <label
           className="nhsuk-label nhsuk-checkboxes__label"

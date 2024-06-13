@@ -51,7 +51,11 @@ export const Text: React.FC<TextProps> = ({
 }: TextProps) => {
   return (
     <>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={arrayIndex ? name + arrayIndex : name}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       <input
@@ -76,11 +80,11 @@ export const Text: React.FC<TextProps> = ({
           fieldError ? "nhsuk-input--error" : ""
         } ${isTotal ? "total-field" : ""}`}
         placeholder={placeholder}
-        aria-labelledby={`${name}--label`}
         onBlur={handleBlur}
         width={width}
         maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}
+        id={arrayIndex ? name + arrayIndex : name}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

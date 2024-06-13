@@ -41,6 +41,7 @@ export const Dates = ({
         {label}
       </label>
       <input
+        id={name}
         onKeyDown={handleKeyDown}
         type="date"
         data-cy={`${name}-input`}

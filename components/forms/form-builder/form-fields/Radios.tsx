@@ -33,13 +33,14 @@ export const Radios: React.FC<RadiosProps> = ({
   dtoName
 }: RadiosProps) => {
   return (
-    <div className="nhsuk-radios">
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+    <fieldset className="nhsuk-radios">
+      <legend className="nhsuk-label" data-cy={`${name}-label`}>
         {label}
-      </label>
+      </legend>
       {options?.map((option: any) => (
         <div className="nhsuk-radios__item" key={option.value}>
           <input
+            id={`${name}-${option.label}`}
             data-cy={`${name}-${option.label}-input`}
             onKeyDown={handleKeyDown}
             className="nhsuk-radios__input"
@@ -59,9 +60,11 @@ export const Radios: React.FC<RadiosProps> = ({
               )
             }
             placeholder={option.value}
-            aria-labelledby={`${option.value}--label`}
           />
-          <label className="nhsuk-label nhsuk-radios__label">
+          <label
+            className="nhsuk-label nhsuk-radios__label"
+            htmlFor={`${name}-${option.label}`}
+          >
             {option.label}
           </label>
         </div>
@@ -69,7 +72,7 @@ export const Radios: React.FC<RadiosProps> = ({
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </div>
+    </fieldset>
   );
 };
 

@@ -38,6 +38,7 @@ const CredentialIssue: React.FC = () => {
         </p>
         <DSPPanel profName={storedPanelName} profData={storedPanelData} />
         <Button
+          className="dsp-btn_panel"
           disabled={isIssuing}
           onClick={() => {
             setIsIssuing(true);
@@ -73,6 +74,7 @@ const CredentialIssue: React.FC = () => {
           </p>
           <DSPPanel profName={storedPanelName} profData={storedPanelData} />
           <Button
+            className="dsp-btn_panel"
             disabled={isIssuing}
             onClick={async () => {
               setIsIssuing(true);

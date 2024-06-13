@@ -54,6 +54,7 @@ export const Phone = ({
         }}
         value={value}
         initialValueFormat="national"
+        id={name}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

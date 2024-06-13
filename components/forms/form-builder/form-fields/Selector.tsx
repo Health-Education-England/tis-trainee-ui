@@ -36,12 +36,14 @@ export const Selector = ({
   arrayName,
   dtoName
 }: SelectorProps) => {
+  const id = `${name}-label`;
   return (
     <div data-cy={name}>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label id={id} className="nhsuk-label" data-cy={id}>
         {label}
       </label>
       <Select
+        aria-labelledby={id}
         onKeyDown={handleKeyDown}
         options={options}
         onChange={selectedOption =>

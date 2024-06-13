@@ -60,6 +60,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
         placeholder={placeholder}
         rows={rows ?? 10}
         spellCheck={true}
+        id={name}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

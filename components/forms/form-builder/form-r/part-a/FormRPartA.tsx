@@ -1,7 +1,4 @@
 import { Redirect, Route, Switch } from "react-router-dom";
-import ScrollTo from "../../../ScrollTo";
-import PageTitle from "../../../../common/PageTitle";
-import { Fieldset, Label } from "nhsuk-react-components";
 import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
@@ -21,6 +18,7 @@ import {
 import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
 import history from "../../../../navigation/history";
 import { FormRPartA } from "../../../../../models/FormRPartA";
+import PageHeading from "../../../../common/PageHeading";
 
 export default function FormA() {
   const formData = useSelectFormData(formAJson.name as FormName) as FormRPartA;
@@ -50,20 +48,12 @@ export default function FormA() {
   }
   return (
     <>
-      <PageTitle title="Form R Part-A" />
-      <ScrollTo />
-      <Fieldset>
-        <Fieldset.Legend
-          isPageHeading
-          className="fieldset-legend__header"
-          data-cy="formRAHeading"
-        >
-          Form R (Part A)
-        </Fieldset.Legend>
-        <Label data-cy="formraLabel" size="s">
-          Trainee registration for Postgraduate Speciality Training
-        </Label>
-      </Fieldset>
+      <PageHeading
+        title="Form R (Part A)"
+        headingDataCy="formRAHeading"
+        subHeadingDataCy="formraLabel"
+        subHeadingText="Trainee registration for Postgraduate Speciality Training"
+      />
       <Switch>
         <Route
           exact

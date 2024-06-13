@@ -26,6 +26,7 @@ const MobilePhoneInputField: FunctionComponent<
         </label>
       )}
       <PhoneInput
+        id="mobilePhoneNumber"
         placeholder="Enter mobile number..."
         onBlur={field.onBlur}
         disabled={disabled}

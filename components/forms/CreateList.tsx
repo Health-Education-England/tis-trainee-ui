@@ -60,7 +60,6 @@ const CreateList = () => {
     content = (
       <>
         <ScrollTo />
-        <br />
         <Container>
           <Row>
             <Col width="one-third">
