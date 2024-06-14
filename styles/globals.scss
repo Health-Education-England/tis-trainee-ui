@@ -6,6 +6,7 @@ $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
 $nhsSuccess: #006400;
 $nhsError: #a7171a;
+$nhsEmergency: #d5281b;
 
 html {
   background-color: inherit;
@@ -858,6 +859,10 @@ ol[type="a"] {
 // CCT calculator Cct.tsx
 
 // dialog
+#cct-disclaimer-text {
+  color: $nhsEmergency;
+  font-size: 1rem;
+}
 .cct-dialog {
   z-index: 1000;
   background-color: whitesmoke;
@@ -878,8 +883,12 @@ ol[type="a"] {
     right: 50vw;
   }
 
-  @media (min-width: 1200px) and (max-width: 1899px) {
-    right: 70vw;
+  @media (min-width: 1200px) and (max-width: 1299px) {
+    right: 60vw;
+  }
+
+  @media (min-width: 1300px) and (max-width: 1899px) {
+    right: 65vw;
   }
 
   @media (min-width: 1900px) {

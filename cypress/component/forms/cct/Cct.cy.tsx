@@ -39,7 +39,7 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-header"]').contains("CCT Calculator");
     cy.get('[data-cy="cct-disclaimer"]').contains(
-      "This calculator is intended to provide a quick rough estimate only. Your actual CCT date will be confirmed at your next ARCP."
+      "Please note, this calculator is only intended"
     );
     cy.get('[data-cy="cctInfoSummary"]')
       .contains("CCT Calculator further information")

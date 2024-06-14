@@ -94,10 +94,12 @@ const CctChild = forwardRef(
             size="m"
             data-cy="cct-header"
           >{`CCT Calculator`}</Fieldset.Legend>
-          <p style={{ color: "#D5281B" }} data-cy="cct-disclaimer">
+          <p id="cct-disclaimer-text" data-cy="cct-disclaimer">
             <b>
-              This calculator is intended to provide a quick rough estimate
-              only. Your actual CCT date will be confirmed at your next ARCP.
+              Please note, this calculator is only intended to provide a quick
+              rough estimate. It does not factor in Time out of Training,
+              statutory leave or a period of OOP. Your actual CCT date will be
+              confirmed at your next ARCP.
             </b>
           </p>
           <ExpanderMsg expanderName="cctInfo" />
