@@ -6,6 +6,7 @@ $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
 $nhsSuccess: #006400;
 $nhsError: #a7171a;
+$nhsEmergency: #d5281b;
 
 html {
   background-color: inherit;
@@ -852,5 +853,69 @@ ol[type="a"] {
 
 .unread-icon {
   color: #425563;
+  margin-right: 0.5em;
+}
+
+// CCT calculator Cct.tsx
+
+// dialog
+#cct-disclaimer-text {
+  color: $nhsEmergency;
+  font-size: 1rem;
+}
+.cct-dialog {
+  z-index: 1000;
+  background-color: whitesmoke;
+  position: relative;
+  top: 0;
+  margin: 2rem;
+
+  &.draggable {
+    cursor: move;
+  }
+
+  @media (min-width: 1025px) {
+    position: absolute;
+    top: 17rem;
+  }
+
+  @media (min-width: 1025px) and (max-width: 1199px) {
+    right: 50vw;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1299px) {
+    right: 60vw;
+  }
+
+  @media (min-width: 1300px) and (max-width: 1899px) {
+    right: 65vw;
+  }
+
+  @media (min-width: 1900px) {
+    right: 75vw;
+  }
+
+  @media (max-width: 440px) {
+    right: 0;
+    margin: 2rem 1rem;
+  }
+}
+
+.no-move {
+  cursor: default;
+}
+
+#cct-btns {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+// CctBtn.tsx
+#cct-card {
+  background-color: #fafbfd;
+}
+
+#cct-btn span {
   margin-right: 0.5em;
 }

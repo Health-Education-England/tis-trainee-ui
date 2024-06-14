@@ -10,6 +10,7 @@ import userReducer from "./userSlice";
 import dspReducer from "./dspSlice";
 import tssUpdatesReducer from "./tssUpdatesSlice";
 import notificationsReducer from "./notificationsSlice";
+import cctCalcReducer from "./cctCalcSlice";
 
 const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   user: userReducer,
   dsp: dspReducer,
   tssUpdates: tssUpdatesReducer,
-  notifications: notificationsReducer
+  notifications: notificationsReducer,
+  cctCalc: cctCalcReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

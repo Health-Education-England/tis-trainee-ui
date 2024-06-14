@@ -310,11 +310,7 @@ export function showFieldMatchWarning(
       return { fieldName, warningMsg };
     } else return null;
   } else if (matcher === "postcodeTest")
-    if (
-      !new RegExp("[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}", "i").test(
-        inputValue
-      )
-    )
+    if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
       return { fieldName, warningMsg };
   return null;
 }

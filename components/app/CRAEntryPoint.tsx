@@ -128,7 +128,7 @@ function CRAEntryPoint() {
           <>
             <ToastContainer
               transition={Zoom}
-              limit={4}
+              limit={2}
               hideProgressBar={true}
             />
             <Main />

@@ -31,6 +31,7 @@ import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
 import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
 import { Notifications } from "../notifications/Notifications";
+import { Cct } from "../forms/cct/Cct";
 
 const appVersion = packageJson.version;
 
@@ -126,6 +127,7 @@ export const Main = () => {
         <TSSHeader />
         {pathname !== "/home" ? <GlobalAlert /> : null}
         <Breadcrumbs />
+        <Cct />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">
           <Switch>
             <Route exact path="/home" component={Home} />

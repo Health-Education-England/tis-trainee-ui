@@ -3,7 +3,8 @@ import { ActionLink, Details } from "nhsuk-react-components";
 export type ExpanderNameType =
   | "dataSource"
   | "formRDeclarationsExplained"
-  | "postTypes";
+  | "postTypes"
+  | "cctInfo";
 
 export const ExpanderMsg = ({
   expanderName
@@ -99,6 +100,65 @@ export const ExpanderMsg = ({
         "See the latest Gold Guide for more details (opens a new tab)",
       actionLinkHref:
         "https://www.copmed.org.uk/images/docs/gold-guide-9th-edition/Gold-Guide-9th-Edition-August-2022.pdf"
+    },
+    cctInfo: {
+      summary: "CCT Calculator further information",
+      text: (
+        <>
+          <p>
+            This CCT calculation is designed to give a rough estimate of the
+            change in Programme end date based on a change in Whole Time
+            Equivalent (WTE) percentage{" "}
+            <i>
+              <b>before</b>
+            </i>{" "}
+            the specifics of your working arrangments are discussed with your
+            Training Programme Director (TPD).
+          </p>
+          <p>
+            <b>Q. What is your current WTE percentage?</b>
+          </p>
+          <p>
+            {`WTE (Whole Time Equivalent) is a measure of the proportion of full
+            time hours you are currently working as a percentage. If your
+            current percentage is not in the list you can add it by typing (e.g.
+            40 or 40%) and then clicking 'Create' to select it.`}
+          </p>
+          <p>
+            <b> Q. What WTE percentage(s) are you considering?</b>
+          </p>
+          <p>
+            Please note that the WTE percentage(s) you select are subject to
+            availability and agreement with your TPD.
+          </p>
+          <p>
+            The percentages in the dropdown list are the most common. You can
+            add your own WTE percentage by typing and then selecting it but this
+            does not indicate a choice will be possible.
+          </p>
+          <p>
+            Returning to full time (100% WTE) requires a full time vacancy to
+            exist.
+          </p>
+          <p>Some specialties will not allow 50% WTE.</p>
+          <p>
+            <b>Q. When should the WTE change begin?</b>
+          </p>
+          <p>
+            The calculator defaults to 16 weeks hence as this is the normal
+            minimum notice period required. Shorter notice periods may be
+            possible but need to be agreed.
+          </p>
+          <p>
+            <b>Q. When should the WTE change end?</b>
+          </p>
+          <p>
+            The calculator defaults to the current programme end date but you
+            can choose an earlier end date if you are looking at ending the
+            change in WTE sooner than this.
+          </p>
+        </>
+      )
     }
   };
 

@@ -23,6 +23,7 @@ import {
   resetTraineeAction
 } from "../../redux/slices/traineeActionsSlice";
 import dayjs from "dayjs";
+import { CctBtn } from "../programmes/CctBtn";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -64,6 +65,12 @@ export function PanelsCreator({
           return (
             <Card.GroupItem key={index} width="one-half">
               <Card className={style.panelDiv}>
+                {panelsName === TraineeProfileName.Programmes && (
+                  <CctBtn
+                    progName={panel.programmeName}
+                    endDate={panel.endDate}
+                  />
+                )}
                 <SummaryList>
                   {Object.keys(filteredPanel).map((panelProp, _index) => (
                     <SummaryList.Row key={_index}>
@@ -132,6 +139,9 @@ export async function handleReview(actionId: string) {
 }
 
 export function displayListVal<T extends Date | string>(val: T, k: string) {
+  if (val === null || val === "") {
+    return "None provided";
+  }
   const transformations: Record<string, (value: Date | string) => string> = {
     endDate: DateUtilities.ToLocalDate,
     startDate: DateUtilities.ToLocalDate,
@@ -142,9 +152,7 @@ export function displayListVal<T extends Date | string>(val: T, k: string) {
   const transformation = transformations[k];
   if (transformation) {
     return transformation(val);
-  } else {
-    return val ? val : "None provided";
-  }
+  } else return val;
 }
 
 export function prepareProfilePanelsData(
@@ -216,16 +224,16 @@ function displayTheCorrectListItem(
       );
     case "otherSpecialties":
       if (panel[panelProp]?.length > 0) {
-        var otherSpecialties = [...panel[panelProp]];
-        return otherSpecialties
-          .sort((s1, s2) => s1.name.localeCompare(s2.name))
-          .map(
-            ({ specialtyId, name }: SpecialtyType): JSX.Element => (
-              <div key={specialtyId}>
-                <div data-cy={`otherSpecialty${specialtyId}Val`}>{name}</div>
-              </div>
-            )
-          );
+        const sortedSpecialties = [...panel[panelProp]].sort((s1, s2) =>
+          s1.name.localeCompare(s2.name)
+        );
+        return sortedSpecialties.map(
+          ({ specialtyId, name }: SpecialtyType): JSX.Element => (
+            <div key={specialtyId}>
+              <div data-cy={`otherSpecialty${specialtyId}Val`}>{name}</div>
+            </div>
+          )
+        );
       } else {
         return "None provided";
       }
