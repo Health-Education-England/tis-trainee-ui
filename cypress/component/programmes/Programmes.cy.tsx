@@ -89,8 +89,8 @@ describe("Programmes with MFA set up", () => {
       .should("contain.text", "01/08/2022 - 01/08/2025");
     cy.get('[data-cy="cctBtn-Cardiology"]')
       .should("exist")
-      .should("contain.text", "Get CCT estimate")
-      .should("have.attr", "title", "Get CCT estimate");
+      .should("contain.text", "Open CCT Calculator")
+      .should("have.attr", "title", "Open CCT Calculator");
     cy.get('[data-cy="cct-prompt-label"]')
       .should("exist")
       .should("contain.text", "Thinking of changing your hours?");
