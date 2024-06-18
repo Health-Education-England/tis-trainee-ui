@@ -1,4 +1,9 @@
-import { calculateNewEndDates, FtePercentsTypes } from "../CctUtilities";
+import {
+  calcDefaultPropStartDate,
+  calculateNewEndDates,
+  FtePercentsTypes
+} from "../CctUtilities";
+import dayjs from "dayjs";
 
 describe("calculateNewEndDates", () => {
   beforeAll(() => {
@@ -55,5 +60,42 @@ describe("calculateNewEndDates", () => {
     );
 
     expect(result).toEqual([{ ftePercent: "95%", newEndDate: "17/02/2028" }]);
+  });
+});
+
+describe("calcDefaultPropStartDate", () => {
+  const sixteenWeeksFromNow = dayjs().add(16, "weeks");
+  it("should return the currentProgStartDate if the program start date is at least 16 weeks from now.", () => {
+    const currentProgStartDate = sixteenWeeksFromNow.format("YYYY-MM-DD");
+    const currentProgEndDate = dayjs().add(2, "years").format("YYYY-MM-DD");
+    expect(
+      calcDefaultPropStartDate(currentProgStartDate, currentProgEndDate)
+    ).toBe(sixteenWeeksFromNow.format("YYYY-MM-DD"));
+    expect(
+      calcDefaultPropStartDate(
+        sixteenWeeksFromNow.add(1, "day").format("YYYY-MM-DD"),
+        currentProgEndDate
+      )
+    ).toBe(sixteenWeeksFromNow.add(1, "day").format("YYYY-MM-DD"));
+  });
+  it("should return an empty string if the program end date is before 16 weeks from now.", () => {
+    const currentProgStartDate = dayjs().format("YYYY-MM-DD");
+    const currentProgEndDate = sixteenWeeksFromNow
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    expect(
+      calcDefaultPropStartDate(currentProgStartDate, currentProgEndDate)
+    ).toBe("");
+  });
+  it("should the default sixteenWeeksFromNow if the program start date is less than 16 weeks from now and the program end date is at least 16 weeks away from now.", () => {
+    const currentProgStartDate = sixteenWeeksFromNow
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    const currentProgEndDate = sixteenWeeksFromNow
+      .add(1, "day")
+      .format("YYYY-MM-DD");
+    expect(
+      calcDefaultPropStartDate(currentProgStartDate, currentProgEndDate)
+    ).toBe(sixteenWeeksFromNow.format("YYYY-MM-DD"));
   });
 });

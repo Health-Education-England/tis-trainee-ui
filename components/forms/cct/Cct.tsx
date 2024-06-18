@@ -96,10 +96,13 @@ const CctChild = forwardRef(
           >{`CCT Calculator`}</Fieldset.Legend>
           <p id="cct-disclaimer-text" data-cy="cct-disclaimer">
             <b>
-              Please note, this calculator is only intended to provide a quick
-              rough estimate. It does not factor in Time out of Training,
-              statutory leave or a period of OOP. Your actual CCT date will be
-              confirmed at your next ARCP.
+              This calculator is intended to provide a quick rough estimate
+              only.
+              <br />
+              It does not factor in Time out of Training, statutory leave or a
+              period of OOP.
+              <br />
+              Your actual CCT date will be confirmed at your next ARCP.
             </b>
           </p>
           <ExpanderMsg expanderName="cctInfo" />
@@ -156,6 +159,7 @@ const CctChild = forwardRef(
             position={position}
             onStop={handleDrag as DraggableEventHandler}
             cancel=".not-draggable"
+            bounds="parent"
           >
             {dialogContent}
           </Draggable>

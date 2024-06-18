@@ -5,20 +5,24 @@ import { Button, CloseIcon } from "nhsuk-react-components";
 import { AutocompleteSelect } from "../../common/AutocompleteSelect";
 import TextInputField from "../TextInputField";
 import FieldWarningMsg from "../FieldWarningMsg";
-import { FtePercentsTypes, handleClose } from "../../../utilities/CctUtilities";
+import {
+  FtePercentsTypes,
+  NewEndDatesTypes,
+  handleClose
+} from "../../../utilities/CctUtilities";
 
 type CalcFormProps = {
-  currentProgEndDate: Date | string;
-  propStartDate: Date | string;
+  currentProgEndDate: string;
+  propStartDate: string;
   onCalculate: (values: CalcFormValues) => void;
-  newEndDates?: string[];
+  newEndDates: NewEndDatesTypes[];
   handlePrint: () => void;
 };
 
 export type CalcFormValues = {
   ftePercents: FtePercentsTypes[];
-  propStartDate: Date | string;
-  propEndDate: Date | string;
+  propStartDate: string;
+  propEndDate: string;
   currentFtePercent: string;
 };
 

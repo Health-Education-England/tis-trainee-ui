@@ -128,13 +128,13 @@ export const ExpanderMsg = ({
             <b> Q. What WTE percentage(s) are you considering?</b>
           </p>
           <p>
-            Please note that the WTE percentage(s) you select are subject to
-            availability and agreement with your TPD.
+            The WTE percentage(s) you select are subject to availability and
+            agreement with your TPD.
           </p>
           <p>
-            The percentages in the dropdown list are the most common. You can
-            add your own WTE percentage by typing and then selecting it but this
-            does not indicate a choice will be possible.
+            {`The dropdown lists the standard WTE percentages. You can add your
+            own by typing and clicking 'Create' but this bespoke value might not
+            be possible.`}
           </p>
           <p>
             Returning to full time (100% WTE) requires a full time vacancy to
@@ -145,17 +145,15 @@ export const ExpanderMsg = ({
             <b>Q. When should the WTE change begin?</b>
           </p>
           <p>
-            The calculator defaults to 16 weeks hence as this is the normal
-            minimum notice period required. Shorter notice periods may be
-            possible but need to be agreed.
+            The required notice period is normally 16 weeks. Shorter notice
+            periods may be possible but will need to be agreed.
           </p>
           <p>
             <b>Q. When should the WTE change end?</b>
           </p>
           <p>
-            The calculator defaults to the current programme end date but you
-            can choose an earlier end date if you are looking at ending the
-            change in WTE sooner than this.
+            The default is the current programme end date but you can choose to
+            end the change in WTE earlier.
           </p>
         </>
       )

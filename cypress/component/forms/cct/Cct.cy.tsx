@@ -9,7 +9,8 @@ import {
   openCctModal,
   setCurrentProgEndDate,
   setNewEndDates,
-  setProgName
+  setProgName,
+  setPropStartDate
 } from "../../../../redux/slices/cctCalcSlice";
 import dayjs from "dayjs";
 
@@ -21,6 +22,9 @@ describe("Cct", () => {
     store.dispatch(openCctModal());
     store.dispatch(setProgName(progName));
     store.dispatch(setCurrentProgEndDate(endDate.format("YYYY-MM-DD")));
+    store.dispatch(
+      setPropStartDate(dayjs().add(16, "week").format("YYYY-MM-DD"))
+    );
 
     const newEndDate = (newPercent: number, currPercent: number) => {
       const propStartDate = dayjs().add(16, "week").subtract(1, "day");
@@ -39,7 +43,7 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-header"]').contains("CCT Calculator");
     cy.get('[data-cy="cct-disclaimer"]').contains(
-      "Please note, this calculator is only intended"
+      "This calculator is intended to provide a quick rough estimate only."
     );
     cy.get('[data-cy="cctInfoSummary"]')
       .contains("CCT Calculator further information")

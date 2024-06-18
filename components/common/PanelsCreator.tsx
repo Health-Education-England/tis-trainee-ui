@@ -69,6 +69,7 @@ export function PanelsCreator({
                   <CctBtn
                     progName={panel.programmeName}
                     endDate={panel.endDate}
+                    startDate={panel.startDate}
                   />
                 )}
                 <SummaryList>
