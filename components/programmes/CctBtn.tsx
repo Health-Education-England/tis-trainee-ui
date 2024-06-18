@@ -4,23 +4,33 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import {
   openCctModal,
   setCurrentProgEndDate,
-  setProgName
+  setProgName,
+  setPropStartDate
 } from "../../redux/slices/cctCalcSlice";
 import { Button, Card, Label } from "nhsuk-react-components";
+import { calcDefaultPropStartDate } from "../../utilities/CctUtilities";
 
 type CctBtnProps = {
   progName: string;
-  endDate: Date | string;
+  endDate: string;
+  startDate: string;
 };
 
-export function CctBtn({ progName, endDate }: Readonly<CctBtnProps>) {
+export function CctBtn({
+  progName,
+  endDate,
+  startDate
+}: Readonly<CctBtnProps>) {
   const dispatch = useAppDispatch();
   const modalState = useAppSelector(state => state.cctCalc.modalOpen);
+  const defaultPropStartDate = calcDefaultPropStartDate(startDate, endDate);
 
   const handleClick = () => {
     dispatch(openCctModal());
     dispatch(setProgName(progName));
     dispatch(setCurrentProgEndDate(endDate));
+    defaultPropStartDate.length > 0 &&
+      dispatch(setPropStartDate(defaultPropStartDate));
   };
   return (
     <Card className="cct-card">
@@ -34,9 +44,9 @@ export function CctBtn({ progName, endDate }: Readonly<CctBtnProps>) {
           data-cy={`cctBtn-${progName}`}
           onClick={handleClick}
           disabled={modalState}
-          title="Get CCT estimate"
+          title="Open CCT Calculator"
         >
-          <span>{"Get CCT estimate"}</span>
+          <span>{"Open CCT Calculator"}</span>
           <FontAwesomeIcon
             icon={faCalculator}
             size="lg"

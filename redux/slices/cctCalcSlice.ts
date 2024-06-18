@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import dayjs from "dayjs";
+import { NewEndDatesTypes } from "../../utilities/CctUtilities";
 
 type CctCalcState = {
   modalOpen: boolean;
   progName: string;
-  currentProgEndDate: Date | string;
-  newEndDates: any[];
-  propStartDate: Date | string;
+  currentProgEndDate: string;
+  newEndDates: NewEndDatesTypes[];
+  propStartDate: string;
 };
 
 const initialState: CctCalcState = {
@@ -14,7 +14,7 @@ const initialState: CctCalcState = {
   progName: "",
   currentProgEndDate: "",
   newEndDates: [],
-  propStartDate: dayjs().add(16, "weeks").format("YYYY-MM-DD")
+  propStartDate: ""
 };
 
 const cctCalcSlice = createSlice({
@@ -27,10 +27,13 @@ const cctCalcSlice = createSlice({
     setProgName(state, action: PayloadAction<string>) {
       return { ...state, progName: action.payload };
     },
-    setCurrentProgEndDate(state, action: PayloadAction<Date | string>) {
+    setCurrentProgEndDate(state, action: PayloadAction<string>) {
       return { ...state, currentProgEndDate: action.payload };
     },
-    setNewEndDates(state, action: PayloadAction<any[]>) {
+    setPropStartDate(state, action: PayloadAction<string>) {
+      return { ...state, propStartDate: action.payload };
+    },
+    setNewEndDates(state, action: PayloadAction<NewEndDatesTypes[]>) {
       return { ...state, newEndDates: action.payload };
     },
     resetCctCalc() {
@@ -45,6 +48,7 @@ export const {
   openCctModal,
   setProgName,
   setCurrentProgEndDate,
+  setPropStartDate,
   setNewEndDates,
   resetCctCalc
 } = cctCalcSlice.actions;

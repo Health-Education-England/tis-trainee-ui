@@ -7,13 +7,18 @@ export type FtePercentsTypes = {
   label: string;
 };
 
+export type NewEndDatesTypes = {
+  ftePercent: string;
+  newEndDate: string;
+};
+
 export function calculateNewEndDates(
   currentFtePercent: number,
   ftePercents: FtePercentsTypes[],
   propStartDate: Date | string,
   propEndDate: Date | string,
   currentProgEndDate: Date | string
-) {
+): NewEndDatesTypes[] {
   const chunkDays = dayjs(propEndDate).diff(propStartDate, "days");
   return ftePercents.map(ftePercent => {
     if (typeof ftePercent.value === "string") {
@@ -38,4 +43,21 @@ export function calculateNewEndDates(
 
 export function handleClose() {
   store.dispatch(resetCctCalc());
+}
+
+export function calcDefaultPropStartDate(
+  programmeStartDate: string,
+  programmeEndDate: string
+): string {
+  const sixteenWeeksFromNow = dayjs().add(16, "weeks").format("YYYY-MM-DD");
+
+  if (dayjs(programmeStartDate).isSameOrAfter(sixteenWeeksFromNow)) {
+    return programmeStartDate;
+  }
+
+  if (dayjs(programmeEndDate).isBefore(sixteenWeeksFromNow)) {
+    return "";
+  }
+
+  return sixteenWeeksFromNow;
 }
