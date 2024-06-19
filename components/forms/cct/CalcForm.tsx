@@ -16,7 +16,7 @@ type CalcFormProps = {
   propStartDate: string;
   onCalculate: (values: CalcFormValues) => void;
   newEndDates: NewEndDatesTypes[];
-  handlePrint: () => void;
+  setShouldPrint: (shouldPrint: boolean) => void;
 };
 
 export type CalcFormValues = {
@@ -31,7 +31,7 @@ export function CalcForm({
   propStartDate,
   onCalculate,
   newEndDates = [],
-  handlePrint
+  setShouldPrint
 }: Readonly<CalcFormProps>) {
   const validationSchema = Yup.object().shape({
     currentFtePercent: Yup.string()
@@ -179,7 +179,7 @@ export function CalcForm({
             </Button>
             <Button
               secondary
-              onClick={handlePrint}
+              onClick={() => setShouldPrint(true)}
               disabled={!dirty || !isValid || newEndDates.length === 0}
               data-cy="cct-pdf-btn"
             >

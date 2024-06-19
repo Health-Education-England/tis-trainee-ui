@@ -5,16 +5,22 @@ type CctCalcState = {
   modalOpen: boolean;
   progName: string;
   currentProgEndDate: string;
+  currentWte: string;
   newEndDates: NewEndDatesTypes[];
   propStartDate: string;
+  propEndDate: string;
+  dialogYPosition: number;
 };
 
 const initialState: CctCalcState = {
   modalOpen: false,
   progName: "",
   currentProgEndDate: "",
+  currentWte: "",
   newEndDates: [],
-  propStartDate: ""
+  propStartDate: "",
+  propEndDate: "",
+  dialogYPosition: 0
 };
 
 const cctCalcSlice = createSlice({
@@ -30,11 +36,20 @@ const cctCalcSlice = createSlice({
     setCurrentProgEndDate(state, action: PayloadAction<string>) {
       return { ...state, currentProgEndDate: action.payload };
     },
+    setCurrentWte(state, action: PayloadAction<string>) {
+      return { ...state, currentWte: action.payload };
+    },
     setPropStartDate(state, action: PayloadAction<string>) {
       return { ...state, propStartDate: action.payload };
     },
+    setPropEndDate(state, action: PayloadAction<string>) {
+      return { ...state, propEndDate: action.payload };
+    },
     setNewEndDates(state, action: PayloadAction<NewEndDatesTypes[]>) {
       return { ...state, newEndDates: action.payload };
+    },
+    setDialogYPosition(state, action: PayloadAction<number>) {
+      return { ...state, dialogYPosition: action.payload };
     },
     resetCctCalc() {
       return initialState;
@@ -48,7 +63,10 @@ export const {
   openCctModal,
   setProgName,
   setCurrentProgEndDate,
+  setCurrentWte,
   setPropStartDate,
+  setPropEndDate,
   setNewEndDates,
+  setDialogYPosition,
   resetCctCalc
 } = cctCalcSlice.actions;
