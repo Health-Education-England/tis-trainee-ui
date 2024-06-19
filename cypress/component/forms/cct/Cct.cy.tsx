@@ -41,6 +41,7 @@ describe("Cct", () => {
         </MemoryRouter>
       </Provider>
     );
+    cy.get('[data-cy="cct-printable"]').should("not.exist");
     cy.get('[data-cy="cct-header"]').contains("CCT Calculator");
     cy.get('[data-cy="cct-disclaimer"]').contains(
       "This calculator is intended to provide a quick rough estimate only."
@@ -158,6 +159,8 @@ describe("Cct", () => {
       .should("have.text", newEndDate(100, 80));
 
     cy.get('[data-cy="cctInfoSummary"]').click();
+
+    cy.get('[data-cy="cct-pdf-btn"]').should("not.be.disabled");
 
     cy.get('[data-cy="cct-close-btn"]').click();
     cy.get(".cct-dialog").should("not.exist");

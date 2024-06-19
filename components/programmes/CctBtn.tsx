@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import {
   openCctModal,
   setCurrentProgEndDate,
+  setDialogYPosition,
   setProgName,
   setPropStartDate
 } from "../../redux/slices/cctCalcSlice";
@@ -26,6 +27,7 @@ export function CctBtn({
   const defaultPropStartDate = calcDefaultPropStartDate(startDate, endDate);
 
   const handleClick = () => {
+    dispatch(setDialogYPosition(window.scrollY));
     dispatch(openCctModal());
     dispatch(setProgName(progName));
     dispatch(setCurrentProgEndDate(endDate));

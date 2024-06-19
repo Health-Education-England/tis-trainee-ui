@@ -2,27 +2,30 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import { setNewEndDates } from "../../../redux/slices/cctCalcSlice";
+import {
+  setCurrentWte,
+  setNewEndDates,
+  setPropEndDate
+} from "../../../redux/slices/cctCalcSlice";
 import ScrollToTop from "../../common/ScrollToTop";
 import { useIsMobile } from "../../../utilities/hooks/useIsMobile";
-import Draggable, {
-  DraggableData,
-  DraggableEventHandler
-} from "react-draggable";
+import Draggable from "react-draggable";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import { Fieldset } from "nhsuk-react-components";
 import { CalcForm, CalcFormValues } from "./CalcForm";
 import {
+  NewEndDatesTypes,
   calculateNewEndDates,
   handleClose
 } from "../../../utilities/CctUtilities";
+import { PrintableCct } from "./PrintableCct";
 
 export function Cct() {
   const componentRef = useRef();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const printRef = useRef();
   const [shouldPrint, setShouldPrint] = useState(false);
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current as unknown as HTMLElement
+    content: () => printRef.current as unknown as HTMLElement
   });
 
   useEffect(() => {
@@ -32,33 +35,24 @@ export function Cct() {
     }
   }, [shouldPrint, handlePrint]);
 
-  const handlePrintAndResetPosition = () => {
-    setPosition({ x: 0, y: 0 });
-    setShouldPrint(true);
-  };
-  const handleDrag = (_e: React.MouseEvent, data: DraggableData) => {
-    setPosition({ x: data.x, y: data.y });
-  };
-
   return (
-    <CctChild
-      ref={componentRef}
-      handlePrint={handlePrintAndResetPosition}
-      position={position}
-      handleDrag={handleDrag}
-    />
+    <>
+      <CctChild ref={componentRef} setShouldPrint={setShouldPrint} />
+      {shouldPrint && <PrintableCct ref={printRef} />}
+    </>
   );
 }
 
 type CctChildProps = {
-  handlePrint: () => void;
-  position: { x: number; y: number };
-  handleDrag: (e: React.MouseEvent, data: DraggableData) => void;
+  setShouldPrint: (shouldPrint: boolean) => void;
 };
 
 const CctChild = forwardRef(
-  ({ handlePrint, position, handleDrag }: Readonly<CctChildProps>, ref) => {
+  ({ setShouldPrint }: Readonly<CctChildProps>, ref) => {
     const dispatch = useAppDispatch();
+    const defaultYPosition = useAppSelector(
+      state => state.cctCalc.dialogYPosition
+    );
     const modalState = useAppSelector(state => state.cctCalc.modalOpen);
     const currentProgEndDate = useAppSelector(
       state => state.cctCalc.currentProgEndDate
@@ -79,6 +73,8 @@ const CctChild = forwardRef(
         currentProgEndDate
       );
       dispatch(setNewEndDates(calculatedEndDates));
+      dispatch(setPropEndDate(values.propEndDate));
+      dispatch(setCurrentWte(values.currentFtePercent));
     };
 
     const dialogContent = (
@@ -90,51 +86,15 @@ const CctChild = forwardRef(
       >
         {isMobile && <ScrollToTop errors={[]} page={0} isPageDirty={false} />}
         <Fieldset>
-          <Fieldset.Legend
-            size="m"
-            data-cy="cct-header"
-          >{`CCT Calculator`}</Fieldset.Legend>
-          <p id="cct-disclaimer-text" data-cy="cct-disclaimer">
-            <b>
-              This calculator is intended to provide a quick rough estimate
-              only.
-              <br />
-              It does not factor in Time out of Training, statutory leave or a
-              period of OOP.
-              <br />
-              Your actual CCT date will be confirmed at your next ARCP.
-            </b>
-          </p>
+          <CctHeader />
+          <DisclaimerTxt />
           <ExpanderMsg expanderName="cctInfo" />
-
-          <p data-cy="cct-curr-prog">
-            <b> {`Programme: `}</b> {progName}
-          </p>
-          <p data-cy="cct-curr-prog-end">
-            <b>{`Current Programme end date: `}</b>
-            {dayjs(currentProgEndDate).format("DD/MM/YYYY")}
-          </p>
+          <CurrentProgInfo
+            progName={progName}
+            currentProgEndDate={currentProgEndDate}
+          />
           {newEndDates.length > 0 && (
-            <div>
-              <table>
-                <thead>
-                  <tr>
-                    <th data-cy="cct-th-wte">New WTE</th>
-                    <th data-cy="cct-th-new-date">New End Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {newEndDates.map(
-                    (item: { ftePercent: string; newEndDate: string }) => (
-                      <tr key={item.ftePercent}>
-                        <td data-cy="cct-td-new-percent">{item.ftePercent}</td>
-                        <td data-cy="cct-td-new-date">{item.newEndDate}</td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <NewWteAndDateTable newEndDates={newEndDates} />
           )}
         </Fieldset>
         <span className="not-draggable no-move">
@@ -143,7 +103,7 @@ const CctChild = forwardRef(
             propStartDate={proposeStartDate}
             onCalculate={handleCalculate}
             newEndDates={newEndDates}
-            handlePrint={handlePrint}
+            setShouldPrint={setShouldPrint}
           />
         </span>
       </dialog>
@@ -156,10 +116,9 @@ const CctChild = forwardRef(
       } else {
         content = (
           <Draggable
-            position={position}
-            onStop={handleDrag as DraggableEventHandler}
             cancel=".not-draggable"
             bounds="parent"
+            defaultPosition={{ x: 0, y: defaultYPosition }}
           >
             {dialogContent}
           </Draggable>
@@ -173,3 +132,88 @@ const CctChild = forwardRef(
   }
 );
 CctChild.displayName = "CctChild"; // need a display name for linting purposes (forwardRef creates a new comp with no display name)
+
+export function DisclaimerTxt() {
+  return (
+    <p id="cct-disclaimer-text" data-cy="cct-disclaimer">
+      <b>
+        This calculator is intended to provide a quick rough estimate only.
+        <br />
+        It does not factor in Time out of Training, statutory leave or a period
+        of OOP.
+        <br />
+        Your actual CCT date will be confirmed at your next ARCP.
+      </b>
+    </p>
+  );
+}
+
+function CctHeader() {
+  return (
+    <Fieldset.Legend
+      size="m"
+      data-cy="cct-header"
+    >{`CCT Calculator`}</Fieldset.Legend>
+  );
+}
+
+export type CurrentProgInfoProps = {
+  progName: string;
+  currentProgEndDate: string;
+  currentWte?: string;
+};
+
+export function CurrentProgInfo({
+  progName,
+  currentProgEndDate,
+  currentWte
+}: Readonly<CurrentProgInfoProps>) {
+  return (
+    <div>
+      <p data-cy="cct-curr-prog">
+        <b> {`Programme: `}</b> {progName}
+      </p>
+      <p data-cy="cct-curr-prog-end">
+        <b>{`Current Programme end date: `}</b>
+        {dayjs(currentProgEndDate).format("DD/MM/YYYY")}
+      </p>
+      {currentWte && (
+        <p data-cy="cct-curr-wte">
+          <b>{`Current WTE: `}</b>
+          {currentWte}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export type NewEndDateTableProps = {
+  newEndDates: NewEndDatesTypes[];
+};
+
+export function NewWteAndDateTable({
+  newEndDates
+}: Readonly<NewEndDateTableProps>) {
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th data-cy="cct-th-wte">New WTE</th>
+            <th data-cy="cct-th-new-date">New End Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {newEndDates.map(
+            (item: { ftePercent: string; newEndDate: string }) => (
+              <tr key={item.ftePercent}>
+                <td data-cy="cct-td-new-percent">{item.ftePercent}</td>
+                <td data-cy="cct-td-new-date">{item.newEndDate}</td>
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}

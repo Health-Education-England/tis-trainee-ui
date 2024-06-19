@@ -876,7 +876,6 @@ ol[type="a"] {
 
   @media (min-width: 1025px) {
     position: absolute;
-    top: 25vh;
   }
 
   @media (min-width: 1025px) and (max-width: 1199px) {
@@ -918,4 +917,35 @@ ol[type="a"] {
 
 #cct-btn span {
   margin-right: 0.5em;
+}
+
+// printable CCT
+.cct-printable {
+  // always invisible except print preview
+  display: none;
+}
+
+@media print {
+  .cct-printable {
+    position: relative;
+    top: 16px;
+    left: 16px;
+    max-width: 95vw;
+    display: block;
+  }
+  .cct-printable h1 {
+    color: #444;
+    font-size: 2em;
+  }
+  .cct-printable h2 {
+    color: #444;
+    font-size: 1.5em;
+  }
+  .cct-printable p {
+    font-size: 1em;
+    line-height: 1.6;
+  }
+  .cct-printable section {
+    margin-bottom: 2em;
+  }
 }
