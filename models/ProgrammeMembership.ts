@@ -6,6 +6,7 @@ export interface ProgrammeMembership {
   programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
+  ntn: string | null;
   startDate: Date | string;
   endDate: Date | string;
   managingDeanery: string;
@@ -34,6 +35,7 @@ export const programmePanelTemplate: ProgrammeMembership = {
   tisId: "",
   programmeName: "",
   programmeNumber: "",
+  ntn: null,
   startDate: "",
   endDate: "",
   managingDeanery: "",

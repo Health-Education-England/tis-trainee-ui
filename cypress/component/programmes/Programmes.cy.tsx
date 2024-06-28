@@ -11,7 +11,8 @@ import {
   mockProgrammeMembershipNonTemplatedField,
   mockProgrammeMembershipCojNotSigned,
   mockProgrammeMembershipCojSigned,
-  mockOutstandingActions
+  mockOutstandingActions,
+  mockProgrammeMembershipNoNtn
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -26,6 +27,9 @@ import {
 import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
 import { updatedCredentials } from "../../../redux/slices/dspSlice";
 import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
+import { updatedFormAList } from "../../../redux/slices/formASlice";
+import { mockFormList } from "../../../mock-data/formr-list";
+import { updatedFormBList } from "../../../redux/slices/formBSlice";
 
 describe("Programmes with no MFA set up", () => {
   it("should not display Programmes page if NOMFA", () => {
@@ -56,6 +60,8 @@ describe("Programmes with no MFA set up", () => {
 describe("Programmes with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(updatedFormAList(mockFormList));
+    store.dispatch(updatedFormBList(mockFormList));
   });
   it("should display Programmes when MFA set up", () => {
     const MockedProgrammesSuccess = () => {
@@ -84,6 +90,9 @@ describe("Programmes with MFA set up", () => {
       .should("exist")
       .should("contain.text", "Cardiology");
     cy.get("[data-cy=ST6]").should("exist");
+    cy.get("[data-cy=ntn0Val]")
+      .should("exist")
+      .should("contain.text", "EOE/ABC-123/11111111/C");
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");
@@ -149,6 +158,32 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=curricula0Val]")
       .should("exist")
       .should("contain.text", "N/A");
+  });
+
+  it("should show alternative text when no NTN", () => {
+    const MockedProgrammeNoNtn = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: mockProgrammeMembershipNoNtn,
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Programmes />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammeNoNtn />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=ntn0Val]")
+      .should("exist")
+      .should("contain.text", "Not Available");
   });
 
   it("should show alternative text when no Programmes data available", () => {
