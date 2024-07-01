@@ -213,7 +213,7 @@ function displayTheCorrectListItem(
           programmeName={panel.programmeName}
         />
       );
-    case "ntn":
+    case "trainingNumber":
       return (
         <TrainingNumber
           conditionsOfJoining={panel["conditionsOfJoining"]}

@@ -135,7 +135,7 @@ describe("Action Summary", () => {
   testProgrammeAction(
     mockOutstandingActions,
     true,
-    "You have 2 Programme Memberships to review, including Training Numbers for current and upcoming programmes."
+    "You have 2 Programme Memberships to review, including training numbers (NTN/DRN) for current and upcoming programmes."
   );
 
   const testPlacementAction = (

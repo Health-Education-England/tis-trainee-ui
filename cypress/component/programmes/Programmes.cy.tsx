@@ -12,7 +12,7 @@ import {
   mockProgrammeMembershipCojNotSigned,
   mockProgrammeMembershipCojSigned,
   mockOutstandingActions,
-  mockProgrammeMembershipNoNtn
+  mockProgrammeMembershipNoTrainingNumber
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -90,7 +90,7 @@ describe("Programmes with MFA set up", () => {
       .should("exist")
       .should("contain.text", "Cardiology");
     cy.get("[data-cy=ST6]").should("exist");
-    cy.get("[data-cy=ntn0Val]")
+    cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
       .should("contain.text", "EOE/ABC-123/11111111/C");
     cy.get("[data-cy=currDates]")
@@ -160,14 +160,14 @@ describe("Programmes with MFA set up", () => {
       .should("contain.text", "N/A");
   });
 
-  it("should show alternative text when no NTN", () => {
-    const MockedProgrammeNoNtn = () => {
+  it("should show alternative text when no training number", () => {
+    const MockedProgrammeNoTrainingNumber = () => {
       const dispatch = useAppDispatch();
       dispatch(
         updatedTraineeProfileData({
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMembershipNoNtn,
+          programmeMemberships: mockProgrammeMembershipNoTrainingNumber,
           placements: []
         })
       );
@@ -177,11 +177,11 @@ describe("Programmes with MFA set up", () => {
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedProgrammeNoNtn />
+          <MockedProgrammeNoTrainingNumber />
         </Router>
       </Provider>
     );
-    cy.get("[data-cy=ntn0Val]")
+    cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
       .should("contain.text", "Not Available");
   });

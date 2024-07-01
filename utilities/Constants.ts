@@ -179,7 +179,7 @@ export const PANEL_KEYS: any = {
   programmeName: "Programme Name",
   programmeNumber: "Programme Number",
   managingDeanery: "Owner",
-  ntn: "NTN",
+  trainingNumber: "Training Number (NTN/DRN)",
   programmeMembershipType: "Type",
   curricula: "Curricula",
   conditionsOfJoining: "Conditions of Joining"

@@ -10,7 +10,7 @@ import { updatedFormAList } from "../../../redux/slices/formASlice";
 import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
 
-const NTN = "ABC/XYZ-123/1234567/D";
+const TRAINING_NUMBER = "ABC/XYZ-123/1234567/D";
 
 describe("TrainingNumber", () => {
   const conditionsOfJoining = {
@@ -23,7 +23,7 @@ describe("TrainingNumber", () => {
     store.dispatch(updatedFormBList(mockFormList));
   });
 
-  it("should display 'Not Available' when no NTN and actions not complete", () => {
+  it("should display 'Not Available' when no training number and actions not complete", () => {
     const conditionsOfJoining = {
       signedAt: null,
       version: "GG8"
@@ -61,7 +61,7 @@ describe("TrainingNumber", () => {
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -86,7 +86,7 @@ describe("TrainingNumber", () => {
             startDate={new Date(
               COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000
             ).toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -94,7 +94,7 @@ describe("TrainingNumber", () => {
 
     cy.get("[data-cy=trainingNumberText]")
       .should("exist")
-      .and("have.text", NTN);
+      .and("have.text", TRAINING_NUMBER);
   });
 
   it("should require Form R Part A when never submitted", () => {
@@ -106,7 +106,7 @@ describe("TrainingNumber", () => {
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -126,7 +126,7 @@ describe("TrainingNumber", () => {
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -146,7 +146,7 @@ describe("TrainingNumber", () => {
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -166,7 +166,7 @@ describe("TrainingNumber", () => {
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -177,7 +177,7 @@ describe("TrainingNumber", () => {
       .and("have.text", "Form R Part B");
   });
 
-  it("should display 'Not Available' when no NTN and actions complete", () => {
+  it("should display 'Not Available' when no training number and actions complete", () => {
     mount(
       <Provider store={store}>
         <BrowserRouter>
@@ -195,14 +195,14 @@ describe("TrainingNumber", () => {
       .and("have.text", "Not Available");
   });
 
-  it("should display the NTN when actions complete", () => {
+  it("should display the training when actions complete", () => {
     mount(
       <Provider store={store}>
         <BrowserRouter>
           <TrainingNumber
             conditionsOfJoining={conditionsOfJoining}
             startDate={COJ_EPOCH.toISOString()}
-            trainingNumber={NTN}
+            trainingNumber={TRAINING_NUMBER}
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>
@@ -210,6 +210,6 @@ describe("TrainingNumber", () => {
 
     cy.get("[data-cy=trainingNumberText]")
       .should("exist")
-      .and("have.text", NTN);
+      .and("have.text", TRAINING_NUMBER);
   });
 });
