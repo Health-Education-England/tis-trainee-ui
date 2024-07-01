@@ -114,7 +114,8 @@ export default function ActionSummary() {
                               programmeActions.length > 1 ? "s" : ""
                             }`}
                           </Link>{" "}
-                          to review.
+                          to review, including training numbers (NTN/DRN) for
+                          current and upcoming programmes.
                         </Label>
                       </li>
                     </ul>

@@ -63,6 +63,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     tisId: "1",
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
+    trainingNumber: "EOE/ABC-123/11111111/C",
     managingDeanery: "Health Education England East of England",
     programmeMembershipType: "SUBSTANTIVE",
     status: Status.Current,
@@ -101,6 +102,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     tisId: "2",
     programmeName: "General Practice",
     programmeNumber: "EOE8950",
+    trainingNumber: "EOE/XYZ-789/11111111/C",
     managingDeanery: "Health Education England East of England",
     programmeMembershipType: "LAT",
     status: Status.Current,
@@ -141,6 +143,7 @@ export const mockProgrammeMembershipNonTemplatedField = {
   tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
+  trainingNumber: null,
   managingDeanery: "Health Education England East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
@@ -159,6 +162,7 @@ export const mockProgrammeMembershipNoCurricula = {
   tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
+  trainingNumber: null,
   managingDeanery: "Health Education England East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
@@ -176,6 +180,7 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
   tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
+  trainingNumber: null,
   managingDeanery: "Health Education England East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
@@ -215,6 +220,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   tisId: "1",
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
+  trainingNumber: null,
   managingDeanery: "Health Education England East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
@@ -251,6 +257,7 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   tisId: "1",
   programmeName: "",
   programmeNumber: "",
+  trainingNumber: null,
   startDate: new Date("2010-10-14"),
   endDate: new Date("2011-10-14"),
   managingDeanery: "",
@@ -266,6 +273,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     tisId: "1",
     programmeName: "",
     programmeNumber: "",
+    trainingNumber: null,
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
@@ -279,6 +287,38 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     tisId: "2",
     programmeName: "",
     programmeNumber: "",
+    trainingNumber: null,
+    startDate: new Date("2010-10-14"),
+    endDate: new Date("2011-10-14"),
+    managingDeanery: "",
+    curricula: [],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  }
+];
+
+export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
+  {
+    tisId: "1",
+    programmeName: "",
+    programmeNumber: "",
+    trainingNumber: null,
+    startDate: new Date("2010-10-14"),
+    endDate: new Date("2011-10-14"),
+    managingDeanery: "",
+    curricula: [],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  },
+  {
+    tisId: "2",
+    programmeName: "",
+    programmeNumber: "",
+    trainingNumber: null,
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",

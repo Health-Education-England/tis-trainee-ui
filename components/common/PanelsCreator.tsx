@@ -16,6 +16,7 @@ import style from "../Common.module.scss";
 import { DspIssueBtn } from "../dsp/DspIssueBtn";
 import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
+import { TrainingNumber } from "../programmes/TrainingNumber";
 import { OtherSites } from "../placements/OtherSites";
 import { Specialty } from "../placements/Specialty";
 import {
@@ -210,6 +211,14 @@ function displayTheCorrectListItem(
           startDate={panel["startDate"]}
           programmeMembershipId={panel.tisId}
           programmeName={panel.programmeName}
+        />
+      );
+    case "trainingNumber":
+      return (
+        <TrainingNumber
+          conditionsOfJoining={panel["conditionsOfJoining"]}
+          startDate={panel["startDate"]}
+          trainingNumber={panel[panelProp]}
         />
       );
     case "otherSites":
