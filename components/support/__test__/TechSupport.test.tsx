@@ -39,7 +39,7 @@ describe("TechSupport", () => {
     });
     clickElement(supportLinkElement);
     const expectedHref =
-      "mailto:tis.support@hee.nhs.uk?subject=TSS Technical support query (TisID: 47165, GMC: 1111111, Support categories: Authenticator, Login)&body=Browser and OS info:%0AMocked User Agent Info%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A";
+      "mailto:england.tis.support@nhs.net?subject=TSS Technical support query (TisID: 47165, GMC: 1111111, Support categories: Authenticator, Login)&body=Browser and OS info:%0AMocked User Agent Info%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A";
     expect(supportLinkElement.getAttribute("href")).toBe(expectedHref);
   });
 
