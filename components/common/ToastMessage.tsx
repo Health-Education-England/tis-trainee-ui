@@ -45,7 +45,7 @@ export const ToastMessage = ({
         <a
           className="toast-anchor"
           data-cy="techSupportLink"
-          href={`mailto:tis.support@hee.nhs.uk?subject=TSS tech support query (${userIds})&body=Browser and OS info:%0A${getUserAgentInfo()}%0A%0APage URL:%0A${getPageURL()}%0A%0AError message:%0A${actionErrorMsg}%0A%0A%0A%0A`}
+          href={`mailto:england.tis.support@nhs.net?subject=TSS tech support query (${userIds})&body=Browser and OS info:%0A${getUserAgentInfo()}%0A%0APage URL:%0A${getPageURL()}%0A%0AError message:%0A${actionErrorMsg}%0A%0A%0A%0A`}
         >
           Click here to email Support
         </a>

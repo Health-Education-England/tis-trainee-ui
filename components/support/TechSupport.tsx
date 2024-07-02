@@ -41,7 +41,7 @@ export function TechSupport({
           {values.supportCatsTech.length > 0 && isValid && (
             <ActionLink
               data-cy="techSupportLink"
-              href={`mailto:tis.support@hee.nhs.uk?subject=TSS Technical support query (${emailIds}, Support categories: ${StringUtilities.alphabetSortedArrAsString(
+              href={`mailto:england.tis.support@nhs.net?subject=TSS Technical support query (${emailIds}, Support categories: ${StringUtilities.alphabetSortedArrAsString(
                 values.supportCatsTech
               )})&body=Browser and OS info:%0A${userAgentData}%0A%0APlease describe your issue(s) below. Include any screenshots you think might help: %0A%0A%0A`}
             >

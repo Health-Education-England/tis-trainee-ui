@@ -22,7 +22,7 @@ describe("Authenticator", () => {
         );
         expect($anchors.last()).to.contain("email");
         expect($anchors.last().attr("href")).to.contain(
-          "mailto:tis.support@hee.nhs.uk"
+          "mailto:england.tis.support@nhs.net"
         );
       });
   });
