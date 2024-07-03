@@ -10,6 +10,7 @@ export interface ProgrammeMembership {
   startDate: Date | string;
   endDate: Date | string;
   managingDeanery: string;
+  responsibleOfficer?: ResponsibleOfficer;
   programmeMembershipType?: string;
   status?: Status;
   programmeCompletionDate?: Date;
@@ -31,6 +32,11 @@ export interface Curriculum {
   curriculumEndDate: Date;
 }
 
+export interface ResponsibleOfficer {
+  firstName: string;
+  lastName: string;
+}
+
 export const programmePanelTemplate: ProgrammeMembership = {
   tisId: "",
   programmeName: "",
@@ -39,6 +45,10 @@ export const programmePanelTemplate: ProgrammeMembership = {
   startDate: "",
   endDate: "",
   managingDeanery: "",
+  responsibleOfficer: {
+    firstName: "",
+    lastName: ""
+  },
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,

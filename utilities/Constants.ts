@@ -179,6 +179,7 @@ export const PANEL_KEYS: any = {
   programmeName: "Programme Name",
   programmeNumber: "Programme Number",
   managingDeanery: "Owner",
+  responsibleOfficer: "Responsible Officer",
   trainingNumber: "Training Number (NTN/DRN)",
   programmeMembershipType: "Type",
   curricula: "Curricula",

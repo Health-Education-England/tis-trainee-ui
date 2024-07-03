@@ -247,6 +247,12 @@ function displayTheCorrectListItem(
       } else {
         return "None provided";
       }
+    case "responsibleOfficer":
+      if (panel[panelProp]?.firstName && panel[panelProp]?.lastName) {
+        return `${panel[panelProp].firstName} ${panel[panelProp].lastName}`;
+      } else {
+        return "Not currently available";
+      }
     default:
       return displayListVal(panel[panelProp], panelProp);
   }
