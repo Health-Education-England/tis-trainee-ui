@@ -1,7 +1,6 @@
 import { Flex, View } from "@aws-amplify/ui-react";
 import styles from "../../Auth.module.scss";
 import { NHSEnglandLogoWhite } from "../../../../public/NHSEnglandLogoWhite";
-import GlobalAlert from "../../../main/GlobalAlert";
 
 const AuthHeader = (): JSX.Element => {
   return (
