@@ -11,6 +11,11 @@ describe("Authenticator", () => {
     cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
   });
 
+  it("Header should have issue notice", () => {
+    cy.get("[data-cy=authAlert]").should("exist");
+    cy.get("[data-cy=authAlert]").should("contain.text", "We are currently having issues with Support emails.");
+  });
+
   it("Body should have the support FAQ and mailto links", () => {
     cy.get("[data-cy=signInSupportLinks]")
       .find("a")
