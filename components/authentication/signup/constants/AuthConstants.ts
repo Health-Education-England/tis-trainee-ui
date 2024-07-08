@@ -21,4 +21,4 @@ export const FORM_FIELD_VALUES = {
 export const SIGN_UP_HEADING_TEXT = "Create an account";
 
 export const SIGN_IN_FOOTER_BTN_LINK_TEXT =
-  "Password Reset (only works if you create an acccount and verify your email)";
+  "Password Reset (only works if you create an account and verify your email)";
