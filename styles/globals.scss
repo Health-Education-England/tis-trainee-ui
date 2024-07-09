@@ -101,7 +101,13 @@ body {
   }
 
   .amplify-button[data-variation="link"] {
-    color: #005eb8 !important;
+    color: $nhsBlue !important;
+    text-decoration: underline;
+    outline: none;
+    &:hover {
+      text-decoration: none;
+      background: none;
+    }
   }
 
   [data-amplify-router] {
@@ -116,6 +122,11 @@ body {
   }
   .signInSupportLinks .supportEmail:hover {
     cursor: help;
+  }
+
+  .signin-password-reset-warning-text {
+    font-size: 0.75rem;
+    margin: 0 32px 16px 32px;
   }
 }
 
