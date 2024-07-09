@@ -9,7 +9,8 @@ const AuthBtnLink = (
   return (
     <View textAlign="center">
       <Button
-        fontWeight="bold"
+        data-cy="passwordResetBtnLink"
+        fontWeight="normal"
         onClick={onClickEvent}
         size="small"
         variation="link"
