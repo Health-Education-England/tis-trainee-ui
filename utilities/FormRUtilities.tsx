@@ -12,9 +12,10 @@ import {
 import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAInitialValues";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
-import { DateType, DateUtilities } from "./DateUtilities";
+import { DateType, DateUtilities, isWithinRange } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
-
+import dayjs from "dayjs";
+import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 export class FormRUtilities {
   public static async handleRowClick(
     formId: string,
@@ -57,17 +58,39 @@ export class FormRUtilities {
   public static loadNewForm(
     pathName: string,
     history: any,
-    traineeProfileData: TraineeProfile
+    traineeProfileData: TraineeProfile,
+    linkedFormRData: LinkedFormRDataType
   ) {
     if (pathName === "/formr-a") {
-      const formAInitialValues =
-        ProfileToFormRPartAInitialValues(traineeProfileData);
+      const formAInitialValues = ProfileToFormRPartAInitialValues(
+        traineeProfileData,
+        linkedFormRData
+      );
       store.dispatch(updatedFormA(formAInitialValues));
     } else if (pathName === "/formr-b") {
-      const formBInitialValues =
-        ProfileToFormRPartBInitialValues(traineeProfileData);
+      const formBInitialValues = ProfileToFormRPartBInitialValues(
+        traineeProfileData,
+        linkedFormRData
+      );
       store.dispatch(updatedFormB(formBInitialValues));
     }
     history.push(`${pathName}/create`);
   }
+}
+
+export type FormStatusType = "new" | "preSub";
+
+export function makeWarningText(
+  formStatus: FormStatusType,
+  latestSubDate: DateType
+) {
+  if (formStatus === "preSub") {
+    return "Please check if this form is correctly linked before submission, and please think carefully before submitting as the current process for deleting or re-submitting a form isn't straightforward.";
+  }
+  if (formStatus === "new" && isWithinRange(latestSubDate, 31, "d")) {
+    return `You recently submitted a form on ${dayjs(latestSubDate).format(
+      "DD/MM/YYYY"
+    )}. Are you sure you want to submit another?`;
+  }
+  return null;
 }

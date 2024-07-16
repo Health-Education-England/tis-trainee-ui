@@ -34,6 +34,8 @@ export interface FormRPartA extends IFormR {
   wholeTimeEquivalent: string;
   declarationType: string;
   otherImmigrationStatus: string;
+  isArcp?: boolean | null;
+  linkedProgrammeUuid?: string | null;
 }
 
 export const initialFormRABeforeProfileData: FormRPartA = {

@@ -8,9 +8,11 @@ import {
   isValidOption
 } from "../utilities/FormBuilderUtilities";
 import { CombinedReferenceData } from "./CombinedReferenceData";
+import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function ProfileToFormRPartAInitialValues(
-  traineeProfileData: TraineeProfile
+  traineeProfileData: TraineeProfile,
+  linkedFormRData: LinkedFormRDataType
 ): FormRPartA {
   const refData: CombinedReferenceData = store.getState().reference.combinedRef;
   const filteredCurriculumData: { value: string; label: string }[] | undefined =
@@ -19,6 +21,7 @@ export function ProfileToFormRPartAInitialValues(
       "MEDICAL_CURRICULUM"
     );
   const pd = traineeProfileData.personalDetails;
+  const { isArcp, linkedProgrammeUuid, managingDeanery } = linkedFormRData;
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
   );
@@ -28,7 +31,7 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
-    localOfficeName: isValidOption("localOffice", pd?.personOwner, refData),
+    localOfficeName: managingDeanery,
     dateOfBirth: pd?.dateOfBirth ?? null,
     gender: isValidOption("gender", pd?.gender, refData),
     immigrationStatus: "",
@@ -63,6 +66,8 @@ export function ProfileToFormRPartAInitialValues(
     traineeTisId: traineeProfileData.traineeTisId,
     lifecycleState: LifeCycleState.New,
     submissionDate: null,
-    lastModifiedDate: null
+    lastModifiedDate: null,
+    isArcp,
+    linkedProgrammeUuid
   };
 }

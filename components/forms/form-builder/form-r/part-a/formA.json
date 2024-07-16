@@ -34,10 +34,9 @@
             },
             {
               "name": "localOfficeName",
-              "label": "Deanery / HEE Local Office",
-              "type": "select",
-              "visible": true,
-              "optionsKey": "localOffice"
+              "label": "Managing Deanery (Linked programme)",
+              "type": "text",
+              "visible": true
             },
             {
               "name": "dateOfBirth",

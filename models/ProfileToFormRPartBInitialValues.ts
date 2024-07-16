@@ -4,11 +4,14 @@ import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
 import { isValidOption } from "../utilities/FormBuilderUtilities";
+import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function ProfileToFormRPartBInitialValues(
-  traineeProfileData: TraineeProfile
+  traineeProfileData: TraineeProfile,
+  linkedFormRData: LinkedFormRDataType
 ): FormRPartB {
   const pd = traineeProfileData.personalDetails;
+  const { isArcp, linkedProgrammeUuid, managingDeanery } = linkedFormRData;
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
   );
@@ -34,7 +37,7 @@ export function ProfileToFormRPartBInitialValues(
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
     email: "",
-    localOfficeName: pd?.personOwner,
+    localOfficeName: managingDeanery,
     prevRevalBody: pd?.prevRevalBody,
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
@@ -70,6 +73,8 @@ export function ProfileToFormRPartBInitialValues(
     submissionDate: null,
     lastModifiedDate: null,
     isDeclarationAccepted: false,
-    isConsentAccepted: false
+    isConsentAccepted: false,
+    isArcp,
+    linkedProgrammeUuid
   };
 }

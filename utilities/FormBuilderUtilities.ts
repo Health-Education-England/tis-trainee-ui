@@ -626,10 +626,8 @@ export const colourStyles = {
   }),
   container: (baseStyles: any) => ({
     ...baseStyles,
-    maxWidth: "100%",
-    "@media (min-width: 40.0625em)": {
-      ...baseStyles["@media (min-width: 40.0625em)"],
-      maxWidth: "52%"
-    }
+    width: "max-content",
+    minWidth: "70%",
+    maxWidth: "100%"
   })
 };

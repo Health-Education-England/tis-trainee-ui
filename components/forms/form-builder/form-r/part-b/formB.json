@@ -42,9 +42,8 @@
             },
             {
               "name": "localOfficeName",
-              "label": "Deanery / Local Office",
-              "type": "select",
-              "optionsKey": "localOffice",
+              "label": "Managing Deanery (Linked programme)",
+              "type": "text",
               "visible": true
             },
             {

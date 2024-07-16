@@ -31,7 +31,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   isCreatable
 }) => {
   const handleChange = (val: any) => {
-    onChange(name, val ? val.label : null);
+    onChange(name, val ? val.value : null);
   };
   const handleMultiChange = (val: any) => onChange(name, val);
   const selectProps = {
