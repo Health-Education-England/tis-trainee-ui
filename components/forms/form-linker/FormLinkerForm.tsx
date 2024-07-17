@@ -23,10 +23,7 @@ export function FormLinkerForm({
   warningText,
   linkedFormData
 }: Readonly<FormLinkerFormProps>) {
-  const initialFormData = linkedFormData ?? {
-    isArcp: null,
-    linkedProgrammeUuid: null
-  };
+  const initialFormData = linkedFormData;
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
   const linkedProgOptions = programmesArr.map(programme => ({

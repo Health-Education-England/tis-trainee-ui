@@ -16,7 +16,6 @@ const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
-  localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   dateOfBirth: dateValidationSchema("Your date of birth")
     .test("dateOfBirth", "You must be 18 years or above", value =>
       DateUtilities.IsLegalAge(value)

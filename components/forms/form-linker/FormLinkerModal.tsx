@@ -6,7 +6,7 @@ type FormLinkerModalProps = {
   isOpen: boolean;
   onClose: () => void;
   warningText: null | string;
-  linkedFormData?: LinkedFormRDataType;
+  linkedFormData: LinkedFormRDataType;
 };
 
 export const FormLinkerModal = ({

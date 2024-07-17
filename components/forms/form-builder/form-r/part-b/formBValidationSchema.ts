@@ -144,7 +144,6 @@ const formBValidationSchemaDefault = yup.object({
     .email("Email address is invalid")
     .max(255, "Email must be shorter than 255 characters")
     .required("Email is required"),
-  localOfficeName: StringValidationSchema("Deanery / HEE Local Office"),
   prevRevalBody: yup.string().nullable(),
   prevRevalBodyOther: yup.string().nullable(),
   currRevalDate: yup

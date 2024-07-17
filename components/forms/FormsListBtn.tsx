@@ -41,7 +41,6 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         prog => prog.tisId === data.linkedProgrammeUuid
       )[0].managingDeanery;
     const linkedFormRData = { ...data, managingDeanery };
-    console.log("linkedFormRData", linkedFormRData);
     setShowModal(false);
     FormRUtilities.loadNewForm(
       pathName,
@@ -78,6 +77,10 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         isOpen={showModal}
         onClose={handleModalFormClose}
         warningText={warningText}
+        linkedFormData={{
+          isArcp: null,
+          linkedProgrammeUuid: null
+        }}
       />
     </>
   );
