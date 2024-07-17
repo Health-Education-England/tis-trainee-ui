@@ -39,6 +39,7 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
+import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -161,13 +162,16 @@ export function makeSubObj(
 export async function submitForm(
   jsonForm: Form,
   formData: FormData,
-  history: any
+  history: any,
+  linkedFormRData: LinkedFormRDataType
 ) {
   const formName = jsonForm.name;
 
   const lastSavedFormDataId = formActionsAndTypes[formName].state();
 
-  const subObject = makeSubObj(jsonForm, formData, lastSavedFormDataId);
+  const updatedFormData = { ...formData, ...linkedFormRData };
+
+  const subObject = makeSubObj(jsonForm, updatedFormData, lastSavedFormDataId);
 
   const action = lastSavedFormDataId
     ? formActionsAndTypes[formName].update

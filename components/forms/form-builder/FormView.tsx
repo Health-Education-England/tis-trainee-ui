@@ -10,9 +10,10 @@ import {
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import { FormRUtilities } from "../../../utilities/FormRUtilities";
-import { useConfirm } from "material-ui-confirm";
-import { dialogBoxWarnings } from "../../../utilities/Constants";
+import {
+  FormRUtilities,
+  makeWarningText
+} from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
 import {
   createErrorObject,
@@ -23,6 +24,9 @@ import {
 import { StartOverButton } from "../StartOverButton";
 import { Form, FormData, FormErrors } from "./FormBuilder";
 import Declarations from "./Declarations";
+import { FormLinkerModal } from "../form-linker/FormLinkerModal";
+import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
+import store from "../../../redux/store/store";
 
 type FormViewProps = {
   formData: FormData;
@@ -39,7 +43,8 @@ export const FormView = ({
   validationSchemaForView,
   redirectPath
 }: FormViewProps) => {
-  const confirm = useConfirm();
+  const [formKey, setFormKey] = useState(Date.now());
+  const [showModal, setShowModal] = useState(false);
   const formName = formJson.name;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -66,14 +71,35 @@ export const FormView = ({
     }
   }, [canEditStatus, formData, validationSchemaForView, allPagesFields]);
 
-  const handleSubClick = (formData: FormData) => {
-    setIsSubmitting(false);
-    confirm({
-      description: dialogBoxWarnings.formSubMsg
-    })
-      .then(() => submitForm(formJson, formData, history))
-      .catch(() => setIsSubmitting(false));
+  const linkedFormData = {
+    isArcp: formData.isArcp,
+    linkedProgrammeUuid: formData.linkedProgrammeUuid,
+    managingDeanery: formData.localOfficeName
   };
+
+  const handleSubClick = () => {
+    setShowModal(true);
+  };
+
+  const handleModalFormSubmit = (data: LinkedFormRDataType) => {
+    const managingDeanery = store
+      .getState()
+      .traineeProfile.traineeProfileData.programmeMemberships.filter(
+        prog => prog.tisId === data.linkedProgrammeUuid
+      )[0].managingDeanery;
+    const linkedFormRData = { ...data, managingDeanery };
+    setShowModal(false);
+    submitForm(formJson, formData, history, linkedFormRData);
+    setIsSubmitting(false);
+  };
+
+  const handleModalFormClose = () => {
+    setShowModal(false);
+    setIsSubmitting(false);
+    setFormKey(Date.now());
+  };
+
+  const warningText = makeWarningText("preSub");
 
   return formData?.traineeTisId ? (
     <>
@@ -106,7 +132,7 @@ export const FormView = ({
 
       <WarningCallout>
         <WarningCallout.Label>Declarations</WarningCallout.Label>
-        <form onSubmit={() => setIsSubmitting(true)}>
+        <form>
           <Declarations
             setCanSubmit={setCanSubmit}
             canEdit={canEditStatus}
@@ -117,7 +143,7 @@ export const FormView = ({
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
-                handleSubClick(formData);
+                handleSubClick();
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
@@ -156,6 +182,14 @@ export const FormView = ({
           formData.submissionDate,
           "submissionDate"
         )}
+      <FormLinkerModal
+        key={formKey}
+        onSubmit={handleModalFormSubmit}
+        isOpen={showModal}
+        onClose={handleModalFormClose}
+        warningText={warningText}
+        linkedFormData={linkedFormData}
+      />
     </>
   ) : (
     <Redirect to={redirectPath} />

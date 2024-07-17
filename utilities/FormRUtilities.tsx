@@ -82,7 +82,7 @@ export type FormStatusType = "new" | "preSub";
 
 export function makeWarningText(
   formStatus: FormStatusType,
-  latestSubDate: DateType
+  latestSubDate?: DateType
 ) {
   if (formStatus === "preSub") {
     return "Please check if this form is correctly linked before submission, and please think carefully before submitting as the current process for deleting or re-submitting a form isn't straightforward.";

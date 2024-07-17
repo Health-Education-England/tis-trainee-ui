@@ -23,7 +23,6 @@ export function FormLinkerForm({
   warningText,
   linkedFormData
 }: Readonly<FormLinkerFormProps>) {
-  const initialFormData = linkedFormData;
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
   const linkedProgOptions = programmesArr.map(programme => ({
@@ -32,6 +31,10 @@ export function FormLinkerForm({
     ).format("DD/MM/YYYY")})`,
     value: programme.tisId
   }));
+  const defaultLinkedProgrammeOption = linkedProgOptions.find(
+    prog => prog.value === linkedFormData.linkedProgrammeUuid
+  );
+  const initialFormData = linkedFormData;
 
   return (
     <div>
@@ -61,6 +64,7 @@ export function FormLinkerForm({
               isMulti={false}
               closeMenuOnSelect={true}
               isCreatable={false}
+              defaultOption={defaultLinkedProgrammeOption ?? null}
             />
             <Button type="submit" disabled={!isValid}>
               Confirm & Continue

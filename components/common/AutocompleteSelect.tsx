@@ -17,6 +17,7 @@ type AutocompleteSelectProps = {
   isMulti: boolean;
   closeMenuOnSelect: boolean;
   isCreatable?: boolean;
+  defaultOption?: any;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -28,7 +29,8 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   label,
   isMulti,
   closeMenuOnSelect,
-  isCreatable
+  isCreatable,
+  defaultOption
 }) => {
   const handleChange = (val: any) => {
     onChange(name, val ? val.value : null);
@@ -41,12 +43,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
     isClearable: true,
     isMulti: isMulti,
     closeMenuOnSelect: closeMenuOnSelect,
-    defaultValue: isMulti
-      ? null
-      : {
-          value: value,
-          label: value
-        },
+    defaultValue: isMulti ? null : defaultOption,
     placeholder: "Select or start typing...",
     className: "autocomplete-select",
     classNamePrefix: "react-select",
