@@ -23,7 +23,7 @@ export type CalcFormValues = {
   ftePercents: FtePercentsTypes[];
   propStartDate: string;
   propEndDate: string;
-  currentFtePercent: string;
+  currentFtePercent: number | string;
 };
 
 export function CalcForm({
@@ -86,7 +86,7 @@ export function CalcForm({
   return (
     <Formik
       initialValues={{
-        currentFtePercent: "100%",
+        currentFtePercent: 100,
         ftePercents: [],
         propStartDate: propStartDate,
         propEndDate: currentProgEndDate
@@ -104,7 +104,13 @@ export function CalcForm({
             </label>
             <AutocompleteSelect
               value={values.currentFtePercent}
-              onChange={setFieldValue}
+              onChange={(field, value) => {
+                const parsedValue =
+                  typeof value === "string" && value.endsWith("%")
+                    ? Number(value.slice(0, -1))
+                    : value;
+                setFieldValue(field, parsedValue);
+              }}
               error={errors.currentFtePercent}
               options={fteOptions}
               name="currentFtePercent"
@@ -112,6 +118,10 @@ export function CalcForm({
               isMulti={false}
               closeMenuOnSelect={true}
               isCreatable={true}
+              defaultOption={{
+                label: `${values.currentFtePercent}%`,
+                value: values.currentFtePercent
+              }}
             />
           </div>
           <div>
@@ -123,7 +133,7 @@ export function CalcForm({
               onChange={setFieldValue}
               error={errors.ftePercents}
               options={fteOptions.filter(
-                option => option.label !== values.currentFtePercent
+                option => option.value !== values.currentFtePercent
               )}
               name="ftePercents"
               label=""
@@ -135,7 +145,7 @@ export function CalcForm({
           {values.ftePercents.some(
             (option: FtePercentsTypes) => option.value === 100
           ) &&
-            values.currentFtePercent !== "100%" && (
+            values.currentFtePercent !== 100 && (
               <span data-cy="ft-return-warn">
                 <FieldWarningMsg warningMsg="Returning to 100% WTE might not be possible. See 'CCT Calculator further information' above." />
               </span>
