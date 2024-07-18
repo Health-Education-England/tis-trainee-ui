@@ -27,6 +27,7 @@ import Declarations from "./Declarations";
 import { FormLinkerModal } from "../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
 import store from "../../../redux/store/store";
+import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
 
 type FormViewProps = {
   formData: FormData;
@@ -71,7 +72,7 @@ export const FormView = ({
     }
   }, [canEditStatus, formData, validationSchemaForView, allPagesFields]);
 
-  const linkedFormData = {
+  const linkedFormData: LinkedFormRDataType = {
     isArcp: formData.isArcp,
     linkedProgrammeUuid: formData.linkedProgrammeUuid,
     managingDeanery: formData.localOfficeName
@@ -87,9 +88,9 @@ export const FormView = ({
       .traineeProfile.traineeProfileData.programmeMemberships.filter(
         prog => prog.tisId === data.linkedProgrammeUuid
       )[0].managingDeanery;
-    const linkedFormRData = { ...data, managingDeanery };
+    const latestLinkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
-    submitForm(formJson, formData, history, linkedFormRData);
+    submitForm(formJson, formData, history, latestLinkedFormRData);
     setIsSubmitting(false);
   };
 
@@ -122,6 +123,9 @@ export const FormView = ({
           formData.submissionDate,
           "submissionDateTop"
         )}
+      {!canEditStatus && typeof linkedFormData.isArcp === "boolean" && (
+        <FormLinkerSummary {...linkedFormData} />
+      )}
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
