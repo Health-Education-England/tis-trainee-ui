@@ -123,9 +123,7 @@ export const FormView = ({
           formData.submissionDate,
           "submissionDateTop"
         )}
-      {!canEditStatus && typeof linkedFormData.isArcp === "boolean" && (
-        <FormLinkerSummary {...linkedFormData} />
-      )}
+      {!canEditStatus && <FormLinkerSummary {...linkedFormData} />}
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
