@@ -11,6 +11,7 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import store from "../store/store";
+import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 interface IFormB {
   formBList: IFormR[];
   formData: FormRPartB;
@@ -67,17 +68,39 @@ export const loadFormBList = createAsyncThunk(
   }
 );
 
+type ReturnedLoadSavedFormB = {
+  finalForm: FormRPartB;
+  covidFlagStatus: boolean;
+};
+
 export const loadSavedFormB = createAsyncThunk(
   "formB/fetchFormB",
-  async (formId: string) => {
+  async ({
+    id,
+    linkedFormRData
+  }: {
+    id: string;
+    linkedFormRData: LinkedFormRDataType | undefined;
+  }): Promise<ReturnedLoadSavedFormB> => {
     const state = store.getState();
-    // Grab the Covid flag status from the feature flags slice to use to determine if the Covid section should be displayed and if a default Covid object should be added to the form data
     const covidFlagStatus =
       state.featureFlags.featureFlags.formRPartB.covidDeclaration;
     const formsService = new FormsService();
-    const response = (await formsService.getTraineeFormRPartBByFormId(formId))
+    const fetchedForm = (await formsService.getTraineeFormRPartBByFormId(id))
       .data;
-    return { response, covidFlagStatus };
+    let finalForm: FormRPartB = fetchedForm;
+    if (linkedFormRData) {
+      finalForm = {
+        ...fetchedForm,
+        isArcp: linkedFormRData.isArcp,
+        linkedProgrammeUuid: linkedFormRData.linkedProgrammeUuid,
+        localOfficeName: linkedFormRData.managingDeanery
+      };
+    }
+    return {
+      finalForm,
+      covidFlagStatus
+    };
   }
 );
 
@@ -196,15 +219,15 @@ const formBSlice = createSlice({
         state.status = "succeeded";
         state.formData =
           action.payload.covidFlagStatus &&
-          action.payload.response.haveCovidDeclarations === null
+          action.payload.finalForm.haveCovidDeclarations === null
             ? {
-                ...action.payload.response,
+                ...action.payload.finalForm,
                 covidDeclarationDto: defaultCovidObject
               }
-            : action.payload.response;
+            : action.payload.finalForm;
         state.displayCovid =
           action.payload.covidFlagStatus ||
-          action.payload.response.haveCovidDeclarations !== null;
+          action.payload.finalForm.haveCovidDeclarations !== null;
       })
       .addCase(loadSavedFormB.rejected, (state, { error }) => {
         state.status = "failed";

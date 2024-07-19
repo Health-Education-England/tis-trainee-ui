@@ -57,12 +57,13 @@ export function mapItemToNewFormat(item: KeyValue): {
 export async function loadTheSavedForm(
   pathName: string,
   id: string,
-  history: any
+  history: any,
+  linkedFormRData?: LinkedFormRDataType
 ) {
   if (pathName === "/formr-a") {
-    await store.dispatch(loadSavedFormA(id));
+    await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
   } else {
-    await store.dispatch(loadSavedFormB(id));
+    await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
   }
   history.push(`${pathName}/create`);
 }

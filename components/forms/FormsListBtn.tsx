@@ -27,8 +27,11 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   );
 
   const handleBtnClick = () => {
-    if (draftFormProps?.id) {
-      loadTheSavedForm(pathName, draftFormProps?.id, history);
+    if (
+      draftFormProps?.id &&
+      draftFormProps?.lifecycleState !== LifeCycleState.Unsubmitted
+    ) {
+      loadTheSavedForm(pathName, draftFormProps.id, history);
     } else {
       setShowModal(true);
     }
@@ -42,12 +45,19 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
       )[0].managingDeanery;
     const linkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
-    FormRUtilities.loadNewForm(
-      pathName,
-      history,
-      traineeProfileData,
-      linkedFormRData
-    );
+    if (
+      draftFormProps?.id &&
+      draftFormProps.lifecycleState === LifeCycleState.Unsubmitted
+    ) {
+      loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData);
+    } else {
+      FormRUtilities.loadNewForm(
+        pathName,
+        history,
+        traineeProfileData,
+        linkedFormRData
+      );
+    }
   };
 
   const handleModalFormClose = () => {
