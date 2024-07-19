@@ -80,7 +80,7 @@ export const loadSavedFormB = createAsyncThunk(
     linkedFormRData
   }: {
     id: string;
-    linkedFormRData: LinkedFormRDataType | undefined;
+    linkedFormRData?: LinkedFormRDataType;
   }): Promise<ReturnedLoadSavedFormB> => {
     const state = store.getState();
     const covidFlagStatus =

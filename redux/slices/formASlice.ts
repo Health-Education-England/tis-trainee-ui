@@ -50,7 +50,7 @@ export const loadSavedFormA = createAsyncThunk(
     linkedFormRData
   }: {
     id: string;
-    linkedFormRData: LinkedFormRDataType | undefined;
+    linkedFormRData?: LinkedFormRDataType;
   }): Promise<FormRPartA> => {
     const formsService = new FormsService();
     const fetchedForm = (await formsService.getTraineeFormRPartAByFormId(id))

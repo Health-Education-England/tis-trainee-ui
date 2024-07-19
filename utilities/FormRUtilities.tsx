@@ -18,18 +18,18 @@ import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 export class FormRUtilities {
   public static async handleRowClick(
-    formId: string,
+    id: string,
     path: string,
     history: string[]
   ): Promise<void> {
     if (path === "/formr-a") {
       store.dispatch(updatedCanEdit(false));
-      await store.dispatch(loadSavedFormA(formId));
+      await store.dispatch(loadSavedFormA({ id }));
     } else if (path === "/formr-b") {
       store.dispatch(updatedCanEditB(false));
-      await store.dispatch(loadSavedFormB(formId));
+      await store.dispatch(loadSavedFormB({ id }));
     }
-    FormRUtilities.historyPush(history, path, formId);
+    FormRUtilities.historyPush(history, path, id);
   }
 
   public static historyPush(history: any, path: string, id?: string): void {
