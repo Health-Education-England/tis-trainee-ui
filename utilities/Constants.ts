@@ -268,8 +268,8 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England Kent, Surrey and Sussex": "PGMDE support portal",
   "Health Education England North Central and East London":
     "PGMDE support portal",
-  "Health Education England North East": "tissupport.north@hee.nhs.uk",
-  "Health Education England North West": "tissupport.north@hee.nhs.uk",
+  "Health Education England North East": "england.specialtytraining.ne@nhs.net",
+  "Health Education England North West": "england.wpi.nw@nhs.net",
   "Health Education England North West London": "PGMDE support portal",
   "Health Education England South London": "PGMDE support portal",
   "Health Education England South West": "england.tisqueries.sw@nhs.net",
