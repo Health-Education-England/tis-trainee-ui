@@ -65,6 +65,10 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeNumber: "EOE8945",
     trainingNumber: "EOE/ABC-123/11111111/C",
     managingDeanery: "Health Education England East of England",
+    responsibleOfficer: {
+      firstName: "Hugh",
+      lastName: "Rangel"
+    },
     programmeMembershipType: "SUBSTANTIVE",
     status: Status.Current,
     curricula: [
@@ -104,6 +108,10 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeNumber: "EOE8950",
     trainingNumber: "EOE/XYZ-789/11111111/C",
     managingDeanery: "Health Education England East of England",
+    responsibleOfficer: {
+      firstName: "Hugh",
+      lastName: "Rangel"
+    },
     programmeMembershipType: "LAT",
     status: Status.Current,
     curricula: [
@@ -261,6 +269,10 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   startDate: new Date("2010-10-14"),
   endDate: new Date("2011-10-14"),
   managingDeanery: "",
+  responsibleOfficer: {
+    firstName: "",
+    lastName: ""
+  },
   curricula: [],
   conditionsOfJoining: {
     signedAt: new Date("2010-10-14"),
@@ -277,6 +289,10 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
+    responsibleOfficer: {
+      firstName: "",
+      lastName: ""
+    },
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -291,6 +307,10 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
+    responsibleOfficer: {
+      firstName: "",
+      lastName: ""
+    },
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -308,6 +328,10 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
+    responsibleOfficer: {
+      firstName: "",
+      lastName: ""
+    },
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -322,6 +346,10 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
+    responsibleOfficer: {
+      firstName: "",
+      lastName: ""
+    },
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -329,6 +357,38 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     }
   }
 ];
+
+export const mockProgrammeMembershipNoResponsibleOfficer: ProgrammeMembership[] =
+  [
+    {
+      tisId: "1",
+      programmeName: "",
+      programmeNumber: "",
+      trainingNumber: null,
+      startDate: new Date("2010-10-14"),
+      endDate: new Date("2011-10-14"),
+      managingDeanery: "",
+      curricula: [],
+      conditionsOfJoining: {
+        signedAt: null,
+        version: "GG8"
+      }
+    },
+    {
+      tisId: "2",
+      programmeName: "",
+      programmeNumber: "",
+      trainingNumber: null,
+      startDate: new Date("2010-10-14"),
+      endDate: new Date("2011-10-14"),
+      managingDeanery: "",
+      curricula: [],
+      conditionsOfJoining: {
+        signedAt: null,
+        version: "GG8"
+      }
+    }
+  ];
 
 export const mockPlacements: Placement[] = [
   {
