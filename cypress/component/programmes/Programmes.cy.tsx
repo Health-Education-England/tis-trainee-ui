@@ -12,7 +12,8 @@ import {
   mockProgrammeMembershipCojNotSigned,
   mockProgrammeMembershipCojSigned,
   mockOutstandingActions,
-  mockProgrammeMembershipNoTrainingNumber
+  mockProgrammeMembershipNoTrainingNumber,
+  mockProgrammeMembershipNoResponsibleOfficer
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -93,6 +94,9 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
       .should("contain.text", "EOE/ABC-123/11111111/C");
+    cy.get("[data-cy=responsibleOfficer0Val]")
+      .should("exist")
+      .should("contain.text", "Hugh Rangel");
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");
@@ -184,6 +188,33 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
       .should("contain.text", "Not Available");
+  });
+
+  it("should show alternative text when no responsible officer", () => {
+    const MockedProgrammeNoResponsibleOfficer = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: mockProgrammeMembershipNoResponsibleOfficer,
+          placements: []
+        })
+      );
+      console.log(mockProgrammeMembershipNoResponsibleOfficer);
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Programmes />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammeNoResponsibleOfficer />
+        </Router>
+      </Provider>
+    );
+    cy.get("[data-cy=responsibleOfficer0Val]")
+      .should("exist")
+      .should("contain.text", "Not currently available");
   });
 
   it("should show alternative text when no Programmes data available", () => {
