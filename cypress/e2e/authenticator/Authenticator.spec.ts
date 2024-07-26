@@ -11,6 +11,14 @@ describe("Authenticator", () => {
     cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
   });
 
+  it("Header should have issue notice", () => {
+    cy.get("[data-cy=authAlert]").should("exist");
+    cy.get("[data-cy=authAlert]").should(
+      "contain.text",
+      "We are currently having issues with Support emails."
+    );
+  });
+
   it("Body should have the support FAQ and mailto links", () => {
     cy.get("[data-cy=signInSupportLinks]")
       .find("a")
@@ -92,6 +100,18 @@ describe("Authenticator", () => {
     cy.get('input[name="password"]').should("have.attr", "type", "text");
     cy.get("button.amplify-field__show-password").first().click();
     cy.get('input[name="password"]').should("have.attr", "type", "password");
+  });
+
+  it("should show the reset password link and warning text", () => {
+    cy.get(".signin-password-reset-warning-text")
+      .should("exist")
+      .should(
+        "contain.text",
+        "Note: Password reset only works if you create an account and verify your email."
+      );
+    cy.get('[data-cy="passwordResetBtnLink"]')
+      .should("exist")
+      .should("contain.text", "Reset Password");
   });
 });
 

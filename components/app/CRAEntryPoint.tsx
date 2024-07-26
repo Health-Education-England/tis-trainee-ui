@@ -17,7 +17,8 @@ import {
   SIGN_UP_HEADING_TEXT,
   YES_TO_PRIVACY,
   YES_TO_PILOT,
-  FORM_FIELD_VALUES
+  FORM_FIELD_VALUES,
+  SIGN_IN_FOOTER_PASSWORD_RESET_WARNING_TEXT
 } from "../authentication/signup/constants/AuthConstants";
 import style from "../authentication/Auth.module.scss";
 import { I18n } from "@aws-amplify/core";
@@ -50,6 +51,9 @@ const components = {
         <>
           {SupportLinks("Sign in")}
           {AuthBtnLink(toResetPassword, SIGN_IN_FOOTER_BTN_LINK_TEXT)}
+          <p className="signin-password-reset-warning-text">
+            {SIGN_IN_FOOTER_PASSWORD_RESET_WARNING_TEXT}
+          </p>
         </>
       );
     }
