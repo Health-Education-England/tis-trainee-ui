@@ -16,6 +16,7 @@ import { DateType, DateUtilities, isWithinRange } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
 export class FormRUtilities {
   public static async handleRowClick(
     id: string,
@@ -78,6 +79,8 @@ export class FormRUtilities {
   }
 }
 
+// form r linker utils
+
 export type FormStatusType = "new" | "preSub";
 
 export function makeWarningText(
@@ -94,3 +97,39 @@ export function makeWarningText(
   }
   return null;
 }
+
+export function filterProgrammesForLinker(
+  programmes: ProgrammeMembership[],
+  isArcp: boolean
+) {
+  const now = dayjs().startOf("day");
+  const nextYear = dayjs(now).add(1, "year").startOf("day");
+  const lastYear = dayjs(now).subtract(1, "year").startOf("day");
+
+  return programmes.filter(programme => {
+    const startDate = dayjs(programme.startDate).startOf("day");
+    const endDate = dayjs(programme.endDate).startOf("day");
+    const currentProgramme = startDate <= now && endDate >= now;
+    const programmeStartsInNextYear = startDate <= nextYear && startDate >= now;
+    const programmeEndsInLastYear = endDate >= lastYear && endDate <= now;
+    return (
+      currentProgramme ||
+      (isArcp ? programmeEndsInLastYear : programmeStartsInNextYear)
+    );
+  });
+}
+
+const selectLinkedProgrammeOptionsSorter = (
+  a: ProgrammeMembership,
+  b: ProgrammeMembership
+) => {
+  if (a.programmeName < b.programmeName) return -1;
+  if (a.programmeName > b.programmeName) return 1;
+  const aDate = new Date(a.startDate).getTime();
+  const bDate = new Date(b.startDate).getTime();
+  return bDate - aDate;
+};
+
+export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
+  return programmes.sort(selectLinkedProgrammeOptionsSorter);
+};

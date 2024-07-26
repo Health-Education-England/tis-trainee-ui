@@ -8,10 +8,9 @@ import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerF
 
 export function ProfileToFormRPartBInitialValues(
   traineeProfileData: TraineeProfile,
-  linkedFormRData: LinkedFormRDataType
+  linkedFormRData?: LinkedFormRDataType
 ): FormRPartB {
   const pd = traineeProfileData.personalDetails;
-  const { isArcp, linkedProgrammeUuid, managingDeanery } = linkedFormRData;
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
   );
@@ -37,7 +36,7 @@ export function ProfileToFormRPartBInitialValues(
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
     email: "",
-    localOfficeName: managingDeanery,
+    localOfficeName: linkedFormRData?.managingDeanery ?? null,
     prevRevalBody: pd?.prevRevalBody,
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
@@ -74,7 +73,7 @@ export function ProfileToFormRPartBInitialValues(
     lastModifiedDate: null,
     isDeclarationAccepted: false,
     isConsentAccepted: false,
-    isArcp,
-    linkedProgrammeUuid
+    isArcp: linkedFormRData?.isArcp ?? null,
+    linkedProgrammeUuid: linkedFormRData?.linkedProgrammeUuid ?? null
   };
 }

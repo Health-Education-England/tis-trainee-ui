@@ -446,10 +446,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-input"]').clear();
   cy.get('[data-cy="gmcNumber-input"]').clear();
   cy.get('[data-cy="email-input"]').clear();
-  cy.clickSelect('[data-cy="localOfficeName"]', null, true);
-  cy.get(
-    '[data-cy="localOfficeName"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
   cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
   cy.get(
     '[data-cy="prevRevalBody"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
@@ -475,9 +471,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   );
   cy.get('[data-cy="error-txt-GMC number is required"]').should("exist");
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
-  cy.get('[data-cy="error-txt-Deanery / HEE Local Office is required"]').should(
-    "exist"
-  );
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
   ).should("exist");
@@ -498,7 +491,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-inline-error-msg"]').should("exist");
   cy.get('[data-cy="gmcNumber-inline-error-msg"]').should("exist");
   cy.get('[data-cy="email-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="localOfficeName-inline-error-msg"]').should("exist");
   cy.get('[data-cy="currRevalDate-inline-error-msg"]').should("exist");
   cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
 
@@ -547,7 +539,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.clearAndType('[data-cy="forename-input"]', `Bob-${currentDate}`);
   cy.clearAndType('[data-cy="surname-input"]', `Smith-${currentDate}`);
   cy.clearAndType('[data-cy="gmcNumber-input"]', "1234567");
-  cy.clickSelect('[data-cy="localOfficeName"]');
 
   cy.get(".error-summary").should("not.exist");
   cy.get('[data-cy="navNext"]').should(

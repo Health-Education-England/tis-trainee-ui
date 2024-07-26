@@ -12,7 +12,7 @@ import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerF
 
 export function ProfileToFormRPartAInitialValues(
   traineeProfileData: TraineeProfile,
-  linkedFormRData: LinkedFormRDataType
+  linkedFormRData?: LinkedFormRDataType
 ): FormRPartA {
   const refData: CombinedReferenceData = store.getState().reference.combinedRef;
   const filteredCurriculumData: { value: string; label: string }[] | undefined =
@@ -21,7 +21,7 @@ export function ProfileToFormRPartAInitialValues(
       "MEDICAL_CURRICULUM"
     );
   const pd = traineeProfileData.personalDetails;
-  const { isArcp, linkedProgrammeUuid, managingDeanery } = linkedFormRData;
+
   const programme = ProfileUtilities.getRecentProgramme(
     traineeProfileData.programmeMemberships
   );
@@ -31,7 +31,7 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
-    localOfficeName: managingDeanery,
+    localOfficeName: linkedFormRData?.managingDeanery ?? null,
     dateOfBirth: pd?.dateOfBirth ?? null,
     gender: isValidOption("gender", pd?.gender, refData),
     immigrationStatus: "",
@@ -67,7 +67,7 @@ export function ProfileToFormRPartAInitialValues(
     lifecycleState: LifeCycleState.New,
     submissionDate: null,
     lastModifiedDate: null,
-    isArcp,
-    linkedProgrammeUuid
+    isArcp: linkedFormRData?.isArcp ?? null,
+    linkedProgrammeUuid: linkedFormRData?.linkedProgrammeUuid ?? null
   };
 }

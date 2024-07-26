@@ -2,7 +2,6 @@ import { SummaryList } from "nhsuk-react-components";
 import { LinkedFormRDataType } from "./FormLinkerForm";
 import dayjs from "dayjs";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { Link } from "react-router-dom";
 
 export function FormLinkerSummary({
   isArcp,
@@ -55,11 +54,12 @@ export function FormLinkerSummary({
 
 function OldFormSummaryText() {
   return (
-    <span>
-      Note: Setting the ARCP status and linked Programme is a new feature. If
-      you wish to retrospectively set these values, you will need to contact{" "}
-      <Link to="/support">Local Office Support</Link> to get this form
-      'unsubmitted' so you can edit it.
-    </span>
+    <p>
+      Note: Setting the ARCP status and linked Programme is a new feature.
+      Currently, it is not possible to set these values on a form submitted
+      before this new feature went live. If, however, you think this ability
+      would be useful, then please complete the survey which should appear on
+      this page.
+    </p>
   );
 }

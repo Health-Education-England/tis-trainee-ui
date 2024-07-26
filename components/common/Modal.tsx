@@ -47,7 +47,12 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
       onKeyDown={handleKeyDown}
     >
       {children}
-      <Button type="button" reverse onClick={handleCloseModal}>
+      <Button
+        data-cy="modal-cancel-btn"
+        type="button"
+        reverse
+        onClick={handleCloseModal}
+      >
         Cancel
       </Button>
     </dialog>

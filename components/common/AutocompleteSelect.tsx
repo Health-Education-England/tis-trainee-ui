@@ -33,7 +33,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   defaultOption
 }) => {
   const handleChange = (val: any) => {
-    onChange(name, val ? val.value : null);
+    onChange(name, val ? val.value : null, true);
   };
   const handleMultiChange = (val: any) => onChange(name, val);
   const selectProps = {
@@ -60,7 +60,9 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label id={`${name}--label`}>{label}</Label>
+      <Label id={`${name}--label`} htmlFor="name">
+        {label}
+      </Label>
       {error ? (
         <span className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error: </span>

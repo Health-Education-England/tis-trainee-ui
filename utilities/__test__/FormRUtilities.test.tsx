@@ -1,18 +1,84 @@
-import { FormRUtilities } from "../FormRUtilities";
+import dayjs from "dayjs";
+import {
+  mockProgrammeMemberships,
+  mockProgrammesForLinkerTest
+} from "../../mock-data/trainee-profile";
+import {
+  filterProgrammesForLinker,
+  sortProgrammesForLinker
+} from "../FormRUtilities";
 
-// Note - delete tests when FormB uses FormBuilder
-describe("FormRUtilities", () => {
-  it("should return value if data (string) provided", () => {
-    const value = "Super Compliment";
-    expect(FormRUtilities.showMsgIfEmpty(value)).toBe(value);
+describe("FormRUtilities - filterProgrammesForLinker", () => {
+  it("should return 'ARCP' programmes", () => {
+    const programmes = mockProgrammesForLinkerTest;
+    const filteredProgrammes = filterProgrammesForLinker(programmes, true);
+    expect(filteredProgrammes.length).toBe(3);
+    expect(filteredProgrammes[0].programmeName).toBe("Acute medicine");
+    expect(filteredProgrammes[0].startDate).toBe(dayjs().format("YYYY-MM-DD"));
+    expect(filteredProgrammes[0].endDate).toBe(dayjs().format("YYYY-MM-DD"));
+    expect(filteredProgrammes[1].programmeName).toBe("Adult psychiatry");
+    expect(filteredProgrammes[1].startDate).toBe(
+      `${dayjs().subtract(1, "year").year()}-12-31`
+    );
+    expect(filteredProgrammes[1].endDate).toBe(`${dayjs().year()}-12-31`);
+    expect(filteredProgrammes[2].programmeName).toBe("Acute medicine");
+    expect(filteredProgrammes[2].startDate).toBe(
+      dayjs().subtract(1, "year").format("YYYY-MM-DD")
+    );
+    expect(filteredProgrammes[2].endDate).toBe(
+      dayjs().subtract(1, "year").format("YYYY-MM-DD")
+    );
   });
-  it("should return given message if no data (empty string) provided", () => {
-    const value = "";
-    const message = "This is my message if no data";
-    expect(FormRUtilities.showMsgIfEmpty(value, message)).toBe(message);
+
+  it("should return 'New Starter' programmes ", () => {
+    const programmes = mockProgrammesForLinkerTest;
+    const filteredProgrammes = filterProgrammesForLinker(programmes, false);
+    expect(filteredProgrammes.length).toBe(3);
+    expect(filteredProgrammes[0].programmeName).toBe("Acute medicine");
+    expect(filteredProgrammes[0].startDate).toBe(dayjs().format("YYYY-MM-DD"));
+    expect(filteredProgrammes[0].endDate).toBe(dayjs().format("YYYY-MM-DD"));
+    expect(filteredProgrammes[1].programmeName).toBe("Adult psychiatry");
+    expect(filteredProgrammes[1].startDate).toBe(
+      `${dayjs().subtract(1, "year").year()}-12-31`
+    );
+    expect(filteredProgrammes[1].endDate).toBe(`${dayjs().year()}-12-31`);
+    expect(filteredProgrammes[2].programmeName).toBe("Adult psychiatry");
+    expect(filteredProgrammes[2].startDate).toBe(
+      dayjs().add(1, "year").format("YYYY-MM-DD")
+    );
+    expect(filteredProgrammes[2].endDate).toBe(
+      dayjs().add(3, "year").format("YYYY-MM-DD")
+    );
   });
-  it("should return default message if no value (empty string) and no message provided", () => {
-    const value = "";
-    expect(FormRUtilities.showMsgIfEmpty(value)).toBe("None recorded");
+});
+
+describe("FormRUtilities - sortedProgrammesForLinker", () => {
+  it("should return programmes sorted by name and date", () => {
+    const programmes = mockProgrammesForLinkerTest;
+    const sortedProgrammes = sortProgrammesForLinker(programmes);
+    expect(sortedProgrammes[0]).toEqual({
+      ...mockProgrammeMemberships[0],
+      programmeName: "Acute medicine",
+      startDate: dayjs().add(1, "year").add(1, "day").format("YYYY-MM-DD"),
+      endDate: dayjs().add(1, "year").add(1, "day").format("YYYY-MM-DD"),
+      tisId: "6"
+    });
+    expect(sortedProgrammes[3]).toEqual({
+      ...mockProgrammeMemberships[0],
+      programmeName: "Acute medicine",
+      startDate: dayjs().subtract(2, "year").format("YYYY-MM-DD"),
+      endDate: dayjs()
+        .subtract(1, "year")
+        .subtract(1, "day")
+        .format("YYYY-MM-DD"),
+      tisId: "4"
+    });
+    expect(sortedProgrammes[sortedProgrammes.length - 1]).toEqual({
+      ...mockProgrammeMemberships[0],
+      programmeName: "Adult psychiatry",
+      startDate: `${dayjs().subtract(1, "year").year()}-12-31`,
+      endDate: `${dayjs().year()}-12-31`,
+      tisId: "2"
+    });
   });
 });
