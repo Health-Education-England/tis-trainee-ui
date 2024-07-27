@@ -1,5 +1,5 @@
 import { Button } from "nhsuk-react-components";
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ModalProps = {
   children: React.ReactNode;
@@ -17,12 +17,17 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
     setIsModalOpen(false);
   };
 
-  // Note: Needed to add handleKeyDown because without it the modal would not reopen after closing via esc key (but sonarlint doesn't like it!).
-  const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
-    if (event.key === "Escape") {
-      handleCloseModal();
-    }
-  };
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCloseModal();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     setIsModalOpen(isOpen);
@@ -40,12 +45,7 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   }, [isModalOpen]);
 
   return (
-    <dialog
-      ref={modalRef}
-      className="modal"
-      aria-modal="true"
-      onKeyDown={handleKeyDown}
-    >
+    <dialog ref={modalRef} className="modal" aria-modal="true">
       {children}
       <Button
         data-cy="modal-cancel-btn"
