@@ -26,11 +26,9 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
     state => state.traineeProfile.traineeProfileData
   );
 
+  // TODO BE needs updating to return linkedProgrammeUuid in the forms list response
   const handleBtnClick = () => {
-    if (
-      draftFormProps?.id &&
-      draftFormProps?.lifecycleState !== LifeCycleState.Unsubmitted
-    ) {
+    if (draftFormProps?.id && draftFormProps?.linkedProgrammeUuid) {
       loadTheSavedForm(pathName, draftFormProps.id, history);
     } else {
       setShowModal(true);
@@ -45,10 +43,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
       )[0].managingDeanery;
     const linkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
-    if (
-      draftFormProps?.id &&
-      draftFormProps.lifecycleState === LifeCycleState.Unsubmitted
-    ) {
+    if (draftFormProps?.id) {
       loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData);
     } else {
       FormRUtilities.loadNewForm(
