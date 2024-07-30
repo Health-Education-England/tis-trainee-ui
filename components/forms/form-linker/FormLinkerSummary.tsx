@@ -8,11 +8,14 @@ export function FormLinkerSummary({
   programmeMembershipId,
   managingDeanery
 }: Readonly<LinkedFormRDataType>) {
-  const linkedProgramme = useAppSelector(state =>
-    state.traineeProfile.traineeProfileData.programmeMemberships.find(
-      programme => programme.programmeTisId === programmeMembershipId
-    )
+  const programmeMemberships = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.programmeMemberships
   );
+  const linkedProgramme = programmeMemberships.find(
+    prog => prog.tisId === programmeMembershipId
+  );
+  const linkedProgrammeName = linkedProgramme?.programmeName;
+  const linkedProgrammeStartDate = linkedProgramme?.startDate;
 
   const calcIsArcpValue = (v: boolean | null) => {
     if (typeof v !== "boolean") {
@@ -26,8 +29,8 @@ export function FormLinkerSummary({
     {
       key: "Linked Programme:",
       value: linkedProgramme
-        ? `${linkedProgramme.programmeName} (start: ${dayjs(
-            linkedProgramme.startDate
+        ? `${linkedProgrammeName} (start: ${dayjs(
+            linkedProgrammeStartDate
           ).format("DD/MM/YYYY")} )`
         : "Linked programme not set."
     },

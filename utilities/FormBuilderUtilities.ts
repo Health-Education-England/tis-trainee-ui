@@ -167,17 +167,15 @@ export async function submitForm(
   linkedFormRData: LinkedFormRDataType
 ) {
   const formName = jsonForm.name;
-
   const lastSavedFormDataId = formActionsAndTypes[formName].state();
-
-  const updatedFormData = { ...formData, ...linkedFormRData };
-
-  const subObject = makeSubObj(jsonForm, updatedFormData, lastSavedFormDataId);
-
+  const subObject = {
+    ...makeSubObj(jsonForm, formData, lastSavedFormDataId),
+    ...linkedFormRData,
+    localOfficeName: formData.localOfficeName
+  };
   const action = lastSavedFormDataId
     ? formActionsAndTypes[formName].update
     : formActionsAndTypes[formName].save;
-
   await store.dispatch(action(subObject));
   resetForm(formName, history);
 }
