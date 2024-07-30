@@ -59,7 +59,7 @@ export const loadSavedFormA = createAsyncThunk(
       return {
         ...fetchedForm,
         isArcp: linkedFormRData.isArcp,
-        linkedProgrammeUuid: linkedFormRData.linkedProgrammeUuid,
+        programmeMembershipId: linkedFormRData.programmeMembershipId,
         localOfficeName: linkedFormRData.managingDeanery
       };
     }

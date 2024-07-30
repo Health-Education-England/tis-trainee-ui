@@ -68,6 +68,6 @@ export function ProfileToFormRPartAInitialValues(
     submissionDate: null,
     lastModifiedDate: null,
     isArcp: linkedFormRData?.isArcp ?? null,
-    linkedProgrammeUuid: linkedFormRData?.linkedProgrammeUuid ?? null
+    programmeMembershipId: linkedFormRData?.programmeMembershipId ?? null
   };
 }

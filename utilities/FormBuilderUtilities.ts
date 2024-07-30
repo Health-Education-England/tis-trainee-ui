@@ -385,7 +385,7 @@ export function sumFieldValues(formData: FormData, fields: Field[]) {
 export interface DraftFormProps {
   id?: string;
   lifecycleState: LifeCycleState;
-  linkedProgrammeUuid?: string | null;
+  programmeMembershipId?: string | null;
 }
 
 export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
@@ -402,7 +402,7 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
     return {
       id: unsubmittedForm.id,
       lifecycleState: LifeCycleState.Unsubmitted,
-      linkedProgrammeUuid: unsubmittedForm.linkedProgrammeUuid
+      programmeMembershipId: unsubmittedForm.programmeMembershipId
     };
   }
 
@@ -414,7 +414,7 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
     return {
       id: draftForm.id,
       lifecycleState: LifeCycleState.Draft,
-      linkedProgrammeUuid: draftForm.linkedProgrammeUuid
+      programmeMembershipId: draftForm.programmeMembershipId
     };
   }
   return null;
@@ -474,7 +474,7 @@ export async function autosaveFormR(
   } else {
     const linkedDataToSave = {
       isArcp: formData.isArcp,
-      linkedProgrammeUuid: formData.linkedProgrammeUuid,
+      programmeMembershipId: formData.programmeMembershipId,
       localOfficeName: formData.localOfficeName
     };
     await saveForm({ ...preppedFormData, ...linkedDataToSave }, formName);

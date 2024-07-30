@@ -26,9 +26,8 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
     state => state.traineeProfile.traineeProfileData
   );
 
-  // TODO BE needs updating to return linkedProgrammeUuid in the forms list response
   const handleBtnClick = () => {
-    if (draftFormProps?.id && draftFormProps?.linkedProgrammeUuid) {
+    if (draftFormProps?.id && draftFormProps?.programmeMembershipId) {
       loadTheSavedForm(pathName, draftFormProps.id, history);
     } else {
       setShowModal(true);
@@ -39,7 +38,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
     const managingDeanery = store
       .getState()
       .traineeProfile.traineeProfileData.programmeMemberships.filter(
-        prog => prog.tisId === data.linkedProgrammeUuid
+        prog => prog.tisId === data.programmeMembershipId
       )[0].managingDeanery;
     const linkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
@@ -84,7 +83,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         warningText={warningText}
         linkedFormData={{
           isArcp: null,
-          linkedProgrammeUuid: null
+          programmeMembershipId: null
         }}
       />
     </>

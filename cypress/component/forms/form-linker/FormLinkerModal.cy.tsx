@@ -33,7 +33,7 @@ describe("FormLinkerModal", () => {
     warningText: null,
     linkedFormData: {
       isArcp: null,
-      linkedProgrammeUuid: null
+      programmeMembershipId: null
     }
   };
 
@@ -49,17 +49,17 @@ describe("FormLinkerModal", () => {
   it("renders the FormLinkerModal component for a new/unsubmitted form", () => {
     mountComponent();
     cy.get("dialog").should("be.visible");
-    cy.get('[data-cy="linkedProgrammeUuid"]').should("not.exist");
+    cy.get('[data-cy="programmeMembershipId"]').should("not.exist");
     cy.get('[data-cy="isArcp0"]').should("exist").click();
-    cy.get('[data-cy="linkedProgrammeUuid"]').should("exist");
-    cy.get('[data-cy="linkedProgrammeUuid"] > .nhsuk-error-message')
+    cy.get('[data-cy="programmeMembershipId"]').should("exist");
+    cy.get('[data-cy="programmeMembershipId"] > .nhsuk-error-message')
       .should("exist")
       .should("contain.text", "Please select a programme.");
     cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
 
     // choose an option from the 'isArcp criteria' options
-    cy.clickSelect('[data-cy="linkedProgrammeUuid"]', "acute", false);
-    cy.get('[data-cy="linkedProgrammeUuid"]').contains(
+    cy.clickSelect('[data-cy="programmeMembershipId"]', "acute", false);
+    cy.get('[data-cy="programmeMembershipId"]').contains(
       `Acute medicine (start: ${dayjs()
         .subtract(1, "year")
         .format("DD/MM/YYYY")})`
@@ -68,12 +68,12 @@ describe("FormLinkerModal", () => {
 
     // switch to 'new starter' option
     cy.get('[data-cy="isArcp1"]').click();
-    cy.get('[data-cy="linkedProgrammeUuid"] > .nhsuk-error-message')
+    cy.get('[data-cy="programmeMembershipId"] > .nhsuk-error-message')
       .should("exist")
       .should("contain.text", "Please select a programme.");
     cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
-    cy.clickSelect('[data-cy="linkedProgrammeUuid"]', "adult");
-    cy.get('[data-cy="linkedProgrammeUuid"]').contains(
+    cy.clickSelect('[data-cy="programmeMembershipId"]', "adult");
+    cy.get('[data-cy="programmeMembershipId"]').contains(
       `Adult psychiatry (start: ${dayjs().add(1, "year").format("DD/MM/YYYY")})`
     );
     cy.get('[data-cy="form-linker-submit-btn"]').should("not.be.disabled");
@@ -86,20 +86,20 @@ describe("FormLinkerModal", () => {
     mountComponent({
       linkedFormData: {
         isArcp: true,
-        linkedProgrammeUuid: "3"
+        programmeMembershipId: "3"
       },
       onSubmit: cy.stub().as("onSubmit")
     });
     cy.get("dialog").should("be.visible");
-    cy.get('[data-cy="linkedProgrammeUuid"]').should("exist");
+    cy.get('[data-cy="programmeMembershipId"]').should("exist");
     cy.get('[data-cy="isArcp0"]').should("exist").should("be.checked");
     cy.get('[data-cy="isArcp1"]').should("exist").should("not.be.checked");
-    cy.get('[data-cy="linkedProgrammeUuid"] > .nhsuk-error-message').should(
+    cy.get('[data-cy="programmeMembershipId"] > .nhsuk-error-message').should(
       "not.exist"
     );
     cy.get('[data-cy="form-linker-submit-btn"]').should("not.be.disabled");
 
-    cy.get('[data-cy="linkedProgrammeUuid"]').contains(
+    cy.get('[data-cy="programmeMembershipId"]').contains(
       `Acute medicine (start: ${dayjs()
         .subtract(1, "year")
         .format("DD/MM/YYYY")})`
@@ -108,12 +108,12 @@ describe("FormLinkerModal", () => {
 
     // switch to 'new starter' option
     cy.get('[data-cy="isArcp1"]').click();
-    cy.get('[data-cy="linkedProgrammeUuid"] > .nhsuk-error-message')
+    cy.get('[data-cy="programmeMembershipId"] > .nhsuk-error-message')
       .should("exist")
       .should("contain.text", "Please select a programme.");
     cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
-    cy.clickSelect('[data-cy="linkedProgrammeUuid"]', "acute");
-    cy.get('[data-cy="linkedProgrammeUuid"]').contains(
+    cy.clickSelect('[data-cy="programmeMembershipId"]', "acute");
+    cy.get('[data-cy="programmeMembershipId"]').contains(
       `Acute medicine (start: ${dayjs().format("DD/MM/YYYY")})`
     );
     cy.get('[data-cy="form-linker-submit-btn"]').should("not.be.disabled");

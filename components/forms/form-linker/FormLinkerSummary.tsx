@@ -5,12 +5,12 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 
 export function FormLinkerSummary({
   isArcp,
-  linkedProgrammeUuid,
+  programmeMembershipId,
   managingDeanery
 }: Readonly<LinkedFormRDataType>) {
   const linkedProgramme = useAppSelector(state =>
     state.traineeProfile.traineeProfileData.programmeMemberships.find(
-      programme => programme.programmeTisId === linkedProgrammeUuid
+      programme => programme.programmeTisId === programmeMembershipId
     )
   );
 

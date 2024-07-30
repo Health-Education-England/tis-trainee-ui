@@ -14,7 +14,7 @@ import {
 
 export type LinkedFormRDataType = {
   isArcp: null | boolean;
-  linkedProgrammeUuid: null | string;
+  programmeMembershipId: null | string;
   managingDeanery?: string;
 };
 type FormLinkerFormProps = {
@@ -37,12 +37,12 @@ export function FormLinkerForm({
   const progTxt = "Please select a programme.";
   const validationSchema = Yup.object().shape({
     isArcp: Yup.boolean().typeError(optTxt).required(optTxt),
-    linkedProgrammeUuid: Yup.string().typeError(progTxt).required(progTxt)
+    programmeMembershipId: Yup.string().typeError(progTxt).required(progTxt)
   });
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
 
-  const presubForm = typeof linkedFormData.linkedProgrammeUuid === "string";
+  const presubForm = typeof linkedFormData.programmeMembershipId === "string";
 
   const makeLinkedProgOptions = (isArcp: boolean) => {
     const filteredProgrammes = filterProgrammesForLinker(programmesArr, isArcp);
@@ -58,7 +58,7 @@ export function FormLinkerForm({
 
   const makeDefaultOption = (options: SelectOption[]) => {
     return options.find(
-      (opt: SelectOption) => opt.value === linkedFormData.linkedProgrammeUuid
+      (opt: SelectOption) => opt.value === linkedFormData.programmeMembershipId
     );
   };
 
@@ -107,7 +107,7 @@ export function FormLinkerForm({
                   );
                   setFieldValue("selectOptions", updatedOptions);
                   setFieldValue(
-                    "linkedProgrammeUuid",
+                    "programmeMembershipId",
                     { label: null, value: null },
                     true
                   );
@@ -115,11 +115,11 @@ export function FormLinkerForm({
               />
               {values.isArcp !== null && (
                 <AutocompleteSelect
-                  value={values.linkedProgrammeUuid}
+                  value={values.programmeMembershipId}
                   onChange={setFieldValue}
-                  error={errors.linkedProgrammeUuid}
+                  error={errors.programmeMembershipId}
                   options={values.selectOptions}
-                  name="linkedProgrammeUuid"
+                  name="programmeMembershipId"
                   label="What programme will this form link to?"
                   isMulti={false}
                   closeMenuOnSelect={true}

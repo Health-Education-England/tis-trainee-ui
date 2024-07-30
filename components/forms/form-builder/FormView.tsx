@@ -74,7 +74,7 @@ export const FormView = ({
 
   const linkedFormData: LinkedFormRDataType = {
     isArcp: formData.isArcp,
-    linkedProgrammeUuid: formData.linkedProgrammeUuid,
+    programmeMembershipId: formData.programmeMembershipId,
     managingDeanery: formData.localOfficeName
   };
 
@@ -86,7 +86,7 @@ export const FormView = ({
     const managingDeanery = store
       .getState()
       .traineeProfile.traineeProfileData.programmeMemberships.filter(
-        prog => prog.tisId === data.linkedProgrammeUuid
+        prog => prog.tisId === data.programmeMembershipId
       )[0].managingDeanery;
     const latestLinkedFormRData = { ...data, managingDeanery };
     setShowModal(false);

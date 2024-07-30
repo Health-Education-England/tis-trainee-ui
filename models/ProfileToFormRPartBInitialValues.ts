@@ -74,6 +74,6 @@ export function ProfileToFormRPartBInitialValues(
     isDeclarationAccepted: false,
     isConsentAccepted: false,
     isArcp: linkedFormRData?.isArcp ?? null,
-    linkedProgrammeUuid: linkedFormRData?.linkedProgrammeUuid ?? null
+    programmeMembershipId: linkedFormRData?.programmeMembershipId ?? null
   };
 }
