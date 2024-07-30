@@ -133,4 +133,21 @@ describe("FormLinkerModal", () => {
     cy.get("body").type("{esc}");
     cy.get("dialog").should("not.be.visible");
   });
+  it("renders the error message if no programmes are available", () => {
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: [],
+        placements: []
+      })
+    );
+    mountComponent();
+    cy.get('[data-cy="error-header-text"]')
+      .should("exist")
+      .should("contain.text", "Oops! Something went wrong");
+    cy.get('[data-cy="error-message-text"]')
+      .should("exist")
+      .should("include.text", "You have no Programmes on TIS Self-Service ");
+  });
 });

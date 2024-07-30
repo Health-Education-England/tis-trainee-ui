@@ -11,6 +11,7 @@ import {
   filterProgrammesForLinker,
   sortProgrammesForLinker
 } from "../../../utilities/FormRUtilities";
+import ErrorPage from "../../common/ErrorPage";
 
 export type LinkedFormRDataType = {
   isArcp: null | boolean;
@@ -76,7 +77,7 @@ export function FormLinkerForm({
     selectOptions: selectOptionsForInitialFromData
   };
 
-  return (
+  return programmesArr.length > 0 ? (
     <div className="form-linker_form">
       {warningText && (
         <WarningCallout data-cy="formWarning">
@@ -143,6 +144,10 @@ export function FormLinkerForm({
           );
         }}
       </Formik>
+    </div>
+  ) : (
+    <div className="form-linker_form">
+      <ErrorPage message="You have no Programmes on TIS Self-Service that can be linked to this Form R submission. Please contact Support (Local Office) for assistance." />
     </div>
   );
 }

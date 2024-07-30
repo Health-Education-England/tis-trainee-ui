@@ -11,6 +11,7 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import {
+  filterManagingDeanery,
   FormRUtilities,
   makeWarningText
 } from "../../../utilities/FormRUtilities";
@@ -83,11 +84,7 @@ export const FormView = ({
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = store
-      .getState()
-      .traineeProfile.traineeProfileData.programmeMemberships.filter(
-        prog => prog.tisId === data.programmeMembershipId
-      )[0].managingDeanery;
+    const managingDeanery = filterManagingDeanery(data.programmeMembershipId);
     const latestLinkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
     submitForm(formJson, formData, history, latestLinkedFormRData);

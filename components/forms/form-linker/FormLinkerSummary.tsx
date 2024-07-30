@@ -31,7 +31,7 @@ export function FormLinkerSummary({
       value: linkedProgramme
         ? `${linkedProgrammeName} (start: ${dayjs(
             linkedProgrammeStartDate
-          ).format("DD/MM/YYYY")} )`
+          ).format("DD/MM/YYYY")})`
         : "Linked programme not set."
     },
     {

@@ -133,3 +133,10 @@ const selectLinkedProgrammeOptionsSorter = (
 export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
   return programmes.sort(selectLinkedProgrammeOptionsSorter);
 };
+
+export const filterManagingDeanery = (PmId: null | string) =>
+  store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => prog.tisId === PmId
+    )[0]?.managingDeanery;

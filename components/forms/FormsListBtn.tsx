@@ -6,8 +6,8 @@ import { DateType } from "../../utilities/DateUtilities";
 import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormLinkerModal } from "./form-linker/FormLinkerModal";
-import store from "../../redux/store/store";
 import {
+  filterManagingDeanery,
   FormRUtilities,
   makeWarningText
 } from "../../utilities/FormRUtilities";
@@ -19,6 +19,7 @@ interface IFormsListBtn {
 }
 
 const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const draftFormProps = useAppSelector(state => state.forms?.draftFormProps);
@@ -26,24 +27,22 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
     state => state.traineeProfile.traineeProfileData
   );
 
-  const handleBtnClick = () => {
+  const handleBtnClick = async () => {
+    setIsSubmitting(true);
     if (draftFormProps?.id && draftFormProps?.programmeMembershipId) {
-      loadTheSavedForm(pathName, draftFormProps.id, history);
+      await loadTheSavedForm(pathName, draftFormProps.id, history);
     } else {
       setShowModal(true);
     }
+    setIsSubmitting(false);
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = store
-      .getState()
-      .traineeProfile.traineeProfileData.programmeMemberships.filter(
-        prog => prog.tisId === data.programmeMembershipId
-      )[0].managingDeanery;
+    const managingDeanery = filterManagingDeanery(data.programmeMembershipId);
     const linkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
     if (draftFormProps?.id) {
-      loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData);
+      loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData); // UNSUBMITTED
     } else {
       FormRUtilities.loadNewForm(
         pathName,
@@ -72,6 +71,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         }
         type="submit"
         onClick={handleBtnClick}
+        disabled={isSubmitting}
       >
         {chooseBtnText(draftFormProps?.lifecycleState)}
       </Button>
