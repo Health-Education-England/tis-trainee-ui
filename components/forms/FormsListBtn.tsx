@@ -38,7 +38,9 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = filterManagingDeanery(data.programmeMembershipId);
+    const managingDeanery = filterManagingDeanery(
+      data.programmeMembershipId as string
+    ); // we know it's not null at this point
     const linkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
     if (draftFormProps?.id) {

@@ -9,7 +9,9 @@ import {
 } from "../../../../components/forms/form-linker/FormLinkerModal";
 import {
   mockPersonalDetails,
-  mockProgrammesForLinkerTest
+  mockProgrammesForLinkerTest,
+  mockProgrammesForLinkerTestOutsideArcp,
+  mockProgrammesForLinkerTestOutsideNewStarter
 } from "../../../../mock-data/trainee-profile";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
@@ -149,5 +151,53 @@ describe("FormLinkerModal", () => {
     cy.get('[data-cy="error-message-text"]')
       .should("exist")
       .should("include.text", "You have no Programmes on TIS Self-Service ");
+  });
+  it("renders the error message if no linked programme options are available for the ARCP user to select.", () => {
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammesForLinkerTestOutsideArcp,
+        placements: []
+      })
+    );
+    mountComponent();
+    cy.get('[data-cy="isArcp1"]').click();
+    cy.get('[data-cy="error-header-text"]').should("not.exist");
+    cy.get('[data-cy="error-message-text"]').should("not.exist");
+    cy.get('[data-cy="programmeMembershipId"]').should("exist");
+    cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.get('[data-cy="form-linker-submit-btn"]').should("not.be.disabled");
+
+    cy.get('[data-cy="isArcp0"]').click();
+    cy.get('[data-cy="error-header-text"]')
+      .should("exist")
+      .should("contain.text", "Oops! Something went wrong");
+    cy.get('[data-cy="error-message-text"]')
+      .should("exist")
+      .should(
+        "include.text",
+        "You have no active programmes to link this form to."
+      );
+    cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
+  });
+  it("renders the error message if no linked programme options are available for the New Starter user to select.", () => {
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammesForLinkerTestOutsideNewStarter,
+        placements: []
+      })
+    );
+    mountComponent();
+    cy.get('[data-cy="isArcp0"]').click();
+    cy.get('[data-cy="error-header-text"]').should("not.exist");
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.get('[data-cy="form-linker-submit-btn"]').should("not.be.disabled");
+    cy.get('[data-cy="isArcp1"]').click();
+    cy.get('[data-cy="error-header-text"]').should("exist");
+    cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
   });
 });

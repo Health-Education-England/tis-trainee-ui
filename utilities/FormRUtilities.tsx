@@ -134,7 +134,7 @@ export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
   return programmes.sort(selectLinkedProgrammeOptionsSorter);
 };
 
-export const filterManagingDeanery = (PmId: null | string) =>
+export const filterManagingDeanery = (PmId: string) =>
   store
     .getState()
     .traineeProfile.traineeProfileData.programmeMemberships.filter(

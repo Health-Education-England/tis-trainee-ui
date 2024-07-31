@@ -92,7 +92,7 @@ export function FormLinkerForm({
         validateOnChange={false}
         validateOnBlur={false}
       >
-        {({ values, errors, setFieldValue, isValid }) => {
+        {({ values, errors, setFieldValue, isValid, dirty }) => {
           return (
             <Form>
               <MultiChoiceInputField
@@ -114,7 +114,7 @@ export function FormLinkerForm({
                   );
                 }}
               />
-              {values.isArcp !== null && (
+              {values.isArcp !== null && values.selectOptions?.length > 0 && (
                 <AutocompleteSelect
                   value={values.programmeMembershipId}
                   onChange={setFieldValue}
@@ -133,10 +133,20 @@ export function FormLinkerForm({
                   data-cy="linked-programme-uuid"
                 />
               )}
+              {dirty && values.selectOptions?.length === 0 && (
+                <div className="form-linker_form">
+                  <ErrorPage
+                    message="You have no active programmes to link this form to. Please
+                  contact Support (Local Office) for assistance."
+                  />
+                </div>
+              )}
               <Button
                 data-cy="form-linker-submit-btn"
                 type="submit"
-                disabled={!isValid}
+                disabled={
+                  !isValid || (dirty && values.selectOptions?.length === 0)
+                }
               >
                 Confirm & Continue
               </Button>
