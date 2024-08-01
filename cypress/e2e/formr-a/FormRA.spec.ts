@@ -14,12 +14,15 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.signInToTss(30000, "/formr-a");
   });
   it("Should delete any existing draft forms if they exist", () => {
-    cy.deleteDraftForm();
+    cy.get("#btnOpenForm").should("exist").click();
+    cy.checkForFormLinkerAndComplete();
+    cy.get('[data-cy="forename-input"]').focus().clear().type("Temp");
+    cy.startOver();
   });
 
   it("Should complete a new Form R Part A.", () => {
     cy.get('[data-cy="Submit new form"]').click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 1 of 3 - Personal Details"
@@ -48,7 +51,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.log("################ Start over functionality ###################");
     cy.startOver();
     cy.get('[data-cy="Submit new form"]').click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
 
     // complete form section 1-3
     cy.checkAndFillFormASection1();
@@ -77,10 +80,9 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="isCorrect"]').should("exist").click();
     cy.get('[data-cy="willKeepInformed"]').should("exist").click();
     cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled").click();
-    cy.get(".MuiDialog-container")
-      .should("exist")
-      .should("include.text", "Please think carefully before submitting");
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+
+    // final submit via linker modal
+    cy.get('[data-cy="form-linker-submit-btn"]').click();
 
     cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="Submit new form"]').should("exist");
@@ -90,6 +92,8 @@ describe("Form R Part A - Basic Form completion and submission", () => {
       "traineeui.tester@hee.nhs.uk"
     );
     cy.get('[data-cy="savePdfBtn"]').should("exist");
+    //check linkage
+    cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
 
     // Navigate back to the list
     cy.get('[data-cy="backLink"]').should("exist").click();
@@ -106,7 +110,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.get('[data-cy="Submit new form"]')
       .should("exist")
       .click({ force: true });
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.clickSelect('[data-cy="immigrationStatus"]', "ref", true);
     cy.get('[data-cy="email-input"]')
       .focus()
@@ -173,7 +177,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
     cy.get('[data-cy="Submit new form"]').should("exist").click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="BtnSaveDraft"]').click();
     cy.contains(
       "[data-cy=toastText]",
@@ -189,7 +193,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
     cy.get('[data-cy="Submit new form"]').should("exist").click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="BtnSaveDraft"]').click();
     cy.contains(
       "[data-cy=toastText]",
@@ -210,7 +214,7 @@ describe("Form R Part A - 'delete form' toast messages", () => {
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
     cy.get('[data-cy="Submit new form"]').should("exist").click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="email-input"]').focus().clear().type("t");
     cy.startOver();
     cy.get('[data-cy="toastText"]').should(

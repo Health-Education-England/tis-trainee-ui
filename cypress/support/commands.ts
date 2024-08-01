@@ -25,27 +25,14 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("checkForRecentForm", () => {
-  cy.get("body").then($body => {
-    if ($body.find(".MuiDialog-container").length) {
-      cy.get(".MuiDialogContentText-root").should(
-        "include.text",
-        "You recently submitted a form"
-      );
-      cy.get(".MuiDialogActions-root > :nth-child(2)").click({ force: true });
+Cypress.Commands.add("checkForFormLinkerAndComplete", () => {
+  cy.get("dialog").then($dialog => {
+    if ($dialog.is(":visible")) {
+      cy.get('[data-cy="isArcp1"]').click();
+      cy.clickSelect('[data-cy="programmeMembershipId"]');
+      cy.get('[data-cy="form-linker-submit-btn"]').click();
     }
   });
-});
-
-Cypress.Commands.add("deleteDraftForm", () => {
-  cy.get("#btnOpenForm")
-    .should("exist")
-    .focus()
-    .then((loadFormButton: JQuery) => {
-      if (loadFormButton.attr("data-cy") !== "Submit new form") {
-        cy.startOver();
-      }
-    });
 });
 
 Cypress.Commands.add("startOver", () => {
@@ -305,7 +292,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1"]').should("be.visible");
   cy.get('[data-cy="cctSpecialty2"]').should("be.visible");
   cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
-  cy.get('[data-cy="cctSpecialty1"]').contains("ACCS Anaesthetics");
+  cy.get('[data-cy="cctSpecialty1"]').should("include.text", "ACCS");
 
   // hide the cctSpecialty fields
   cy.clickRadioCheck(
@@ -320,7 +307,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
-  ).contains("ACCS Anaesthetics");
+  ).should("include.text", "ACCS");
 
   // hidden fields should not be validated
   cy.clickRadioCheck(

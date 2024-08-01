@@ -46,7 +46,9 @@ export function FormLinkerSummary({
         {rows.map(({ key, value }) => (
           <SummaryList.Row key={key}>
             <SummaryList.Key>{key}</SummaryList.Key>
-            <SummaryList.Value>{value}</SummaryList.Value>
+            <SummaryList.Value data-cy={`${key}-value`}>
+              {value}
+            </SummaryList.Value>
           </SummaryList.Row>
         ))}
       </SummaryList>

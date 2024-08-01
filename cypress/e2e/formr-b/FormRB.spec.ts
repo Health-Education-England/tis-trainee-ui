@@ -11,21 +11,21 @@ const today = dayjs();
 // - form submission
 // - checking submitted form
 // - shortcut btn
-// But Note: currently only the unit and component tests are included in the in the code coverage report
+// - saving/checking fomr linkage data
+// But Note: currently only the unit and component tests are included in the code coverage report
 
 describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
   it("Should save a new draft form then delete it", () => {
     cy.signInToTss(30000, "/formr-b", "iphone-6");
-    cy.deleteDraftForm();
-    cy.checkElement("Submit new form").click();
-    cy.checkForRecentForm();
+    cy.get("#btnOpenForm").should("exist").click();
+    cy.checkForFormLinkerAndComplete();
 
     cy.log("No autosave if no changes made");
     cy.get('[data-cy="homeLink"]').should("exist").click();
     cy.get('[data-cy="menuToggleBtn"]').click();
     cy.get('[data-cy="Form R (B)"]').click();
     cy.get('[data-cy="Submit new form"]').scrollIntoView().click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
 
     cy.log("Autosave if navigate away after editing");
     cy.get('[data-cy="autosaveNote"]').should("exist");
@@ -69,7 +69,7 @@ describe("Form R (Part B) - Submit a new form", () => {
   it("complete part of a new Form R Part B.", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form").click();
-    cy.checkForRecentForm();
+    cy.checkForFormLinkerAndComplete();
     cy.checkElement("homeLink");
     cy.navNext();
     cy.checkElement("progress-header", "Part 1 of 10 - Personal Details");
@@ -132,10 +132,8 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();
     cy.checkElement("BtnSubmit", "Submit Form").click();
-    cy.get(".MuiDialog-container")
-      .should("exist")
-      .should("include.text", "Please think carefully before submitting");
-    cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+    // final submit via linker modal
+    cy.get('[data-cy="form-linker-submit-btn"]').click();
     cy.checkElement("Submit new form");
   });
 

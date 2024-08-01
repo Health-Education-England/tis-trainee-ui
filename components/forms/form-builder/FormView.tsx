@@ -84,7 +84,9 @@ export const FormView = ({
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = filterManagingDeanery(data.programmeMembershipId);
+    const managingDeanery = filterManagingDeanery(
+      data.programmeMembershipId as string
+    );
     const latestLinkedFormRData = { ...data, managingDeanery };
     setShowModal(false);
     submitForm(formJson, formData, history, latestLinkedFormRData);
