@@ -162,6 +162,7 @@ describe("FormLinkerModal", () => {
       })
     );
     mountComponent();
+    cy.get('[data-cy="formWarning"]').should("not.exist");
     cy.get('[data-cy="isArcp1"]').click();
     cy.get('[data-cy="error-header-text"]').should("not.exist");
     cy.get('[data-cy="error-message-text"]').should("not.exist");
@@ -191,7 +192,8 @@ describe("FormLinkerModal", () => {
         placements: []
       })
     );
-    mountComponent();
+    mountComponent({ warningText: "This is a warning message" });
+    cy.get('[data-cy="formWarning"]').should("exist");
     cy.get('[data-cy="isArcp0"]').click();
     cy.get('[data-cy="error-header-text"]').should("not.exist");
     cy.clickSelect('[data-cy="programmeMembershipId"]');
