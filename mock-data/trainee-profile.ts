@@ -847,3 +847,11 @@ export const mockProgrammesForLinkerTest: ProgrammeMembership[] = [
     tisId: "6"
   }
 ];
+
+export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
+  mockProgrammesForLinkerTest[3],
+  mockProgrammesForLinkerTest[4]
+];
+
+export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
+  [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
