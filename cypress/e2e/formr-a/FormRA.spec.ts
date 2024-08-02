@@ -105,7 +105,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
   before(() => {
     cy.signInToTss(0, "/", "iphone-6");
   });
-  it("should persist the updated dependent field visibility status to trigger any expected validation  when a draft form is re-opened.", () => {
+  it("should persist the updated dependent field visibility status to trigger any expected validation when a draft form is re-opened.", () => {
     cy.contains("Form R (Part A)").click({ force: true });
     cy.get('[data-cy="Submit new form"]')
       .should("exist")
@@ -156,10 +156,8 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.get('[data-cy="isCorrect"]').should("exist").click();
     cy.get('[data-cy="willKeepInformed"]').should("exist").click();
     cy.get("[data-cy=BtnSubmit]").should("exist").click();
-    cy.get(".MuiDialog-container")
-      .should("exist")
-      .should("include.text", "Please think carefully before submitting");
-    cy.get(".MuiDialogActions-root > :nth-child(1)").click();
+    cy.get("dialog").should("exist");
+    cy.get('[data-cy="modal-cancel-btn"]').should("exist").click();
     cy.startOver();
     cy.get('[data-cy="Submit new form"]').should("exist");
   });
