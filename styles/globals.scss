@@ -977,6 +977,6 @@ dialog::backdrop {
   backdrop-filter: blur(10px);
 }
 
-html:has(dialog[open]) {
+html:has(dialog[data-cy="formLinkerModal"][open]) {
   overflow: hidden;
 }

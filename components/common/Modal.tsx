@@ -45,7 +45,12 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   }, [isModalOpen]);
 
   return (
-    <dialog ref={modalRef} className="modal" aria-modal="true">
+    <dialog
+      ref={modalRef}
+      className="modal"
+      aria-modal="true"
+      data-cy="formLinkerModal"
+    >
       {children}
       <Button
         data-cy="modal-cancel-btn"
