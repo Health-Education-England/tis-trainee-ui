@@ -1,5 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "nhsuk-react-components";
-import { useEffect, useRef, useState } from "react";
 
 type ModalProps = {
   children: React.ReactNode;
@@ -10,12 +10,12 @@ type ModalProps = {
 export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement>(null);
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     if (onClose) {
       onClose();
     }
     setIsModalOpen(false);
-  };
+  }, [onClose]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -27,7 +27,7 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleCloseModal]);
 
   useEffect(() => {
     setIsModalOpen(isOpen);

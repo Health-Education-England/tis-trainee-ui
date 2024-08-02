@@ -12,7 +12,7 @@ import {
 
 describe("PrintableCct", () => {
   it("renders the PrintableCct component but hidden", () => {
-    store.dispatch(setCurrentWte("100%"));
+    store.dispatch(setCurrentWte(100));
     store.dispatch(
       setNewEndDates([{ ftePercent: "50%", newEndDate: "01/01/2032" }])
     );
