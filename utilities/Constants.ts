@@ -130,11 +130,6 @@ export const NEW_DECLARATION: Declaration = {
   locationOfEntry: ""
 };
 
-export const dialogBoxWarnings = {
-  formSubMsg:
-    "Please think carefully before submitting as the current process for deleting or re-submitting a new form isn't straightforward. You can save a draft copy if needed. But if you are ready to submit then please click OK."
-};
-
 export type PanelKeys = {
   placements: string;
   programmeMemberships: string;

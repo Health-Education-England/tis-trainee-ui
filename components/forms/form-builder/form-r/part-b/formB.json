@@ -41,13 +41,6 @@
               "visible": true
             },
             {
-              "name": "localOfficeName",
-              "label": "Deanery / Local Office",
-              "type": "select",
-              "optionsKey": "localOffice",
-              "visible": true
-            },
-            {
               "name": "prevRevalBody",
               "label": "Previous Designated Body for Revalidation (if applicable)",
               "type": "select",

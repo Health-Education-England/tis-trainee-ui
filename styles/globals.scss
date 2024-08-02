@@ -960,3 +960,23 @@ ol[type="a"] {
     margin-bottom: 2em;
   }
 }
+
+// form linker
+.form-linker_form {
+  max-width: 500px;
+}
+
+.form-linker_summary {
+  border: solid 1px black;
+  padding: 0.5rem;
+  margin: 1rem 0;
+}
+
+// form linker dialog
+dialog::backdrop {
+  backdrop-filter: blur(10px);
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
+}
