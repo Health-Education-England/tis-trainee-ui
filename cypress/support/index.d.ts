@@ -26,7 +26,7 @@ declare global {
         text: string | number | null = null,
         shouldExist: boolean = true
       ): Chainable<Element>;
-      checkForRecentForm(): Chainable<Element>;
+      checkForFormLinkerAndComplete(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       checkViewFields(fields: string[][]): Chainable<Element>;
@@ -39,7 +39,6 @@ declare global {
       clickAllRemoveWorkButtons(): Chainable<Element>;
       clickRadioCheck(selector: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
-      deleteDraftForm(): Chainable<Element>;
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
       signIn(): Chainable<Element>;
