@@ -11,7 +11,7 @@ const today = dayjs();
 // - form submission
 // - checking submitted form
 // - shortcut btn
-// - saving/checking fomr linkage data
+// - saving/checking linkage data
 // But Note: currently only the unit and component tests are included in the code coverage report
 
 describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
@@ -152,6 +152,8 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
     cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
     cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
+    //check linkage
+    cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
     cy.get('[data-cy="backLink"]').click();
     cy.contains("Submitted forms").should("exist");
   });
