@@ -20,7 +20,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.startOver();
   });
 
-  it("Should complete a new Form R Part A.", () => {
+  it("should autosave then delete draft via 'start over' btn.", () => {
     cy.get('[data-cy="Submit new form"]').click();
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="progress-header"] > h3').should(
@@ -50,6 +50,9 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
     cy.log("################ Start over functionality ###################");
     cy.startOver();
+  });
+
+  it("should complete form and submit successfully", () => {
     cy.get('[data-cy="Submit new form"]').click();
     cy.checkForFormLinkerAndComplete();
 
