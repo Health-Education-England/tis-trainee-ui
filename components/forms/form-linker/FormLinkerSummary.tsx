@@ -60,11 +60,10 @@ export function FormLinkerSummary({
 function OldFormSummaryText() {
   return (
     <p>
-      Note: Setting the ARCP status and linked Programme is a new feature.
-      Currently, it is not possible to set these values on a form submitted
-      before this new feature went live. If, however, you think this ability
-      would be useful, then please complete the survey which should appear on
-      this page.
+      {`Note: Setting the ARCP status and linked Programme is a new feature.
+      Currently, to set these values on a form submitted before this new feature
+      went live, you will need to contact Support (Local Office) to get the form
+      'unsubmitted' so you can link and then resubmit it.`}
     </p>
   );
 }

@@ -1,7 +1,7 @@
 import { Modal } from "../../common/Modal";
 import { FormLinkerForm, LinkedFormRDataType } from "./FormLinkerForm";
 
-type FormLinkerModalProps = {
+export type FormLinkerModalProps = {
   onSubmit: (data: LinkedFormRDataType) => void;
   isOpen: boolean;
   onClose: () => void;

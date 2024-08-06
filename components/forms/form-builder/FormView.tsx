@@ -27,7 +27,6 @@ import { Form, FormData, FormErrors } from "./FormBuilder";
 import Declarations from "./Declarations";
 import { FormLinkerModal } from "../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
-import store from "../../../redux/store/store";
 import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
 
 type FormViewProps = {
