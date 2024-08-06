@@ -5,4 +5,5 @@ export interface IFormR {
   submissionDate?: DateType;
   lastModifiedDate: DateType;
   lifecycleState: LifeCycleState;
+  programmeMembershipId?: string | null;
 }

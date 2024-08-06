@@ -39,6 +39,7 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
+import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -56,12 +57,13 @@ export function mapItemToNewFormat(item: KeyValue): {
 export async function loadTheSavedForm(
   pathName: string,
   id: string,
-  history: any
+  history: any,
+  linkedFormRData?: LinkedFormRDataType
 ) {
   if (pathName === "/formr-a") {
-    await store.dispatch(loadSavedFormA(id));
+    await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
   } else {
-    await store.dispatch(loadSavedFormB(id));
+    await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
   }
   history.push(`${pathName}/create`);
 }
@@ -161,18 +163,19 @@ export function makeSubObj(
 export async function submitForm(
   jsonForm: Form,
   formData: FormData,
-  history: any
+  history: any,
+  linkedFormRData: LinkedFormRDataType
 ) {
   const formName = jsonForm.name;
-
   const lastSavedFormDataId = formActionsAndTypes[formName].state();
-
-  const subObject = makeSubObj(jsonForm, formData, lastSavedFormDataId);
-
+  const subObject = {
+    ...makeSubObj(jsonForm, formData, lastSavedFormDataId),
+    ...linkedFormRData,
+    localOfficeName: formData.localOfficeName
+  };
   const action = lastSavedFormDataId
     ? formActionsAndTypes[formName].update
     : formActionsAndTypes[formName].save;
-
   await store.dispatch(action(subObject));
   resetForm(formName, history);
 }
@@ -380,6 +383,7 @@ export function sumFieldValues(formData: FormData, fields: Field[]) {
 export interface DraftFormProps {
   id?: string;
   lifecycleState: LifeCycleState;
+  programmeMembershipId?: string | null;
 }
 
 export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
@@ -395,7 +399,8 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   if (unsubmittedForm) {
     return {
       id: unsubmittedForm.id,
-      lifecycleState: LifeCycleState.Unsubmitted
+      lifecycleState: LifeCycleState.Unsubmitted,
+      programmeMembershipId: unsubmittedForm.programmeMembershipId
     };
   }
 
@@ -406,7 +411,8 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   if (draftForm) {
     return {
       id: draftForm.id,
-      lifecycleState: LifeCycleState.Draft
+      lifecycleState: LifeCycleState.Draft,
+      programmeMembershipId: draftForm.programmeMembershipId
     };
   }
   return null;
@@ -464,7 +470,12 @@ export async function autosaveFormR(
       formName
     );
   } else {
-    await saveForm(preppedFormData, formName);
+    const linkedDataToSave = {
+      isArcp: formData.isArcp,
+      programmeMembershipId: formData.programmeMembershipId,
+      localOfficeName: formData.localOfficeName
+    };
+    await saveForm({ ...preppedFormData, ...linkedDataToSave }, formName);
   }
 }
 
@@ -626,10 +637,8 @@ export const colourStyles = {
   }),
   container: (baseStyles: any) => ({
     ...baseStyles,
-    maxWidth: "100%",
-    "@media (min-width: 40.0625em)": {
-      ...baseStyles["@media (min-width: 40.0625em)"],
-      maxWidth: "52%"
-    }
+    width: "max-content",
+    minWidth: "70%",
+    maxWidth: "100%"
   })
 };

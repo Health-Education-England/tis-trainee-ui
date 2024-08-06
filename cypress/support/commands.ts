@@ -25,27 +25,14 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("checkForRecentForm", () => {
-  cy.get("body").then($body => {
-    if ($body.find(".MuiDialog-container").length) {
-      cy.get(".MuiDialogContentText-root").should(
-        "include.text",
-        "You recently submitted a form"
-      );
-      cy.get(".MuiDialogActions-root > :nth-child(2)").click({ force: true });
+Cypress.Commands.add("checkForFormLinkerAndComplete", () => {
+  cy.get("dialog").then($dialog => {
+    if ($dialog.is(":visible")) {
+      cy.get('[data-cy="isArcp1"]').click();
+      cy.clickSelect('[data-cy="programmeMembershipId"]');
+      cy.get('[data-cy="form-linker-submit-btn"]').click();
     }
   });
-});
-
-Cypress.Commands.add("deleteDraftForm", () => {
-  cy.get("#btnOpenForm")
-    .should("exist")
-    .focus()
-    .then((loadFormButton: JQuery) => {
-      if (loadFormButton.attr("data-cy") !== "Submit new form") {
-        cy.startOver();
-      }
-    });
 });
 
 Cypress.Commands.add("startOver", () => {
@@ -305,7 +292,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1"]').should("be.visible");
   cy.get('[data-cy="cctSpecialty2"]').should("be.visible");
   cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
-  cy.get('[data-cy="cctSpecialty1"]').contains("ACCS Anaesthetics");
+  cy.get('[data-cy="cctSpecialty1"]').should("include.text", "ACCS");
 
   // hide the cctSpecialty fields
   cy.clickRadioCheck(
@@ -320,7 +307,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
-  ).contains("ACCS Anaesthetics");
+  ).should("include.text", "ACCS");
 
   // hidden fields should not be validated
   cy.clickRadioCheck(
@@ -446,10 +433,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-input"]').clear();
   cy.get('[data-cy="gmcNumber-input"]').clear();
   cy.get('[data-cy="email-input"]').clear();
-  cy.clickSelect('[data-cy="localOfficeName"]', null, true);
-  cy.get(
-    '[data-cy="localOfficeName"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
   cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
   cy.get(
     '[data-cy="prevRevalBody"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
@@ -475,9 +458,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   );
   cy.get('[data-cy="error-txt-GMC number is required"]').should("exist");
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
-  cy.get('[data-cy="error-txt-Deanery / HEE Local Office is required"]').should(
-    "exist"
-  );
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
   ).should("exist");
@@ -498,7 +478,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-inline-error-msg"]').should("exist");
   cy.get('[data-cy="gmcNumber-inline-error-msg"]').should("exist");
   cy.get('[data-cy="email-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="localOfficeName-inline-error-msg"]').should("exist");
   cy.get('[data-cy="currRevalDate-inline-error-msg"]').should("exist");
   cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
 
@@ -547,7 +526,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.clearAndType('[data-cy="forename-input"]', `Bob-${currentDate}`);
   cy.clearAndType('[data-cy="surname-input"]', `Smith-${currentDate}`);
   cy.clearAndType('[data-cy="gmcNumber-input"]', "1234567");
-  cy.clickSelect('[data-cy="localOfficeName"]');
 
   cy.get(".error-summary").should("not.exist");
   cy.get('[data-cy="navNext"]').should(

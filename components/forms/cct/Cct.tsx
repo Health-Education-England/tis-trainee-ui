@@ -66,7 +66,7 @@ const CctChild = forwardRef(
 
     const handleCalculate = (values: CalcFormValues) => {
       const calculatedEndDates = calculateNewEndDates(
-        Number(values.currentFtePercent.split("%")[0]),
+        values.currentFtePercent as number,
         values.ftePercents,
         values.propStartDate,
         values.propEndDate,
@@ -74,7 +74,7 @@ const CctChild = forwardRef(
       );
       dispatch(setNewEndDates(calculatedEndDates));
       dispatch(setPropEndDate(values.propEndDate));
-      dispatch(setCurrentWte(values.currentFtePercent));
+      dispatch(setCurrentWte(values.currentFtePercent as number));
     };
 
     const dialogContent = (
@@ -160,7 +160,7 @@ function CctHeader() {
 export type CurrentProgInfoProps = {
   progName: string;
   currentProgEndDate: string;
-  currentWte?: string;
+  currentWte?: number;
 };
 
 export function CurrentProgInfo({
@@ -180,7 +180,7 @@ export function CurrentProgInfo({
       {currentWte && (
         <p data-cy="cct-curr-wte">
           <b>{`Current WTE: `}</b>
-          {currentWte}
+          {`${currentWte}%`}
         </p>
       )}
     </div>

@@ -30,7 +30,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label>{props.label}</Label>
+      <Label htmlFor={props.id}>{props.label}</Label>
 
       <FormElement
         name={props.name}
@@ -76,6 +76,6 @@ const setOnChangeValue = (
 ) =>
   props.type === "checkbox"
     ? helpers.setValue(!item.value)
-    : helpers.setValue(item.value);
+    : helpers.setValue(item.value, true);
 
 export default connect(MultiChoiceInputField);

@@ -5,7 +5,7 @@ type CctCalcState = {
   modalOpen: boolean;
   progName: string;
   currentProgEndDate: string;
-  currentWte: string;
+  currentWte: number | undefined;
   newEndDates: NewEndDatesTypes[];
   propStartDate: string;
   propEndDate: string;
@@ -16,7 +16,7 @@ const initialState: CctCalcState = {
   modalOpen: false,
   progName: "",
   currentProgEndDate: "",
-  currentWte: "",
+  currentWte: undefined,
   newEndDates: [],
   propStartDate: "",
   propEndDate: "",
@@ -36,7 +36,7 @@ const cctCalcSlice = createSlice({
     setCurrentProgEndDate(state, action: PayloadAction<string>) {
       return { ...state, currentProgEndDate: action.payload };
     },
-    setCurrentWte(state, action: PayloadAction<string>) {
+    setCurrentWte(state, action: PayloadAction<number>) {
       return { ...state, currentWte: action.payload };
     },
     setPropStartDate(state, action: PayloadAction<string>) {

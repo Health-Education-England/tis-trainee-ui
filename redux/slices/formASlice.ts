@@ -10,6 +10,7 @@ import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 interface IFormA {
   formAList: IFormR[];
   formData: FormRPartA;
@@ -44,11 +45,25 @@ export const loadFormAList = createAsyncThunk(
 
 export const loadSavedFormA = createAsyncThunk(
   "formA/fetchFormA",
-  async (formId: string) => {
+  async ({
+    id,
+    linkedFormRData
+  }: {
+    id: string;
+    linkedFormRData?: LinkedFormRDataType;
+  }): Promise<FormRPartA> => {
     const formsService = new FormsService();
-    const response: AxiosResponse<FormRPartA> =
-      await formsService.getTraineeFormRPartAByFormId(formId);
-    return response.data;
+    const fetchedForm = (await formsService.getTraineeFormRPartAByFormId(id))
+      .data;
+    if (linkedFormRData) {
+      return {
+        ...fetchedForm,
+        isArcp: linkedFormRData.isArcp,
+        programmeMembershipId: linkedFormRData.programmeMembershipId,
+        localOfficeName: linkedFormRData.managingDeanery
+      };
+    }
+    return fetchedForm;
   }
 );
 

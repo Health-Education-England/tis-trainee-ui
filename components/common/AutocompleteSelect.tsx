@@ -17,6 +17,7 @@ type AutocompleteSelectProps = {
   isMulti: boolean;
   closeMenuOnSelect: boolean;
   isCreatable?: boolean;
+  defaultOption?: any;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -28,10 +29,11 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   label,
   isMulti,
   closeMenuOnSelect,
-  isCreatable
+  isCreatable,
+  defaultOption
 }) => {
   const handleChange = (val: any) => {
-    onChange(name, val ? val.label : null);
+    onChange(name, val ? val.value : null, true);
   };
   const handleMultiChange = (val: any) => onChange(name, val);
   const selectProps = {
@@ -41,12 +43,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
     isClearable: true,
     isMulti: isMulti,
     closeMenuOnSelect: closeMenuOnSelect,
-    defaultValue: isMulti
-      ? null
-      : {
-          value: value,
-          label: value
-        },
+    defaultValue: isMulti ? null : defaultOption,
     placeholder: "Select or start typing...",
     className: "autocomplete-select",
     classNamePrefix: "react-select",
@@ -63,7 +60,9 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label id={`${name}--label`}>{label}</Label>
+      <Label id={`${name}--label`} htmlFor="name">
+        {label}
+      </Label>
       {error ? (
         <span className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error: </span>

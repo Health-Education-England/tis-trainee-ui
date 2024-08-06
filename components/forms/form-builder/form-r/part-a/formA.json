@@ -33,13 +33,6 @@
               "visible": true
             },
             {
-              "name": "localOfficeName",
-              "label": "Deanery / HEE Local Office",
-              "type": "select",
-              "visible": true,
-              "optionsKey": "localOffice"
-            },
-            {
               "name": "dateOfBirth",
               "label": "Date of Birth",
               "placeholder": "DD/MM/YYYY",

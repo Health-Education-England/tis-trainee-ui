@@ -799,3 +799,59 @@ export const mockTraineeProfileFormBCovid: TraineeProfile = {
   ...mockTraineeProfileCovid,
   placements: mockPlacementsForGrouping
 };
+
+export const mockProgrammesForLinkerTest: ProgrammeMembership[] = [
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Acute medicine",
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+    tisId: "1"
+  },
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Adult psychiatry",
+    startDate: `${dayjs().subtract(1, "year").year()}-12-31`,
+    endDate: `${dayjs().year()}-12-31`,
+    tisId: "2"
+  },
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Acute medicine",
+    startDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    endDate: dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+    tisId: "3"
+  },
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Acute medicine",
+    startDate: dayjs().subtract(2, "year").format("YYYY-MM-DD"),
+    endDate: dayjs()
+      .subtract(1, "year")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD"),
+    tisId: "4"
+  },
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Adult psychiatry",
+    startDate: dayjs().add(1, "year").format("YYYY-MM-DD"),
+    endDate: dayjs().add(3, "year").format("YYYY-MM-DD"),
+    tisId: "5"
+  },
+  {
+    ...mockProgrammeMemberships[0],
+    programmeName: "Acute medicine",
+    startDate: dayjs().add(1, "year").add(1, "day").format("YYYY-MM-DD"),
+    endDate: dayjs().add(1, "year").add(1, "day").format("YYYY-MM-DD"),
+    tisId: "6"
+  }
+];
+
+export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
+  mockProgrammesForLinkerTest[3],
+  mockProgrammesForLinkerTest[4]
+];
+
+export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
+  [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
