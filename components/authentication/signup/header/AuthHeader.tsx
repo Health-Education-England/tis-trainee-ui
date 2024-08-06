@@ -15,18 +15,6 @@ const AuthHeader = (): JSX.Element => {
           <h1 data-cy="authTitle">TIS Self-Service</h1>
         </View>
       </Flex>
-
-      <div className="app-signin-alert">
-        <p data-cy="authAlert">
-          We are currently having issues with Support emails.
-          <br />
-          Visit our{" "}
-          <a href="https://tis-support.hee.nhs.uk/trainees/" target="_new">
-            Support page
-          </a>{" "}
-          for details.
-        </p>
-      </div>
     </>
   );
 };
