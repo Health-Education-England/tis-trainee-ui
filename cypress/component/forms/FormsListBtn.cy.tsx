@@ -35,7 +35,9 @@ describe("FormsListBtn", () => {
       .should("exist")
       .should(
         "include.text",
-        "Important: ImportantYou recently submitted a form on 02/08/2024. Are you sure you want to submit another?"
+        `Important: ImportantYou recently submitted a form on ${day().format(
+          "DD/MM/YYYY"
+        )}. Are you sure you want to submit another?`
       );
   });
 
