@@ -21,7 +21,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
   });
 
   it("should autosave then delete draft via 'start over' btn.", () => {
-    cy.get('[data-cy="Submit new form"]').click();
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
@@ -53,7 +53,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
   });
 
   it("should complete form and submit successfully", () => {
-    cy.get('[data-cy="Submit new form"]').click();
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
 
     // complete form section 1-3
@@ -110,9 +110,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
   });
   it("should persist the updated dependent field visibility status to trigger any expected validation when a draft form is re-opened.", () => {
     cy.contains("Form R (Part A)").click({ force: true });
-    cy.get('[data-cy="Submit new form"]')
-      .should("exist")
-      .click({ force: true });
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
     cy.clickSelect('[data-cy="immigrationStatus"]', "ref", true);
     cy.get('[data-cy="email-input"]')
@@ -177,7 +175,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     }).as("saveFormRequestErrored");
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
-    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="BtnSaveDraft"]').click();
     cy.contains(
@@ -193,7 +191,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     }).as("saveFormRequestSucceeded");
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
-    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="BtnSaveDraft"]').click();
     cy.contains(
@@ -214,7 +212,7 @@ describe("Form R Part A - 'delete form' toast messages", () => {
     }).as("deleteFormRequestErrored");
     cy.contains("Form R (Part A)").click();
     cy.visit("/formr-a", { failOnStatusCode: false, timeout: 60000 });
-    cy.get('[data-cy="Submit new form"]').should("exist").click();
+    cy.focusedClick("Submit new form");
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="email-input"]').focus().clear().type("t");
     cy.startOver();

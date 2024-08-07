@@ -25,6 +25,14 @@ Cypress.Commands.add(
   }
 );
 
+Cypress.Commands.add("focusedClick", selector => {
+  cy.get(`[data-cy="${selector}"]`)
+    .should("exist")
+    .scrollIntoView()
+    .focus()
+    .click({ force: true });
+});
+
 Cypress.Commands.add("checkForFormLinkerAndComplete", () => {
   cy.get("dialog").then($dialog => {
     if ($dialog.is(":visible")) {

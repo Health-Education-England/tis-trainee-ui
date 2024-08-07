@@ -39,6 +39,7 @@ declare global {
       clickAllRemoveWorkButtons(): Chainable<Element>;
       clickRadioCheck(selector: string): Chainable<Element>;
       confirmCookie(): Chainable<Element>;
+      focusedClick(selector: string): Chainable<Element>;
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
       signIn(): Chainable<Element>;
