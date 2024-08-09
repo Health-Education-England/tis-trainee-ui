@@ -21,9 +21,7 @@ const Home = () => {
   }
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
-      <Fieldset.Legend size="m">
-        Finding your way around TIS Self-Service
-      </Fieldset.Legend>
+      <Fieldset.Legend size="m">TIS Self-Service overview</Fieldset.Legend>
       <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard
@@ -32,7 +30,7 @@ const Home = () => {
             linkHeader="Action Summary"
           >
             <ul className={style.ull}>
-              <li>Outstanding actions you must complete</li>
+              <li>Outstanding tasks to complete</li>
               <li>Status of FormR submissions</li>
             </ul>
           </PageCard>

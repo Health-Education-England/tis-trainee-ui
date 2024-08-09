@@ -124,9 +124,9 @@ export const Main = () => {
   )
     content = (
       <>
+        {pathname !== "/action-summary" ? <GlobalAlert /> : null}
         <PageTitle />
         <TSSHeader />
-        {pathname !== "/home" ? <GlobalAlert /> : null}
         <Breadcrumbs />
         <Cct />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">

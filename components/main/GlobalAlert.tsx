@@ -4,6 +4,13 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { useOutstandingActions } from "../../utilities/hooks/action-summary/useOutstandingActions";
 import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActions";
 import { useInProgressActions } from "../../utilities/hooks/action-summary/useInProgressActions";
+import { Fieldset } from "nhsuk-react-components";
+import {
+  faClock,
+  faInfoCircle,
+  faExclamationTriangle
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GlobalAlert = () => {
   // Don't show the Global alert if the user has not set their MFA
@@ -65,7 +72,7 @@ const GlobalAlert = () => {
       id="app-global-alert"
       data-cy="globalAlert"
     >
-      <div className="nhsuk-width-container" style={{ marginBottom: "0.5em" }}>
+      <div className="nhsuk-width-container">
         {outstandingActions.status && (
           <ActionsSummaryAlert
             unsignedCoJ={unsignedCoJ}
@@ -84,22 +91,18 @@ export default GlobalAlert;
 
 function BookmarkAlert() {
   return (
-    <div className="nhsuk-grid-row" data-cy="bookmarkAlert">
-      <div className="nhsuk-grid-column-full">
-        <div className="app-global-alert__content">
-          <div className="app-global-alert__message">
-            <h2>We have moved</h2>
-            <p>
-              You are seeing this message because you accessed this site using
-              an old address, we have redirected you here automatically.
-            </p>
-            <p>
-              Please update any bookmarks or password managers to use the new{" "}
-              <a href="/">{window.location.origin}</a> address.
-            </p>
-          </div>
-        </div>
-      </div>
+    <div data-cy="bookmarkAlert" className="bookmark-alert">
+      <Fieldset.Legend size="s" className="bookmark-alert-header">
+        We have moved
+      </Fieldset.Legend>
+      <p>
+        You are seeing this message because you accessed this site using an old
+        address, we have redirected you here automatically.
+      </p>
+      <p>
+        Please update any bookmarks or password managers to use the new{" "}
+        <a href="/">{window.location.origin}</a> address.
+      </p>
     </div>
   );
 }
@@ -119,25 +122,33 @@ function ActionsSummaryAlert({
   unreviewedProgramme,
   unreviewedPlacement
 }: Readonly<ActionsAlertProps>) {
-  const ACTION_LINK = (
-    <span>
-      Please click <Link to="/">here</Link> for details.
-    </span>
-  );
-  const importantInfoText = "Please review your Form R submissions.";
   const conditions = [
     {
       check: () =>
         (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
         !inProgressFormR,
-      body: <span>You have outstanding actions to complete.</span>,
+      body: (
+        <p>
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            size="lg"
+            color="#d5281b"
+          />
+          You have outstanding actions to complete.
+        </p>
+      ),
       cyTag: "outstandingAction"
     },
     {
       check: () =>
         !(unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
         inProgressFormR,
-      body: <span>You have in progress actions to complete.</span>,
+      body: (
+        <p>
+          <FontAwesomeIcon icon={faClock} size="lg" color="#E45245" /> You have
+          in progress actions to complete.
+        </p>
+      ),
       cyTag: "inProgressFormR"
     },
     {
@@ -145,7 +156,14 @@ function ActionsSummaryAlert({
         (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
         inProgressFormR,
       body: (
-        <span>You have outstanding and in progress actions to complete.</span>
+        <p>
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            size="lg"
+            color="#d5281b"
+          />{" "}
+          You have outstanding and in progress actions to complete.
+        </p>
       ),
       cyTag: "unsignedCoJAndInProgressFormR"
     }
@@ -156,19 +174,19 @@ function ActionsSummaryAlert({
   };
 
   return (
-    <div className="nhsuk-grid-row" data-cy="actionsSummaryAlert">
-      <div className="nhsuk-grid-column-full">
-        <div className="app-global-alert__content">
-          <div className="app-global-alert__message">
-            <h2>Attention</h2>
-            <p data-cy={cyTag}>{body}</p>
-            {importantInfo && (
-              <p data-cy={"checkFormRSubs"}>{importantInfoText}</p>
-            )}
-            <p>{ACTION_LINK}</p>
-          </div>
-        </div>
-      </div>
+    <div data-cy="actionsSummaryAlert">
+      <span data-cy={cyTag}>{body}</span>
+      {importantInfo && (
+        <span data-cy={"checkFormRSubs"}>
+          <p>
+            <FontAwesomeIcon icon={faInfoCircle} size="lg" color="#005eb8" />{" "}
+            Please review your Form R submissions.
+          </p>
+        </span>
+      )}
+      <p>
+        See <Link to="/action-summary">Action Summary</Link> for details.
+      </p>
     </div>
   );
 }
