@@ -6,7 +6,8 @@ const homeArr = [
   { name: "Placements", header: "Placements" },
   { name: "Form R (Part A)", header: "Form R (Part A)" },
   { name: "Form R (Part B)", header: "Form R (Part B)" },
-  { name: "MFA", header: "MFA (Multi-Factor Authentication) set-up" }
+  { name: "MFA", header: "MFA (Multi-Factor Authentication) set-up" },
+  { name: "Action Summary", header: "Action Summary" }
 ];
 
 describe("Home", () => {
@@ -20,6 +21,7 @@ describe("Home", () => {
       .should("exist")
       .should("contain.html", "Welcome to<br>TIS Self-Service");
     cy.get('[data-cy="tssUpdatesContainer"]').should("exist");
+    cy.get('[data-cy="tssOverview"]').should("exist");
 
     homeArr.forEach(section => {
       cy.get(`[data-cy="${section.name}"]`)
@@ -30,10 +32,7 @@ describe("Home", () => {
         .should("exist")
         .should("contain.text", `${section.header}`);
       cy.get("nav.nhsuk-width-container > a").click();
-      cy.get(".nhsuk-u-margin-bottom-4").should("exist");
     });
-
-    cy.get("[data-cy=actionSummaryHeading]").should("exist");
 
     cy.visit("/home/nonsense", { failOnStatusCode: false });
     cy.get('[data-cy="pageNotFoundText"]')

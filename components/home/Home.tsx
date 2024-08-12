@@ -21,7 +21,9 @@ const Home = () => {
   }
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
-      <Fieldset.Legend size="m">TIS Self-Service overview</Fieldset.Legend>
+      <Fieldset.Legend size="m" data-cy="tssOverview">
+        TIS Self-Service overview
+      </Fieldset.Legend>
       <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard
