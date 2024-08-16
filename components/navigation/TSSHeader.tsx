@@ -96,20 +96,20 @@ function makeTSSHeaderLinks() {
   const preferredMfa = store.getState().user.preferredMfa;
   const paths = [
     {
-      path: "profile",
-      name: "Profile",
-      mobileOnly: false,
-      showWithNoMfa: false
-    },
-    {
-      path: "placements",
-      name: "Placements",
+      path: "action-summary",
+      name: "Action Summary",
       mobileOnly: false,
       showWithNoMfa: false
     },
     {
       path: "programmes",
       name: "Programmes",
+      mobileOnly: false,
+      showWithNoMfa: false
+    },
+    {
+      path: "placements",
+      name: "Placements",
       mobileOnly: false,
       showWithNoMfa: false
     },
@@ -126,7 +126,13 @@ function makeTSSHeaderLinks() {
       showWithNoMfa: false
     },
     { path: "support", name: "Support", mobileOnly: true, showWithNoMfa: true },
-    { path: "mfa", name: "MFA set-up", mobileOnly: true, showWithNoMfa: true }
+    { path: "mfa", name: "MFA set-up", mobileOnly: true, showWithNoMfa: true },
+    {
+      path: "profile",
+      name: "Profile",
+      mobileOnly: false,
+      showWithNoMfa: false
+    }
   ];
 
   const makeLi = (pathObj: {

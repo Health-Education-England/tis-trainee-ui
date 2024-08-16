@@ -1,13 +1,8 @@
-import { Card } from "nhsuk-react-components";
-import { useEffect } from "react";
+import { Card, Fieldset } from "nhsuk-react-components";
 import { Redirect } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { resetMfaJourney } from "../../redux/slices/userSlice";
+import { useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import style from "../Common.module.scss";
-import ActionSummary from "./actionSummary/ActionSummary";
-import { loadFormAList } from "../../redux/slices/formASlice";
-import { loadFormBList } from "../../redux/slices/formBSlice";
 
 const handleClick = (route: string) => history.push(route);
 
@@ -19,17 +14,6 @@ interface HomeCardProps {
 }
 
 const Home = () => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(resetMfaJourney());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(loadFormAList());
-    dispatch(loadFormBList());
-  }, [dispatch]);
-
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   if (preferredMfa === "NOMFA") {
@@ -37,24 +21,19 @@ const Home = () => {
   }
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
-      <ActionSummary />
+      <Fieldset.Legend size="m" data-cy="tssOverview">
+        TIS Self-Service overview
+      </Fieldset.Legend>
       <Card.Group>
-        <Card.GroupItem width="one-third">
-          <PageCard isClickable={true} route="/profile" linkHeader="Profile">
-            <ul className={style.ull}>
-              <li>your personal information</li>
-              <li>registration details</li>
-            </ul>
-          </PageCard>
-        </Card.GroupItem>
         <Card.GroupItem width="one-third">
           <PageCard
             isClickable={true}
-            route="/placements"
-            linkHeader="Placements"
+            route="/action-summary"
+            linkHeader="Action Summary"
           >
             <ul className={style.ull}>
-              <li>a list of your Placements (past, current and future)</li>
+              <li>Outstanding tasks to complete</li>
+              <li>Status of FormR submissions</li>
             </ul>
           </PageCard>
         </Card.GroupItem>
@@ -65,7 +44,23 @@ const Home = () => {
             linkHeader="Programmes"
           >
             <ul className={style.ull}>
-              <li>a list of your Programmes (past, current and future)</li>
+              <li>Training Number (NTN/DRN)</li>
+              <li>Conditions of Joining (CoJ) Agreement(s)</li>
+              <li>CCT Calculator</li>
+              <li>Issuing a Digital Staff Passport (DSP) credential</li>
+              <li>Programmes (past, current and future)</li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+        <Card.GroupItem width="one-third">
+          <PageCard
+            isClickable={true}
+            route="/placements"
+            linkHeader="Placements"
+          >
+            <ul className={style.ull}>
+              <li>Issuing a Digital Staff Passport (DSP) credential</li>
+              <li>Placements (past, current and future)</li>
             </ul>
           </PageCard>
         </Card.GroupItem>
@@ -78,8 +73,8 @@ const Home = () => {
             linkHeader="Form R (Part A)"
           >
             <ul className={style.ull}>
-              <li>submit a new form</li>
-              <li>view and save a PDF copy of a submitted form</li>
+              <li>Submit a new form</li>
+              <li>View and save a PDF copy of a submitted form</li>
             </ul>
           </PageCard>
         </Card.GroupItem>
@@ -90,18 +85,16 @@ const Home = () => {
             linkHeader="Form R (Part B)"
           >
             <ul className={style.ull}>
-              <li>submit a new form</li>
-              <li>view and save a PDF copy of a submitted form</li>
+              <li>Submit a new form</li>
+              <li>View and save a PDF copy of a submitted form</li>
             </ul>
           </PageCard>
         </Card.GroupItem>
         <Card.GroupItem width="one-third">
-          <PageCard isClickable={true} route="/mfa" linkHeader="MFA">
+          <PageCard isClickable={true} route="/profile" linkHeader="Profile">
             <ul className={style.ull}>
-              <li>
-                set up or update your MFA (Multi-Factor Authentication) sign-in
-                method
-              </li>
+              <li>Personal information</li>
+              <li>Registration details</li>
             </ul>
           </PageCard>
         </Card.GroupItem>
@@ -111,11 +104,21 @@ const Home = () => {
           <PageCard isClickable={true} route="/support" linkHeader="Support">
             <ul className={style.ull}>
               <li>
-                email your Local Office with Form R and Personal details queries
+                Email your Local Office with Form R and Personal details queries
               </li>
               <li>
-                email TIS Support with any technical issues (e.g. error
+                Email TIS Support with any technical issues (e.g. error
                 messages)
+              </li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+        <Card.GroupItem width="one-third">
+          <PageCard isClickable={true} route="/mfa" linkHeader="MFA">
+            <ul className={style.ull}>
+              <li>
+                Set up or update your MFA (Multi-Factor Authentication) sign-in
+                method
               </li>
             </ul>
           </PageCard>

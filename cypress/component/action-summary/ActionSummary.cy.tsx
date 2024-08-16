@@ -2,32 +2,33 @@ import day from "dayjs";
 import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import store from "../../../../redux/store/store";
-import ActionSummary from "../../../../components/home/actionSummary/ActionSummary";
-import history from "../../../../components/navigation/history";
+import store from "../../../redux/store/store";
+import ActionSummary from "../../../components/actionSummary/ActionSummary";
+import history from "../../../components/navigation/history";
 import {
   updatedFormAList,
   updatedFormAStatus
-} from "../../../../redux/slices/formASlice";
-import { updatedUnsignedCojs } from "../../../../redux/slices/traineeProfileSlice";
+} from "../../../redux/slices/formASlice";
+import { updatedUnsignedCojs } from "../../../redux/slices/traineeProfileSlice";
 import {
   mockOutstandingActions,
   mockProgrammeMembershipCojNotSigned
-} from "../../../../mock-data/trainee-profile";
-import { mockFormList, mockForms } from "../../../../mock-data/formr-list";
+} from "../../../mock-data/trainee-profile";
+import { mockFormList, mockForms } from "../../../mock-data/formr-list";
 import {
   dateMoreThanYearAgo,
   dateWithinYear,
   todayDate
-} from "../../../../utilities/DateUtilities";
+} from "../../../utilities/DateUtilities";
 import {
   updatedFormBList,
   updatedFormBStatus
-} from "../../../../redux/slices/formBSlice";
-import { IFormR } from "../../../../models/IFormR";
-import { ProgrammeMembership } from "../../../../models/ProgrammeMembership";
-import { TraineeAction } from "../../../../models/TraineeAction";
-import { updatedActionsData } from "../../../../redux/slices/traineeActionsSlice";
+} from "../../../redux/slices/formBSlice";
+import { IFormR } from "../../../models/IFormR";
+import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
+import { TraineeAction } from "../../../models/TraineeAction";
+import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
+import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 type FormType = "A" | "B";
 
@@ -42,13 +43,11 @@ const ActionSummaryComponent = (
 describe("Action Summary - loading", () => {
   beforeEach(() => {
     mount(ActionSummaryComponent);
-  });
-  afterEach(() => {
-    store.dispatch(updatedFormAStatus("success"));
+    store.dispatch(updatedFormAStatus("loading"));
+    store.dispatch(updatedPreferredMfa("SMS"));
   });
 
   it("should display the loading spinner when data is loading", () => {
-    store.dispatch(updatedFormAStatus("loading"));
     cy.get("[data-cy=loading]").should("exist");
   });
 });
@@ -61,11 +60,10 @@ describe("Action Summary", () => {
     "inProgressHeading",
     "otherChecksHeading"
   ];
-
   beforeEach(() => {
+    store.dispatch(updatedPreferredMfa("SMS"));
     mount(ActionSummaryComponent);
   });
-
   selectors.forEach(selector => {
     it(`should display the ${selector}`, () => {
       cy.get(`[data-cy=${selector}]`).should("exist");
@@ -197,7 +195,6 @@ describe("Action Summary", () => {
         .should("contain", "submitted within the last year");
     });
   };
-
   const formListWithinYear = [
     { ...mockFormList[1] },
     {

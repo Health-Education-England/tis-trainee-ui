@@ -13,7 +13,8 @@ const homeCards = [
   "Form R (Part A)",
   "Form R (Part B)",
   "Support",
-  "MFA"
+  "MFA",
+  "Action Summary"
 ];
 
 describe("Home with no MFA set up", () => {
@@ -43,10 +44,6 @@ describe("Home with MFA set up", () => {
         </Router>
       </Provider>
     );
-  });
-
-  it("should display the Action Summary card on the Home page", () => {
-    cy.get("[data-cy=actionSummary]").should("exist");
   });
 
   homeCards.forEach(card => {

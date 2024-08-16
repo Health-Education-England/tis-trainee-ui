@@ -55,7 +55,7 @@ export const HomeHeaderSection = () => {
 
 function HomeWelcomeHeaderText() {
   return (
-    <h1 data-cy="homeWelcomeHeaderText" className="nhsuk-u-margin-bottom-4">
+    <h1 data-cy="homeWelcomeHeaderText" className="nhsuk-u-margin-bottom-2">
       Welcome to
       <br />
       TIS Self-Service

@@ -1,25 +1,42 @@
 import { Card, Fieldset, Label } from "nhsuk-react-components";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { Link, Redirect } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faExclamationCircle,
   faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
-import Loading from "../../common/Loading";
-import style from "../../Common.module.scss";
+import Loading from "../common/Loading";
+import style from "../Common.module.scss";
 import FormMessage from "./FormMessage";
-import { DateUtilities } from "../../../utilities/DateUtilities";
-import { useOutstandingActions } from "../../../utilities/hooks/action-summary/useOutstandingActions";
-import { useInfoActions } from "../../../utilities/hooks/action-summary/useInfoActions";
-import { useInProgressActions } from "../../../utilities/hooks/action-summary/useInProgressActions";
-import DataSourceMsg from "../../common/DataSourceMsg";
+import { DateUtilities } from "../../utilities/DateUtilities";
+import { useOutstandingActions } from "../../utilities/hooks/action-summary/useOutstandingActions";
+import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActions";
+import { useInProgressActions } from "../../utilities/hooks/action-summary/useInProgressActions";
+import DataSourceMsg from "../common/DataSourceMsg";
+import { useEffect } from "react";
+import { resetMfaJourney } from "../../redux/slices/userSlice";
+import { loadFormAList } from "../../redux/slices/formASlice";
+import { loadFormBList } from "../../redux/slices/formBSlice";
 
 export default function ActionSummary() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(resetMfaJourney());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(loadFormAList());
+    dispatch(loadFormBList());
+  }, [dispatch]);
+
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+
   // OUTSTANDING ACTIONS
   const { unsignedCojCount, programmeActions, placementActions } =
-    useOutstandingActions(); // Note: noSubFormRA and noSubFormRB conditions are in the 'Form R submissions' section for now.
+    useOutstandingActions();
 
   // FORM R SUBMISSIONS (FOR INFO)
   const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
@@ -32,6 +49,10 @@ export default function ActionSummary() {
     state =>
       state.formA.status === "loading" || state.formB.status === "loading"
   );
+
+  if (preferredMfa === "NOMFA") {
+    return <Redirect to="/mfa" />;
+  }
 
   if (isformRListLoading) return <Loading />;
 
