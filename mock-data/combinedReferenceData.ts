@@ -45,28 +45,28 @@ export const mockedCombinedReference: CombinedReferenceData = {
     {
       id: "5e7c8ddb2523bc1554f1ce7e",
       tisId: "2",
-      label: "Health Education England East of England",
+      label: "East of England",
       type: "LETB/Deanery",
       internal: true
     },
     {
       id: "5e7c8df62523bc1554f1ce81",
       tisId: "8",
-      label: "Health Education England South London",
+      label: "South London",
       type: "LETB/Deanery",
       internal: true
     },
     {
       id: "5e7c8df62523bc1554f1ce80",
       tisId: "5",
-      label: "Health Education England Thames Valley",
+      label: "Thames Valley",
       type: "LETB/Deanery",
       internal: true
     },
     {
       id: "5e7c8dc32523bc1554f1ce7d",
       tisId: "1",
-      label: "Health Education England Wessex",
+      label: "Wessex",
       type: "LETB/Deanery",
       internal: true
     },
@@ -89,22 +89,22 @@ export const mockedCombinedReference: CombinedReferenceData = {
     {
       id: "5e7c8ddb2523bc1554f1ce7e",
       tisId: "2",
-      label: "Health Education England East of England"
+      label: "East of England"
     },
     {
       id: "5e7c8df62523bc1554f1ce81",
       tisId: "8",
-      label: "Health Education England South London"
+      label: "South London"
     },
     {
       id: "5e7c8df62523bc1554f1ce80",
       tisId: "5",
-      label: "Health Education England Thames Valley"
+      label: "Thames Valley"
     },
     {
       id: "5e7c8dc32523bc1554f1ce7d",
       tisId: "1",
-      label: "Health Education England Wessex"
+      label: "Wessex"
     },
     {
       id: "5e7c8df62523bc1554f1ce7f",
@@ -273,20 +273,20 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
       value: "Cheshire and Wirral Partnership NHS Foundation Trust"
     },
     {
-      label: "Health Education England East of England",
-      value: "Health Education England East of England"
+      label: "East of England",
+      value: "East of England"
     },
     {
-      label: "Health Education England South London",
-      value: "Health Education England South London"
+      label: "South London",
+      value: "South London"
     },
     {
-      label: "Health Education England Thames Valley",
-      value: "Health Education England Thames Valley"
+      label: "Thames Valley",
+      value: "Thames Valley"
     },
     {
-      label: "Health Education England Wessex",
-      value: "Health Education England Wessex"
+      label: "Wessex",
+      value: "Wessex"
     },
     {
       label: "Northern Ireland Medical and Dental Training Agency",
@@ -365,20 +365,20 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
   ],
   localOffice: [
     {
-      label: "Health Education England East of England",
-      value: "Health Education England East of England"
+      label: "East of England",
+      value: "East of England"
     },
     {
-      label: "Health Education England South London",
-      value: "Health Education England South London"
+      label: "South London",
+      value: "South London"
     },
     {
-      label: "Health Education England Thames Valley",
-      value: "Health Education England Thames Valley"
+      label: "Thames Valley",
+      value: "Thames Valley"
     },
     {
-      label: "Health Education England Wessex",
-      value: "Health Education England Wessex"
+      label: "Wessex",
+      value: "Wessex"
     },
     {
       label: "Northern Ireland Medical and Dental Training Agency",

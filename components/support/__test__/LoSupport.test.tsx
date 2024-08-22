@@ -39,7 +39,7 @@ describe("LoSupport", () => {
 
     const loList = getAllByRole("combobox")[0];
     await act(async () => {
-      await user.selectOptions(loList, "Health Education England South London");
+      await user.selectOptions(loList, "South London");
     });
 
     const PgmdeSupportLink = getByRole("link", {
@@ -58,10 +58,7 @@ describe("LoSupport", () => {
 
     const loList = getAllByRole("combobox")[0];
     await act(async () => {
-      await user.selectOptions(
-        loList,
-        "Health Education England Thames Valley"
-      );
+      await user.selectOptions(loList, "Thames Valley");
     });
 
     const loSupportCatList = getAllByRole("combobox")[1];
@@ -71,7 +68,7 @@ describe("LoSupport", () => {
     await clickElement(supportCatChosenOption);
 
     const loSupportLink = getByRole("link", {
-      name: /Please click here to email Health Education England Thames Valley/i
+      name: /Please click here to email Thames Valley/i
     });
     expect(loSupportLink).toBeInTheDocument();
     await act(() => {
