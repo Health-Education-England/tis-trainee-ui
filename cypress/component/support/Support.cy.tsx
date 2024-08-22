@@ -65,16 +65,12 @@ describe("Support", () => {
       "include.text",
       "Please select your Local Office from the list below:"
     );
-    cy.get("[data-cy=localOffice]").select(
-      "Health Education England South London"
-    );
+    cy.get("[data-cy=localOffice]").select("South London");
     cy.get('[data-cy="pgdmeLink"] > .nhsuk-action-link__text').should(
       "include.text",
       "Click here to email your support request via the PGMDE Support Portal"
     );
-    cy.get("[data-cy=localOffice]").select(
-      "Health Education England Thames Valley"
-    );
+    cy.get("[data-cy=localOffice]").select("Thames Valley");
     cy.get('[data-cy="pgdmeLink"] > .nhsuk-action-link__text').should(
       "not.exist"
     );
@@ -112,19 +108,17 @@ describe("Support", () => {
       .should("have.attr", "href");
     cy.get('[data-cy="loSupportLink"] > .nhsuk-action-link__text').should(
       "include.text",
-      "Please click here to email Health Education England Thames Valley"
+      "Please click here to email Thames Valley"
     );
 
-    cy.get("[data-cy=localOffice]").select(
-      "Health Education England East of England"
-    );
+    cy.get("[data-cy=localOffice]").select("East of England");
     cy.get(
       '[data-cy="supportCats"] > .autocomplete-select > .react-select__control > .react-select__value-container > .react-select__input-container'
     ).should("exist");
     cy.get('[data-cy="loSupportLink"]').should("exist");
     cy.get('[data-cy="loSupportLink"] > .nhsuk-action-link__text').should(
       "include.text",
-      "Please click here to email Health Education England East of England"
+      "Please click here to email East of England"
     );
 
     cy.get("[data-cy=localOffice]").select("-- Please select --");

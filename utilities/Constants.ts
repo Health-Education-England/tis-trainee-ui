@@ -257,21 +257,35 @@ type localOfficeContactsProps = {
   [key: string]: string;
 };
 
+// TODO: remove old local office names once renaming is complete.
 export const localOfficeContacts: localOfficeContactsProps = {
   "Health Education England East Midlands": "england.tis.em@nhs.net",
+  "East Midlands": "england.tis.em@nhs.net",
   "Health Education England East of England": "england.tis.eoe@nhs.net",
+  "East of England": "england.tis.eoe@nhs.net",
   "Health Education England Kent, Surrey and Sussex": "PGMDE support portal",
+  "Kent, Surrey and Sussex": "PGMDE support portal",
   "Health Education England North Central and East London":
     "PGMDE support portal",
+  "North Central and East London": "PGMDE support portal",
   "Health Education England North East": "england.specialtytraining.ne@nhs.net",
+  "North East": "england.specialtytraining.ne@nhs.net",
   "Health Education England North West": "england.wpi.nw@nhs.net",
+  "North West": "england.wpi.nw@nhs.net",
   "Health Education England North West London": "PGMDE support portal",
+  "North West London": "PGMDE support portal",
   "Health Education England South London": "PGMDE support portal",
+  "South London": "PGMDE support portal",
   "Health Education England South West": "england.tisqueries.sw@nhs.net",
+  "South West": "england.tisqueries.sw@nhs.net",
   "Health Education England Thames Valley": "england.formr.tv@nhs.net",
+  "Thames Valley": "england.formr.tv@nhs.net",
   "Health Education England Wessex": "england.formr.wx@nhs.net",
+  Wessex: "england.formr.wx@nhs.net",
   "Health Education England West Midlands": "england.tis.wm@nhs.net",
-  "Health Education England Yorkshire and the Humber": "england.tis.yh@nhs.net"
+  "West Midlands": "england.tis.wm@nhs.net",
+  "Health Education England Yorkshire and the Humber": "england.tis.yh@nhs.net",
+  "Yorkshire and the Humber": "england.tis.yh@nhs.net"
 };
 
 export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;

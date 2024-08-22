@@ -20,7 +20,7 @@ export const mockPersonalDetails: PersonalDetails = {
   knownAs: "Ivy",
   maidenName: "N/A",
   title: "Mr",
-  personOwner: "Health Education England Thames Valley",
+  personOwner: "Thames Valley",
   dateOfBirth: "1911-11-30",
   gender: "Male",
   qualification: "AKC - Association of King's College",
@@ -64,7 +64,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
     trainingNumber: "EOE/ABC-123/11111111/C",
-    managingDeanery: "Health Education England East of England",
+    managingDeanery: "East of England",
     responsibleOfficer: {
       firstName: "Hugh",
       lastName: "Rangel"
@@ -107,7 +107,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeName: "General Practice",
     programmeNumber: "EOE8950",
     trainingNumber: "EOE/XYZ-789/11111111/C",
-    managingDeanery: "Health Education England East of England",
+    managingDeanery: "East of England",
     responsibleOfficer: {
       firstName: "Hugh",
       lastName: "Rangel"
@@ -152,7 +152,7 @@ export const mockProgrammeMembershipNonTemplatedField = {
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   trainingNumber: null,
-  managingDeanery: "Health Education England East of England",
+  managingDeanery: "East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
   curricula: [],
@@ -171,7 +171,7 @@ export const mockProgrammeMembershipNoCurricula = {
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   trainingNumber: null,
-  managingDeanery: "Health Education England East of England",
+  managingDeanery: "East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
   curricula: [],
@@ -189,7 +189,7 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   trainingNumber: null,
-  managingDeanery: "Health Education England East of England",
+  managingDeanery: "East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
   curricula: [
@@ -229,7 +229,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   programmeName: "Cardiology",
   programmeNumber: "EOE8945",
   trainingNumber: null,
-  managingDeanery: "Health Education England East of England",
+  managingDeanery: "East of England",
   programmeMembershipType: "SUBSTANTIVE",
   status: Status.Current,
   curricula: [
