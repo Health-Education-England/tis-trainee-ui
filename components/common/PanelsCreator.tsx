@@ -65,7 +65,13 @@ export function PanelsCreator({
           );
           return (
             <Card.GroupItem key={index} width="one-half">
-              <Card className={style.panelDiv}>
+              <Card
+                className={
+                  currentAction.length > 0
+                    ? style.panelDivHighlight
+                    : style.panelDiv
+                }
+              >
                 {panelsName === TraineeProfileName.Programmes && (
                   <CctBtn
                     progName={panel.programmeName}

@@ -449,6 +449,7 @@ describe("Placements - dsp membership", () => {
 
       cy.get("[data-cy='reviewActionBtn-placements-315']").should("not.exist");
       cy.get("[data-cy='actionDueDate-placements-315']").should("not.exist");
+      cy.get("[class*='panelDivHighlight']").should("not.exist");
     });
 
     it("should display the placement review button for unreviewed placement", () => {
@@ -476,6 +477,7 @@ describe("Placements - dsp membership", () => {
 
       cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
       cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
+      cy.get("[class*='panelDivHighlight']").should("exist");
     });
 
     it("should display the placement review button for unreviewed overdue placement", () => {
@@ -503,6 +505,7 @@ describe("Placements - dsp membership", () => {
 
       cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
       cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
+      cy.get("[class*='panelDivHighlight']").should("exist");
     });
   });
 });
