@@ -428,6 +428,7 @@ describe("Programme review action", () => {
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should(
       "not.exist"
     );
+    cy.get("[class*='panelDivHighlight']").should("not.exist");
   });
 
   it("should display the programme review button for unreviewed programme", () => {
@@ -460,6 +461,7 @@ describe("Programme review action", () => {
       "exist"
     );
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
+    cy.get("[class*='panelDivHighlight']").should("exist");
   });
 
   it("should display the programme review button for overdue programme", () => {
@@ -492,5 +494,6 @@ describe("Programme review action", () => {
       "exist"
     );
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
+    cy.get("[class*='panelDivHighlight']").should("exist");
   });
 });
