@@ -106,9 +106,9 @@ function ProgrammesPanels() {
                 Please note
               </WarningCallout.Label>
               <p data-cy="futureWarningText">
-                The information we have for future programme memberships with a start date
-                more than 12 weeks from today is not yet finalised and may be
-                subject to change.
+                The information we have for future programme memberships with a
+                start date more than 12 weeks from today is not yet finalised
+                and may be subject to change.
               </p>
             </WarningCallout>
             <PanelsCreator
