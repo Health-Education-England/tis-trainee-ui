@@ -1,9 +1,9 @@
 import { ProfileUtilities } from "../ProfileUtilities";
 import {
-  isCurrentPl,
-  isFuturePl,
+  isCurrentPlOrPm,
+  isFuturePlOrPr,
   isPastIt,
-  isUpcomingPl
+  isUpcomingPlOrPm
 } from "../DateUtilities";
 import {
   draftFormRPartB,
@@ -131,16 +131,16 @@ describe("Profile utilities - groupPlacementsByDate", () => {
   it("should classify a placement correctly", () => {
     expect(isPastIt(mockPlacementsForGrouping[0].endDate)).toBe(true);
     expect(isPastIt(mockPlacementsForGrouping[1].endDate)).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[1])).toBe(true);
-    expect(isCurrentPl(mockPlacementsForGrouping[0])).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[2])).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[3])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[2])).toBe(true);
-    expect(isUpcomingPl(mockPlacementsForGrouping[3])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[1])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[0])).toBe(false);
-    expect(isFuturePl(mockPlacementsForGrouping[3])).toBe(true);
-    expect(isFuturePl(mockPlacementsForGrouping[2])).toBe(false);
+    expect(isCurrentPlOrPm(mockPlacementsForGrouping[1])).toBe(true);
+    expect(isCurrentPlOrPm(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isCurrentPlOrPm(mockPlacementsForGrouping[2])).toBe(false);
+    expect(isCurrentPlOrPm(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingPlOrPm(mockPlacementsForGrouping[2])).toBe(true);
+    expect(isUpcomingPlOrPm(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingPlOrPm(mockPlacementsForGrouping[1])).toBe(false);
+    expect(isUpcomingPlOrPm(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isFuturePlOrPr(mockPlacementsForGrouping[3])).toBe(true);
+    expect(isFuturePlOrPr(mockPlacementsForGrouping[2])).toBe(false);
   });
 
   it("should group placements correctly", () => {

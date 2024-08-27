@@ -5,6 +5,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import { Placement } from "../models/Placement";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
 day.extend(utc);
 day.extend(timezone);
@@ -202,23 +203,29 @@ export function isPastIt(date: DateType): boolean {
   return day(date).format("YYYY-MM-DD") < today;
 }
 
-export function isCurrentPl(pl: Placement): boolean {
-  const { startDate, endDate } = pl;
+export function isCurrentPlOrPm(
+  plOrPm: Placement | ProgrammeMembership
+): boolean {
+  const { startDate, endDate } = plOrPm;
   return (
     day(endDate).format("YYYY-MM-DD") >= today &&
     day(startDate).format("YYYY-MM-DD") <= today
   );
 }
 
-export function isUpcomingPl(pl: Placement): boolean {
-  const { startDate } = pl;
+export function isUpcomingPlOrPm(
+  plOrPm: Placement | ProgrammeMembership
+): boolean {
+  const { startDate } = plOrPm;
   return (
     day(startDate).format("YYYY-MM-DD") > today &&
     day(startDate).format("YYYY-MM-DD") <= twelveWeeksAhead
   );
 }
 
-export function isFuturePl(pl: Placement): boolean {
-  const { startDate } = pl;
+export function isFuturePlOrPr(
+  plOrPm: Placement | ProgrammeMembership
+): boolean {
+  const { startDate } = plOrPm;
   return day(startDate).format("YYYY-MM-DD") > twelveWeeksAhead;
 }

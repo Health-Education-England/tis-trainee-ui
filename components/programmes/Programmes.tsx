@@ -1,5 +1,5 @@
-import { Fieldset } from "nhsuk-react-components";
-import { useEffect } from "react";
+import { Details, Fieldset, WarningCallout } from "nhsuk-react-components";
+import { useEffect, useMemo } from "react";
 import { Redirect } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
@@ -15,6 +15,7 @@ import {
 import { TraineeProfileName } from "../../models/TraineeProfile";
 import { PANEL_KEYS } from "../../utilities/Constants";
 import Loading from "../common/Loading";
+import { ProfileUtilities } from "../../utilities/ProfileUtilities";
 import { fetchCredentials } from "../../utilities/DspUtilities";
 
 const Programmes = () => {
@@ -47,6 +48,9 @@ export default Programmes;
 function ProgrammesPanels() {
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
+  const groupedProgrammes = useMemo(() => {
+    return ProfileUtilities.groupProgrammesByDate(programmesArr);
+  }, [programmesArr]);
   return (
     <>
       <PageTitle title="Programmes" />
@@ -61,15 +65,78 @@ function ProgrammesPanels() {
         </Fieldset.Legend>
       </Fieldset>
       <DataSourceMsg />
-      <PanelsCreator
-        panelsArr={prepareProfilePanelsData(
-          programmesArr,
-          TraineeProfileName.Programmes
-        )}
-        panelsName={TraineeProfileName.Programmes}
-        panelsTitle={PANEL_KEYS.programmeMemberships}
-        panelKeys={PANEL_KEYS}
-      />
+      <Details.ExpanderGroup>
+        <Details expander open data-cy="currentExpand">
+          <Details.Summary>Your current programme memberships</Details.Summary>
+          <Details.Text>
+            <PanelsCreator
+              panelsArr={prepareProfilePanelsData(
+                groupedProgrammes.current,
+                TraineeProfileName.Programmes
+              )}
+              panelsName={TraineeProfileName.Programmes}
+              panelsTitle={PANEL_KEYS.programmeMemberships}
+              panelKeys={PANEL_KEYS}
+            />
+          </Details.Text>
+        </Details>
+        <Details expander data-cy="upcomingExpand">
+          <Details.Summary>
+            Upcoming programme memberships (within 12 weeks)
+          </Details.Summary>
+          <Details.Text>
+            <PanelsCreator
+              panelsArr={prepareProfilePanelsData(
+                groupedProgrammes.upcoming,
+                TraineeProfileName.Programmes
+              )}
+              panelsName={TraineeProfileName.Programmes}
+              panelsTitle={PANEL_KEYS.programmeMemberships}
+              panelKeys={PANEL_KEYS}
+            />
+          </Details.Text>
+        </Details>
+        <Details expander data-cy="futureExpand">
+          <Details.Summary>
+            Future programme memberships (&gt;12 weeks from today)
+          </Details.Summary>
+          <Details.Text>
+            <WarningCallout>
+              <WarningCallout.Label visuallyHiddenText={false}>
+                Please note
+              </WarningCallout.Label>
+              <p data-cy="futureWarningText">
+                The information we have for future programme memberships with a start date
+                more than 12 weeks from today is not yet finalised and may be
+                subject to change.
+              </p>
+            </WarningCallout>
+            <PanelsCreator
+              panelsArr={prepareProfilePanelsData(
+                groupedProgrammes.future,
+                TraineeProfileName.Programmes
+              )}
+              panelsName={TraineeProfileName.Programmes}
+              panelsTitle={PANEL_KEYS.programmeMemberships}
+              panelKeys={PANEL_KEYS}
+            />
+          </Details.Text>
+        </Details>
+        <Details expander data-cy="pastExpand">
+          <Details.Summary>Past programme memberships</Details.Summary>
+          <Details.Text>
+            <PanelsCreator
+              panelsArr={prepareProfilePanelsData(
+                groupedProgrammes.past,
+                TraineeProfileName.Programmes
+              )}
+              panelsName={TraineeProfileName.Programmes}
+              panelsTitle={PANEL_KEYS.programmeMemberships}
+              panelKeys={PANEL_KEYS}
+            />
+          </Details.Text>
+        </Details>
+      </Details.ExpanderGroup>
     </>
   );
 }

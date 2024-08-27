@@ -1,8 +1,17 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
 import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
 import { Placement, PlacementGroup } from "../models/Placement";
-import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
-import { isCurrentPl, isPastIt, isUpcomingPl, today } from "./DateUtilities";
+import {
+  Curriculum,
+  ProgrammeMembership,
+  ProgrammeMembershipGroup
+} from "../models/ProgrammeMembership";
+import {
+  isCurrentPlOrPm,
+  isPastIt,
+  isUpcomingPlOrPm,
+  today
+} from "./DateUtilities";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -120,9 +129,9 @@ export class ProfileUtilities {
         const { future, upcoming, current, past } = grouped;
         if (isPastIt(placement.endDate)) {
           past.push(placement);
-        } else if (isCurrentPl(placement)) {
+        } else if (isCurrentPlOrPm(placement)) {
           current.push(placement);
-        } else if (isUpcomingPl(placement)) {
+        } else if (isUpcomingPlOrPm(placement)) {
           upcoming.push(placement);
         } else future.push(placement);
         return grouped;
@@ -130,4 +139,32 @@ export class ProfileUtilities {
       groupedPlacements
     );
   };
+
+  //TODO refactor
+  public static readonly groupProgrammesByDate = (
+    programmes: ProgrammeMembership[]
+  ): ProgrammeMembershipGroup => {
+    const groupedProgrammeMemberships: ProgrammeMembershipGroup = {
+      future: [],
+      upcoming: [],
+      current: [],
+      past: []
+    };
+
+    return programmes.reduce(
+      (grouped: ProgrammeMembershipGroup, programme: ProgrammeMembership) => {
+        const { future, upcoming, current, past } = grouped;
+        if (isPastIt(programme.endDate)) {
+          past.push(programme);
+        } else if (isCurrentPlOrPm(programme)) {
+          current.push(programme);
+        } else if (isUpcomingPlOrPm(programme)) {
+          upcoming.push(programme);
+        } else future.push(programme);
+        return grouped;
+      },
+      groupedProgrammeMemberships
+    );
+  };
+
 }

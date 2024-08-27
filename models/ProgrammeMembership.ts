@@ -55,3 +55,10 @@ export const programmePanelTemplate: ProgrammeMembership = {
     version: ""
   }
 };
+
+export interface ProgrammeMembershipGroup {
+  future: ProgrammeMembership[];
+  upcoming: ProgrammeMembership[];
+  current: ProgrammeMembership[];
+  past: ProgrammeMembership[];
+}
