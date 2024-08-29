@@ -12,6 +12,7 @@ import {
 } from "../../mock-data/draft-formr-partb";
 import {
   mockProgrammeMemberships,
+  mockProgrammeMembershipsForGrouping,
   mockProgrammeMembershipNoCurricula,
   mockProgrammeMembershipNoMedicalCurricula,
   mockProgrammeMembershipDuplicateCurriculaStart,
@@ -141,6 +142,58 @@ describe("Profile utilities - groupPlacementsByDate", () => {
     expect(isUpcomingPlOrPm(mockPlacementsForGrouping[0])).toBe(false);
     expect(isFuturePlOrPr(mockPlacementsForGrouping[3])).toBe(true);
     expect(isFuturePlOrPr(mockPlacementsForGrouping[2])).toBe(false);
+  });
+
+  it("should group programme memberships correctly", () => {
+    expect(
+      ProfileUtilities.groupProgrammesByDate(
+        mockProgrammeMembershipsForGrouping
+      )
+    ).toEqual({
+      future: [mockProgrammeMembershipsForGrouping[3]],
+      upcoming: [mockProgrammeMembershipsForGrouping[2]],
+      current: [mockProgrammeMembershipsForGrouping[1]],
+      past: [mockProgrammeMembershipsForGrouping[0]]
+    });
+  });
+
+  describe("Profile utilities - groupProgrammesByDate", () => {
+    it("should classify a programme membership correctly", () => {
+      expect(isPastIt(mockProgrammeMembershipsForGrouping[0].endDate)).toBe(
+        true
+      );
+      expect(isPastIt(mockProgrammeMembershipsForGrouping[1].endDate)).toBe(
+        false
+      );
+      expect(isCurrentPlOrPm(mockProgrammeMembershipsForGrouping[1])).toBe(
+        true
+      );
+      expect(isCurrentPlOrPm(mockProgrammeMembershipsForGrouping[0])).toBe(
+        false
+      );
+      expect(isCurrentPlOrPm(mockProgrammeMembershipsForGrouping[2])).toBe(
+        false
+      );
+      expect(isCurrentPlOrPm(mockProgrammeMembershipsForGrouping[3])).toBe(
+        false
+      );
+      expect(isUpcomingPlOrPm(mockProgrammeMembershipsForGrouping[2])).toBe(
+        true
+      );
+      expect(isUpcomingPlOrPm(mockProgrammeMembershipsForGrouping[3])).toBe(
+        false
+      );
+      expect(isUpcomingPlOrPm(mockProgrammeMembershipsForGrouping[1])).toBe(
+        false
+      );
+      expect(isUpcomingPlOrPm(mockProgrammeMembershipsForGrouping[0])).toBe(
+        false
+      );
+      expect(isFuturePlOrPr(mockProgrammeMembershipsForGrouping[3])).toBe(true);
+      expect(isFuturePlOrPr(mockProgrammeMembershipsForGrouping[2])).toBe(
+        false
+      );
+    });
   });
 
   it("should group placements correctly", () => {

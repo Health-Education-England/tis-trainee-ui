@@ -140,7 +140,6 @@ export class ProfileUtilities {
     );
   };
 
-  //TODO refactor
   public static readonly groupProgrammesByDate = (
     programmes: ProgrammeMembership[]
   ): ProgrammeMembershipGroup => {
