@@ -48,7 +48,7 @@ export default Placements;
 function PlacementsPanels() {
   const placementsArr = useAppSelector(selectTraineeProfile).placements;
   const groupedPlacements = useMemo(() => {
-    return ProfileUtilities.groupPlacementsByDate(placementsArr);
+    return ProfileUtilities.groupDateBoxedByDate(placementsArr);
   }, [placementsArr]);
 
   return (

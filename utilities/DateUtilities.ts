@@ -6,6 +6,7 @@ import { Placement } from "../models/Placement";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { IDateBoxed } from "../models/IDateBoxed";
 
 day.extend(utc);
 day.extend(timezone);
@@ -203,29 +204,25 @@ export function isPastIt(date: DateType): boolean {
   return day(date).format("YYYY-MM-DD") < today;
 }
 
-export function isCurrentPlOrPm(
-  plOrPm: Placement | ProgrammeMembership
-): boolean {
-  const { startDate, endDate } = plOrPm;
+export function isCurrentDateBoxed(dateBoxed: IDateBoxed): boolean {
+  const { startDate, endDate } = dateBoxed;
   return (
     day(endDate).format("YYYY-MM-DD") >= today &&
     day(startDate).format("YYYY-MM-DD") <= today
   );
 }
 
-export function isUpcomingPlOrPm(
-  plOrPm: Placement | ProgrammeMembership
-): boolean {
-  const { startDate } = plOrPm;
+export function isUpcomingDateBoxed(dateBoxed: IDateBoxed): boolean {
+  const { startDate } = dateBoxed;
   return (
     day(startDate).format("YYYY-MM-DD") > today &&
     day(startDate).format("YYYY-MM-DD") <= twelveWeeksAhead
   );
 }
 
-export function isFuturePlOrPr(
-  plOrPm: Placement | ProgrammeMembership
+export function isFutureDateBoxed(
+  dateBoxed: IDateBoxed
 ): boolean {
-  const { startDate } = plOrPm;
+  const { startDate } = dateBoxed;
   return day(startDate).format("YYYY-MM-DD") > twelveWeeksAhead;
 }

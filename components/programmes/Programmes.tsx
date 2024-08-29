@@ -49,7 +49,7 @@ function ProgrammesPanels() {
   const programmesArr =
     useAppSelector(selectTraineeProfile).programmeMemberships;
   const groupedProgrammes = useMemo(() => {
-    return ProfileUtilities.groupProgrammesByDate(programmesArr);
+    return ProfileUtilities.groupDateBoxedByDate(programmesArr);
   }, [programmesArr]);
   return (
     <>

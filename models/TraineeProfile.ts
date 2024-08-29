@@ -1,6 +1,7 @@
 import { ProgrammeMembership } from "./ProgrammeMembership";
 import { Placement } from "./Placement";
 import { PersonalDetails } from "./PersonalDetails";
+import { IDateBoxed } from "./IDateBoxed";
 
 export interface TraineeProfile {
   traineeTisId: string;
@@ -9,7 +10,7 @@ export interface TraineeProfile {
   placements: Placement[];
 }
 
-export type ProfileType = Placement | ProgrammeMembership;
+export type ProfileType = IDateBoxed;
 
 export enum TraineeProfileName {
   Placements = "placements",

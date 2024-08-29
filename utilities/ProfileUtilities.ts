@@ -7,11 +7,12 @@ import {
   ProgrammeMembershipGroup
 } from "../models/ProgrammeMembership";
 import {
-  isCurrentPlOrPm,
+  isCurrentDateBoxed,
   isPastIt,
-  isUpcomingPlOrPm,
+  isUpcomingDateBoxed,
   today
 } from "./DateUtilities";
+import { IDateBoxed, IDateBoxedGroup } from "../models/IDateBoxed";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -113,57 +114,30 @@ export class ProfileUtilities {
 
     return trimmedWork;
   }
-
-  public static readonly groupPlacementsByDate = (
-    placements: Placement[]
-  ): PlacementGroup => {
-    const groupedPlacements: PlacementGroup = {
+ 
+  public static readonly groupDateBoxedByDate = (
+    dateBoxed: IDateBoxed[]
+  ): IDateBoxedGroup => {
+    const groupedDateBoxed: IDateBoxedGroup = {
       future: [],
       upcoming: [],
       current: [],
       past: []
     };
 
-    return placements.reduce(
-      (grouped: PlacementGroup, placement: Placement) => {
+    return dateBoxed.reduce(
+      (grouped: IDateBoxedGroup, dateBoxedItem: IDateBoxed) => {
         const { future, upcoming, current, past } = grouped;
-        if (isPastIt(placement.endDate)) {
-          past.push(placement);
-        } else if (isCurrentPlOrPm(placement)) {
-          current.push(placement);
-        } else if (isUpcomingPlOrPm(placement)) {
-          upcoming.push(placement);
-        } else future.push(placement);
+        if (isPastIt(dateBoxedItem.endDate)) {
+          past.push(dateBoxedItem);
+        } else if (isCurrentDateBoxed(dateBoxedItem)) {
+          current.push(dateBoxedItem);
+        } else if (isUpcomingDateBoxed(dateBoxedItem)) {
+          upcoming.push(dateBoxedItem);
+        } else future.push(dateBoxedItem);
         return grouped;
       },
-      groupedPlacements
+      groupedDateBoxed
     );
   };
-
-  public static readonly groupProgrammesByDate = (
-    programmes: ProgrammeMembership[]
-  ): ProgrammeMembershipGroup => {
-    const groupedProgrammeMemberships: ProgrammeMembershipGroup = {
-      future: [],
-      upcoming: [],
-      current: [],
-      past: []
-    };
-
-    return programmes.reduce(
-      (grouped: ProgrammeMembershipGroup, programme: ProgrammeMembership) => {
-        const { future, upcoming, current, past } = grouped;
-        if (isPastIt(programme.endDate)) {
-          past.push(programme);
-        } else if (isCurrentPlOrPm(programme)) {
-          current.push(programme);
-        } else if (isUpcomingPlOrPm(programme)) {
-          upcoming.push(programme);
-        } else future.push(programme);
-        return grouped;
-      },
-      groupedProgrammeMemberships
-    );
-  };
-
 }
