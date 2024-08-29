@@ -1,9 +1,9 @@
 import { ProfileUtilities } from "../ProfileUtilities";
 import {
-  isCurrentPl,
-  isFuturePl,
+  isCurrentDateBoxed,
+  isFutureDateBoxed,
   isPastIt,
-  isUpcomingPl
+  isUpcomingDateBoxed
 } from "../DateUtilities";
 import {
   draftFormRPartB,
@@ -12,6 +12,7 @@ import {
 } from "../../mock-data/draft-formr-partb";
 import {
   mockProgrammeMemberships,
+  mockProgrammeMembershipsForGrouping,
   mockProgrammeMembershipNoCurricula,
   mockProgrammeMembershipNoMedicalCurricula,
   mockProgrammeMembershipDuplicateCurriculaStart,
@@ -131,21 +132,75 @@ describe("Profile utilities - groupPlacementsByDate", () => {
   it("should classify a placement correctly", () => {
     expect(isPastIt(mockPlacementsForGrouping[0].endDate)).toBe(true);
     expect(isPastIt(mockPlacementsForGrouping[1].endDate)).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[1])).toBe(true);
-    expect(isCurrentPl(mockPlacementsForGrouping[0])).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[2])).toBe(false);
-    expect(isCurrentPl(mockPlacementsForGrouping[3])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[2])).toBe(true);
-    expect(isUpcomingPl(mockPlacementsForGrouping[3])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[1])).toBe(false);
-    expect(isUpcomingPl(mockPlacementsForGrouping[0])).toBe(false);
-    expect(isFuturePl(mockPlacementsForGrouping[3])).toBe(true);
-    expect(isFuturePl(mockPlacementsForGrouping[2])).toBe(false);
+    expect(isCurrentDateBoxed(mockPlacementsForGrouping[1])).toBe(true);
+    expect(isCurrentDateBoxed(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isCurrentDateBoxed(mockPlacementsForGrouping[2])).toBe(false);
+    expect(isCurrentDateBoxed(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingDateBoxed(mockPlacementsForGrouping[2])).toBe(true);
+    expect(isUpcomingDateBoxed(mockPlacementsForGrouping[3])).toBe(false);
+    expect(isUpcomingDateBoxed(mockPlacementsForGrouping[1])).toBe(false);
+    expect(isUpcomingDateBoxed(mockPlacementsForGrouping[0])).toBe(false);
+    expect(isFutureDateBoxed(mockPlacementsForGrouping[3])).toBe(true);
+    expect(isFutureDateBoxed(mockPlacementsForGrouping[2])).toBe(false);
+  });
+
+  it("should group programme memberships correctly", () => {
+    expect(
+      ProfileUtilities.groupDateBoxedByDate(
+        mockProgrammeMembershipsForGrouping
+      )
+    ).toEqual({
+      future: [mockProgrammeMembershipsForGrouping[3]],
+      upcoming: [mockProgrammeMembershipsForGrouping[2]],
+      current: [mockProgrammeMembershipsForGrouping[1]],
+      past: [mockProgrammeMembershipsForGrouping[0]]
+    });
+  });
+
+  describe("Profile utilities - groupProgrammesByDate", () => {
+    it("should classify a programme membership correctly", () => {
+      expect(isPastIt(mockProgrammeMembershipsForGrouping[0].endDate)).toBe(
+        true
+      );
+      expect(isPastIt(mockProgrammeMembershipsForGrouping[1].endDate)).toBe(
+        false
+      );
+      expect(isCurrentDateBoxed(mockProgrammeMembershipsForGrouping[1])).toBe(
+        true
+      );
+      expect(isCurrentDateBoxed(mockProgrammeMembershipsForGrouping[0])).toBe(
+        false
+      );
+      expect(isCurrentDateBoxed(mockProgrammeMembershipsForGrouping[2])).toBe(
+        false
+      );
+      expect(isCurrentDateBoxed(mockProgrammeMembershipsForGrouping[3])).toBe(
+        false
+      );
+      expect(isUpcomingDateBoxed(mockProgrammeMembershipsForGrouping[2])).toBe(
+        true
+      );
+      expect(isUpcomingDateBoxed(mockProgrammeMembershipsForGrouping[3])).toBe(
+        false
+      );
+      expect(isUpcomingDateBoxed(mockProgrammeMembershipsForGrouping[1])).toBe(
+        false
+      );
+      expect(isUpcomingDateBoxed(mockProgrammeMembershipsForGrouping[0])).toBe(
+        false
+      );
+      expect(isFutureDateBoxed(mockProgrammeMembershipsForGrouping[3])).toBe(
+        true
+      );
+      expect(isFutureDateBoxed(mockProgrammeMembershipsForGrouping[2])).toBe(
+        false
+      );
+    });
   });
 
   it("should group placements correctly", () => {
     expect(
-      ProfileUtilities.groupPlacementsByDate(mockPlacementsForGrouping)
+      ProfileUtilities.groupDateBoxedByDate(mockPlacementsForGrouping)
     ).toEqual({
       future: [mockPlacementsForGrouping[3]],
       upcoming: [mockPlacementsForGrouping[2]],

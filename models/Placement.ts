@@ -1,14 +1,13 @@
 import { Signature } from "./Dsp";
 import { Status } from "./Status";
+import { IDateBoxed } from "./IDateBoxed";
 
-export interface Placement {
+export interface Placement extends IDateBoxed {
   tisId?: string;
   site: string;
   siteLocation: string;
   siteKnownAs: string;
   otherSites: Site[];
-  startDate: Date | string;
-  endDate: Date | string;
   wholeTimeEquivalent: string;
   specialty: string;
   subSpecialty: string;
@@ -45,13 +44,6 @@ export interface Site {
   site: string;
   siteKnownAs?: string;
   siteLocation?: string;
-}
-
-export interface PlacementGroup {
-  future: Placement[];
-  upcoming: Placement[];
-  current: Placement[];
-  past: Placement[];
 }
 
 export type SpecialtyType = {

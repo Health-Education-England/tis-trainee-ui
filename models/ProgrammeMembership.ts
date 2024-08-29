@@ -1,14 +1,13 @@
 import { Signature } from "./Dsp";
 import { Status } from "./Status";
+import { IDateBoxed } from "./IDateBoxed";
 
-export interface ProgrammeMembership {
+export interface ProgrammeMembership extends IDateBoxed {
   tisId?: string;
   programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
   trainingNumber: string | null;
-  startDate: Date | string;
-  endDate: Date | string;
   managingDeanery: string;
   responsibleOfficer?: ResponsibleOfficer;
   programmeMembershipType?: string;

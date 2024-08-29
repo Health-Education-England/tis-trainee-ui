@@ -144,6 +144,101 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
   }
 ];
 
+export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
+  // Past
+  {
+    startDate: new Date("2020-01-01"),
+    endDate: new Date("2022-01-01"),
+    tisId: "1",
+    programmeName: "Past",
+    programmeNumber: "EOE8945",
+    trainingNumber: "EOE/ABC-123/11111111/C",
+    managingDeanery: "East of England",
+    curricula: [
+      {
+        curriculumTisId: "1",
+        curriculumName: "ST1",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2020-01-01"),
+        curriculumEndDate: new Date("2023-01-01")
+      }
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  },
+  // Current
+  {
+    startDate: new Date("2020-01-01"),
+    endDate: dayjs().add(1, "year").toDate(),
+    tisId: "2",
+    programmeName: "Current",
+    programmeNumber: "EOE8945",
+    trainingNumber: "EOE/ABC-123/11111111/C",
+    managingDeanery: "East of England",
+    curricula: [
+      {
+        curriculumTisId: "1",
+        curriculumName: "ST1",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2020-01-01"),
+        curriculumEndDate: new Date("2023-01-01")
+      }
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  },
+  // Upcoming
+  {
+    startDate: dayjs().add(10, "week").toDate(),
+    endDate: dayjs().add(2, "year").toDate(),
+    tisId: "3",
+    programmeName: "Upcoming",
+    programmeNumber: "EOE8945",
+    trainingNumber: "EOE/ABC-123/11111111/C",
+    managingDeanery: "East of England",
+    curricula: [
+      {
+        curriculumTisId: "1",
+        curriculumName: "ST1",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2020-01-01"),
+        curriculumEndDate: new Date("2023-01-01")
+      }
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  },
+  // Future
+  {
+    startDate: dayjs().add(1, "year").toDate(),
+    endDate: dayjs().add(2, "year").toDate(),
+    tisId: "4",
+    programmeName: "Future",
+    programmeNumber: "EOE8945",
+    trainingNumber: "EOE/ABC-123/11111111/C",
+    managingDeanery: "East of England",
+    curricula: [
+      {
+        curriculumTisId: "1",
+        curriculumName: "ST1",
+        curriculumSubType: "MEDICAL_CURRICULUM",
+        curriculumStartDate: new Date("2020-01-01"),
+        curriculumEndDate: new Date("2023-01-01")
+      }
+    ],
+    conditionsOfJoining: {
+      signedAt: null,
+      version: "GG8"
+    }
+  },
+];
+
 export const mockProgrammeMembershipNonTemplatedField = {
   startDate: new Date("2020-01-01"),
   endDate: new Date("2022-01-01"),

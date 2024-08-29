@@ -89,7 +89,7 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=programmeName0Val]")
       .first()
       .should("exist")
-      .should("contain.text", "Cardiology");
+      .should("contain.text", "General Practice");
     cy.get("[data-cy=ST6]").should("exist");
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
@@ -99,17 +99,17 @@ describe("Programmes with MFA set up", () => {
       .should("contain.text", "Hugh Rangel");
     cy.get("[data-cy=currDates]")
       .last()
-      .should("contain.text", "01/08/2022 - 01/08/2025");
-    cy.get('[data-cy="cctBtn-Cardiology"]')
+      .should("contain.text", "01/08/2020 - 01/08/2025");
+    cy.get('[data-cy="cctBtn-General Practice"]')
       .should("exist")
       .should("contain.text", "Open CCT Calculator")
       .should("have.attr", "title", "Open CCT Calculator");
     cy.get('[data-cy="cct-prompt-label"]')
       .should("exist")
       .should("contain.text", "Thinking of changing your hours?");
-    cy.get('[data-cy="cctBtn-Cardiology"]').first().click();
-    cy.get('[data-cy="cctBtn-Cardiology"]').first().should("be.disabled");
-    cy.get('[data-cy="cctBtn-Cardiology"]').last().should("be.disabled");
+    cy.get('[data-cy="cctBtn-General Practice"]').first().click();
+    cy.get('[data-cy="cctBtn-General Practice"]').first().should("be.disabled");
+    cy.get('[data-cy="cctBtn-General Practice"]').last().should("be.disabled");
   });
 
   it("should show alternative text when no Programme data available", () => {
@@ -134,6 +134,35 @@ describe("Programmes with MFA set up", () => {
       </Provider>
     );
     cy.get("[data-cy=notAssignedprogrammeMemberships]")
+      .should("exist")
+      .should("contain.text", "You are not assigned to any programmes");
+  });
+
+  it("should show alternative text when no panel data available", () => {
+    const MockedProgrammesEmpty = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Programmes />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammesEmpty />
+        </Router>
+      </Provider>
+    );
+    cy.get('[data-cy="upcomingExpand"]').click();
+    cy.get(
+      '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedprogrammeMemberships"]'
+    )
       .should("exist")
       .should("contain.text", "You are not assigned to any programmes");
   });

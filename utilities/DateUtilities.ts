@@ -2,9 +2,9 @@ import day from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { Placement } from "../models/Placement";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { IDateBoxed } from "../models/IDateBoxed";
 
 day.extend(utc);
 day.extend(timezone);
@@ -202,23 +202,25 @@ export function isPastIt(date: DateType): boolean {
   return day(date).format("YYYY-MM-DD") < today;
 }
 
-export function isCurrentPl(pl: Placement): boolean {
-  const { startDate, endDate } = pl;
+export function isCurrentDateBoxed(dateBoxed: IDateBoxed): boolean {
+  const { startDate, endDate } = dateBoxed;
   return (
     day(endDate).format("YYYY-MM-DD") >= today &&
     day(startDate).format("YYYY-MM-DD") <= today
   );
 }
 
-export function isUpcomingPl(pl: Placement): boolean {
-  const { startDate } = pl;
+export function isUpcomingDateBoxed(dateBoxed: IDateBoxed): boolean {
+  const { startDate } = dateBoxed;
   return (
     day(startDate).format("YYYY-MM-DD") > today &&
     day(startDate).format("YYYY-MM-DD") <= twelveWeeksAhead
   );
 }
 
-export function isFuturePl(pl: Placement): boolean {
-  const { startDate } = pl;
+export function isFutureDateBoxed(
+  dateBoxed: IDateBoxed
+): boolean {
+  const { startDate } = dateBoxed;
   return day(startDate).format("YYYY-MM-DD") > twelveWeeksAhead;
 }

@@ -1,8 +1,14 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
 import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
-import { Placement, PlacementGroup } from "../models/Placement";
+import { Placement } from "../models/Placement";
 import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
-import { isCurrentPl, isPastIt, isUpcomingPl, today } from "./DateUtilities";
+import {
+  isCurrentDateBoxed,
+  isPastIt,
+  isUpcomingDateBoxed,
+  today
+} from "./DateUtilities";
+import { IDateBoxed, IDateBoxedGroup } from "../models/IDateBoxed";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -105,29 +111,29 @@ export class ProfileUtilities {
     return trimmedWork;
   }
 
-  public static readonly groupPlacementsByDate = (
-    placements: Placement[]
-  ): PlacementGroup => {
-    const groupedPlacements: PlacementGroup = {
+  public static readonly groupDateBoxedByDate = (
+    dateBoxed: IDateBoxed[]
+  ): IDateBoxedGroup => {
+    const groupedDateBoxed: IDateBoxedGroup = {
       future: [],
       upcoming: [],
       current: [],
       past: []
     };
 
-    return placements.reduce(
-      (grouped: PlacementGroup, placement: Placement) => {
+    return dateBoxed.reduce(
+      (grouped: IDateBoxedGroup, dateBoxedItem: IDateBoxed) => {
         const { future, upcoming, current, past } = grouped;
-        if (isPastIt(placement.endDate)) {
-          past.push(placement);
-        } else if (isCurrentPl(placement)) {
-          current.push(placement);
-        } else if (isUpcomingPl(placement)) {
-          upcoming.push(placement);
-        } else future.push(placement);
+        if (isPastIt(dateBoxedItem.endDate)) {
+          past.push(dateBoxedItem);
+        } else if (isCurrentDateBoxed(dateBoxedItem)) {
+          current.push(dateBoxedItem);
+        } else if (isUpcomingDateBoxed(dateBoxedItem)) {
+          upcoming.push(dateBoxedItem);
+        } else future.push(dateBoxedItem);
         return grouped;
       },
-      groupedPlacements
+      groupedDateBoxed
     );
   };
 }
