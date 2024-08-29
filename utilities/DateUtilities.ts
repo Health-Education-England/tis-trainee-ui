@@ -2,10 +2,8 @@ import day from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { Placement } from "../models/Placement";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { IDateBoxed } from "../models/IDateBoxed";
 
 day.extend(utc);

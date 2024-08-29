@@ -1,11 +1,7 @@
 import { FormRPartB, Work } from "../models/FormRPartB";
 import { NEW_WORK, MEDICAL_CURRICULUM } from "./Constants";
-import { Placement, PlacementGroup } from "../models/Placement";
-import {
-  Curriculum,
-  ProgrammeMembership,
-  ProgrammeMembershipGroup
-} from "../models/ProgrammeMembership";
+import { Placement } from "../models/Placement";
+import { Curriculum, ProgrammeMembership } from "../models/ProgrammeMembership";
 import {
   isCurrentDateBoxed,
   isPastIt,
@@ -114,7 +110,7 @@ export class ProfileUtilities {
 
     return trimmedWork;
   }
- 
+
   public static readonly groupDateBoxedByDate = (
     dateBoxed: IDateBoxed[]
   ): IDateBoxedGroup => {
