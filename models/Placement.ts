@@ -46,13 +46,6 @@ export interface Site {
   siteLocation?: string;
 }
 
-export interface PlacementGroup {
-  future: Placement[];
-  upcoming: Placement[];
-  current: Placement[];
-  past: Placement[];
-}
-
 export type SpecialtyType = {
   specialtyId: string;
   name: string;
