@@ -35,8 +35,8 @@ export const issueDspCredential = createAsyncThunk(
   async (issueArgs: { issueName: string; stateId: string }, { getState }) => {
     const { issueName, stateId } = issueArgs;
     const state = getState() as RootState;
-    const panelData: Placement | ProgrammeMembership | null =
-      state.dsp.dspPanelObj;
+    const panelData: Placement | ProgrammeMembership | null = state.dsp
+      .dspPanelObj as Placement | ProgrammeMembership | null;
     const credentialsService = new CredentialsService();
     localStorage.setItem(
       stateId,
