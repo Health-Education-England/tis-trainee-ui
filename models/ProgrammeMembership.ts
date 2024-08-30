@@ -3,7 +3,6 @@ import { Status } from "./Status";
 import { IDateBoxed } from "./IDateBoxed";
 
 export interface ProgrammeMembership extends IDateBoxed {
-  tisId?: string;
   programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;

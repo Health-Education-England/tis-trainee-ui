@@ -3,7 +3,6 @@ import { Status } from "./Status";
 import { IDateBoxed } from "./IDateBoxed";
 
 export interface Placement extends IDateBoxed {
-  tisId?: string;
   site: string;
   siteLocation: string;
   siteKnownAs: string;

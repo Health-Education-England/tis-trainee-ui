@@ -1,4 +1,5 @@
 export interface IDateBoxed {
+  tisId?: string;
   startDate: Date | string;
   endDate: Date | string;
 }
