@@ -8,11 +8,11 @@ import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
-import CojGg9 from "./CojGg9";
+import CojGg10 from "./CojGg10";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
-import { COJ_DECLARATIONS } from "../../../utilities/Constants";
+import { COJ_DECLARATIONS_10 } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
 
@@ -21,7 +21,7 @@ const acceptanceValidation = Yup.bool()
   .oneOf([true], "Please confirm your acceptance")
   .required("Please confirm your acceptance");
 
-export default function CojView() {
+export default function CojView10() {
   const {
     signingCojProgName: progName,
     signingCojSignedDate: signedDate,
@@ -51,6 +51,7 @@ function CojDeclarationSection({
         isDeclareInform: "",
         isDeclareUpToDate: "",
         isDeclareAttend: "",
+        isDeclareContacted: "",
         isDeclareEngage: ""
       }}
       validationSchema={Yup.object({
@@ -60,6 +61,7 @@ function CojDeclarationSection({
         isDeclareInform: acceptanceValidation,
         isDeclareUpToDate: acceptanceValidation,
         isDeclareAttend: acceptanceValidation,
+        isDeclareContacted: acceptanceValidation,
         isDeclareEngage: acceptanceValidation
       })}
       onSubmit={async _values => {
@@ -80,7 +82,7 @@ function CojDeclarationSection({
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {COJ_DECLARATIONS.map(declaration => (
+          {COJ_DECLARATIONS_10.map(declaration => (
             <MultiChoiceInputField
               key={declaration.id}
               id={declaration.id}
@@ -143,5 +145,5 @@ type COJversionType = {
   progName: string;
 };
 function CojVersion({ progName }: Readonly<COJversionType>) {
-  return <CojGg9 progName={progName} />;
+  return <CojGg10 progName={progName} />;
 }
