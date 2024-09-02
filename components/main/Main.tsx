@@ -33,6 +33,7 @@ import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice"
 import { Notifications } from "../notifications/Notifications";
 import { Cct } from "../forms/cct/Cct";
 import ActionSummary from "../actionSummary/ActionSummary";
+import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 
 const appVersion = packageJson.version;
 
@@ -136,6 +137,11 @@ export const Main = () => {
             <Route exact path="/placements" component={Placements} />
             <Route exact path="/programmes" component={Programmes} />
             <Route exact path="/programmes/:id/sign-coj" component={CojView} />
+            <Route
+              exact
+              path="/programmes/:id/onboarding-tracker"
+              component={OnboardingTracker}
+            />
             <Route exact path="/profile" component={Profile} />
             <Route path="/credential" component={Dsp} />
             <Route path="/formr-a" component={FormRPartA} />

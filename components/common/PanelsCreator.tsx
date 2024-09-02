@@ -25,6 +25,7 @@ import {
 } from "../../redux/slices/traineeActionsSlice";
 import dayjs from "dayjs";
 import { CctBtn } from "../programmes/CctBtn";
+import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerLink";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -72,14 +73,64 @@ export function PanelsCreator({
                     : style.panelDiv
                 }
               >
+                {panelsName === TraineeProfileName.Placements && (
+                  <p className={style.panelHeader}>{panel.site}</p>
+                )}
                 {panelsName === TraineeProfileName.Programmes && (
-                  <CctBtn
-                    progName={panel.programmeName}
-                    endDate={panel.endDate}
-                    startDate={panel.startDate}
-                  />
+                  <p className={style.panelHeader}>{panel.programmeName}</p>
                 )}
                 <SummaryList>
+                  {panelsName === TraineeProfileName.Programmes &&
+                    dayjs().isAfter(
+                      dayjs(panel.startDate).subtract(16, "weeks")
+                    ) && (
+                      <>
+                        <p
+                          className={style.panelSubHeader}
+                          data-cy="subheaderOnboarding"
+                        >
+                          Onboarding
+                        </p>
+
+                        <SummaryList.Row>
+                          <SummaryList.Key>
+                            <Label
+                              size="s"
+                              data-cy="NewProgrammeOnboardingText"
+                            >
+                              'New Programme' onboarding journey
+                            </Label>
+                          </SummaryList.Key>
+                          <SummaryList.Value>
+                            <OnboardingTrackerLink progPanelId={panel.tisId} />
+                          </SummaryList.Value>
+                        </SummaryList.Row>
+                      </>
+                    )}
+
+                  {panelsName === TraineeProfileName.Programmes && (
+                    <>
+                      <p
+                        className={style.panelSubHeader}
+                        data-cy="subheaderLtft"
+                      >
+                        Less Than Full Time (LTFT)
+                      </p>
+                      <CctBtn
+                        data-cy={`cctBtn-${panelsName}-${panel.tisId}`}
+                        progName={panel.programmeName}
+                        endDate={panel.endDate}
+                        startDate={panel.startDate}
+                      />
+                    </>
+                  )}
+
+                  <p
+                    className={style.panelSubHeader}
+                    data-cy="subheaderDetails"
+                  >
+                    Details
+                  </p>
                   {Object.keys(filteredPanel).map((panelProp, _index) => (
                     <SummaryList.Row key={_index}>
                       <SummaryList.Key data-cy={`${panelProp}${index}Key`}>

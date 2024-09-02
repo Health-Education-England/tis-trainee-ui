@@ -5,9 +5,15 @@ type ModalProps = {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  cancelBtnText?: string;
 };
 
-export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
+export const Modal = ({
+  children,
+  isOpen,
+  onClose,
+  cancelBtnText = "Cancel"
+}: ModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDialogElement>(null);
   const handleCloseModal = useCallback(() => {
@@ -44,22 +50,37 @@ export const Modal = ({ children, isOpen, onClose }: ModalProps) => {
     }
   }, [isModalOpen]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && event.target === modalRef.current) {
+        handleCloseModal();
+      }
+    };
+
+    if (isModalOpen) {
+      modalRef.current?.addEventListener("click", handleClickOutside);
+    } else {
+      modalRef.current?.removeEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      modalRef.current?.removeEventListener("click", handleClickOutside);
+    };
+  }, [isModalOpen, handleCloseModal]);
+
   return (
-    <dialog
-      ref={modalRef}
-      className="modal"
-      aria-modal="true"
-      data-cy="formLinkerModal"
-    >
-      {children}
-      <Button
-        data-cy="modal-cancel-btn"
-        type="button"
-        reverse
-        onClick={handleCloseModal}
-      >
-        Cancel
-      </Button>
+    <dialog ref={modalRef} aria-modal="true" data-cy="dialogModal">
+      <div className="dialog-contents-wrapper">
+        {children}
+        <Button
+          data-cy="modal-cancel-btn"
+          type="button"
+          reverse
+          onClick={handleCloseModal}
+        >
+          {cancelBtnText}
+        </Button>
+      </div>
     </dialog>
   );
 };
