@@ -32,7 +32,7 @@ export function ConditionsOfJoining({
       programmeName,
       conditionsOfJoining.signedAt
     );
-    history.push(`/programmes/${programmeMembershipId}/sign-coj`);
+    history.push(`/programmes/${programmeMembershipId}/sign-coj/GG10`);
   };
   return conditionsOfJoining.signedAt ? (
     <React.Fragment>
@@ -45,7 +45,7 @@ export function ConditionsOfJoining({
         {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}
       </p>
       <Link
-        to={`/programmes/${programmeMembershipId}/sign-coj`}
+        to={`/programmes/${programmeMembershipId}/sign-coj/${conditionsOfJoining.version}`}
         onClick={() =>
           setCojState(
             programmeMembershipId,

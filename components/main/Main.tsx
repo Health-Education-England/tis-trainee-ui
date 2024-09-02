@@ -24,7 +24,8 @@ import Programmes from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";
-import CojView from "../forms/conditionOfJoining/CojView";
+import CojView9 from "../forms/conditionOfJoining/CojView9";
+import CojView10 from "../forms/conditionOfJoining/CojView10";
 import TSSHeader from "../navigation/TSSHeader";
 import packageJson from "../../package.json";
 import { loadFormAList } from "../../redux/slices/formASlice";
@@ -135,7 +136,16 @@ export const Main = () => {
             <Route exact path="/home" component={Home} />
             <Route exact path="/placements" component={Placements} />
             <Route exact path="/programmes" component={Programmes} />
-            <Route exact path="/programmes/:id/sign-coj" component={CojView} />
+            <Route
+              exact
+              path="/programmes/:id/sign-coj/GG9"
+              component={CojView9}
+            />
+            <Route
+              exact
+              path="/programmes/:id/sign-coj/GG10"
+              component={CojView10}
+            />
             <Route exact path="/profile" component={Profile} />
             <Route path="/credential" component={Dsp} />
             <Route path="/formr-a" component={FormRPartA} />

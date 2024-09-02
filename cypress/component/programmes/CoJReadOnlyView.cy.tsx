@@ -10,21 +10,21 @@ import {
   updatedsigningCojProgName,
   updatedsigningCojSignedDate
 } from "../../../redux/slices/userSlice";
-import CojView from "../../../components/forms/conditionOfJoining/CojView";
+import CojView9 from "../../../components/forms/conditionOfJoining/CojView9";
 
 describe("COJ Contents ReadOnly View", () => {
   beforeEach(() => {
-    const MockedCojView = () => {
+    const MockedCojView9 = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedsigningCojProgName("General Practice"));
       dispatch(updatedsigningCoj(true));
       dispatch(updatedsigningCojSignedDate(new Date("2023-01-01")));
-      return <CojView />;
+      return <CojView9 />;
     };
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedCojView />
+          <MockedCojView9 />
         </Router>
       </Provider>
     );

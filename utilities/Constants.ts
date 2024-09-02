@@ -26,7 +26,7 @@ export const COJ_EPOCH = new Date(
   process.env.NEXT_PUBLIC_CONDITIONS_OF_JOINING_EPOCH as string
 );
 
-export const COJ_DECLARATIONS = [
+export const COJ_DECLARATIONS_9 = [
   {
     id: "isDeclareProvisional",
     label:
@@ -56,6 +56,49 @@ export const COJ_DECLARATIONS = [
     id: "isDeclareAttend",
     label:
       "I will attend the minimum number of formal teaching days as required by my training programme."
+  },
+  {
+    id: "isDeclareEngage",
+    label:
+      "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
+  }
+];
+
+export const COJ_DECLARATIONS_10 = [
+  {
+    id: "isDeclareProvisional",
+    label:
+      "I understand that programme and post allocations are provisional, and are subject to change until confirmed by NHSE WTE/NES/HEIW/NIMDTA and/or my employing organisation."
+  },
+  {
+    id: "isDeclareSatisfy",
+    label:
+      "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
+  },
+  {
+    id: "isDeclareProvide",
+    label:
+      "I will obtain a professional email address, and will provide this to my training programme and NHSE WTE/NES/HEIW/NIMDTA."
+  },
+  {
+    id: "isDeclareInform",
+    label:
+      "I will inform my training programme and NHSE WTE/NES/HEIW/NIMDTA of any change to my personal contact details and/or personal circumstances that may affect my training programme arrangements."
+  },
+  {
+    id: "isDeclareUpToDate",
+    label:
+      "I will keep myself up to date with the latest information available via NHSE WTE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
+  },
+  {
+    id: "isDeclareAttend",
+    label:
+      "I will attend the minimum number of formal teaching days as required by my training programme."
+  },
+  {
+    id: "isDeclareContacted",
+    label:
+      "I understand that I will be contacted by NHSE WTE/NES/HEIW/NIMDTA about matters that are relevant to my teaching, training or personal development."
   },
   {
     id: "isDeclareEngage",
