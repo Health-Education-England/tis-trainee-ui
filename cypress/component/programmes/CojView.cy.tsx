@@ -7,9 +7,10 @@ import history from "../../../components/navigation/history";
 import React from "react";
 import {
   updatedsigningCoj,
-  updatedsigningCojProgName
+  updatedsigningCojProgName,
+  updatedsigningCojVersion
 } from "../../../redux/slices/userSlice";
-import CojView9 from "../../../components/forms/conditionOfJoining/CojView9";
+import CojView from "../../../components/forms/conditionOfJoining/CojView";
 
 describe("COJ Contents View", () => {
   beforeEach(() => {
@@ -17,7 +18,8 @@ describe("COJ Contents View", () => {
       const dispatch = useAppDispatch();
       dispatch(updatedsigningCojProgName("General Practice"));
       dispatch(updatedsigningCoj(true));
-      return <CojView9 />;
+      dispatch(updatedsigningCojVersion("GG10"));
+      return <CojView />;
     };
     mount(
       <Provider store={store}>
@@ -41,6 +43,7 @@ describe("COJ Contents View", () => {
     cy.get("#isDeclareInform--error-message").should("exist");
     cy.get("#isDeclareUpToDate--error-message").should("exist");
     cy.get("#isDeclareAttend--error-message").should("exist");
+    cy.get("#isDeclareContacted--error-message").should("exist");
     cy.get("#isDeclareEngage--error-message").should("exist");
     cy.get("[data-cy=cojSignBtn]").should("be.disabled");
   });
@@ -52,6 +55,7 @@ describe("COJ Contents View", () => {
     cy.get("#isDeclareInform--error-message").should("exist");
     cy.get("#isDeclareUpToDate--error-message").should("exist");
     cy.get("#isDeclareAttend--error-message").should("exist");
+    cy.get("#isDeclareContacted--error-message").should("exist");
     cy.get("#isDeclareEngage--error-message").should("exist");
   });
   it("should not show warning and enable button if all agreements are checked", () => {
@@ -61,6 +65,7 @@ describe("COJ Contents View", () => {
     cy.get("[data-cy=isDeclareInform0]").click();
     cy.get("[data-cy=isDeclareUpToDate0]").click();
     cy.get("[data-cy=isDeclareAttend0]").click();
+    cy.get("[data-cy=isDeclareContacted0]").click();
     cy.get("[data-cy=isDeclareEngage0]").click();
     cy.get("[data-cy=cojSignBtn]").click();
     cy.get("#isDeclareProvisional--error-message").should("not.exist");
@@ -69,6 +74,7 @@ describe("COJ Contents View", () => {
     cy.get("#isDeclareInform--error-message").should("not.exist");
     cy.get("#isDeclareUpToDate--error-message").should("not.exist");
     cy.get("#isDeclareAttend--error-message").should("not.exist");
+    cy.get("#isDeclareContacted--error-message").should("not.exist");
     cy.get("#isDeclareEngage--error-message").should("not.exist");
     cy.get("[data-cy=cojSignBtn]").should("not.be.disabled");
   });
