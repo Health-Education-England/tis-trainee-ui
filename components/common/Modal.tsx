@@ -51,20 +51,21 @@ export const Modal = ({
   }, [isModalOpen]);
 
   useEffect(() => {
+    const modalElement = modalRef.current;
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && event.target === modalRef.current) {
+      if (modalElement && event.target === modalElement) {
         handleCloseModal();
       }
     };
 
     if (isModalOpen) {
-      modalRef.current?.addEventListener("click", handleClickOutside);
+      modalElement?.addEventListener("click", handleClickOutside);
     } else {
-      modalRef.current?.removeEventListener("click", handleClickOutside);
+      modalElement?.removeEventListener("click", handleClickOutside);
     }
 
     return () => {
-      modalRef.current?.removeEventListener("click", handleClickOutside);
+      modalElement?.removeEventListener("click", handleClickOutside);
     };
   }, [isModalOpen, handleCloseModal]);
 
