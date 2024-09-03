@@ -18,6 +18,7 @@ interface IUser {
   signingCojPmId: string;
   signingCoj: boolean;
   signingCojSignedDate: Date | null;
+  signingCojVersion: string;
   redirected: boolean;
 }
 
@@ -35,6 +36,7 @@ const initialState: IUser = {
   signingCojPmId: "",
   signingCoj: false,
   signingCojSignedDate: null,
+  signingCojVersion: "",
   redirected: false
 };
 
@@ -163,6 +165,9 @@ const userSlice = createSlice({
     updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
       return { ...state, signingCojSignedDate: action.payload };
     },
+    updatedsigningCojVersion(state, action: PayloadAction<string>) {
+      return { ...state, signingCojVersion: action.payload };
+    },
     updatedRedirected(state, action: PayloadAction<boolean>) {
       return { ...state, redirected: action.payload };
     }
@@ -290,5 +295,6 @@ export const {
   updatedsigningCojPmId,
   updatedsigningCoj,
   updatedsigningCojSignedDate,
+  updatedsigningCojVersion,
   updatedRedirected
 } = userSlice.actions;

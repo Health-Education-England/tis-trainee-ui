@@ -4,7 +4,8 @@ import {
   updatedsigningCoj,
   updatedsigningCojPmId,
   updatedsigningCojProgName,
-  updatedsigningCojSignedDate
+  updatedsigningCojSignedDate,
+  updatedsigningCojVersion
 } from "../../redux/slices/userSlice";
 import store from "../../redux/store/store";
 import { CojUtilities } from "../../utilities/CojUtilities";
@@ -30,9 +31,10 @@ export function ConditionsOfJoining({
     setCojState(
       programmeMembershipId,
       programmeName,
-      conditionsOfJoining.signedAt
+      conditionsOfJoining.signedAt,
+      conditionsOfJoining.version
     );
-    history.push(`/programmes/${programmeMembershipId}/sign-coj/GG10`);
+    history.push(`/programmes/${programmeMembershipId}/sign-coj`);
   };
   return conditionsOfJoining.signedAt ? (
     <React.Fragment>
@@ -45,12 +47,13 @@ export function ConditionsOfJoining({
         {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}
       </p>
       <Link
-        to={`/programmes/${programmeMembershipId}/sign-coj/${conditionsOfJoining.version}`}
+        to={`/programmes/${programmeMembershipId}/sign-coj`}
         onClick={() =>
           setCojState(
             programmeMembershipId,
             programmeName,
-            conditionsOfJoining.signedAt
+            conditionsOfJoining.signedAt,
+            conditionsOfJoining.version
           )
         }
         data-cy={`cojViewBtn-${programmeMembershipId}`}
@@ -77,10 +80,12 @@ export function ConditionsOfJoining({
 function setCojState(
   programmeMembershipId: string,
   programmeName: string,
-  signedDate: Date | null
+  signedDate: Date | null,
+  version: string
 ) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));
   store.dispatch(updatedsigningCoj(true));
   store.dispatch(updatedsigningCojSignedDate(signedDate));
+  store.dispatch(updatedsigningCojVersion(version));
 }
