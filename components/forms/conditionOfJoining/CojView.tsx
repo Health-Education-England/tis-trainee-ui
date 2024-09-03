@@ -8,7 +8,6 @@ import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
-import CojGg10 from "./CojGg10";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
@@ -18,6 +17,7 @@ import {
 } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
+import CojGg10 from "./CojGg10";
 import CojGg9 from "./CojGg9";
 
 const acceptanceValidation = Yup.bool()
