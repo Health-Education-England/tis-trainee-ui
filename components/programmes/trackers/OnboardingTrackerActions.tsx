@@ -147,7 +147,7 @@ function TrackerSectionHeader({
   const style = { "--circle-colour": circleColour } as CSSProperties;
 
   return (
-    <div className="tracker-section-header" tabIndex={0}>
+    <div className="tracker-section-header">
       <div className="tracker-section_node" style={style}>
         {digit}
       </div>
@@ -189,7 +189,7 @@ Readonly<TssTraineeActionProps>) {
 
   return (
     <>
-      <div className="action-wrapper" tabIndex={0}>
+      <div className="action-wrapper">
         <div className="tracker-section_icon">
           <FontAwesomeIcon
             icon={actionIcon}

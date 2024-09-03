@@ -98,7 +98,7 @@ export function PanelsCreator({
                               size="s"
                               data-cy="NewProgrammeOnboardingText"
                             >
-                              'New Programme' onboarding journey
+                              {`'New Programme' onboarding journey`}
                             </Label>
                           </SummaryList.Key>
                           <SummaryList.Value>

@@ -59,7 +59,7 @@ export function OnboardingTracker() {
           tabIndex={0}
           style={{ color: "#005eb8" }}
         >
-          The 'New Programme' onboarding journey
+          {`The 'New Programme' onboarding journey`}
         </Fieldset.Legend>
         {/* TODO Show the linkage when status/API work is done */}
         {/* <h2 tabIndex={0} style={{ marginBottom: 0 }}>
