@@ -1,4 +1,13 @@
+import {
+  faCircle,
+  faCircleQuestion,
+  faEnvelope,
+  faShare,
+  faUserFriends
+} from "@fortawesome/free-solid-svg-icons";
+
 import { Declaration, Work } from "../models/FormRPartB";
+import { Link } from "react-router-dom";
 
 export const CCT_DECLARATION =
   "I have been appointed to a programme leading to award of CCT";
@@ -289,3 +298,208 @@ export const localOfficeContacts: localOfficeContactsProps = {
 };
 
 export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+// Onboarding Tracker Actions
+const welcomeEmailText =
+  "Receive 'Welcome' email 16 weeks prior to starting in post";
+const royalSocietyText = "Register with Royal Society/ Faculty";
+const reviewProgrammeText = "Review your Programme data";
+const signCojText = "Sign Conditions of Joining (CoJ) Agreement";
+const formRPartAText = "Submit Form R (Part A)";
+const formRPartBText = "Submit Form R (Part B)";
+const trainingNumberText =
+  "Your Training Number (NTN/DRN) is made available in Programme details";
+const ltftText =
+  "Apply for Less Than Full Time (LTFT). See notification for details.";
+const deferText = "Deferral. See notification for details.";
+const placementConfirmationText =
+  "Receive 'Placement Confirmation' email 12 weeks prior to starting in post";
+const reviewPlacementText = "Review your Placement details";
+const dayOneEmailText = "Receive 'Day One' email when your post begins";
+const connectRoText =
+  "Connect with your Responsible Officer (RO)/ Designated Body (DB)";
+
+export const onboardingTrackerActionText = {
+  WELCOME_EMAIL: {
+    actionText: welcomeEmailText,
+    textLink: null,
+    faIcon: faEnvelope
+  },
+  ROYAL_SOCIETY_REGISTRATION: {
+    actionText: royalSocietyText,
+    faIcon: faUserFriends,
+    textLink: null
+  },
+  REVIEW_PROGRAMME: {
+    actionText: reviewProgrammeText,
+    textLink: "/programmes",
+    faIcon: faCircle
+  },
+  SIGN_COJ: {
+    actionText: signCojText,
+    textLink: "/programmes",
+    faIcon: faCircle
+  },
+  FORMR_PARTA: {
+    actionText: formRPartAText,
+    textLink: "/formr-a",
+    faIcon: faCircle
+  },
+  FORMR_PARTB: {
+    actionText: formRPartBText,
+    textLink: "/formr-b",
+    faIcon: faCircle
+  },
+  TRAINING_NUMBER: {
+    actionText: trainingNumberText,
+    textLink: "/programmes",
+    faIcon: faShare
+  },
+  LTFT: {
+    actionText: ltftText,
+    textLink: "/notifications",
+    faIcon: faCircleQuestion
+  },
+  DEFER: {
+    actionText: deferText,
+    textLink: "/notifications",
+    faIcon: faCircleQuestion
+  },
+  PLACEMENT_CONFIRMATION: {
+    actionText: placementConfirmationText,
+    textLink: null,
+    faIcon: faEnvelope
+  },
+  REVIEW_PLACEMENT: {
+    actionText: reviewPlacementText,
+    textLink: "/placements",
+    faIcon: faCircle
+  },
+  DAY_ONE_EMAIL: {
+    actionText: dayOneEmailText,
+    textLink: null,
+    faIcon: faEnvelope
+  },
+  CONNECT_RO: {
+    actionText: connectRoText,
+    textLink: null,
+    faIcon: faUserFriends
+  }
+};
+
+export type ProgOnboardingTagType =
+  | "WELCOME_EMAIL"
+  | "ROYAL_SOCIETY_REGISTRATION"
+  | "REVIEW_PROGRAMME"
+  | "SIGN_COJ"
+  | "FORMR_PARTA"
+  | "FORMR_PARTB"
+  | "TRAINING_NUMBER"
+  | "LTFT"
+  | "DEFER"
+  | "PLACEMENT_CONFIRMATION"
+  | "REVIEW_PLACEMENT"
+  | "DAY_ONE_EMAIL"
+  | "CONNECT_RO";
+
+const formRTxt =
+  " (and sign your Conditions of Joining Agreement), your Training Number will be made available in the Details section of your ";
+
+export const onboardingTrackerInfoText = {
+  WELCOME_EMAIL: (
+    <p>
+      The Welcome email is sent to the email address you use to sign in to TIS
+      Self-Service.
+    </p>
+  ),
+  ROYAL_SOCIETY_REGISTRATION: (
+    <p>
+      Royal Society / Faculty registration is done outside of TIS Self-Service.
+    </p>
+  ),
+  REVIEW_PROGRAMME: (
+    <p>
+      If you do notice any discrepancies when reviewing the{" "}
+      <Link to="/programmes">Programme</Link> data, please contact{" "}
+      <Link to="/support">Local Office support</Link>.
+    </p>
+  ),
+  SIGN_COJ: (
+    <>
+      <p>
+        You can sign / view the signed Conditions of Joining Agreement via the
+        link in the Details section of your{" "}
+        <Link to="/programmes">Programme</Link>.
+      </p>
+      <p>
+        When you sign your Conditions of Joining Agreement (and submit your
+        FormR Parts A & B), your Training Number will be made available in the
+        Details section of your <Link to="/programmes">Programme</Link>.
+      </p>
+    </>
+  ),
+  FORMR_PARTA: (
+    <p>
+      When you submit your <Link to="/formr-a">FormR Part A</Link> & Part B
+      {formRTxt}
+      <Link to="/programmes">Programme</Link>.
+    </p>
+  ),
+  FORMR_PARTB: (
+    <p>
+      When you submit your <Link to="/formr-b">FormR Part B</Link> & Part A
+      {formRTxt}
+      <Link to="/programmes">Programme</Link>.
+    </p>
+  ),
+  TRAINING_NUMBER: (
+    <>
+      <p>
+        Your training number is made available in the Details section of your{" "}
+        <Link to="/programmes">Programme</Link> when you: (1) Sign your
+        Conditions of Joining Agreement, (2) Submit FormR (Part A & B).
+      </p>
+    </>
+  ),
+  LTFT: (
+    <p>
+      To learn more about the Less Than Full Time (LTFT) application process,
+      please look for the LTFT message in your{" "}
+      <Link to="/notifications">Notifications</Link>.
+    </p>
+  ),
+  DEFER: (
+    <p>
+      To learn more about the Deferral process, please look for the Defer
+      message in your <Link to="/notifications">Notifications</Link>.
+    </p>
+  ),
+  PLACEMENT_CONFIRMATION: (
+    <p>
+      The 'Placement Confirmation' email is sent to the email address you use to
+      sign in to TIS Self-Service.
+    </p>
+  ),
+  REVIEW_PLACEMENT: (
+    <>
+      <p>
+        When you receive the 'Placement Confirmation' email 12 weeks before your
+        start date, your Placement should be in{" "}
+        <Link to="/placements">Upcoming Placements</Link> for you to review.
+      </p>
+      <p>
+        If you do notice any discrepancies when reviewing the Placement details,
+        please contact <Link to="/support">Local Office support</Link>.
+      </p>
+    </>
+  ),
+  DAY_ONE_EMAIL: (
+    <p>
+      The 'Day One' email is sent to email address you use to sign in to TIS
+      Self-Service.
+    </p>
+  ),
+  CONNECT_RO: (
+    <p>Connecting with your RO/DB is done outside of TIS Self-Service.</p>
+  )
+};

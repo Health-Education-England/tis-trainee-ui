@@ -78,7 +78,7 @@ export function FormLinkerForm({
   };
 
   return programmesArr.length > 0 ? (
-    <div className="form-linker_form">
+    <div>
       {warningText && (
         <WarningCallout data-cy="formWarning">
           <WarningCallout.Label>Important</WarningCallout.Label>

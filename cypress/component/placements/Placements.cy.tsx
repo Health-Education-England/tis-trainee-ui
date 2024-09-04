@@ -82,6 +82,9 @@ describe("Placements with MFA set up", () => {
       </Provider>
     );
     cy.get(".nhsuk-details__summary-text").should("exist");
+    cy.get('[data-cy="subheaderDetails"]')
+      .first()
+      .should("have.text", "Details");
     cy.get("[data-cy=site0Key]")
       .first()
       .should("exist")

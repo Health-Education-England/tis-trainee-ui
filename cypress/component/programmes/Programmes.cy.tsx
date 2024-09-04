@@ -85,6 +85,7 @@ describe("Programmes with MFA set up", () => {
         </Router>
       </Provider>
     );
+    cy.get('[data-cy="subheaderDetails"]').contains("Details");
     cy.get(".nhsuk-details__summary-text").should("exist");
     cy.get("[data-cy=programmeName0Val]")
       .first()
@@ -100,13 +101,29 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2020 - 01/08/2025");
+    cy.get('[data-cy="subheaderOnboarding"]').contains("Onboarding");
+    cy.get('[data-cy="NewProgrammeOnboardingText"]').should(
+      "include.text",
+      "'New Programme' onboarding journey"
+    );
+    cy.get(
+      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
+    )
+      .should("have.attr", "href", "/programmes/2/onboarding-tracker")
+      .and("include.text", "View");
+    cy.get(
+      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > [data-cy="subheaderLtft"]'
+    ).contains("Less Than Full Time");
+    cy.get(
+      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(4) > .nhsuk-summary-list__value > a'
+    ).contains("See your LTFT notification");
+    cy.get(
+      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(5) > .nhsuk-summary-list__key > .nhsuk-label'
+    ).contains("Need a rough idea how changing your hours");
     cy.get('[data-cy="cctBtn-General Practice"]')
       .should("exist")
       .should("contain.text", "Open CCT Calculator")
       .should("have.attr", "title", "Open CCT Calculator");
-    cy.get('[data-cy="cct-prompt-label"]')
-      .should("exist")
-      .should("contain.text", "Thinking of changing your hours?");
     cy.get('[data-cy="cctBtn-General Practice"]').first().click();
     cy.get('[data-cy="cctBtn-General Practice"]').first().should("be.disabled");
     cy.get('[data-cy="cctBtn-General Practice"]').last().should("be.disabled");
