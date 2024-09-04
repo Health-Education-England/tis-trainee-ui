@@ -4,6 +4,8 @@ import { MFAType } from "../../models/MFAStatus";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 
+export type CojVersionType = "GG9" | "GG10" | "";
+
 interface IUser {
   status: string;
   tempMfa: string;
@@ -18,7 +20,7 @@ interface IUser {
   signingCojPmId: string;
   signingCoj: boolean;
   signingCojSignedDate: Date | null;
-  signingCojVersion: string;
+  signingCojVersion: CojVersionType;
   redirected: boolean;
 }
 
@@ -165,7 +167,7 @@ const userSlice = createSlice({
     updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
       return { ...state, signingCojSignedDate: action.payload };
     },
-    updatedsigningCojVersion(state, action: PayloadAction<string>) {
+    updatedsigningCojVersion(state, action: PayloadAction<CojVersionType>) {
       return { ...state, signingCojVersion: action.payload };
     },
     updatedRedirected(state, action: PayloadAction<boolean>) {

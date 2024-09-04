@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import {
+  CojVersionType,
   updatedsigningCoj,
   updatedsigningCojPmId,
   updatedsigningCojProgName,
@@ -32,7 +33,7 @@ export function ConditionsOfJoining({
       programmeMembershipId,
       programmeName,
       conditionsOfJoining.signedAt,
-      conditionsOfJoining.version
+      conditionsOfJoining.version as CojVersionType
     );
     history.push(`/programmes/${programmeMembershipId}/sign-coj`);
   };
@@ -53,7 +54,7 @@ export function ConditionsOfJoining({
             programmeMembershipId,
             programmeName,
             conditionsOfJoining.signedAt,
-            conditionsOfJoining.version
+            conditionsOfJoining.version as CojVersionType
           )
         }
         data-cy={`cojViewBtn-${programmeMembershipId}`}
@@ -81,7 +82,7 @@ function setCojState(
   programmeMembershipId: string,
   programmeName: string,
   signedDate: Date | null,
-  version: string
+  version: CojVersionType
 ) {
   store.dispatch(updatedsigningCojProgName(programmeName));
   store.dispatch(updatedsigningCojPmId(programmeMembershipId));

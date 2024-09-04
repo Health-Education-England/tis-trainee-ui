@@ -25,6 +25,36 @@ const acceptanceValidation = Yup.bool()
   .oneOf([true], "Please confirm your acceptance")
   .required("Please confirm your acceptance");
 
+const defaultInitialValues = {
+  isDeclareProvisional: "",
+  isDeclareSatisfy: "",
+  isDeclareProvide: "",
+  isDeclareInform: "",
+  isDeclareUpToDate: "",
+  isDeclareAttend: "",
+  isDeclareEngage: ""
+};
+
+const v10InitialValues = {
+  ...defaultInitialValues,
+  isDeclareContacted: ""
+};
+
+const defaultValidationSchema = Yup.object({
+  isDeclareProvisional: acceptanceValidation,
+  isDeclareSatisfy: acceptanceValidation,
+  isDeclareProvide: acceptanceValidation,
+  isDeclareInform: acceptanceValidation,
+  isDeclareUpToDate: acceptanceValidation,
+  isDeclareAttend: acceptanceValidation,
+  isDeclareEngage: acceptanceValidation
+});
+
+const v10ValidationSchema = Yup.object({
+  ...defaultValidationSchema.fields,
+  isDeclareContacted: acceptanceValidation
+});
+
 export default function CojView() {
   const {
     signingCojProgName: progName,
@@ -35,230 +65,126 @@ export default function CojView() {
 
   if (!signingCoj) return <Redirect to="/programmes" />;
 
-  return progName ? (
+  return progName && signingCojVersion !== "" ? (
     <>
       {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
       <ScrollTo />
-      <CojVersion progName={progName} version={signingCojVersion} />
       {signingCojVersion === "GG9" && (
-        <CojDeclarationSection9 signedDate={signedDate} />
+        <>
+          <CojGg9 progName={progName} />
+          <CojDeclarationSection
+            signedDate={signedDate}
+            initialValues={defaultInitialValues}
+            validationSchema={defaultValidationSchema}
+            declarations={COJ_DECLARATIONS_9}
+          />
+        </>
       )}
       {signingCojVersion === "GG10" && (
-        <CojDeclarationSection10 signedDate={signedDate} />
+        <>
+          <CojGg10 progName={progName} />
+          <CojDeclarationSection
+            signedDate={signedDate}
+            initialValues={v10InitialValues}
+            validationSchema={v10ValidationSchema}
+            declarations={COJ_DECLARATIONS_10}
+          />
+        </>
       )}
     </>
   ) : null;
 }
 
-function CojDeclarationSection9({
-  signedDate
-}: Readonly<{ signedDate: Date | null }>) {
-  return (
-    <Formik
-      initialValues={{
-        isDeclareProvisional: "",
-        isDeclareSatisfy: "",
-        isDeclareProvide: "",
-        isDeclareInform: "",
-        isDeclareUpToDate: "",
-        isDeclareAttend: "",
-        isDeclareEngage: ""
-      }}
-      validationSchema={Yup.object({
-        isDeclareProvisional: acceptanceValidation,
-        isDeclareSatisfy: acceptanceValidation,
-        isDeclareProvide: acceptanceValidation,
-        isDeclareInform: acceptanceValidation,
-        isDeclareUpToDate: acceptanceValidation,
-        isDeclareAttend: acceptanceValidation,
-        isDeclareEngage: acceptanceValidation
-      })}
-      onSubmit={async _values => {
-        const signingCojPmId = store.getState().user.signingCojPmId;
-        await store.dispatch(signCoj(signingCojPmId));
-        store.dispatch(updatedsigningCoj(false));
-        store.dispatch(updatedTraineeProfileStatus("idle"));
-        history.push("/programmes");
-      }}
-    >
-      {({ handleSubmit, isValid, isSubmitting }) => (
-        <>
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                In addition, I acknowledge the following specific information
-                requirements:
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          {COJ_DECLARATIONS_9.map(declaration => (
-            <MultiChoiceInputField
-              key={declaration.id}
-              id={declaration.id}
-              type="checkbox"
-              name={declaration.id}
-              canEdit={!signedDate}
-              checked={!!signedDate}
-              items={[
-                {
-                  label: declaration.label,
-                  value: true
-                }
-              ]}
-            />
-          ))}
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                I acknowledge the importance of these responsibilities and
-                understand that they are requirements for maintaining my
-                registration with the Postgraduate Dean. If I fail to meet them,
-                I understand that my training number/contract may be withdrawn
-                by the Postgraduate Dean.
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                I understand that this document does not constitute an offer of
-                employment.
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          {signedDate ? (
-            <SummaryList noBorder>
-              <SummaryList.Row>
-                <SummaryList.Value data-cy="cojSignedOn">
-                  Signed On: {DateUtilities.ConvertToLondonTime(signedDate)}
-                </SummaryList.Value>
-              </SummaryList.Row>
-            </SummaryList>
-          ) : (
-            <Button
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSubmit();
-              }}
-              disabled={!isValid || isSubmitting}
-              data-cy="cojSignBtn"
-            >
-              Click to sign Conditions of Joining agreement
-            </Button>
-          )}
-        </>
-      )}
-    </Formik>
-  );
-}
-
-function CojDeclarationSection10({
-  signedDate
-}: Readonly<{ signedDate: Date | null }>) {
-  return (
-    <Formik
-      initialValues={{
-        isDeclareProvisional: "",
-        isDeclareSatisfy: "",
-        isDeclareProvide: "",
-        isDeclareInform: "",
-        isDeclareUpToDate: "",
-        isDeclareAttend: "",
-        isDeclareContacted: "",
-        isDeclareEngage: ""
-      }}
-      validationSchema={Yup.object({
-        isDeclareProvisional: acceptanceValidation,
-        isDeclareSatisfy: acceptanceValidation,
-        isDeclareProvide: acceptanceValidation,
-        isDeclareInform: acceptanceValidation,
-        isDeclareUpToDate: acceptanceValidation,
-        isDeclareAttend: acceptanceValidation,
-        isDeclareContacted: acceptanceValidation,
-        isDeclareEngage: acceptanceValidation
-      })}
-      onSubmit={async _values => {
-        const signingCojPmId = store.getState().user.signingCojPmId;
-        await store.dispatch(signCoj(signingCojPmId));
-        store.dispatch(updatedsigningCoj(false));
-        store.dispatch(updatedTraineeProfileStatus("idle"));
-        history.push("/programmes");
-      }}
-    >
-      {({ handleSubmit, isValid, isSubmitting }) => (
-        <>
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                In addition, I acknowledge the following specific information
-                requirements:
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          {COJ_DECLARATIONS_10.map(declaration => (
-            <MultiChoiceInputField
-              key={declaration.id}
-              id={declaration.id}
-              type="checkbox"
-              name={declaration.id}
-              canEdit={!signedDate}
-              checked={!!signedDate}
-              items={[
-                {
-                  label: declaration.label,
-                  value: true
-                }
-              ]}
-            />
-          ))}
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                I acknowledge the importance of these responsibilities and
-                understand that they are requirements for maintaining my
-                registration with the Postgraduate Dean. If I fail to meet them,
-                I understand that my training number/contract may be withdrawn
-                by the Postgraduate Dean.
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                I understand that this document does not constitute an offer of
-                employment.
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          {signedDate ? (
-            <SummaryList noBorder>
-              <SummaryList.Row>
-                <SummaryList.Value data-cy="cojSignedOn">
-                  Signed On: {DateUtilities.ConvertToLondonTime(signedDate)}
-                </SummaryList.Value>
-              </SummaryList.Row>
-            </SummaryList>
-          ) : (
-            <Button
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSubmit();
-              }}
-              disabled={!isValid || isSubmitting}
-              data-cy="cojSignBtn"
-            >
-              Click to sign Conditions of Joining agreement
-            </Button>
-          )}
-        </>
-      )}
-    </Formik>
-  );
-}
-
-type COJversionType = {
-  progName: string;
-  version: string;
+type CojDeclarationSectionProps = {
+  signedDate: Date | null;
+  initialValues: Record<string, string>;
+  validationSchema: Yup.ObjectSchema<any>;
+  declarations: { id: string; label: string }[];
 };
-function CojVersion({ progName, version }: Readonly<COJversionType>) {
-  if (version === "GG9") {
-    return <CojGg9 progName={progName} />;
-  }
-  return <CojGg10 progName={progName} />;
+
+function CojDeclarationSection({
+  signedDate,
+  initialValues,
+  validationSchema,
+  declarations
+}: Readonly<CojDeclarationSectionProps>) {
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={async _values => {
+        const signingCojPmId = store.getState().user.signingCojPmId;
+        await store.dispatch(signCoj(signingCojPmId));
+        store.dispatch(updatedsigningCoj(false));
+        store.dispatch(updatedTraineeProfileStatus("idle"));
+        history.push("/programmes");
+      }}
+    >
+      {({ handleSubmit, isValid, isSubmitting }) => (
+        <>
+          <SummaryList noBorder>
+            <SummaryList.Row>
+              <SummaryList.Value>
+                In addition, I acknowledge the following specific information
+                requirements:
+              </SummaryList.Value>
+            </SummaryList.Row>
+          </SummaryList>
+          {declarations.map(declaration => (
+            <MultiChoiceInputField
+              key={declaration.id}
+              id={declaration.id}
+              type="checkbox"
+              name={declaration.id}
+              canEdit={!signedDate}
+              checked={!!signedDate}
+              items={[
+                {
+                  label: declaration.label,
+                  value: true
+                }
+              ]}
+            />
+          ))}
+          <SummaryList noBorder>
+            <SummaryList.Row>
+              <SummaryList.Value>
+                I acknowledge the importance of these responsibilities and
+                understand that they are requirements for maintaining my
+                registration with the Postgraduate Dean. If I fail to meet them,
+                I understand that my training number/contract may be withdrawn
+                by the Postgraduate Dean.
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Value>
+                I understand that this document does not constitute an offer of
+                employment.
+              </SummaryList.Value>
+            </SummaryList.Row>
+          </SummaryList>
+          {signedDate ? (
+            <SummaryList noBorder>
+              <SummaryList.Row>
+                <SummaryList.Value data-cy="cojSignedOn">
+                  Signed On: {DateUtilities.ConvertToLondonTime(signedDate)}
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
+          ) : (
+            <Button
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+              disabled={!isValid || isSubmitting}
+              data-cy="cojSignBtn"
+            >
+              Click to sign Conditions of Joining agreement
+            </Button>
+          )}
+        </>
+      )}
+    </Formik>
+  );
 }
