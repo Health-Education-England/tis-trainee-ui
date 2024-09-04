@@ -427,7 +427,7 @@ export const onboardingTrackerInfoText = {
   SIGN_COJ: (
     <>
       <p>
-        You can sign/ view the signed Conditions of Joining Agreement via the
+        You can sign / view the signed Conditions of Joining Agreement via the
         link in the Details section of your{" "}
         <Link to="/programmes">Programme</Link>.
       </p>
@@ -485,7 +485,7 @@ export const onboardingTrackerInfoText = {
       <p>
         When you receive the 'Placement Confirmation' email 12 weeks before your
         start date, your Placement should be in{" "}
-        <Link to="/placements">Upcoming Placements</Link> for you to review.{" "}
+        <Link to="/placements">Upcoming Placements</Link> for you to review.
       </p>
       <p>
         If you do notice any discrepancies when reviewing the Placement details,
