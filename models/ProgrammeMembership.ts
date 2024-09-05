@@ -1,6 +1,7 @@
 import { Signature } from "./Dsp";
 import { Status } from "./Status";
 import { IDateBoxed } from "./IDateBoxed";
+import { CojVersionType } from "../redux/slices/userSlice";
 
 export interface ProgrammeMembership extends IDateBoxed {
   programmeTisId?: string;
@@ -19,7 +20,7 @@ export interface ProgrammeMembership extends IDateBoxed {
 
 export interface ConditionsOfJoining {
   signedAt: Date | null;
-  version: string;
+  version: CojVersionType;
 }
 
 export interface Curriculum {

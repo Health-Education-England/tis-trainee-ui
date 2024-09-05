@@ -58,6 +58,7 @@ describe("CojUtilities", () => {
       expect(CojUtilities.getVersionText("GG7")).toEqual("Gold Guide 7");
       expect(CojUtilities.getVersionText("GG8")).toEqual("Gold Guide 8");
       expect(CojUtilities.getVersionText("GG9")).toEqual("Gold Guide 9");
+      expect(CojUtilities.getVersionText("GG10")).toEqual("Gold Guide 10");
     });
 
     it("should return formatted Gold Guide version when GGxx format", () => {
@@ -107,9 +108,7 @@ describe("CojUtilities", () => {
 
       jest.setSystemTime(currentDate);
 
-      expect(
-        CojUtilities.canAnyBeSigned([signed, preCojEpoch])
-      ).toEqual(false);
+      expect(CojUtilities.canAnyBeSigned([signed, preCojEpoch])).toEqual(false);
     });
 
     it("should return true when a programme membership is post-coj epoch", () => {
@@ -120,12 +119,10 @@ describe("CojUtilities", () => {
         ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
-      
+
       jest.setSystemTime(currentDate);
 
-      expect(
-        CojUtilities.canAnyBeSigned([signed, postCojEpoch])
-      ).toEqual(true);
+      expect(CojUtilities.canAnyBeSigned([signed, postCojEpoch])).toEqual(true);
     });
 
     it("should return true when all programme memberships can be signed", () => {
@@ -135,12 +132,12 @@ describe("CojUtilities", () => {
         ...mockProgrammeMembershipCojNotSigned[0],
         startDate: new Date(POST_COJ_EPOCH)
       };
-      
+
       jest.setSystemTime(currentDate);
 
-      expect(
-        CojUtilities.canAnyBeSigned([postCojEpoch, postCojEpoch])
-      ).toEqual(true);
+      expect(CojUtilities.canAnyBeSigned([postCojEpoch, postCojEpoch])).toEqual(
+        true
+      );
     });
   });
 });

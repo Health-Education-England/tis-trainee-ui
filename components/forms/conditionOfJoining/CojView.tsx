@@ -8,60 +8,108 @@ import store from "../../../redux/store/store";
 import history from "../../navigation/history";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
-import CojGg9 from "./CojGg9";
 import * as Yup from "yup";
 import { Redirect } from "react-router-dom";
 import { updatedsigningCoj } from "../../../redux/slices/userSlice";
-import { COJ_DECLARATIONS } from "../../../utilities/Constants";
+import {
+  COJ_DECLARATIONS_10,
+  COJ_DECLARATIONS_9
+} from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
+import CojGg10 from "./CojGg10";
+import CojGg9 from "./CojGg9";
 
+// set intiial values
+const initialValuesDefault = {
+  isDeclareProvisional: "",
+  isDeclareSatisfy: "",
+  isDeclareProvide: "",
+  isDeclareInform: "",
+  isDeclareUpToDate: "",
+  isDeclareAttend: "",
+  isDeclareEngage: ""
+};
+const initialValues10 = {
+  ...initialValuesDefault,
+  isDeclareContacted: ""
+};
+
+// set validation schema
 const acceptanceValidation = Yup.bool()
   .nullable()
   .oneOf([true], "Please confirm your acceptance")
   .required("Please confirm your acceptance");
+const validationSchemaDefault = Yup.object({
+  isDeclareProvisional: acceptanceValidation,
+  isDeclareSatisfy: acceptanceValidation,
+  isDeclareProvide: acceptanceValidation,
+  isDeclareInform: acceptanceValidation,
+  isDeclareUpToDate: acceptanceValidation,
+  isDeclareAttend: acceptanceValidation,
+  isDeclareEngage: acceptanceValidation
+});
+const validationSchema10 = Yup.object({
+  ...validationSchemaDefault.fields,
+  isDeclareContacted: acceptanceValidation
+});
 
 export default function CojView() {
   const {
     signingCojProgName: progName,
     signingCojSignedDate: signedDate,
-    signingCoj
+    signingCoj,
+    signingCojVersion
   } = store.getState().user;
 
   if (!signingCoj) return <Redirect to="/programmes" />;
-  return progName ? (
+
+  return progName && signingCojVersion !== "" ? (
     <>
       {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
       <ScrollTo />
-      <CojVersion progName={progName} />
-      <CojDeclarationSection signedDate={signedDate} />
+      {signingCojVersion === "GG9" && (
+        <>
+          <CojGg9 progName={progName} />
+          <CojDeclarationSection
+            signedDate={signedDate}
+            initialValues={initialValuesDefault}
+            validationSchema={validationSchemaDefault}
+            declarations={COJ_DECLARATIONS_9}
+          />
+        </>
+      )}
+      {signingCojVersion === "GG10" && (
+        <>
+          <CojGg10 progName={progName} />
+          <CojDeclarationSection
+            signedDate={signedDate}
+            initialValues={initialValues10}
+            validationSchema={validationSchema10}
+            declarations={COJ_DECLARATIONS_10}
+          />
+        </>
+      )}
     </>
   ) : null;
 }
 
+type CojDeclarationSectionProps = {
+  signedDate: Date | null;
+  initialValues: Record<string, string>;
+  validationSchema: Yup.ObjectSchema<any>;
+  declarations: { id: string; label: string }[];
+};
 function CojDeclarationSection({
-  signedDate
-}: Readonly<{ signedDate: Date | null }>) {
+  signedDate,
+  initialValues,
+  validationSchema,
+  declarations
+}: Readonly<CojDeclarationSectionProps>) {
   return (
     <Formik
-      initialValues={{
-        isDeclareProvisional: "",
-        isDeclareSatisfy: "",
-        isDeclareProvide: "",
-        isDeclareInform: "",
-        isDeclareUpToDate: "",
-        isDeclareAttend: "",
-        isDeclareEngage: ""
-      }}
-      validationSchema={Yup.object({
-        isDeclareProvisional: acceptanceValidation,
-        isDeclareSatisfy: acceptanceValidation,
-        isDeclareProvide: acceptanceValidation,
-        isDeclareInform: acceptanceValidation,
-        isDeclareUpToDate: acceptanceValidation,
-        isDeclareAttend: acceptanceValidation,
-        isDeclareEngage: acceptanceValidation
-      })}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={async _values => {
         const signingCojPmId = store.getState().user.signingCojPmId;
         await store.dispatch(signCoj(signingCojPmId));
@@ -80,7 +128,7 @@ function CojDeclarationSection({
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
-          {COJ_DECLARATIONS.map(declaration => (
+          {declarations.map(declaration => (
             <MultiChoiceInputField
               key={declaration.id}
               id={declaration.id}
@@ -137,11 +185,4 @@ function CojDeclarationSection({
       )}
     </Formik>
   );
-}
-
-type COJversionType = {
-  progName: string;
-};
-function CojVersion({ progName }: Readonly<COJversionType>) {
-  return <CojGg9 progName={progName} />;
 }

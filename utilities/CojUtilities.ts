@@ -1,4 +1,5 @@
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { CojVersionType } from "../redux/slices/userSlice";
 import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
 
 export class CojUtilities {
@@ -16,7 +17,7 @@ export class CojUtilities {
     }
   }
 
-  public static getVersionText(version: string) {
+  public static getVersionText(version: CojVersionType) {
     const regex = new RegExp(GOLD_GUIDE_VERSION_REGEX);
     const matcher = regex.exec(version);
     return matcher ? `Gold Guide ${matcher[1]}` : "Unknown";
