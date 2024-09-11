@@ -64,7 +64,7 @@ export default function CojView() {
 
   if (!signingCoj) return <Redirect to="/programmes" />;
 
-  return progName && signingCojVersion !== "" ? (
+  return progName ? (
     <>
       {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
       <ScrollTo />
