@@ -13,6 +13,7 @@ import {
   yesterday
 } from "../utilities/DateUtilities";
 import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
+import { CojVersionType } from "../redux/slices/userSlice";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -34,7 +35,7 @@ export const mockPersonalDetails: PersonalDetails = {
   address3: "London",
   address4: "",
   postCode: "WC1B 5DN",
-  gmcNumber: "11111111",
+  gmcNumber: "1111111",
   gmcStatus: "",
   gdcNumber: "",
   gdcStatus: "",
@@ -63,7 +64,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     tisId: "1",
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
-    trainingNumber: "EOE/ABC-123/11111111/C",
+    trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
     responsibleOfficer: {
       firstName: "Hugh",
@@ -96,7 +97,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   {
@@ -106,7 +107,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     tisId: "2",
     programmeName: "General Practice",
     programmeNumber: "EOE8950",
-    trainingNumber: "EOE/XYZ-789/11111111/C",
+    trainingNumber: "EOE/XYZ-789/1111111/C",
     managingDeanery: "East of England",
     responsibleOfficer: {
       firstName: "Hugh",
@@ -139,7 +140,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   }
 ];
@@ -152,7 +153,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     tisId: "1",
     programmeName: "Past",
     programmeNumber: "EOE8945",
-    trainingNumber: "EOE/ABC-123/11111111/C",
+    trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
     curricula: [
       {
@@ -165,7 +166,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   // Current
@@ -175,7 +176,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     tisId: "2",
     programmeName: "Current",
     programmeNumber: "EOE8945",
-    trainingNumber: "EOE/ABC-123/11111111/C",
+    trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
     curricula: [
       {
@@ -188,7 +189,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   // Upcoming
@@ -198,7 +199,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     tisId: "3",
     programmeName: "Upcoming",
     programmeNumber: "EOE8945",
-    trainingNumber: "EOE/ABC-123/11111111/C",
+    trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
     curricula: [
       {
@@ -211,7 +212,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   // Future
@@ -221,7 +222,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     tisId: "4",
     programmeName: "Future",
     programmeNumber: "EOE8945",
-    trainingNumber: "EOE/ABC-123/11111111/C",
+    trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
     curricula: [
       {
@@ -234,9 +235,9 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
-  },
+  }
 ];
 
 export const mockProgrammeMembershipNonTemplatedField = {
@@ -253,7 +254,7 @@ export const mockProgrammeMembershipNonTemplatedField = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG8"
+    version: "GG9"
   },
   nonTemplatedField: "nonTemplatedField"
 };
@@ -272,7 +273,7 @@ export const mockProgrammeMembershipNoCurricula = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG8"
+    version: "GG9"
   }
 };
 
@@ -312,7 +313,7 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
   ],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG8"
+    version: "GG9"
   }
 };
 
@@ -352,7 +353,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   ],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG8"
+    version: "GG9"
   }
 };
 
@@ -371,7 +372,7 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: new Date("2010-10-14"),
-    version: "GG8"
+    version: "GG9"
   }
 };
 
@@ -391,7 +392,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   {
@@ -409,7 +410,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   }
 ];
@@ -430,7 +431,7 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   },
   {
@@ -448,7 +449,7 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG8"
+      version: "GG9"
     }
   }
 ];
@@ -466,7 +467,7 @@ export const mockProgrammeMembershipNoResponsibleOfficer: ProgrammeMembership[] 
       curricula: [],
       conditionsOfJoining: {
         signedAt: null,
-        version: "GG8"
+        version: "GG9"
       }
     },
     {
@@ -480,7 +481,7 @@ export const mockProgrammeMembershipNoResponsibleOfficer: ProgrammeMembership[] 
       curricula: [],
       conditionsOfJoining: {
         signedAt: null,
-        version: "GG8"
+        version: "GG9"
       }
     }
   ];

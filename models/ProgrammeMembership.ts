@@ -51,6 +51,6 @@ export const programmePanelTemplate: ProgrammeMembership = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
-    version: ""
+    version: "GG10"
   }
 };

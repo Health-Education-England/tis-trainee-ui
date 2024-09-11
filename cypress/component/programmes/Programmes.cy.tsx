@@ -94,7 +94,7 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=ST6]").should("exist");
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
-      .should("contain.text", "EOE/ABC-123/11111111/C");
+      .should("contain.text", "EOE/ABC-123/1111111/C");
     cy.get("[data-cy=responsibleOfficer0Val]")
       .should("exist")
       .should("contain.text", "Hugh Rangel");

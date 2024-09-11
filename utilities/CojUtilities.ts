@@ -1,6 +1,6 @@
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { CojVersionType } from "../redux/slices/userSlice";
-import { COJ_EPOCH, GOLD_GUIDE_VERSION_REGEX } from "./Constants";
+import { COJ_EPOCH } from "./Constants";
 
 export class CojUtilities {
   public static getStatusText(startDate: string | null) {
@@ -18,9 +18,7 @@ export class CojUtilities {
   }
 
   public static getVersionText(version: CojVersionType) {
-    const regex = new RegExp(GOLD_GUIDE_VERSION_REGEX);
-    const matcher = regex.exec(version);
-    return matcher ? `Gold Guide ${matcher[1]}` : "Unknown";
+    return `Gold Guide ${version.substring(2)}`;
   }
 
   public static canAnyBeSigned(

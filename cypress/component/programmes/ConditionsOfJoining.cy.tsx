@@ -14,7 +14,7 @@ describe("ConditionsOfJoining", () => {
   describe("when COJ signed", () => {
     const conditionsOfJoining = {
       signedAt: COJ_EPOCH,
-      version: "GG8"
+      version: "GG9"
     } as ConditionsOfJoiningModel;
 
     it("should only display signed COJ fields", () => {
@@ -55,31 +55,14 @@ describe("ConditionsOfJoining", () => {
 
       cy.get("[data-cy=cojSignedVersion]")
         .should("exist")
-        .and("have.text", "Version: Gold Guide 8");
-    });
-
-    it("should display unknown version when not GGxx format", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={{ ...conditionsOfJoining, version: "v123" }}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=cojSignedVersion]")
-        .should("exist")
-        .and("have.text", "Version: Unknown");
+        .and("have.text", "Version: Gold Guide 9");
     });
   });
 
   describe("when COJ not signed", () => {
     const conditionsOfJoining = {
       signedAt: null,
-      version: "GG8"
+      version: "GG10"
     } as ConditionsOfJoiningModel;
 
     it("should display unsigned COJ fields", () => {
