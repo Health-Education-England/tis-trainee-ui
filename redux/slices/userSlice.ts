@@ -4,7 +4,7 @@ import { MFAType } from "../../models/MFAStatus";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 
-export type CojVersionType = "GG8" | "GG9" | "GG10" | "";
+export type CojVersionType = "GG9" | "GG10";
 
 interface IUser {
   status: string;
@@ -38,7 +38,7 @@ const initialState: IUser = {
   signingCojPmId: "",
   signingCoj: false,
   signingCojSignedDate: null,
-  signingCojVersion: "",
+  signingCojVersion: "GG10",
   redirected: false
 };
 

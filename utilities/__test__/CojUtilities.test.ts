@@ -48,30 +48,8 @@ describe("CojUtilities", () => {
 
   describe("getVersionText", () => {
     it("should return formatted Gold Guide version when GGx format", () => {
-      expect(CojUtilities.getVersionText("GG0")).toEqual("Gold Guide 0");
-      expect(CojUtilities.getVersionText("GG1")).toEqual("Gold Guide 1");
-      expect(CojUtilities.getVersionText("GG2")).toEqual("Gold Guide 2");
-      expect(CojUtilities.getVersionText("GG3")).toEqual("Gold Guide 3");
-      expect(CojUtilities.getVersionText("GG4")).toEqual("Gold Guide 4");
-      expect(CojUtilities.getVersionText("GG5")).toEqual("Gold Guide 5");
-      expect(CojUtilities.getVersionText("GG6")).toEqual("Gold Guide 6");
-      expect(CojUtilities.getVersionText("GG7")).toEqual("Gold Guide 7");
-      expect(CojUtilities.getVersionText("GG8")).toEqual("Gold Guide 8");
       expect(CojUtilities.getVersionText("GG9")).toEqual("Gold Guide 9");
       expect(CojUtilities.getVersionText("GG10")).toEqual("Gold Guide 10");
-    });
-
-    it("should return formatted Gold Guide version when GGxx format", () => {
-      expect(CojUtilities.getVersionText("GG12")).toEqual("Gold Guide 12");
-    });
-
-    it("should return unknown when incorrect format", () => {
-      expect(CojUtilities.getVersionText("prefixGG1")).toEqual("Unknown");
-      expect(CojUtilities.getVersionText("GG1suffix")).toEqual("Unknown");
-      expect(CojUtilities.getVersionText("prefixGG1suffix")).toEqual("Unknown");
-      expect(CojUtilities.getVersionText("GG")).toEqual("Unknown");
-      expect(CojUtilities.getVersionText("abc")).toEqual("Unknown");
-      expect(CojUtilities.getVersionText("123")).toEqual("Unknown");
     });
   });
 
@@ -153,7 +131,7 @@ describe("CojUtilities (for Action Summary and Alert) - unsignedCojs", () => {
       CojUtilities.unsignedCojs([
         {
           ...mockProgrammeMembershipCojSigned,
-          conditionsOfJoining: { signedAt: new Date(), version: "GG1" }
+          conditionsOfJoining: { signedAt: new Date(), version: "GG10" }
         }
       ])
     ).toEqual([]);

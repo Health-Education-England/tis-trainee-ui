@@ -15,10 +15,10 @@ const GMC_NUMBER = "1234567";
 const GDC_NUMBER = "12345";
 
 describe("TrainingNumber", () => {
-  const conditionsOfJoining = {
+  const conditionsOfJoining: ConditionsOfJoiningModel = {
     signedAt: COJ_EPOCH,
-    version: "GG8"
-  } as ConditionsOfJoiningModel;
+    version: "GG9"
+  };
 
   beforeEach(() => {
     store.dispatch(updatedFormAList(mockFormList));
@@ -26,10 +26,10 @@ describe("TrainingNumber", () => {
   });
 
   it("should display 'Not Available' when no training number and actions not complete", () => {
-    const conditionsOfJoining = {
+    const conditionsOfJoining: ConditionsOfJoiningModel = {
       signedAt: null,
-      version: "GG8"
-    } as ConditionsOfJoiningModel;
+      version: "GG9"
+    };
 
     store.dispatch(updatedFormAList([]));
     store.dispatch(updatedFormBList([]));
@@ -54,10 +54,10 @@ describe("TrainingNumber", () => {
   });
 
   it("should require Conditions of Joining when not signed and start date after COJ epoch", () => {
-    const conditionsOfJoining = {
+    const conditionsOfJoining: ConditionsOfJoiningModel = {
       signedAt: null,
-      version: "GG8"
-    } as ConditionsOfJoiningModel;
+      version: "GG9"
+    };
 
     mount(
       <Provider store={store}>
@@ -79,10 +79,10 @@ describe("TrainingNumber", () => {
   });
 
   it("should not require Conditions of Joining when not signed and start date before COJ epoch", () => {
-    const conditionsOfJoining = {
+    const conditionsOfJoining: ConditionsOfJoiningModel = {
       signedAt: null,
-      version: "GG8"
-    } as ConditionsOfJoiningModel;
+      version: "GG9"
+    };
 
     mount(
       <Provider store={store}>
