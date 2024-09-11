@@ -226,7 +226,7 @@ describe("TrainingNumber", () => {
             startDate={COJ_EPOCH.toISOString()}
             trainingNumber={TRAINING_NUMBER}
             gmcNumber={"abc1234"} //non-numeric characters
-            gdcNumber={"123456"}  //too long
+            gdcNumber={"123456"} //too long
           ></TrainingNumber>
         </BrowserRouter>
       </Provider>

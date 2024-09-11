@@ -276,8 +276,14 @@ function displayTheCorrectListItem(
           conditionsOfJoining={panel["conditionsOfJoining"]}
           startDate={panel["startDate"]}
           trainingNumber={panel[panelProp]}
-          gmcNumber={store.getState().traineeProfile.traineeProfileData.personalDetails.gmcNumber}
-          gdcNumber={store.getState().traineeProfile.traineeProfileData.personalDetails.gdcNumber}
+          gmcNumber={
+            store.getState().traineeProfile.traineeProfileData.personalDetails
+              .gmcNumber
+          }
+          gdcNumber={
+            store.getState().traineeProfile.traineeProfileData.personalDetails
+              .gdcNumber
+          }
         />
       );
     case "otherSites":

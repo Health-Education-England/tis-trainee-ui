@@ -28,12 +28,17 @@ export function TrainingNumber({
 
   const requiresFormRA = noSubFormRA || infoActionsA.isForInfoYearPlusSubForm;
   const requiresFormRB = noSubFormRB || infoActionsB.isForInfoYearPlusSubForm;
-  const requiresGmc = gmcNumber == null || gmcNumber == undefined || ! /^\d{7}$/.test(gmcNumber);
-  const requiresGdc = gdcNumber == null || gdcNumber == undefined || ! /^\d{5}$/.test(gdcNumber);
+  const requiresGmc =
+    gmcNumber == null || gmcNumber == undefined || !/^\d{7}$/.test(gmcNumber);
+  const requiresGdc =
+    gdcNumber == null || gdcNumber == undefined || !/^\d{5}$/.test(gdcNumber);
   const requiresGmcOrGdc = requiresGmc && requiresGdc;
 
   return !trainingNumber ||
-    (!requiresCoj && !requiresFormRA && !requiresFormRB && !requiresGmcOrGdc) ? (
+    (!requiresCoj &&
+      !requiresFormRA &&
+      !requiresFormRB &&
+      !requiresGmcOrGdc) ? (
     <div data-cy="trainingNumberText">{trainingNumber ?? "Not Available"}</div>
   ) : (
     <div>
@@ -42,7 +47,9 @@ export function TrainingNumber({
         {requiresCoj && <li data-cy="requireCoj">Conditions of Joining</li>}
         {requiresFormRA && <li data-cy="requireFormRA">Form R Part A</li>}
         {requiresFormRB && <li data-cy="requireFormRB">Form R Part B</li>}
-        {requiresGmcOrGdc && <li data-cy="requireGmcOrGdc">Personal GMC/GDC no.</li>}
+        {requiresGmcOrGdc && (
+          <li data-cy="requireGmcOrGdc">Personal GMC/GDC no.</li>
+        )}
       </ul>
     </div>
   );
