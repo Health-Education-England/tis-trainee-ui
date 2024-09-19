@@ -20,10 +20,9 @@ interface Props {
   onBlur?: any;
   isNumberField?: boolean;
   isTotal?: boolean;
-  maxLength?: number;
 }
 
-const TextInputField: FunctionComponent<Props> = props => {
+const GmcNumberField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
   const setFieldWidth = (valueLength: number | undefined) => {
@@ -49,7 +48,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         onBlur={field.onBlur}
         onChange={field.onChange}
         value={field.value ?? ""}
-        maxLength={props.maxLength ?? (isNumberField ? 4 : 4096)}
+        maxLength={isNumberField ? 4 : 4096}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"
@@ -62,7 +61,7 @@ const TextInputField: FunctionComponent<Props> = props => {
   );
 };
 
-export default connect(TextInputField);
+export default connect(GmcNumberField);
 
 function handleNumberInput(
   isNumberField: boolean | undefined,

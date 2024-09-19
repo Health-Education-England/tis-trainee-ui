@@ -892,7 +892,7 @@ ol[type="a"] {
   color: $nhsEmergency;
   font-size: 1rem;
 }
-.cct-dialog {
+.cct-dialog, .gmc-dialog {
   z-index: 1000;
   background-color: whitesmoke;
   position: relative;
@@ -934,14 +934,14 @@ ol[type="a"] {
   cursor: default;
 }
 
-#cct-btns {
+#cct-btns, #gmc-btns {
   display: flex;
   justify-content: space-between;
   margin: 1rem 0;
 }
 
 // CctBtn.tsx
-#cct-card {
+#cct-card, #gmc-card {
   background-color: #fafbfd;
 }
 

@@ -25,8 +25,21 @@ export function GmcForm({
 }: Readonly<GmcFormProps>) {
   const validationSchema = Yup.object().shape({
     gmcNumber: Yup.string()
-      .length(7, "GMC number must be 7 digits")
+      .nullable()
       .required("GMC number is required.")
+      .test(
+        "is-unknown-or-7-digit-number",
+        "GMC must be a 7-digit number or UNKNOWN",
+        value => {
+          if (value && value !== null && value !== "") {
+            if (value.toUpperCase() === "UNKNOWN") {
+              return true;
+            }
+            return /^\d{7}$/.test(value);
+          }
+          return false;
+        }
+      )
   });
 
   return (
@@ -42,10 +55,13 @@ export function GmcForm({
       {({ values, errors, setFieldValue, dirty, isValid }) => (
         <Form>
           <TextInputField
-            label="GMC number"
+            label="Provide your 7-digit GMC number"
             type="string"
-            name="propGmcNumber"
+            name="gmcNumber"
             width={10}
+            hint="Use 'UNKNOWN' if you don't have this yet"
+            placeholder={currentGmcNumber}
+            maxLength={7}
           />
           <div id="gmc-btns">
             <Button
