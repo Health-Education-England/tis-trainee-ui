@@ -11,6 +11,9 @@ import { PersonalDetails } from "../../models/PersonalDetails";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
+import { GmcLink } from "./GmcLink";
+
+const editableFieldLabel = "General Medical Council (GMC)";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -55,7 +58,7 @@ const Profile = () => {
 
   const registrationDetails: KeyValue[] = [
     {
-      label: "General Medical Council (GMC)",
+      label: editableFieldLabel,
       value: gmcNumber
     },
     {
@@ -111,11 +114,13 @@ const Profile = () => {
             {forenames && `${forenames} `}
             {surname}
           </SummaryList.Value>
+          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         {personalData?.map(pd => (
           <SummaryList.Row key={pd.label} data-cy={pd.label}>
             <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
             <SummaryList.Value data-cy={pd.value}>{pd.value}</SummaryList.Value>
+            <SummaryList.Actions></SummaryList.Actions>
           </SummaryList.Row>
         ))}
 
@@ -127,6 +132,7 @@ const Profile = () => {
             <p>{address3}</p>
             <p data-cy="postCode">{postCode}</p>
           </SummaryList.Value>
+          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
           Registration details
@@ -137,6 +143,14 @@ const Profile = () => {
               <SummaryList.Row key={rd.label} data-cy={rd.label}>
                 <SummaryList.Key>{rd.label}</SummaryList.Key>
                 <SummaryList.Value>{rd.value}</SummaryList.Value>
+                <SummaryList.Actions>
+                  {rd.label === editableFieldLabel && (
+                    <GmcLink
+                    data-cy={`gmcLink-}`}
+                    gmcNumber={rd.value}
+                  />
+                  )}
+                </SummaryList.Actions>
               </SummaryList.Row>
             )
         )}

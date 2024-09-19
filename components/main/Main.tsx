@@ -32,6 +32,7 @@ import { loadFormBList } from "../../redux/slices/formBSlice";
 import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
 import { Notifications } from "../notifications/Notifications";
 import { Cct } from "../forms/cct/Cct";
+import { Gmc } from "../forms/profile/Gmc";
 import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 
@@ -130,6 +131,7 @@ export const Main = () => {
         <TSSHeader />
         <Breadcrumbs />
         <Cct />
+        <Gmc />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">
           <Switch>
             <Route exact path="/action-summary" component={ActionSummary} />
