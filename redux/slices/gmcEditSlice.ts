@@ -12,6 +12,16 @@ const initialState: GmcEditState = {
   dialogYPosition: 0
 };
 
+// export const updateGmc = createAsyncThunk(
+//     "traineeProfile/programmeMembership/signCoj",
+//     async (programmeMembershipId: string) => {
+//       const traineeProfileService = new TraineeProfileService();
+//       const response: AxiosResponse<ProgrammeMembership> =
+//         await traineeProfileService.signCoj(programmeMembershipId);
+//       return response.data;
+//     }
+//   );
+
 const gmcEditSlice = createSlice({
   name: "gmcEdit",
   initialState,

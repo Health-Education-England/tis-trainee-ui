@@ -11,6 +11,7 @@ import { ExpanderMsg } from "../../common/ExpanderMsg";
 import { Fieldset } from "nhsuk-react-components";
 import { GmcForm, GmcFormValues } from "./GmcForm";
 import store from "../../../redux/store/store";
+import { TraineeProfileService } from "../../../services/TraineeProfileService";
 
 function handleClose() {
   store.dispatch(resetGmcEdit());
@@ -44,7 +45,9 @@ const GmcChild = forwardRef(
     const isMobile = useIsMobile(1024);
 
     const handleCalculate = (values: GmcFormValues) => {
-        //TODO: call trainee-details API
+        //TODO: is this the right place? and need to pass response back from api to refresh state
+        const tps = new TraineeProfileService;
+      tps.updateGmc(values.gmcNumber);
       dispatch(setCurrentGmcNumber(values.gmcNumber));
     };
 
