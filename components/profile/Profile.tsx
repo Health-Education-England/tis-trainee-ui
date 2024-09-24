@@ -11,15 +11,15 @@ import { PersonalDetails } from "../../models/PersonalDetails";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import { GmcLink } from "./GmcLink";
 import { GmcDataType } from "./GmcEditForm";
+import { GmcEditModal } from "./GmcEditModal";
 
 const editableFieldLabel = "General Medical Council (GMC)";
 
 const Profile = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const handleSubClick = () => {
+  const handleChangeLinkClick = () => {
     setShowModal(true);
   };
 
@@ -160,13 +160,26 @@ const Profile = () => {
                 <SummaryList.Value>{rd.value}</SummaryList.Value>
                 <SummaryList.Actions>
                   {rd.label === editableFieldLabel && (
-                    <GmcLink data-cy={`gmcLink-}`} gmcNumber={rd.value} />
+                    <a
+                      className="internal-link"
+                      data-cy={`gmcLink-}`}
+                      onClick={handleChangeLinkClick}
+                    >
+                      change
+                    </a>
                   )}
                 </SummaryList.Actions>
               </SummaryList.Row>
             )
         )}
       </SummaryList>
+      <GmcEditModal
+        isOpen={showModal}
+        onClose={handleModalFormClose}
+        onSubmit={handleModalFormSubmit}
+        gmcData={gmcNumber as unknown as GmcDataType}
+        warningText={"potato"}
+      />
     </div>
   );
   return <div>{content}</div>;
