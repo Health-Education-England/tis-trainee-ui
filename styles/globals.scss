@@ -536,14 +536,18 @@ ol[type="a"] {
   margin-bottom: 0;
 }
 
-.custom-link {
-  color: #fff !important; // needed to override NHSUK default
+.internal-link {
   text-decoration: underline;
-  text-decoration-color: #fff;
+  cursor: pointer;
 }
 
-.custom-link:hover {
+.internal-link:hover {
   text-decoration: none;
+}
+
+.custom-link {
+  color: #fff !important; // needed to override NHSUK default
+  text-decoration-color: #fff;
 }
 
 .whats-new-header {
