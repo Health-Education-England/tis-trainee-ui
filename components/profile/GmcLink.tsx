@@ -1,30 +1,25 @@
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { ActionLink } from "nhsuk-react-components";
-import { GmcEditModal } from "./GmcEditModal";
-import { truncate } from "fs/promises";
+import { GmcEditModal, GmcEditModalProps } from "./GmcEditModal";
+import { useEffect, useMemo, useState } from "react";
+import { GmcDataType } from "./GmcEditForm";
 
-type GmcLinkProps = {
-  gmcNumber: string;
-};
-
-export function GmcLink({ gmcNumber }: Readonly<GmcLinkProps>) {
+export function GmcLink({ gmcNumber }: Readonly<GmcDataType>) {
+  const [showModal, setShowModal] = useState(false);
   let modalOpen = false;
 
-  const handleClick = () => {
-    alert("here");
-    modalOpen = true;
-    return (
-      <>
-        <GmcEditModal
-          isOpen={true}
-          onClose={() => (modalOpen = false)}
-          onSubmit={() => alert("set GMC number")}
-          gmcData={{ gmcNumber: gmcNumber }}
-          warningText={"potato"}
-        ></GmcEditModal>
-      </>
-    );
+  const handleGmcEditClick = () => {
+    setShowModal(true);
   };
+  
+  const handleModalFormSubmit = (data: GmcDataType) => {
+    //update state
+    setShowModal(false);
+  };
+  
+  const handleModalFormClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
       <ActionLink
@@ -33,12 +28,20 @@ export function GmcLink({ gmcNumber }: Readonly<GmcLinkProps>) {
         as="a"
         target="_blank"
         rel="noopener noreferrer"
-        onClick={handleClick}
-        disabled={modalOpen}
+        onClick={handleGmcEditClick}
+        disabled={!showModal}
         title="Edit GMC number"
       >
         <span>{"Change "}</span>
       </ActionLink>
+      <GmcEditModal
+        key={'test'}
+        onSubmit={handleModalFormSubmit}
+        isOpen={showModal}
+        onClose={handleModalFormClose}
+        warningText={'some text'}
+        gmcData={{gmcNumber: gmcNumber}}
+      />
     </>
   );
 }

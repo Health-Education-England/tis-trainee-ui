@@ -16,7 +16,6 @@ export const GmcEditModal = ({
   warningText,
   gmcData
 }: GmcEditModalProps) => {
-  alert('in modal');
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <GmcEditForm
