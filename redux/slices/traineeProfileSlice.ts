@@ -142,6 +142,17 @@ const traineeProfileSlice = createSlice({
       .addCase(signCoj.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(updateGmc.pending, (state, _action) => {
+        state.status = "loading";
+      })
+      .addCase(updateGmc.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.traineeProfileData.personalDetails = action.payload;
+      })
+      .addCase(updateGmc.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   }
 });

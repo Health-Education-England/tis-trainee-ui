@@ -8,40 +8,39 @@ import style from "../Common.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import { PersonalDetails } from "../../models/PersonalDetails";
-import {
-  selectTraineeProfile,
-  updateGmc
-} from "../../redux/slices/traineeProfileSlice";
+import { updateGmc } from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { GmcDataType } from "./GmcEditForm";
 import { GmcEditModal } from "./GmcEditModal";
-import store from "../../redux/store/store";
 
 const editableFieldLabel = "General Medical Council (GMC)";
 
 const Profile = () => {
+  const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState(false);
-
   const handleChangeLinkClick = () => {
     setShowModal(true);
   };
 
-  const handleModalFormSubmit = async (data: GmcDataType) => {
-    await store.dispatch(updateGmc(data.gmcNumber));
+  const pd = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.personalDetails
+  );
 
-    gmcNumber = data.gmcNumber;
-    
-    alert(gmcNumber);
-    setShowModal(false);
+  const updateGmcStatus = useAppSelector(state => state.traineeProfile.status);
+
+  const handleModalFormSubmit = async (data: GmcDataType) => {
+    await dispatch(updateGmc(data.gmcNumber));
+    if (updateGmcStatus === "success") {
+      setShowModal(false);
+    }
   };
 
   const handleModalFormClose = () => {
     setShowModal(false);
   };
 
-  const dispatch = useAppDispatch();
-  var {
+  const {
     maidenName,
     knownAs,
     gender,
@@ -65,7 +64,7 @@ const Profile = () => {
     address2,
     address3,
     postCode
-  }: PersonalDetails = useAppSelector(selectTraineeProfile).personalDetails;
+  }: PersonalDetails = pd;
 
   const personalData: KeyValue[] = [
     { label: "Maiden name", value: maidenName },
