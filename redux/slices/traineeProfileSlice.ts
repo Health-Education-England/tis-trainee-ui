@@ -2,7 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
-import { initialPersonalDetails } from "../../models/PersonalDetails";
+import {
+  initialPersonalDetails,
+  PersonalDetails
+} from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
@@ -46,6 +49,16 @@ export const signCoj = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<ProgrammeMembership> =
       await traineeProfileService.signCoj(programmeMembershipId);
+    return response.data;
+  }
+);
+
+export const updateGmc = createAsyncThunk(
+  "traineeProfile/profile/updateGmc",
+  async (gmc: string) => {
+    const traineeProfileService = new TraineeProfileService();
+    const response: AxiosResponse<PersonalDetails> =
+      await traineeProfileService.updateGmc(gmc);
     return response.data;
   }
 );

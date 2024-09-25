@@ -8,11 +8,15 @@ import style from "../Common.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import { PersonalDetails } from "../../models/PersonalDetails";
-import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
+import {
+  selectTraineeProfile,
+  updateGmc
+} from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { GmcDataType } from "./GmcEditForm";
 import { GmcEditModal } from "./GmcEditModal";
+import store from "../../redux/store/store";
 
 const editableFieldLabel = "General Medical Council (GMC)";
 
@@ -23,7 +27,12 @@ const Profile = () => {
     setShowModal(true);
   };
 
-  const handleModalFormSubmit = (data: GmcDataType) => {
+  const handleModalFormSubmit = async (data: GmcDataType) => {
+    await store.dispatch(updateGmc(data.gmcNumber));
+
+    gmcNumber = data.gmcNumber;
+    
+    alert(gmcNumber);
     setShowModal(false);
   };
 
@@ -32,7 +41,7 @@ const Profile = () => {
   };
 
   const dispatch = useAppDispatch();
-  const {
+  var {
     maidenName,
     knownAs,
     gender,
