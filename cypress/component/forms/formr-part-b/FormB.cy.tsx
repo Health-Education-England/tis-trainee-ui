@@ -164,7 +164,10 @@ describe("FormB /confirm (without Covid)", () => {
       "formrbLabel",
       "Trainee registration for Postgraduate Speciality Training"
     );
-
+    cy.checkElement(
+      "formrbInfo",
+      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+    );
     cy.get(
       '[data-cy="warningConfirmation"] > .nhsuk-warning-callout__label > span'
     )
@@ -298,6 +301,9 @@ describe("FormB /confirm (with Covid)", () => {
     cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
     cy.get('[data-cy="formrbLabel"]').contains(
       "Trainee registration for Postgraduate Speciality Training"
+    );
+    cy.get('[data-cy="formrbInfo"]').contains(
+      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
     );
     cy.get(
       '[data-cy="warningConfirmation"] > .nhsuk-warning-callout__label > span'
