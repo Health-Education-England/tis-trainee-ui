@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Fieldset, SummaryList } from "nhsuk-react-components";
+import { Button } from "@aws-amplify/ui-react";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import DataSourceMsg from "../common/DataSourceMsg";
@@ -175,13 +176,14 @@ const Profile = () => {
                 <SummaryList.Value>{rd.value}</SummaryList.Value>
                 <SummaryList.Actions>
                   {rd.label === editableFieldLabel && (
-                    <a
+                    <Button
                       className="internal-link"
                       data-cy={`updateGmcLink`}
                       onClick={handleChangeLinkClick}
+                      variation="link"
                     >
                       change
-                    </a>
+                    </Button>
                   )}
                 </SummaryList.Actions>
               </SummaryList.Row>
