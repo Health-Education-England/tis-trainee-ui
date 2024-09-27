@@ -85,5 +85,12 @@ describe("Profile with MFA set up", () => {
     cy.get("[data-cy=postCode")
       .should("exist")
       .should("contain.text", "WC1B 5DN");
+    cy.get("[data-cy=updateGmcLink]")
+      .should("exist")
+      .should("contain.text", "change");
+    cy.get("dialog")
+      .should("exist")
+      .should("have.attr", "data-cy", "dialogModal")
+      .should("not.be.visible");
   });
 });

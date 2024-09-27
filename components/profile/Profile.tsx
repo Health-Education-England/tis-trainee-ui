@@ -176,7 +176,7 @@ const Profile = () => {
                   {rd.label === editableFieldLabel && (
                     <a
                       className="internal-link"
-                      data-cy={`gmcLink-}`}
+                      data-cy={`updateGmcLink`}
                       onClick={handleChangeLinkClick}
                     >
                       change
