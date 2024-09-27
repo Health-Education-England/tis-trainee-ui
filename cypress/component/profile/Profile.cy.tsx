@@ -9,7 +9,8 @@ import { useAppDispatch } from "../../../redux/hooks/hooks";
 import Profile from "../../../components/profile/Profile";
 import {
   updatedTraineeProfileData,
-  updatedTraineeProfileStatus
+  updatedTraineeProfileStatus,
+  updateGmc
 } from "../../../redux/slices/traineeProfileSlice";
 import { mockPersonalDetails } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
@@ -92,5 +93,40 @@ describe("Profile with MFA set up", () => {
       .should("exist")
       .should("have.attr", "data-cy", "dialogModal")
       .should("not.be.visible");
+  });
+  it("should not update GMC when API call fails.", () => {
+    const MockedProfileGmcUpdated = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updateGmc("1234567")); //should fail since API call is not mocked
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfileGmcUpdated />
+        </Router>
+      </Provider>
+    );
+    cy.testDataSourceLink();
+    cy.get("[data-cy=\"General Medical Council (GMC)\"]")
+      .should("exist")
+      .should("contain.text", "1111111");
+  });
+  it("should update GMC when API call succeeds.", () => {
+    //todo
+    assert(0 !== 0);
+  });
+  it("should open GMC modal form when change button clicked.", () => {
+    //todo
+    assert(0 !== 0);
   });
 });

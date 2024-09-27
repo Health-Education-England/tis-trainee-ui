@@ -157,7 +157,6 @@ const traineeProfileSlice = createSlice({
       .addCase(updateGmc.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-        state.traineeProfileData.personalDetails.gmcNumber = "something different";
         showToast(
           "GMC number could not be updated",
           ToastType.ERROR
