@@ -2,7 +2,10 @@ import { AxiosResponse } from "axios";
 import ApiService from "./apiService";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-import { PersonalDetails, initialPersonalDetails } from "../models/PersonalDetails";
+import {
+  PersonalDetails,
+  initialPersonalDetails
+} from "../models/PersonalDetails";
 
 export class TraineeProfileService extends ApiService {
   constructor() {
@@ -21,10 +24,8 @@ export class TraineeProfileService extends ApiService {
     );
   }
 
-  async updateGmc(
-    gmcNumber: string
-  ): Promise<AxiosResponse<PersonalDetails>> {
-    var gmcDetails = { ...initialPersonalDetails, ...{"gmcNumber": gmcNumber}};
+  async updateGmc(gmcNumber: string): Promise<AxiosResponse<PersonalDetails>> {
+    var gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
   }
 }

@@ -24,7 +24,7 @@ export function GmcEditForm({
       .required("GMC number is required.")
       .test(
         "is-unknown-or-7-digit-number",
-        "GMC must be a 7-digit number or UNKNOWN",
+        "GMC must be a 7-digit number or UNKNOWN", //TODO: remove 'unknown' as an option. Left for now because a handy way of testing API 400-failure
         value => {
           if (value && value !== null && value !== "") {
             if (value.toUpperCase() === "UNKNOWN") {
