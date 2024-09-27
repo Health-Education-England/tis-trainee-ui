@@ -1,8 +1,7 @@
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
-import { Button, CloseIcon } from "nhsuk-react-components";
+import { Button } from "nhsuk-react-components";
 import TextInputField from "../forms/TextInputField";
-import store from "../../redux/store/store";
 
 export type GmcDataType = {
   gmcNumber: string;

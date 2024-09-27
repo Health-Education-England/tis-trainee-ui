@@ -25,7 +25,7 @@ export class TraineeProfileService extends ApiService {
   }
 
   async updateGmc(gmcNumber: string): Promise<AxiosResponse<PersonalDetails>> {
-    var gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
+    let gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
   }
 }
