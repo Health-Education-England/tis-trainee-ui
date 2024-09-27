@@ -28,20 +28,9 @@ const Profile = () => {
     state => state.traineeProfile.traineeProfileData.personalDetails
   );
 
-  const updateGmcStatus = useAppSelector(state => state.traineeProfile.status);
-
   const handleModalFormSubmit = async (data: GmcDataType) => {
-    let res = await dispatch(updateGmc(data.gmcNumber));
-    if (updateGmcStatus === "succeeded") {
-      //this is always 'succeeded' even when it should be 'failed'
-      if (res.meta.requestStatus === "rejected") {
-        alert("this failed");
-        //how to get state to reload the page?
-      }
-      setShowModal(false);
-    } else {
-      alert("never happens");
-    }
+    await dispatch(updateGmc(data.gmcNumber));
+    setShowModal(false);
   };
 
   const handleModalFormClose = () => {

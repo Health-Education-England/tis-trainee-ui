@@ -17,6 +17,7 @@ interface IProfile {
   hasSignableCoj: boolean;
   unsignedCojs: ProgrammeMembership[];
   status: string;
+  gmcStatus: string;
   error: any;
 }
 
@@ -30,6 +31,7 @@ export const initialState: IProfile = {
   hasSignableCoj: false,
   unsignedCojs: [],
   status: "idle",
+  gmcStatus: "idle",
   error: ""
 };
 
@@ -144,23 +146,17 @@ const traineeProfileSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(updateGmc.pending, (state, _action) => {
-        state.status = "loading";
+        state.gmcStatus = "loading";
       })
       .addCase(updateGmc.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.gmcStatus = "succeeded";
         state.traineeProfileData.personalDetails = action.payload;
-        showToast(
-          "GMC number updated",
-          ToastType.SUCCESS
-        );
+        showToast("GMC number updated", ToastType.SUCCESS);
       })
       .addCase(updateGmc.rejected, (state, action) => {
-        state.status = "failed";
+        state.gmcStatus = "failed";
         state.error = action.error.message;
-        showToast(
-          "GMC number could not be updated",
-          ToastType.ERROR
-        );
+        showToast("GMC number could not be updated", ToastType.ERROR);
       });
   }
 });
