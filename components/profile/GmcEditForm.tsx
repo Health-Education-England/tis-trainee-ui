@@ -12,33 +12,29 @@ type GmcEditFormProps = {
   gmcData: GmcDataType;
 };
 
+export const gmcValidationSchema = Yup.object().shape({
+  gmcNumber: Yup.string()
+    .nullable()
+    .required("GMC number is required.")
+    .test("is-7-digit-number", "GMC must be a 7-digit number", value => {
+      if (value && value !== null && value !== "") {
+        return /^\d{7}$/.test(value);
+      }
+      return false;
+    })
+});
+
 export function GmcEditForm({
   onSubmit,
   warningText,
   gmcData
 }: Readonly<GmcEditFormProps>) {
-  const validationSchema = Yup.object().shape({
-    gmcNumber: Yup.string()
-      .nullable()
-      .required("GMC number is required.")
-      .test(
-        "is-7-digit-number",
-        "GMC must be a 7-digit number",
-        value => {
-          if (value && value !== null && value !== "") {
-            return /^\d{7}$/.test(value);
-          }
-          return false;
-        }
-      )
-  });
-
   return (
     <Formik
       initialValues={{
         gmcNumber: gmcData.gmcNumber
       }}
-      validationSchema={validationSchema}
+      validationSchema={gmcValidationSchema}
       onSubmit={onSubmit}
     >
       {({ values, errors, setFieldValue, dirty, isValid }) => (

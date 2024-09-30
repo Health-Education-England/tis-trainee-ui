@@ -184,7 +184,7 @@ const Profile = () => {
         onClose={handleModalFormClose}
         onSubmit={handleModalFormSubmit}
         gmcData={gmcNumber as unknown as GmcDataType}
-        warningText={"potato"}
+        warningText={""}
       />
     </div>
   );
