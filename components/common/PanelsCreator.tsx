@@ -26,6 +26,7 @@ import {
 import dayjs from "dayjs";
 import { CctBtn } from "../programmes/CctBtn";
 import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerLink";
+import InfoTooltip from "./InfoToolTip";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -134,6 +135,14 @@ export function PanelsCreator({
                   {Object.keys(filteredPanel).map((panelProp, _index) => (
                     <SummaryList.Row key={_index}>
                       <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
+                        {panelProp === "conditionsOfJoining" ? (
+                          <Label size="s" style={{ float: "right" }}>
+                            <InfoTooltip
+                              tooltipId="cojInfo"
+                              content="The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
+                            ></InfoTooltip>
+                          </Label>
+                        ) : null}
                         {panelKeys[panelProp as keyof PanelKeys]}
                       </SummaryList.Key>
                       <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
