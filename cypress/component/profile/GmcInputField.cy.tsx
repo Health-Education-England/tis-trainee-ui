@@ -24,7 +24,6 @@ describe("GmcInputField in Formik form", () => {
               name="gmcNumber"
               width={10}
               placeholder={""}
-              maxLength={7}
             />
           </Form>
         </Formik>
@@ -37,9 +36,17 @@ describe("GmcInputField in Formik form", () => {
         </Router>
       </Provider>
     );
-    cy.get("#gmcNumber").clear().type("01");
+    cy.get("#gmcNumber").clear().type("123456");
     cy.get("#gmcNumber--error-message").contains(
       "GMC must be a 7-digit number"
+    );
+    cy.get("#gmcNumber").clear().type("12345678");
+    cy.get("#gmcNumber--error-message").contains(
+      "GMC must be a 7-digit number"
+    );
+      cy.get("#gmcNumber").clear();
+    cy.get("#gmcNumber--error-message").contains(
+      "GMC number is required"
     );
     cy.get("#gmcNumber").clear().type("abcdefg");
     cy.get("#gmcNumber--error-message").contains(
