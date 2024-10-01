@@ -394,9 +394,19 @@ describe("Programme summary panel", () => {
       </Provider>
     );
 
+    cy.get('[data-cy="pastExpand"]').invoke("show").click({ force: true });
     cy.get('[data-cy="conditionsOfJoining0Key"]')
       .should("exist")
       .and("have.text", "Conditions of Joining");
+    cy.get('[data-cy="conditionsOfJoining0CojInfo-icon"]')
+      .invoke("show")
+      .click({ force: true });
+    cy.get("#conditionsOfJoining0CojInfo")
+      .should("be.visible")
+      .and(
+        "include.text",
+        "The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
+      );
     cy.get('[data-cy="conditionsOfJoining0Val"]')
       .children('[data-cy="cojStatusText"]')
       .should("exist")
