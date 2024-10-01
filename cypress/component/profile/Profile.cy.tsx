@@ -142,4 +142,33 @@ describe("Profile with MFA set up", () => {
       .should("have.attr", "data-cy", "dialogModal")
       .should("not.be.visible");
   });
+
+  it("GMC modal form should retain value after Cancel.", () => {
+    const MockedProfile = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfile />
+        </Router>
+      </Provider>
+    );
+    cy.testDataSourceLink();
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").clear().type("abc");
+    cy.get("[data-cy=modal-cancel-btn]").should("exist").click();
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").should("have.value", "abc");
+  });
 });

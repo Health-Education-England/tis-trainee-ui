@@ -45,7 +45,7 @@ describe("Profile", () => {
 
   it("should handle update GMC failure", () => {
     cy.intercept("PUT", "**/basic-details/gmc-number", { statusCode: 400 }).as(
-      "puUpdateGmcFailure"
+      "putUpdateGmcFailure"
     );
     const newGmc = "1234567";
     cy.get("[data-cy=updateGmcLink]").should("exist").click();
