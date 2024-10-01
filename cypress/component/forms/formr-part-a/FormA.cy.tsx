@@ -98,6 +98,10 @@ describe("Form A View (/form-a/confirm)", () => {
         "Trainee registration for Postgraduate Speciality Training"
       ],
       [
+        '[data-cy="formraInfo"]',
+        "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+      ],
+      [
         ".nhsuk-error-summary",
         "Before proceeding to the next section please address the following:"
       ],
@@ -154,6 +158,10 @@ describe("Form A View (/form-a/confirm)", () => {
           '[data-cy="formraLabel"]',
           "Trainee registration for Postgraduate Speciality Training"
         ],
+        [
+          '[data-cy="formraInfo"]',
+          "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+        ],
         ['[data-cy="backLink"]', "Back to forms list"],
         ['[data-cy="savePdfBtn"]', "Save a copy as a PDF"],
         [
@@ -204,6 +212,10 @@ describe("Form A View (/form-a/confirm)", () => {
           [
             '[data-cy="formraLabel"]',
             "Trainee registration for Postgraduate Speciality Training"
+          ],
+          [
+            '[data-cy="formraInfo"]',
+            "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
           ],
           ['[data-cy="pageNotFoundText"]', "Sorry, page not found"]
         ];

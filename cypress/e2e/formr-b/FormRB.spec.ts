@@ -112,6 +112,10 @@ describe("Form R (Part B) - Submit a new form", () => {
       "formrbLabel",
       "Trainee registration for Postgraduate Speciality Training"
     );
+    cy.checkElement(
+      "formrbInfo",
+      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+    );
     cy.checkElement("warningConfirmation");
     cy.checkElement("forename-value", `Bob-${today.format("YYYY-MM-DD")}`);
     cy.checkElement("edit-Personal Details").click();
