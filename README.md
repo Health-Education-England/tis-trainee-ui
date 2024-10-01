@@ -90,6 +90,8 @@ Before you can run the e2e tests (logging in as an authorised user using a One T
 `npm run cypress:headless` will run the e2e tests in headless mode with Cypress.<br />
 `npm run cypress` will allow you to view the e2e tests in the browser. For more information visit (https://docs.cypress.io/guides/end-to-end-testing/writing-your-first-end-to-end-test)
 
+NOTE: When running locally, choose the 'Electron' browser option to run the tests as the 'Chrome' option causes an infinite refresh (I think we might need to update Cypress to the latest version to fix this).
+
 ## Building a production app
 
 `npm run build` generates an optimized version of your application for production. This standard output includes:
