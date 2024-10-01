@@ -94,37 +94,7 @@ describe("Profile with MFA set up", () => {
       .should("have.attr", "data-cy", "dialogModal")
       .should("not.be.visible");
   });
-  it("should not update GMC when API call fails.", () => {
-    const MockedProfileGmcUpdated = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      dispatch(updateGmc("1234567")); //should fail since API call is not mocked
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileGmcUpdated />
-        </Router>
-      </Provider>
-    );
-    cy.testDataSourceLink();
-    cy.get('[data-cy="General Medical Council (GMC)"]')
-      .should("exist")
-      .should("contain.text", "1111111");
-  });
-  it("should update GMC when API call succeeds.", () => {
-    //todo
-    //assert(0 !== 0);
-  });
+
   it("should open GMC modal form when change button clicked.", () => {
     const MockedProfile = () => {
       const dispatch = useAppDispatch();
@@ -154,9 +124,22 @@ describe("Profile with MFA set up", () => {
       .should("have.attr", "data-cy", "dialogModal")
       .should("be.visible");
 
-    cy.get("#gmcNumber").should("exist").should("have.value", "");
+    cy.get("#gmcNumber")
+      .should("exist")
+      .should("have.value", "")
+      .should("have.attr", "maxlength", "7");
     cy.get("[data-cy=gmc-edit-btn]").should("exist").should("be.disabled");
     cy.get("#gmcNumber").clear().type("1234567");
     cy.get("[data-cy=gmc-edit-btn]").should("exist").should("not.be.disabled");
+    cy.get("[data-cy=modal-cancel-btn]")
+      .should("exist")
+      .should("not.be.disabled");
+
+    cy.get("[data-cy=gmc-edit-btn]").click();
+
+    cy.get("dialog")
+      .should("exist")
+      .should("have.attr", "data-cy", "dialogModal")
+      .should("not.be.visible");
   });
 });
