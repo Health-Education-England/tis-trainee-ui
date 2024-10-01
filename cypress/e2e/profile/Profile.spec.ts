@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
+import { waitForElementToBeRemoved } from "@testing-library/react";
+
 describe("Profile", () => {
   beforeEach(() => {
     cy.signInToTss(30000, "/profile");
@@ -55,6 +57,27 @@ describe("Profile", () => {
     cy.get('[data-cy="General Medical Council (GMC)"]')
       .should("exist")
       .should("contain.text", "1111111");
+  });
+
+  it("should show loading icon when GMC update delays", () => {
+    cy.intercept("PUT", "**/basic-details/gmc-number", req => {
+      req.on("response", res => {
+        res.setThrottle(0.3);
+      });
+    }).as("slowPut");
+
+    const newGmc = "1234567";
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").clear().type(newGmc);
+    cy.get("[data-cy=gmc-edit-btn]").click();
+
+    cy.get("[data-cy=loading]").should("exist");
+
+    cy.get('[data-cy="General Medical Council (GMC)"]', { timeout: 5000 })
+      .should("exist")
+      .should("contain.text", newGmc); 
+
+    cy.get("[data-cy=loading]").should("not.exist");
   });
 });
 
