@@ -117,7 +117,7 @@ describe("Profile with MFA set up", () => {
       </Provider>
     );
     cy.testDataSourceLink();
-    cy.get("[data-cy=\"General Medical Council (GMC)\"]")
+    cy.get('[data-cy="General Medical Council (GMC)"]')
       .should("exist")
       .should("contain.text", "1111111");
   });
@@ -126,7 +126,37 @@ describe("Profile with MFA set up", () => {
     //assert(0 !== 0);
   });
   it("should open GMC modal form when change button clicked.", () => {
-    //todo
-    //assert(0 !== 0);
+    const MockedProfile = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfile />
+        </Router>
+      </Provider>
+    );
+    cy.testDataSourceLink();
+    cy.get("[data-cy=updateGmcLink]").click();
+
+    cy.get("dialog")
+      .should("exist")
+      .should("have.attr", "data-cy", "dialogModal")
+      .should("be.visible");
+
+    cy.get("#gmcNumber").should("exist").should("have.value", "");
+    cy.get("[data-cy=gmc-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#gmcNumber").clear().type("1234567");
+    cy.get("[data-cy=gmc-edit-btn]").should("exist").should("not.be.disabled");
   });
 });
