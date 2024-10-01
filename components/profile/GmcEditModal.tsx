@@ -5,24 +5,16 @@ export type GmcEditModalProps = {
   onSubmit: (data: GmcDataType) => void;
   isOpen: boolean;
   onClose: () => void;
-  warningText: null | string;
-  gmcData: GmcDataType;
 };
 
 export const GmcEditModal = ({
   onSubmit,
   isOpen,
-  onClose,
-  warningText,
-  gmcData
+  onClose
 }: GmcEditModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <GmcEditForm
-        onSubmit={onSubmit}
-        warningText={warningText}
-        gmcData={gmcData}
-      />
+      <GmcEditForm onSubmit={onSubmit} />
     </Modal>
   );
 };
