@@ -85,6 +85,11 @@ export default function FormB() {
         <Label data-cy="formrbLabel" size="s">
           Trainee registration for Postgraduate Speciality Training
         </Label>
+        <Label data-cy="formrbInfo" size="s">
+          The Form R is a vital aspect of Revalidation (this applies to those
+          holding GMC registration) and you are expected to complete one at the
+          start of a new training programme and ahead of each ARCP.
+        </Label>
       </Fieldset>
       <Switch>
         <Route
