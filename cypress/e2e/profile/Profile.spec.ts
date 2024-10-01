@@ -14,6 +14,48 @@ describe("Profile", () => {
       .should("contain.text", "Profile");
     cy.get("[data-cy=fullNameValue]").should("exist");
   });
+
+  it("should update GMC", () => {
+    const oldGmc = "1111111";
+    const newGmc = "1234567";
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").clear().type(newGmc);
+    cy.get("[data-cy=gmc-edit-btn]").click();
+
+    cy.get('[data-cy="General Medical Council (GMC)"]')
+      .should("exist")
+      .should("contain.text", newGmc);
+
+    //now set it back so other tests aren't compromised
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").clear().type(oldGmc);
+    cy.get("[data-cy=gmc-edit-btn]").click();
+  });
+
+  it("should cancel and not update GMC", () => {
+    const newGmc = "1234567";
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").clear().type(newGmc);
+    cy.get("[data-cy=modal-cancel-btn]").click();
+
+    cy.get('[data-cy="General Medical Council (GMC)"]')
+      .should("exist")
+      .should("contain.text", "1111111");
+  });
+
+  it("should handle update GMC failure", () => {
+    cy.intercept("PUT", "**/basic-details/gmc-number", { statusCode: 400 }).as(
+      "puUpdateGmcFailure"
+    );
+    const newGmc = "1234567";
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").should("exist").clear().type(newGmc);
+    cy.get("[data-cy=gmc-edit-btn]").click();
+
+    cy.get('[data-cy="General Medical Council (GMC)"]')
+      .should("exist")
+      .should("contain.text", "1111111");
+  });
 });
 
 export {};
