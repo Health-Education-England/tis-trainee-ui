@@ -14,6 +14,7 @@ import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { GmcDataType } from "./GmcEditForm";
 import { GmcEditModal } from "./GmcEditModal";
+import Loading from "../common/Loading";
 
 const editableFieldLabel = "General Medical Council (GMC)";
 
@@ -28,9 +29,9 @@ const Profile = () => {
     state => state.traineeProfile.traineeProfileData.personalDetails
   );
 
-  const handleModalFormSubmit = async (data: GmcDataType) => {
-    await dispatch(updateGmc(data.gmcNumber));
+  const handleModalFormSubmit = (data: GmcDataType) => {
     setShowModal(false);
+    dispatch(updateGmc(data.gmcNumber));
   };
 
   const handleModalFormClose = () => {
@@ -109,9 +110,18 @@ const Profile = () => {
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
+  const isLoading: boolean = useAppSelector(
+    state => state.traineeProfile.gmcStatus === "loading"
+  );
+
   if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
   }
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   const content = (
     <div id="profile">
       <PageTitle title="Profile" />
@@ -183,8 +193,6 @@ const Profile = () => {
         isOpen={showModal}
         onClose={handleModalFormClose}
         onSubmit={handleModalFormSubmit}
-        gmcData={gmcNumber as unknown as GmcDataType}
-        warningText={""}
       />
     </div>
   );

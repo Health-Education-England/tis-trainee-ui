@@ -8,8 +8,6 @@ export type GmcDataType = {
 };
 type GmcEditFormProps = {
   onSubmit: (data: GmcDataType) => void;
-  warningText: null | string;
-  gmcData: GmcDataType;
 };
 
 export const gmcValidationSchema = Yup.object().shape({
@@ -24,27 +22,23 @@ export const gmcValidationSchema = Yup.object().shape({
     })
 });
 
-export function GmcEditForm({
-  onSubmit,
-  warningText,
-  gmcData
-}: Readonly<GmcEditFormProps>) {
+export function GmcEditForm({ onSubmit }: Readonly<GmcEditFormProps>) {
   return (
     <Formik
       initialValues={{
-        gmcNumber: gmcData.gmcNumber
+        gmcNumber: ""
       }}
       validationSchema={gmcValidationSchema}
       onSubmit={onSubmit}
     >
-      {({ values, errors, setFieldValue, dirty, isValid }) => (
+      {({ dirty, isValid }) => (
         <Form>
           <TextInputField
             label="Provide your 7-digit GMC number"
             type="string"
             name="gmcNumber"
             width={10}
-            placeholder={gmcData.gmcNumber}
+            placeholder="Enter GMC number"
             maxLength={7}
           />
           <div id="gmc-btns">
