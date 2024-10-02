@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import { waitForElementToBeRemoved } from "@testing-library/react";
-
 describe("Profile", () => {
   beforeEach(() => {
     cy.signInToTss(30000, "/profile");
@@ -75,7 +73,7 @@ describe("Profile", () => {
 
     cy.get('[data-cy="General Medical Council (GMC)"]', { timeout: 5000 })
       .should("exist")
-      .should("contain.text", newGmc); 
+      .should("contain.text", newGmc);
 
     cy.get("[data-cy=loading]").should("not.exist");
   });
