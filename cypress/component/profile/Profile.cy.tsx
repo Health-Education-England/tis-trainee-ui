@@ -171,4 +171,42 @@ describe("Profile with MFA set up", () => {
     cy.get("[data-cy=updateGmcLink]").should("exist").click();
     cy.get("#gmcNumber").should("exist").should("have.value", "abc");
   });
+
+  it("Profile should retain preexisting non-valid GMC value after Cancel.", () => {
+    const MockedProfile = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: {
+            ...mockPersonalDetails,
+            ...{ gmcNumber: "UNKNOWN" }
+          },
+          programmeMemberships: [],
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      return <Profile />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProfile />
+        </Router>
+      </Provider>
+    );
+    cy.testDataSourceLink();
+    cy.get('[data-cy="General Medical Council (GMC)"]')
+      .should("exist")
+      .should("contain.text", "UNKNOWN");
+
+    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#gmcNumber").clear().type("1234567");
+    cy.get("[data-cy=modal-cancel-btn]").should("exist").click();
+
+    cy.get('[data-cy="General Medical Council (GMC)"]')
+      .should("exist")
+      .should("contain.text", "UNKNOWN");
+  });
 });
