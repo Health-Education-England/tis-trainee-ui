@@ -2,7 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
-import { initialPersonalDetails } from "../../models/PersonalDetails";
+import {
+  initialPersonalDetails,
+  PersonalDetails
+} from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
@@ -14,6 +17,7 @@ interface IProfile {
   hasSignableCoj: boolean;
   unsignedCojs: ProgrammeMembership[];
   status: string;
+  gmcStatus: string;
   error: any;
 }
 
@@ -27,6 +31,7 @@ export const initialState: IProfile = {
   hasSignableCoj: false,
   unsignedCojs: [],
   status: "idle",
+  gmcStatus: "idle",
   error: ""
 };
 
@@ -46,6 +51,16 @@ export const signCoj = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: AxiosResponse<ProgrammeMembership> =
       await traineeProfileService.signCoj(programmeMembershipId);
+    return response.data;
+  }
+);
+
+export const updateGmc = createAsyncThunk(
+  "traineeProfile/personalDetails/updateGmc",
+  async (gmc: string) => {
+    const traineeProfileService = new TraineeProfileService();
+    const response: AxiosResponse<PersonalDetails> =
+      await traineeProfileService.updateGmc(gmc);
     return response.data;
   }
 );
@@ -129,6 +144,19 @@ const traineeProfileSlice = createSlice({
       .addCase(signCoj.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(updateGmc.pending, (state, _action) => {
+        state.gmcStatus = "loading";
+      })
+      .addCase(updateGmc.fulfilled, (state, action) => {
+        state.gmcStatus = "succeeded";
+        state.traineeProfileData.personalDetails = action.payload;
+        showToast("GMC number updated", ToastType.SUCCESS);
+      })
+      .addCase(updateGmc.rejected, (state, action) => {
+        state.gmcStatus = "failed";
+        state.error = action.error.message;
+        showToast("GMC number could not be updated", ToastType.ERROR);
       });
   }
 });

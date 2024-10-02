@@ -84,7 +84,7 @@ export function WhatsNewHeader(): JSX.Element {
       <a
         data-cy="anchorEl_What's New"
         title="Click here for more details"
-        className="nhsuk-link custom-link whats-new-link"
+        className="nhsuk-link internal-link custom-link whats-new-link"
         href={wpUpdatesUrl}
         target="_blank"
         rel="noopener noreferrer"

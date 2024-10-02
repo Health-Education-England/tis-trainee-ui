@@ -55,4 +55,35 @@ describe("TraineeProfileService", () => {
       expect(res).toEqual(errorResponse);
     });
   });
+
+  it("signCoj method should return failure response", () => {
+    jest.spyOn(mockService, "post").mockRejectedValue(errorResponse);
+
+    mockService.signCoj("1").catch(res => {
+      expect(res).toEqual(errorResponse);
+    });
+  });
+
+  it("updateGmc method should return success response", () => {
+    const successResponse: Promise<AxiosResponse<ProgrammeMembership>> =
+      Promise.resolve({
+        data: mockProgrammeMemberships[0],
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config: {}
+      });
+
+    jest.spyOn(mockService, "put").mockReturnValue(successResponse);
+
+    expect(mockService.updateGmc("1234567")).toEqual(successResponse);
+  });
+
+  it("updateGmc method should return failure response", () => {
+    jest.spyOn(mockService, "put").mockRejectedValue(errorResponse);
+
+    mockService.updateGmc("1234567").catch(res => {
+      expect(res).toEqual(errorResponse);
+    });
+  });
 });

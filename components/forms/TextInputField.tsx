@@ -20,6 +20,7 @@ interface Props {
   onBlur?: any;
   isNumberField?: boolean;
   isTotal?: boolean;
+  maxLength?: number;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
@@ -48,7 +49,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         onBlur={field.onBlur}
         onChange={field.onChange}
         value={field.value ?? ""}
-        maxLength={isNumberField ? 4 : 4096}
+        maxLength={props.maxLength ?? (isNumberField ? 4 : 4096)}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"
