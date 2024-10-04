@@ -97,7 +97,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   {
@@ -140,7 +140,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   }
 ];
@@ -166,7 +166,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   // Current
@@ -189,7 +189,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   // Upcoming
@@ -212,7 +212,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   // Future
@@ -235,7 +235,7 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     ],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   }
 ];
@@ -254,7 +254,7 @@ export const mockProgrammeMembershipNonTemplatedField = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG9"
+    version: "GG9" as CojVersionType
   },
   nonTemplatedField: "nonTemplatedField"
 };
@@ -273,7 +273,7 @@ export const mockProgrammeMembershipNoCurricula = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG9"
+    version: "GG9" as CojVersionType
   }
 };
 
@@ -313,7 +313,7 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
   ],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG9"
+    version: "GG9" as CojVersionType
   }
 };
 
@@ -353,7 +353,7 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
   ],
   conditionsOfJoining: {
     signedAt: null,
-    version: "GG9"
+    version: "GG9" as CojVersionType
   }
 };
 
@@ -372,7 +372,7 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   curricula: [],
   conditionsOfJoining: {
     signedAt: new Date("2010-10-14"),
-    version: "GG9"
+    version: "GG9" as CojVersionType
   }
 };
 
@@ -392,7 +392,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   {
@@ -410,7 +410,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   }
 ];
@@ -431,7 +431,7 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   },
   {
@@ -449,7 +449,7 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
-      version: "GG9"
+      version: "GG9" as CojVersionType
     }
   }
 ];
@@ -467,7 +467,7 @@ export const mockProgrammeMembershipNoResponsibleOfficer: ProgrammeMembership[] 
       curricula: [],
       conditionsOfJoining: {
         signedAt: null,
-        version: "GG9"
+        version: "GG9" as CojVersionType
       }
     },
     {
@@ -481,7 +481,7 @@ export const mockProgrammeMembershipNoResponsibleOfficer: ProgrammeMembership[] 
       curricula: [],
       conditionsOfJoining: {
         signedAt: null,
-        version: "GG9"
+        version: "GG9" as CojVersionType
       }
     }
   ];
