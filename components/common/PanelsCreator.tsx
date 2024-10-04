@@ -140,7 +140,7 @@ export function PanelsCreator({
                             <InfoTooltip
                               tooltipId={`${panelProp}${index}CojInfo`}
                               content="The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
-                            ></InfoTooltip>
+                            />
                           </Label>
                         ) : null}
                         {panelKeys[panelProp as keyof PanelKeys]}
