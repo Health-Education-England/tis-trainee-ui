@@ -1128,4 +1128,5 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .tooltipContent {
   max-width: 500px;
   line-height: 1.8;
+  z-index: 99;
 }

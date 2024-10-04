@@ -19,7 +19,7 @@ export default function InfoTooltip({ tooltipId, content }: InfoTooltipProps) {
       <Tooltip
         id={tooltipId}
         className="tooltipContent"
-        place="right-start"
+        place="top"
         content={content}
       />
     </>
