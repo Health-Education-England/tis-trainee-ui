@@ -7,7 +7,10 @@ type InfoTooltipProps = {
   content: string;
 };
 
-export default function InfoTooltip({ tooltipId, content }: InfoTooltipProps) {
+export default function InfoTooltip({
+  tooltipId,
+  content
+}: Readonly<InfoTooltipProps>) {
   return (
     <>
       <FontAwesomeIcon
