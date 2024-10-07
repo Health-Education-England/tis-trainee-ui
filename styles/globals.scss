@@ -1124,3 +1124,14 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .action-card-info-icon:hover {
   transform: scale(1.1);
 }
+
+.tooltipContent {
+  max-width: 500px;
+  line-height: 1.8;
+  z-index: 99;
+}
+@media (max-width: 500px) {
+  .tooltipContent {
+    max-width: 100%;
+  }
+}
