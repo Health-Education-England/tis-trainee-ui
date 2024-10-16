@@ -34,6 +34,7 @@ import { Notifications } from "../notifications/Notifications";
 import { Cct } from "../forms/cct/Cct";
 import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
+import { Ltft } from "../ltft/Ltft";
 
 const appVersion = packageJson.version;
 
@@ -149,6 +150,7 @@ export const Main = () => {
             <Route exact path="/support" component={Support} />
             <Route path="/mfa" component={MFA} />
             <Route path="/notifications" component={Notifications} />
+            <Route path="/ltft" component={Ltft} />
             <Redirect exact path="/" to="/home" />
             <Redirect
               exact

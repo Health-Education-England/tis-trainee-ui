@@ -5,6 +5,7 @@ import {
   Label,
   SummaryList
 } from "nhsuk-react-components";
+import { Link } from "react-router-dom";
 import { placementPanelTemplate, SpecialtyType } from "../../models/Placement";
 import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
@@ -24,7 +25,6 @@ import {
   resetTraineeAction
 } from "../../redux/slices/traineeActionsSlice";
 import dayjs from "dayjs";
-import { CctBtn } from "../programmes/CctBtn";
 import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerLink";
 import InfoTooltip from "./InfoTooltip";
 
@@ -109,22 +109,21 @@ export function PanelsCreator({
                       </>
                     )}
 
-                  {panelsName === TraineeProfileName.Programmes && (
-                    <>
-                      <p
-                        className={style.panelSubHeader}
-                        data-cy="subheaderLtft"
-                      >
-                        Less Than Full Time (LTFT)
-                      </p>
-                      <CctBtn
-                        data-cy={`cctBtn-${panelsName}-${panel.tisId}`}
-                        progName={panel.programmeName}
-                        endDate={panel.endDate}
-                        startDate={panel.startDate}
-                      />
-                    </>
-                  )}
+                  <>
+                    <p className={style.panelSubHeader} data-cy="subheaderLtft">
+                      Changing hours (LTFT)
+                    </p>
+                    <SummaryList.Row>
+                      <SummaryList.Key>
+                        <Label size="s">Looking to change your hours?</Label>
+                      </SummaryList.Key>
+                      <SummaryList.Value>
+                        <Link to="/ltft" data-cy="ltft-link">
+                          Go to Changing hours (LTFT) page
+                        </Link>
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                  </>
 
                   <p
                     className={style.panelSubHeader}
