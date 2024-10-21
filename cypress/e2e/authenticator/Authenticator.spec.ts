@@ -11,6 +11,16 @@ describe("Authenticator", () => {
     cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
   });
 
+  it("should have an alert message for Foundation and Public Health doctors", () => {
+    cy.get("[data-cy=authAlert]")
+      .should("exist")
+      .should("contain.text", "Foundation and Public Health doctors")
+      .should(
+        "contain.text",
+        "Apologies: The email advising you to sign-up on TIS Self-Service was sent in error."
+      );
+  });
+
   it("Body should have the support FAQ and mailto links", () => {
     cy.get("[data-cy=signInSupportLinks]")
       .find("a")
