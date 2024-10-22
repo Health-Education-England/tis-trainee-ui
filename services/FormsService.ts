@@ -1,13 +1,25 @@
-import { AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import ApiService from "./apiService";
 import { FormRPartA } from "../models/FormRPartA";
 import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
 import { IFormR } from "../models/IFormR";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
+  }
+
+  async getTraineeCojPdf(programmeMembership: ProgrammeMembership) : Promise<AxiosResponse<Blob>> {
+    let requestConfig: AxiosRequestConfig<ProgrammeMembership> = {
+      headers: {
+        Accept: "application/pdf"
+      },
+      responseType: "blob"
+    }
+
+    return this.axiosInstance.put<ProgrammeMembership, AxiosResponse<Blob>>("/coj", programmeMembership, requestConfig)
   }
 
   async saveTraineeFormRPartA(

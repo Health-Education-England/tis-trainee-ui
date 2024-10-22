@@ -19,6 +19,8 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
 import CojGg10 from "./CojGg10";
 import CojGg9 from "./CojGg9";
+import { FormsService } from "../../../services/FormsService";
+import { FileUtilities } from "../../../utilities/FileUtilities";
 
 // set intiial values
 const initialValuesDefault = {
@@ -54,8 +56,28 @@ const validationSchema10 = Yup.object({
   isDeclareContacted: acceptanceValidation
 });
 
+const formsService = new FormsService();
+
+async function getCojPdf(programmeMembershipId: string) {
+  const programmeMemberships = store.getState().traineeProfile.traineeProfileData.programmeMemberships;
+  
+  const linkedProgramme = programmeMemberships.find(
+    prog => prog.tisId === programmeMembershipId
+  );
+
+  if (linkedProgramme) {
+    const response = await formsService.getTraineeCojPdf(linkedProgramme);
+    FileUtilities.downloadPdf(
+      `conditions-of-joining_${linkedProgramme.tisId}.pdf`, 
+      response.data);
+  } else {
+    // TODO: do something?
+  }
+}
+
 export default function CojView() {
   const {
+    signingCojPmId: pmId,
     signingCojProgName: progName,
     signingCojSignedDate: signedDate,
     signingCoj,
@@ -66,7 +88,7 @@ export default function CojView() {
 
   return progName ? (
     <>
-      {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
+      {signedDate && <FormSavePDF history={history} path={"/programmes"} onClickHandler={() => getCojPdf(pmId)}/>}
       <ScrollTo />
       {signingCojVersion === "GG9" && (
         <>
