@@ -5,9 +5,10 @@ import style from "../Common.module.scss";
 type IFormSave = {
   history: any;
   path: string;
+  onClickHandler?: any;
 };
 
-const FormSavePDF = ({ history, path }: IFormSave) => {
+const FormSavePDF = ({ history, path, onClickHandler}: IFormSave) => {
   return (
     <div className="hide-from-print">
       <Row>
@@ -25,20 +26,20 @@ const FormSavePDF = ({ history, path }: IFormSave) => {
         <Col width="one-third">
           <Button
             data-cy="savePdfBtn"
-            onClick={() => FormRUtilities.windowPrint()}
+            onClick={onClickHandler || (() => FormRUtilities.windowPrint())}
           >
             Save a copy as a PDF
           </Button>
         </Col>
         <Col style={{ textAlign: "right" }} width="two-thirds">
-          <ActionLink
+          {onClickHandler ? <></> : <ActionLink
             data-cy="pdfHelpLink"
             target="_blank"
             rel="noopener noreferrer"
             href="https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
           >
             Click here for help saving form as a PDF
-          </ActionLink>
+          </ActionLink>}
         </Col>
       </Row>
     </div>
