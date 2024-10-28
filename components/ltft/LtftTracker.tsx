@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 export function LtftTracker() {
   return (
     <>
-      <Card.Heading>Tracker</Card.Heading>
+      <Card.Heading>Current application tracker</Card.Heading>
       <Card.Description>
         When the development work is completed, this will track the progress of
         your current Changing hours (LTFT) application.

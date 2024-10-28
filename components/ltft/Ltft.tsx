@@ -1,8 +1,9 @@
 import { Fieldset } from "nhsuk-react-components";
-import { mockLtfts } from "../../mock-data/mockLtft";
 import { Route, Switch } from "react-router-dom";
 import { LtftHome } from "./LtftHome";
 import PageNotFound from "../common/PageNotFound";
+import { LtftCct } from "./LtftCct";
+import { LtftCctSummary } from "./LtftCctSummary";
 
 export type LtftStatus =
   | "Not started"
@@ -14,8 +15,6 @@ export type LtftStatus =
   | "ACTIONED";
 
 export function Ltft() {
-  const ltftData = mockLtfts;
-  const currentLtftStatus: LtftStatus = calcLtftStatus(ltftData);
   return (
     <>
       <Fieldset>
@@ -28,23 +27,15 @@ export function Ltft() {
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
-        <Route
-          exact
-          path="/ltft/cct-calculation"
-          render={() => <div>Make new CCT calculation</div>}
-        />
+        <Route exact path="/ltft/cct-calculation" render={() => <LtftCct />} />
+        <Route exact path="/ltft/cct-summary" component={LtftCctSummary} />
         <Route
           exact
           path="/ltft"
-          render={() => <LtftHome currentLtftStatus={currentLtftStatus} />}
+          render={() => <LtftHome currentLtftStatus="Not started" />} // TODO: replace with actual status
         />
         <Route path="/ltft/*" component={PageNotFound} />
       </Switch>
     </>
   );
-}
-
-function calcLtftStatus(ltftData: any): LtftStatus {
-  console.log(ltftData);
-  return "Not started";
 }

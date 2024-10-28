@@ -21,14 +21,19 @@ export function LtftHome({ currentLtftStatus }: Readonly<LtftHomeProps>) {
           Important
         </WarningCallout.Label>
         <p data-cy="ltftWipWarningText">
-          This page is currently under development. At the moment you can make
-          save, and edit a CCT calculation but not submit a Changing hours
-          (LTFT) application.
+          This page is currently under development. You can make, save, and edit
+          a CCT calculation but not yet submit a complete Changing hours (LTFT)
+          application via TIS Self-Service.
         </p>
       </WarningCallout>
       <Card>
         <Card.Content>
-          <Card.Heading>Summary</Card.Heading>
+          <LtftTracker />
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <Card.Heading>Applications Summary</Card.Heading>
           <Card.Description>
             Once developed, this section will be a summary of your Changing
             hours (LTFT) applications - past and current.
@@ -52,7 +57,6 @@ export function LtftHome({ currentLtftStatus }: Readonly<LtftHomeProps>) {
               </SummaryList.Actions>
             </SummaryList.Row>
           </SummaryList>
-          <LtftTracker />
         </Card.Content>
       </Card>
     </>

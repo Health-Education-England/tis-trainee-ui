@@ -2,6 +2,7 @@ import { Label } from "nhsuk-react-components";
 import Select, { Theme } from "react-select";
 import { colourStyles } from "../../utilities/FormBuilderUtilities";
 import CreatableSelect from "react-select/creatable";
+import { ReactNode } from "react";
 
 type AutocompleteSelectProps = {
   value: any;
@@ -18,6 +19,7 @@ type AutocompleteSelectProps = {
   closeMenuOnSelect: boolean;
   isCreatable?: boolean;
   defaultOption?: any;
+  hint?: string | ReactNode;
 };
 
 export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
@@ -30,7 +32,8 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   isMulti,
   closeMenuOnSelect,
   isCreatable,
-  defaultOption
+  defaultOption,
+  hint
 }) => {
   const handleChange = (val: any) => {
     onChange(name, val ? val.value : null, true);
@@ -63,6 +66,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
       <Label id={`${name}--label`} htmlFor="name">
         {label}
       </Label>
+      {hint && <span className="nhsuk-hint">{hint}</span>}
       {error ? (
         <span className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error: </span>
