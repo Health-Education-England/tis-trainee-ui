@@ -23,9 +23,15 @@ import { Modal } from "../common/Modal";
 import { LtftType, updatedLtftData } from "../../redux/slices/ltftSlice";
 import { Form, Formik } from "formik";
 import { AutocompleteSelect } from "../common/AutocompleteSelect";
-import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import dayjs from "dayjs";
 import TextInputField from "../forms/TextInputField";
+import ScrollToTop from "../common/ScrollToTop";
+import {
+  findLinkedProgramme,
+  makeProgrammeOptions,
+  setDefaultProgrammeOption,
+  standardWtePercents
+} from "../../utilities/CctUtilities";
 
 export function LtftCct() {
   const dispatch = useAppDispatch();
@@ -33,49 +39,15 @@ export function LtftCct() {
   const handleProgModalClose = () => {
     setShowProgModal(false);
   };
-
   const progsArr = useAppSelector(selectTraineeProfile).programmeMemberships;
 
-  const makeProgrammeOptions = (programmesArr: ProgrammeMembership[]) => {
-    const programmeOptions = programmesArr.map(programme => ({
-      label: `${programme.programmeName} (${dayjs(programme.startDate).format(
-        "DD/MM/YYYY"
-      )})`,
-      value: programme.tisId
-    }));
-    return programmeOptions;
-  };
-
-  const chosenProgramme = (id: string | null) =>
-    progsArr.find(p => p.tisId === id);
-
   const programmeOptions = makeProgrammeOptions(progsArr);
-  const percentOptions = [
-    { label: "100%", value: 100 },
-    { label: "80%", value: 80 },
-    { label: "70%", value: 70 },
-    { label: "60%", value: 60 },
-    { label: "50%", value: 50 }
-  ];
+  const percentOptions = standardWtePercents;
 
   const initialFormData = useAppSelector(
     state => state.ltft.ltftApplicationData
   );
 
-  const setDefaultProgrammeOption = (id: string | null) => {
-    const selectedProgramme = chosenProgramme(id);
-    if (selectedProgramme) {
-      return {
-        label: `${selectedProgramme.programmeName} (${dayjs(
-          selectedProgramme.startDate
-        ).format("DD/MM/YYYY")})`,
-        value: selectedProgramme.tisId
-      };
-    }
-    return null;
-  };
-
-  const minPropStart = dayjs();
   // const sixteenWkCriteria = dayjs().add(16, "weeks");
 
   const validationSchema = Yup.object().shape({
@@ -114,10 +86,7 @@ export function LtftCct() {
         ),
       newWteReason: Yup.array().min(1, "At least one reason is required."),
       startDate: Yup.date()
-        .min(
-          minPropStart.format("YYYY-MM-DD"),
-          "Start date cannot be before today."
-        )
+        .min(dayjs().format("YYYY-MM-DD"), "Start date cannot be before today.")
         .required("Start date is required."),
       endDate: Yup.date()
         .when("linkedProgEndDate", (linkedProgEndDate, schema) => {
@@ -137,162 +106,171 @@ export function LtftCct() {
   });
 
   return (
-    <Card>
-      <Card.Content>
-        <Card.Heading style={{ color: "#005eb8" }}>
-          CCT Calculation
-        </Card.Heading>
-        <ProgrammesModal
-          isOpen={showProgModal}
-          onClose={handleProgModalClose}
-        />
-        <Formik
-          initialValues={initialFormData}
-          validationSchema={validationSchema}
-          onSubmit={(values: LtftType) => {
-            if (values.cct.endDate === "" && values.cct.linkedProgEndDate) {
-              values.cct.endDate = values.cct.linkedProgEndDate;
-            }
-            dispatch(updatedLtftData(values));
-            history.push("/ltft/cct-summary");
-          }}
-        >
-          {({ values, errors, setFieldValue, isValid, handleSubmit }) => (
-            <Form>
-              <Row>
-                <Col width="two-thirds">
-                  <Button
-                    type="button"
-                    reverse
-                    onClick={() => setShowProgModal(true)}
-                    data-cy="showProgrammesBtn"
-                  >
-                    View Programmes & Placements
-                  </Button>
-                </Col>
-              </Row>
-              <Container>
-                <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
-                  Linked Programme
-                </h3>
+    <>
+      <ScrollToTop />
+      <Card>
+        <Card.Content>
+          <Card.Heading style={{ color: "#005eb8" }}>
+            CCT Calculation
+          </Card.Heading>
+          <ProgrammesModal
+            isOpen={showProgModal}
+            onClose={handleProgModalClose}
+          />
+          <Formik
+            initialValues={initialFormData}
+            validationSchema={validationSchema}
+            onSubmit={(values: LtftType) => {
+              if (values.cct.endDate === "" && values.cct.linkedProgEndDate) {
+                values.cct.endDate = values.cct.linkedProgEndDate;
+              }
+              dispatch(updatedLtftData(values));
+              history.push("/ltft/cct-summary");
+            }}
+          >
+            {({ values, errors, setFieldValue, isValid, handleSubmit }) => (
+              <Form>
                 <Row>
-                  <Col width="one-half">
-                    <AutocompleteSelect
-                      value={values.programmeMembershipId}
-                      onChange={(field, value: string) => {
-                        setFieldValue(field, value);
-                        const selectedProgramme = chosenProgramme(value);
-                        if (selectedProgramme) {
-                          setFieldValue(
-                            "cct.linkedProgEndDate",
-                            selectedProgramme.endDate,
-                            false
-                          );
-                        }
-                      }}
-                      error={errors.programmeMembershipId}
-                      options={programmeOptions}
-                      name="programmeMembershipId"
-                      label="You propose to make the WTE change in what Programme?"
-                      isMulti={false}
-                      closeMenuOnSelect={true}
-                      data-cy="linked-pm-id-btn"
-                      defaultOption={setDefaultProgrammeOption(
-                        values.programmeMembershipId
-                      )}
-                    />
-                  </Col>
-                </Row>
-                <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
-                  WTE change percentages
-                </h3>
-                <Row>
-                  <Col width="one-half">
-                    <AutocompleteSelect
-                      value={values.cct.currentWte}
-                      onChange={setFieldValue}
-                      error={errors.cct?.currentWte}
-                      options={percentOptions}
-                      name="cct.currentWte"
-                      label="WTE percentage (before change)"
-                      isMulti={false}
-                      closeMenuOnSelect={true}
-                      isCreatable={true}
-                      data-cy="current-wte-btn"
-                      defaultOption={{
-                        label: values.cct.currentWte,
-                        value: values.cct.currentWte
-                      }}
-                    />
-                  </Col>
-                  <Col width="one-third">
-                    <AutocompleteSelect
-                      value={values.cct.newWte}
-                      onChange={setFieldValue}
-                      error={errors.cct?.newWte}
-                      options={percentOptions}
-                      name="cct.newWte"
-                      label="Proposed WTE percentage?"
-                      isMulti={false}
-                      isCreatable={true}
-                      closeMenuOnSelect={true}
-                      data-cy="new-wte-btn"
-                      defaultOption={{
-                        label: values.cct.newWte,
-                        value: values.cct.newWte
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
-                  WTE change date(s)
-                </h3>
-                <Row>
-                  <Col width="one-half">
-                    <TextInputField
-                      label="Proposed start date?"
-                      type="date"
-                      name="cct.startDate"
-                      width={10}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col width="full">
-                    {values.cct.startDate &&
-                      !errors.programmeMembershipId &&
-                      !errors.cct?.startDate && (
-                        <TextInputField
-                          label="Proposed end date?"
-                          type="date"
-                          name="cct.endDate"
-                          width={10}
-                          hint={`Leaving this blank will default to your Linked Programme end date: ${dayjs(
-                            chosenProgramme(values.programmeMembershipId)
-                              ?.endDate
-                          ).format("DD/MM/YYYY")}.`}
-                        />
-                      )}
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col width="one-half">
+                  <Col width="two-thirds">
                     <Button
-                      data-cy="cct-calc-btn"
-                      onClick={() => handleSubmit}
-                      disabled={!isValid}
+                      type="button"
+                      reverse
+                      onClick={() => setShowProgModal(true)}
+                      data-cy="showProgrammesBtn"
                     >
-                      Calculate
+                      View Programmes & Placements
                     </Button>
                   </Col>
                 </Row>
-              </Container>
-            </Form>
-          )}
-        </Formik>
-      </Card.Content>
-    </Card>
+                <Container>
+                  <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
+                    Linked Programme
+                  </h3>
+                  <Row>
+                    <Col width="one-half">
+                      <AutocompleteSelect
+                        value={values.programmeMembershipId}
+                        onChange={(field, value: string) => {
+                          setFieldValue(field, value);
+                          const selectedProgramme = findLinkedProgramme(
+                            value,
+                            progsArr
+                          );
+                          if (selectedProgramme) {
+                            setFieldValue(
+                              "cct.linkedProgEndDate",
+                              selectedProgramme.endDate,
+                              false
+                            );
+                          }
+                        }}
+                        error={errors.programmeMembershipId}
+                        options={programmeOptions}
+                        name="programmeMembershipId"
+                        label="You propose to make the WTE change in what Programme?"
+                        isMulti={false}
+                        closeMenuOnSelect={true}
+                        data-cy="linked-pm-id-btn"
+                        defaultOption={setDefaultProgrammeOption(
+                          values.programmeMembershipId,
+                          progsArr
+                        )}
+                      />
+                    </Col>
+                  </Row>
+                  <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
+                    WTE change percentages
+                  </h3>
+                  <Row>
+                    <Col width="one-half">
+                      <AutocompleteSelect
+                        value={values.cct.currentWte}
+                        onChange={setFieldValue}
+                        error={errors.cct?.currentWte}
+                        options={percentOptions}
+                        name="cct.currentWte"
+                        label="WTE percentage (before change)"
+                        isMulti={false}
+                        closeMenuOnSelect={true}
+                        isCreatable={true}
+                        data-cy="current-wte-btn"
+                        defaultOption={{
+                          label: values.cct.currentWte,
+                          value: values.cct.currentWte
+                        }}
+                      />
+                    </Col>
+                    <Col width="one-third">
+                      <AutocompleteSelect
+                        value={values.cct.newWte}
+                        onChange={setFieldValue}
+                        error={errors.cct?.newWte}
+                        options={percentOptions}
+                        name="cct.newWte"
+                        label="Proposed WTE percentage?"
+                        isMulti={false}
+                        isCreatable={true}
+                        closeMenuOnSelect={true}
+                        data-cy="new-wte-btn"
+                        defaultOption={{
+                          label: values.cct.newWte,
+                          value: values.cct.newWte
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  <h3 style={{ color: "#005eb8", margin: "12px 0" }}>
+                    WTE change date(s)
+                  </h3>
+                  <Row>
+                    <Col width="one-half">
+                      <TextInputField
+                        label="Proposed start date?"
+                        type="date"
+                        name="cct.startDate"
+                        width={10}
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col width="full">
+                      {values.cct.startDate &&
+                        !errors.programmeMembershipId &&
+                        !errors.cct?.startDate && (
+                          <TextInputField
+                            label="Proposed end date?"
+                            type="date"
+                            name="cct.endDate"
+                            width={10}
+                            hint={`Leaving this blank will default to your Linked Programme end date: ${dayjs(
+                              findLinkedProgramme(
+                                values.programmeMembershipId,
+                                progsArr
+                              )?.endDate
+                            ).format("DD/MM/YYYY")}.`}
+                          />
+                        )}
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col width="one-half">
+                      <Button
+                        data-cy="cct-calc-btn"
+                        onClick={() => handleSubmit}
+                        disabled={!isValid}
+                      >
+                        Calculate
+                      </Button>
+                    </Col>
+                  </Row>
+                </Container>
+              </Form>
+            )}
+          </Formik>
+        </Card.Content>
+      </Card>
+    </>
   );
 }
 

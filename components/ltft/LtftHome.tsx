@@ -5,9 +5,10 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
+import { LtftStatus } from "./Ltft";
 
 type LtftHomeProps = {
-  currentLtftStatus: string;
+  currentLtftStatus: LtftStatus;
 };
 
 export function LtftHome({ currentLtftStatus }: Readonly<LtftHomeProps>) {
