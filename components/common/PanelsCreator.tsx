@@ -23,10 +23,12 @@ import {
   completeTraineeAction,
   resetTraineeAction
 } from "../../redux/slices/traineeActionsSlice";
+import { TraineeProfileService } from "../../services/TraineeProfileService";
 import dayjs from "dayjs";
 import { CctBtn } from "../programmes/CctBtn";
 import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerLink";
 import InfoTooltip from "./InfoTooltip";
+import { FileUtilities } from "../../utilities/FileUtilities";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -186,6 +188,16 @@ export function PanelsCreator({
                     </SummaryList.Row>
                   ) : null}
                 </SummaryList>
+                <Button
+                  className="btn_full-width"
+                  onClick={(e: { preventDefault: () => void }) => {
+                    e.preventDefault();
+                    downloadPmConfirmation(panel.tisId);
+                  }}
+                  data-cy={`downloadPmConfirmBtn-${panelsName}-${panel.tisId}`}
+                >
+                  {"Download Programme Confirmation"}
+                </Button>
               </Card>
             </Card.GroupItem>
           );
@@ -204,6 +216,13 @@ export function PanelsCreator({
 export async function handleReview(actionId: string) {
   await store.dispatch(completeTraineeAction(actionId));
   store.dispatch(resetTraineeAction());
+}
+
+const traineeProfileService = new TraineeProfileService();
+export async function downloadPmConfirmation(programmeId: string) {
+  FileUtilities.downloadPdf(`programme-confirmation_${programmeId}.pdf`, () =>
+    traineeProfileService.getPmConfirmation(programmeId)
+  );
 }
 
 export function displayListVal<T extends Date | string>(val: T, k: string) {
