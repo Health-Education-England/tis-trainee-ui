@@ -113,6 +113,10 @@ export function LtftCct() {
           <Card.Heading style={{ color: "#005eb8" }}>
             CCT Calculation
           </Card.Heading>
+          <p style={{ color: "GrayText" }}>
+            Completing this form will allow you to estimate your new Programme
+            end date based on a change of hours within that Programme.
+          </p>
           <ProgrammesModal
             isOpen={showProgModal}
             onClose={handleProgModalClose}
@@ -147,7 +151,7 @@ export function LtftCct() {
                     Linked Programme
                   </h3>
                   <Row>
-                    <Col width="one-half">
+                    <Col width="two-thirds">
                       <AutocompleteSelect
                         value={values.programmeMembershipId}
                         onChange={(field, value: string) => {
@@ -167,7 +171,7 @@ export function LtftCct() {
                         error={errors.programmeMembershipId}
                         options={programmeOptions}
                         name="programmeMembershipId"
-                        label="You propose to make the WTE change in what Programme?"
+                        label="You want to begin your change of hours in what Programme?"
                         isMulti={false}
                         closeMenuOnSelect={true}
                         data-cy="linked-pm-id-btn"
@@ -189,7 +193,7 @@ export function LtftCct() {
                         error={errors.cct?.currentWte}
                         options={percentOptions}
                         name="cct.currentWte"
-                        label="WTE percentage (before change)"
+                        label="What is your WTE percentage (before change)"
                         isMulti={false}
                         closeMenuOnSelect={true}
                         isCreatable={true}
@@ -200,14 +204,14 @@ export function LtftCct() {
                         }}
                       />
                     </Col>
-                    <Col width="one-third">
+                    <Col width="one-half">
                       <AutocompleteSelect
                         value={values.cct.newWte}
                         onChange={setFieldValue}
                         error={errors.cct?.newWte}
                         options={percentOptions}
                         name="cct.newWte"
-                        label="Proposed WTE percentage?"
+                        label="What new WTE percentage are you proposing?"
                         isMulti={false}
                         isCreatable={true}
                         closeMenuOnSelect={true}
@@ -225,7 +229,7 @@ export function LtftCct() {
                   <Row>
                     <Col width="one-half">
                       <TextInputField
-                        label="Proposed start date?"
+                        label="When should the new WTE percentage begin?"
                         type="date"
                         name="cct.startDate"
                         width={10}
@@ -238,7 +242,7 @@ export function LtftCct() {
                         !errors.programmeMembershipId &&
                         !errors.cct?.startDate && (
                           <TextInputField
-                            label="Proposed end date?"
+                            label="When should the new WTE percentage end?"
                             type="date"
                             name="cct.endDate"
                             width={10}
@@ -260,7 +264,7 @@ export function LtftCct() {
                         onClick={() => handleSubmit}
                         disabled={!isValid}
                       >
-                        Calculate
+                        Calculate new Programme end date
                       </Button>
                     </Col>
                   </Row>

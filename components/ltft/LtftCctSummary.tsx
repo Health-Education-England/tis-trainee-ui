@@ -1,4 +1,12 @@
-import { Card, Col, Label, Row, SummaryList } from "nhsuk-react-components";
+import {
+  BackLink,
+  Button,
+  Card,
+  Col,
+  Label,
+  Row,
+  Table
+} from "nhsuk-react-components";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { LtftType } from "../../redux/slices/ltftSlice";
 import dayjs from "dayjs";
@@ -10,6 +18,7 @@ import {
 import ScrollToTop from "../common/ScrollToTop";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { Redirect } from "react-router-dom";
+import history from "../navigation/history";
 
 export function LtftCctSummary() {
   const progsArr = useAppSelector(selectTraineeProfile).programmeMemberships;
@@ -41,11 +50,17 @@ export function LtftCctSummary() {
           <Card.Heading style={{ color: "#005eb8" }}>
             CCT Calculation Summary
           </Card.Heading>
-          <Card.Description>
-            This uses the CCT Calculation data you provide to estimate a new
-            Programme end date.
-          </Card.Description>
-
+          <Row>
+            <Col width="one-third">
+              <BackLink
+                data-cy="backLink-to-cct-calculation"
+                className="back-link"
+                onClick={() => history.push("/ltft/cct-calculation")}
+              >
+                Back to edit calculation
+              </BackLink>
+            </Col>
+          </Row>
           <Row>
             <Col width="one-half">
               <Label style={{ margin: 0 }} size="s">
@@ -89,29 +104,44 @@ export function LtftCctSummary() {
               <p>{summaryData[0].newEndDate}</p>
             </Col>
           </Row>
-        </Card.Content>
-      </Card>
-      <Card>
-        <Card.Content>
-          <Card.Heading style={{ color: "#005eb8" }}>
-            For your information
-          </Card.Heading>
-          <Card.Description>
-            Below shows the effect of all standard WTE percentages on your
-            Linked Programme end date.
-          </Card.Description>
-          <SummaryList>
-            <SummaryList.Row>
-              <SummaryList.Key>WTE</SummaryList.Key>
-              <SummaryList.Value>New Programme end date</SummaryList.Value>
-            </SummaryList.Row>
-            {summaryData.slice(1).map(item => (
-              <SummaryList.Row key={item.ftePercent}>
-                <SummaryList.Key>{item.ftePercent}</SummaryList.Key>
-                <SummaryList.Value>{item.newEndDate}</SummaryList.Value>
-              </SummaryList.Row>
-            ))}
-          </SummaryList>
+          <Row>
+            <Col width="one-third">
+              <Button
+                type="button"
+                onClick={() => alert("Submit calculation")}
+                data-cy="submit-cct-calculation"
+              >
+                Submit calculation
+              </Button>
+            </Col>
+            <Col width="one-third">
+              <Button
+                secondary
+                type="button"
+                onClick={() => alert("Save PDF")}
+                data-cy="save-cct-pdf"
+              >
+                Save PDF
+              </Button>
+            </Col>
+          </Row>
+          <br />
+          <Table style={{ color: "GrayText" }} caption="For your information">
+            <Table.Head>
+              <Table.Row>
+                <Table.Cell>WTE</Table.Cell>
+                <Table.Cell>New Programme end date</Table.Cell>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {summaryData.slice(1).map(item => (
+                <Table.Row key={item.ftePercent}>
+                  <Table.Cell>{item.ftePercent}</Table.Cell>
+                  <Table.Cell>{item.newEndDate}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         </Card.Content>
       </Card>
     </>
