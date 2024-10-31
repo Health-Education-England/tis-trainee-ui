@@ -13,7 +13,8 @@ import {
   mockProgrammeMembershipCojSigned,
   mockOutstandingActions,
   mockProgrammeMembershipNoTrainingNumber,
-  mockProgrammeMembershipNoResponsibleOfficer
+  mockProgrammeMembershipNoResponsibleOfficer,
+  mockProgrammeMembershipsForGrouping
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -551,5 +552,115 @@ describe("Programme review action", () => {
     );
     cy.get("[data-cy='actionDueDate-programmeMemberships-1']").should("exist");
     cy.get("[class*='panelDivHighlight']").should("exist");
+  });
+});
+
+describe("Programme confirmation", () => {
+  it("should not display the programme confirmation button for past programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipsForGrouping[0]],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-1']").should(
+      "not.exist"
+    );
+  });
+
+  it("should not display the programme confirmation button for future programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipsForGrouping[3]],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-4']").should(
+      "not.exist"
+    );
+  });
+
+  it("should display the programme confirmation button for current programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipsForGrouping[1]],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-2']").should(
+      "exist"
+    );
+  });
+
+  it("should display the programme confirmation button for upcoming programme", () => {
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetails,
+          programmeMemberships: [mockProgrammeMembershipsForGrouping[2]],
+          placements: []
+        })
+      );
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-3']").should(
+      "exist"
+    );
   });
 });

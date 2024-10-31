@@ -10,7 +10,12 @@ import { programmePanelTemplate } from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import store from "../../redux/store/store";
 import { PanelKeys } from "../../utilities/Constants";
-import { DateUtilities } from "../../utilities/DateUtilities";
+import {
+  DateUtilities,
+  isCurrentDateBoxed,
+  isUpcomingDateBoxed,
+  twelveWeeksAhead
+} from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";
 import { DspIssueBtn } from "../dsp/DspIssueBtn";
@@ -188,16 +193,18 @@ export function PanelsCreator({
                     </SummaryList.Row>
                   ) : null}
                 </SummaryList>
-                <Button
-                  className="btn_full-width"
-                  onClick={(e: { preventDefault: () => void }) => {
-                    e.preventDefault();
-                    downloadPmConfirmation(panel.tisId);
-                  }}
-                  data-cy={`downloadPmConfirmBtn-${panelsName}-${panel.tisId}`}
-                >
-                  {"Download Programme Confirmation"}
-                </Button>
+                {isCurrentDateBoxed(panel) || isUpcomingDateBoxed(panel) ? (
+                  <Button
+                    className="btn_full-width"
+                    onClick={(e: { preventDefault: () => void }) => {
+                      e.preventDefault();
+                      downloadPmConfirmation(panel.tisId);
+                    }}
+                    data-cy={`downloadPmConfirmBtn-${panelsName}-${panel.tisId}`}
+                  >
+                    {"Download Programme Confirmation"}
+                  </Button>
+                ) : null}
               </Card>
             </Card.GroupItem>
           );
