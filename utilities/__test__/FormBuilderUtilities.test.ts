@@ -3,14 +3,21 @@ import {
   mockedCombinedReference
 } from "../../mock-data/combinedReferenceData";
 import { mockForms } from "../../mock-data/formr-list";
+import { mockTraineeProfile } from "../../mock-data/trainee-profile";
 import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 import { LifeCycleState } from "../../models/LifeCycleState";
+import { updatedTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
+import store from "../../redux/store/store";
 import {
   setDraftFormProps,
   transformReferenceData
 } from "../FormBuilderUtilities";
 
 describe("transformReferenceData", () => {
+  beforeEach(() => {
+    store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
+  })
+
   it("should transform reference data to a new format", () => {
     const data: CombinedReferenceData = mockedCombinedReference;
     const expected = mockTransformedCombinedReferenceData;
