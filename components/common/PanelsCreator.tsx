@@ -13,8 +13,7 @@ import { PanelKeys } from "../../utilities/Constants";
 import {
   DateUtilities,
   isCurrentDateBoxed,
-  isUpcomingDateBoxed,
-  twelveWeeksAhead
+  isUpcomingDateBoxed
 } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";

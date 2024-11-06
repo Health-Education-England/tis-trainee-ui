@@ -27,7 +27,7 @@ export class TraineeProfileService extends ApiService {
   async getPmConfirmation(
     programmeMembershipId: string
   ): Promise<AxiosResponse<Blob>> {
-    let requestConfig: AxiosRequestConfig<String> = {
+    let requestConfig: AxiosRequestConfig<string> = {
       headers: {
         Accept: "application/pdf"
       },
