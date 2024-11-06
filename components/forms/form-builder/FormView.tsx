@@ -103,7 +103,9 @@ export const FormView = ({
   return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEditStatus && <FormSavePDF history={history} path={redirectPath} />}
+      {!canEditStatus && (
+        <FormSavePDF history={history} path={redirectPath} pmId="" />
+      )}
       {canEditStatus && (
         <WarningCallout data-cy="warningConfirmation">
           <WarningCallout.Label visuallyHiddenText={false}>
