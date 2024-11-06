@@ -19,7 +19,6 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
 import CojGg10 from "./CojGg10";
 import CojGg9 from "./CojGg9";
-import { FormsService } from "../../../services/FormsService";
 
 // set intiial values
 const initialValuesDefault = {
@@ -55,8 +54,6 @@ const validationSchema10 = Yup.object({
   isDeclareContacted: acceptanceValidation
 });
 
-const formsService = new FormsService();
-
 export default function CojView() {
   const {
     signingCojPmId: pmId,
@@ -71,11 +68,7 @@ export default function CojView() {
   return progName ? (
     <>
       {signedDate && (
-        <FormSavePDF
-          history={history}
-          path={"/programmes"}
-          onClickHandler={() => formsService.downloadTraineeCojPdf(pmId)}
-        />
+        <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
       )}
       <ScrollTo />
       {signingCojVersion === "GG9" && (

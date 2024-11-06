@@ -5,78 +5,44 @@ import store from "../../../redux/store/store";
 import FormSavePDF from "../../../components/forms/FormSavePDF";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import history from "../../../components/navigation/history";
-import React from "react";
+import React, { ReactNode } from "react";
+import { useAppDispatch } from "../../../redux/hooks/hooks";
+import { mockTraineeProfile } from "../../../mock-data/trainee-profile";
+import { updatedTraineeProfileData } from "../../../redux/slices/traineeProfileSlice";
+import { FileUtilities } from "../../../utilities/FileUtilities";
+
+const mountWithProviders = (children: ReactNode) => {
+  return mount(
+    <Provider store={store}>
+      <Router history={history}>{children}</Router>
+    </Provider>
+  );
+};
 
 describe("FormSavePDF", () => {
-  it("should push history when clicking back button", () => {
+  it("should show the 'PDF help' link when 'save Pdf' button clicked and no matched PM", () => {
     cy.stub(FormRUtilities, "historyPush").as("Back");
     cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
 
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormSavePDF history={[]} path="/formr-b" />
-        </Router>
-      </Provider>
-    );
+    mountWithProviders(<FormSavePDF history={[]} path="/formr-b" pmId="1" />);
+    cy.get("[data-cy=pdfHelpLink]").should("not.exist");
+    cy.get("[data-cy=savePdfBtn]").click();
+    cy.get("@PrintPDF").should("have.been.called");
+    cy.get("[data-cy=pdfHelpLink]").should("exist");
     cy.get("[data-cy=backLink]").click();
     cy.get("@Back").should("have.been.called");
   });
 
-  it("should call windowPrint when client-side PDF", () => {
-    cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormSavePDF history={[]} path="/formr-b" />
-        </Router>
-      </Provider>
-    );
+  it("should not show the 'PDF help' link when 'save Pdf' button clicked and matched PM", () => {
+    cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
+    const MockedFormsListBtnNoDraftForms = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedTraineeProfileData(mockTraineeProfile));
+      return <FormSavePDF history={[]} path="/formr-b" pmId="1" />;
+    };
+    mountWithProviders(<MockedFormsListBtnNoDraftForms />);
     cy.get("[data-cy=savePdfBtn]").click();
-    cy.get("@PrintPDF").should("have.been.called");
-  });
-
-  it("should show instructions when client-side PDF", () => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormSavePDF history={[]} path="/formr-b" />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=pdfHelpLink]").should("exist");
-  });
-
-  it("should call click handler when server-side PDF", () => {
-    cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
-
-    const clickHandler = cy.stub().as("ClickHandler");
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormSavePDF
-            history={[]}
-            path="/formr-b"
-            onClickHandler={clickHandler}
-          />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=savePdfBtn]").click();
-    cy.get("@PrintPDF").should("not.have.been.called");
-    cy.get("@ClickHandler").should("have.been.called");
-  });
-
-  it("should not show instructions when server-side PDF", () => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <FormSavePDF history={[]} path="/formr-b" onClickHandler={() => {}} />
-        </Router>
-      </Provider>
-    );
+    cy.get("@DownloadPDF").should("have.been.called");
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
   });
 });

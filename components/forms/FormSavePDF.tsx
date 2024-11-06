@@ -1,14 +1,23 @@
 import { ActionLink, BackLink, Button, Col, Row } from "nhsuk-react-components";
 import { FormRUtilities } from "../../utilities/FormRUtilities";
 import style from "../Common.module.scss";
+import { downloadCojPdf } from "../../utilities/FileUtilities";
+import { useAppSelector } from "../../redux/hooks/hooks";
+import { useState } from "react";
 
 type IFormSave = {
   history: any;
   path: string;
-  onClickHandler?: any;
+  pmId: string;
 };
 
-const FormSavePDF = ({ history, path, onClickHandler }: IFormSave) => {
+const FormSavePDF = ({ history, path, pmId }: IFormSave) => {
+  const [showPdfHelp, setShowPdfHelp] = useState<boolean>(false);
+  const matchedPm = useAppSelector(state =>
+    state.traineeProfile.traineeProfileData.programmeMemberships.find(
+      pm => pm.tisId === pmId
+    )
+  );
   return (
     <div className="hide-from-print">
       <Row>
@@ -26,15 +35,15 @@ const FormSavePDF = ({ history, path, onClickHandler }: IFormSave) => {
         <Col width="one-third">
           <Button
             data-cy="savePdfBtn"
-            onClick={onClickHandler || (() => FormRUtilities.windowPrint())}
+            onClick={() => {
+              downloadCojPdf(pmId, matchedPm, setShowPdfHelp);
+            }}
           >
             Save a copy as a PDF
           </Button>
         </Col>
-        <Col style={{ textAlign: "right" }} width="two-thirds">
-          {onClickHandler ? (
-            <></>
-          ) : (
+        {showPdfHelp && (
+          <Col style={{ textAlign: "right" }} width="two-thirds">
             <ActionLink
               data-cy="pdfHelpLink"
               target="_blank"
@@ -43,8 +52,8 @@ const FormSavePDF = ({ history, path, onClickHandler }: IFormSave) => {
             >
               Click here for help saving form as a PDF
             </ActionLink>
-          )}
-        </Col>
+          </Col>
+        )}
       </Row>
     </div>
   );

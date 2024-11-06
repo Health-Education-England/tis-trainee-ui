@@ -1,5 +1,8 @@
 import { AxiosResponse } from "axios";
 import { showToast, ToastType } from "../components/common/ToastMessage";
+import { FormsService } from "../services/FormsService";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { FormRUtilities } from "./FormRUtilities";
 
 type PdfFunction = () => Promise<AxiosResponse<Blob>>;
 
@@ -30,5 +33,21 @@ export class FileUtilities {
         ToastType.ERROR
       );
     }
+  }
+}
+
+const formsService = new FormsService();
+export function downloadCojPdf(
+  id: string,
+  matchedPm: ProgrammeMembership | undefined,
+  setShowPdfHelp: (showPdfHelp: boolean) => void
+) {
+  if (matchedPm) {
+    FileUtilities.downloadPdf(`conditions-of-joining_${id}.pdf`, () =>
+      formsService.downloadTraineeCojPdf(matchedPm)
+    );
+  } else {
+    FormRUtilities.windowPrint();
+    return setShowPdfHelp(true);
   }
 }

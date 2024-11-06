@@ -5,37 +5,23 @@ import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
 import { IFormR } from "../models/IFormR";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-import store from "../redux/store/store";
-import { FileUtilities } from "../utilities/FileUtilities";
 
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
   }
 
-  async downloadTraineeCojPdf(programmeMembershipId: string) {
-    const programmeMemberships =
-      store.getState().traineeProfile.traineeProfileData.programmeMemberships;
-
-    const programmeMembership = programmeMemberships.find(
-      prog => prog.tisId === programmeMembershipId
-    );
-
+  async downloadTraineeCojPdf(programmeMembership: ProgrammeMembership) {
     let requestConfig: AxiosRequestConfig<ProgrammeMembership> = {
       headers: {
         Accept: "application/pdf"
       },
       responseType: "blob"
     };
-
-    const response = this.axiosInstance.put<
-      ProgrammeMembership,
-      AxiosResponse<Blob>
-    >("/coj", programmeMembership, requestConfig);
-
-    FileUtilities.downloadPdf(
-      `conditions-of-joining_${programmeMembershipId}.pdf`,
-      () => response
+    return this.axiosInstance.put<ProgrammeMembership, AxiosResponse<Blob>>(
+      "/coj",
+      programmeMembership,
+      requestConfig
     );
   }
 
