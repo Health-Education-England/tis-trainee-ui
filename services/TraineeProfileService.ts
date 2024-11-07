@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosRequestConfig } from "axios";
 import ApiService from "./apiService";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
@@ -21,6 +21,22 @@ export class TraineeProfileService extends ApiService {
   ): Promise<AxiosResponse<ProgrammeMembership>> {
     return this.post<ProgrammeMembership>(
       `/programme-membership/${programmeMembershipId}/sign-coj`
+    );
+  }
+
+  async getPmConfirmation(
+    programmeMembershipId: string
+  ): Promise<AxiosResponse<Blob>> {
+    let requestConfig: AxiosRequestConfig<string> = {
+      headers: {
+        Accept: "application/pdf"
+      },
+      responseType: "blob"
+    };
+
+    return this.axiosInstance.get<Blob>(
+      `/programme-membership/${programmeMembershipId}/confirmation`,
+      requestConfig
     );
   }
 

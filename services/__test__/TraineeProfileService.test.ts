@@ -7,6 +7,7 @@ import {
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
+import { FileUtilities } from "../../utilities/FileUtilities";
 
 const mockService = new TraineeProfileService();
 describe("TraineeProfileService", () => {
@@ -60,6 +61,49 @@ describe("TraineeProfileService", () => {
     jest.spyOn(mockService, "post").mockRejectedValue(errorResponse);
 
     mockService.signCoj("1").catch(res => {
+      expect(res).toEqual(errorResponse);
+    });
+  });
+
+  it("getPmConfirmation method should download PM confirmation PDF", () => {
+    const successResponse: Promise<AxiosResponse<Blob>> = Promise.resolve({
+      data: new Blob(),
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config: {}
+    });
+
+    jest
+      .spyOn(mockService.axiosInstance, "get")
+      .mockReturnValue(successResponse);
+
+    const result = mockService.getPmConfirmation("1");
+
+    expect(mockService.axiosInstance.get).toHaveBeenCalledWith(
+      "/programme-membership/1/confirmation",
+      {
+        headers: {
+          Accept: "application/pdf"
+        },
+        responseType: "blob"
+      }
+    );
+    expect(result).toEqual(successResponse);
+  });
+
+  it("getPmConfirmation method should return failure response", () => {
+    jest.spyOn(mockService, "get").mockRejectedValue(errorResponse);
+
+    mockService.getPmConfirmation("1").catch(res => {
+      expect(res).toEqual(errorResponse);
+    });
+  });
+
+  it("getPmConfirmation method should return failure response", () => {
+    jest.spyOn(mockService, "post").mockRejectedValue(errorResponse);
+
+    mockService.getPmConfirmation("1").catch(res => {
       expect(res).toEqual(errorResponse);
     });
   });
