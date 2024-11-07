@@ -78,9 +78,18 @@ describe("TraineeProfileService", () => {
       .spyOn(mockService.axiosInstance, "get")
       .mockReturnValue(successResponse);
 
-    mockService.getPmConfirmation("1");
+    const result = mockService.getPmConfirmation("1");
 
-    expect(mockService.getPmConfirmation("1")).toEqual(successResponse);
+    expect(mockService.axiosInstance.get).toHaveBeenCalledWith(
+      "/programme-membership/1/confirmation",
+      {
+        headers: {
+          Accept: "application/pdf"
+        },
+        responseType: "blob"
+      }
+    );
+    expect(result).toEqual(successResponse);
   });
 
   it("getPmConfirmation method should return failure response", () => {

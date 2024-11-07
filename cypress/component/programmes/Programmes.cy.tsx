@@ -32,6 +32,7 @@ import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 import { updatedFormAList } from "../../../redux/slices/formASlice";
 import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
+import { FileUtilities } from "../../../utilities/FileUtilities";
 
 describe("Programmes with no MFA set up", () => {
   it("should not display Programmes page if NOMFA", () => {
@@ -632,9 +633,11 @@ describe("Programme confirmation", () => {
       </Provider>
     );
 
-    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-2']").should(
-      "exist"
-    );
+    cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-2']")
+      .should("exist")
+      .click({ force: true });
+    cy.get("@DownloadPDF").should("have.been.called");
   });
 
   it("should display the programme confirmation button for upcoming programme", () => {
@@ -659,8 +662,10 @@ describe("Programme confirmation", () => {
       </Provider>
     );
 
-    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-3']").should(
-      "exist"
-    );
+    cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-3']")
+      .should("exist")
+      .click({ force: true });
+    cy.get("@DownloadPDF").should("have.been.called");
   });
 });
