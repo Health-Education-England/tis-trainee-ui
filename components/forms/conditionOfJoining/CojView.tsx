@@ -56,6 +56,7 @@ const validationSchema10 = Yup.object({
 
 export default function CojView() {
   const {
+    signingCojPmId: pmId,
     signingCojProgName: progName,
     signingCojSignedDate: signedDate,
     signingCoj,
@@ -66,7 +67,9 @@ export default function CojView() {
 
   return progName ? (
     <>
-      {signedDate && <FormSavePDF history={history} path={"/programmes"} />}
+      {signedDate && (
+        <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
+      )}
       <ScrollTo />
       {signingCojVersion === "GG9" && (
         <>

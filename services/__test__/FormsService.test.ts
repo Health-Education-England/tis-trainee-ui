@@ -5,9 +5,39 @@ import { submittedFormRPartBs } from "../../mock-data/submitted-formr-partb";
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { FormRPartB } from "../../models/FormRPartB";
 import { FormRPartA } from "../../models/FormRPartA";
+import { mockProgrammeMemberships } from "../../mock-data/trainee-profile";
 
 const mockService = new FormsService();
 describe("FormsService", () => {
+  it("downloadTraineeCojPdf method should download PDF from server", async () => {
+    const programmeMembership = mockProgrammeMemberships[0];
+    const successResponse: AxiosResponse<Blob> = {
+      data: new Blob(),
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config: {}
+    };
+
+    jest
+      .spyOn(mockService.axiosInstance, "put")
+      .mockResolvedValue(successResponse);
+
+    const result = await mockService.downloadTraineeCojPdf(programmeMembership);
+
+    expect(mockService.axiosInstance.put).toHaveBeenCalledWith(
+      "/coj",
+      programmeMembership,
+      {
+        headers: {
+          Accept: "application/pdf"
+        },
+        responseType: "blob"
+      }
+    );
+    expect(result).toEqual(successResponse);
+  });
+
   it("getTraineeFormRPartA method should return success response", () => {
     const successResponse: Promise<AxiosResponse<FormRPartA[]>> =
       Promise.resolve({

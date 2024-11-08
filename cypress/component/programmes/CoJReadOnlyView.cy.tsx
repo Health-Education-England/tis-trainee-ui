@@ -12,6 +12,7 @@ import {
   updatedsigningCojVersion
 } from "../../../redux/slices/userSlice";
 import CojView from "../../../components/forms/conditionOfJoining/CojView";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 
 describe("COJ Contents ReadOnly View For Gold Guide 9", () => {
   beforeEach(() => {
@@ -66,7 +67,10 @@ describe("COJ Contents ReadOnly View For Gold Guide 9", () => {
       .should("be.checked");
   });
   it("should render view component with save PDF btn/link and declarations for submitted form.", () => {
-    cy.get("[data-cy=savePdfBtn]").should("exist");
+    cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
+    cy.get("[data-cy=pdfHelpLink]").should("not.exist");
+    cy.get("[data-cy=savePdfBtn]").click();
+    cy.get("@PrintPDF").should("have.been.called");
     cy.get("[data-cy=pdfHelpLink]")
       .should("exist")
       .should(
@@ -133,7 +137,9 @@ describe("COJ Contents ReadOnly View For Gold Guide 10", () => {
       .should("be.checked");
   });
   it("should render view component with save PDF btn/link and declarations for submitted form.", () => {
-    cy.get("[data-cy=savePdfBtn]").should("exist");
+    cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
+    cy.get("[data-cy=savePdfBtn]").click();
+    cy.get("@PrintPDF").should("have.been.called");
     cy.get("[data-cy=pdfHelpLink]")
       .should("exist")
       .should(
