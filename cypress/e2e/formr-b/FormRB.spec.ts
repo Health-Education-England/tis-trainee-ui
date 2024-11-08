@@ -151,7 +151,6 @@ describe("Form R (Part B) - Submit a new form", () => {
       `Form submitted on: ${today.format("DD/MM/YYYY")}`
     );
     cy.checkElement("savePdfBtn");
-    cy.get(".nhsuk-action-link__text").click();
     cy.checkElement("forename-value", "Bob-edited");
     cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
     cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
