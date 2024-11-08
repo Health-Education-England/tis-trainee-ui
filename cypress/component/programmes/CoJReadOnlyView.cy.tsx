@@ -146,6 +146,7 @@ describe("COJ Contents ReadOnly View For Gold Guide 10", () => {
         "have.attr",
         "href",
         "https://tis-support.hee.nhs.uk/trainees/how-to-save-form-as-pdf/"
-      );
+      )
+      .click();
   });
 });

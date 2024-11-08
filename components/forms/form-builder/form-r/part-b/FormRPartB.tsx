@@ -6,7 +6,7 @@ import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
 import formBJson from "./formB.json";
-import FormBuilder, { Form, FormName } from "../../FormBuilder";
+import FormBuilder, { Form } from "../../FormBuilder";
 import { getFormBValidationSchema } from "./formBValidationSchema";
 import { useSelectFormData } from "../../../../../utilities/hooks/useSelectFormData";
 import { selectAllReference } from "../../../../../redux/slices/referenceSlice";
@@ -24,7 +24,7 @@ export default function FormB() {
 
   const redirectPath = "/formr-b";
   const formJson = formBJson as Form;
-  const formData = useSelectFormData(formJson.name as FormName) as FormRPartB;
+  const formData = useSelectFormData(formJson.name) as FormRPartB;
 
   const formDataWithSortedWork = {
     ...formData,
