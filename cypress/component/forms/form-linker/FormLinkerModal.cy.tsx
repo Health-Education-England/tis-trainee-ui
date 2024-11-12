@@ -48,6 +48,20 @@ describe("FormLinkerModal", () => {
     );
   };
 
+  it("should ask for reason submitting FormR", () => {
+    mountComponent();
+    cy.get("dialog").should("be.visible");
+    cy.get('[data-cy="programmeMembershipId"]').should("not.exist");
+    cy.get('[data-cy="isArcp"]')
+      .should("exist")
+      .should(
+        "contain.text",
+        "Please select why you are submitting your Form R"
+      );
+    cy.contains("ARCP/Annual Submission").should("exist");
+    cy.contains("New Starter").should("exist");
+  });
+
   it("renders the FormLinkerModal component for a new/unsubmitted form", () => {
     mountComponent();
     cy.get("dialog").should("be.visible");
