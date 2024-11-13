@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { YES_NO_OPTIONS } from "../../../utilities/Constants";
+import { ARCP_OPTIONS } from "../../../utilities/Constants";
 import { AutocompleteSelect } from "../../common/AutocompleteSelect";
 import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice";
 import {
@@ -99,8 +99,8 @@ export function FormLinkerForm({
                 name="isArcp"
                 id="isArcp"
                 type="radios"
-                items={YES_NO_OPTIONS}
-                label="Are you submitting this form for your ARCP/Revalidation?"
+                items={ARCP_OPTIONS}
+                label="Please select why you are submitting your Form R:"
                 data-cy="is-arcp-radio"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const updatedOptions = makeLinkedProgOptions(
