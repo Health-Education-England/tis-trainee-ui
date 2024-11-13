@@ -192,7 +192,8 @@ export function PanelsCreator({
                     </SummaryList.Row>
                   ) : null}
                 </SummaryList>
-                {isCurrentDateBoxed(panel) || isUpcomingDateBoxed(panel) ? (
+                {panelsName === TraineeProfileName.Programmes &&
+                (isCurrentDateBoxed(panel) || isUpcomingDateBoxed(panel)) ? (
                   <Button
                     className="btn_full-width"
                     onClick={(e: { preventDefault: () => void }) => {
