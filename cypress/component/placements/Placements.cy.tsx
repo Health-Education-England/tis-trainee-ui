@@ -510,5 +510,32 @@ describe("Placements - dsp membership", () => {
       cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
       cy.get("[class*='panelDivHighlight']").should("exist");
     });
+
+    it("should not display the programme confirmation button for placement", () => {
+      const MockedPlacements = () => {
+        const dispatch = useAppDispatch();
+        dispatch(
+          updatedTraineeProfileData({
+            traineeTisId: "12345",
+            personalDetails: mockPersonalDetails,
+            programmeMemberships: [],
+            placements: [mockPlacements[0]]
+          })
+        );
+        return <Placements />;
+      };
+
+      mount(
+        <Provider store={store}>
+          <Router history={history}>
+            <MockedPlacements />
+          </Router>
+        </Provider>
+      );
+
+      cy.get("[data-cy='downloadPmConfirmBtn-placements-315']").should(
+        "not.exist"
+      );
+    });
   });
 });
