@@ -43,7 +43,20 @@ describe("FileUtilities.downloadPdf", () => {
     expect(createElementMock).toHaveBeenCalledWith("a");
   });
 
-  it("should handle errors gracefully", async () => {
+  it("should handle response with Axios error object", async () => {
+    const errorResponse = { message: "Network error" };
+    const getPdfMock = jest.fn().mockRejectedValue(errorResponse);
+
+    await FileUtilities.downloadPdf("test.pdf", getPdfMock);
+
+    expect(getPdfMock).toHaveBeenCalled();
+    expect(showToast).toHaveBeenCalledWith(
+      "Failed to download test.pdf PDF. Please try again. (error msg: Network error ). ",
+      ToastType.ERROR
+    );
+  });
+
+  it("should handle other download errors gracefully", async () => {
     const getPdfMock = jest.fn().mockRejectedValue(new Error("Network error"));
 
     await FileUtilities.downloadPdf("test.pdf", getPdfMock);
@@ -51,28 +64,8 @@ describe("FileUtilities.downloadPdf", () => {
     expect(getPdfMock).toHaveBeenCalled();
     expect(createObjectURLMock).not.toHaveBeenCalled();
     expect(createElementMock).not.toHaveBeenCalled();
-  });
-
-  it("should call showToast on download failure", async () => {
-    const getPdfMock = jest.fn().mockRejectedValue(new Error("Network error"));
-
-    await FileUtilities.downloadPdf("test.pdf", getPdfMock);
-
     expect(showToast as jest.Mock).toHaveBeenCalledWith(
-      "Failed to download test.pdf PDF. Please try again. (error msg: Error: Network error ). ",
-      ToastType.ERROR
-    );
-  });
-
-  it("should handle response with Axios error object", async () => {
-    const errorResponse = { response: "Server error" };
-    const getPdfMock = jest.fn().mockRejectedValue(errorResponse);
-
-    await FileUtilities.downloadPdf("test.pdf", getPdfMock);
-
-    expect(getPdfMock).toHaveBeenCalled();
-    expect(showToast).toHaveBeenCalledWith(
-      "Failed to download test.pdf PDF. Please try again. (error msg: Server error ). ",
+      "Failed to download test.pdf PDF. Please try again. (error msg: Network error ). ",
       ToastType.ERROR
     );
   });

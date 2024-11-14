@@ -23,12 +23,12 @@ export class FileUtilities {
       window.URL.revokeObjectURL(url);
     } catch (error: any) {
       console.log(`PDF Fail error msg: ${
-        error.response ? error.response : error
+        error.message ? error.message : JSON.stringify(error)
       } )
       `);
       showToast(
         `Failed to download ${filename} PDF. Please try again. (error msg: ${
-          error.response ? error.response : error
+          error.message ? error.message : JSON.stringify(error)
         } ). `,
         ToastType.ERROR
       );
