@@ -29,10 +29,10 @@ import {
 } from "../../redux/slices/traineeActionsSlice";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import dayjs from "dayjs";
-import { CctBtn } from "../programmes/CctBtn";
 import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerLink";
 import InfoTooltip from "./InfoTooltip";
 import { FileUtilities } from "../../utilities/FileUtilities";
+import { Link } from "react-router-dom";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -114,24 +114,32 @@ export function PanelsCreator({
                         </SummaryList.Row>
                       </>
                     )}
-
-                  {panelsName === TraineeProfileName.Programmes && (
-                    <>
-                      <p
-                        className={style.panelSubHeader}
-                        data-cy="subheaderLtft"
-                      >
-                        Less Than Full Time (LTFT)
-                      </p>
-                      <CctBtn
-                        data-cy={`cctBtn-${panelsName}-${panel.tisId}`}
-                        progName={panel.programmeName}
-                        endDate={panel.endDate}
-                        startDate={panel.startDate}
-                      />
-                    </>
-                  )}
-
+                  <p className={style.panelSubHeader} data-cy="subheaderLtft">
+                    Changing hours (LTFT)
+                  </p>
+                  <SummaryList.Row>
+                    <SummaryList.Key>
+                      <Label size="s">Thinking of changing your hours?</Label>
+                    </SummaryList.Key>
+                    <SummaryList.Value>
+                      <Link to="/notifications">
+                        See your LTFT notification for more details on how to
+                        apply
+                      </Link>
+                    </SummaryList.Value>
+                  </SummaryList.Row>
+                  <SummaryList.Row>
+                    <SummaryList.Key>
+                      <Label size="s">
+                        Need a changing hours (LTFT) calculation?
+                      </Label>
+                    </SummaryList.Key>
+                    <SummaryList.Value>
+                      <Link to="/cct" data-cy="cct-link">
+                        Go to CCT page
+                      </Link>
+                    </SummaryList.Value>
+                  </SummaryList.Row>
                   <p
                     className={style.panelSubHeader}
                     data-cy="subheaderDetails"

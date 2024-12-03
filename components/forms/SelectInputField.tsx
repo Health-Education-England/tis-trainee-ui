@@ -11,11 +11,12 @@ interface Props {
   options?: any[];
   footer?: any;
   onChange?: any;
+  disabled?: boolean;
 }
 
 const SelectInputField: React.FC<Props> = props => {
   const [field, { error }, helpers] = useField(props);
-  const { name, id, label, onChange, hint, footer } = props;
+  const { name, id, label, onChange, hint, footer, disabled } = props;
   return (
     <div
       className={
@@ -34,6 +35,7 @@ const SelectInputField: React.FC<Props> = props => {
         hint={hint}
         value={field.value ?? ""}
         data-cy={name}
+        disabled={disabled}
       >
         <Select.Option value="">-- Please select --</Select.Option>
         {props.options

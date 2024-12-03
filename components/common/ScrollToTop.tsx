@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 
 type ScrollToTopProps = {
-  errors: any;
-  page: number;
-  isPageDirty: boolean;
+  errors?: any;
+  page?: number;
+  isPageDirty?: boolean;
 };
 
 export default function ScrollToTop({
-  errors,
-  page,
-  isPageDirty
+  errors = {},
+  page = 1,
+  isPageDirty = false
 }: ScrollToTopProps) {
   const errorsLength = Object.keys(errors).length;
   useEffect(() => {

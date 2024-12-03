@@ -69,6 +69,17 @@ const Home = () => {
         <Card.GroupItem width="one-third">
           <PageCard
             isClickable={true}
+            route="/cct"
+            linkHeader="CCT (Certificate of Completion of Training)"
+          >
+            <ul className={style.ull}>
+              <li>Make a CCT Calculation</li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+        <Card.GroupItem width="one-third">
+          <PageCard
+            isClickable={true}
             route="/formr-a"
             linkHeader="Form R (Part A)"
           >
@@ -90,6 +101,8 @@ const Home = () => {
             </ul>
           </PageCard>
         </Card.GroupItem>
+      </Card.Group>
+      <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard isClickable={true} route="/profile" linkHeader="Profile">
             <ul className={style.ull}>
@@ -98,8 +111,6 @@ const Home = () => {
             </ul>
           </PageCard>
         </Card.GroupItem>
-      </Card.Group>
-      <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard isClickable={true} route="/support" linkHeader="Support">
             <ul className={style.ull}>

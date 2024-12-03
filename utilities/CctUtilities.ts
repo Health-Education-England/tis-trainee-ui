@@ -1,63 +1,76 @@
 import dayjs from "dayjs";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import {
+  CctCalculation,
+  CctChangeType,
+  saveCctCalc,
+  updateCctCalc,
+  updatedFormSaveStatus
+} from "../redux/slices/cctSlice";
 import store from "../redux/store/store";
-import { resetCctCalc } from "../redux/slices/cctCalcSlice";
+import history from "../components/navigation/history";
 
-export type FtePercentsTypes = {
-  value: number | string;
-  label: string;
-};
-
-export type NewEndDatesTypes = {
-  ftePercent: string;
-  newEndDate: string;
-};
-
-export function calculateNewEndDates(
-  currentFtePercent: number,
-  ftePercents: FtePercentsTypes[],
-  propStartDate: Date | string,
-  propEndDate: Date | string,
-  currentProgEndDate: Date | string
-): NewEndDatesTypes[] {
-  const chunkDays = dayjs(propEndDate).diff(propStartDate, "days");
-  return ftePercents.map(ftePercent => {
-    if (typeof ftePercent.value === "string") {
-      ftePercent.value = Number(ftePercent.value.split("%")[0]);
-    }
-    if (!ftePercent.label.includes("%")) {
-      ftePercent.label = `${ftePercent.label}%`;
-    }
-    const chunkDaysWTE = Math.ceil(
-      (chunkDays * currentFtePercent) / ftePercent.value
-    );
-    const newEndDate = dayjs(currentProgEndDate).add(
-      chunkDaysWTE - chunkDays,
-      "days"
-    );
-    return {
-      ftePercent: ftePercent.label,
-      newEndDate: newEndDate.format("DD/MM/YYYY")
-    };
-  });
+export function findLinkedProgramme(
+  id: string | null,
+  progs: ProgrammeMembership[]
+) {
+  return progs.find(prog => prog.tisId === id);
 }
 
-export function handleClose() {
-  store.dispatch(resetCctCalc());
+export function makeProgrammeOptions(progs: ProgrammeMembership[]) {
+  return progs.map(programme => ({
+    label: `${programme.programmeName} (${dayjs(programme.startDate).format(
+      "DD/MM/YYYY"
+    )})`,
+    value: programme.tisId
+  }));
 }
 
-export function calcDefaultPropStartDate(
-  programmeStartDate: string,
-  programmeEndDate: string
-): string {
-  const sixteenWeeksFromNow = dayjs().add(16, "weeks").format("YYYY-MM-DD");
+export function setDefaultProgrammeOption(
+  id: string | null,
+  progs: ProgrammeMembership[]
+) {
+  const selectedProgramme = id ? findLinkedProgramme(id, progs) : null;
+  return selectedProgramme
+    ? {
+        label: `${selectedProgramme.programmeName} (${dayjs(
+          selectedProgramme.startDate
+        ).format("DD/MM/YYYY")})`,
+        value: selectedProgramme.tisId
+      }
+    : null;
+}
 
-  if (dayjs(programmeStartDate).isSameOrAfter(sixteenWeeksFromNow)) {
-    return programmeStartDate;
+export function calcLtftChange(
+  currentProgEndDate: Date | string,
+  currentWte: number,
+  change: CctChangeType
+) {
+  const { startDate, wte } = change;
+  const chunkDays = dayjs(currentProgEndDate).diff(startDate, "days");
+  const chunkDaysWTE = Math.ceil((chunkDays * currentWte) / (wte as number));
+  return dayjs(currentProgEndDate)
+    .add(chunkDaysWTE - chunkDays, "days")
+    .format("YYYY-MM-DD");
+}
+
+export async function handleCctSubmit(
+  startSubmitting: () => void,
+  stopSubmitting: () => void,
+  calcData: CctCalculation,
+  name?: string
+) {
+  startSubmitting();
+  store.dispatch(updatedFormSaveStatus("idle"));
+  if (calcData.id) {
+    await store.dispatch(updateCctCalc(calcData));
+  } else {
+    const trimmedName = name?.trim();
+    await store.dispatch(saveCctCalc({ ...calcData, name: trimmedName }));
   }
-
-  if (dayjs(programmeEndDate).isBefore(sixteenWeeksFromNow)) {
-    return "";
+  const formSaveStatus = store.getState().cct.formSaveStatus;
+  if (formSaveStatus === "succeeded") {
+    history.push("/cct");
   }
-
-  return sixteenWeeksFromNow;
+  stopSubmitting();
 }
