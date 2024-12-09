@@ -122,7 +122,7 @@ export function PanelsCreator({
                       <Label size="s">Thinking of changing your hours?</Label>
                     </SummaryList.Key>
                     <SummaryList.Value>
-                      <Link to="/notifications">
+                      <Link to="/notifications" data-cy="ltft-link">
                         See your LTFT notification for more details on how to
                         apply
                       </Link>
@@ -130,8 +130,8 @@ export function PanelsCreator({
                   </SummaryList.Row>
                   <SummaryList.Row>
                     <SummaryList.Key>
-                      <Label size="s">
-                        Need a changing hours (LTFT) calculation?
+                      <Label size="s" data-cy="cct-link-header">
+                        Need a Changing hours (LTFT) calculation?
                       </Label>
                     </SummaryList.Key>
                     <SummaryList.Value>
