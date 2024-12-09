@@ -22,13 +22,23 @@ const columnHelper = createColumnHelper<CctSummaryType>();
 const columns = [
   columnHelper.accessor("name", {
     id: "name",
-    header: ({ column }) => <TableColumnHeader column={column} title="Name" />,
+    header: ({ column }) => (
+      <TableColumnHeader
+        column={column}
+        title="Name"
+        data-cy={`table-column_${column.id}`}
+      />
+    ),
     cell: props => <span>{props.renderValue()}</span>
   }),
   columnHelper.accessor("created", {
     id: "created",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Created" />
+      <TableColumnHeader
+        column={column}
+        title="Created"
+        data-cy={`table-column_${column.id}`}
+      />
     ),
     cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
     sortingFn: "datetime"
@@ -36,7 +46,11 @@ const columns = [
   columnHelper.accessor("lastModified", {
     id: "lastModified",
     header: ({ column }) => (
-      <TableColumnHeader column={column} title="Last modified" />
+      <TableColumnHeader
+        column={column}
+        title="Last modified"
+        data-cy={`table-column_${column.id}`}
+      />
     ),
     cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
     sortingFn: "datetime",
@@ -71,7 +85,7 @@ export function CctSavedDraftsTable() {
 
   return cctList.length > 0 ? (
     <div className="table-wrapper">
-      <table data-cy="saved-calculations-table">
+      <table data-cy="cct-saved-drafts-table">
         <thead>
           {table.getHeaderGroups().map(headerGroup => {
             return (
@@ -104,7 +118,7 @@ export function CctSavedDraftsTable() {
                 data-cy={`saved-calculation-row-${row.id}`}
               >
                 {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
+                  <td key={cell.id} data-cy={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -115,6 +129,6 @@ export function CctSavedDraftsTable() {
       </table>
     </div>
   ) : (
-    <div>You have no saved calculations.</div>
+    <p data-cy="no-saved-drafts">You have no saved calculations.</p>
   );
 }
