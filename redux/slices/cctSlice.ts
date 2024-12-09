@@ -24,7 +24,7 @@ export type CctCalculation = {
   id?: string;
   traineeTisId?: string;
   name?: string;
-  cctDate?: Date;
+  cctDate?: Date | string;
   programmeMembership: PmType;
   changes: CctChangeType[];
 };

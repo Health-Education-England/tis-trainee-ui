@@ -18,7 +18,7 @@ export function CctHome() {
 
   return (
     <>
-      <WarningCallout>
+      <WarningCallout data-cy="cct-home-warning">
         <WarningCallout.Label visuallyHiddenText={false}>
           Important
         </WarningCallout.Label>
@@ -27,11 +27,14 @@ export function CctHome() {
           please <Link to="/support">contact your Local Office support</Link>
         </p>
       </WarningCallout>
-      <p className={style.panelSubHeader} data-cy="subheaderProgs">
+      <p className={style.panelSubHeader} data-cy="cct-home-subheader-prog">
         Current & future programmes
       </p>
       <CctProgrammesList />
       <br />
+      <p className={style.panelSubHeader} data-cy="cct-home-subheader-calcs">
+        Saved calculations
+      </p>
       <CctSavedDrafts />
       <Button
         type="button"
@@ -39,7 +42,7 @@ export function CctHome() {
           dispatch(resetCctCalc());
           history.push("/cct/create");
         }}
-        data-cy="makeNewCctBtn"
+        data-cy="cct-home-new-calc-btn"
       >
         Make a new calculation
       </Button>

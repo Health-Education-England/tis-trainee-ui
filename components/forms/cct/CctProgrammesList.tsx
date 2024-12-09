@@ -24,12 +24,17 @@ export function CctProgrammesList() {
         {progsArr.reduce<JSX.Element[]>((acc, item) => {
           if (dayjs(item.endDate).isAfter(dayjs())) {
             acc.push(
-              <Table.Row key={item.programmeTisId}>
+              <Table.Row
+                key={item.tisId}
+                data-cy={`cct-home-prog-${item.tisId}`}
+              >
                 <Table.Cell>{item.programmeName}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell
+                  data-cy={`cct-home-prog-item-startdate-${item.tisId}`}
+                >
                   {dayjs(item.startDate).format("DD/MM/YYYY")}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell data-cy={`cct-home-prog-item-end-${item.tisId}`}>
                   {dayjs(item.endDate).format("DD/MM/YYYY")}
                 </Table.Cell>
               </Table.Row>

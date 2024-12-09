@@ -94,7 +94,7 @@ export function CctCalcCreate() {
               {initialFormData.name}
             </p>
           )}
-          <WarningCallout>
+          <WarningCallout data-cy="cct-calc-warning">
             <WarningCallout.Label visuallyHiddenText={false}>
               Please note
             </WarningCallout.Label>
@@ -140,21 +140,26 @@ export function CctCalcCreate() {
               resetForm,
               dirty
             }) => (
-              <Form>
+              <Form data-cy="cct-calc-form">
                 <Row>
                   <Col width="two-thirds">
                     <Button
                       type="button"
                       reverse
                       onClick={() => setShowProgModal(true)}
-                      data-cy="showProgrammesBtn"
+                      data-cy="show-prog-modal-btn"
                     >
                       View your programmes & placements
                     </Button>
                   </Col>
                 </Row>
                 <Container>
-                  <h3 className={style.panelSubHeader}>Linked Programme</h3>
+                  <h3
+                    className={style.panelSubHeader}
+                    data-cy="linked-prog-header"
+                  >
+                    Linked Programme
+                  </h3>
                   <Row>
                     <Col width="two-thirds">
                       <AutocompleteSelect
@@ -193,7 +198,6 @@ export function CctCalcCreate() {
                         label=""
                         isMulti={false}
                         closeMenuOnSelect={true}
-                        data-cy="linked-pm-id-btn"
                         defaultOption={setDefaultProgrammeOption(
                           values.programmeMembership.id,
                           progsArr
@@ -205,10 +209,12 @@ export function CctCalcCreate() {
                     <>
                       <Row>
                         <Col width="three-quarters">
-                          <Table responsive>
+                          <Table responsive data-cy="linked-prog-table">
                             <Table.Head>
                               <Table.Row>
-                                <Table.Cell>Linked Programme</Table.Cell>
+                                <Table.Cell data-cy="table-header-linked-prog-name">
+                                  Linked Programme
+                                </Table.Cell>
                                 <Table.Cell>Start date</Table.Cell>
                                 <Table.Cell>
                                   Current Completion date (on TIS)
@@ -217,7 +223,7 @@ export function CctCalcCreate() {
                             </Table.Head>
                             <Table.Body>
                               <Table.Row>
-                                <Table.Cell>
+                                <Table.Cell data-cy="table-data-linked-prog-name">
                                   {values.programmeMembership.name}
                                 </Table.Cell>
                                 <Table.Cell>
@@ -235,7 +241,10 @@ export function CctCalcCreate() {
                           </Table>
                         </Col>
                       </Row>
-                      <h3 className={style.panelSubHeader}>
+                      <h3
+                        className={style.panelSubHeader}
+                        data-cy="currentWte-header"
+                      >
                         Current WTE percentage
                       </h3>
                       <Row>
@@ -280,7 +289,12 @@ export function CctCalcCreate() {
                   {values.programmeMembership.id &&
                   values.programmeMembership.wte ? (
                     <>
-                      <h3 className={style.panelSubHeader}>Proposed changes</h3>
+                      <h3
+                        className={style.panelSubHeader}
+                        data-cy="proposed-changes-header"
+                      >
+                        Proposed changes
+                      </h3>
                       <FieldArray
                         name="changes"
                         render={_ => (
@@ -316,14 +330,17 @@ export function CctCalcCreate() {
                                         type="date"
                                         data-cy="change-start-date"
                                       />
-                                      {dayjs(values.changes[index].startDate) <
-                                        dayjs()
-                                          .add(16, "week")
-                                          .subtract(1, "day") && (
-                                        <span data-cy="start-short-notice-warn">
-                                          <FieldWarningMsg warningMsg="Actioning a change in WTE hours with less than 16 weeks notice might not be possible logistically (e.g. rota constraints)." />
-                                        </span>
-                                      )}
+                                      {!(
+                                        errors.changes as CctCalculationErrors["changes"]
+                                      )?.[index]?.startDate &&
+                                        dayjs(values.changes[index].startDate) <
+                                          dayjs()
+                                            .add(16, "week")
+                                            .subtract(1, "day") && (
+                                          <span data-cy="start-short-notice-warn">
+                                            <FieldWarningMsg warningMsg="Actioning a change in WTE hours with less than 16 weeks notice might not be possible logistically (e.g. rota constraints)." />
+                                          </span>
+                                        )}
                                     </Col>
                                     <Col width="one-quarter">
                                       {values.changes[index].type !== "LTFT" ||
