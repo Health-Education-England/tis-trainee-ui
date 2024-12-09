@@ -26,8 +26,6 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
-import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
-import { updatedCredentials } from "../../../redux/slices/dspSlice";
 import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 import { updatedFormAList } from "../../../redux/slices/formASlice";
 import { mockFormList } from "../../../mock-data/formr-list";

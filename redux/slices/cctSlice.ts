@@ -8,7 +8,7 @@ export type CctType = "LTFT";
 export type CctChangeType = {
   type: CctType | null;
   startDate: Date | string;
-  endDate: Date | string;
+  endDate?: Date | string;
   wte: number | null;
 };
 
@@ -27,6 +27,8 @@ export type CctCalculation = {
   cctDate?: Date | string;
   programmeMembership: PmType;
   changes: CctChangeType[];
+  created?: Date | string;
+  lastModified?: Date | string;
 };
 
 export const defaultCctCalc: CctCalculation = {

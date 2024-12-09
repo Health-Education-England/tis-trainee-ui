@@ -1,3 +1,5 @@
+import { CctCalculation } from "../redux/slices/cctSlice";
+
 type CctSummaryType = {
   id: string;
   name: string;
@@ -29,3 +31,25 @@ export const cctSummaryList: CctSummaryType[] = [
     lastModified: "2023-03-02T00:00:00Z"
   }
 ];
+
+export const mockCctCalcData1: CctCalculation = {
+  id: "6756c2b57ee98643d6f3dd8b",
+  name: "bob1",
+  programmeMembership: {
+    id: "a6de88b8-de41-48dd-9492-a518f5001176",
+    name: "Cardiology",
+    startDate: "2020-01-01",
+    endDate: "2028-01-01",
+    wte: 1.0
+  },
+  changes: [
+    {
+      type: "LTFT",
+      startDate: "2025-04-01",
+      wte: 0.7
+    }
+  ],
+  cctDate: "2029-03-07",
+  created: "2024-12-09T10:13:09.559Z",
+  lastModified: "2024-12-09T15:11:04.100Z"
+};
