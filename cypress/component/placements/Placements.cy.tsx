@@ -18,16 +18,11 @@ import {
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
-import {
-  updatedCognitoGroups,
-  updatedPreferredMfa
-} from "../../../redux/slices/userSlice";
+import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
-import { updatedCredentials } from "../../../redux/slices/dspSlice";
-import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
 import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 import { Placement } from "../../../models/Placement";
 

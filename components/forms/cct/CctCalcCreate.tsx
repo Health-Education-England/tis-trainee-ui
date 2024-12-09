@@ -89,7 +89,7 @@ export function CctCalcCreate() {
             CCT Calculator - Changing hours (LTFT)
           </Card.Heading>
           {initialFormData.name && (
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: 0 }} data-cy="saved-cct-name">
               <b>Saved calculation name: </b>
               {initialFormData.name}
             </p>

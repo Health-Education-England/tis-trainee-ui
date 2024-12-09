@@ -6,17 +6,31 @@ import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfi
 import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 import { CctCalcCreate } from "../../../../components/forms/cct/CctCalcCreate";
 import dayjs from "dayjs";
+import { TraineeProfile } from "../../../../models/TraineeProfile";
+import {
+  CctCalculation,
+  updatedCctCalc
+} from "../../../../redux/slices/cctSlice";
+import { mockCctCalcData1 } from "../../../../mock-data/mock-cct-data";
 
-describe("CctCalcCreate", () => {
+const mountCctWithMockData = (
+  profileData: TraineeProfile = mockTraineeProfile,
+  cctCalcData: CctCalculation | null = null
+) => {
+  store.dispatch(updatedTraineeProfileData(profileData));
+  if (cctCalcData) store.dispatch(updatedCctCalc(cctCalcData));
+  mount(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={["/cct"]}>
+        <CctCalcCreate />
+      </MemoryRouter>
+    </Provider>
+  );
+};
+
+describe("CctCalcCreate - new", () => {
   it("renders the new cct calc form for completion", () => {
-    store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
-    mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/cct"]}>
-          <CctCalcCreate />
-        </MemoryRouter>
-      </Provider>
-    );
+    mountCctWithMockData();
     cy.get('[data-cy="backLink-to-cct-home"]').should("exist").click();
     cy.url().should("include", "/cct");
     cy.get('[data-cy="cct-calc-warning"]')
@@ -83,6 +97,17 @@ describe("CctCalcCreate", () => {
       "WTE values must be different"
     );
     cy.clickSelect('[data-cy="changes[0].wte"]', null, false);
+    cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
+  });
+});
+
+describe("CctCalcCreate - edit", () => {
+  it("renders the cct calc form for editing", () => {
+    mountCctWithMockData(mockTraineeProfile, mockCctCalcData1);
+    cy.get('[data-cy="backLink-to-cct-home"]').should("exist");
+    cy.get('[data-cy="saved-cct-name"]').contains("bob1");
+    cy.get('[data-cy="cct-calc-btn"]').should("not.exist");
+    cy.clickSelect('[data-cy="changes[0].wte"]', "60%");
     cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
   });
 });
