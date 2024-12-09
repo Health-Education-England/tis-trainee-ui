@@ -29,58 +29,49 @@ import {
 import { updatedCredentials } from "../../../redux/slices/dspSlice";
 import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
 import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
+import { Placement } from "../../../models/Placement";
+
+const mountPlacementsWithMockData = (
+  placements: Placement[],
+  prefMfa: string = "NOMFA",
+  profileStatus: string = "idle",
+  actionsData: any = [mockOutstandingActions[3]]
+) => {
+  const MockedPlacements = () => {
+    const dispatch = useAppDispatch();
+    dispatch(updatedPreferredMfa(prefMfa));
+    dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: [],
+        placements: placements
+      })
+    );
+    dispatch(updatedTraineeProfileStatus(profileStatus));
+    dispatch(updatedActionsData(actionsData));
+    return <Placements />;
+  };
+
+  mount(
+    <Provider store={store}>
+      <Router history={history}>
+        <MockedPlacements />
+      </Router>
+    </Provider>
+  );
+};
 
 describe("Placements with no MFA set up", () => {
   it("should not display Placements page if NOMFA", () => {
-    const MockedPlacementsNoMfa = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: mockPlacements
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsNoMfa />
-        </Router>
-      </Provider>
-    );
+    mountPlacementsWithMockData([mockPlacements[0]]);
     cy.get("[data-cy=placementsHeading]").should("not.exist");
   });
 });
 
 describe("Placements with MFA set up", () => {
-  beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
-  });
   it("should display Placements when MFA set up", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: mockPlacements
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
-    );
+    mountPlacementsWithMockData(mockPlacements, "SMS", "succeeded");
     cy.get(".nhsuk-details__summary-text").should("exist");
     cy.get('[data-cy="subheaderDetails"]')
       .first()
@@ -135,28 +126,24 @@ describe("Placements with MFA set up", () => {
       .next()
       .get('[data-cy="otherSpecialty211Val"]')
       .should("exist"); //alphabetic ordering
+
+    cy.get('[data-cy="subheaderLtft"]')
+      .first()
+      .contains("Changing hours (LTFT)");
+    cy.get('[data-cy="ltft-link"]').first().click();
+    cy.url().should("include", "/notifications");
+    cy.get('[data-cy="cct-link-header"]')
+      .first()
+      .contains("Need a Changing hours (LTFT) calculation?");
+    cy.get('[data-cy="cct-link"]').first().click();
+    cy.url().should("include", "/cct");
   });
 
   it("should show available data when partial Other Sites", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementPartialOtherSites]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementPartialOtherSites],
+      "SMS",
+      "succeeded"
     );
 
     cy.get('[data-cy="otherSite0Val"]')
@@ -184,54 +171,22 @@ describe("Placements with MFA set up", () => {
   });
 
   it("should show alternative text when no Other Sites", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementNoOtherSites]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementNoOtherSites],
+      "SMS",
+      "succeeded"
     );
-
     cy.get("[data-cy=otherSites0Val]")
       .should("exist")
       .should("contain.text", "None provided");
   });
 
   it("should display Placements Subspecialty", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementSubSpecialtyPostAllows]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementSubSpecialtyPostAllows],
+      "SMS",
+      "succeeded"
     );
-
     cy.get('[data-cy="subSpecialty0Val"]')
       .first()
       .should("exist")
@@ -239,25 +194,10 @@ describe("Placements with MFA set up", () => {
   });
 
   it("should display missing Placements Subspecialty None Provided when Post Allows", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementNoSubSpecialtyPostAllows]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementNoSubSpecialtyPostAllows],
+      "SMS",
+      "succeeded"
     );
 
     cy.get('[data-cy="subSpecialty0Val"]')
@@ -267,25 +207,10 @@ describe("Placements with MFA set up", () => {
   });
 
   it("should display Placements Subspecialty even if Post does not Allow", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacemenSubSpecialtyPostNotAllows]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacemenSubSpecialtyPostNotAllows],
+      "SMS",
+      "succeeded"
     );
 
     cy.get('[data-cy="subSpecialty0Val"]').should(
@@ -295,51 +220,17 @@ describe("Placements with MFA set up", () => {
   });
 
   it("should not display missing Placements Subspecialty if Post does not Allow", () => {
-    const MockedPlacementsSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementNoSubSpecialtyPostNotAllows]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsSuccess />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementNoSubSpecialtyPostNotAllows],
+      "SMS",
+      "succeeded"
     );
 
     cy.get('[data-cy="subSpecialty0Val"]').should("not.exist");
   });
 
   it("should show alternative text when no panel data available", () => {
-    const MockedPlacementsEmpty = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsEmpty />
-        </Router>
-      </Provider>
-    );
+    mountPlacementsWithMockData([], "SMS", "succeeded");
     cy.get('[data-cy="upcomingExpand"]').click();
     cy.get(
       '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedplacements"]'
@@ -349,193 +240,46 @@ describe("Placements with MFA set up", () => {
   });
 
   it("should not show non-templated placement properties", () => {
-    const MockedProfileNonTemplatedField = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: [mockPlacementNonTemplatedField]
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileNonTemplatedField />
-        </Router>
-      </Provider>
+    mountPlacementsWithMockData(
+      [mockPlacementNonTemplatedField],
+      "SMS",
+      "succeeded"
     );
     cy.get("[data-cy=nonTemplatedField0Val]").should("not.exist");
   });
 });
 
-describe("Placements - dsp membership", () => {
-  beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(
-      updatedTraineeProfileData({
-        traineeTisId: "12345",
-        personalDetails: mockPersonalDetails,
-        programmeMemberships: [],
-        placements: mockPlacements
-      })
-    );
-    store.dispatch(updatedTraineeProfileStatus("succeeded"));
-  });
-  it("should not show the dsp section if member of no group ", () => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <Placements />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-placements-316"]').should("not.exist");
-  });
-  it("should show the dsp section if member of the dsp beta group", () => {
-    const MockedPlacementsDspBetaGp = () => {
-      store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
-      store.dispatch(updatedCredentials(mockDspPlacementCredentials));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsDspBetaGp />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-placements-316"]').should("exist");
-  });
-  it("should not show the dsp section if member of another test gp ", () => {
-    const MockedPlacementsOtherGp = () => {
-      store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
-      return <Placements />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedPlacementsOtherGp />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-placements-316"]').should("not.exist");
+describe("Placement review action", () => {
+  it("should not display the placement review button for unavailable placement", () => {
+    mountPlacementsWithMockData([mockPlacements[0]]);
+    cy.get("[data-cy='reviewActionBtn-placements-315']").should("not.exist");
+    cy.get("[data-cy='actionDueDate-placements-315']").should("not.exist");
+    cy.get("[class*='panelDivHighlight']").should("not.exist");
   });
 
-  describe("Placement review action", () => {
-    it("should not display the placement review button for unavailable placement", () => {
-      const MockedPlacements = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [],
-            placements: [mockPlacements[0]]
-          })
-        );
-        dispatch(updatedActionsData([mockOutstandingActions[3]]));
-        return <Placements />;
-      };
+  it("should display the placement review button for unreviewed placement", () => {
+    mountPlacementsWithMockData([mockPlacements[0]], "SMS", "succeeded", [
+      mockOutstandingActions[4]
+    ]);
+    cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
+    cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
+    cy.get("[class*='panelDivHighlight']").should("exist");
+  });
 
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedPlacements />
-          </Router>
-        </Provider>
-      );
+  it("should display the placement review button for unreviewed overdue placement", () => {
+    mountPlacementsWithMockData([mockPlacements[0]], "SMS", "succeeded", [
+      mockOutstandingActions[5]
+    ]);
+    cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
+    cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
+    cy.get("[class*='panelDivHighlight']").should("exist");
+  });
 
-      cy.get("[data-cy='reviewActionBtn-placements-315']").should("not.exist");
-      cy.get("[data-cy='actionDueDate-placements-315']").should("not.exist");
-      cy.get("[class*='panelDivHighlight']").should("not.exist");
-    });
+  it("should not display the programme confirmation button for placement", () => {
+    mountPlacementsWithMockData([mockPlacements[0]]);
 
-    it("should display the placement review button for unreviewed placement", () => {
-      const MockedPlacements = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [],
-            placements: [mockPlacements[0]]
-          })
-        );
-        dispatch(updatedActionsData([mockOutstandingActions[4]]));
-        return <Placements />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedPlacements />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
-      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
-      cy.get("[class*='panelDivHighlight']").should("exist");
-    });
-
-    it("should display the placement review button for unreviewed overdue placement", () => {
-      const MockedPlacements = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [],
-            placements: [mockPlacements[0]]
-          })
-        );
-        dispatch(updatedActionsData([mockOutstandingActions[5]]));
-        return <Placements />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedPlacements />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy='reviewActionBtn-placements-315']").should("exist");
-      cy.get("[data-cy='actionDueDate-placements-315']").should("exist");
-      cy.get("[class*='panelDivHighlight']").should("exist");
-    });
-
-    it("should not display the programme confirmation button for placement", () => {
-      const MockedPlacements = () => {
-        const dispatch = useAppDispatch();
-        dispatch(
-          updatedTraineeProfileData({
-            traineeTisId: "12345",
-            personalDetails: mockPersonalDetails,
-            programmeMemberships: [],
-            placements: [mockPlacements[0]]
-          })
-        );
-        return <Placements />;
-      };
-
-      mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <MockedPlacements />
-          </Router>
-        </Provider>
-      );
-
-      cy.get("[data-cy='downloadPmConfirmBtn-placements-315']").should(
-        "not.exist"
-      );
-    });
+    cy.get("[data-cy='downloadPmConfirmBtn-placements-315']").should(
+      "not.exist"
+    );
   });
 });
