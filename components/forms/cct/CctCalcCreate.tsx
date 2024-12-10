@@ -390,8 +390,8 @@ export function CctCalcCreate() {
                                                   value:
                                                     values.changes[index].wte,
                                                   label: `${
-                                                    values.changes[index].wte *
-                                                    100
+                                                    (values.changes[index]
+                                                      .wte as number) * 100
                                                   }%`
                                                 }
                                               : null
@@ -401,10 +401,9 @@ export function CctCalcCreate() {
                                       {!(
                                         errors.changes as CctCalculationErrors["changes"]
                                       )?.[index]?.wte &&
-                                        values.changes[index].wte &&
-                                        values.programmeMembership.wte &&
-                                        values.changes[index].wte >
-                                          values.programmeMembership.wte && (
+                                        (values.changes[index]?.wte as number) >
+                                          (values.programmeMembership
+                                            .wte as number) && (
                                           <span data-cy="wte-increase-return-warn">
                                             <FieldWarningMsg warningMsg="Actioning an increase in WTE hours needs a suitable post to be available, which might not be possible." />
                                           </span>

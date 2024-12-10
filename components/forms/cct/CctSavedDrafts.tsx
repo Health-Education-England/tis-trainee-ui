@@ -20,4 +20,5 @@ export function CctSavedDrafts() {
   if (cctSummaryListStatus === "succeeded") {
     return <CctSavedDraftsTable />;
   }
+  return null;
 }
