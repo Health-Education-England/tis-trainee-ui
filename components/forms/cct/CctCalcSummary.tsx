@@ -7,6 +7,8 @@ import style from "../../Common.module.scss";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { handleCctSubmit } from "../../../utilities/CctUtilities";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
+import { CalcDetails } from "./CctCalcCreate";
 
 export function CctCalcSummary() {
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
@@ -16,7 +18,15 @@ export function CctCalcSummary() {
   };
   const newCalcMade = useAppSelector(state => state.cct.newCalcMade);
   const viewedCalc = useAppSelector(state => state.cct.cctCalc);
-  const { programmeMembership, cctDate, changes, name, id } = viewedCalc;
+  const {
+    programmeMembership,
+    cctDate,
+    changes,
+    name,
+    id,
+    created,
+    lastModified
+  } = viewedCalc;
 
   const handleSave = () => {
     if (id) {
@@ -28,17 +38,11 @@ export function CctCalcSummary() {
 
   return (
     <>
-      <Card>
+      <Card className="pdf-visible">
         <Card.Content>
           <Card.Heading data-cy="cct-calc-summary-header">
             CCT Calculation Summary
           </Card.Heading>
-          {name && (
-            <p style={{ margin: 0 }}>
-              <b>Saved calculation name: </b>
-              {name}
-            </p>
-          )}
           <h3 className={style.panelSubHeader}>Linked Programme</h3>
           <SummaryList noBorder>
             <SummaryList.Row>
@@ -95,11 +99,21 @@ export function CctCalcSummary() {
           <SummaryList noBorder>
             <SummaryList.Row>
               <SummaryList.Key>New completion date</SummaryList.Key>
-              <SummaryList.Value style={{ color: "green", fontWeight: "bold" }}>
+              <SummaryList.Value
+                style={{ color: "green", fontWeight: "bold" }}
+                data-cy="saved-cct-date"
+              >
                 {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
+          {name && created && lastModified && (
+            <CalcDetails
+              created={created}
+              lastModified={lastModified}
+              name={name}
+            />
+          )}
         </Card.Content>
       </Card>
       <Row>
@@ -125,6 +139,18 @@ export function CctCalcSummary() {
             data-cy="Btn-back-to-cct-create"
           >
             Edit calculation
+          </Button>
+        </Col>
+        <Col width="one-third">
+          <Button
+            reverse
+            type="button"
+            onClick={() => {
+              FormRUtilities.windowPrint();
+            }}
+            data-cy="Btn-cct-save-pdf"
+          >
+            Save PDF
           </Button>
         </Col>
       </Row>

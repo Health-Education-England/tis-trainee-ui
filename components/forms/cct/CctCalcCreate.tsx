@@ -71,6 +71,7 @@ export function CctCalcCreate() {
   const initialFormData: CctCalculation = useAppSelector(
     state => state.cct.cctCalc
   );
+  const { name, created, lastModified } = initialFormData;
 
   return (
     <>
@@ -88,12 +89,6 @@ export function CctCalcCreate() {
           <Card.Heading data-cy="cct-calc-header">
             CCT Calculator - Changing hours (LTFT)
           </Card.Heading>
-          {initialFormData.name && (
-            <p style={{ margin: 0 }} data-cy="saved-cct-name">
-              <b>Saved calculation name: </b>
-              {initialFormData.name}
-            </p>
-          )}
           <WarningCallout data-cy="cct-calc-warning">
             <WarningCallout.Label visuallyHiddenText={false}>
               Please note
@@ -454,6 +449,13 @@ export function CctCalcCreate() {
               </Form>
             )}
           </Formik>
+          {name && created && lastModified && (
+            <CalcDetails
+              created={created}
+              lastModified={lastModified}
+              name={name}
+            />
+          )}
         </Card.Content>
       </Card>
     </>
@@ -471,5 +473,25 @@ function ProgrammesModal({ isOpen, onClose }: Readonly<ProgrammesModalProps>) {
       <ProgrammesForViewing />
       <PlacementsForViewing />
     </Modal>
+  );
+}
+
+type CalcDetailsProps = {
+  name: string;
+  created: Date | string;
+  lastModified: Date | string;
+};
+
+export function CalcDetails({
+  name,
+  created,
+  lastModified
+}: Readonly<CalcDetailsProps>) {
+  return (
+    <section data-cy="saved-cct-details">
+      <div>{`Name: ${name}`}</div>
+      <div>{`Created: ${dayjs(created).toString()}`}</div>
+      <div>{`Last saved: ${dayjs(lastModified).toString()}`}</div>
+    </section>
   );
 }
