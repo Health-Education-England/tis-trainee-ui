@@ -5,6 +5,8 @@ import { Button } from "nhsuk-react-components";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { handleCctSubmit } from "../../../utilities/CctUtilities";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import ErrorPage from "../../common/ErrorPage";
 
 type CctNameModalProps = {
   isOpen: boolean;
@@ -18,6 +20,7 @@ export function CctNameModal({
   viewedCalc
 }: Readonly<CctNameModalProps>) {
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
+  const formSaveStatus = useAppSelector(state => state.cct.formSaveStatus);
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText="Close">
       <Formik
@@ -29,6 +32,9 @@ export function CctNameModal({
         {({ values }) => {
           return (
             <Form>
+              {formSaveStatus === "failed" && (
+                <ErrorPage message="There was a problem saving your calculation. Please try again." />
+              )}
               <TextInputField
                 name="name"
                 id="cctName"

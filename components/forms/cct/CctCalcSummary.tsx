@@ -4,18 +4,22 @@ import history from "../../navigation/history";
 import dayjs from "dayjs";
 import { CctNameModal } from "./CctNameModal";
 import style from "../../Common.module.scss";
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { handleCctSubmit } from "../../../utilities/CctUtilities";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { CalcDetails } from "./CctCalcCreate";
+import ErrorPage from "../../common/ErrorPage";
+import { updatedFormSaveStatus } from "../../../redux/slices/cctSlice";
 
 export function CctCalcSummary() {
+  const dispatch = useAppDispatch();
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const [showCctNameModal, setShowCctNameModal] = useState(false);
   const handleProgModalClose = () => {
     setShowCctNameModal(false);
   };
+  const cctFormSaveStatus = useAppSelector(state => state.cct.formSaveStatus);
   const newCalcMade = useAppSelector(state => state.cct.newCalcMade);
   const viewedCalc = useAppSelector(state => state.cct.cctCalc);
   const {
@@ -29,6 +33,7 @@ export function CctCalcSummary() {
   } = viewedCalc;
 
   const handleSave = () => {
+    dispatch(updatedFormSaveStatus("idle"));
     if (id) {
       handleCctSubmit(startSubmitting, stopSubmitting, viewedCalc);
     } else {
@@ -117,6 +122,13 @@ export function CctCalcSummary() {
         </Card.Content>
       </Card>
       <Row>
+        <Col width="full">
+          {cctFormSaveStatus === "failed" && (
+            <ErrorPage message="There was a problem saving your calculation. Please try again." />
+          )}
+        </Col>
+      </Row>
+      <Row>
         {newCalcMade && (
           <Col width="one-third">
             <Button
@@ -134,6 +146,7 @@ export function CctCalcSummary() {
             secondary
             type="button"
             onClick={() => {
+              dispatch(updatedFormSaveStatus("idle"));
               history.push("/cct/create");
             }}
             data-cy="Btn-back-to-cct-create"

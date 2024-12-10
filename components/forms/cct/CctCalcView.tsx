@@ -19,16 +19,14 @@ export function CctCalcView() {
     }
   }, [id, dispatch, newCalcMade]);
 
-  // Implement when the cctDate is included in the retrieved saved calculation
-  // const storedCalcDate = useAppSelector(state => state.cct.cctCalc.cctDate);
   const cctStatus = useAppSelector(state => state.cct.status);
+  const cctDate = useAppSelector(state => state.cct.cctCalc.cctDate);
 
   if (cctStatus === "loading") {
     return <Loading />;
   }
 
-  // Add another condition below to check if no storedCalcDate when the retrieved saved calculation includes the cctDate (it currently returns a null value)
-  if (cctStatus === "failed") {
+  if (cctStatus === "failed" || !cctDate) {
     return (
       <ContentWrapper>
         <ErrorPage message="There was a problem displaying your calculation." />

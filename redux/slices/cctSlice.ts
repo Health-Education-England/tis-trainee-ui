@@ -109,7 +109,7 @@ const cctSlice = createSlice({
       state.newCalcMade = action.payload;
     },
     updatedFormSaveStatus(state, action: PayloadAction<string>) {
-      state.status = action.payload;
+      state.formSaveStatus = action.payload;
     },
     updatedFormSaveError(state, action: PayloadAction<string>) {
       state.error = action.payload;
