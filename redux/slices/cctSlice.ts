@@ -103,10 +103,12 @@ const cctSlice = createSlice({
     },
     updatedCctCalc(state, action: PayloadAction<CctCalculation>) {
       state.cctCalc = action.payload;
-      state.newCalcMade = true;
     },
     updatedNewCalcMade(state, action: PayloadAction<boolean>) {
       state.newCalcMade = action.payload;
+    },
+    updatedCctStatus(state, action: PayloadAction<string>) {
+      state.status = action.payload;
     },
     updatedFormSaveStatus(state, action: PayloadAction<string>) {
       state.formSaveStatus = action.payload;
@@ -178,6 +180,7 @@ export default cctSlice.reducer;
 export const {
   resetCctCalc,
   updatedCctCalc,
+  updatedCctStatus,
   updatedNewCalcMade,
   updatedFormSaveStatus,
   updatedFormSaveError

@@ -134,7 +134,7 @@ export function CctCalcSummary() {
             <Button
               type="button"
               onClick={handleSave}
-              data-cy="Btn-name-this-calc"
+              data-cy="cct-save-btn"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Saving..." : "Save"}
@@ -149,7 +149,7 @@ export function CctCalcSummary() {
               dispatch(updatedFormSaveStatus("idle"));
               history.push("/cct/create");
             }}
-            data-cy="Btn-back-to-cct-create"
+            data-cy="cct-edit-btn"
           >
             Edit calculation
           </Button>
@@ -161,7 +161,7 @@ export function CctCalcSummary() {
             onClick={() => {
               FormRUtilities.windowPrint();
             }}
-            data-cy="Btn-cct-save-pdf"
+            data-cy="cct-save-pdf-btn"
           >
             Save PDF
           </Button>

@@ -41,7 +41,11 @@ export function CctNameModal({
                 label="Give your calculation a name"
                 placeholder="Type name here..."
               />
-              <Button type="submit" disabled={!values.name || isSubmitting}>
+              <Button
+                type="submit"
+                disabled={!values.name || isSubmitting}
+                data-cy="cct-modal-save-btn"
+              >
                 {isSubmitting ? "Saving..." : "Save calculation"}
               </Button>
             </Form>

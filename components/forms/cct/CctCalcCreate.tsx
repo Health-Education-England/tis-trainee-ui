@@ -28,7 +28,8 @@ import history from "../../navigation/history";
 import {
   CctCalculation,
   defaultCctCalc,
-  updatedCctCalc
+  updatedCctCalc,
+  updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
 import { cctValidationSchema } from "./cctCalcValidationSchema";
 import { Link } from "react-router-dom";
@@ -123,6 +124,7 @@ export function CctCalcCreate() {
                 values.changes[0]
               );
               dispatch(updatedCctCalc({ ...values, cctDate: newCctEndDate }));
+              dispatch(updatedNewCalcMade(true));
               history.push(values.id ? `/cct/view/${values.id}` : "/cct/view");
             }}
           >
