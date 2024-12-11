@@ -28,7 +28,7 @@ const mountCctViewWithMockData = (
 };
 
 describe("CctCalcView", () => {
-  it("renders an existing cct calculation that has just been edited (no internet)", () => {
+  it("renders an existing cct calculation that has just been edited", () => {
     mountCctViewWithMockData();
     cy.window().then(win => {
       cy.stub(win, "print").as("print");

@@ -94,7 +94,7 @@ export function CctCalcSummary() {
                 </SummaryList.Row>
                 <SummaryList.Row>
                   <SummaryList.Key>Proposed WTE</SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="cct-view-new-wte">
                     {change.wte && change.wte * 100}%
                   </SummaryList.Value>
                 </SummaryList.Row>
