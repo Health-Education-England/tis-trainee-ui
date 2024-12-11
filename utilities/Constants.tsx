@@ -211,6 +211,7 @@ export type PanelKeys = {
 
 export const PANEL_KEYS: any = {
   placements: "Placements",
+  programmememberships: "Programmes",
   programmeMemberships: "Programmes",
   site: "Site",
   siteLocation: "Site Location",
@@ -538,4 +539,10 @@ export const onboardingTrackerInfoText = {
   CONNECT_RO: (
     <p>Connecting with your RO/DB is done outside of TIS Self-Service.</p>
   )
+};
+
+export const getProfilePanelFutureWarningText = (
+  profileName: string
+): string => {
+  return `The information we have for future ${profileName} with a start date more than 12 weeks from today is not yet finalised and may be subject to change.`;
 };

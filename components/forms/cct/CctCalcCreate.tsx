@@ -33,10 +33,11 @@ import {
 } from "../../../redux/slices/cctSlice";
 import { cctValidationSchema } from "./cctCalcValidationSchema";
 import { Link } from "react-router-dom";
-import { ProgrammesForViewing } from "../../programmes/ProgrammesForViewing";
-import { PlacementsForViewing } from "../../placements/PlacementsForViewing";
 import FieldWarningMsg from "../FieldWarningMsg";
 import SelectInputField from "../SelectInputField";
+import { TraineeProfileName } from "../../../models/TraineeProfile";
+import { getProfilePanelFutureWarningText } from "../../../utilities/Constants";
+import { ProfilePanels } from "../../profile/ProfilePanels";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -471,8 +472,18 @@ type ProgrammesModalProps = {
 function ProgrammesModal({ isOpen, onClose }: Readonly<ProgrammesModalProps>) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText="Close">
-      <ProgrammesForViewing />
-      <PlacementsForViewing />
+      <ProfilePanels
+        profileName={TraineeProfileName.Programmes}
+        dataSelector={selectTraineeProfile}
+        title="Programmes"
+        warningText={getProfilePanelFutureWarningText("programmes")}
+      />
+      <ProfilePanels
+        profileName={TraineeProfileName.Placements}
+        dataSelector={selectTraineeProfile}
+        title="Placements"
+        warningText={getProfilePanelFutureWarningText("placements")}
+      />
     </Modal>
   );
 }

@@ -507,7 +507,7 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.5"
   },
   {
-    endDate: new Date("2029-12-31"),
+    endDate: dayjs().add(3, "year").toDate(),
     grade: "ST2",
     tisId: "316",
     placementType: "Long-term sick",
@@ -539,7 +539,7 @@ export const mockPlacements: Placement[] = [
       }
     ],
     postAllowsSubspecialty: true,
-    startDate: new Date("2020-01-01"),
+    startDate: dayjs().subtract(1, "year").toDate(),
     status: Status.Current,
     employingBody: "",
     trainingBody: "Carmarthenshire NHS Trust",

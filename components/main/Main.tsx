@@ -19,8 +19,8 @@ import {
   updatedRedirected
 } from "../../redux/slices/userSlice";
 import Home from "../home/Home";
-import Placements from "../placements/Placements";
-import Programmes from "../programmes/Programmes";
+import { Placements } from "../placements/Placements";
+import { Programmes } from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";

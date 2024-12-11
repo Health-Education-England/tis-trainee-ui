@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
-import Programmes from "../../../components/programmes/Programmes";
+import { Programmes } from "../../../components/programmes/Programmes";
 import {
   mockPersonalDetails,
   mockProgrammeMemberships,
@@ -82,6 +82,7 @@ describe("Programmes with no MFA set up", () => {
 describe("Programmes with MFA set up", () => {
   it("should display Programmes when MFA set up", () => {
     mountProgrammesWithMockData("SMS", "succeeded");
+    cy.get('[data-cy="currentExpand"]').click();
     cy.get('[data-cy="subheaderDetails"]').contains("Details");
     cy.get(".nhsuk-details__summary-text").should("exist");
     cy.get("[data-cy=programmeName0Val]")

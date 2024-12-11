@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
-import Placements from "../../../components/placements/Placements";
+import { Placements } from "../../../components/placements/Placements";
 import {
   mockOutstandingActions,
   mockPlacements,
@@ -68,6 +68,7 @@ describe("Placements with MFA set up", () => {
   it("should display Placements when MFA set up", () => {
     mountPlacementsWithMockData(mockPlacements, "SMS", "succeeded");
     cy.get(".nhsuk-details__summary-text").should("exist");
+    cy.get('[data-cy="currentExpand"]').click();
     cy.get('[data-cy="subheaderDetails"]')
       .first()
       .should("have.text", "Details");
