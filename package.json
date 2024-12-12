@@ -1,6 +1,6 @@
 {
   "name": "trainee-ui-app",
-  "version": "0.107.4",
+  "version": "0.107.5",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^5.3.0",
@@ -76,6 +76,8 @@
     "react-router-dom": "^5.2.0",
     "react-select": "^5.7.0",
     "react-select-event": "^5.5.1",
+    "react-snowfall": "^2.2.0",
+    "react-switch": "^7.0.0",
     "react-test-renderer": "^18.2.0",
     "react-to-print": "^2.15.1",
     "react-toastify": "^9.1.3",

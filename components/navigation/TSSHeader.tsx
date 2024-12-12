@@ -4,9 +4,11 @@ import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
 import store from "../../redux/store/store";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
+import SantaSwitch from "react-switch";
+import Snowfall from "react-snowfall";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +23,19 @@ const TSSHeader = () => {
       dispatch(getNotifications());
     }
   }, [notificationsStatus, dispatch]);
+
+  const [checked, setChecked] = useState(false);
+  const handleChange = () => {
+    setChecked(!checked);
+  };
+
+  const iconStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    fontSize: "1.5rem"
+  };
 
   return (
     <Header>
@@ -79,6 +94,43 @@ const TSSHeader = () => {
             <i>(Private Beta)</i>
           </a>
         </span>
+        <span style={{ marginLeft: "16px" }}>
+          <SantaSwitch
+            onChange={handleChange}
+            checked={checked}
+            offColor="#2D8CDC"
+            checkedIcon={
+              <div style={iconStyle}>
+                <span role="img" aria-label="father Christmas checked icon">
+                  🎅
+                </span>
+              </div>
+            }
+            uncheckedHandleIcon={
+              <div style={iconStyle}>
+                <span role="img" aria-label="cry emoji unchecked">
+                  😢
+                </span>
+              </div>
+            }
+            checkedHandleIcon={
+              <div style={iconStyle}>
+                <span role="img" aria-label="happy emoji checked">
+                  😁
+                </span>
+              </div>
+            }
+          />
+        </span>
+        {checked ? (
+          <Snowfall
+            style={{
+              position: "fixed",
+              width: "100vw",
+              height: "100vh"
+            }}
+          />
+        ) : null}
       </div>
       <Header.Nav className="header-nav">
         {makeTSSHeaderLinks()}
