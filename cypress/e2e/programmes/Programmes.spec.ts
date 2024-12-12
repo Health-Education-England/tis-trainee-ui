@@ -3,32 +3,16 @@
 
 describe("Programmes", () => {
   beforeEach(() => {
-    cy.signInToTss(30000, "/programmes");
+    cy.signInToTss(0, "/programmes");
   });
 
   it("should display and populate programme section", () => {
     cy.get('[data-cy="homeLink"]').should("exist");
     cy.get('[data-cy="homeWelcomeHeaderText"]').should("not.exist");
     cy.get(".nhsuk-fieldset__heading").should("contain.text", "Programmes");
-
-    cy.get("body").then($body => {
-      if ($body.find('[data-cy^="cctBtn-"]').length) {
-        cy.get('[data-cy^="cctBtn-"]').first().should("exist").click();
-        cy.get('[data-cy="cct-header"]').should("exist");
-        cy.get('[data-cy="cct-calc-btn"]').should("be.disabled");
-        cy.clickSelect('[data-cy="ftePercents"]');
-        cy.get('[data-cy="cct-pdf-btn"]').should("be.disabled");
-        cy.get('[data-cy="cct-calc-btn"]').click();
-        cy.get('[data-cy="cct-th-wte"]')
-          .should("have.text", "New WTE")
-          .next()
-          .should("have.text", "New End Date");
-        cy.get('[data-cy="cct-pdf-btn"]').should("not.be.disabled");
-        cy.get('[data-cy="cct-close-btn"]').should("exist").click();
-      } else {
-        cy.get('[data-cy="notAssignedprogrammeMemberships"]').should("exist");
-      }
-    });
+    // check nav to cct home
+    cy.get('[data-cy="cct-link"]').first().click();
+    cy.url().should("include", "/cct");
   });
 });
 

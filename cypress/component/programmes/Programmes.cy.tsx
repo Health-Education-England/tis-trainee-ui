@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
-import Programmes from "../../../components/programmes/Programmes";
+import { Programmes } from "../../../components/programmes/Programmes";
 import {
   mockPersonalDetails,
   mockProgrammeMemberships,
@@ -26,73 +26,69 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
-import { mockDspPlacementCredentials } from "../../../mock-data/dsp-credentials";
-import { updatedCredentials } from "../../../redux/slices/dspSlice";
 import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 import { updatedFormAList } from "../../../redux/slices/formASlice";
 import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
 import { FileUtilities } from "../../../utilities/FileUtilities";
+import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
+
+const mountProgrammesWithMockData = (
+  prefMfa: string = "NOMFA",
+  profileStatus: string = "idle",
+  programmeMemberships: ProgrammeMembership[] = mockProgrammeMemberships,
+  actionsData: any[] = [],
+  cognitoGroups: any[] = [],
+  formAList: any = mockFormList,
+  formBList: any = mockFormList
+) => {
+  const MockedProgrammes = () => {
+    const dispatch = useAppDispatch();
+    dispatch(updatedPreferredMfa(prefMfa));
+    dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: programmeMemberships,
+        placements: []
+      })
+    );
+    dispatch(updatedTraineeProfileStatus(profileStatus));
+    dispatch(updatedActionsData(actionsData));
+    if (cognitoGroups.length > 0) {
+      dispatch(updatedCognitoGroups(cognitoGroups));
+    }
+    dispatch(updatedFormAList(formAList));
+    dispatch(updatedFormBList(formBList));
+    return <Programmes />;
+  };
+
+  mount(
+    <Provider store={store}>
+      <Router history={history}>
+        <MockedProgrammes />
+      </Router>
+    </Provider>
+  );
+};
 
 describe("Programmes with no MFA set up", () => {
   it("should not display Programmes page if NOMFA", () => {
-    const MockedProgrammesFail = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMemberships,
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesFail />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData();
     cy.get("[data-cy=programmesHeading]").should("not.exist");
   });
 });
 
 describe("Programmes with MFA set up", () => {
-  beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedFormAList(mockFormList));
-    store.dispatch(updatedFormBList(mockFormList));
-  });
   it("should display Programmes when MFA set up", () => {
-    const MockedProgrammesSuccess = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMemberships,
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesSuccess />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded");
+    cy.get('[data-cy="currentExpand"]').click();
     cy.get('[data-cy="subheaderDetails"]').contains("Details");
     cy.get(".nhsuk-details__summary-text").should("exist");
     cy.get("[data-cy=programmeName0Val]")
       .first()
       .should("exist")
-      .should("contain.text", "General Practice");
+      .should("contain.text", "Cardiology");
     cy.get("[data-cy=ST6]").should("exist");
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
@@ -102,7 +98,7 @@ describe("Programmes with MFA set up", () => {
       .should("contain.text", "Hugh Rangel");
     cy.get("[data-cy=currDates]")
       .last()
-      .should("contain.text", "01/08/2020 - 01/08/2025");
+      .should("contain.text", "01/08/2022 - 01/08/2025");
     cy.get('[data-cy="subheaderOnboarding"]').contains("Onboarding");
     cy.get('[data-cy="NewProgrammeOnboardingText"]').should(
       "include.text",
@@ -111,127 +107,39 @@ describe("Programmes with MFA set up", () => {
     cy.get(
       '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
     )
-      .should("have.attr", "href", "/programmes/2/onboarding-tracker")
+      .should("have.attr", "href", "/programmes/1/onboarding-tracker")
       .and("include.text", "View");
-    cy.get(
-      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > [data-cy="subheaderLtft"]'
-    ).contains("Less Than Full Time");
-    cy.get(
-      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(4) > .nhsuk-summary-list__value > a'
-    ).contains("See your LTFT notification");
-    cy.get(
-      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(5) > .nhsuk-summary-list__key > .nhsuk-label'
-    ).contains("Need a rough idea how changing your hours");
-    cy.get('[data-cy="cctBtn-General Practice"]')
-      .should("exist")
-      .should("contain.text", "Open CCT Calculator")
-      .should("have.attr", "title", "Open CCT Calculator");
-    cy.get('[data-cy="cctBtn-General Practice"]').first().click();
-    cy.get('[data-cy="cctBtn-General Practice"]').first().should("be.disabled");
-    cy.get('[data-cy="cctBtn-General Practice"]').last().should("be.disabled");
+    cy.get('[data-cy="cct-link-header"]')
+      .first()
+      .contains("Need a Changing hours (LTFT) calculation?");
+    // both progs and placements use same panel creator component so not repeating placement tests
   });
 
-  it("should show alternative text when no Programme data available", () => {
-    const MockedProfileSomeEmpty = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileSomeEmpty />
-        </Router>
-      </Provider>
-    );
+  it("should show alternative text when no Programme/ panel data available", () => {
+    mountProgrammesWithMockData("SMS", "succeeded", []);
     cy.get("[data-cy=notAssignedprogrammeMemberships]")
       .should("exist")
       .should("contain.text", "You are not assigned to any programmes");
-  });
-
-  it("should show alternative text when no panel data available", () => {
-    const MockedProgrammesEmpty = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesEmpty />
-        </Router>
-      </Provider>
-    );
     cy.get('[data-cy="upcomingExpand"]').click();
-    cy.get(
-      '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedprogrammeMemberships"]'
-    )
+    cy.get('[data-cy="notAssignedprogrammeMemberships"]')
       .should("exist")
       .should("contain.text", "You are not assigned to any programmes");
   });
 
   it("should show alternative text when no Curricula", () => {
-    const MockedProgrammeNoCurricula = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipNoCurricula],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammeNoCurricula />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipNoCurricula
+    ]);
     cy.get("[data-cy=curricula0Val]")
       .should("exist")
       .should("contain.text", "N/A");
   });
 
   it("should show alternative text when no training number", () => {
-    const MockedProgrammeNoTrainingNumber = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMembershipNoTrainingNumber,
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammeNoTrainingNumber />
-        </Router>
-      </Provider>
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      mockProgrammeMembershipNoTrainingNumber
     );
     cy.get("[data-cy=trainingNumber0Val]")
       .should("exist")
@@ -239,162 +147,30 @@ describe("Programmes with MFA set up", () => {
   });
 
   it("should show alternative text when no responsible officer", () => {
-    const MockedProgrammeNoResponsibleOfficer = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: mockProgrammeMembershipNoResponsibleOfficer,
-          placements: []
-        })
-      );
-      console.log(mockProgrammeMembershipNoResponsibleOfficer);
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammeNoResponsibleOfficer />
-        </Router>
-      </Provider>
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      mockProgrammeMembershipNoResponsibleOfficer
     );
     cy.get("[data-cy=responsibleOfficer0Val]")
       .should("exist")
       .should("contain.text", "Not currently available");
   });
 
-  it("should show alternative text when no Programmes data available", () => {
-    const MockedProgrammesEmpty = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesEmpty />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=notAssignedprogrammeMemberships]")
-      .should("exist")
-      .should("contain.text", "You are not assigned to any programmes");
-  });
-
   it("should not show non-templated programme membership properties", () => {
-    const MockedProfileNonTemplatedField = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipNonTemplatedField],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileNonTemplatedField />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipNonTemplatedField
+    ]);
     cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
-  });
-});
-
-describe("Programmes - dsp membership", () => {
-  beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(
-      updatedTraineeProfileData({
-        traineeTisId: "12345",
-        personalDetails: mockPersonalDetails,
-        programmeMemberships: mockProgrammeMemberships,
-        placements: []
-      })
-    );
-    store.dispatch(updatedTraineeProfileStatus("succeeded"));
-  });
-  it("should not show the dsp section if member of no group ", () => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <Programmes />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-programmes-2"]').should("not.exist");
-  });
-  it("should show the dsp section if member of the dsp beta group", () => {
-    const MockedProgrammesDspBetaGp = () => {
-      store.dispatch(updatedCognitoGroups(["dsp-beta-consultants"]));
-      store.dispatch(updatedCredentials(mockDspPlacementCredentials));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesDspBetaGp />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-programmes-2"]').should("exist");
-  });
-  it("should not show the dsp section if member of another test gp ", () => {
-    const MockedProgrammesOtherGp = () => {
-      store.dispatch(updatedCognitoGroups(["coj-omega-consultants"]));
-      return <Programmes />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammesOtherGp />
-        </Router>
-      </Provider>
-    );
-    cy.get('[data-cy="dsp-btn-programmes-2"]').should("not.exist");
   });
 });
 
 describe("Programme summary panel", () => {
   it("should show COJ status", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned[0],
-            mockProgrammeMembershipCojSigned
-          ],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipCojNotSigned[0],
+      mockProgrammeMembershipCojSigned
+    ]);
 
     cy.get('[data-cy="pastExpand"]').invoke("show").click({ force: true });
     cy.get('[data-cy="conditionsOfJoining0Key"]')
@@ -423,63 +199,27 @@ describe("Programme summary panel", () => {
   });
 
   it("should display the view COJ button for placements with signed COJ forms", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned[0],
-            mockProgrammeMembershipCojSigned
-          ],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipCojNotSigned[0],
+      mockProgrammeMembershipCojSigned
+    ]);
 
     cy.get("[data-cy='cojSignedDate']").should("exist");
-
     cy.get("[data-cy='cojViewBtn-1']").should("exist").and("have.text", "View");
   });
 });
 
 describe("Programme review action", () => {
   it("should not display the programme review button for unavailable programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned[0],
-            mockProgrammeMembershipCojSigned
-          ],
-          placements: []
-        })
-      );
-      dispatch(updatedActionsData([mockOutstandingActions[0]]));
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      [
+        mockProgrammeMembershipCojNotSigned[0],
+        mockProgrammeMembershipCojSigned
+      ],
+      [mockOutstandingActions[0]]
     );
-
     cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
       "not.exist"
     );
@@ -490,29 +230,14 @@ describe("Programme review action", () => {
   });
 
   it("should display the programme review button for unreviewed programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned[0],
-            mockProgrammeMembershipCojSigned
-          ],
-          placements: []
-        })
-      );
-      dispatch(updatedActionsData([mockOutstandingActions[1]]));
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      [
+        mockProgrammeMembershipCojNotSigned[0],
+        mockProgrammeMembershipCojSigned
+      ],
+      [mockOutstandingActions[1]]
     );
 
     cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
@@ -523,29 +248,14 @@ describe("Programme review action", () => {
   });
 
   it("should display the programme review button for overdue programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [
-            mockProgrammeMembershipCojNotSigned[0],
-            mockProgrammeMembershipCojSigned
-          ],
-          placements: []
-        })
-      );
-      dispatch(updatedActionsData([mockOutstandingActions[2]]));
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      [
+        mockProgrammeMembershipCojNotSigned[0],
+        mockProgrammeMembershipCojSigned
+      ],
+      [mockOutstandingActions[2]]
     );
 
     cy.get("[data-cy='reviewActionBtn-programmeMemberships-1']").should(
@@ -558,26 +268,9 @@ describe("Programme review action", () => {
 
 describe("Programme confirmation", () => {
   it("should not display the programme confirmation button for past programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipsForGrouping[0]],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipsForGrouping[0]
+    ]);
 
     cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-1']").should(
       "not.exist"
@@ -585,53 +278,18 @@ describe("Programme confirmation", () => {
   });
 
   it("should not display the programme confirmation button for future programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipsForGrouping[3]],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
-
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipsForGrouping[3]
+    ]);
     cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-4']").should(
       "not.exist"
     );
   });
 
   it("should display the programme confirmation button for current programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipsForGrouping[1]],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipsForGrouping[1]
+    ]);
 
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
     cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-2']")
@@ -641,27 +299,9 @@ describe("Programme confirmation", () => {
   });
 
   it("should display the programme confirmation button for upcoming programme", () => {
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [mockProgrammeMembershipsForGrouping[2]],
-          placements: []
-        })
-      );
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
-
+    mountProgrammesWithMockData("SMS", "succeeded", [
+      mockProgrammeMembershipsForGrouping[2]
+    ]);
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
     cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-3']")
       .should("exist")

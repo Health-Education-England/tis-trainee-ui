@@ -6,6 +6,8 @@ import {
   PersonalDetails,
   initialPersonalDetails
 } from "../models/PersonalDetails";
+import { CctSummaryType } from "../redux/slices/cctSummaryListSlice";
+import { CctCalculation } from "../redux/slices/cctSlice";
 
 export class TraineeProfileService extends ApiService {
   constructor() {
@@ -43,5 +45,27 @@ export class TraineeProfileService extends ApiService {
   async updateGmc(gmcNumber: string): Promise<AxiosResponse<PersonalDetails>> {
     let gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
+  }
+
+  async getCctCalculations(): Promise<AxiosResponse<CctSummaryType[]>> {
+    return this.get("/cct/calculation");
+  }
+
+  async getCctCalculation(
+    cctId: string
+  ): Promise<AxiosResponse<CctCalculation>> {
+    return this.get<CctCalculation>(`/cct/calculation/${cctId}`);
+  }
+
+  async saveCctCalculation(
+    cctCalc: CctCalculation
+  ): Promise<AxiosResponse<CctCalculation>> {
+    return this.post<CctCalculation>("/cct/calculation", cctCalc);
+  }
+
+  async updateCctCalculation(
+    cctCalc: CctCalculation
+  ): Promise<AxiosResponse<CctCalculation>> {
+    return this.put<CctCalculation>(`/cct/calculation/${cctCalc.id}`, cctCalc);
   }
 }

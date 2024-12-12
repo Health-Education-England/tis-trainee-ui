@@ -1135,3 +1135,19 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
     max-width: 100%;
   }
 }
+
+// used in cct calc view atm
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .pdf-visible,
+  .pdf-visible * {
+    visibility: visible;
+  }
+  .pdf-visible {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
