@@ -545,3 +545,11 @@ export const getProfilePanelFutureWarningText = (
 ): string => {
   return `The information we have for future ${profileName} with a start date more than 12 weeks from today is not yet finalised and may be subject to change.`;
 };
+
+export const fteOptions = [
+  { value: 100, label: "100%" },
+  { value: 80, label: "80%" },
+  { value: 70, label: "70%" },
+  { value: 60, label: "60%" },
+  { value: 50, label: "50%" }
+];
