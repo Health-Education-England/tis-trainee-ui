@@ -3,7 +3,7 @@
 
 describe("Programmes", () => {
   beforeEach(() => {
-    cy.signInToTss(0, "/programmes");
+    cy.signInToTss(30000, "/programmes");
   });
 
   it("should display and populate programme section", () => {
