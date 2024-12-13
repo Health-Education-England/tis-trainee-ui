@@ -19,8 +19,8 @@ import {
   updatedRedirected
 } from "../../redux/slices/userSlice";
 import Home from "../home/Home";
-import Placements from "../placements/Placements";
-import Programmes from "../programmes/Programmes";
+import { Placements } from "../placements/Placements";
+import { Programmes } from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";
@@ -31,9 +31,9 @@ import { loadFormAList } from "../../redux/slices/formASlice";
 import { loadFormBList } from "../../redux/slices/formBSlice";
 import { fetchTraineeActionsData } from "../../redux/slices/traineeActionsSlice";
 import { Notifications } from "../notifications/Notifications";
-import { Cct } from "../forms/cct/Cct";
 import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
+import { Cct } from "../forms/cct/Cct";
 
 const appVersion = packageJson.version;
 
@@ -129,7 +129,6 @@ export const Main = () => {
         <PageTitle />
         <TSSHeader />
         <Breadcrumbs />
-        <Cct />
         <main className="nhsuk-width-container nhsuk-u-margin-top-5">
           <Switch>
             <Route exact path="/action-summary" component={ActionSummary} />
@@ -149,6 +148,7 @@ export const Main = () => {
             <Route exact path="/support" component={Support} />
             <Route path="/mfa" component={MFA} />
             <Route path="/notifications" component={Notifications} />
+            <Route path="/cct" component={Cct} />
             <Redirect exact path="/" to="/home" />
             <Redirect
               exact

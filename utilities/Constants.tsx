@@ -211,6 +211,7 @@ export type PanelKeys = {
 
 export const PANEL_KEYS: any = {
   placements: "Placements",
+  programmememberships: "Programmes",
   programmeMemberships: "Programmes",
   site: "Site",
   siteLocation: "Site Location",
@@ -272,7 +273,11 @@ export const toastErrText = {
   markNotificationAsRead: `Couldn't open this message and mark as read. ${dodgyConnection}`,
   markNotificationAsUnread: `Couldn't mark this message as unread. ${dodgyConnection}`,
   archiveNotification: `Couldn't archive this message. ${dodgyConnection}`,
-  fetchNotificationMessage: `Couldn't load this message. ${dodgyConnection}`
+  fetchNotificationMessage: `Couldn't load this message. ${dodgyConnection}`,
+  loadCctSummaryListMessage: `Couldn't load your list of saved calculations. ${dodgyConnection}`,
+  loadSavedCctCalcMessage: `Couldn't load your saved calculation. ${dodgyConnection}`,
+  saveCctCalcMessage: `Couldn't save your CCT calculation. ${dodgyConnection}`,
+  updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`
 };
 
 export const toastSuccessText = {
@@ -291,7 +296,9 @@ export const toastSuccessText = {
   getPreferredMfaTotp:
     "Authenticator MFA is now set up. When prompted, provide a new 6-digit code from your app when you next log in.",
   signCoj: "Your Conditions of Joining has been signed.",
-  completeTraineeAction: "Your Outstanding Action has been updated."
+  completeTraineeAction: "Your Outstanding Action has been updated.",
+  saveCctCalcMessage: "Your CCT calculation has been saved.",
+  updateCctCalcMessage: "Your CCT calculation has been updated."
 };
 
 export const supportCatOptions = [
@@ -484,13 +491,11 @@ export const onboardingTrackerInfoText = {
     </p>
   ),
   TRAINING_NUMBER: (
-    <>
-      <p>
-        Your training number is made available in the Details section of your{" "}
-        <Link to="/programmes">Programme</Link> when you: (1) Sign your
-        Conditions of Joining Agreement, (2) Submit FormR (Part A & B).
-      </p>
-    </>
+    <p>
+      Your training number is made available in the Details section of your{" "}
+      <Link to="/programmes">Programme</Link> when you: (1) Sign your Conditions
+      of Joining Agreement, (2) Submit FormR (Part A & B).
+    </p>
   ),
   LTFT: (
     <p>
@@ -533,4 +538,10 @@ export const onboardingTrackerInfoText = {
   CONNECT_RO: (
     <p>Connecting with your RO/DB is done outside of TIS Self-Service.</p>
   )
+};
+
+export const getProfilePanelFutureWarningText = (
+  profileName: string
+): string => {
+  return `The information we have for future ${profileName} with a start date more than 12 weeks from today is not yet finalised and may be subject to change.`;
 };

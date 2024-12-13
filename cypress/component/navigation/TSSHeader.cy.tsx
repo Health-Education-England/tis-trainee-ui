@@ -13,6 +13,8 @@ const navLinks = [
   { name: "Programmes", href: "/programmes" },
   { name: "Form R (A)", href: "/formr-a" },
   { name: "Form R (B)", href: "/formr-b" },
+  { name: "Action Summary", href: "/action-summary" },
+  { name: "CCT", href: "/cct" },
   { name: "Support", href: "/support" },
   { name: "MFA set-up", href: "/mfa" }
 ];

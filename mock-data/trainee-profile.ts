@@ -59,7 +59,7 @@ export const mockPersonalDetails: PersonalDetails = {
 export const mockProgrammeMemberships: ProgrammeMembership[] = [
   {
     startDate: new Date("2020-01-01"),
-    endDate: new Date("2022-01-01"),
+    endDate: dayjs().add(3, "year").toDate(),
     programmeCompletionDate: new Date("2019-12-31"),
     tisId: "1",
     programmeName: "Cardiology",
@@ -102,7 +102,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
   },
   {
     startDate: new Date("2022-01-01"),
-    endDate: dayjs().add(1, "year").toDate(),
+    endDate: dayjs().add(4, "year").toDate(),
     programmeCompletionDate: new Date("2021-12-31"),
     tisId: "2",
     programmeName: "General Practice",
@@ -507,7 +507,7 @@ export const mockPlacements: Placement[] = [
     wholeTimeEquivalent: "0.5"
   },
   {
-    endDate: new Date("2029-12-31"),
+    endDate: dayjs().add(3, "year").toDate(),
     grade: "ST2",
     tisId: "316",
     placementType: "Long-term sick",
@@ -539,7 +539,7 @@ export const mockPlacements: Placement[] = [
       }
     ],
     postAllowsSubspecialty: true,
-    startDate: new Date("2020-01-01"),
+    startDate: dayjs().subtract(1, "year").toDate(),
     status: Status.Current,
     employingBody: "",
     trainingBody: "Carmarthenshire NHS Trust",

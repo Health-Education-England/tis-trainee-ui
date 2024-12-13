@@ -14,7 +14,8 @@ const homeCards = [
   "Form R (Part B)",
   "Support",
   "MFA",
-  "Action Summary"
+  "Action Summary",
+  "CCT (Certificate of Completion of Training)"
 ];
 
 describe("Home with no MFA set up", () => {
