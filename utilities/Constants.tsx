@@ -276,7 +276,6 @@ export const toastErrText = {
   fetchNotificationMessage: `Couldn't load this message. ${dodgyConnection}`,
   loadCctSummaryListMessage: `Couldn't load your list of saved calculations. ${dodgyConnection}`,
   loadSavedCctCalcMessage: `Couldn't load your saved calculation. ${dodgyConnection}`,
-  calculateNewCctEndDateMessage: `Couldn't calculate your new CCT end date. ${dodgyConnection}`,
   saveCctCalcMessage: `Couldn't save your CCT calculation. ${dodgyConnection}`,
   updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`
 };
