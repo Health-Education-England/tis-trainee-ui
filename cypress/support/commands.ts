@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import dayjs from "dayjs";
+import { cctCalcWarningsMsgs } from "../../utilities/Constants";
 
 const currentDate = dayjs().format("YYYY-MM-DD");
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
@@ -1035,6 +1036,7 @@ Cypress.Commands.add("checkFlags", (name: string) => {
 });
 
 Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
+  const { shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } = cctCalcWarningsMsgs;
   cy.get('[data-cy="backLink-to-cct-home"]').should("exist");
   cy.url().should("include", "/cct");
   cy.get('[data-cy="cct-calc-warning"]')
@@ -1088,7 +1090,9 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .contains("Change date cannot be before today.");
   cy.get('[data-cy="start-short-notice-warn"]').should("not.exist");
   cy.get('[data-cy="changes[0].startDate"]').type(dayjs().format("YYYY-MM-DD"));
-  cy.get('[data-cy="start-short-notice-warn"]').should("exist");
+  cy.get('[data-cy="start-short-notice-warn"]')
+    .should("exist")
+    .contains(shortNoticeMsg);
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
     "Please enter a Proposed WTE"
   );
@@ -1096,6 +1100,11 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
     "WTE values must be different"
   );
-  cy.clickSelect('[data-cy="changes[0].wte"]', null, false);
+  cy.clickSelect('[data-cy="programmeMembership.wte"]', "80%", false);
+  cy.clickSelect('[data-cy="changes[0].wte"]', "90%", false);
+  cy.get('[data-cy="wte-increase-return-warn"]')
+    .should("exist")
+    .contains(wteIncreaseMsg);
+  cy.get('[data-cy="wte-custom-warn"]').should("exist").contains(wteCustomMsg);
   cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
 });

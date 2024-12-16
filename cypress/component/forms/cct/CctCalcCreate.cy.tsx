@@ -3,7 +3,10 @@ import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
-import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
+import {
+  mockProgrammeMembershipsForGrouping,
+  mockTraineeProfile
+} from "../../../../mock-data/trainee-profile";
 import { CctCalcCreate } from "../../../../components/forms/cct/CctCalcCreate";
 import { TraineeProfile } from "../../../../models/TraineeProfile";
 import {
@@ -11,6 +14,9 @@ import {
   updatedCctCalc
 } from "../../../../redux/slices/cctSlice";
 import { mockCctCalcData1 } from "../../../../mock-data/mock-cct-data";
+import { cctCalcWarningsMsgs } from "../../../../utilities/Constants";
+
+const { noActiveProgsMsg } = cctCalcWarningsMsgs;
 
 const mountCctWithMockData = (
   profileData: TraineeProfile = mockTraineeProfile,
@@ -26,6 +32,24 @@ const mountCctWithMockData = (
     </Provider>
   );
 };
+
+describe("CctCalcCreate - alt msg if no/past programmes", () => {
+  it("doesn't render the calc form if no programmes", () => {
+    mountCctWithMockData({ ...mockTraineeProfile, programmeMemberships: [] });
+    cy.get('[data-cy="cct-only-past-progs-msg"]')
+      .should("exist")
+      .contains(noActiveProgsMsg);
+  });
+  it("doesn't render the calc form if only past programmes", () => {
+    mountCctWithMockData({
+      ...mockTraineeProfile,
+      programmeMemberships: [mockProgrammeMembershipsForGrouping[0]]
+    });
+    cy.get('[data-cy="cct-only-past-progs-msg"]')
+      .should("exist")
+      .contains(noActiveProgsMsg);
+  });
+});
 
 describe("CctCalcCreate - new", () => {
   it("renders the new cct calc form for completion", () => {
