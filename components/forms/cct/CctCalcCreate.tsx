@@ -37,10 +37,10 @@ import FieldWarningMsg from "../FieldWarningMsg";
 import SelectInputField from "../SelectInputField";
 import { TraineeProfileName } from "../../../models/TraineeProfile";
 import {
-  cctCalcWarningsMsgs,
   fteOptions,
   getProfilePanelFutureWarningText
 } from "../../../utilities/Constants";
+import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 import { ProfilePanels } from "../../profile/ProfilePanels";
 import { isPastIt } from "../../../utilities/DateUtilities";
 

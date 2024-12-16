@@ -1,8 +1,6 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import dayjs from "dayjs";
-
 describe("Placements", () => {
   beforeEach(() => {
     cy.signInToTss(30000, "/placements");

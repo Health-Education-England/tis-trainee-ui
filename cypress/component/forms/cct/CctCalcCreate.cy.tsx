@@ -14,7 +14,7 @@ import {
   updatedCctCalc
 } from "../../../../redux/slices/cctSlice";
 import { mockCctCalcData1 } from "../../../../mock-data/mock-cct-data";
-import { cctCalcWarningsMsgs } from "../../../../utilities/Constants";
+import { cctCalcWarningsMsgs } from "../../../../utilities/CctConstants";
 
 const { noActiveProgsMsg } = cctCalcWarningsMsgs;
 
