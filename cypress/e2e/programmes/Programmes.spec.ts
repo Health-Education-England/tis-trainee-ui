@@ -40,10 +40,10 @@ describe("Programmes", () => {
     cy.get('[data-cy="cct-home-subheader-calcs"]').contains(
       "Saved calculations"
     );
-    cy.get('[data-cy="0_name"]')
+    cy.get('[data-cy*="_name"]')
       .first()
       .should("include.text", `😎_${dayjs().format("YYYY-MM-DD")}`);
-    cy.get('[data-cy="0_name"]').first().click();
+    cy.get('[data-cy*="_name"]').first().click();
     cy.get('[data-cy="saved-cct-details"] > :nth-child(1)').should(
       "include.text",
       `Name: 😎_${dayjs().format("YYYY-MM-DD")}`

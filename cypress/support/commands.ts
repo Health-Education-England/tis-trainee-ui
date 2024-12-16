@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import dayjs from "dayjs";
-import { cctCalcWarningsMsgs } from "../../utilities/Constants";
+import { cctCalcWarningsMsgs } from "../../utilities/CctConstants";
 
 const currentDate = dayjs().format("YYYY-MM-DD");
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
