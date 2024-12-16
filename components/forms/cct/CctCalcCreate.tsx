@@ -37,6 +37,7 @@ import FieldWarningMsg from "../FieldWarningMsg";
 import SelectInputField from "../SelectInputField";
 import { TraineeProfileName } from "../../../models/TraineeProfile";
 import {
+  cctCalcWarningsMsgs,
   fteOptions,
   getProfilePanelFutureWarningText
 } from "../../../utilities/Constants";
@@ -63,7 +64,6 @@ export function CctCalcCreate() {
   const progsArrNotPast = useAppSelector(
     selectTraineeProfile
   ).programmeMemberships.filter(prog => !isPastIt(prog.endDate));
-  console.log("progsArrNotPast", progsArrNotPast);
   const programmeOptions = makeProgrammeOptions(progsArrNotPast);
   const [showProgModal, setShowProgModal] = useState(false);
   const handleProgModalClose = () => {
@@ -73,6 +73,8 @@ export function CctCalcCreate() {
     state => state.cct.cctCalc
   );
   const { name, created, lastModified } = initialFormData;
+  const { noActiveProgsMsg, shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } =
+    cctCalcWarningsMsgs;
 
   return (
     <>
@@ -344,7 +346,9 @@ export function CctCalcCreate() {
                                                 .add(16, "week")
                                                 .subtract(1, "day") && (
                                               <span data-cy="start-short-notice-warn">
-                                                <FieldWarningMsg warningMsg="Actioning a change in WTE hours with less than 16 weeks notice might not be possible logistically (e.g. rota constraints)." />
+                                                <FieldWarningMsg
+                                                  warningMsg={shortNoticeMsg}
+                                                />
                                               </span>
                                             )}
                                         </Col>
@@ -418,7 +422,9 @@ export function CctCalcCreate() {
                                               (values.programmeMembership
                                                 .wte as number) && (
                                               <span data-cy="wte-increase-return-warn">
-                                                <FieldWarningMsg warningMsg="Actioning an increase in WTE hours needs a suitable post to be available, which might not be possible." />
+                                                <FieldWarningMsg
+                                                  warningMsg={wteIncreaseMsg}
+                                                />
                                               </span>
                                             )}
                                           {!(
@@ -433,7 +439,9 @@ export function CctCalcCreate() {
                                                   100
                                             ) && (
                                               <span data-cy="wte-custom-warn">
-                                                <FieldWarningMsg warningMsg="Actioning a custom WTE change might not be possible; it will require Dean approval." />
+                                                <FieldWarningMsg
+                                                  warningMsg={wteCustomMsg}
+                                                />
                                               </span>
                                             )}
                                         </Col>
@@ -472,10 +480,7 @@ export function CctCalcCreate() {
               )}
             </>
           ) : (
-            <p data-cy="cct-only-past-progs-msg">
-              You do not have any current, upcoming or future programmes to link
-              to a CCT calculation.
-            </p>
+            <p data-cy="cct-only-past-progs-msg">{noActiveProgsMsg}</p>
           )}
         </Card.Content>
       </Card>

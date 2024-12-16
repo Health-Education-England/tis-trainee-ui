@@ -25,7 +25,7 @@ describe("Programmes", () => {
     cy.checkAndFillNewCctCalcForm();
 
     // edit new wte
-    cy.get('[data-cy="cct-view-new-wte"]').contains("50%");
+    cy.get('[data-cy="cct-view-new-wte"]').contains("90%");
     cy.get('[data-cy="cct-edit-btn"]').click();
     cy.clickSelect('[data-cy="changes[0].wte"]', "60%");
     cy.get('[data-cy="cct-calc-btn"]').click();
