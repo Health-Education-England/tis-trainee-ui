@@ -1138,9 +1138,6 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 
 // used in cct calc view atm
 @media print {
-  body * {
-    visibility: hidden;
-  }
   .pdf-visible,
   .pdf-visible * {
     visibility: visible;
