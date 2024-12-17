@@ -13,35 +13,28 @@ import {
 import {
   continueToConfirm,
   createErrorObject,
-  filteredOptions,
   getEditPageNumber,
   handleSoftValidationWarningMsgVisibility,
   handleTextFieldWidth,
-  sumFieldValues,
   saveDraftForm,
   validateFields,
   formatFieldName,
-  showFormField
+  showFormField,
+  updateFormData,
+  determineCurrentValue,
+  updateTotalField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
-import { Text } from "./form-fields/Text";
-import { Radios } from "./form-fields/Radios";
-import { Selector } from "./form-fields/Selector";
-import { Dates } from "./form-fields/Dates";
-import { Phone } from "./form-fields/Phone";
 import { ImportantText } from "./form-sections/ImportantText";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
-import PanelBuilder from "./form-array/PanelBuilder";
-import { TextArea } from "./form-fields/TextArea";
 import ScrollToTop from "../../common/ScrollToTop";
-import { Checkboxes } from "./form-fields/Checkboxes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
-import DtoBuilder from "./form-dto/DtoBuilder";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
+import { FormFieldBuilder } from "./FormFieldBuilder";
 
 type FieldType =
   | "text"
@@ -184,22 +177,14 @@ export default function FormBuilder({
     arrayName?: string,
     dtoName?: string
   ) => {
-    // Note - Bit of a faff, need to transform radio inputs ("Yes", "No") to boolean values (true, false) so that they can be stored in the database as such.
     const name = event.currentTarget.name;
     const primaryField = currentPageFields.find(field => field.name === name);
     const totalName = primaryField?.contributesToTotal;
-
-    let value: string | boolean = event.currentTarget.value;
-    if (value === "Yes") value = true;
-    if (value === "No") value = false;
-    let currentValue: string | boolean;
-    if (selectedOption) {
-      currentValue = selectedOption.value;
-    } else if (checkedStatus !== undefined) {
-      currentValue = checkedStatus;
-    } else {
-      currentValue = value;
-    }
+    const currentValue = determineCurrentValue(
+      event,
+      selectedOption,
+      checkedStatus
+    );
 
     // Note this code still only works for non-nested text fields
     if (typeof currentValue === "string") {
@@ -213,52 +198,17 @@ export default function FormBuilder({
     }
     //-----------------------------------------------------------
 
-    let updatedFormData: FormData = {};
-    if (typeof arrayIndex === "number" && arrayName) {
-      setFormData((prevFormData: FormData) => {
-        const newArray = [...prevFormData[arrayName]];
-        newArray[arrayIndex] = {
-          ...newArray[arrayIndex],
-          [name]: currentValue
-        };
-        updatedFormData = { ...prevFormData, [arrayName]: newArray };
-        return updatedFormData;
-      });
-    } else if (dtoName) {
-      setFormData((prevFormData: FormData) => {
-        const dto = prevFormData[dtoName];
-        const updatedDto = {
-          ...dto,
-          [name]: currentValue
-        };
-        updatedFormData = {
-          ...prevFormData,
-          [dtoName]: updatedDto
-        };
-        return updatedFormData;
-      });
-    } else {
-      setFormData((prevFormData: FormData) => {
-        updatedFormData = {
-          ...prevFormData,
-          [name]: currentValue
-        };
-        return updatedFormData;
-      });
-    }
+    updateFormData(
+      name,
+      currentValue,
+      setFormData,
+      arrayIndex,
+      arrayName,
+      dtoName
+    );
 
-    // Update total field if the field that triggers the handleChange contributes to a number total
     if (totalName) {
-      const fieldsToTotal = currentPageFields.filter(
-        field => field.contributesToTotal === totalName
-      );
-      setFormData((prevFormData: FormData) => {
-        const total = sumFieldValues(prevFormData, fieldsToTotal);
-        return {
-          ...prevFormData,
-          [totalName]: total
-        };
-      });
+      updateTotalField(totalName, currentPageFields, setFormData);
     }
 
     isFormDirty.current = true;
@@ -329,7 +279,7 @@ export default function FormBuilder({
             )}
             {pages[currentPage].importantTxtName && (
               <ImportantText
-                txtName={pages[currentPage].importantTxtName as string}
+                txtName={pages[currentPage].importantTxtName ?? ""}
               />
             )}
             {pages[currentPage].expanderLinkName && (
@@ -346,48 +296,18 @@ export default function FormBuilder({
                   <Card.Content>
                     <Card.Heading>{section.sectionHeader}</Card.Heading>
                     {section.fields.map((field: Field) => {
-                      let fieldComponent = null;
-                      switch (field.type) {
-                        case "array":
-                          fieldComponent = (
-                            <PanelBuilder
-                              field={field}
-                              formData={formData}
-                              setFormData={setFormData}
-                              renderFormField={renderFormField}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              panelErrors={formErrors[field.name]}
-                              fieldWarning={fieldWarning}
-                              options={options}
-                              isFormDirty={isFormDirty}
-                            />
-                          );
-                          break;
-                        case "dto":
-                          fieldComponent = (
-                            <DtoBuilder
-                              field={field}
-                              formData={formData}
-                              renderFormField={renderFormField}
-                              handleChange={handleChange}
-                              handleBlur={handleBlur}
-                              errors={formErrors[field.name]}
-                              options={options}
-                              dtoName={field.name}
-                            />
-                          );
-                          break;
-                        default:
-                          fieldComponent = renderFormField(
-                            field,
-                            formData[field.name] ?? "",
-                            formErrors[field.name] ?? "",
-                            fieldWarning,
-                            { handleChange, handleBlur },
-                            options
-                          );
-                      }
+                      const fieldComponent = (
+                        <FormFieldBuilder
+                          field={field}
+                          value={formData[field.name] ?? ""}
+                          error={formErrors[field.name] ?? ""}
+                          fieldWarning={fieldWarning}
+                          handlers={{ handleChange, handleBlur, setFormData }}
+                          options={options}
+                          formData={formData}
+                          isFormDirty={isFormDirty}
+                        />
+                      );
                       return (
                         <div key={field.name} className="nhsuk-form-group">
                           {showFormField(field, formData)
@@ -564,160 +484,4 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
   };
 
   return <div>{renderErrors(formErrors)}</div>;
-}
-
-function renderFormField(
-  field: Field,
-  value: string,
-  error: string,
-  fieldWarning: FieldWarning | undefined,
-  handlers: {
-    handleChange: (
-      event: any,
-      selectedOption?: any,
-      checkedStatus?: boolean,
-      index?: number,
-      name?: string
-    ) => void;
-    handleBlur: (
-      event: any,
-      selectedOption?: any,
-      checkedStatus?: boolean,
-      index?: number,
-      name?: string
-    ) => void;
-  },
-  options?: any,
-  arrayDetails?: { arrayIndex: number; arrayName: string },
-  dtoName?: string
-): React.ReactElement | null {
-  const {
-    name,
-    type,
-    label,
-    placeholder,
-    optionsKey,
-    width,
-    isNumberField,
-    isTotal,
-    readOnly,
-    rows
-  } = field;
-  const { handleChange, handleBlur } = handlers;
-  const { arrayIndex, arrayName } = arrayDetails ?? {};
-
-  switch (type) {
-    case "text":
-      return (
-        <Text
-          name={name}
-          label={label}
-          handleChange={handleChange}
-          fieldError={error}
-          fieldWarning={fieldWarning}
-          placeholder={placeholder}
-          handleBlur={handleBlur}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-          width={width}
-          isNumberField={isNumberField}
-          isTotal={isTotal}
-          readOnly={readOnly}
-        />
-      );
-
-    case "textArea":
-      return (
-        <TextArea
-          name={name}
-          label={label}
-          handleChange={handleChange}
-          fieldError={error}
-          placeholder={placeholder}
-          handleBlur={handleBlur}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-          rows={rows}
-        />
-      );
-
-    case "radio":
-      return (
-        <Radios
-          name={name}
-          label={label}
-          options={filteredOptions(optionsKey, options)}
-          handleChange={handleChange}
-          fieldError={error}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-        />
-      );
-
-    case "select":
-      return (
-        <Selector
-          name={name}
-          label={label}
-          options={filteredOptions(optionsKey, options)}
-          handleChange={handleChange}
-          fieldError={error}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-        />
-      );
-
-    case "date":
-      return (
-        <Dates
-          name={name}
-          label={label}
-          handleChange={handleChange}
-          fieldError={error}
-          placeholder={placeholder}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-          fieldWarning={fieldWarning}
-        />
-      );
-
-    case "phone":
-      return (
-        <Phone
-          name={name}
-          label={label}
-          handleChange={handleChange}
-          fieldError={error}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-        />
-      );
-    case "checkbox":
-      return (
-        <Checkboxes
-          name={name}
-          label={label}
-          handleChange={handleChange}
-          fieldError={error}
-          value={value}
-          arrayIndex={arrayIndex}
-          arrayName={arrayName}
-          dtoName={dtoName}
-        />
-      );
-    default:
-      return null;
-  }
 }

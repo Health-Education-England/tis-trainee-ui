@@ -590,6 +590,83 @@ export function isValidOption(
   return result ? (option as string) : "";
 }
 
+export const determineCurrentValue = (
+  event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  selectedOption?: any,
+  checkedStatus?: boolean
+) => {
+  let value: string | boolean = event.currentTarget.value;
+  if (value === "Yes") value = true;
+  if (value === "No") value = false;
+  if (selectedOption) {
+    return selectedOption.value;
+  } else if (checkedStatus !== undefined) {
+    return checkedStatus;
+  } else {
+    return value;
+  }
+};
+
+export const updateFormData = (
+  name: string,
+  currentValue: any,
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>,
+  arrayIndex: number | undefined,
+  arrayName: string | undefined,
+  dtoName: string | undefined
+) => {
+  let updatedFormData: FormData = {};
+  if (typeof arrayIndex === "number" && arrayName) {
+    setFormData((prevFormData: FormData) => {
+      const newArray = [...prevFormData[arrayName]];
+      newArray[arrayIndex] = {
+        ...newArray[arrayIndex],
+        [name]: currentValue
+      };
+      updatedFormData = { ...prevFormData, [arrayName]: newArray };
+      return updatedFormData;
+    });
+  } else if (dtoName) {
+    setFormData((prevFormData: FormData) => {
+      const dto = prevFormData[dtoName];
+      const updatedDto = {
+        ...dto,
+        [name]: currentValue
+      };
+      updatedFormData = {
+        ...prevFormData,
+        [dtoName]: updatedDto
+      };
+      return updatedFormData;
+    });
+  } else {
+    setFormData((prevFormData: FormData) => {
+      updatedFormData = {
+        ...prevFormData,
+        [name]: currentValue
+      };
+      return updatedFormData;
+    });
+  }
+};
+
+export const updateTotalField = (
+  totalName: string,
+  currentPageFields: Field[],
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>
+) => {
+  const fieldsToTotal = currentPageFields.filter(
+    field => field.contributesToTotal === totalName
+  );
+  setFormData((prevFormData: FormData) => {
+    const total = sumFieldValues(prevFormData, fieldsToTotal);
+    return {
+      ...prevFormData,
+      [totalName]: total
+    };
+  });
+};
+
 // react-select styles
 export const colourStyles = {
   option: (baseStyles: any, { isFocused }: any) => ({
