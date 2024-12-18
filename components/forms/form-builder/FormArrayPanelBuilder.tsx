@@ -1,50 +1,35 @@
 import React from "react";
-import { Field, FieldWarning } from "../FormBuilder";
+import { Field, FieldWarning } from "./FormBuilder";
 import { Button, Card } from "nhsuk-react-components";
 import {
   formatFieldName,
   showFormField
-} from "../../../../utilities/FormBuilderUtilities";
+} from "../../../utilities/FormBuilderUtilities";
+import { FormFieldBuilder } from "./FormFieldBuilder";
 
-type PanelBuilder = {
+type FormArrayPanelBuilderProps = {
   fieldWarning: FieldWarning | undefined;
   field: Field;
-  formData: any;
   setFormData: React.Dispatch<any>;
-  renderFormField: (
-    field: Field,
-    value: string,
-    error: string,
-    FieldWarning: FieldWarning | undefined,
-    handlers: {
-      handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-      handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    },
-    options?: any,
-    arrayDetails?: { arrayIndex: number; arrayName: string },
-    dtoName?: string
-  ) => JSX.Element | null;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   panelErrors: any;
   options?: any;
+  formData?: any;
   isFormDirty: React.MutableRefObject<boolean>;
-  dtoName?: string;
 };
 
-export default function PanelBuilder({
+export function FormArrayPanelBuilder({
   field,
   formData,
   setFormData,
-  renderFormField,
   handleChange,
   handleBlur,
   panelErrors,
   fieldWarning,
   options,
-  isFormDirty,
-  dtoName
-}: Readonly<PanelBuilder>) {
+  isFormDirty
+}: Readonly<FormArrayPanelBuilderProps>) {
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
       panel[objField.name] = "";
@@ -78,20 +63,25 @@ export default function PanelBuilder({
             <p>
               <b>{`${formattedFieldName} ${index + 1}`}</b>
             </p>
-            {field.objectFields?.map((objField: Field) => (
+            {field.objectFields?.map(objField => (
               <div key={objField.name} className="nhsuk-form-group">
-                {showFormField(objField, formData[field.name][index])
-                  ? renderFormField(
-                      objField,
-                      formData[field.name][index][objField.name] ?? "",
-                      panelErrors?.[index]?.[objField.name] ?? "",
-                      fieldWarning,
-                      { handleChange, handleBlur },
-                      options,
-                      { arrayIndex: index, arrayName: field.name },
-                      dtoName
-                    )
-                  : null}
+                {showFormField(objField, formData[field.name][index]) ? (
+                  <FormFieldBuilder
+                    field={objField}
+                    value={formData[field.name][index][objField.name] ?? ""}
+                    error={panelErrors?.[index]?.[objField.name] ?? ""}
+                    fieldWarning={fieldWarning}
+                    handlers={{
+                      handleChange: handleChange,
+                      handleBlur: handleBlur,
+                      setFormData: setFormData
+                    }}
+                    options={options}
+                    arrayDetails={{ arrayIndex: index, arrayName: field.name }}
+                    formData={formData}
+                    isFormDirty={isFormDirty}
+                  />
+                ) : null}
               </div>
             ))}
             <div>
