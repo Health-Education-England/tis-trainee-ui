@@ -114,6 +114,12 @@ function makeTSSHeaderLinks() {
       showWithNoMfa: false
     },
     {
+      path: "cct",
+      name: "CCT",
+      mobileOnly: false,
+      showWithNoMfa: false
+    },
+    {
       path: "formr-a",
       name: "Form R (A)",
       mobileOnly: false,
