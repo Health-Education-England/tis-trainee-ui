@@ -53,7 +53,10 @@ describe("Authenticator", () => {
         });
         expect(hrefs.get()).to.deep.eq(links);
       });
-    cy.get("[data-cy=footerCopy]").should("contain.text", "© NHS England 2024");
+    cy.get("[data-cy=footerCopy]").should(
+      "contain.text",
+      `© NHS England ${new Date().getFullYear()}`
+    );
   });
 
   it("should remove the privacy & cookies error message and show the Create an account button if checkbox checked", () => {
