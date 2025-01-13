@@ -67,6 +67,28 @@ const Home = () => {
       </Card.Group>
       <Card.Group>
         <Card.GroupItem width="one-third">
+          <PageCard isClickable={true} route="/profile" linkHeader="Profile">
+            <ul className={style.ull}>
+              <li>Personal information</li>
+              <li>Registration details</li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+        <Card.GroupItem width="one-third">
+          <PageCard
+            isClickable={true}
+            route="/ltft"
+            linkHeader="Changing hours (LTFT)"
+          >
+            <ul className={style.ull}>
+              <li>
+                Submit and track a Changing hours (Less Than Full Time)
+                application
+              </li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+        <Card.GroupItem width="one-third">
           <PageCard
             isClickable={true}
             route="/cct"
@@ -77,6 +99,8 @@ const Home = () => {
             </ul>
           </PageCard>
         </Card.GroupItem>
+      </Card.Group>
+      <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard
             isClickable={true}
@@ -101,16 +125,6 @@ const Home = () => {
             </ul>
           </PageCard>
         </Card.GroupItem>
-      </Card.Group>
-      <Card.Group>
-        <Card.GroupItem width="one-third">
-          <PageCard isClickable={true} route="/profile" linkHeader="Profile">
-            <ul className={style.ull}>
-              <li>Personal information</li>
-              <li>Registration details</li>
-            </ul>
-          </PageCard>
-        </Card.GroupItem>
         <Card.GroupItem width="one-third">
           <PageCard isClickable={true} route="/support" linkHeader="Support">
             <ul className={style.ull}>
@@ -124,6 +138,8 @@ const Home = () => {
             </ul>
           </PageCard>
         </Card.GroupItem>
+      </Card.Group>
+      <Card.Group>
         <Card.GroupItem width="one-third">
           <PageCard isClickable={true} route="/mfa" linkHeader="MFA">
             <ul className={style.ull}>

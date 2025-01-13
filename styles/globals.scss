@@ -821,31 +821,37 @@ ol[type="a"] {
   }
 }
 
-.unread-btn {
-  min-width: 190px;
-  max-width: 190px;
-  margin-right: 16px;
-  border: 1px solid white;
-  box-shadow: 0 1px 0 #4c6272;
+.table-row-btn {
+  padding: 8px 16px;
+  border: 1px solid #4c6272;
+  box-shadow: 0 1px 0 #4e6475;
   border-radius: 4px;
-  background-color: #f0f4f5;
-  color: #425563;
+  color: whitesmoke;
   transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.hover-active-states {
   &:hover {
-    border: 1px solid darken(whitesmoke, 5%);
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #212b32;
-    background-color: whitesmoke;
+    background-color: #212b32;
+    transform: scale(1.05);
   }
   &:active {
     background-color: #003f6d;
-    color: whitesmoke;
+    transform: scale(0.95);
   }
 }
 
+.unread-btn,
+.make-ltft-btn {
+  @extend .table-row-btn;
+  @extend .hover-active-states;
+  background-color: #6c716f;
+  margin-right: 8px;
+}
+
 .unread-icon {
-  color: #425563;
+  color: white;
   margin-right: 0.5em;
 }
 

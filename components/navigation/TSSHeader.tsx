@@ -120,6 +120,12 @@ function makeTSSHeaderLinks() {
       showWithNoMfa: false
     },
     {
+      path: "ltft",
+      name: "Changing hours (LTFT)",
+      mobileOnly: false,
+      showWithNoMfa: false
+    },
+    {
       path: "formr-a",
       name: "Form R (A)",
       mobileOnly: false,

@@ -56,6 +56,9 @@ describe("CctSavedDrafts", () => {
       .first()
       .contains("UserChosenName1")
       .click();
+    cy.get('[data-cy="0_makeLtft"] > [data-cy="make-ltft-btn"]').should(
+      "exist"
+    );
     cy.url().should(
       "include",
       "/cct/view/123e4567-e89b-12d3-a456-426614174000"

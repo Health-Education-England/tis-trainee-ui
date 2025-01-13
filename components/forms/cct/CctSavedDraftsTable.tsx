@@ -55,6 +55,10 @@ const columns = [
     cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
     sortingFn: "datetime",
     sortDescFirst: true
+  }),
+  columnHelper.display({
+    id: "makeLtft",
+    cell: props => <RowLtftActions row={props.row.original} />
   })
 ];
 
@@ -118,7 +122,14 @@ export function CctSavedDraftsTable() {
                 data-cy={`saved-calculation-row-${row.id}`}
               >
                 {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} data-cy={cell.id}>
+                  <td
+                    key={cell.id}
+                    data-cy={cell.id}
+                    style={{
+                      padding: "12px 12px 8px 2px",
+                      minWidth: "200px"
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -130,5 +141,27 @@ export function CctSavedDraftsTable() {
     </div>
   ) : (
     <p data-cy="no-saved-drafts">You have no saved calculations.</p>
+  );
+}
+
+type RowLtftActionsProps = {
+  row: CctSummaryType;
+};
+
+function RowLtftActions({ row }: Readonly<RowLtftActionsProps>) {
+  return (
+    <button
+      type="button"
+      className="make-ltft-btn"
+      onClick={(e: { stopPropagation: () => void }) => {
+        e.stopPropagation();
+        console.log(
+          "TODO - modal to confirm CCT discussion and continue to main LTFT form"
+        );
+      }}
+      data-cy="make-ltft-btn"
+    >
+      Make Changing hours (LTFT) application
+    </button>
   );
 }
