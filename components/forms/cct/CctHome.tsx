@@ -43,8 +43,9 @@ export function CctHome() {
           history.push("/cct/create");
         }}
         data-cy="cct-home-new-calc-btn"
+        style={{ marginTop: "0.5rem" }}
       >
-        Make a new calculation
+        Make a new CCT calculation
       </Button>
     </>
   );

@@ -822,7 +822,7 @@ ol[type="a"] {
 }
 
 .table-row-btn {
-  padding: 8px 16px;
+  padding: 8px;
   border: 1px solid #4c6272;
   box-shadow: 0 1px 0 #4e6475;
   border-radius: 4px;
@@ -848,6 +848,7 @@ ol[type="a"] {
   @extend .hover-active-states;
   background-color: #6c716f;
   margin-right: 8px;
+  min-width: 200px;
 }
 
 .unread-icon {
@@ -1113,4 +1114,9 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
     left: 0;
     top: 0;
   }
+}
+
+.checkbox-hint {
+  margin-left: 3rem;
+  padding-left: 0.25rem;
 }

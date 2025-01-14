@@ -37,6 +37,6 @@ describe("CctHome", () => {
       .contains("Saved calculations");
     cy.get('[data-cy="cct-home-new-calc-btn"]')
       .should("exist")
-      .contains("Make a new calculation");
+      .contains("Make a new CCT calculation");
   });
 });

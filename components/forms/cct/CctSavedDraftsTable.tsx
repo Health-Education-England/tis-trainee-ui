@@ -16,10 +16,14 @@ import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
 import store from "../../../redux/store/store";
 import { updatedNewCalcMade } from "../../../redux/slices/cctSlice";
+import { LtftDeclarationsModal } from "../../ltft/LtftDeclarationsModal";
+import { Hint } from "nhsuk-react-components";
 
 const columnHelper = createColumnHelper<CctSummaryType>();
 
-const columns = [
+const createColumns = (
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+) => [
   columnHelper.accessor("name", {
     id: "name",
     header: ({ column }) => (
@@ -58,7 +62,12 @@ const columns = [
   }),
   columnHelper.display({
     id: "makeLtft",
-    cell: props => <RowLtftActions row={props.row.original} />
+    cell: props => (
+      <RowLtftActions
+        row={props.row.original}
+        setIsModalOpen={setIsModalOpen}
+      />
+    )
   })
 ];
 
@@ -72,6 +81,13 @@ export function CctSavedDraftsTable() {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "lastModified", desc: true }
   ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const columns = useMemo(
+    () => createColumns(setIsModalOpen),
+    [setIsModalOpen]
+  );
 
   const table = useReactTable({
     data: memoData,
@@ -89,6 +105,11 @@ export function CctSavedDraftsTable() {
 
   return cctList.length > 0 ? (
     <div className="table-wrapper">
+      <Hint data-cy="cct-saved-drafts-ltft-hint">
+        Please click the 'Make Changing hours (LTFT) application' button to
+        begin an application with your chosen saved CCT Calculation details
+        included.
+      </Hint>
       <table data-cy="cct-saved-drafts-table">
         <thead>
           {table.getHeaderGroups().map(headerGroup => {
@@ -127,7 +148,7 @@ export function CctSavedDraftsTable() {
                     data-cy={cell.id}
                     style={{
                       padding: "12px 12px 8px 2px",
-                      minWidth: "200px"
+                      minWidth: "150px"
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -138,6 +159,14 @@ export function CctSavedDraftsTable() {
           })}
         </tbody>
       </table>
+      <LtftDeclarationsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          setIsModalOpen(false);
+          history.push("/ltft/main");
+        }}
+      />
     </div>
   ) : (
     <p data-cy="no-saved-drafts">You have no saved calculations.</p>
@@ -146,19 +175,23 @@ export function CctSavedDraftsTable() {
 
 type RowLtftActionsProps = {
   row: CctSummaryType;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function RowLtftActions({ row }: Readonly<RowLtftActionsProps>) {
+function RowLtftActions({
+  row,
+  setIsModalOpen
+}: Readonly<RowLtftActionsProps>) {
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
+
   return (
     <button
       type="button"
       className="make-ltft-btn"
-      onClick={(e: { stopPropagation: () => void }) => {
-        e.stopPropagation();
-        console.log(
-          "TODO - modal to confirm CCT discussion and continue to main LTFT form"
-        );
-      }}
+      onClick={handleButtonClick}
       data-cy="make-ltft-btn"
     >
       Make Changing hours (LTFT) application
