@@ -6,8 +6,8 @@ import {
   PersonalDetails,
   initialPersonalDetails
 } from "../models/PersonalDetails";
-import { CctSummaryType } from "../redux/slices/cctSummaryListSlice";
 import { CctCalculation } from "../redux/slices/cctSlice";
+import { CctSummaryType } from "../redux/slices/cctListSlice";
 
 export class TraineeProfileService extends ApiService {
   constructor() {
@@ -47,7 +47,10 @@ export class TraineeProfileService extends ApiService {
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
   }
 
-  async getCctCalculations(): Promise<AxiosResponse<CctSummaryType[]>> {
+  // TODO: refactor to use CctCalculation when BE is ready
+  async getCctCalculations(): Promise<
+    AxiosResponse<CctSummaryType[] | CctCalculation[]>
+  > {
     return this.get("/cct/calculation");
   }
 

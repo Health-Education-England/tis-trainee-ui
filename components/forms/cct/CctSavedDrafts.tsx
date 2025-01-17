@@ -4,20 +4,18 @@ import Loading from "../../common/Loading";
 import { CctSavedDraftsTable } from "./CctSavedDraftsTable";
 
 export function CctSavedDrafts() {
-  const cctSummaryListStatus = useAppSelector(
-    state => state.cctSummaryList.status
-  );
-  if (cctSummaryListStatus === "loading") {
+  const cctListStatus = useAppSelector(state => state.cctList.status);
+  if (cctListStatus === "loading") {
     return <Loading />;
   }
 
-  if (cctSummaryListStatus === "failed") {
+  if (cctListStatus === "failed") {
     return (
       <ErrorPage message="There was a problem loading your saved calculations. Please try reloading them by refreshing the page." />
     );
   }
 
-  if (cctSummaryListStatus === "succeeded") {
+  if (cctListStatus === "succeeded") {
     return <CctSavedDraftsTable />;
   }
   return null;

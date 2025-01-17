@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CctCalculation } from "./cctSlice";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { toastErrText } from "../../utilities/Constants";
@@ -11,32 +12,32 @@ export type CctSummaryType = {
   lastModified: Date | string;
 };
 
-type CctSummaryListState = {
-  cctList: CctSummaryType[];
+// TODO: refactor to use CctCalculation when BE is ready
+export type TempCctListType = CctSummaryType[] | CctCalculation[];
+
+type CctList = {
+  cctList: TempCctListType;
   status: string;
   error: any;
 };
 
-const initialState: CctSummaryListState = {
+const initialState: CctList = {
   cctList: [],
   status: "idle",
   error: ""
 };
 
-export const loadCctSummaryList = createAsyncThunk(
-  "cctSummaryList/loadCctSummaryList",
-  async () => {
-    const traineeProfileService = new TraineeProfileService();
-    const response = await traineeProfileService.getCctCalculations();
-    return response.data;
-  }
-);
+export const loadCctList = createAsyncThunk("cctList/loadCctList", async () => {
+  const traineeProfileService = new TraineeProfileService();
+  const response = await traineeProfileService.getCctCalculations();
+  return response.data;
+});
 
-const cctSummaryListSlice = createSlice({
-  name: "cctSummaryList",
+const cctListSlice = createSlice({
+  name: "cctList",
   initialState,
   reducers: {
-    updatedCctList: (state, action: PayloadAction<CctSummaryType[]>) => {
+    updatedCctList: (state, action: PayloadAction<TempCctListType>) => {
       state.cctList = action.payload;
     },
     updatedCctListStatus: (state, action: PayloadAction<string>) => {
@@ -45,14 +46,14 @@ const cctSummaryListSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(loadCctSummaryList.pending, state => {
+      .addCase(loadCctList.pending, state => {
         state.status = "loading";
       })
-      .addCase(loadCctSummaryList.fulfilled, (state, { payload }) => {
+      .addCase(loadCctList.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
         state.cctList = payload;
       })
-      .addCase(loadCctSummaryList.rejected, (state, { error }) => {
+      .addCase(loadCctList.rejected, (state, { error }) => {
         state.status = "failed";
         state.error = error.message;
         showToast(
@@ -64,7 +65,6 @@ const cctSummaryListSlice = createSlice({
   }
 });
 
-export default cctSummaryListSlice.reducer;
+export const { updatedCctList, updatedCctListStatus } = cctListSlice.actions;
 
-export const { updatedCctList, updatedCctListStatus } =
-  cctSummaryListSlice.actions;
+export default cctListSlice.reducer;

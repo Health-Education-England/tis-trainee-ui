@@ -1,5 +1,6 @@
 import { CctCalculation } from "../redux/slices/cctSlice";
 
+// TODO remove the CctSummaryType list when BE is ready
 type CctSummaryType = {
   id: string;
   name: string;
@@ -32,24 +33,47 @@ export const cctSummaryList: CctSummaryType[] = [
   }
 ];
 
-export const mockCctCalcData1: CctCalculation = {
-  id: "6756c2b57ee98643d6f3dd8b",
-  name: "bob1",
-  programmeMembership: {
-    id: "a6de88b8-de41-48dd-9492-a518f5001176",
-    name: "Cardiology",
-    startDate: "2020-01-01",
-    endDate: "2028-01-01",
-    wte: 1.0
+export const mockCctFullCalcsList1: CctCalculation[] = [
+  {
+    id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+    name: "reduced hours",
+    cctDate: "2028-11-23",
+    programmeMembership: {
+      id: "a6de88b8-de41-48dd-9492-a518f5001176",
+      name: "General Practice",
+      startDate: "2020-01-01",
+      endDate: "2028-01-01",
+      wte: 1.0
+    },
+    changes: [
+      {
+        type: "LTFT",
+        startDate: "2025-12-01",
+        wte: 0.7
+      }
+    ],
+    created: "2024-12-09T10:13:09.559Z",
+    lastModified: "2024-12-09T15:11:04.100Z"
   },
-  changes: [
-    {
-      type: "LTFT",
-      startDate: "2025-04-01",
-      wte: 0.7
-    }
-  ],
-  cctDate: "2029-03-07",
-  created: "2024-12-09T10:13:09.559Z",
-  lastModified: "2024-12-09T15:11:04.100Z"
-};
+  {
+    id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffc",
+    name: "hours increase",
+    cctDate: "2027-08-02",
+    programmeMembership: {
+      id: "0460eb0d-2797-4078-ab6f-060b2ae6a18e",
+      name: "Cardiology",
+      startDate: "2020-01-01",
+      endDate: "2028-01-01",
+      wte: 0.8
+    },
+    changes: [
+      {
+        type: "LTFT",
+        startDate: "2025-12-01",
+        wte: 1.0
+      }
+    ],
+    created: "2024-12-09T10:13:09.559Z",
+    lastModified: "2024-12-09T15:11:04.100Z"
+  }
+];

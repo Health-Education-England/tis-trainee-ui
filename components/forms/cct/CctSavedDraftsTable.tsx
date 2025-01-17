@@ -10,7 +10,7 @@ import {
   createColumnHelper
 } from "@tanstack/react-table";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { CctSummaryType } from "../../../redux/slices/cctSummaryListSlice";
+import { CctSummaryType } from "../../../redux/slices/cctListSlice";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
@@ -72,10 +72,11 @@ const createColumns = (
 ];
 
 export function CctSavedDraftsTable() {
-  const cctList = useAppSelector(state => state.cctSummaryList.cctList);
+  const cctList = useAppSelector(state => state.cctList.cctList);
 
   const memoData = useMemo(() => {
-    return cctList;
+    // TODO: remove CctSummaryType when BE is ready
+    return cctList as CctSummaryType[];
   }, [cctList]);
 
   const [sorting, setSorting] = useState<SortingState>([
