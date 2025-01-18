@@ -56,10 +56,10 @@ export const LtftDeclarationsModal = ({
             application will be for viewing only.
           </Checkboxes.Box>
           <Hint className="checkbox-hint">
-            If you do proceed and then decide you want an application with
+            {`If you do proceed and then decide you want an application with
             different CCT Calculation details, you can 'start over' and choose
             another saved CCT Calculation from the list via the 'Make Changing
-            hours (LTFT)' button.
+            hours (LTFT)' button.`}
           </Hint>
         </Checkboxes>
         <Button

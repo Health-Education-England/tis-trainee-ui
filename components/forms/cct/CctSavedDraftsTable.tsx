@@ -114,9 +114,9 @@ export function CctSavedDraftsTable() {
   return cctList.length > 0 ? (
     <div className="table-wrapper">
       <Hint data-cy="cct-saved-drafts-ltft-hint">
-        Please click the 'Make Changing hours (LTFT) application' button to
+        {`Please click the 'Make Changing hours (LTFT) application' button to
         begin an application with your chosen saved CCT Calculation details
-        included.
+        included.`}
       </Hint>
       <table data-cy="cct-saved-drafts-table">
         <thead>
