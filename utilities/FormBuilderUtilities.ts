@@ -20,6 +20,7 @@ import {
   FieldWarning,
   Form,
   FormData,
+  FormName,
   MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -452,6 +453,7 @@ async function saveForm(formData: FormData, formName: string) {
   }
 }
 
+// TODO - needs updating for ltft form
 export async function autosaveFormR(
   formName: string,
   formData: FormRPartA | FormRPartB
@@ -666,6 +668,30 @@ export const updateTotalField = (
     };
   });
 };
+
+export function setFinalFormFields(
+  lastSavedFormData: FormData,
+  formData: FormData,
+  jsonFormName: FormName
+) {
+  const finalFields = { ...formData };
+
+  if (lastSavedFormData?.id) {
+    finalFields.id = lastSavedFormData.id;
+
+    if (jsonFormName === "ltft") {
+      finalFields.lastModified = lastSavedFormData.lastModified;
+    } else {
+      finalFields.lastModifiedDate = lastSavedFormData.lastModifiedDate;
+      finalFields.lifecycleState = lastSavedFormData.lifecycleState;
+      finalFields.traineeTisId = lastSavedFormData.traineeTisId;
+    }
+  } else if (jsonFormName !== "ltft") {
+    finalFields.traineeTisId = lastSavedFormData.traineeTisId;
+  }
+
+  return finalFields;
+}
 
 // react-select styles
 export const colourStyles = {

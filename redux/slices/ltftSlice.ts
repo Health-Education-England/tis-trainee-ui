@@ -32,7 +32,7 @@ type LtftDiscussion = {
 
 type LtftPd = {
   id?: string;
-  title: ProfileSType;
+  title?: ProfileSType;
   surname: ProfileSType;
   forename: ProfileSType;
   telephoneNumber: ProfileSType;
@@ -73,17 +73,57 @@ export type LtftObj = {
 };
 
 type LtftState = {
-  ltft: LtftObj | null;
+  formData: LtftObj;
   LtftCctSnapshot: CctCalculation | null;
   status: string;
   error: any;
+  canEdit: boolean;
+};
+
+const initialLtftObj: LtftObj = {
+  change: {
+    calculationId: "",
+    cctDate: "",
+    type: "",
+    startDate: "",
+    wte: 0
+  },
+  declarations: {
+    discussedWithTpd: null,
+    informationIsCorrect: null,
+    notGuaranteed: null
+  },
+  discussions: null,
+  personalDetails: {
+    title: "",
+    surname: "",
+    forename: "",
+    telephoneNumber: "",
+    mobileNumber: "",
+    email: "",
+    gmcNumber: "",
+    skilledWorkerVisaHolder: null
+  },
+  programmeMembership: {
+    id: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+    wte: 0
+  },
+  reasons: null,
+  status: {
+    current: "DRAFT",
+    history: null
+  }
 };
 
 const initialState: LtftState = {
-  ltft: null,
+  formData: initialLtftObj,
   LtftCctSnapshot: null,
   status: "idle",
-  error: ""
+  error: "",
+  canEdit: false
 };
 
 const ltftSlice = createSlice({
@@ -97,7 +137,7 @@ const ltftSlice = createSlice({
       state.LtftCctSnapshot = action.payload;
     },
     updatedLtft(state, action: PayloadAction<LtftObj>) {
-      state.ltft = action.payload;
+      state.formData = action.payload;
     }
   }
 });
