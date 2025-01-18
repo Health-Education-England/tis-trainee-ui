@@ -9,7 +9,7 @@ import {
   SortingState,
   createColumnHelper
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { CctSummaryType } from "../../../redux/slices/cctListSlice";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
@@ -18,6 +18,12 @@ import store from "../../../redux/store/store";
 import { updatedNewCalcMade } from "../../../redux/slices/cctSlice";
 import { LtftDeclarationsModal } from "../../ltft/LtftDeclarationsModal";
 import { Hint } from "nhsuk-react-components";
+import { mockCctFullCalcsList1 } from "../../../mock-data/mock-cct-data";
+import {
+  setLtftCctSnapshot,
+  updatedLtft
+} from "../../../redux/slices/ltftSlice";
+import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 
 const columnHelper = createColumnHelper<CctSummaryType>();
 
@@ -72,6 +78,7 @@ const createColumns = (
 ];
 
 export function CctSavedDraftsTable() {
+  const dispatch = useAppDispatch();
   const cctList = useAppSelector(state => state.cctList.cctList);
 
   const memoData = useMemo(() => {
@@ -164,8 +171,10 @@ export function CctSavedDraftsTable() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
+          const draftLtft = populateLtftDraft();
+          dispatch(updatedLtft(draftLtft));
           setIsModalOpen(false);
-          history.push("/ltft/main");
+          history.push("/ltft/create");
         }}
       />
     </div>
@@ -183,7 +192,12 @@ function RowLtftActions({
   row,
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // TODO this mock data var when BE is updated
+  const mockCctRowData = mockCctFullCalcsList1[0];
+
+  const handleMakeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // TODO swap mock data for row (which has full CctCalculation) when BE is updated
+    store.dispatch(setLtftCctSnapshot(mockCctRowData));
     e.stopPropagation();
     setIsModalOpen(true);
   };
@@ -192,7 +206,7 @@ function RowLtftActions({
     <button
       type="button"
       className="make-ltft-btn"
-      onClick={handleButtonClick}
+      onClick={handleMakeLtftBtnClick}
       data-cy="make-ltft-btn"
     >
       Make Changing hours (LTFT) application

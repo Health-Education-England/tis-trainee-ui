@@ -984,6 +984,7 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .tracker-section_node {
   min-width: 40px;
   min-height: 40px;
+  border: solid 3px #212b32;
   border-radius: 50%;
   background-color: var(--circle-colour);
   display: flex;
