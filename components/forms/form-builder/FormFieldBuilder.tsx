@@ -50,11 +50,11 @@ export function FormFieldBuilder({
     isNumberField,
     isTotal,
     readOnly,
-    rows
+    rows,
+    isMultiSelect
   } = field;
   const { handleChange, handleBlur, setFormData } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
-
   switch (type) {
     case "array":
       return (
@@ -148,6 +148,7 @@ export function FormFieldBuilder({
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           dtoName={dtoName}
+          isMultiSelect={isMultiSelect}
         />
       );
 

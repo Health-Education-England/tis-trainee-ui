@@ -68,6 +68,7 @@ export type Field = {
   isTotal?: boolean;
   readOnly?: boolean;
   rows?: number;
+  isMultiSelect?: boolean;
 };
 export type FormData = {
   [key: string]: any;

@@ -601,6 +601,9 @@ export const determineCurrentValue = (
   if (value === "Yes") value = true;
   if (value === "No") value = false;
   if (selectedOption) {
+    if (Array.isArray(selectedOption)) {
+      return selectedOption.map((option: any) => option.value);
+    }
     return selectedOption.value;
   } else if (checkedStatus !== undefined) {
     return checkedStatus;

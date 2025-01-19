@@ -19,10 +19,11 @@ type SelectorProps = {
     dtoName?: string
   ) => void;
   fieldError: string;
-  value: string;
+  value: string | string[];
   arrayIndex?: number;
   arrayName?: string;
   dtoName?: string;
+  isMultiSelect?: boolean;
 };
 
 export const Selector = ({
@@ -34,7 +35,8 @@ export const Selector = ({
   value,
   arrayIndex,
   arrayName,
-  dtoName
+  dtoName,
+  isMultiSelect
 }: SelectorProps) => {
   return (
     <div data-cy={name}>
@@ -66,8 +68,13 @@ export const Selector = ({
           borderRadius: 0
         })}
         styles={colourStyles}
-        value={options?.filter((option: any) => option.value === value)}
+        value={
+          isMultiSelect
+            ? options?.filter((option: any) => value.includes(option.value))
+            : options?.filter((option: any) => option.value === value)
+        }
         isClearable={true}
+        isMulti={isMultiSelect}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

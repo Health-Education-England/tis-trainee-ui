@@ -49,13 +49,14 @@
       "expanderLinkName": "",
       "sections": [
         {
-          "sectionHeader": "Reason for applying",
+          "sectionHeader": "Reason(s) for applying",
           "fields": [
             {
               "name": "reasons",
               "label": "Why are you making this Changing hours (LTFT) application?",
               "placeholder": "choose one or more...",
               "type": "select",
+              "isMultiSelect": true,
               "optionsKey": "ltftReasons",
               "visible": true,
               "canGrow": true
