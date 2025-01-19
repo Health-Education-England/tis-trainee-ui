@@ -18,7 +18,7 @@ export function populateLtftDraft() {
       informationIsCorrect: null,
       notGuaranteed: null
     },
-    discussions: null,
+    discussions: [{ name: "", email: "", role: "tpd" }],
     personalDetails: {
       title: personalDetails?.title,
       surname: personalDetails?.surname,

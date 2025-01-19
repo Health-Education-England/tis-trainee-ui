@@ -2,6 +2,69 @@
   "name": "ltft",
   "pages": [
     {
+      "pageName": "Discussing your proposals",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Discussing your proposals",
+          "fields": [
+            {
+              "name": "discussions",
+              "type": "array",
+              "label": "TPD / other people you have discussed your LTFT application with",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "name",
+                  "label": "Name",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email Address",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "role",
+                  "label": "Role / Position",
+                  "placeholder": "type here...",
+                  "type": "select",
+                  "optionsKey": "ltftRoles",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Reason for applying",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Reason for applying",
+          "fields": [
+            {
+              "name": "reasons",
+              "label": "Why are you making this Changing hours (LTFT) application?",
+              "placeholder": "choose one or more...",
+              "type": "select",
+              "optionsKey": "ltftReasons",
+              "visible": true,
+              "canGrow": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "pageName": "Personal Details",
       "importantTxtName": "",
       "expanderLinkName": "",
