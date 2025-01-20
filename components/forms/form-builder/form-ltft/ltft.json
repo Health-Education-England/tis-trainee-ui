@@ -74,62 +74,69 @@
           "sectionHeader": "Personal Details",
           "fields": [
             {
-              "name": "forename",
-              "label": "Forename ",
-              "placeholder": "type here...",
-              "type": "text",
+              "name": "personalDetails",
+              "type": "dto",
               "visible": true,
-              "canGrow": true
-            },
-            {
-              "name": "surname",
-              "label": "Surname (GMC-Registered)",
-              "placeholder": "type here...",
-              "type": "text",
-              "visible": true,
-              "canGrow": true
-            },
-            {
-              "name": "gmcNumber",
-              "label": "GMC Number",
-              "placeholder": "type here...",
-              "type": "text",
-              "visible": true
-            },
-            {
-              "name": "dateOfBirth",
-              "label": "Date of Birth",
-              "placeholder": "DD/MM/YYYY",
-              "type": "date",
-              "visible": true
-            },
-            {
-              "name": "telephoneNumber",
-              "label": "Contact Telephone",
-              "placeholder": "type here...",
-              "type": "phone",
-              "visible": true
-            },
-            {
-              "name": "mobileNumber",
-              "label": "Contact Mobile",
-              "placeholder": "type here...",
-              "type": "phone",
-              "visible": true
-            },
-            {
-              "name": "email",
-              "label": "Email Address",
-              "placeholder": "type here...",
-              "type": "text",
-              "visible": true
-            },
-            {
-              "name": "skilledWorkerVisaHolder",
-              "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
-              "type": "radio",
-              "optionsKey": "yesNo",
-              "visible": true
+              "objectFields": [
+                {
+                  "name": "forename",
+                  "label": "Forename ",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "surname",
+                  "label": "Surname (GMC-Registered)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "gmcNumber",
+                  "label": "GMC Number",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "dateOfBirth",
+                  "label": "Date of Birth",
+                  "placeholder": "DD/MM/YYYY",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "telephoneNumber",
+                  "label": "Contact Telephone",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "mobileNumber",
+                  "label": "Contact Mobile",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email Address",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "skilledWorkerVisaHolder",
+                  "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
+                  "type": "radio",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                }
+              ]
             }
           ]
         }

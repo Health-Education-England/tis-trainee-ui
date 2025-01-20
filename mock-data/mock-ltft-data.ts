@@ -59,7 +59,7 @@ export const mockLtftDraft0 = {
     endDate: "2028-01-01",
     wte: 1
   },
-  reasons: [["Caring Responsibilities", "Custom Reason"]],
+  reasons: ["Caring Responsibilities", "Custom Reason"],
   status: {
     current: "DRAFT",
     history: [
