@@ -47,7 +47,6 @@ const Home = () => {
               <li>Training Number (NTN/DRN)</li>
               <li>Conditions of Joining (CoJ) Agreement(s)</li>
               <li>CCT Calculator</li>
-              <li>Issuing a Digital Staff Passport (DSP) credential</li>
               <li>Programmes (past, current and future)</li>
             </ul>
           </PageCard>
@@ -59,7 +58,6 @@ const Home = () => {
             linkHeader="Placements"
           >
             <ul className={style.ull}>
-              <li>Issuing a Digital Staff Passport (DSP) credential</li>
               <li>Placements (past, current and future)</li>
             </ul>
           </PageCard>

@@ -22,7 +22,6 @@ import Home from "../home/Home";
 import { Placements } from "../placements/Placements";
 import { Programmes } from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
-import Dsp from "../dsp/Dsp";
 import GlobalAlert from "./GlobalAlert";
 import CojView from "../forms/conditionOfJoining/CojView";
 import TSSHeader from "../navigation/TSSHeader";
@@ -142,7 +141,6 @@ export const Main = () => {
               component={OnboardingTracker}
             />
             <Route exact path="/profile" component={Profile} />
-            <Route path="/credential" component={Dsp} />
             <Route path="/formr-a" component={FormRPartA} />
             <Route path="/formr-b" component={FormRPartB} />
             <Route exact path="/support" component={Support} />
@@ -150,30 +148,6 @@ export const Main = () => {
             <Route path="/notifications" component={Notifications} />
             <Route path="/cct" component={Cct} />
             <Redirect exact path="/" to="/home" />
-            <Redirect
-              exact
-              path="/credential-issued"
-              to={{
-                pathname: "/credential/issued",
-                search: location.search
-              }}
-            />
-            <Redirect
-              exact
-              path="/credential-verified"
-              to={{
-                pathname: "/credential/issue",
-                search: location.search
-              }}
-            />
-            <Redirect
-              exact
-              path="/invalid-credential"
-              to={{
-                pathname: "/credential/invalid",
-                search: location.search
-              }}
-            />
             <Route path="/*" component={PageNotFound} />
           </Switch>
         </main>
