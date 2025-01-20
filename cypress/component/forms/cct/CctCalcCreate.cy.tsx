@@ -13,7 +13,7 @@ import {
   CctCalculation,
   updatedCctCalc
 } from "../../../../redux/slices/cctSlice";
-import { mockCctCalcData1 } from "../../../../mock-data/mock-cct-data";
+import { mockCctList } from "../../../../mock-data/mock-cct-data";
 import { cctCalcWarningsMsgs } from "../../../../utilities/CctConstants";
 
 const { noActiveProgsMsg } = cctCalcWarningsMsgs;
@@ -60,7 +60,7 @@ describe("CctCalcCreate - new", () => {
 
 describe("CctCalcCreate - edit", () => {
   it("renders the cct calc form for editing", () => {
-    mountCctWithMockData(mockTraineeProfile, mockCctCalcData1);
+    mountCctWithMockData(mockTraineeProfile, mockCctList[0]);
     cy.get('[data-cy="backLink-to-cct-home"]').should("exist");
     cy.get('[data-cy="saved-cct-details"] > div').first().contains("bob1");
     cy.get('[data-cy="saved-cct-details"] > div')
