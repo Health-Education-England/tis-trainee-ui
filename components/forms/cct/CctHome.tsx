@@ -6,14 +6,14 @@ import { resetCctCalc } from "../../../redux/slices/cctSlice";
 import { Link } from "react-router-dom";
 import { CctSavedDrafts } from "./CctSavedDrafts";
 import { useEffect } from "react";
-import { loadCctSummaryList } from "../../../redux/slices/cctSummaryListSlice";
+import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(loadCctSummaryList());
+    dispatch(loadCctList());
   }, [dispatch]);
 
   return (

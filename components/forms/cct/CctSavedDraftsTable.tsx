@@ -10,14 +10,16 @@ import {
   createColumnHelper
 } from "@tanstack/react-table";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { CctSummaryType } from "../../../redux/slices/cctSummaryListSlice";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
 import store from "../../../redux/store/store";
-import { updatedNewCalcMade } from "../../../redux/slices/cctSlice";
+import {
+  CctCalculation,
+  updatedNewCalcMade
+} from "../../../redux/slices/cctSlice";
 
-const columnHelper = createColumnHelper<CctSummaryType>();
+const columnHelper = createColumnHelper<CctCalculation>();
 
 const columns = [
   columnHelper.accessor("name", {

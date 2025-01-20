@@ -4,7 +4,7 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import { CctCalcView } from "../../../../components/forms/cct/CctCalcView";
 import history from "../../../../components/navigation/history";
-import { mockCctCalcData1 } from "../../../../mock-data/mock-cct-data";
+import { mockCctList } from "../../../../mock-data/mock-cct-data";
 import {
   CctCalculation,
   updatedCctCalc,
@@ -13,7 +13,7 @@ import {
 } from "../../../../redux/slices/cctSlice";
 
 const mountCctViewWithMockData = (
-  cctCalcData: CctCalculation = mockCctCalcData1,
+  cctCalcData: CctCalculation = mockCctList[0],
   newCalcMade = true
 ) => {
   store.dispatch(updatedCctCalc(cctCalcData));
@@ -48,7 +48,7 @@ describe("CctCalcView", () => {
     cy.get("@print").should("be.called");
   });
   it("renders an existing cct calculation that has NOT just been edited", () => {
-    mountCctViewWithMockData(mockCctCalcData1, false);
+    mountCctViewWithMockData(mockCctList[0], false);
     cy.get('[data-cy="saved-cct-details"] > div').first().contains("bob1");
     cy.get('[data-cy="cct-save-btn"]').should("not.exist");
     cy.get('[data-cy="cct-edit-btn"]').should("exist");
@@ -56,7 +56,7 @@ describe("CctCalcView", () => {
   });
 
   it("renders an error page if there is no cctDate (if user navigates to cct/view without a calc or id)", () => {
-    mountCctViewWithMockData({ ...mockCctCalcData1, cctDate: "" });
+    mountCctViewWithMockData({ ...mockCctList[0], cctDate: "" });
     store.dispatch(updatedNewCalcMade(true));
     cy.get(".nhsuk-error-summary").should("exist");
   });
@@ -71,7 +71,7 @@ describe("CctCalcView", () => {
     store.dispatch(updatedCctStatus("idle"));
     mountCctViewWithMockData(
       {
-        ...mockCctCalcData1,
+        ...mockCctList[0],
         id: "",
         name: "",
         created: undefined,

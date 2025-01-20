@@ -5,8 +5,8 @@ import { MemoryRouter } from "react-router-dom";
 import {
   updatedCctList,
   updatedCctListStatus
-} from "../../../../redux/slices/cctSummaryListSlice";
-import { cctSummaryList } from "../../../../mock-data/mock-cct-data";
+} from "../../../../redux/slices/cctListSlice";
+import { mockCctList } from "../../../../mock-data/mock-cct-data";
 import { CctSavedDrafts } from "../../../../components/forms/cct/CctSavedDrafts";
 
 describe("CctSavedDrafts", () => {
@@ -44,21 +44,16 @@ describe("CctSavedDrafts", () => {
   });
 
   it("renders the CctSavedDrafts on success", () => {
-    store.dispatch(updatedCctList(cctSummaryList));
+    store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     cy.get('[data-cy="cct-saved-drafts-table"]').should("exist");
     // check ordering (defaults desc last modified)
-    cy.get('[data-cy="saved-calculation-row-2"] > td')
-      .first()
-      .contains("UserChosenName3");
+    cy.get('[data-cy="saved-calculation-row-1"] > td').first().contains("bob2");
     // clicking row uses correct id in /view
     cy.get('[data-cy="saved-calculation-row-0"] > td')
       .first()
-      .contains("UserChosenName1")
+      .contains("bob1")
       .click();
-    cy.url().should(
-      "include",
-      "/cct/view/123e4567-e89b-12d3-a456-426614174000"
-    );
+    cy.url().should("include", "/cct/view/6756c2b57ee98643d6f3dd8b");
   });
 });
