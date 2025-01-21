@@ -1,4 +1,3 @@
-import { Signature } from "./Dsp";
 import { Status } from "./Status";
 import { IDateBoxed } from "./IDateBoxed";
 
@@ -17,7 +16,6 @@ export interface Placement extends IDateBoxed {
   employingBody: string;
   trainingBody: string;
   status?: Status;
-  signature?: Signature;
 }
 
 export const placementPanelTemplate: Placement = {

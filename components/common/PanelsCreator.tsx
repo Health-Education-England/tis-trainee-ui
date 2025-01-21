@@ -17,7 +17,6 @@ import {
 } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import style from "../Common.module.scss";
-import { DspIssueBtn } from "../dsp/DspIssueBtn";
 import { ConditionsOfJoining } from "../programmes/ConditionsOfJoining";
 import { Curricula } from "../programmes/Curricula";
 import { TrainingNumber } from "../programmes/TrainingNumber";
@@ -47,11 +46,6 @@ export function PanelsCreator({
   panelsTitle,
   panelKeys
 }: Readonly<PanelsCreatorProps>) {
-  const cognitoGroups = store.getState().user.cognitoGroups;
-  const inDspBetaConsultantsGp: boolean = !!cognitoGroups?.includes(
-    "dsp-beta-consultants"
-  );
-
   const today = dayjs().format("YYYY-MM-DD");
   const unreviewedActions = store
     .getState()
@@ -164,14 +158,6 @@ export function PanelsCreator({
                       </SummaryList.Value>
                     </SummaryList.Row>
                   ))}
-                  {inDspBetaConsultantsGp ? (
-                    <DspIssueBtn
-                      panelName={panelsName}
-                      panelId={panel.tisId}
-                      isPastDate={DateUtilities.IsPastDate(panel.endDate)}
-                      data-cy={`dspIssueBtn-${panelsName}-${panel.tisId}`}
-                    />
-                  ) : null}
                   {currentAction.length > 0 ? (
                     <SummaryList.Row>
                       <SummaryList.Key>

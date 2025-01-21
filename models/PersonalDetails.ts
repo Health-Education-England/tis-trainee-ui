@@ -1,5 +1,4 @@
 import { ProfileSType } from "../utilities/ProfileUtilities";
-import { Signature } from "./Dsp";
 export interface PersonalDetails {
   surname: ProfileSType;
   forenames: ProfileSType;
@@ -34,7 +33,6 @@ export interface PersonalDetails {
   prevRevalBodyOther: ProfileSType;
   currRevalDate: Date | string | null;
   prevRevalDate: Date | string | null;
-  signature: Signature;
 }
 
 export const initialPersonalDetails: PersonalDetails = {
@@ -70,6 +68,5 @@ export const initialPersonalDetails: PersonalDetails = {
   surname: null,
   telephoneNumber: null,
   title: null,
-  visaIssued: null,
-  signature: { hmac: null, signedAt: null, validUntil: null }
+  visaIssued: null
 };
