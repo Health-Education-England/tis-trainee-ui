@@ -20,6 +20,7 @@ import {
 } from "../../../redux/slices/cctSlice";
 import { setLtftCctSnapshot } from "../../../redux/slices/ltftSlice";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -161,6 +162,15 @@ export function CctSavedDraftsTable() {
           })}
         </tbody>
       </table>
+      <LtftDeclarationsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          // TODO: populate the new LTFT form with cct snapshot and PD details
+          setIsModalOpen(false);
+          history.push("/ltft/create");
+        }}
+      />
     </div>
   ) : (
     <p data-cy="no-saved-drafts">You have no saved calculations.</p>
