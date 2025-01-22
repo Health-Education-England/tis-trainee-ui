@@ -15,7 +15,8 @@ const homeCards = [
   "Support",
   "MFA",
   "Action Summary",
-  "CCT (Certificate of Completion of Training)"
+  "CCT (Certificate of Completion of Training)",
+  "Changing hours (LTFT)"
 ];
 
 describe("Home with no MFA set up", () => {

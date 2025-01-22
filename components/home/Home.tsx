@@ -133,6 +133,22 @@ const Home = () => {
           </PageCard>
         </Card.GroupItem>
       </Card.Group>
+      <Card.Group>
+        <Card.GroupItem width="one-third">
+          <PageCard
+            isClickable={true}
+            route="/ltft"
+            linkHeader="Changing hours (LTFT)"
+          >
+            <ul className={style.ull}>
+              <li>
+                Submit and track a Changing hours (Less Than Full Time)
+                application
+              </li>
+            </ul>
+          </PageCard>
+        </Card.GroupItem>
+      </Card.Group>
     </div>
   );
 };
