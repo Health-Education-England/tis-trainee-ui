@@ -8,6 +8,5 @@ export const Placements = () => (
     title="Placements"
     profileName={TraineeProfileName.Placements}
     warningText={getProfilePanelFutureWarningText("placements")}
-    fetchType="placement"
   />
 );
