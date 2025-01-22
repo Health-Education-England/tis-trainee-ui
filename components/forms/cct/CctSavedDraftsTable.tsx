@@ -18,10 +18,13 @@ import {
   CctCalculation,
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
+import { setLtftCctSnapshot } from "../../../redux/slices/ltftSlice";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
-const columns = [
+const createColumns = (
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+) => [
   columnHelper.accessor("name", {
     id: "name",
     header: ({ column }) => (
@@ -57,6 +60,15 @@ const columns = [
     cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
     sortingFn: "datetime",
     sortDescFirst: true
+  }),
+  columnHelper.display({
+    id: "makeLtft",
+    cell: props => (
+      <RowLtftActions
+        row={props.row.original}
+        setIsModalOpen={setIsModalOpen}
+      />
+    )
   })
 ];
 
@@ -70,6 +82,13 @@ export function CctSavedDraftsTable() {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "lastModified", desc: true }
   ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const columns = useMemo(
+    () => createColumns(setIsModalOpen),
+    [setIsModalOpen]
+  );
 
   const table = useReactTable({
     data: memoData,
@@ -132,5 +151,30 @@ export function CctSavedDraftsTable() {
     </div>
   ) : (
     <p data-cy="no-saved-drafts">You have no saved calculations.</p>
+  );
+}
+
+type RowLtftActionsProps = {
+  row: CctCalculation;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function RowLtftActions({
+  row,
+  setIsModalOpen
+}: Readonly<RowLtftActionsProps>) {
+  const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    store.dispatch(setLtftCctSnapshot(row));
+    setIsModalOpen(true);
+  };
+  return (
+    <button
+      className="make-ltft-btn"
+      onClick={makeLtftBtnClick}
+      data-cy={`make-ltft-btn-${row.id}`}
+    >
+      Apply for Changing hours (LTFT)
+    </button>
   );
 }

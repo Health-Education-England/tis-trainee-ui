@@ -277,7 +277,8 @@ export const toastErrText = {
   loadCctSummaryListMessage: `Couldn't load your list of saved calculations. ${dodgyConnection}`,
   loadSavedCctCalcMessage: `Couldn't load your saved calculation. ${dodgyConnection}`,
   saveCctCalcMessage: `Couldn't save your CCT calculation. ${dodgyConnection}`,
-  updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`
+  updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`,
+  loadLtftSummaryListMessage: `Couldn't load your list of saved Changing hours (LTFT) forms. ${dodgyConnection}`
 };
 
 export const toastSuccessText = {

@@ -8,12 +8,14 @@ import { CctSavedDrafts } from "./CctSavedDrafts";
 import { useEffect } from "react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
+import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(loadCctList());
+    dispatch(fetchLtftSummaryList());
   }, [dispatch]);
 
   return (

@@ -7,17 +7,27 @@ export function CctSavedDrafts() {
   const cctSummaryListStatus = useAppSelector(
     state => state.cctSummaryList.status
   );
-  if (cctSummaryListStatus === "loading") {
+  const ltftSummaryListStatus = useAppSelector(
+    state => state.ltftSummaryList.status
+  );
+
+  if (
+    cctSummaryListStatus === "loading" ||
+    ltftSummaryListStatus === "loading"
+  ) {
     return <Loading />;
   }
 
-  if (cctSummaryListStatus === "failed") {
+  if (cctSummaryListStatus === "failed" || ltftSummaryListStatus === "failed") {
     return (
-      <ErrorPage message="There was a problem loading your saved calculations. Please try reloading them by refreshing the page." />
+      <ErrorPage message="There was a problem loading your saved data. Please try reloading them by refreshing the page." />
     );
   }
 
-  if (cctSummaryListStatus === "succeeded") {
+  if (
+    cctSummaryListStatus === "succeeded" &&
+    ltftSummaryListStatus === "succeeded"
+  ) {
     return <CctSavedDraftsTable />;
   }
   return null;
