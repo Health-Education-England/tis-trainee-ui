@@ -8,6 +8,7 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import TSSHeader from "../../../components/navigation/TSSHeader";
 
 const navLinks = [
+  { name: "Changing hours (LTFT)", href: "/ltft" },
   { name: "Profile", href: "/profile" },
   { name: "Placements", href: "/placements" },
   { name: "Programmes", href: "/programmes" },

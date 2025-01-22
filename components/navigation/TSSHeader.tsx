@@ -138,6 +138,12 @@ function makeTSSHeaderLinks() {
       name: "Profile",
       mobileOnly: false,
       showWithNoMfa: false
+    },
+    {
+      path: "ltft",
+      name: "Changing hours (LTFT)",
+      mobileOnly: false,
+      showWithNoMfa: false
     }
   ];
 
