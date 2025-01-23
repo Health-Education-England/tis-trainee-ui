@@ -1,9 +1,11 @@
 import { useAppSelector } from "../../../redux/hooks/hooks";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import ErrorPage from "../../common/ErrorPage";
 import Loading from "../../common/Loading";
 import { CctSavedDraftsTable } from "./CctSavedDraftsTable";
 
 export function CctSavedDrafts() {
+  const isBetaTester = useIsBetaTester();
   const cctSummaryListStatus = useAppSelector(
     state => state.cctSummaryList.status
   );
@@ -25,8 +27,10 @@ export function CctSavedDrafts() {
   }
 
   if (
-    cctSummaryListStatus === "succeeded" &&
-    ltftSummaryListStatus === "succeeded"
+    (isBetaTester &&
+      cctSummaryListStatus === "succeeded" &&
+      ltftSummaryListStatus === "succeeded") ||
+    cctSummaryListStatus === "succeeded"
   ) {
     return <CctSavedDraftsTable />;
   }

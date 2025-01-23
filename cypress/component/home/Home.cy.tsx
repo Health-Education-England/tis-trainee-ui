@@ -3,7 +3,10 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import Home from "../../../components/home/Home";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import {
+  updatedCognitoGroups,
+  updatedPreferredMfa
+} from "../../../redux/slices/userSlice";
 import history from "../../../components/navigation/history";
 
 const homeCards = [
@@ -39,6 +42,7 @@ describe("Home with no MFA set up", () => {
 describe("Home with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
     mount(
       <Provider store={store}>
         <Router history={history}>
