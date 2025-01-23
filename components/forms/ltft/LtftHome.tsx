@@ -1,13 +1,16 @@
-import { Card } from "nhsuk-react-components";
+import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
+import { LtftTracker } from "./LtftTracker";
+import history from "../../navigation/history";
 
 export function LtftHome() {
   return (
     <Card>
       <Card.Content>
         <Card.Heading data-cy="ltft-tracker-header">
-          Current Changing hours (LTFT) application
+          New Application
         </Card.Heading>
-        <LtftCurrent />
+        <LtftTracker />
+        <TrackerBtns />
       </Card.Content>
       <Card.Content>
         <Card.Heading data-cy="ltft-summary-header">
@@ -19,10 +22,28 @@ export function LtftHome() {
   );
 }
 
-function LtftCurrent() {
-  return <p>Current LTFT application tracker goes here</p>;
-}
-
 function LtftSummary() {
   return <p>LTFT Summary goes here</p>;
+}
+
+function TrackerBtns() {
+  return (
+    <div style={{ marginTop: "2rem" }}>
+      <Container>
+        <Row>
+          <Col width="full">
+            <Button
+              data-cy="choose-cct-btn"
+              onClick={() => {
+                history.push("/cct");
+              }}
+            >
+              Choose a CCT Calculation to begin your Changing hours (LTFT)
+              application
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }

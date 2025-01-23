@@ -46,7 +46,7 @@ export function CctHome() {
         }}
         data-cy="cct-home-new-calc-btn"
       >
-        Make a new calculation
+        Make a new CCT Calculation
       </Button>
     </>
   );
