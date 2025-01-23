@@ -2,11 +2,11 @@ import { Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
 import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
-import store from "../../redux/store/store";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
+import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -16,6 +16,9 @@ const TSSHeader = () => {
   const notificationsStatus = useAppSelector(
     state => state.notifications.status
   );
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  const isBetaTester = useIsBetaTester();
+
   useEffect(() => {
     if (notificationsStatus === "idle") {
       dispatch(getNotifications());
@@ -81,7 +84,7 @@ const TSSHeader = () => {
         </span>
       </div>
       <Header.Nav className="header-nav">
-        {makeTSSHeaderLinks()}
+        {makeTSSHeaderLinks(preferredMfa, isBetaTester)}
         <div className="nhsuk-header__navigation-item mobile-only-nav">
           <SignOutBtn />
         </div>
@@ -89,11 +92,9 @@ const TSSHeader = () => {
     </Header>
   );
 };
-
 export default TSSHeader;
 
-function makeTSSHeaderLinks() {
-  const preferredMfa = store.getState().user.preferredMfa;
+function makeTSSHeaderLinks(preferredMfa: string, isBetaTester: boolean) {
   const paths = [
     {
       path: "action-summary",
@@ -143,7 +144,8 @@ function makeTSSHeaderLinks() {
       path: "ltft",
       name: "Changing hours (LTFT)",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      showForBetaTesters: true
     }
   ];
 
@@ -152,13 +154,17 @@ function makeTSSHeaderLinks() {
     name: string;
     mobileOnly: boolean;
     showWithNoMfa: boolean;
+    showForBetaTesters?: boolean;
   }) => (
     <div
       key={pathObj.name}
       className={`nhsuk-header__navigation-item ${
         pathObj.mobileOnly ? "mobile-only-nav" : ""
       }`}
-      hidden={preferredMfa === "NOMFA" && !pathObj.showWithNoMfa}
+      hidden={
+        (preferredMfa === "NOMFA" && !pathObj.showWithNoMfa) ||
+        (pathObj.showForBetaTesters && !isBetaTester)
+      }
     >
       <NavLink
         data-cy={pathObj.name}

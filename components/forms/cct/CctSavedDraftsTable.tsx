@@ -19,6 +19,7 @@ import {
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
 import { setLtftCctSnapshot } from "../../../redux/slices/ltftSlice";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -163,12 +164,13 @@ function RowLtftActions({
   row,
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {
+  const isBetaTester = useIsBetaTester();
   const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     store.dispatch(setLtftCctSnapshot(row));
     setIsModalOpen(true);
   };
-  return (
+  return isBetaTester ? (
     <button
       className="make-ltft-btn"
       onClick={makeLtftBtnClick}
@@ -176,5 +178,5 @@ function RowLtftActions({
     >
       Apply for Changing hours (LTFT)
     </button>
-  );
+  ) : null;
 }
