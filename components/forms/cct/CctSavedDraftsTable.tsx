@@ -23,9 +23,7 @@ import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
-const createColumns = (
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-) => [
+const columnsDefault = [
   columnHelper.accessor("name", {
     id: "name",
     header: ({ column }) => (
@@ -61,8 +59,14 @@ const createColumns = (
     cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
     sortingFn: "datetime",
     sortDescFirst: true
-  }),
-  columnHelper.display({
+  })
+];
+
+const createColumns = (
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  hasDraftOrUnsubmitted: boolean
+) => {
+  const ltftColumn = columnHelper.display({
     id: "makeLtft",
     cell: props => (
       <RowLtftActions
@@ -70,11 +74,19 @@ const createColumns = (
         setIsModalOpen={setIsModalOpen}
       />
     )
-  })
-];
+  });
+  if (hasDraftOrUnsubmitted) {
+    return [...columnsDefault, ltftColumn];
+  }
+  return columnsDefault;
+};
 
 export function CctSavedDraftsTable() {
   const cctList = useAppSelector(state => state.cctSummaryList.cctList);
+  const ltftList = useAppSelector(state => state.ltftSummaryList.ltftList);
+  const hasDraftOrUnsubmitted = ltftList.some(
+    ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
+  );
 
   const memoData = useMemo(() => {
     return cctList;
@@ -87,8 +99,8 @@ export function CctSavedDraftsTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns = useMemo(
-    () => createColumns(setIsModalOpen),
-    [setIsModalOpen]
+    () => createColumns(setIsModalOpen, hasDraftOrUnsubmitted),
+    [setIsModalOpen, hasDraftOrUnsubmitted]
   );
 
   const table = useReactTable({

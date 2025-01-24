@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FormsService } from "../../services/FormsService";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { toastErrText } from "../../utilities/Constants";
@@ -37,7 +37,10 @@ export const ltftSummaryListSlice = createSlice({
   name: "ltftList",
   initialState,
   reducers: {
-    updatedLtftSummaryList: (state, action) => {
+    updatedLtftSummaryList: (
+      state,
+      action: PayloadAction<LtftSummaryObj[]>
+    ) => {
       state.ltftList = action.payload;
     },
     updatedLtftSummaryListStatus: (state, action) => {
