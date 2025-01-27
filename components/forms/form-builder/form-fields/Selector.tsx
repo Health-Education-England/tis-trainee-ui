@@ -75,6 +75,7 @@ export const Selector = ({
         }
         isClearable={true}
         isMulti={isMultiSelect}
+        // closeMenuOnSelect={!isMultiSelect}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

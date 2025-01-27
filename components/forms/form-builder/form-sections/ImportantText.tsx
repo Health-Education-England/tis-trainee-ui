@@ -92,6 +92,21 @@ const newResolvedDecsText5 =
 const unresolvedDecsText =
   "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/RITA/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
 
+const tpdDiscussionText1 =
+  "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposals with prior to completing this form. ";
+
+const tpdDiscussionText2 =
+  "When you submit this appication, your TPD will receive an email which will include a summary of your proposals.";
+
+const otherDiscussionsText =
+  "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposals.";
+
+const ltftReasonsText1 =
+  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reason.";
+
+const ltftReasonsText2 =
+  "If your reason isn't in the list then please select 'other reason' and provide details in the space provided.";
+
 const generateTextElement = (texts: string[]) => (
   <span>
     {texts.map(text => (
@@ -157,5 +172,14 @@ const displayText: DisplayText = {
     newResolvedDecsText4,
     newResolvedDecsText5
   ]),
-  newUnresolvedDecsInstructions: generateTextElement([unresolvedDecsText])
+  newUnresolvedDecsInstructions: generateTextElement([unresolvedDecsText]),
+  tpdDiscussionInstructions: generateTextElement([
+    tpdDiscussionText1,
+    tpdDiscussionText2
+  ]),
+  otherDiscussionsInstructions: generateTextElement([otherDiscussionsText]),
+  ltftReasonsInstructions: generateTextElement([
+    ltftReasonsText1,
+    ltftReasonsText2
+  ])
 };
