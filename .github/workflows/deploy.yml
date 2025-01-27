@@ -117,7 +117,7 @@ jobs:
 
       - name: Slack Notify - Test Fails
         if: failure()
-        uses: rtCamp/action-slack-notify@v2.2.1
+        uses: rtCamp/action-slack-notify@v2.3.2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: TIS-Self-Service
@@ -131,7 +131,7 @@ jobs:
 
       - name: Slack Notify - Tests Pass
         if: success()
-        uses: rtCamp/action-slack-notify@v2.2.1
+        uses: rtCamp/action-slack-notify@v2.3.2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_USERNAME: TIS-Self-Service
