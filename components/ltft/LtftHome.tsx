@@ -7,12 +7,12 @@ import history from "../navigation/history";
 export function LtftHome() {
   // TODO: replace mock data when BE is ready
   // Temp code for demo only: draft/unsubmitted application in list, show the 'in progress' tracker, else show the 'new application' tracker
-  // const ltftList = mockLtftsList1;
-  // const draftOrUnsubmittedLtftSummary: LtftSummaryObj | undefined =
-  //   ltftList.find(
-  //     ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
-  //   );
-  const draftOrUnsubmittedLtftSummary = undefined;
+  const ltftList = mockLtftsList1;
+  const draftOrUnsubmittedLtftSummary: LtftSummaryObj | undefined =
+    ltftList.find(
+      ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
+    );
+  // const draftOrUnsubmittedLtftSummary = undefined;
 
   return (
     <>

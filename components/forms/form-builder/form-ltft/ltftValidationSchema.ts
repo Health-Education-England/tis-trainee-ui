@@ -20,7 +20,7 @@ const phoneValidation = (fieldName: string) =>
 const DiscussionsValidationSchema = yup.object().shape({
   name: StringValidationSchema("Name"),
   email: emailValidation,
-  role: yup.string().required("Role is required")
+  role: StringValidationSchema("Role")
 });
 
 const personalDetailsDtoValidationSchema = yup.object().shape({
@@ -37,10 +37,9 @@ const personalDetailsDtoValidationSchema = yup.object().shape({
 });
 
 export const ltftValidationSchema = yup.object({
-  discussions: yup
-    .array()
-    .of(DiscussionsValidationSchema)
-    .min(1, "At a minimum, your TPD discussion details are required"),
-  reasons: yup.array().min(1, reasonError).required(reasonError),
+  tpdName: StringValidationSchema("TPD Name"),
+  tpdEmail: emailValidation,
+  otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),
+  reasonsSelected: yup.array().min(1, reasonError).required(reasonError),
   personalDetails: personalDetailsDtoValidationSchema
 });

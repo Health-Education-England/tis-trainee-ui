@@ -573,9 +573,14 @@ export function formatFieldName(fieldName: string) {
 }
 
 export function showFormField(field: Field, formData: FormData) {
-  return (
-    field.visible || field.visibleIf?.includes(formData[field.parent as string])
-  );
+  if (field.visible) return true;
+  if (field.visibleIf) {
+    if (Array.isArray(formData[field.parent as string])) {
+      return formData[field.parent as string].includes(field.visibleIf[0]);
+    }
+    return field.visibleIf.includes(formData[field.parent as string]);
+  }
+  return false;
 }
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.

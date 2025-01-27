@@ -18,7 +18,9 @@ export function populateLtftDraft() {
       informationIsCorrect: null,
       notGuaranteed: null
     },
-    discussions: [{ name: "", email: "", role: "tpd" }],
+    tpdName: "",
+    tpdEmail: "",
+    otherDiscussions: null,
     personalDetails: {
       title: personalDetails?.title,
       surname: personalDetails?.surname,
@@ -36,7 +38,8 @@ export function populateLtftDraft() {
       endDate: LtftCctSnapshot?.programmeMembership.endDate ?? "",
       wte: LtftCctSnapshot?.programmeMembership.wte ?? 0
     },
-    reasons: null,
+    reasonsSelected: null,
+    reasonsOtherDetail: null,
     status: {
       current: "DRAFT",
       history: null

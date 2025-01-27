@@ -23,7 +23,8 @@ export function LtftForm() {
       label: "Training / career development"
     },
     { value: "Unique opportunities", label: "Unique opportunities" },
-    { value: "Welfare & wellbeing", label: "Welfare & wellbeing" }
+    { value: "Welfare & wellbeing", label: "Welfare & wellbeing" },
+    { value: "other", label: "other reason" }
   ];
 
   const ltftRoles = [

@@ -55,10 +55,13 @@ export type LtftObj = {
   name?: string;
   change: LtftCctChange;
   declarations: LtftDeclarations;
-  discussions: LtftDiscussion[] | null;
+  tpdName: string;
+  tpdEmail: string;
+  otherDiscussions: LtftDiscussion[] | null;
   personalDetails: LtftPd;
   programmeMembership: LtftPm;
-  reasons: string[] | null;
+  reasonsSelected: string[] | null;
+  reasonsOtherDetail: string | null;
   status: {
     current: LtftFormStatus;
     history:
@@ -93,7 +96,9 @@ const initialLtftObj: LtftObj = {
     informationIsCorrect: null,
     notGuaranteed: null
   },
-  discussions: null,
+  tpdName: "",
+  tpdEmail: "",
+  otherDiscussions: null,
   personalDetails: {
     title: "",
     surname: "",
@@ -111,7 +116,8 @@ const initialLtftObj: LtftObj = {
     endDate: "",
     wte: 0
   },
-  reasons: null,
+  reasonsSelected: null,
+  reasonsOtherDetail: null,
   status: {
     current: "DRAFT",
     history: null
