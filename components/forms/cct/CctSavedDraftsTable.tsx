@@ -9,7 +9,7 @@ import {
   SortingState,
   createColumnHelper
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
@@ -18,9 +18,13 @@ import {
   CctCalculation,
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
-import { setLtftCctSnapshot } from "../../../redux/slices/ltftSlice";
+import {
+  setLtftCctSnapshot,
+  updatedLtft
+} from "../../../redux/slices/ltftSlice";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
+import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -83,7 +87,8 @@ const createColumns = (
 };
 
 export function CctSavedDraftsTable() {
-  const cctList = useAppSelector(state => state.cctSummaryList.cctList);
+  const dispatch = useAppDispatch();
+  const cctList = useAppSelector(state => state.cctList.cctList);
   const ltftList = useAppSelector(state => state.ltftSummaryList.ltftList);
   const hasDraftOrUnsubmitted = ltftList.some(
     ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
@@ -166,7 +171,9 @@ export function CctSavedDraftsTable() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
-          // TODO: populate the new LTFT form with cct snapshot and PD details
+          // populate the new LTFT form with cct snapshot (full cct calc) and PD details
+          const draftLtft = populateLtftDraft();
+          dispatch(updatedLtft(draftLtft));
           setIsModalOpen(false);
           history.push("/ltft/create");
         }}

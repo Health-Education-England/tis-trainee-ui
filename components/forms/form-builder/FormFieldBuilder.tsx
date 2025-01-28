@@ -50,7 +50,8 @@ export function FormFieldBuilder({
     isNumberField,
     isTotal,
     readOnly,
-    rows
+    rows,
+    isMultiSelect
   } = field;
   const { handleChange, handleBlur, setFormData } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
@@ -148,6 +149,7 @@ export function FormFieldBuilder({
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           dtoName={dtoName}
+          isMultiSelect={isMultiSelect}
         />
       );
 

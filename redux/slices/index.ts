@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   tssUpdates: tssUpdatesReducer,
   notifications: notificationsReducer,
   cct: cctReducer,
-  cctSummaryList: cctListReducer,
+  cctList: cctListReducer,
   ltft: ltftReducer,
   ltftSummaryList: ltftSummaryListReducer
 });

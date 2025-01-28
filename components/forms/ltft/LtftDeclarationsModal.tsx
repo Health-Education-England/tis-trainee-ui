@@ -57,7 +57,7 @@ export const LtftDeclarationsModal = ({
           <Hint className="checkbox-hint">
             {`If you do proceed but later want to use different CCT Calculation
             details for your LTFT application, you will be able to discard your
-            current application. You can then restart the process by choosing from your list of saved calculations, CCT Calculation details for your new LTFT application via the 'Apply for Changing hours
+            current application. You can then restart the process by choosing CCT Calculation details for your new LTFT application from your list of saved calculations via the 'Apply for Changing hours
             (LTFT)' button.`}
           </Hint>
         </Checkboxes>

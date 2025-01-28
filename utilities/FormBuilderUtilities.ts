@@ -20,6 +20,7 @@ import {
   FieldWarning,
   Form,
   FormData,
+  FormName,
   MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -180,48 +181,63 @@ export async function submitForm(
   resetForm(formName, history);
 }
 
+// TODO temp code to handle ltft form
+const chooseRedirectPath = (formName: string, confirm?: boolean) => {
+  if (formName === "formA") {
+    return confirm ? "/formr-a/confirm" : "/formr-a";
+  } else if (formName === "formB") {
+    return confirm ? "/formr-b/confirm" : "/formr-b";
+  } else {
+    return confirm ? "/ltft/confirm" : "/ltft";
+  }
+};
+
+//TODO - needs refactoring properly for ltft (and any future) form save
 export async function saveDraftForm(
   formName: string,
   formData: FormData,
   history: string[]
 ) {
-  const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
-  const lastSavedFormData =
-    formName === "formA"
-      ? store.getState().formA?.formData
-      : store.getState().formB?.formData;
-  let updatedFormData: FormData;
-  if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
-    updatedFormData = {
-      ...formData,
-      submissionDate: null,
-      lifecycleState: LifeCycleState.Draft,
-      lastModifiedDate: new Date()
-    };
-  } else {
-    updatedFormData = {
-      ...formData,
-      lastModifiedDate: new Date()
-    };
-  }
-  if (formName === "formA") {
-    lastSavedFormData.id
-      ? await store.dispatch(
-          updateFormA({
-            ...updatedFormData,
-            id: lastSavedFormData.id
-          } as FormRPartA)
-        )
-      : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
-  } else {
-    lastSavedFormData.id
-      ? await store.dispatch(
-          updateFormB({
-            ...updatedFormData,
-            id: lastSavedFormData.id
-          } as FormRPartB)
-        )
-      : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
+  const redirectPath = chooseRedirectPath(formName);
+
+  if (formName !== "ltft") {
+    const lastSavedFormData =
+      formName === "formA"
+        ? store.getState().formA?.formData
+        : store.getState().formB?.formData;
+    let updatedFormData: FormData;
+    if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
+      updatedFormData = {
+        ...formData,
+        submissionDate: null,
+        lifecycleState: LifeCycleState.Draft,
+        lastModifiedDate: new Date()
+      };
+    } else {
+      updatedFormData = {
+        ...formData,
+        lastModifiedDate: new Date()
+      };
+    }
+    if (formName === "formA") {
+      lastSavedFormData.id
+        ? await store.dispatch(
+            updateFormA({
+              ...updatedFormData,
+              id: lastSavedFormData.id
+            } as FormRPartA)
+          )
+        : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
+    } else {
+      lastSavedFormData.id
+        ? await store.dispatch(
+            updateFormB({
+              ...updatedFormData,
+              id: lastSavedFormData.id
+            } as FormRPartB)
+          )
+        : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
+    }
   }
   history.push(redirectPath);
 }
@@ -231,12 +247,11 @@ export function continueToConfirm(
   formData: FormData,
   history: string[]
 ) {
-  const redirectPath =
-    formName === "formA" ? "/formr-a/confirm" : "/formr-b/confirm";
+  const redirectPath = chooseRedirectPath(formName, true);
   if (formName === "formA") {
     store.dispatch(updatedFormA(formData as FormRPartA));
     store.dispatch(updatedCanEdit(true));
-  } else {
+  } else if (formName === "formB") {
     store.dispatch(updatedFormB(formData as FormRPartB));
     store.dispatch(updatedCanEditB(true));
   }
@@ -452,6 +467,7 @@ async function saveForm(formData: FormData, formName: string) {
   }
 }
 
+// TODO - needs updating for ltft form
 export async function autosaveFormR(
   formName: string,
   formData: FormRPartA | FormRPartB
@@ -571,9 +587,14 @@ export function formatFieldName(fieldName: string) {
 }
 
 export function showFormField(field: Field, formData: FormData) {
-  return (
-    field.visible || field.visibleIf?.includes(formData[field.parent as string])
-  );
+  if (field.visible) return true;
+  if (field.visibleIf) {
+    if (Array.isArray(formData[field.parent as string])) {
+      return formData[field.parent as string].includes(field.visibleIf[0]);
+    }
+    return field.visibleIf.includes(formData[field.parent as string]);
+  }
+  return false;
 }
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.
@@ -599,6 +620,9 @@ export const determineCurrentValue = (
   if (value === "Yes") value = true;
   if (value === "No") value = false;
   if (selectedOption) {
+    if (Array.isArray(selectedOption)) {
+      return selectedOption.map((option: any) => option.value);
+    }
     return selectedOption.value;
   } else if (checkedStatus !== undefined) {
     return checkedStatus;
@@ -666,6 +690,30 @@ export const updateTotalField = (
     };
   });
 };
+
+export function setFinalFormFields(
+  lastSavedFormData: FormData,
+  formData: FormData,
+  jsonFormName: FormName
+) {
+  const finalFields = { ...formData };
+
+  if (lastSavedFormData?.id) {
+    finalFields.id = lastSavedFormData.id;
+
+    if (jsonFormName === "ltft") {
+      finalFields.lastModified = lastSavedFormData.lastModified;
+    } else {
+      finalFields.lastModifiedDate = lastSavedFormData.lastModifiedDate;
+      finalFields.lifecycleState = lastSavedFormData.lifecycleState;
+      finalFields.traineeTisId = lastSavedFormData.traineeTisId;
+    }
+  } else if (jsonFormName !== "ltft") {
+    finalFields.traineeTisId = lastSavedFormData.traineeTisId;
+  }
+
+  return finalFields;
+}
 
 // react-select styles
 export const colourStyles = {
