@@ -36,7 +36,7 @@ const comp = (
 describe("Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
+    store.dispatch(updatedCognitoGroups(["beta-participant"]));
     mount(comp);
   });
 
@@ -121,7 +121,7 @@ describe("Header with NOMFA", () => {
 describe("Desktop Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
+    store.dispatch(updatedCognitoGroups(["beta-participant"]));
     mount(comp);
     cy.viewport(1024, 768);
   });

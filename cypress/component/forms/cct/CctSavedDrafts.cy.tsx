@@ -17,7 +17,7 @@ import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
 
 describe("CctSavedDrafts", () => {
   beforeEach(() => {
-    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
+    store.dispatch(updatedCognitoGroups(["beta-participant"]));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>
@@ -72,7 +72,7 @@ describe("CctSavedDrafts", () => {
 
 describe("CctSavedDrafts - beta tester", () => {
   beforeEach(() => {
-    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
+    store.dispatch(updatedCognitoGroups(["beta-participant"]));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));

@@ -92,7 +92,7 @@ export type FormDeclaration = {
 export type Form = {
   name: FormName;
   pages: Page[];
-  declarations?: FormDeclaration[];
+  declarations: FormDeclaration[];
 };
 type FormBuilderProps = {
   jsonForm: Form;

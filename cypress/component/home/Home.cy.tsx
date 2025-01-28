@@ -42,7 +42,7 @@ describe("Home with no MFA set up", () => {
 describe("Home with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-consultants"]));
+    store.dispatch(updatedCognitoGroups(["beta-participant"]));
     mount(
       <Provider store={store}>
         <Router history={history}>
