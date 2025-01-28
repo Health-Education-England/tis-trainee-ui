@@ -34,7 +34,7 @@ type LtftPd = {
   id?: string;
   title?: ProfileSType;
   surname: ProfileSType;
-  forename: ProfileSType;
+  forenames: ProfileSType;
   telephoneNumber: ProfileSType;
   mobileNumber: ProfileSType;
   email: ProfileSType;
@@ -104,7 +104,7 @@ const initialLtftObj: LtftObj = {
   personalDetails: {
     title: "",
     surname: "",
-    forename: "",
+    forenames: "",
     telephoneNumber: "",
     mobileNumber: "",
     email: "",

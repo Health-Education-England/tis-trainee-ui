@@ -24,7 +24,7 @@ export function populateLtftDraft() {
     personalDetails: {
       title: personalDetails?.title,
       surname: personalDetails?.surname,
-      forename: personalDetails?.forenames,
+      forenames: personalDetails?.forenames,
       telephoneNumber: personalDetails?.telephoneNumber,
       mobileNumber: personalDetails?.mobileNumber,
       email: personalDetails?.email,

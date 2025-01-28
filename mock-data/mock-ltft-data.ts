@@ -1,3 +1,5 @@
+import { LtftObj } from "../redux/slices/ltftSlice";
+
 export const mockLtftsList1 = [
   {
     id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
@@ -25,32 +27,36 @@ export const mockLtftsList1 = [
   }
 ];
 
-export const mockLtftDraft0 = {
+export const mockLtftDraft0: LtftObj = {
   id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
   name: "My Programme - Hours Reduction",
   change: {
     calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     cctDate: "2028-11-23",
-    id: "b2f8df7b-82f6-413f-8265-35a008d6b53b",
     type: "LTFT",
     startDate: "2025-12-01",
     wte: 1
   },
   declarations: {
-    discussedWithTpd: true
+    discussedWithTpd: true,
+    informationIsCorrect: null,
+    notGuaranteed: true
   },
-  discussions: [],
+  tpdName: "",
+  tpdEmail: "",
+  otherDiscussions: [],
   personalDetails: {
     id: "4",
     title: "Mr",
-    forenames: "Anthony",
     surname: "Gilliam",
+    forenames: "Anthony",
     telephoneNumber: "0161 4960000",
     mobileNumber: "07700 900000",
     email: "anthony.gilliam@example.com",
     gmcNumber: "6621443",
-    gdcNumber: "D592359",
-    skilledWorkerVisaHolder: true
+    gdcNumber: "",
+    publicHealthNumber: "",
+    skilledWorkerVisaHolder: null
   },
   programmeMembership: {
     id: "a6de88b8-de41-48dd-9492-a518f5001176",
@@ -59,7 +65,8 @@ export const mockLtftDraft0 = {
     endDate: "2028-01-01",
     wte: 1
   },
-  reasons: ["Caring Responsibilities", "Custom Reason"],
+  reasonsSelected: null,
+  reasonsOtherDetail: null,
   status: {
     current: "DRAFT",
     history: [

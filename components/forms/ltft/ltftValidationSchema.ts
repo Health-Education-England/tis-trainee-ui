@@ -2,7 +2,8 @@ import * as yup from "yup";
 import { StringValidationSchema } from "../StringValidationSchema";
 import { CHECK_PHONE_REGEX } from "../../../utilities/Constants";
 
-const yesNoError = "Please select yes or no";
+const yesNoError =
+  "Please select Yes or No for: Are you a Tier 2 / Skilled Worker Visa holder?";
 const reasonError = "At least one reason is required";
 
 const emailValidation = yup

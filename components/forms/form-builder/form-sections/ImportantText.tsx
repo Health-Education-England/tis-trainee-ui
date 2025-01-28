@@ -102,10 +102,10 @@ const ltftOtherDiscussionsText =
   "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposals.";
 
 const ltftReasonsText1 =
-  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reason.";
+  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reasons.";
 
 const ltftReasonsText2 =
-  "If your reason isn't in the list then please select 'other reason' and provide details in the space provided.";
+  "If your reason isn't in the list then please select 'other reason' and give details in the space provided.";
 
 const generateTextElement = (texts: string[]) => (
   <span>
@@ -177,5 +177,9 @@ const displayText: DisplayText = {
     ltftDiscussionText1,
     ltftDiscussionText2,
     ltftOtherDiscussionsText
+  ]),
+  ltftReasonsInstructions: generateTextElement([
+    ltftReasonsText1,
+    ltftReasonsText2
   ])
 };

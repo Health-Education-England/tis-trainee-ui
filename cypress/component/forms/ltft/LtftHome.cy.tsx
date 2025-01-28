@@ -15,10 +15,10 @@ describe("LtftHome", () => {
     );
     cy.get('[data-cy="ltft-tracker-header"]')
       .should("exist")
-      .contains("New Application");
+      .contains("New application");
     cy.get('[data-cy="ltft-summary-header"]')
       .should("exist")
-      .contains("Applications summary");
+      .contains("Previous applications summary");
     cy.get('[data-cy="choose-cct-btn"]')
       .should("exist")
       .contains(

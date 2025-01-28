@@ -13,10 +13,7 @@ import {
   updatedLtftSummaryListStatus
 } from "../../../../redux/slices/ltftSummaryListSlice";
 import { updatedCognitoGroups } from "../../../../redux/slices/userSlice";
-import {
-  mockLtftDraft,
-  mockLtftsPrevious
-} from "../../../../mock-data/mock-ltft-data";
+import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
 
 describe("CctSavedDrafts", () => {
   beforeEach(() => {
@@ -79,9 +76,6 @@ describe("CctSavedDrafts - beta tester", () => {
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));
-    store.dispatch(
-      updatedLtftSummaryList([...mockLtftsPrevious, mockLtftDraft])
-    );
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>
@@ -92,13 +86,30 @@ describe("CctSavedDrafts - beta tester", () => {
   });
 
   it("Renders the 'ltft button' when user is a beta tester and they have no in progress ltfts", () => {
-    store.dispatch(updatedLtftSummaryList(mockLtftsPrevious));
-    cy.get(
-      '[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]'
-    ).should("exist");
+    store.dispatch(updatedLtftSummaryList(mockLtftsList1.slice(1)));
+    cy.get('[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
+      .should("exist")
+      .click();
+    // Check modal
+    cy.get('[data-cy="dialogModal"]').should("exist");
+    cy.get('[data-cy="ltft-declarations-modal-heading"]').contains(
+      "Before proceeding to the main Changing hours (LTFT) application..."
+    );
+    cy.get('[data-cy="confirm-ltft-btn"]')
+      .should("exist")
+      .should("be.disabled");
+    cy.get('[data-cy="modal-cancel-btn"]')
+      .should("exist")
+      .should("not.be.disabled");
+    cy.get('[data-cy="discussedWithTpd"]').check();
+    cy.get('[data-cy="confirm-ltft-btn"]').should("be.disabled");
+    cy.get('[data-cy="understandStartover"]').check();
+    cy.get('[data-cy="confirm-ltft-btn"]').should("not.be.disabled").click();
+    cy.url().should("include", "/ltft/create");
   });
 
   it("Doesn't render the 'ltft button' when user is a beta tester and they have an in progress ltft", () => {
+    store.dispatch(updatedLtftSummaryList(mockLtftsList1));
     cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b"]').should(
       "not.exist"
     );
@@ -111,9 +122,7 @@ describe("CctSavedDrafts - not a beta tester", () => {
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));
-    store.dispatch(
-      updatedLtftSummaryList([...mockLtftsPrevious, mockLtftDraft])
-    );
+    store.dispatch(updatedLtftSummaryList(mockLtftsList1.slice(1)));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>

@@ -3,7 +3,7 @@ import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
 
-//TODO temp -remove when BE is ready
+//TODO temp - refactor when BE is ready
 const draftOrUnsubmittedLtftSummary = undefined;
 
 export function LtftHome() {
@@ -78,7 +78,8 @@ function TrackerSectionBtns({
                   history.push("/cct");
                 }}
               >
-                Choose a CCT Calculation to make a new application
+                Choose a CCT Calculation to begin your Changing hours (LTFT)
+                application
               </Button>
             </Col>
           </Row>

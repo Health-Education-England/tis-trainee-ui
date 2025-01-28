@@ -62,7 +62,7 @@
       ]
     },
     {
-      "pageName": "Reason for applying",
+      "pageName": "Reason(s) for applying",
       "importantTxtName": "ltftReasonsInstructions",
       "expanderLinkName": "",
       "sections": [
@@ -106,7 +106,7 @@
               "visible": true,
               "objectFields": [
                 {
-                  "name": "forename",
+                  "name": "forenames",
                   "label": "Forename ",
                   "placeholder": "type here...",
                   "type": "text",
