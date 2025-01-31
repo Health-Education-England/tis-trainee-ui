@@ -1,8 +1,32 @@
-import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Table
+} from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { useEffect } from "react";
+import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
+import LtftSummary from "./LtftSummary";
 
 export function LtftHome() {
+  const dispatch = useAppDispatch();
+  const isBetaTester = useIsBetaTester();
+
+  useEffect(() => {
+    if (isBetaTester) dispatch(fetchLtftSummaryList());
+  }, [dispatch, isBetaTester]);
+
+  // const ltftSummaryList = useAppSelector(state => state.ltftSummaryList);
+  const ltftSummaryList = useAppSelector(
+    state => state.ltftSummaryList?.ltftList || []
+  );
+
   return (
     <Card>
       <Card.Content>
@@ -16,14 +40,11 @@ export function LtftHome() {
         <Card.Heading data-cy="ltft-summary-header">
           Applications summary
         </Card.Heading>
-        <LtftSummary />
+        <LtftSummary ltftSummaryList={ltftSummaryList} />
+        {/* <LtftSummary /> */}
       </Card.Content>
     </Card>
   );
-}
-
-function LtftSummary() {
-  return <p>LTFT Summary goes here</p>;
 }
 
 function TrackerBtns() {
