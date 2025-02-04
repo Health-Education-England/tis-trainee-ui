@@ -25,4 +25,9 @@ describe("LtftSummary Component", () => {
       cy.contains("Status").should("exist");
     });
   });
+
+  it("should sort by last modified date desc", () => {
+    cy.get('[data-cy="lastModified-0"]').contains("15/12/2024");
+    cy.get('[data-cy="lastModified-1"]').contains("15/10/2024");
+  });
 });
