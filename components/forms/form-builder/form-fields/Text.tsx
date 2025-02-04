@@ -4,7 +4,6 @@ import {
   handleNumberInput
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
-import { FieldWarning } from "../FormBuilder";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 
@@ -13,7 +12,6 @@ type TextProps = {
   label: string | undefined;
   fieldError: string;
   placeholder?: string;
-  fieldWarning?: FieldWarning;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -29,17 +27,17 @@ export const Text: React.FC<TextProps> = ({
   label,
   fieldError,
   placeholder,
-  fieldWarning,
   value,
   arrayIndex,
   arrayName,
-  width,
+  width = 20,
   isNumberField,
   isTotal,
   readOnly,
   dtoName
 }: TextProps) => {
-  const { handleBlur, handleChange } = useFormContext();
+  const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
+    useFormContext();
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -62,9 +60,11 @@ export const Text: React.FC<TextProps> = ({
             dtoName
           )
         }
-        className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
-          fieldError ? "nhsuk-input--error" : ""
-        } ${isTotal ? "total-field" : ""}`}
+        className={`nhsuk-input nhsuk-input--width-${
+          fieldWidthData?.fieldName === name ? fieldWidthData.width : width
+        } ${fieldError ? "nhsuk-input--error" : ""} ${
+          isTotal ? "total-field" : ""
+        }`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
         onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
@@ -77,14 +77,13 @@ export const Text: React.FC<TextProps> = ({
             dtoName
           )
         }
-        width={width}
         maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-      {fieldWarning?.fieldName === name ? (
+      {fieldWarning?.fieldName === name && !fieldError ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}
     </>

@@ -93,13 +93,14 @@ type FormBuilderProps = {
   validationSchema: any;
 };
 export type MatcherName = "prevDateTest" | "postcodeTest";
-export type FieldWarning = {
-  fieldName: MatcherName;
-  warningMsg: string;
-};
 export type Warning = {
-  matcher: string;
+  matcher: MatcherName;
   msgText: string;
+};
+
+export type ReturnedWidthData = {
+  fieldName: string;
+  width: number;
 };
 
 export default function FormBuilder({
@@ -115,8 +116,6 @@ export default function FormBuilder({
     setCurrentPageFields,
     formName
   } = useFormContext();
-
-  console.log("formData in FormBuilder: ", formData);
 
   const jsonFormName = formName;
   const pages = jsonForm.pages;

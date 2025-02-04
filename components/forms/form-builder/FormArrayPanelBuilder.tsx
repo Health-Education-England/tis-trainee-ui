@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, FieldWarning } from "./FormBuilder";
+import { Field } from "./FormBuilder";
 import { Button, Card } from "nhsuk-react-components";
 import {
   formatFieldName,

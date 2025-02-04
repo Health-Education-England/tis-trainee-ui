@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Field, FormData, FormName } from "./FormBuilder";
+import { Field, FormData, FormName, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
+  ReturnedWarning,
+  setTextFieldWidth,
+  showFieldMatchWarning,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
@@ -33,14 +36,22 @@ type FormContextType = {
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
   formName: FormName;
+  fieldWarning: ReturnedWarning | null;
+  setFieldWarning: React.Dispatch<React.SetStateAction<ReturnedWarning | null>>;
+  fieldWidthData: ReturnedWidthData | null;
+  setFieldWidthData: React.Dispatch<
+    React.SetStateAction<ReturnedWidthData | null>
+  >;
 };
 
-const FormContext = createContext<FormContextType | undefined>(undefined);
+const FormContext = createContext<FormContextType>({} as FormContextType);
 
 export const useFormContext = () => {
   const context = useContext(FormContext);
   if (!context) {
-    throw new Error("useFormContext must be used within a FormProvider");
+    throw new Error(
+      "Note to dev: useFormContext must be used within a FormProvider"
+    );
   }
   return context;
 };
@@ -62,6 +73,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
   const [currentPageFields, setCurrentPageFields] =
     useState<Field[]>(initialPageFields);
+  const [fieldWarning, setFieldWarning] = useState<ReturnedWarning | null>(
+    null
+  );
+  const [fieldWidthData, setFieldWidthData] =
+    useState<ReturnedWidthData | null>(null);
 
   useFormAutosave(
     formName,
@@ -136,6 +152,18 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
       updateFormData(name, currentValue, arrayIndex, arrayName, dtoName);
 
+      if (primaryField?.warning) {
+        const matcher = primaryField.warning.matcher;
+        const msg = primaryField.warning.msgText;
+        const warning = showFieldMatchWarning(currentValue, matcher, msg, name);
+        setFieldWarning(warning);
+      }
+
+      if (primaryField?.type === "text" && primaryField?.canGrow) {
+        const newWidth = setTextFieldWidth(currentValue.length);
+        setFieldWidthData({ fieldName: primaryField.name, width: newWidth });
+      }
+
       if (totalName) {
         const fieldsToTotal = currentPageFields.filter(
           field => field.contributesToTotal === totalName
@@ -148,7 +176,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({
           };
         });
       }
-
       setIsFormDirty(true);
     },
     [currentPageFields]
@@ -164,7 +191,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       setIsFormDirty,
       currentPageFields,
       setCurrentPageFields,
-      formName
+      formName,
+      fieldWarning,
+      setFieldWarning,
+      fieldWidthData,
+      setFieldWidthData
     }),
     [
       formData,
@@ -172,7 +203,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       currentPageFields,
       formName,
       handleBlur,
-      handleChange
+      handleChange,
+      fieldWarning,
+      fieldWidthData
     ]
   );
 

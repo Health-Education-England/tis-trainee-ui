@@ -48,9 +48,8 @@ export default function FormA() {
   );
   const redirectPath = "/formr-a";
 
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
+  if (preferredMfa === "NOMFA") return <Redirect to="/mfa" />;
+
   return (
     <>
       <PageTitle title="Form R Part-A" />

@@ -17,7 +17,6 @@ import {
 import store from "../redux/store/store";
 import {
   Field,
-  FieldWarning,
   Form,
   FormData,
   FormName,
@@ -330,12 +329,17 @@ export function transformReferenceData(
   return transformedData;
 }
 
+export type ReturnedWarning = {
+  fieldName: string;
+  warningMsg: string;
+};
+
 export function showFieldMatchWarning(
   inputValue: string,
   matcher: MatcherName,
   warningMsg: string,
   fieldName: string
-) {
+): ReturnedWarning | null {
   if (matcher === "prevDateTest") {
     const testDate = dayjs().subtract(1, "day");
     const inputDate = dayjs(inputValue);
@@ -348,39 +352,8 @@ export function showFieldMatchWarning(
   return null;
 }
 
-export function handleSoftValidationWarningMsgVisibility(
-  inputVal: string,
-  primaryFormField: Field | undefined,
-  fieldName: string,
-  setFieldWarning: (warning: FieldWarning) => void
-) {
-  if (inputVal?.length && primaryFormField?.warning) {
-    const matcher = primaryFormField.warning.matcher as MatcherName;
-    const msg = primaryFormField.warning.msgText;
-    const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
-    setFieldWarning(warning as FieldWarning);
-  }
-}
-
 export function setTextFieldWidth(width: number) {
   return width < 20 ? 20 : Math.floor(width / 10) * 10;
-}
-
-export function handleTextFieldWidth(
-  event: React.ChangeEvent<
-    HTMLInputElement | HTMLSelectElement | HTMLDivElement
-  >,
-  currentValue: string,
-  primaryField: Field | undefined
-) {
-  if (
-    primaryField?.type === "text" &&
-    currentValue.length >= 20 &&
-    primaryField?.canGrow
-  ) {
-    const thisFieldWidth = setTextFieldWidth(currentValue?.length);
-    event.currentTarget.className = `nhsuk-input nhsuk-input--width-${thisFieldWidth}`;
-  }
 }
 
 export function handleKeyDown(

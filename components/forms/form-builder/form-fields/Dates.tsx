@@ -1,6 +1,5 @@
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
-import { FieldWarning } from "../FormBuilder";
 import { useFormContext } from "../FormContext";
 import FieldErrorInline from "./FieldErrorInline";
 
@@ -13,7 +12,6 @@ type DatesProps = {
   arrayIndex?: number;
   arrayName?: string;
   dtoName?: string;
-  fieldWarning?: FieldWarning;
 };
 
 export const Dates = ({
@@ -24,10 +22,9 @@ export const Dates = ({
   value,
   arrayIndex,
   arrayName,
-  dtoName,
-  fieldWarning
+  dtoName
 }: DatesProps) => {
-  const { handleChange } = useFormContext();
+  const { handleBlur, handleChange, fieldWarning } = useFormContext();
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -49,6 +46,16 @@ export const Dates = ({
             dtoName
           );
         }}
+        onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
+          handleBlur(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
+        }
         className={`nhsuk-input nhsuk-input--width-20 ${
           fieldError ? "nhsuk-input--error" : ""
         }`}
@@ -59,7 +66,7 @@ export const Dates = ({
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-      {fieldWarning?.fieldName === name ? (
+      {fieldWarning?.fieldName === name && !fieldError ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}
     </div>

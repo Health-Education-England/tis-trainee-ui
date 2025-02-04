@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, FieldWarning } from "./FormBuilder";
+import { Field } from "./FormBuilder";
 import { FormDtoBuilder } from "./FormDtoBuilder";
 import { Text } from "./form-fields/Text";
 import { TextArea } from "./form-fields/TextArea";
