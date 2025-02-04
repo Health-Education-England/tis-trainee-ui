@@ -19,7 +19,6 @@ import {
   selectCurriculumOptions
 } from "../../../../../redux/slices/referenceSlice";
 import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
-import history from "../../../../navigation/history";
 import { FormRPartA } from "../../../../../models/FormRPartA";
 import { FormProvider } from "../../FormContext";
 
@@ -44,6 +43,9 @@ export default function FormA() {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const canEditStatus = useAppSelector(state => state.formA.canEdit);
   const formJson = formAJson as Form;
+  const initialPageFields = formJson.pages[0].sections.flatMap(
+    section => section.fields
+  );
   const redirectPath = "/formr-a";
 
   if (preferredMfa === "NOMFA") {
@@ -76,12 +78,14 @@ export default function FormA() {
           path="/formr-a/create"
           render={() => {
             return formData.traineeTisId ? (
-              <FormProvider initialData={formData}>
+              <FormProvider
+                initialData={formData}
+                initialPageFields={initialPageFields}
+              >
                 <FormBuilder
                   jsonForm={formJson}
                   options={formOptions}
                   validationSchema={formAValidationSchema}
-                  history={history}
                 />
               </FormProvider>
             ) : (

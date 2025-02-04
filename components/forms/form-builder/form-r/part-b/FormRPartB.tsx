@@ -12,11 +12,11 @@ import { useSelectFormData } from "../../../../../utilities/hooks/useSelectFormD
 import { selectAllReference } from "../../../../../redux/slices/referenceSlice";
 import { DesignatedBodyKeyValue } from "../../../../../models/DesignatedBodyKeyValue";
 import { transformReferenceData } from "../../../../../utilities/FormBuilderUtilities";
-import history from "../../../../navigation/history";
 import { FormView } from "../../FormView";
 import { FormRPartB } from "../../../../../models/FormRPartB";
 import { COVID_RESULT_DECLARATIONS } from "../../../../../utilities/Constants";
 import { ProfileUtilities } from "../../../../../utilities/ProfileUtilities";
+import { FormProvider } from "../../FormContext";
 
 export default function FormB() {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
@@ -25,6 +25,9 @@ export default function FormB() {
   const redirectPath = "/formr-b";
   const formJson = formBJson as Form;
   const formData = useSelectFormData(formJson.name) as FormRPartB;
+  const initialPageFields = formJson.pages[0].sections.flatMap(
+    section => section.fields
+  );
 
   const formDataWithSortedWork = {
     ...formData,
@@ -97,13 +100,16 @@ export default function FormB() {
           path="/formr-b/create"
           render={() => {
             return formData.traineeTisId ? (
-              <FormBuilder
-                jsonForm={finalFormJson}
-                fetchedFormData={formDataWithSortedWork}
-                options={formOptions}
-                validationSchema={formValidationSchema}
-                history={history}
-              />
+              <FormProvider
+                initialData={formDataWithSortedWork}
+                initialPageFields={initialPageFields}
+              >
+                <FormBuilder
+                  jsonForm={finalFormJson}
+                  options={formOptions}
+                  validationSchema={formValidationSchema}
+                />
+              </FormProvider>
             ) : (
               <Redirect to={redirectPath} />
             );

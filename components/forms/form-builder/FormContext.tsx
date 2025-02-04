@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
-import { FormData } from "./FormBuilder";
+import { Field, FormData } from "./FormBuilder";
 import {
-  determineCurrentValue
-  // updateFormData
+  determineCurrentValue,
+  sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 
 type FormContextType = {
@@ -19,6 +19,8 @@ type FormContextType = {
   handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
   isFormDirty: boolean;
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
+  currentPageFields: Field[];
+  setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
 };
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
@@ -33,15 +35,19 @@ export const useFormContext = () => {
 
 type FormProviderProps = {
   initialData: FormData;
+  initialPageFields: Field[];
   children: React.ReactNode;
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({
   children,
-  initialData
+  initialData,
+  initialPageFields
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
+  const [currentPageFields, setCurrentPageFields] =
+    useState<Field[]>(initialPageFields);
 
   const handleBlur = (event: any) => {
     const { name, value } = event.currentTarget;
@@ -59,6 +65,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     dtoName?: string
   ) => {
     const name = event.currentTarget.name;
+
+    const primaryField = currentPageFields.find(field => field.name === name);
+    const totalName = primaryField?.contributesToTotal;
+
     const currentValue = determineCurrentValue(
       event,
       selectedOption,
@@ -84,6 +94,20 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         return { ...formData, [name]: currentValue };
       }
     });
+
+    if (totalName) {
+      const fieldsToTotal = currentPageFields.filter(
+        field => field.contributesToTotal === totalName
+      );
+      setFormData((prevFormData: FormData) => {
+        const total = sumFieldValues(prevFormData, fieldsToTotal);
+        return {
+          ...prevFormData,
+          [totalName]: total
+        };
+      });
+    }
+
     setIsFormDirty(true);
   };
 
@@ -94,9 +118,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       handleChange,
       handleBlur,
       isFormDirty,
-      setIsFormDirty
+      setIsFormDirty,
+      currentPageFields,
+      setCurrentPageFields
     }),
-    [formData, isFormDirty]
+    [formData, isFormDirty, currentPageFields]
   );
 
   return (

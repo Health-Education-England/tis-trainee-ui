@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   ArrowLeftIcon,
@@ -15,7 +15,9 @@ import {
   getEditPageNumber,
   validateFields,
   formatFieldName,
-  showFormField
+  showFormField,
+  saveDraftForm,
+  continueToConfirm
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
@@ -89,7 +91,6 @@ type FormBuilderProps = {
   jsonForm: Form;
   options: any;
   validationSchema: any;
-  history: string[];
 };
 export type MatcherName = "prevDateTest" | "postcodeTest";
 export type FieldWarning = {
@@ -104,27 +105,29 @@ export type Warning = {
 export default function FormBuilder({
   jsonForm,
   options,
-  validationSchema,
-  history
+  validationSchema
 }: Readonly<FormBuilderProps>) {
-  const { formData, isFormDirty, setIsFormDirty } = useFormContext();
+  const {
+    formData,
+    isFormDirty,
+    setIsFormDirty,
+    currentPageFields,
+    setCurrentPageFields
+  } = useFormContext();
+
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
-  const isAutosaving =
-    useAppSelector(state => state.formA.autosaveStatus) === "saving";
   const lastPage = pages.length - 1;
-  const initialPageValue = useMemo(
-    () => getEditPageNumber(jsonFormName),
-    [jsonFormName]
-  );
+  const initialPageValue = getEditPageNumber(jsonFormName);
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const currentPageFields = useMemo(() => {
-    return pages[currentPage].sections.flatMap(
-      (section: Section) => section.fields
+  useEffect(() => {
+    setCurrentPageFields(
+      pages[currentPage].sections.flatMap((section: Section) => section.fields)
     );
-  }, [currentPage, pages]);
+  }, [currentPage, pages, formData]);
 
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
@@ -149,12 +152,8 @@ export default function FormBuilder({
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage) {
-          // continueToConfirm(
-          //   jsonFormName,
-          //   setFinalFormFields(lastSavedFormData, formData, jsonFormName),
-          //   history
-          // );
-          history.push("/confirm");
+          console.log("form data for reviewing: ", formData);
+          continueToConfirm(jsonFormName, formData);
         } else {
           setCurrentPage(currentPage + 1);
         }
@@ -165,6 +164,13 @@ export default function FormBuilder({
           return newErrors;
         });
       });
+  };
+
+  const handleSaveBtnClick = () => {
+    setIsSubmitting(true);
+    saveDraftForm(jsonFormName, formData);
+    console.log("form data for saving", formData);
+    setIsSubmitting(false);
   };
 
   return (
@@ -278,12 +284,12 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {canEditStatus && (
+          {/* {canEditStatus && (
             <Col width="one-half">
               <Button
                 onClick={(e: { preventDefault: () => void }) => {
                   e.preventDefault();
-                  // handleShortcutToConfirm();
+                  handleShortcutToConfirm();
                 }}
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
@@ -291,15 +297,15 @@ export default function FormBuilder({
                 {"Shortcut to Confirm"}
               </Button>
             </Col>
-          )}
+          )} */}
           <Col width="one-quarter">
             <Button
               secondary
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
-                // handleSaveBtnClick();
+                handleSaveBtnClick();
               }}
-              disabled={isAutosaving}
+              disabled={isSubmitting} // need isAutoSaving too eventually
               data-cy="BtnSaveDraft"
             >
               {"Save & exit"}
