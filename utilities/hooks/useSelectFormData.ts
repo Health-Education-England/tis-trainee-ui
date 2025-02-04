@@ -2,7 +2,7 @@ import { FormName } from "../../components/forms/form-builder/FormBuilder";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { RootState } from "../../redux/store/store";
 
-type FormState = Pick<RootState, "formA" | "formB">;
+type FormState = Pick<RootState, "formA" | "formB" | "ltft">;
 const selectData = (state: FormState, formName: FormName) =>
   state[formName]?.formData;
 

@@ -33,11 +33,14 @@ import { Notifications } from "../notifications/Notifications";
 import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 import { Cct } from "../forms/cct/Cct";
+import { Ltft } from "../forms/ltft/Ltft";
+import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
 
 const appVersion = packageJson.version;
 
 export const Main = () => {
   const dispatch = useAppDispatch();
+  const isBetaTester = useIsBetaTester();
   const traineeProfileDataStatus = useAppSelector(
     state => state.traineeProfile.status
   );
@@ -147,6 +150,7 @@ export const Main = () => {
             <Route path="/mfa" component={MFA} />
             <Route path="/notifications" component={Notifications} />
             <Route path="/cct" component={Cct} />
+            {isBetaTester ? <Route path="/ltft" component={Ltft} /> : null}
             <Redirect exact path="/" to="/home" />
             <Route path="/*" component={PageNotFound} />
           </Switch>

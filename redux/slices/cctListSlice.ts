@@ -3,6 +3,7 @@ import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { toastErrText } from "../../utilities/Constants";
 import { CctCalculation } from "./cctSlice";
+import { AxiosResponse } from "axios";
 
 type CctListState = {
   cctList: CctCalculation[];
@@ -18,7 +19,8 @@ const initialState: CctListState = {
 
 export const loadCctList = createAsyncThunk("cctList/loadCctList", async () => {
   const traineeProfileService = new TraineeProfileService();
-  const response = await traineeProfileService.getCctCalculations();
+  const response: AxiosResponse<CctCalculation[]> =
+    await traineeProfileService.getCctCalculations();
   return response.data;
 });
 

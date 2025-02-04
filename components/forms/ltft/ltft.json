@@ -1,0 +1,188 @@
+{
+  "name": "ltft",
+  "pages": [
+    {
+      "pageName": "Discussing your proposals",
+      "importantTxtName": "ltftDiscussionInstructions",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Your Training Programme Director (TPD) details",
+          "fields": [
+            {
+              "name": "tpdName",
+              "label": "TPD Name",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            },
+            {
+              "name": "tpdEmail",
+              "label": "TPD Email Address",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": true
+            }
+          ]
+        },
+        {
+          "sectionHeader": "Other discussions (if applicable)",
+          "fields": [
+            {
+              "name": "otherDiscussions",
+              "type": "array",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "name",
+                  "label": "Name",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email Address",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "role",
+                  "label": "Role / Position",
+                  "placeholder": "type here...",
+                  "type": "select",
+                  "optionsKey": "ltftRoles",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Reason(s) for applying",
+      "importantTxtName": "ltftReasonsInstructions",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Reason(s) for applying",
+          "fields": [
+            {
+              "name": "reasonsSelected",
+              "label": "Why are you applying for Changing hours (LTFT)?",
+              "placeholder": "choose one or more...",
+              "type": "select",
+              "isMultiSelect": true,
+              "optionsKey": "ltftReasons",
+              "dependencies": ["reasonsOtherDetail"],
+              "visible": true
+            },
+            {
+              "name": "reasonsOtherDetail",
+              "label": "Other reason",
+              "placeholder": "type here...",
+              "type": "text",
+              "visibleIf": ["other"],
+              "parent": "reasonsSelected",
+              "visible": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Personal Details",
+          "fields": [
+            {
+              "name": "personalDetails",
+              "type": "dto",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "forenames",
+                  "label": "Forename ",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "surname",
+                  "label": "Surname (GMC-Registered)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "dateOfBirth",
+                  "label": "Date of Birth",
+                  "placeholder": "DD/MM/YYYY",
+                  "type": "date",
+                  "visible": true
+                },
+                {
+                  "name": "telephoneNumber",
+                  "label": "Contact Telephone",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "mobileNumber",
+                  "label": "Contact Mobile",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email Address",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "gmcNumber",
+                  "label": "GMC Number",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "gdcNumber",
+                  "label": "GDC Number (if applicable)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "publicHealthNumber",
+                  "label": "Public Health Number (if applicable)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "skilledWorkerVisaHolder",
+                  "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
+                  "type": "radio",
+                  "optionsKey": "yesNo",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "declarations": []
+}

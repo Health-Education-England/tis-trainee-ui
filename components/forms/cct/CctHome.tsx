@@ -8,13 +8,17 @@ import { CctSavedDrafts } from "./CctSavedDrafts";
 import { useEffect } from "react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
+import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
+  const isBetaTester = useIsBetaTester();
 
   useEffect(() => {
     dispatch(loadCctList());
-  }, [dispatch]);
+    if (isBetaTester) dispatch(fetchLtftSummaryList());
+  }, [dispatch, isBetaTester]);
 
   return (
     <>
@@ -44,7 +48,7 @@ export function CctHome() {
         }}
         data-cy="cct-home-new-calc-btn"
       >
-        Make a new calculation
+        Make a new CCT Calculation
       </Button>
     </>
   );

@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import style from "../Common.module.scss";
+import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
 
 const handleClick = (route: string) => history.push(route);
 
@@ -15,6 +16,7 @@ interface HomeCardProps {
 
 const Home = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  const isBetaTester = useIsBetaTester();
 
   if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;
@@ -133,6 +135,24 @@ const Home = () => {
           </PageCard>
         </Card.GroupItem>
       </Card.Group>
+      {isBetaTester && (
+        <Card.Group>
+          <Card.GroupItem width="one-third">
+            <PageCard
+              isClickable={true}
+              route="/ltft"
+              linkHeader="Changing hours (LTFT)"
+            >
+              <ul className={style.ull}>
+                <li>
+                  Submit and track a Changing hours (Less Than Full Time)
+                  application
+                </li>
+              </ul>
+            </PageCard>
+          </Card.GroupItem>
+        </Card.Group>
+      )}
     </div>
   );
 };

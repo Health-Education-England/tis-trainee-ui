@@ -22,7 +22,8 @@ import {
   showFormField,
   updateFormData,
   determineCurrentValue,
-  updateTotalField
+  updateTotalField,
+  setFinalFormFields
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
@@ -67,6 +68,7 @@ export type Field = {
   isTotal?: boolean;
   readOnly?: boolean;
   rows?: number;
+  isMultiSelect?: boolean;
 };
 export type FormData = {
   [key: string]: any;
@@ -82,7 +84,7 @@ type Section = {
   fields: Field[];
   objectFields?: Field[];
 };
-export type FormName = "formA" | "formB";
+export type FormName = "formA" | "formB" | "ltft";
 export type FormDeclaration = {
   name: string;
   label: string;
@@ -214,22 +216,16 @@ export default function FormBuilder({
     isFormDirty.current = true;
   };
 
-  const finalFormFields = lastSavedFormData.id
-    ? {
-        ...formData,
-        id: lastSavedFormData.id,
-        lastModifiedDate: lastSavedFormData.lastModifiedDate,
-        lifecycleState: lastSavedFormData.lifecycleState,
-        traineeTisId: lastSavedFormData.traineeTisId
-      }
-    : { ...formData, traineeTisId: lastSavedFormData.traineeTisId };
-
   const handlePageChange = () => {
     isFormDirty.current = false;
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage) {
-          continueToConfirm(jsonFormName, finalFormFields, history);
+          continueToConfirm(
+            jsonFormName,
+            setFinalFormFields(lastSavedFormData, formData, jsonFormName),
+            history
+          );
         } else {
           setCurrentPage(currentPage + 1);
         }
@@ -246,7 +242,11 @@ export default function FormBuilder({
     isFormDirty.current = false;
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
-        continueToConfirm(jsonFormName, finalFormFields, history);
+        continueToConfirm(
+          jsonFormName,
+          setFinalFormFields(lastSavedFormData, formData, jsonFormName),
+          history
+        );
       })
       .catch((err: { inner: { path: string; message: string }[] }) => {
         setFormErrors(() => {

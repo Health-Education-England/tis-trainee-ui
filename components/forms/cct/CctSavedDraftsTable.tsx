@@ -9,7 +9,7 @@ import {
   SortingState,
   createColumnHelper
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
@@ -18,10 +18,17 @@ import {
   CctCalculation,
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
+import {
+  setLtftCctSnapshot,
+  updatedLtft
+} from "../../../redux/slices/ltftSlice";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
+import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
-const columns = [
+const columnsDefault = [
   columnHelper.accessor("name", {
     id: "name",
     header: ({ column }) => (
@@ -60,8 +67,32 @@ const columns = [
   })
 ];
 
+const createColumns = (
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  hasDraftOrUnsubmitted: boolean
+) => {
+  const ltftColumn = columnHelper.display({
+    id: "makeLtft",
+    cell: props => (
+      <RowLtftActions
+        row={props.row.original}
+        setIsModalOpen={setIsModalOpen}
+      />
+    )
+  });
+  if (hasDraftOrUnsubmitted) {
+    return columnsDefault;
+  }
+  return [...columnsDefault, ltftColumn];
+};
+
 export function CctSavedDraftsTable() {
-  const cctList = useAppSelector(state => state.cctSummaryList.cctList);
+  const dispatch = useAppDispatch();
+  const cctList = useAppSelector(state => state.cctList.cctList);
+  const ltftList = useAppSelector(state => state.ltftSummaryList.ltftList);
+  const hasDraftOrUnsubmitted = ltftList.some(
+    ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
+  );
 
   const memoData = useMemo(() => {
     return cctList;
@@ -70,6 +101,13 @@ export function CctSavedDraftsTable() {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "lastModified", desc: true }
   ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const columns = useMemo(
+    () => createColumns(setIsModalOpen, hasDraftOrUnsubmitted),
+    [setIsModalOpen, hasDraftOrUnsubmitted]
+  );
 
   const table = useReactTable({
     data: memoData,
@@ -129,8 +167,45 @@ export function CctSavedDraftsTable() {
           })}
         </tbody>
       </table>
+      <LtftDeclarationsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          // populate the new LTFT form with cct snapshot (full cct calc) and PD details
+          const draftLtft = populateLtftDraft();
+          dispatch(updatedLtft(draftLtft));
+          setIsModalOpen(false);
+          history.push("/ltft/create");
+        }}
+      />
     </div>
   ) : (
     <p data-cy="no-saved-drafts">You have no saved calculations.</p>
   );
+}
+
+type RowLtftActionsProps = {
+  row: CctCalculation;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function RowLtftActions({
+  row,
+  setIsModalOpen
+}: Readonly<RowLtftActionsProps>) {
+  const isBetaTester = useIsBetaTester();
+  const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    store.dispatch(setLtftCctSnapshot(row));
+    setIsModalOpen(true);
+  };
+  return isBetaTester ? (
+    <button
+      className="make-ltft-btn"
+      onClick={makeLtftBtnClick}
+      data-cy={`make-ltft-btn-${row.id}`}
+    >
+      Apply for Changing hours (LTFT)
+    </button>
+  ) : null;
 }

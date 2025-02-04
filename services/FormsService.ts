@@ -5,7 +5,7 @@ import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
 import { IFormR } from "../models/IFormR";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-
+import { LtftSummaryObj } from "../redux/slices/ltftSummaryListSlice";
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
@@ -82,5 +82,9 @@ export class FormsService extends ApiService {
 
   async getFeatureFlags(): Promise<AxiosResponse<FeatureFlags>> {
     return this.get<FeatureFlags>("/feature-flags");
+  }
+
+  async getLtftSummaryList(): Promise<AxiosResponse<LtftSummaryObj[]>> {
+    return this.get<LtftSummaryObj[]>("/ltft");
   }
 }
