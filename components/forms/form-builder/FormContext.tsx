@@ -17,6 +17,8 @@ type FormContextType = {
     dtoName?: string
   ) => void;
   handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  isFormDirty: boolean;
+  setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
@@ -39,6 +41,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   initialData
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
+  const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
 
   const handleBlur = (event: any) => {
     const { name, value } = event.currentTarget;
@@ -81,6 +84,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         return { ...formData, [name]: currentValue };
       }
     });
+    setIsFormDirty(true);
   };
 
   const contextValue = React.useMemo(
@@ -88,9 +92,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       formData,
       setFormData,
       handleChange,
-      handleBlur
+      handleBlur,
+      isFormDirty,
+      setIsFormDirty
     }),
-    [formData]
+    [formData, isFormDirty]
   );
 
   return (

@@ -11,30 +11,19 @@ import {
   Row
 } from "nhsuk-react-components";
 import {
-  continueToConfirm,
   createErrorObject,
   getEditPageNumber,
-  handleSoftValidationWarningMsgVisibility,
-  handleTextFieldWidth,
-  saveDraftForm,
   validateFields,
   formatFieldName,
-  showFormField,
-  updateFormData,
-  determineCurrentValue,
-  updateTotalField,
-  setFinalFormFields,
-  handlePageChange
+  showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
-import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import ScrollToTop from "../../common/ScrollToTop";
-import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
@@ -118,11 +107,9 @@ export default function FormBuilder({
   validationSchema,
   history
 }: Readonly<FormBuilderProps>) {
-  const { formData } = useFormContext();
-  console.log("formData from context in FormBuilder", formData);
+  const { formData, isFormDirty, setIsFormDirty } = useFormContext();
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
-  const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
   const lastPage = pages.length - 1;
@@ -131,11 +118,6 @@ export default function FormBuilder({
     [jsonFormName]
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-  // const { formData, setFormData } = useFormAutosave(
-  //   fetchedFormData,
-  //   jsonFormName,
-  //   isFormDirty
-  // );
   const [formErrors, setFormErrors] = useState<any>({});
 
   const currentPageFields = useMemo(() => {
@@ -147,7 +129,7 @@ export default function FormBuilder({
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
-    if (isFormDirty.current) {
+    if (isFormDirty) {
       validateFields(currentPageFields, formData, validationSchema)
         .then(() => {
           setFormErrors({});
@@ -161,12 +143,36 @@ export default function FormBuilder({
     }
   }, [formData, currentPageFields, validationSchema]);
 
+  const handlePageChange = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsFormDirty(false);
+    validateFields(currentPageFields, formData, validationSchema)
+      .then(() => {
+        if (currentPage === lastPage) {
+          // continueToConfirm(
+          //   jsonFormName,
+          //   setFinalFormFields(lastSavedFormData, formData, jsonFormName),
+          //   history
+          // );
+          history.push("/confirm");
+        } else {
+          setCurrentPage(currentPage + 1);
+        }
+      })
+      .catch((err: { inner: { path: string; message: string }[] }) => {
+        setFormErrors(() => {
+          const newErrors = createErrorObject(err);
+          return newErrors;
+        });
+      });
+  };
+
   return (
     <form onSubmit={handlePageChange} acceptCharset="UTF-8">
       <ScrollToTop
         errors={formErrors}
         page={currentPage}
-        isPageDirty={isFormDirty.current}
+        isPageDirty={isFormDirty}
       />
       {pages && (
         <div data-cy="progress-header">
@@ -200,7 +206,6 @@ export default function FormBuilder({
                         value={formData[field.name] ?? ""}
                         error={formErrors[field.name] ?? ""}
                         options={options}
-                        isFormDirty={isFormDirty}
                       />
                     );
                     return (
@@ -229,7 +234,7 @@ export default function FormBuilder({
                   "nhsuk-pagination__link nhsuk-pagination__link--prev"
                 }
                 onClick={() => {
-                  isFormDirty.current = false;
+                  setIsFormDirty(false);
                   setFormErrors({});
                   setCurrentPage(currentPage - 1);
                 }}

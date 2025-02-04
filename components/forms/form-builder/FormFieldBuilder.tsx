@@ -18,7 +18,6 @@ type FormFieldBuilderProps = {
   options?: any;
   arrayDetails?: { arrayIndex: number; arrayName: string };
   dtoName?: string;
-  isFormDirty: React.MutableRefObject<boolean>;
 };
 
 export function FormFieldBuilder({
@@ -27,8 +26,7 @@ export function FormFieldBuilder({
   error,
   options,
   arrayDetails,
-  dtoName,
-  isFormDirty
+  dtoName
 }: Readonly<FormFieldBuilderProps>) {
   const {
     name,
@@ -52,17 +50,11 @@ export function FormFieldBuilder({
           field={field}
           panelErrors={error}
           options={options}
-          isFormDirty={isFormDirty}
         />
       );
     case "dto":
       return (
-        <FormDtoBuilder
-          field={field}
-          dtoErrors={error}
-          options={options}
-          isFormDirty={isFormDirty}
-        />
+        <FormDtoBuilder field={field} dtoErrors={error} options={options} />
       );
     case "text":
       return (

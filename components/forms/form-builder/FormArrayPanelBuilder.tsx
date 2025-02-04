@@ -12,16 +12,14 @@ type FormArrayPanelBuilderProps = {
   field: Field;
   panelErrors: any;
   options?: any;
-  isFormDirty: React.MutableRefObject<boolean>;
 };
 
 export function FormArrayPanelBuilder({
   field,
   panelErrors,
-  options,
-  isFormDirty
+  options
 }: Readonly<FormArrayPanelBuilderProps>) {
-  const { formData, setFormData } = useFormContext();
+  const { formData, setFormData, setIsFormDirty } = useFormContext();
 
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
@@ -32,14 +30,14 @@ export function FormArrayPanelBuilder({
   };
 
   const addPanel = () => {
-    isFormDirty.current = true;
+    setIsFormDirty(true);
     const currentPanelsArray = formData[field.name] ?? [];
     const newPanelsArray = [...currentPanelsArray, newPanel()];
     setFormData({ ...formData, [field.name]: newPanelsArray });
   };
 
   const removePanel = (index: number) => {
-    isFormDirty.current = true;
+    setIsFormDirty(true);
     const newPanelsArray = formData[field.name].filter(
       (_arrObj: any, i: number) => i !== index
     );
@@ -65,7 +63,6 @@ export function FormArrayPanelBuilder({
                     error={panelErrors?.[index]?.[objField.name] ?? ""}
                     options={options}
                     arrayDetails={{ arrayIndex: index, arrayName: field.name }}
-                    isFormDirty={isFormDirty}
                   />
                 ) : null}
               </div>

@@ -631,39 +631,6 @@ export const determineCurrentValue = (
   }
 };
 
-export const updateFormData = (
-  name: string,
-  currentValue: any,
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>,
-  arrayIndex?: number,
-  arrayName?: string,
-  dtoName?: string
-) => {
-  if (typeof arrayIndex === "number" && arrayName) {
-    setFormData((prevFormData: FormData) => {
-      const newArray = [...prevFormData[arrayName]];
-      newArray[arrayIndex] = {
-        ...newArray[arrayIndex],
-        [name]: currentValue
-      };
-      return { ...prevFormData, [arrayName]: newArray };
-    });
-  } else if (dtoName) {
-    setFormData((prevFormData: FormData) => {
-      const dto = prevFormData[dtoName];
-      const updatedDto = {
-        ...dto,
-        [name]: currentValue
-      };
-      return { ...prevFormData, [dtoName]: updatedDto };
-    });
-  } else {
-    setFormData((prevFormData: FormData) => {
-      return { ...prevFormData, [name]: currentValue };
-    });
-  }
-};
-
 export const updateTotalField = (
   totalName: string,
   currentPageFields: Field[],
@@ -757,5 +724,3 @@ export const colourStyles = {
     maxWidth: "100%"
   })
 };
-
-export const handlePageChange = () => "page change";

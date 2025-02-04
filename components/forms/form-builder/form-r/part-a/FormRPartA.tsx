@@ -21,6 +21,7 @@ import {
 import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
 import history from "../../../../navigation/history";
 import { FormRPartA } from "../../../../../models/FormRPartA";
+import { FormProvider } from "../../FormContext";
 
 export default function FormA() {
   const formData = useSelectFormData(formAJson.name as FormName) as FormRPartA;
@@ -75,12 +76,14 @@ export default function FormA() {
           path="/formr-a/create"
           render={() => {
             return formData.traineeTisId ? (
-              <FormBuilder
-                jsonForm={formJson}
-                options={formOptions}
-                validationSchema={formAValidationSchema}
-                history={history}
-              />
+              <FormProvider initialData={formData}>
+                <FormBuilder
+                  jsonForm={formJson}
+                  options={formOptions}
+                  validationSchema={formAValidationSchema}
+                  history={history}
+                />
+              </FormProvider>
             ) : (
               <Redirect to={redirectPath} />
             );

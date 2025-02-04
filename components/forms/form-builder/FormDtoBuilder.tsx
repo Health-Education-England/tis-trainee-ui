@@ -8,14 +8,12 @@ type FormDtoBuilderProps = {
   field: Field;
   dtoErrors: any;
   options?: any;
-  isFormDirty: React.MutableRefObject<boolean>;
 };
 
 export function FormDtoBuilder({
   field,
   dtoErrors,
-  options,
-  isFormDirty
+  options
 }: Readonly<FormDtoBuilderProps>) {
   const { formData } = useFormContext();
   return (
@@ -30,7 +28,6 @@ export function FormDtoBuilder({
               error={dtoErrors?.[objField.name]}
               options={options}
               dtoName={field.name}
-              isFormDirty={isFormDirty}
             />
           ) : null}
         </div>
