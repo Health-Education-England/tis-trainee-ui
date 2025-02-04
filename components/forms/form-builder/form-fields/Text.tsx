@@ -52,23 +52,31 @@ export const Text: React.FC<TextProps> = ({
         type="text"
         name={name}
         value={value ?? ""}
-        onChange={
-          ((event: any) =>
-            handleChange(
-              event,
-              undefined,
-              undefined,
-              arrayIndex,
-              arrayName,
-              dtoName
-            )) as any
+        onChange={(event: any) =>
+          handleChange(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
         }
         className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
           fieldError ? "nhsuk-input--error" : ""
         } ${isTotal ? "total-field" : ""}`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
-        onBlur={handleBlur}
+        onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
+          handleBlur(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
+        }
         width={width}
         maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}

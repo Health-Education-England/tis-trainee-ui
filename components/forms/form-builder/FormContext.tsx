@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { Field, FormData, FormName } from "./FormBuilder";
 import {
   determineCurrentValue,
@@ -20,7 +20,14 @@ type FormContextType = {
     arrayName?: string,
     dtoName?: string
   ) => void;
-  handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  handleBlur: (
+    event: React.FocusEvent<HTMLInputElement>,
+    selectedOption?: any,
+    checkedStatus?: boolean,
+    arrayIndex?: number,
+    arrayName?: string,
+    dtoName?: string
+  ) => void;
   isFormDirty: boolean;
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
   currentPageFields: Field[];
@@ -62,67 +69,90 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     isFormDirty
   );
 
-  const handleBlur = (event: any) => {
-    const { name, value } = event.currentTarget;
-    setFormData((formData: FormData) => {
-      return { ...formData, [name]: value.trim() };
-    });
-  };
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    selectedOption?: any,
-    checkedStatus?: boolean,
+  const updateFormData = (
+    name: string,
+    value: any,
     arrayIndex?: number,
     arrayName?: string,
     dtoName?: string
   ) => {
-    const name = event.currentTarget.name;
-
-    const primaryField = currentPageFields.find(field => field.name === name);
-    const totalName = primaryField?.contributesToTotal;
-
-    const currentValue = determineCurrentValue(
-      event,
-      selectedOption,
-      checkedStatus
-    );
-
     setFormData(formData => {
       if (typeof arrayIndex === "number" && arrayName) {
         const newArray = [...(formData[arrayName] || [])];
         newArray[arrayIndex] = {
           ...newArray[arrayIndex],
-          [name]: currentValue
+          [name]: value
         };
         return { ...formData, [arrayName]: newArray };
       } else if (dtoName) {
         const dto = formData[dtoName] || {};
         const updatedDto = {
           ...dto,
-          [name]: currentValue
+          [name]: value
         };
         return { ...formData, [dtoName]: updatedDto };
       } else {
-        return { ...formData, [name]: currentValue };
+        return { ...formData, [name]: value };
       }
     });
-
-    if (totalName) {
-      const fieldsToTotal = currentPageFields.filter(
-        field => field.contributesToTotal === totalName
-      );
-      setFormData((prevFormData: FormData) => {
-        const total = sumFieldValues(prevFormData, fieldsToTotal);
-        return {
-          ...prevFormData,
-          [totalName]: total
-        };
-      });
-    }
-
-    setIsFormDirty(true);
   };
+
+  const handleBlur = useCallback(
+    (
+      event: React.FocusEvent<HTMLInputElement>,
+      selectedOption?: any,
+      checkedStatus?: boolean,
+      arrayIndex?: number,
+      arrayName?: string,
+      dtoName?: string
+    ) => {
+      const { name, value } = event.currentTarget;
+      if (selectedOption || checkedStatus) {
+        return;
+      }
+      const trimmedValue = value.trim();
+      updateFormData(name, trimmedValue, arrayIndex, arrayName, dtoName);
+    },
+    []
+  );
+
+  const handleChange = useCallback(
+    (
+      event: React.ChangeEvent<HTMLInputElement>,
+      selectedOption?: any,
+      checkedStatus?: boolean,
+      arrayIndex?: number,
+      arrayName?: string,
+      dtoName?: string
+    ) => {
+      const name = event.currentTarget.name;
+      const primaryField = currentPageFields.find(field => field.name === name);
+      const totalName = primaryField?.contributesToTotal;
+      const currentValue = determineCurrentValue(
+        event,
+        selectedOption,
+        checkedStatus
+      );
+
+      updateFormData(name, currentValue, arrayIndex, arrayName, dtoName);
+
+      if (totalName) {
+        const fieldsToTotal = currentPageFields.filter(
+          field => field.contributesToTotal === totalName
+        );
+        setFormData((prevFormData: FormData) => {
+          const total = sumFieldValues(prevFormData, fieldsToTotal);
+          return {
+            ...prevFormData,
+            [totalName]: total
+          };
+        });
+      }
+
+      setIsFormDirty(true);
+    },
+    [currentPageFields]
+  );
 
   const contextValue = React.useMemo(
     () => ({
@@ -136,7 +166,14 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       setCurrentPageFields,
       formName
     }),
-    [formData, isFormDirty, currentPageFields]
+    [
+      formData,
+      isFormDirty,
+      currentPageFields,
+      formName,
+      handleBlur,
+      handleChange
+    ]
   );
 
   return (

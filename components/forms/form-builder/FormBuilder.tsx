@@ -116,6 +116,8 @@ export default function FormBuilder({
     formName
   } = useFormContext();
 
+  console.log("formData in FormBuilder: ", formData);
+
   const jsonFormName = formName;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
@@ -129,7 +131,7 @@ export default function FormBuilder({
     setCurrentPageFields(
       pages[currentPage].sections.flatMap((section: Section) => section.fields)
     );
-  }, [currentPage, pages, formData]);
+  }, [currentPage, pages, formData, setCurrentPageFields]);
 
   useEffect(() => {
     if (isFormDirty) {
@@ -144,7 +146,7 @@ export default function FormBuilder({
           });
         });
     }
-  }, [formData, currentPageFields, validationSchema]);
+  }, [formData, currentPageFields, validationSchema, isFormDirty]);
 
   const handlePageChange = (e: { preventDefault: () => void }) => {
     e.preventDefault();
