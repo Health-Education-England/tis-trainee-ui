@@ -4,6 +4,10 @@ import {
   determineCurrentValue,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
+import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
+import { FormRPartA } from "../../../models/FormRPartA";
+import { FormRPartB } from "../../../models/FormRPartB";
+import { LtftObj } from "../../../redux/slices/ltftSlice";
 
 type FormContextType = {
   formData: FormData;
@@ -51,6 +55,12 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
   const [currentPageFields, setCurrentPageFields] =
     useState<Field[]>(initialPageFields);
+
+  useFormAutosave(
+    formName,
+    formData as FormRPartA | FormRPartB | LtftObj,
+    isFormDirty
+  );
 
   const handleBlur = (event: any) => {
     const { name, value } = event.currentTarget;
