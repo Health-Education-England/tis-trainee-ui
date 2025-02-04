@@ -153,7 +153,6 @@ export default function FormBuilder({
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage || canEditStatus) {
-          console.log("form data for reviewing: ", formData);
           continueToConfirm(jsonFormName, formData);
         } else {
           setCurrentPage(currentPage + 1);
@@ -170,7 +169,6 @@ export default function FormBuilder({
   const handleSaveBtnClick = () => {
     setIsSubmitting(true);
     saveDraftForm(jsonFormName, formData);
-    console.log("form data for saving", formData);
     setIsSubmitting(false);
   };
 
