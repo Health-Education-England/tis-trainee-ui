@@ -3,6 +3,7 @@ import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
 import history from "../../navigation/history";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
+import { FormProvider } from "../form-builder/FormContext";
 import ltftJson from "./ltft.json";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
@@ -46,13 +47,14 @@ export function LtftForm() {
   return formData?.declarations.discussedWithTpd ? (
     <div>
       <h2>Main application form</h2>
-      <FormBuilder
-        jsonForm={formJson}
-        fetchedFormData={formData}
-        options={{ yesNo, ltftReasons, ltftRoles }}
-        validationSchema={ltftValidationSchema}
-        history={history}
-      />
+      <FormProvider initialData={formData}>
+        <FormBuilder
+          jsonForm={formJson}
+          options={{ yesNo, ltftReasons, ltftRoles }}
+          validationSchema={ltftValidationSchema}
+          history={history}
+        />
+      </FormProvider>
     </div>
   ) : (
     <ErrorPage message="Please try again" />

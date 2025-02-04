@@ -23,7 +23,8 @@ import {
   updateFormData,
   determineCurrentValue,
   updateTotalField,
-  setFinalFormFields
+  setFinalFormFields,
+  handlePageChange
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
@@ -36,6 +37,7 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
+import { useFormContext } from "./FormContext";
 
 type FieldType =
   | "text"
@@ -96,7 +98,6 @@ export type Form = {
 };
 type FormBuilderProps = {
   jsonForm: Form;
-  fetchedFormData: FormData;
   options: any;
   validationSchema: any;
   history: string[];
@@ -113,33 +114,29 @@ export type Warning = {
 
 export default function FormBuilder({
   jsonForm,
-  fetchedFormData,
   options,
   validationSchema,
   history
 }: Readonly<FormBuilderProps>) {
+  const { formData } = useFormContext();
+  console.log("formData from context in FormBuilder", formData);
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const isFormDirty = useRef(false);
   const isAutosaving =
     useAppSelector(state => state.formA.autosaveStatus) === "saving";
-  const lastSavedFormData = useSelectFormData(jsonFormName);
   const lastPage = pages.length - 1;
   const initialPageValue = useMemo(
     () => getEditPageNumber(jsonFormName),
     [jsonFormName]
   );
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-  const { formData, setFormData } = useFormAutosave(
-    fetchedFormData,
-    jsonFormName,
-    isFormDirty
-  );
+  // const { formData, setFormData } = useFormAutosave(
+  //   fetchedFormData,
+  //   jsonFormName,
+  //   isFormDirty
+  // );
   const [formErrors, setFormErrors] = useState<any>({});
-  const [fieldWarning, setFieldWarning] = useState<FieldWarning | undefined>(
-    undefined
-  );
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentPageFields = useMemo(() => {
     return pages[currentPage].sections.flatMap(
@@ -164,258 +161,151 @@ export default function FormBuilder({
     }
   }, [formData, currentPageFields, validationSchema]);
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    setFormData((prev: FormData) => {
-      return { ...prev, [name]: value.trim() };
-    });
-  };
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    arrayIndex?: number,
-    arrayName?: string,
-    dtoName?: string
-  ) => {
-    const name = event.currentTarget.name;
-    const primaryField = currentPageFields.find(field => field.name === name);
-    const totalName = primaryField?.contributesToTotal;
-    const currentValue = determineCurrentValue(
-      event,
-      selectedOption,
-      checkedStatus
-    );
-
-    // Note this code still only works for non-nested text fields
-    if (typeof currentValue === "string") {
-      handleTextFieldWidth(event, currentValue, primaryField);
-      handleSoftValidationWarningMsgVisibility(
-        currentValue,
-        primaryField,
-        name,
-        setFieldWarning
-      );
-    }
-    //-----------------------------------------------------------
-
-    updateFormData(
-      name,
-      currentValue,
-      setFormData,
-      arrayIndex,
-      arrayName,
-      dtoName
-    );
-
-    if (totalName) {
-      updateTotalField(totalName, currentPageFields, setFormData);
-    }
-
-    isFormDirty.current = true;
-  };
-
-  const handlePageChange = () => {
-    isFormDirty.current = false;
-    validateFields(currentPageFields, formData, validationSchema)
-      .then(() => {
-        if (currentPage === lastPage) {
-          continueToConfirm(
-            jsonFormName,
-            setFinalFormFields(lastSavedFormData, formData, jsonFormName),
-            history
-          );
-        } else {
-          setCurrentPage(currentPage + 1);
-        }
-      })
-      .catch((err: { inner: { path: string; message: string }[] }) => {
-        setFormErrors(() => {
-          const newErrors = createErrorObject(err);
-          return newErrors;
-        });
-      });
-  };
-
-  const handleShortcutToConfirm = () => {
-    isFormDirty.current = false;
-    validateFields(currentPageFields, formData, validationSchema)
-      .then(() => {
-        continueToConfirm(
-          jsonFormName,
-          setFinalFormFields(lastSavedFormData, formData, jsonFormName),
-          history
-        );
-      })
-      .catch((err: { inner: { path: string; message: string }[] }) => {
-        setFormErrors(() => {
-          const newErrors = createErrorObject(err);
-          return newErrors;
-        });
-      });
-  };
-
-  const handleSaveBtnClick = () => {
-    setIsSubmitting(true);
-    saveDraftForm(jsonFormName, formData, history);
-    setIsSubmitting(false);
-  };
-
   return (
-    formData && (
-      <form onSubmit={handlePageChange} acceptCharset="UTF-8">
-        <ScrollToTop
-          errors={formErrors}
-          page={currentPage}
-          isPageDirty={isFormDirty.current}
-        />
-        {pages && (
-          <div data-cy="progress-header">
-            {pages[currentPage].pageName && (
-              <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
-                pages[currentPage].pageName
-              }`}</h3>
-            )}
-            {pages[currentPage].importantTxtName && (
-              <ImportantText
-                txtName={pages[currentPage].importantTxtName ?? ""}
-              />
-            )}
-            {pages[currentPage].expanderLinkName && (
-              <ExpanderMsg
-                expanderName={
-                  pages[currentPage].expanderLinkName as ExpanderNameType
-                }
-              />
-            )}
-            <AutosaveNote />
-            {pages[currentPage]?.sections.map((section: Section) => (
-              <React.Fragment key={section.sectionHeader}>
-                <Card feature>
-                  <Card.Content>
-                    <Card.Heading>{section.sectionHeader}</Card.Heading>
-                    {section.fields.map((field: Field) => {
-                      const fieldComponent = (
-                        <FormFieldBuilder
-                          field={field}
-                          value={formData[field.name] ?? ""}
-                          error={formErrors[field.name] ?? ""}
-                          fieldWarning={fieldWarning}
-                          handlers={{ handleChange, handleBlur, setFormData }}
-                          options={options}
-                          formData={formData}
-                          isFormDirty={isFormDirty}
-                        />
-                      );
-                      return (
-                        <div key={field.name} className="nhsuk-form-group">
-                          {showFormField(field, formData)
-                            ? fieldComponent
-                            : null}
-                        </div>
-                      );
-                    })}
-                  </Card.Content>
-                </Card>
-              </React.Fragment>
-            ))}
-          </div>
-        )}
-        <AutosaveMessage formName={jsonFormName} />
-        {Object.keys(formErrors).length > 0 && (
-          <FormErrors formErrors={formErrors} />
-        )}
-        <nav className="nhsuk-pagination">
-          <ul className="nhsuk-list nhsuk-pagination__list">
-            <li className="nhsuk-pagination-item--previous">
-              {currentPage > 0 && pages.length > 1 && (
-                <Link
-                  to="#"
-                  className={
-                    "nhsuk-pagination__link nhsuk-pagination__link--prev"
-                  }
-                  onClick={() => {
-                    isFormDirty.current = false;
-                    setFormErrors({});
-                    setCurrentPage(currentPage - 1);
-                  }}
-                  data-cy="navPrevious"
-                >
-                  <span className="nhsuk-pagination__title">{"Previous"}</span>
-                  <span className="nhsuk-u-visually-hidden">:</span>
-                  <span className="nhsuk-pagination__page">
-                    <div>{`${currentPage}. ${
-                      pages[currentPage - 1].pageName
-                    }`}</div>
-                  </span>
-                  <ArrowLeftIcon />
-                </Link>
-              )}
-            </li>
-            <li className="nhsuk-pagination-item--next">
+    <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+      <ScrollToTop
+        errors={formErrors}
+        page={currentPage}
+        isPageDirty={isFormDirty.current}
+      />
+      {pages && (
+        <div data-cy="progress-header">
+          {pages[currentPage].pageName && (
+            <h3>{`Part ${currentPage + 1} of ${pages.length} - ${
+              pages[currentPage].pageName
+            }`}</h3>
+          )}
+          {pages[currentPage].importantTxtName && (
+            <ImportantText
+              txtName={pages[currentPage].importantTxtName ?? ""}
+            />
+          )}
+          {pages[currentPage].expanderLinkName && (
+            <ExpanderMsg
+              expanderName={
+                pages[currentPage].expanderLinkName as ExpanderNameType
+              }
+            />
+          )}
+          <AutosaveNote />
+          {pages[currentPage]?.sections.map((section: Section) => (
+            <React.Fragment key={section.sectionHeader}>
+              <Card feature>
+                <Card.Content>
+                  <Card.Heading>{section.sectionHeader}</Card.Heading>
+                  {section.fields.map((field: Field) => {
+                    const fieldComponent = (
+                      <FormFieldBuilder
+                        field={field}
+                        value={formData[field.name] ?? ""}
+                        error={formErrors[field.name] ?? ""}
+                        options={options}
+                        isFormDirty={isFormDirty}
+                      />
+                    );
+                    return (
+                      <div key={field.name} className="nhsuk-form-group">
+                        {showFormField(field, formData) ? fieldComponent : null}
+                      </div>
+                    );
+                  })}
+                </Card.Content>
+              </Card>
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+      <AutosaveMessage formName={jsonFormName} />
+      {Object.keys(formErrors).length > 0 && (
+        <FormErrors formErrors={formErrors} />
+      )}
+      <nav className="nhsuk-pagination">
+        <ul className="nhsuk-list nhsuk-pagination__list">
+          <li className="nhsuk-pagination-item--previous">
+            {currentPage > 0 && pages.length > 1 && (
               <Link
                 to="#"
-                className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
-                  isSubmitting || Object.keys(formErrors).length > 0
-                    ? "disabled-link"
-                    : ""
-                }`}
-                onClick={handlePageChange}
-                data-cy="navNext"
+                className={
+                  "nhsuk-pagination__link nhsuk-pagination__link--prev"
+                }
+                onClick={() => {
+                  isFormDirty.current = false;
+                  setFormErrors({});
+                  setCurrentPage(currentPage - 1);
+                }}
+                data-cy="navPrevious"
               >
-                <span className="nhsuk-pagination__title">{"Next"}</span>
+                <span className="nhsuk-pagination__title">{"Previous"}</span>
                 <span className="nhsuk-u-visually-hidden">:</span>
                 <span className="nhsuk-pagination__page">
-                  {currentPage === lastPage ? (
-                    <>{"Review & submit"}</>
-                  ) : (
-                    <div>{`${currentPage + 2}. ${
-                      pages[currentPage + 1].pageName
-                    }`}</div>
-                  )}
+                  <div>{`${currentPage}. ${
+                    pages[currentPage - 1].pageName
+                  }`}</div>
                 </span>
-                <ArrowRightIcon />
+                <ArrowLeftIcon />
               </Link>
-            </li>
-          </ul>
-        </nav>
-        <Container>
-          <Row>
-            {canEditStatus && (
-              <Col width="one-half">
-                <Button
-                  onClick={(e: { preventDefault: () => void }) => {
-                    e.preventDefault();
-                    handleShortcutToConfirm();
-                  }}
-                  data-cy="BtnShortcutToConfirm"
-                  disabled={isSubmitting || Object.keys(formErrors).length > 0}
-                >
-                  {"Shortcut to Confirm"}
-                </Button>
-              </Col>
             )}
-            <Col width="one-quarter">
+          </li>
+          <li className="nhsuk-pagination-item--next">
+            <Link
+              to="#"
+              className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
+                Object.keys(formErrors).length > 0 ? "disabled-link" : ""
+              }`}
+              onClick={handlePageChange}
+              data-cy="navNext"
+            >
+              <span className="nhsuk-pagination__title">{"Next"}</span>
+              <span className="nhsuk-u-visually-hidden">:</span>
+              <span className="nhsuk-pagination__page">
+                {currentPage === lastPage ? (
+                  <>{"Review & submit"}</>
+                ) : (
+                  <div>{`${currentPage + 2}. ${
+                    pages[currentPage + 1].pageName
+                  }`}</div>
+                )}
+              </span>
+              <ArrowRightIcon />
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <Container>
+        <Row>
+          {canEditStatus && (
+            <Col width="one-half">
               <Button
-                secondary
                 onClick={(e: { preventDefault: () => void }) => {
                   e.preventDefault();
-                  handleSaveBtnClick();
+                  // handleShortcutToConfirm();
                 }}
-                disabled={isSubmitting || isAutosaving}
-                data-cy="BtnSaveDraft"
+                data-cy="BtnShortcutToConfirm"
+                disabled={Object.keys(formErrors).length > 0}
               >
-                {"Save & exit"}
+                {"Shortcut to Confirm"}
               </Button>
             </Col>
-            <Col width="one-quarter">
-              <StartOverButton />
-            </Col>
-          </Row>
-        </Container>
-      </form>
-    )
+          )}
+          <Col width="one-quarter">
+            <Button
+              secondary
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                // handleSaveBtnClick();
+              }}
+              disabled={isAutosaving}
+              data-cy="BtnSaveDraft"
+            >
+              {"Save & exit"}
+            </Button>
+          </Col>
+          <Col width="one-quarter">
+            <StartOverButton />
+          </Col>
+        </Row>
+      </Container>
+    </form>
   );
 }
 

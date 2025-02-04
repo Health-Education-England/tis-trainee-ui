@@ -77,7 +77,6 @@ export default function FormA() {
             return formData.traineeTisId ? (
               <FormBuilder
                 jsonForm={formJson}
-                fetchedFormData={formData}
                 options={formOptions}
                 validationSchema={formAValidationSchema}
                 history={history}

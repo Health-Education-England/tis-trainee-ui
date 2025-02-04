@@ -6,22 +6,14 @@ import {
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { FieldWarning } from "../FormBuilder";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type TextProps = {
   name: string;
   label: string | undefined;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    index?: number | undefined,
-    name?: string | undefined,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   placeholder?: string;
   fieldWarning?: FieldWarning;
-  handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -35,11 +27,9 @@ type TextProps = {
 export const Text: React.FC<TextProps> = ({
   name,
   label,
-  handleChange,
   fieldError,
   placeholder,
   fieldWarning,
-  handleBlur,
   value,
   arrayIndex,
   arrayName,
@@ -49,6 +39,7 @@ export const Text: React.FC<TextProps> = ({
   readOnly,
   dtoName
 }: TextProps) => {
+  const { handleBlur, handleChange } = useFormContext();
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

@@ -6,30 +6,23 @@ import {
   showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { FormFieldBuilder } from "./FormFieldBuilder";
+import { useFormContext } from "./FormContext";
 
 type FormArrayPanelBuilderProps = {
-  fieldWarning: FieldWarning | undefined;
   field: Field;
-  setFormData: React.Dispatch<any>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   panelErrors: any;
   options?: any;
-  formData?: any;
   isFormDirty: React.MutableRefObject<boolean>;
 };
 
 export function FormArrayPanelBuilder({
   field,
-  formData,
-  setFormData,
-  handleChange,
-  handleBlur,
   panelErrors,
-  fieldWarning,
   options,
   isFormDirty
 }: Readonly<FormArrayPanelBuilderProps>) {
+  const { formData, setFormData } = useFormContext();
+
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
       panel[objField.name] = "";
@@ -70,15 +63,8 @@ export function FormArrayPanelBuilder({
                     field={objField}
                     value={formData[field.name][index][objField.name] ?? ""}
                     error={panelErrors?.[index]?.[objField.name] ?? ""}
-                    fieldWarning={fieldWarning}
-                    handlers={{
-                      handleChange: handleChange,
-                      handleBlur: handleBlur,
-                      setFormData: setFormData
-                    }}
                     options={options}
                     arrayDetails={{ arrayIndex: index, arrayName: field.name }}
-                    formData={formData}
                     isFormDirty={isFormDirty}
                   />
                 ) : null}

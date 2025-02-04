@@ -635,11 +635,10 @@ export const updateFormData = (
   name: string,
   currentValue: any,
   setFormData: React.Dispatch<React.SetStateAction<FormData>>,
-  arrayIndex: number | undefined,
-  arrayName: string | undefined,
-  dtoName: string | undefined
+  arrayIndex?: number,
+  arrayName?: string,
+  dtoName?: string
 ) => {
-  let updatedFormData: FormData = {};
   if (typeof arrayIndex === "number" && arrayName) {
     setFormData((prevFormData: FormData) => {
       const newArray = [...prevFormData[arrayName]];
@@ -647,8 +646,7 @@ export const updateFormData = (
         ...newArray[arrayIndex],
         [name]: currentValue
       };
-      updatedFormData = { ...prevFormData, [arrayName]: newArray };
-      return updatedFormData;
+      return { ...prevFormData, [arrayName]: newArray };
     });
   } else if (dtoName) {
     setFormData((prevFormData: FormData) => {
@@ -657,19 +655,11 @@ export const updateFormData = (
         ...dto,
         [name]: currentValue
       };
-      updatedFormData = {
-        ...prevFormData,
-        [dtoName]: updatedDto
-      };
-      return updatedFormData;
+      return { ...prevFormData, [dtoName]: updatedDto };
     });
   } else {
     setFormData((prevFormData: FormData) => {
-      updatedFormData = {
-        ...prevFormData,
-        [name]: currentValue
-      };
-      return updatedFormData;
+      return { ...prevFormData, [name]: currentValue };
     });
   }
 };
@@ -767,3 +757,5 @@ export const colourStyles = {
     maxWidth: "100%"
   })
 };
+
+export const handlePageChange = () => "page change";

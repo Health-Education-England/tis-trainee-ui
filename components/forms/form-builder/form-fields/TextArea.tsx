@@ -1,21 +1,13 @@
 import { Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type TextAreaProps = {
   name: string;
   label: string | undefined;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    index?: number | undefined,
-    name?: string | undefined,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   placeholder?: string;
-  handleBlur: (event: any) => void;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -26,16 +18,15 @@ type TextAreaProps = {
 export const TextArea: React.FC<TextAreaProps> = ({
   name,
   label,
-  handleChange,
   fieldError,
   placeholder,
-  handleBlur,
   value,
   arrayIndex,
   arrayName,
   rows,
   dtoName
 }: TextAreaProps) => {
+  const { handleBlur, handleChange } = useFormContext();
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -48,7 +39,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
         value={value ?? ""}
         onChange={event =>
           handleChange(
-            event,
+            event as any,
             undefined,
             undefined,
             arrayIndex,
@@ -56,7 +47,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
             dtoName
           )
         }
-        onBlur={handleBlur}
+        onBlur={handleBlur as any}
         placeholder={placeholder}
         rows={rows ?? 10}
         spellCheck={true}
