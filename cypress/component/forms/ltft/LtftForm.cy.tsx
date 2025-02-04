@@ -5,13 +5,25 @@ import { MemoryRouter } from "react-router-dom";
 import { mockLtftDraft0 } from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
 import { updatedLtft } from "../../../../redux/slices/ltftSlice";
+import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
+import ltftJson from "../../../../components/forms/ltft/ltft.json";
+import { Field } from "../../../../components/forms/form-builder/FormBuilder";
 
 const mountLtftWithMockData = () => {
   store.dispatch(updatedLtft(mockLtftDraft0));
+  const initialPageFields = ltftJson.pages[0].sections.flatMap(
+    section => section.fields as Field[]
+  );
   mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/ltft/create"]}>
-        <LtftForm />
+        <FormProvider
+          initialData={mockLtftDraft0}
+          initialPageFields={initialPageFields}
+          formName="ltft"
+        >
+          <LtftForm />
+        </FormProvider>
       </MemoryRouter>
     </Provider>
   );
