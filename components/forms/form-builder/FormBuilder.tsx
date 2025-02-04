@@ -122,14 +122,13 @@ export default function FormBuilder({
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
     setCurrentPageFields(
       pages[currentPage].sections.flatMap((section: Section) => section.fields)
     );
   }, [currentPage, pages, formData]);
-
-  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
     if (isFormDirty) {
@@ -151,7 +150,7 @@ export default function FormBuilder({
     setIsFormDirty(false);
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
-        if (currentPage === lastPage) {
+        if (currentPage === lastPage || canEditStatus) {
           console.log("form data for reviewing: ", formData);
           continueToConfirm(jsonFormName, formData);
         } else {
@@ -284,20 +283,17 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {/* {canEditStatus && (
+          {canEditStatus && (
             <Col width="one-half">
               <Button
-                onClick={(e: { preventDefault: () => void }) => {
-                  e.preventDefault();
-                  handleShortcutToConfirm();
-                }}
+                onClick={handlePageChange}
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
                 {"Shortcut to Confirm"}
               </Button>
             </Col>
-          )} */}
+          )}
           <Col width="one-quarter">
             <Button
               secondary

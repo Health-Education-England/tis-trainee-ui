@@ -42,7 +42,11 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
-import { LtftObj } from "../redux/slices/ltftSlice";
+import {
+  LtftObj,
+  updatedCanEditLtft,
+  updatedLtft
+} from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -264,7 +268,7 @@ export function continueToConfirm(formName: string, formData: FormData) {
       updatedCanEditB
     );
   } else if (formName === "ltft") {
-    // dispatchUpdateActions(formData as LtftObj, updatedLtft, updatedCanEditLtft);
+    dispatchUpdateActions(formData as LtftObj, updatedLtft, updatedCanEditLtft);
   }
   history.push(redirectPath);
 }
