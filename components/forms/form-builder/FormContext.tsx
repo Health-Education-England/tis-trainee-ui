@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { Field, FormData } from "./FormBuilder";
+import { Field, FormData, FormName } from "./FormBuilder";
 import {
   determineCurrentValue,
   sumFieldValues
@@ -21,6 +21,7 @@ type FormContextType = {
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
+  formName: FormName;
 };
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
@@ -36,13 +37,15 @@ export const useFormContext = () => {
 type FormProviderProps = {
   initialData: FormData;
   initialPageFields: Field[];
+  formName: FormName;
   children: React.ReactNode;
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({
   children,
   initialData,
-  initialPageFields
+  initialPageFields,
+  formName
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
@@ -120,7 +123,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       isFormDirty,
       setIsFormDirty,
       currentPageFields,
-      setCurrentPageFields
+      setCurrentPageFields,
+      formName
     }),
     [formData, isFormDirty, currentPageFields]
   );

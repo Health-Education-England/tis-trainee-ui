@@ -112,10 +112,11 @@ export default function FormBuilder({
     isFormDirty,
     setIsFormDirty,
     currentPageFields,
-    setCurrentPageFields
+    setCurrentPageFields,
+    formName
   } = useFormContext();
 
-  const jsonFormName = jsonForm.name;
+  const jsonFormName = formName;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);

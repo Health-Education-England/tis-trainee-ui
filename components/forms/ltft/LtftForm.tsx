@@ -52,6 +52,7 @@ export function LtftForm() {
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}
+        formName={ltftJson.name as FormName}
       >
         <FormBuilder
           jsonForm={formJson}

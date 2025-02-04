@@ -81,6 +81,7 @@ export default function FormA() {
               <FormProvider
                 initialData={formData}
                 initialPageFields={initialPageFields}
+                formName={formJson.name}
               >
                 <FormBuilder
                   jsonForm={formJson}
