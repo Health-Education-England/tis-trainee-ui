@@ -1,28 +1,13 @@
 import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
-import {
-  fetchLtftSummaryList,
-  LtftSummaryObj
-} from "../../../redux/slices/ltftSummaryListSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
-import { useEffect } from "react";
+import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
 
 //TODO temp - refactor when BE is ready
 const draftOrUnsubmittedLtftSummary = undefined;
 
 export function LtftHome() {
-  const dispatch = useAppDispatch();
-  const isBetaTester = useIsBetaTester();
-  useEffect(() => {
-    if (isBetaTester) dispatch(fetchLtftSummaryList());
-  }, [dispatch, isBetaTester]);
-  const ltftSummaryList = useAppSelector(
-    state => state.ltftSummaryList?.ltftList || []
-  );
-
   return (
     <>
       <Card>
@@ -47,7 +32,7 @@ export function LtftHome() {
           <Card.Heading data-cy="ltft-summary-header">
             Previous applications summary
           </Card.Heading>
-          <LtftSummary ltftSummaryList={ltftSummaryList} />
+          <LtftSummary />
         </Card.Content>
       </Card>
     </>
