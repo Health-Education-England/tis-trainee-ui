@@ -2,7 +2,7 @@ import { Table } from "nhsuk-react-components";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useState } from "react";
-import { CheckboxField } from "@aws-amplify/ui-react";
+import { Button, CheckboxField } from "@aws-amplify/ui-react";
 
 type LtftSummaryProps = {
   ltftSummaryList?: LtftSummaryObj[];
@@ -11,13 +11,16 @@ type LtftSummaryProps = {
 const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   const ltftSummaries = ltftSummaryList || [];
   const [showSubmitted, setShowSubmitted] = useState(true);
-  const [showUnsubmitted, setShowUnsubmitted] = useState(true);
+  const [showApproved, setShowApproved] = useState(true);
+  const [showWithdrawn, setShowWithdrawn] = useState(true);
 
   const filteredLtftSummaries = ltftSummaries.filter(
     item =>
       item.status !== "DRAFT" &&
+      item.status !== "UNSUBMITTED" &&
       (showSubmitted || item.status !== "SUBMITTED") &&
-      (showUnsubmitted || item.status !== "UNSUBMITTED")
+      (showApproved || item.status !== "APPROVED") &&
+      (showWithdrawn || item.status !== "WITHDRAWN")
   );
 
   const sortedLtftSummaries = DateUtilities.genericSort(
@@ -29,6 +32,13 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   return (
     <div>
       <CheckboxField
+        name="yesToShowApproved"
+        value="yes"
+        label="APPROVED"
+        checked={showApproved}
+        onChange={() => setShowApproved(prevShowApproved => !prevShowApproved)}
+      />
+      <CheckboxField
         name="yesToShowSubmitted"
         value="yes"
         label="SUBMITTED"
@@ -38,12 +48,12 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
         }
       />
       <CheckboxField
-        name="yesToShowUnsubmitted"
+        name="yesToShowWithdrawn"
         value="yes"
-        label="UNSUBMITTED"
-        checked={showUnsubmitted}
+        label="WITHDRAWN"
+        checked={showWithdrawn}
         onChange={() =>
-          setShowUnsubmitted(prevShowUnsubmitted => !prevShowUnsubmitted)
+          setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
         }
       />
       <Table responsive data-cy="ltftSummary">
@@ -53,6 +63,7 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
             <Table.Cell>Created date</Table.Cell>
             <Table.Cell>Last Modified date</Table.Cell>
             <Table.Cell>Status</Table.Cell>
+            <Table.Cell>Operation</Table.Cell>
           </Table.Row>
         </Table.Head>
         <Table.Body>
@@ -66,6 +77,31 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
                 {new Date(item.lastModified).toLocaleDateString()}
               </Table.Cell>
               <Table.Cell>{item.status}</Table.Cell>
+              <Table.Cell>
+                {/* TODO: update logic */}
+                {item.status === "APPROVED" ? (
+                  <>
+                    <Button
+                      data-cy="unsubmitLtftBtnLink"
+                      fontWeight="normal"
+                      // onClick={onClickEvent}
+                      size="small"
+                      type="reset"
+                    >
+                      Unsubmit
+                    </Button>
+                    <Button
+                      data-cy="withdrawLtftBtnLink"
+                      fontWeight="normal"
+                      // onClick={onClickEvent}
+                      size="small"
+                      type="reset"
+                    >
+                      Withdraw
+                    </Button>
+                  </>
+                ) : null}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
