@@ -259,7 +259,11 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
     "have.text",
     "Warning: Non-UK postcode detected. Please ignore if valid."
   );
-
+  cy.get('[data-cy="postCode-input"]').clear();
+  cy.get(".field-warning-msg").should("not.exist");
+  cy.get('[data-cy="postCode-inline-error-msg"]').should("exist");
+  cy.clearAndType('[data-cy="postCode-input"]', "123456");
+  cy.get(".field-warning-msg").should("exist");
   cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
 
   // check disabled next button

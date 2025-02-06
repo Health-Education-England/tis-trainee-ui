@@ -25,8 +25,13 @@ import {
   mockTraineeProfileFormBCovid
 } from "../../../../mock-data/trainee-profile";
 import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-partb";
+import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
+import { FormRPartB } from "../../../../models/FormRPartB";
+import formBJson from "../../../../components/forms/form-builder/form-r/part-b/formB.json";
+import { Field } from "../../../../components/forms/form-builder/FormBuilder";
 
 describe("FormB /create (without Covid)", () => {
+  let initialFormBData: FormRPartB;
   beforeEach(() => {
     store.dispatch(
       updatedCurriculumOptions(mockedCombinedReference.curriculumOptions)
@@ -35,17 +40,26 @@ describe("FormB /create (without Covid)", () => {
       updatedReference(transformReferenceData(mockedCombinedReference))
     );
     store.dispatch(updatedPreferredMfa("SMS"));
-    const initialFormBData = ProfileToFormRPartBInitialValues(
+    initialFormBData = ProfileToFormRPartBInitialValues(
       mockTraineeProfileFormB
     );
     store.dispatch(updatedFormB(initialFormBData));
   });
 
   it("should render FormB", () => {
+    const initialPageFields = formBJson.pages[0].sections.flatMap(
+      section => section.fields as Field[]
+    );
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/formr-b/create"]}>
-          <FormB />
+          <FormProvider
+            initialData={initialFormBData}
+            initialPageFields={initialPageFields}
+            formName="formB"
+          >
+            <FormB />
+          </FormProvider>
         </MemoryRouter>
       </Provider>
     );

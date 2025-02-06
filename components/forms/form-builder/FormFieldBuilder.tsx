@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, FieldWarning } from "./FormBuilder";
+import { Field } from "./FormBuilder";
 import { FormDtoBuilder } from "./FormDtoBuilder";
 import { Text } from "./form-fields/Text";
 import { TextArea } from "./form-fields/TextArea";
@@ -15,30 +15,18 @@ type FormFieldBuilderProps = {
   field: Field;
   value: any;
   error: string;
-  fieldWarning: FieldWarning | undefined;
-  handlers: {
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    setFormData: React.Dispatch<any>;
-  };
   options?: any;
   arrayDetails?: { arrayIndex: number; arrayName: string };
   dtoName?: string;
-  formData?: any;
-  isFormDirty: React.MutableRefObject<boolean>;
 };
 
 export function FormFieldBuilder({
   field,
   value,
   error,
-  fieldWarning,
-  handlers,
   options,
   arrayDetails,
-  dtoName,
-  formData,
-  isFormDirty
+  dtoName
 }: Readonly<FormFieldBuilderProps>) {
   const {
     name,
@@ -53,7 +41,6 @@ export function FormFieldBuilder({
     rows,
     isMultiSelect
   } = field;
-  const { handleChange, handleBlur, setFormData } = handlers;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
 
   switch (type) {
@@ -61,40 +48,21 @@ export function FormFieldBuilder({
       return (
         <FormArrayPanelBuilder
           field={field}
-          setFormData={setFormData}
-          handleChange={handleChange}
-          handleBlur={handleBlur}
           panelErrors={error}
-          fieldWarning={fieldWarning}
           options={options}
-          formData={formData}
-          isFormDirty={isFormDirty}
         />
       );
     case "dto":
       return (
-        <FormDtoBuilder
-          field={field}
-          formData={formData}
-          setFormData={setFormData}
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          dtoErrors={error}
-          options={options}
-          fieldWarning={fieldWarning}
-          isFormDirty={isFormDirty}
-        />
+        <FormDtoBuilder field={field} dtoErrors={error} options={options} />
       );
     case "text":
       return (
         <Text
           name={name}
           label={label}
-          handleChange={handleChange}
           fieldError={error}
-          fieldWarning={fieldWarning}
           placeholder={placeholder}
-          handleBlur={handleBlur}
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
@@ -110,10 +78,8 @@ export function FormFieldBuilder({
         <TextArea
           name={name}
           label={label}
-          handleChange={handleChange}
           fieldError={error}
           placeholder={placeholder}
-          handleBlur={handleBlur}
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
@@ -128,7 +94,6 @@ export function FormFieldBuilder({
           name={name}
           label={label}
           options={filteredOptions(optionsKey, options)}
-          handleChange={handleChange}
           fieldError={error}
           value={value}
           arrayIndex={arrayIndex}
@@ -143,7 +108,6 @@ export function FormFieldBuilder({
           name={name}
           label={label}
           options={filteredOptions(optionsKey, options)}
-          handleChange={handleChange}
           fieldError={error}
           value={value}
           arrayIndex={arrayIndex}
@@ -158,14 +122,12 @@ export function FormFieldBuilder({
         <Dates
           name={name}
           label={label}
-          handleChange={handleChange}
           fieldError={error}
           placeholder={placeholder}
           value={value}
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           dtoName={dtoName}
-          fieldWarning={fieldWarning}
         />
       );
 
@@ -174,7 +136,6 @@ export function FormFieldBuilder({
         <Phone
           name={name}
           label={label}
-          handleChange={handleChange}
           fieldError={error}
           value={value}
           arrayIndex={arrayIndex}
@@ -187,7 +148,6 @@ export function FormFieldBuilder({
         <Checkboxes
           name={name}
           label={label}
-          handleChange={handleChange}
           fieldError={error}
           value={value}
           arrayIndex={arrayIndex}

@@ -1,19 +1,12 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type RadiosProps = {
   name: string;
   label: string | undefined;
   options: any;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    arrayIndex?: number,
-    arrayName?: string,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   value: string | boolean | null;
   arrayIndex?: number;
@@ -25,13 +18,13 @@ export const Radios: React.FC<RadiosProps> = ({
   name,
   label,
   options,
-  handleChange,
   fieldError,
   value,
   arrayIndex,
   arrayName,
   dtoName
 }: RadiosProps) => {
+  const { handleChange } = useFormContext();
   return (
     <div className="nhsuk-radios">
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

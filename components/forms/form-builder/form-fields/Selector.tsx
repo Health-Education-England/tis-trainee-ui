@@ -5,19 +5,12 @@ import {
   handleKeyDown
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type SelectorProps = {
   name: string;
   label: string | undefined;
   options: any;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    arrayIndex?: number,
-    arrayName?: string,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   value: string | string[];
   arrayIndex?: number;
@@ -30,7 +23,6 @@ export const Selector = ({
   name,
   label,
   options,
-  handleChange,
   fieldError,
   value,
   arrayIndex,
@@ -38,6 +30,7 @@ export const Selector = ({
   dtoName,
   isMultiSelect
 }: SelectorProps) => {
+  const { handleChange } = useFormContext();
   return (
     <div data-cy={name}>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>

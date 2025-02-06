@@ -165,7 +165,7 @@ export const FormView = ({
                 secondary
                 onClick={() => {
                   setIsSubmitting(true);
-                  saveDraftForm(formName, formData, history);
+                  saveDraftForm(formName, formData);
                 }}
                 disabled={isSubmitting}
                 data-cy="BtnSaveDraft"

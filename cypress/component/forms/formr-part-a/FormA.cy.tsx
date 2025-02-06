@@ -20,6 +20,9 @@ import {
 import { ProfileToFormRPartAInitialValues } from "../../../../models/ProfileToFormRPartAInitialValues";
 import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
+import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
+import formAJson from "../../../../components/forms/form-builder/form-r/part-a/formA.json";
+import { Field } from "../../../../components/forms/form-builder/FormBuilder";
 
 describe("FormA", () => {
   beforeEach(() => {
@@ -35,10 +38,19 @@ describe("FormA", () => {
     const initialisedFormAData =
       ProfileToFormRPartAInitialValues(mockTraineeProfile);
     store.dispatch(updatedFormA(initialisedFormAData));
+    const initialPageFields = formAJson.pages[0].sections.flatMap(
+      section => section.fields as Field[]
+    );
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/formr-a/create"]}>
-          <FormA />
+          <FormProvider
+            initialData={initialisedFormAData}
+            initialPageFields={initialPageFields}
+            formName="formA"
+          >
+            <FormA />
+          </FormProvider>
         </MemoryRouter>
       </Provider>
     );

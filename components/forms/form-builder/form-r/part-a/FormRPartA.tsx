@@ -19,8 +19,8 @@ import {
   selectCurriculumOptions
 } from "../../../../../redux/slices/referenceSlice";
 import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
-import history from "../../../../navigation/history";
 import { FormRPartA } from "../../../../../models/FormRPartA";
+import { FormProvider } from "../../FormContext";
 
 export default function FormA() {
   const formData = useSelectFormData(formAJson.name as FormName) as FormRPartA;
@@ -43,11 +43,13 @@ export default function FormA() {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const canEditStatus = useAppSelector(state => state.formA.canEdit);
   const formJson = formAJson as Form;
+  const initialPageFields = formJson.pages[0].sections.flatMap(
+    section => section.fields
+  );
   const redirectPath = "/formr-a";
 
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
+  if (preferredMfa === "NOMFA") return <Redirect to="/mfa" />;
+
   return (
     <>
       <PageTitle title="Form R Part-A" />
@@ -75,13 +77,17 @@ export default function FormA() {
           path="/formr-a/create"
           render={() => {
             return formData.traineeTisId ? (
-              <FormBuilder
-                jsonForm={formJson}
-                fetchedFormData={formData}
-                options={formOptions}
-                validationSchema={formAValidationSchema}
-                history={history}
-              />
+              <FormProvider
+                initialData={formData}
+                initialPageFields={initialPageFields}
+                formName={formJson.name}
+              >
+                <FormBuilder
+                  jsonForm={formJson}
+                  options={formOptions}
+                  validationSchema={formAValidationSchema}
+                />
+              </FormProvider>
             ) : (
               <Redirect to={redirectPath} />
             );

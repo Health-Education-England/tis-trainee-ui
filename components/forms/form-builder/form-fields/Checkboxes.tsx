@@ -1,18 +1,11 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type CheckboxesProps = {
   name: string;
   label: string | undefined;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    arrayIndex?: number,
-    arrayName?: string,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   placeholder?: string;
   value: string;
@@ -24,7 +17,6 @@ type CheckboxesProps = {
 export const Checkboxes: React.FC<CheckboxesProps> = ({
   name,
   label,
-  handleChange,
   fieldError,
   placeholder,
   value,
@@ -32,6 +24,7 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   arrayName,
   dtoName
 }: CheckboxesProps) => {
+  const { handleChange } = useFormContext();
   return (
     <div className="nhsuk-checkboxes">
       <div className="nhsuk-checkboxes__item">

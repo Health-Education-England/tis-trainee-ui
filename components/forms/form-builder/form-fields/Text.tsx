@@ -4,24 +4,14 @@ import {
   handleNumberInput
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
-import { FieldWarning } from "../FormBuilder";
 import FieldErrorInline from "./FieldErrorInline";
+import { useFormContext } from "../FormContext";
 
 type TextProps = {
   name: string;
   label: string | undefined;
-  handleChange: (
-    event: any,
-    selectedOption?: any,
-    checkedStatus?: boolean,
-    index?: number | undefined,
-    name?: string | undefined,
-    dtoName?: string
-  ) => void;
   fieldError: string;
   placeholder?: string;
-  fieldWarning?: FieldWarning;
-  handleBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   value: string;
   arrayIndex?: number;
   arrayName?: string;
@@ -35,20 +25,19 @@ type TextProps = {
 export const Text: React.FC<TextProps> = ({
   name,
   label,
-  handleChange,
   fieldError,
   placeholder,
-  fieldWarning,
-  handleBlur,
   value,
   arrayIndex,
   arrayName,
-  width,
+  width = 20,
   isNumberField,
   isTotal,
   readOnly,
   dtoName
 }: TextProps) => {
+  const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
+    useFormContext();
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -61,31 +50,40 @@ export const Text: React.FC<TextProps> = ({
         type="text"
         name={name}
         value={value ?? ""}
-        onChange={
-          ((event: any) =>
-            handleChange(
-              event,
-              undefined,
-              undefined,
-              arrayIndex,
-              arrayName,
-              dtoName
-            )) as any
+        onChange={(event: any) =>
+          handleChange(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
         }
-        className={`nhsuk-input nhsuk-input--width-${width ?? 20} ${
-          fieldError ? "nhsuk-input--error" : ""
-        } ${isTotal ? "total-field" : ""}`}
+        className={`nhsuk-input nhsuk-input--width-${
+          fieldWidthData?.fieldName === name ? fieldWidthData.width : width
+        } ${fieldError ? "nhsuk-input--error" : ""} ${
+          isTotal ? "total-field" : ""
+        }`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}
-        onBlur={handleBlur}
-        width={width}
+        onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
+          handleBlur(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
+        }
         maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-      {fieldWarning?.fieldName === name ? (
+      {fieldWarning?.fieldName === name && !fieldError ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}
     </>

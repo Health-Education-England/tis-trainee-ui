@@ -17,7 +17,6 @@ import {
 import store from "../redux/store/store";
 import {
   Field,
-  FieldWarning,
   Form,
   FormData,
   FormName,
@@ -41,6 +40,12 @@ import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
+import history from "../components/navigation/history";
+import {
+  LtftObj,
+  updatedCanEditLtft,
+  updatedLtft
+} from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -104,7 +109,6 @@ export function resetForm(formName: string, history: any) {
   }
 }
 
-// NOTE- First stab at making this a bit more generic for all forms.
 type FormActionsAndTypes<T> = {
   [key: string]: {
     update: any;
@@ -114,7 +118,9 @@ type FormActionsAndTypes<T> = {
   };
 };
 
-const formActionsAndTypes: FormActionsAndTypes<FormRPartA | FormRPartB> = {
+const formActionsAndTypes: FormActionsAndTypes<
+  FormRPartA | FormRPartB | LtftObj
+> = {
   formA: {
     update: updateFormA,
     save: saveFormA,
@@ -127,6 +133,13 @@ const formActionsAndTypes: FormActionsAndTypes<FormRPartA | FormRPartB> = {
     state: () => store.getState().formB?.formData?.id,
     type: {} as FormRPartB
   }
+  //   ,
+  //   ltft: {
+  //     update:  // updateLtft,
+  //     save: // saveLtft,
+  //     state: () => store.getState().ltft?.formData?.id,
+  //     type: {} as LtftObj
+  // }
 };
 
 export function makeSubObj(
@@ -181,7 +194,22 @@ export async function submitForm(
   resetForm(formName, history);
 }
 
-// TODO temp code to handle ltft form
+async function dispatchFormAction(
+  updatedFormData: any,
+  updateAction: any,
+  saveAction: any
+) {
+  if (updatedFormData.id) {
+    await store.dispatch(
+      updateAction({
+        ...updatedFormData
+      })
+    );
+  } else {
+    await store.dispatch(saveAction(updatedFormData));
+  }
+}
+
 const chooseRedirectPath = (formName: string, confirm?: boolean) => {
   if (formName === "formA") {
     return confirm ? "/formr-a/confirm" : "/formr-a";
@@ -192,21 +220,12 @@ const chooseRedirectPath = (formName: string, confirm?: boolean) => {
   }
 };
 
-//TODO - needs refactoring properly for ltft (and any future) form save
-export async function saveDraftForm(
-  formName: string,
-  formData: FormData,
-  history: string[]
-) {
+export async function saveDraftForm(formName: string, formData: FormData) {
   const redirectPath = chooseRedirectPath(formName);
 
   if (formName !== "ltft") {
-    const lastSavedFormData =
-      formName === "formA"
-        ? store.getState().formA?.formData
-        : store.getState().formB?.formData;
     let updatedFormData: FormData;
-    if (lastSavedFormData.lifecycleState !== LifeCycleState.Unsubmitted) {
+    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
       updatedFormData = {
         ...formData,
         submissionDate: null,
@@ -220,40 +239,35 @@ export async function saveDraftForm(
       };
     }
     if (formName === "formA") {
-      lastSavedFormData.id
-        ? await store.dispatch(
-            updateFormA({
-              ...updatedFormData,
-              id: lastSavedFormData.id
-            } as FormRPartA)
-          )
-        : await store.dispatch(saveFormA(updatedFormData as FormRPartA));
+      await dispatchFormAction(updatedFormData, updateFormA, saveFormA);
     } else {
-      lastSavedFormData.id
-        ? await store.dispatch(
-            updateFormB({
-              ...updatedFormData,
-              id: lastSavedFormData.id
-            } as FormRPartB)
-          )
-        : await store.dispatch(saveFormB(updatedFormData as FormRPartB));
+      await dispatchFormAction(updatedFormData, updateFormB, saveFormB);
     }
   }
   history.push(redirectPath);
 }
 
-export function continueToConfirm(
-  formName: string,
+function dispatchUpdateActions(
   formData: FormData,
-  history: string[]
+  updateAction: any,
+  canEditAction: any
 ) {
+  store.dispatch(updateAction(formData));
+  store.dispatch(canEditAction(true));
+}
+
+export function continueToConfirm(formName: string, formData: FormData) {
   const redirectPath = chooseRedirectPath(formName, true);
   if (formName === "formA") {
-    store.dispatch(updatedFormA(formData as FormRPartA));
-    store.dispatch(updatedCanEdit(true));
+    dispatchUpdateActions(formData as FormRPartA, updatedFormA, updatedCanEdit);
   } else if (formName === "formB") {
-    store.dispatch(updatedFormB(formData as FormRPartB));
-    store.dispatch(updatedCanEditB(true));
+    dispatchUpdateActions(
+      formData as FormRPartB,
+      updatedFormB,
+      updatedCanEditB
+    );
+  } else if (formName === "ltft") {
+    dispatchUpdateActions(formData as LtftObj, updatedLtft, updatedCanEditLtft);
   }
   history.push(redirectPath);
 }
@@ -315,12 +329,17 @@ export function transformReferenceData(
   return transformedData;
 }
 
+export type ReturnedWarning = {
+  fieldName: string;
+  warningMsg: string;
+};
+
 export function showFieldMatchWarning(
   inputValue: string,
   matcher: MatcherName,
   warningMsg: string,
   fieldName: string
-) {
+): ReturnedWarning | null {
   if (matcher === "prevDateTest") {
     const testDate = dayjs().subtract(1, "day");
     const inputDate = dayjs(inputValue);
@@ -333,39 +352,8 @@ export function showFieldMatchWarning(
   return null;
 }
 
-export function handleSoftValidationWarningMsgVisibility(
-  inputVal: string,
-  primaryFormField: Field | undefined,
-  fieldName: string,
-  setFieldWarning: (warning: FieldWarning) => void
-) {
-  if (inputVal?.length && primaryFormField?.warning) {
-    const matcher = primaryFormField.warning.matcher as MatcherName;
-    const msg = primaryFormField.warning.msgText;
-    const warning = showFieldMatchWarning(inputVal, matcher, msg, fieldName);
-    setFieldWarning(warning as FieldWarning);
-  }
-}
-
 export function setTextFieldWidth(width: number) {
   return width < 20 ? 20 : Math.floor(width / 10) * 10;
-}
-
-export function handleTextFieldWidth(
-  event: React.ChangeEvent<
-    HTMLInputElement | HTMLSelectElement | HTMLDivElement
-  >,
-  currentValue: string,
-  primaryField: Field | undefined
-) {
-  if (
-    primaryField?.type === "text" &&
-    currentValue.length >= 20 &&
-    primaryField?.canGrow
-  ) {
-    const thisFieldWidth = setTextFieldWidth(currentValue?.length);
-    event.currentTarget.className = `nhsuk-input nhsuk-input--width-${thisFieldWidth}`;
-  }
 }
 
 export function handleKeyDown(
@@ -629,66 +617,6 @@ export const determineCurrentValue = (
   } else {
     return value;
   }
-};
-
-export const updateFormData = (
-  name: string,
-  currentValue: any,
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>,
-  arrayIndex: number | undefined,
-  arrayName: string | undefined,
-  dtoName: string | undefined
-) => {
-  let updatedFormData: FormData = {};
-  if (typeof arrayIndex === "number" && arrayName) {
-    setFormData((prevFormData: FormData) => {
-      const newArray = [...prevFormData[arrayName]];
-      newArray[arrayIndex] = {
-        ...newArray[arrayIndex],
-        [name]: currentValue
-      };
-      updatedFormData = { ...prevFormData, [arrayName]: newArray };
-      return updatedFormData;
-    });
-  } else if (dtoName) {
-    setFormData((prevFormData: FormData) => {
-      const dto = prevFormData[dtoName];
-      const updatedDto = {
-        ...dto,
-        [name]: currentValue
-      };
-      updatedFormData = {
-        ...prevFormData,
-        [dtoName]: updatedDto
-      };
-      return updatedFormData;
-    });
-  } else {
-    setFormData((prevFormData: FormData) => {
-      updatedFormData = {
-        ...prevFormData,
-        [name]: currentValue
-      };
-      return updatedFormData;
-    });
-  }
-};
-
-export const updateTotalField = (
-  totalName: string,
-  currentPageFields: Field[],
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>
-) => {
-  const fieldsToTotal = currentPageFields.filter(
-    field => field.contributesToTotal === totalName
-  );
-  setFormData((prevFormData: FormData) => {
-    const total = sumFieldValues(prevFormData, fieldsToTotal);
-    return {
-      ...prevFormData,
-      [totalName]: total
-    };
-  });
 };
 
 export function setFinalFormFields(

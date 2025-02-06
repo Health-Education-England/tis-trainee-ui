@@ -148,11 +148,18 @@ const ltftSlice = createSlice({
     },
     updatedLtft(state, action: PayloadAction<LtftObj>) {
       state.formData = action.payload;
+    },
+    updatedCanEditLtft(state, action: PayloadAction<boolean>) {
+      state.canEdit = action.payload;
     }
   }
 });
 
-export const { resetToInit, setLtftCctSnapshot, updatedLtft } =
-  ltftSlice.actions;
+export const {
+  resetToInit,
+  setLtftCctSnapshot,
+  updatedLtft,
+  updatedCanEditLtft
+} = ltftSlice.actions;
 
 export default ltftSlice.reducer;
