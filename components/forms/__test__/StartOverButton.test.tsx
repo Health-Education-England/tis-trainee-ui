@@ -4,9 +4,10 @@ import { StartOverButton } from "../StartOverButton";
 import { Provider } from "react-redux";
 import {
   resetToInitFormA,
-  updatedFormA
+  updatedFormA,
+  updatedNewFormId
 } from "../../../redux/slices/formASlice";
-import { formASavedDraft } from "../../../mock-data/draft-formr-parta";
+import { formANew } from "../../../mock-data/draft-formr-parta";
 import {
   updatedDraftFormProps,
   updatedFormsRefreshNeeded
@@ -60,8 +61,9 @@ describe("Startoverbtn Component", () => {
     expect(startOverButton).not.toBeInTheDocument();
   });
 
-  it("Should render the Startover button when autosave is successful (i.e. form data includes form id via autosave response data).", () => {
-    store.dispatch(updatedFormA(formASavedDraft));
+  it("Should render the Startover button when initial autosave is successful (i.e. via stored newFormId on successful POST response).", () => {
+    store.dispatch(updatedFormA(formANew));
+    store.dispatch(updatedNewFormId("123"));
     const { queryByRole } = renderStartOverButton();
     const startOverButton = queryByRole("button", {
       name: "Start over"

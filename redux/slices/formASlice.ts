@@ -152,6 +152,9 @@ const formASlice = createSlice({
     },
     updatedFormAList(state, action: PayloadAction<IFormR[]>) {
       return { ...state, formAList: action.payload };
+    },
+    updatedNewFormId(state, action: PayloadAction<string>) {
+      return { ...state, newFormId: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -326,7 +329,8 @@ export const {
   updatedSaveStatus,
   updatedSaveLatestTimeStamp,
   updatedFormAStatus,
-  updatedFormAList
+  updatedFormAList,
+  updatedNewFormId
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>

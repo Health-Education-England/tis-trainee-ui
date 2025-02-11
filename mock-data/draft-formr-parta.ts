@@ -22,7 +22,7 @@ export const formANew = {
   isArcp: false,
   isLeadingToCct: false,
   lastModifiedDate: "2025-02-11T07:41:11.499",
-  lifecycleState: "DRAFT",
+  lifecycleState: LifeCycleState.New,
   localOfficeName: "North West",
   medicalSchool: "Manchester University",
   mobileNumber: "08465879348",
