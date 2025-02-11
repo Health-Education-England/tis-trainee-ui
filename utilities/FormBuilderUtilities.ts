@@ -273,7 +273,7 @@ export function setFormDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {
-  const myPreciousFormDataFields = {
+  const preciousFormDataBoth = {
     lifecycleState: LifeCycleState.Submitted,
     lastModifiedDate: new Date(),
     submissionDate: new Date(),
@@ -282,6 +282,15 @@ export function setFormDataForSubmit(
     programmeMembershipId: formData.programmeMembershipId as string,
     localOfficeName: formData.localOfficeName as string
   };
+
+  // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA
+  const myPreciousFormDataFields =
+    jsonForm.name === "formB"
+      ? preciousFormDataBoth
+      : {
+          ...preciousFormDataBoth,
+          isLeadingToCct: (formData as FormRPartA).isLeadingToCct
+        };
 
   const newFormData = jsonForm.pages.reduce((fd, page) => {
     page.sections.forEach(section => {
@@ -303,7 +312,7 @@ export function setFormDataForSubmit(
   return { ...newFormData, ...myPreciousFormDataFields };
 }
 
-function prepFormData(
+export function prepFormData(
   formData: FormRPartA | FormRPartB,
   isSubmit: boolean,
   jsonForm: Form
@@ -371,7 +380,7 @@ async function saveForm(
   }
 }
 
-const getDraftFormId = (
+export const getDraftFormId = (
   formData: FormRPartA | FormRPartB,
   formName: string
 ): string | undefined => {
@@ -382,7 +391,7 @@ const getDraftFormId = (
   }
 };
 
-const getAutosaveStatus = (formName: string) => {
+const getSaveStatus = (formName: string) => {
   if (formName === "formA") {
     return store.getState().formA.saveStatus;
   } else {
@@ -390,9 +399,9 @@ const getAutosaveStatus = (formName: string) => {
   }
 };
 
-const handleAutosaveRedirect = (formName: string, isAutoSave: boolean) => {
+export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
   if (!isAutoSave) {
-    const autosaveStatus = getAutosaveStatus(formName);
+    const autosaveStatus = getSaveStatus(formName);
     if (autosaveStatus === "succeeded") {
       history.push(chooseRedirectPath(formName));
     }
@@ -416,10 +425,10 @@ export async function saveFormR(
       isAutoSave,
       isSubmit
     );
-    handleAutosaveRedirect(formName, isAutoSave);
+    handleSaveRedirect(formName, isAutoSave);
   } else {
     await saveForm(formName, preppedFormData, isAutoSave, isSubmit);
-    handleAutosaveRedirect(formName, isAutoSave);
+    handleSaveRedirect(formName, isAutoSave);
   }
 }
 

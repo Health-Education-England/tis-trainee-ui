@@ -22,7 +22,10 @@ import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
 import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
 import formAJson from "../../../../components/forms/form-builder/form-r/part-a/formA.json";
-import { Field } from "../../../../components/forms/form-builder/FormBuilder";
+import {
+  Field,
+  Form
+} from "../../../../components/forms/form-builder/FormBuilder";
 
 describe("FormA", () => {
   beforeEach(() => {
@@ -47,7 +50,7 @@ describe("FormA", () => {
           <FormProvider
             initialData={initialisedFormAData}
             initialPageFields={initialPageFields}
-            formName="formA"
+            jsonForm={formAJson as Form}
           >
             <FormA />
           </FormProvider>
