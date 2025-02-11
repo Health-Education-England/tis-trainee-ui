@@ -8,7 +8,7 @@ import { IFormR } from "../../models/IFormR";
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
-import { AutosaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 interface IFormA {
@@ -18,8 +18,9 @@ interface IFormA {
   error: any;
   editPageNumber: number;
   canEdit: boolean;
-  autosaveStatus: AutosaveStatusProps;
-  autoSaveLatestTimeStamp: string;
+  saveStatus: SaveStatusProps;
+  saveLatestTimeStamp: string;
+  newFormId: string | undefined;
 }
 
 export const initialState: IFormA = {
@@ -29,8 +30,9 @@ export const initialState: IFormA = {
   error: "",
   editPageNumber: 0,
   canEdit: false,
-  autosaveStatus: "idle",
-  autoSaveLatestTimeStamp: "none this session"
+  saveStatus: "idle",
+  saveLatestTimeStamp: "none this session",
+  newFormId: undefined
 };
 
 export const loadFormAList = createAsyncThunk(
@@ -69,33 +71,49 @@ export const loadSavedFormA = createAsyncThunk(
 
 export const saveFormA = createAsyncThunk(
   "formA/saveFormA",
-  async (form: FormRPartA) => {
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: FormRPartA;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
     const formsService = new FormsService();
-    return formsService.saveTraineeFormRPartA(form);
+    try {
+      const response = await formsService.saveTraineeFormRPartA(formData);
+      return { data: response.data, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
   }
 );
 
 export const updateFormA = createAsyncThunk(
   "formA/updateFormA",
-  async (form: FormRPartA) => {
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: FormRPartA;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
     const formsService = new FormsService();
-    return formsService.updateTraineeFormRPartA(form);
-  }
-);
-
-export const autoSaveFormA = createAsyncThunk(
-  "formA/autoSaveFormA",
-  async (form: FormRPartA) => {
-    const formsService = new FormsService();
-    return (await formsService.saveTraineeFormRPartA(form)).data;
-  }
-);
-
-export const autoUpdateFormA = createAsyncThunk(
-  "formA/autoUpdateFormA",
-  async (form: FormRPartA) => {
-    const formsService = new FormsService();
-    return (await formsService.updateTraineeFormRPartA(form)).data;
+    try {
+      const response = await formsService.updateTraineeFormRPartA(formData);
+      return { data: response.data, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
   }
 );
 
@@ -123,10 +141,10 @@ const formASlice = createSlice({
     updatedCanEdit(state, action: PayloadAction<boolean>) {
       return { ...state, canEdit: action.payload };
     },
-    updatedAutosaveStatus(state, action: PayloadAction<AutosaveStatusProps>) {
-      return { ...state, autosaveStatus: action.payload };
+    updatedSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
+      return { ...state, saveStatus: action.payload };
     },
-    updatedAutoSaveLatestTimeStamp(state, action: PayloadAction<string>) {
+    updatedSaveLatestTimeStamp(state, action: PayloadAction<string>) {
       return { ...state, autoSaveLatestTimeStamp: action.payload };
     },
     updatedFormAStatus(state, action: PayloadAction<string>) {
@@ -170,65 +188,114 @@ const formASlice = createSlice({
           `${error.code}-${error.message}`
         );
       })
-      .addCase(saveFormA.pending, (state, _action) => {
-        state.status = "saving";
-      })
-      .addCase(saveFormA.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-        showToast(toastSuccessText.saveFormA, ToastType.SUCCESS);
-      })
-      .addCase(saveFormA.rejected, (state, { error }) => {
-        state.status = "failed";
+      .addCase(
+        saveFormA.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        saveFormA.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          state.newFormId = data.id;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModifiedDate,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitFormA, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.saveFormA, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(saveFormA.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
         state.error = error.message;
-        showToast(
-          toastErrText.saveFormA,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitFormA,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.saveFormA,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
       })
-      .addCase(updateFormA.pending, (state, _action) => {
-        state.status = "updating";
-      })
-      .addCase(updateFormA.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-        showToast(toastSuccessText.updateFormA, ToastType.SUCCESS);
-      })
-      .addCase(updateFormA.rejected, (state, { error }) => {
-        state.status = "failed";
+      .addCase(
+        updateFormA.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        updateFormA.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModifiedDate,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitFormA, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.updateFormA, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(updateFormA.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
         state.error = error.message;
-        showToast(
-          toastErrText.updateFormA,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(autoSaveFormA.pending, state => {
-        state.autosaveStatus = "saving";
-      })
-      .addCase(autoSaveFormA.fulfilled, (state, action) => {
-        state.autosaveStatus = "succeeded";
-        state.formData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
-          action.payload.lastModifiedDate,
-          true
-        );
-      })
-      .addCase(autoSaveFormA.rejected, state => {
-        state.autosaveStatus = "failed";
-      })
-      .addCase(autoUpdateFormA.pending, state => {
-        state.autosaveStatus = "saving";
-      })
-      .addCase(autoUpdateFormA.fulfilled, (state, action) => {
-        state.autosaveStatus = "succeeded";
-        state.formData = action.payload;
-        state.autoSaveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
-          action.payload.lastModifiedDate,
-          true
-        );
-      })
-      .addCase(autoUpdateFormA.rejected, state => {
-        state.autosaveStatus = "failed";
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitFormA,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.updateFormA,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
       })
       .addCase(deleteFormA.pending, (state, _action) => {
         state.status = "deleting";
@@ -256,8 +323,8 @@ export const {
   updatedFormA,
   updatedEditPageNumber,
   updatedCanEdit,
-  updatedAutosaveStatus,
-  updatedAutoSaveLatestTimeStamp,
+  updatedSaveStatus,
+  updatedSaveLatestTimeStamp,
   updatedFormAStatus,
   updatedFormAList
 } = formASlice.actions;

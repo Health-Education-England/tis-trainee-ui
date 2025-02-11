@@ -103,10 +103,9 @@ export default function FormB() {
               <FormProvider
                 initialData={formDataWithSortedWork}
                 initialPageFields={initialPageFields}
-                formName={formJson.name}
+                jsonForm={finalFormJson}
               >
                 <FormBuilder
-                  jsonForm={finalFormJson}
                   options={formOptions}
                   validationSchema={formValidationSchema}
                 />

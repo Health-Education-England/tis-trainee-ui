@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "nhsuk-react-components";
-import { useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import { DateType } from "../../utilities/DateUtilities";
 import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
@@ -12,6 +12,8 @@ import {
   makeWarningText
 } from "../../utilities/FormRUtilities";
 import { LinkedFormRDataType } from "./form-linker/FormLinkerForm";
+import { updatedSaveStatus } from "../../redux/slices/formASlice";
+import { updatedSaveStatusB } from "../../redux/slices/formBSlice";
 
 interface IFormsListBtn {
   pathName: string;
@@ -19,6 +21,7 @@ interface IFormsListBtn {
 }
 
 const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
+  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
@@ -26,8 +29,18 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   const traineeProfileData = useAppSelector(
     state => state.traineeProfile.traineeProfileData
   );
+  const formName = pathName.split("/")[1] === "formr-a" ? "formA" : "formB";
+  const isFormDeleting = useAppSelector(
+    state => state[formName].status === "deleting"
+  );
 
   const handleBtnClick = async () => {
+    // NOTE: this is needed for edge case where stale state from race between form click save event & redirect and auto update event.
+    if (formName === "formA") {
+      dispatch(updatedSaveStatus("idle"));
+    } else {
+      dispatch(updatedSaveStatusB("idle"));
+    }
     setIsSubmitting(true);
     if (draftFormProps?.id && draftFormProps?.programmeMembershipId) {
       await loadTheSavedForm(pathName, draftFormProps.id, history);
@@ -73,7 +86,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         }
         type="submit"
         onClick={handleBtnClick}
-        disabled={isSubmitting}
+        disabled={isSubmitting || isFormDeleting}
       >
         {chooseBtnText(draftFormProps?.lifecycleState)}
       </Button>

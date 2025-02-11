@@ -17,9 +17,8 @@ import {
 } from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
 import {
+  saveFormR,
   createErrorObject,
-  saveDraftForm,
-  submitForm,
   validateFields
 } from "../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../StartOverButton";
@@ -28,6 +27,8 @@ import Declarations from "./Declarations";
 import { FormLinkerModal } from "../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
 import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
+import { FormRPartA } from "../../../models/FormRPartA";
+import { FormRPartB } from "../../../models/FormRPartB";
 
 type FormViewProps = {
   formData: FormData;
@@ -46,7 +47,6 @@ export const FormView = ({
 }: FormViewProps) => {
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
-  const formName = formJson.name;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
@@ -57,8 +57,9 @@ export const FormView = ({
     );
   }, [formJson.pages]);
 
+  // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
-    if (canEditStatus) {
+    if (canEditStatus && !isSubmitting) {
       validateFields(allPagesFields, formData, validationSchemaForView)
         .then(() => {
           setErrors({});
@@ -70,7 +71,13 @@ export const FormView = ({
           });
         });
     }
-  }, [canEditStatus, formData, validationSchemaForView, allPagesFields]);
+  }, [
+    canEditStatus,
+    formData,
+    validationSchemaForView,
+    allPagesFields,
+    isSubmitting
+  ]);
 
   const linkedFormData: LinkedFormRDataType = {
     isArcp: formData.isArcp,
@@ -83,12 +90,20 @@ export const FormView = ({
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = filterManagingDeanery(
+    setIsSubmitting(true);
+    const { isArcp, programmeMembershipId } = data;
+    const localOfficeName = filterManagingDeanery(
       data.programmeMembershipId as string
     );
-    const latestLinkedFormRData = { ...data, managingDeanery };
+
+    const updatedFormData = {
+      ...formData,
+      isArcp,
+      localOfficeName,
+      programmeMembershipId
+    } as FormRPartA | FormRPartB;
     setShowModal(false);
-    submitForm(formJson, formData, history, latestLinkedFormRData);
+    saveFormR(formJson, updatedFormData, false, true);
     setIsSubmitting(false);
   };
 
@@ -163,9 +178,15 @@ export const FormView = ({
             <Col width="one-quarter">
               <Button
                 secondary
-                onClick={() => {
+                onClick={async () => {
                   setIsSubmitting(true);
-                  saveDraftForm(formName, formData);
+                  await saveFormR(
+                    formJson,
+                    formData as FormRPartA | FormRPartB,
+                    false,
+                    false
+                  );
+                  setIsSubmitting(false);
                 }}
                 disabled={isSubmitting}
                 data-cy="BtnSaveDraft"

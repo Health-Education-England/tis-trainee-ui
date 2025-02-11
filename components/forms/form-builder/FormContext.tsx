@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Field, FormData, FormName, ReturnedWidthData } from "./FormBuilder";
+import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
   ReturnedWarning,
@@ -35,7 +35,7 @@ type FormContextType = {
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
-  formName: FormName;
+  jsonForm: Form;
   fieldWarning: ReturnedWarning | null;
   setFieldWarning: React.Dispatch<React.SetStateAction<ReturnedWarning | null>>;
   fieldWidthData: ReturnedWidthData | null;
@@ -59,7 +59,7 @@ export const useFormContext = () => {
 type FormProviderProps = {
   initialData: FormData;
   initialPageFields: Field[];
-  formName: FormName;
+  jsonForm: Form;
   children: React.ReactNode;
 };
 
@@ -67,7 +67,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   children,
   initialData,
   initialPageFields,
-  formName
+  jsonForm
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
@@ -80,7 +80,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     useState<ReturnedWidthData | null>(null);
 
   useFormAutosave(
-    formName,
+    jsonForm,
     formData as FormRPartA | FormRPartB | LtftObj,
     isFormDirty
   );
@@ -191,7 +191,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       setIsFormDirty,
       currentPageFields,
       setCurrentPageFields,
-      formName,
+      jsonForm,
       fieldWarning,
       setFieldWarning,
       fieldWidthData,
@@ -201,7 +201,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       formData,
       isFormDirty,
       currentPageFields,
-      formName,
+      jsonForm,
       handleBlur,
       handleChange,
       fieldWarning,
