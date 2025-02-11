@@ -1,5 +1,8 @@
 import { Table } from "nhsuk-react-components";
-import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
+import {
+  fetchLtftSummaryList,
+  LtftSummaryObj
+} from "../../../redux/slices/ltftSummaryListSlice";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useEffect, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
@@ -7,17 +10,26 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import Loading from "../../common/Loading";
 import history from "../../navigation/history";
+import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 
-const LtftSummary = () => {
+type LtftSummaryProps = {
+  ltftSummaryList?: LtftSummaryObj[];
+};
+
+const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   const dispatch = useAppDispatch();
   const isBetaTester = useIsBetaTester();
   useEffect(() => {
     if (isBetaTester) dispatch(fetchLtftSummaryList());
   }, [dispatch, isBetaTester]);
-  const ltftSummaryList = useAppSelector(
-    state => state.ltftSummaryList?.ltftList || []
-  );
-  const ltftListStatus = useAppSelector(state => state.ltftSummaryList?.status);
+
+  // TODO: remove the mock data mockLtftsList1 and resume the data from useAppSelector when ready
+  // const ltftSummaryList = useAppSelector(
+  //   state => state.ltftSummaryList?.ltftList || []
+  // );
+  // const ltftListStatus = useAppSelector(state => state.ltftSummaryList?.status);
+  ltftSummaryList = mockLtftsList1;
+  const ltftListStatus = "succeeded";
 
   const ltftSummaries = ltftSummaryList || [];
   const [showSubmitted, setShowSubmitted] = useState(true);
@@ -50,6 +62,7 @@ const LtftSummary = () => {
       <>
         <div>
           <CheckboxField
+            data-cy="filterApprovedLtft"
             name="yesToShowApproved"
             value="yes"
             label="APPROVED"
@@ -59,6 +72,7 @@ const LtftSummary = () => {
             }
           />
           <CheckboxField
+            data-cy="filterSubmittedLtft"
             name="yesToShowSubmitted"
             value="yes"
             label="SUBMITTED"
@@ -68,6 +82,7 @@ const LtftSummary = () => {
             }
           />
           <CheckboxField
+            data-cy="filterWithdrawnLtft"
             name="yesToShowWithdrawn"
             value="yes"
             label="WITHDRAWN"
@@ -81,9 +96,9 @@ const LtftSummary = () => {
               <Table.Row>
                 <Table.Cell>Name</Table.Cell>
                 <Table.Cell>Created date</Table.Cell>
-                <Table.Cell>Last Modified date</Table.Cell>
                 <Table.Cell>Status</Table.Cell>
-                <Table.Cell>Operation</Table.Cell>
+                <Table.Cell>Status date</Table.Cell>
+                <Table.Cell>Operations</Table.Cell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -91,20 +106,20 @@ const LtftSummary = () => {
                 return (
                   <Table.Row
                     key={index}
-                    onClick={e => {
-                      e.stopPropagation();
-                      // history.push(`/cct/view/${row.original.id}`);
-                      history.push(`/cct/view/67a22bbaac62fa4e421baa50`);
-                    }}
+                    // TODO: click to show LTFT details
+                    // onClick={e => {
+                    //   e.stopPropagation();
+                    //   history.push(`/ltft/view/${row.original.id}`);
+                    // }}
                   >
                     <Table.Cell>{item.name}</Table.Cell>
                     <Table.Cell>
                       {new Date(item.created).toLocaleDateString()}
                     </Table.Cell>
+                    <Table.Cell>{item.status}</Table.Cell>
                     <Table.Cell data-cy={`lastModified-${index}`}>
                       {new Date(item.lastModified).toLocaleDateString()}
                     </Table.Cell>
-                    <Table.Cell>{item.status}</Table.Cell>
                     <Table.Cell>
                       {item.status === "SUBMITTED" &&
                       item === latestSubmitted ? (

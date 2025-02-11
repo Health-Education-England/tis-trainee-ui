@@ -6,24 +6,40 @@ export const mockLtftsList1 = [
     name: "GP hours reduction",
     programmeMembershipId: "a6de88b8-de41-48dd-9492-a518f5001176",
     status: "DRAFT",
-    created: "2025-01-15T14:50:36.941Z",
+    created: "2025-01-1T14:50:36.941Z",
     lastModified: "2025-01-15T15:50:36.941Z"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174000",
-    name: "My last Programme hours reduction",
+    name: "Programme hours reduction 1",
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b407",
-    status: "SUBMITTED",
+    status: "APPROVED",
     created: "2024-12-15T14:50:36.941Z",
     lastModified: "2024-12-15T15:50:36.941Z"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
-    name: "My first Programme hours reduction",
+    name: "Programme hours reduction 2",
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
-    status: "REJECTED",
+    status: "SUBMITTED",
     created: "2024-10-15T14:50:36.941Z",
     lastModified: "2024-10-15T15:50:36.941Z"
+  },
+  {
+    id: "123e4567-e89b-12d3-a456-426614174001",
+    name: "Programme hours reduction 3",
+    programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
+    status: "SUBMITTED",
+    created: "2024-09-15T14:50:36.941Z",
+    lastModified: "2024-09-15T15:50:36.941Z"
+  },
+  {
+    id: "123e4567-e89b-12d3-a456-426614174001",
+    name: "Programme hours reduction 4",
+    programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
+    status: "WITHDRAWN",
+    created: "2024-08-15T14:50:36.941Z",
+    lastModified: "2024-08-15T15:50:36.941Z"
   }
 ];
 
