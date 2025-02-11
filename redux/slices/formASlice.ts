@@ -145,7 +145,7 @@ const formASlice = createSlice({
       return { ...state, saveStatus: action.payload };
     },
     updatedSaveLatestTimeStamp(state, action: PayloadAction<string>) {
-      return { ...state, autoSaveLatestTimeStamp: action.payload };
+      return { ...state, saveLatestTimeStamp: action.payload };
     },
     updatedFormAStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
