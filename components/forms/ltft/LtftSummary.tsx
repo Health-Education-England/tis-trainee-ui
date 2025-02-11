@@ -6,6 +6,7 @@ import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import Loading from "../../common/Loading";
+import history from "../../navigation/history";
 
 const LtftSummary = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,10 @@ const LtftSummary = () => {
     filteredLtftSummaries.slice(),
     "lastModified",
     true
+  );
+
+  const latestSubmitted = sortedLtftSummaries.find(
+    i => i.status === "SUBMITTED"
   );
 
   let content: JSX.Element = <></>;
@@ -82,43 +87,53 @@ const LtftSummary = () => {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {sortedLtftSummaries.map((item, index) => (
-                <Table.Row key={index}>
-                  <Table.Cell>{item.name}</Table.Cell>
-                  <Table.Cell>
-                    {new Date(item.created).toLocaleDateString()}
-                  </Table.Cell>
-                  <Table.Cell data-cy={`lastModified-${index}`}>
-                    {new Date(item.lastModified).toLocaleDateString()}
-                  </Table.Cell>
-                  <Table.Cell>{item.status}</Table.Cell>
-                  <Table.Cell>
-                    {/* TODO: update logic */}
-                    {item.status === "APPROVED" ? (
-                      <>
-                        <Button
-                          data-cy="unsubmitLtftBtnLink"
-                          fontWeight="normal"
-                          // onClick={onClickEvent}
-                          size="small"
-                          type="reset"
-                        >
-                          Unsubmit
-                        </Button>
-                        <Button
-                          data-cy="withdrawLtftBtnLink"
-                          fontWeight="normal"
-                          // onClick={onClickEvent}
-                          size="small"
-                          type="reset"
-                        >
-                          Withdraw
-                        </Button>
-                      </>
-                    ) : null}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {sortedLtftSummaries.map((item, index) => {
+                return (
+                  <Table.Row
+                    key={index}
+                    onClick={e => {
+                      e.stopPropagation();
+                      // history.push(`/cct/view/${row.original.id}`);
+                      history.push(`/cct/view/67a22bbaac62fa4e421baa50`);
+                    }}
+                  >
+                    <Table.Cell>{item.name}</Table.Cell>
+                    <Table.Cell>
+                      {new Date(item.created).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell data-cy={`lastModified-${index}`}>
+                      {new Date(item.lastModified).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>{item.status}</Table.Cell>
+                    <Table.Cell>
+                      {item.status === "SUBMITTED" &&
+                      item === latestSubmitted ? (
+                        <>
+                          <Button
+                            data-cy="unsubmitLtftBtnLink"
+                            fontWeight="normal"
+                            // onClick={onClickEvent}
+                            size="small"
+                            type="reset"
+                            style={{ marginRight: "0.5em" }}
+                          >
+                            Unsubmit
+                          </Button>
+                          <Button
+                            data-cy="withdrawLtftBtnLink"
+                            fontWeight="normal"
+                            // onClick={onClickEvent}
+                            size="small"
+                            type="reset"
+                          >
+                            Withdraw
+                          </Button>
+                        </>
+                      ) : null}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
             </Table.Body>
           </Table>
         </div>
