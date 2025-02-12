@@ -54,7 +54,7 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   );
 
   let content: JSX.Element = <></>;
-  if (ltftListStatus === "loading") content = <Loading />;
+  // if (ltftListStatus === "loading") content = <Loading />;
   if (ltftListStatus === "succeeded")
     content = (
       <div>
