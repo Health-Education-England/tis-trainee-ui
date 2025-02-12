@@ -1,7 +1,15 @@
-import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  WarningCallout
+} from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
+import LtftSummary from "./LtftSummary";
 
 //TODO temp - refactor when BE is ready
 const draftOrUnsubmittedLtftSummary = undefined;
@@ -28,10 +36,20 @@ export function LtftHome() {
       </Card>
       <Card>
         <Card.Content>
+          <WarningCallout data-cy="ltftWarning">
+            <WarningCallout.Label visuallyHiddenText={false}>
+              For Demonstration Only
+            </WarningCallout.Label>
+            <p>
+              The table below has <strong>dummy data</strong> and is read only
+              for demonstrating the future layout of the LTFT Applications
+              Summary.
+            </p>
+          </WarningCallout>
           <Card.Heading data-cy="ltft-summary-header">
             Previous applications summary
           </Card.Heading>
-          <p>No previous applications</p>
+          <LtftSummary />
         </Card.Content>
       </Card>
     </>
