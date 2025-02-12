@@ -7,7 +7,10 @@ import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
 import { updatedLtft } from "../../../../redux/slices/ltftSlice";
 import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
 import ltftJson from "../../../../components/forms/ltft/ltft.json";
-import { Field } from "../../../../components/forms/form-builder/FormBuilder";
+import {
+  Field,
+  Form
+} from "../../../../components/forms/form-builder/FormBuilder";
 
 const mountLtftWithMockData = () => {
   store.dispatch(updatedLtft(mockLtftDraft0));
@@ -20,7 +23,7 @@ const mountLtftWithMockData = () => {
         <FormProvider
           initialData={mockLtftDraft0}
           initialPageFields={initialPageFields}
-          formName="ltft"
+          jsonForm={ltftJson as Form}
         >
           <LtftForm />
         </FormProvider>

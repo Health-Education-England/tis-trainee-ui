@@ -16,8 +16,8 @@ import {
   validateFields,
   formatFieldName,
   showFormField,
-  saveDraftForm,
-  continueToConfirm
+  continueToConfirm,
+  saveFormR
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
@@ -29,6 +29,8 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
+import { FormRPartA } from "../../../models/FormRPartA";
+import { FormRPartB } from "../../../models/FormRPartB";
 
 type FieldType =
   | "text"
@@ -88,7 +90,6 @@ export type Form = {
   declarations: FormDeclaration[];
 };
 type FormBuilderProps = {
-  jsonForm: Form;
   options: any;
   validationSchema: any;
 };
@@ -104,7 +105,6 @@ export type ReturnedWidthData = {
 };
 
 export default function FormBuilder({
-  jsonForm,
   options,
   validationSchema
 }: Readonly<FormBuilderProps>) {
@@ -114,10 +114,10 @@ export default function FormBuilder({
     setIsFormDirty,
     currentPageFields,
     setCurrentPageFields,
-    formName
+    jsonForm
   } = useFormContext();
 
-  const jsonFormName = formName;
+  const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);
@@ -166,9 +166,14 @@ export default function FormBuilder({
       });
   };
 
-  const handleSaveBtnClick = () => {
+  const handleSaveBtnClick = async () => {
     setIsSubmitting(true);
-    saveDraftForm(jsonFormName, formData);
+    await saveFormR(
+      jsonForm,
+      formData as FormRPartA | FormRPartB,
+      false,
+      false
+    );
     setIsSubmitting(false);
   };
 

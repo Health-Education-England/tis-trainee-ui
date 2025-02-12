@@ -6,21 +6,21 @@ import store from "../../../redux/store/store";
 import history from "../../../components/navigation/history";
 import {
   AutosaveMessage,
-  AutosaveStatusProps
+  SaveStatusProps
 } from "../../../components/forms/AutosaveMessage";
 import {
-  updatedAutoSaveLatestTimeStamp,
-  updatedAutosaveStatus
+  updatedSaveLatestTimeStamp,
+  updatedSaveStatus
 } from "../../../redux/slices/formASlice";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 
 describe("AutosaveMessage", () => {
   const lastModDate: string = "2023-09-26T09:54:27.47";
   const timeStamp = DateUtilities.ConvertToLondonTime(lastModDate, true);
-  const renderAutosaveMessage = (autosaveStatus: AutosaveStatusProps) => {
+  const renderAutosaveMessage = (autosaveStatus: SaveStatusProps) => {
     const MockedAutosaveMessage = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedAutosaveStatus(autosaveStatus));
+      dispatch(updatedSaveStatus(autosaveStatus));
       return <AutosaveMessage formName="formA" />;
     };
     mount(
@@ -56,8 +56,8 @@ describe("AutosaveMessage", () => {
   it("should render the 'succeeded' autosave message when the form is saved successfully", () => {
     const MockedAutoSuccessMessage = () => {
       const dispatch = useAppDispatch();
-      dispatch(updatedAutosaveStatus("succeeded"));
-      dispatch(updatedAutoSaveLatestTimeStamp(timeStamp));
+      dispatch(updatedSaveStatus("succeeded"));
+      dispatch(updatedSaveLatestTimeStamp(timeStamp));
       return <AutosaveMessage formName="formA" />;
     };
     mount(

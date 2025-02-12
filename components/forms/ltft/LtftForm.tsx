@@ -52,10 +52,9 @@ export function LtftForm() {
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}
-        formName={ltftJson.name as FormName}
+        jsonForm={ltftJson as Form}
       >
         <FormBuilder
-          jsonForm={formJson}
           options={{ yesNo, ltftReasons, ltftRoles }}
           validationSchema={ltftValidationSchema}
         />

@@ -3,13 +3,11 @@ import { CombinedReferenceData } from "../models/CombinedReferenceData";
 import { FormRPartA } from "../models/FormRPartA";
 import { KeyValue } from "../models/KeyValue";
 import {
-  autoSaveFormA,
-  autoUpdateFormA,
+  saveFormA,
+  updateFormA,
   deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
-  saveFormA,
-  updateFormA,
   updatedCanEdit,
   updatedEditPageNumber,
   updatedFormA
@@ -19,17 +17,14 @@ import {
   Field,
   Form,
   FormData,
-  FormName,
   MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
-  autoSaveFormB,
-  autoUpdateFormB,
+  saveFormB,
+  updateFormB,
   deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
-  saveFormB,
-  updateFormB,
   updatedCanEditB,
   updatedEditPageNumberB,
   updatedFormB
@@ -41,11 +36,6 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
-import {
-  LtftObj,
-  updatedCanEditLtft,
-  updatedLtft
-} from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -108,108 +98,6 @@ export function resetForm(formName: string, history: any) {
     }
   }
 }
-
-type FormActionsAndTypes<T> = {
-  [key: string]: {
-    update: any;
-    save: any;
-    state: () => string | undefined;
-    type: T;
-  };
-};
-
-const formActionsAndTypes: FormActionsAndTypes<
-  FormRPartA | FormRPartB | LtftObj
-> = {
-  formA: {
-    update: updateFormA,
-    save: saveFormA,
-    state: () => store.getState().formA?.formData?.id,
-    type: {} as FormRPartA
-  },
-  formB: {
-    update: updateFormB,
-    save: saveFormB,
-    state: () => store.getState().formB?.formData?.id,
-    type: {} as FormRPartB
-  }
-  //   ,
-  //   ltft: {
-  //     update:  // updateLtft,
-  //     save: // saveLtft,
-  //     state: () => store.getState().ltft?.formData?.id,
-  //     type: {} as LtftObj
-  // }
-};
-
-export function makeSubObj(
-  jsonForm: Form,
-  formData: FormData,
-  savedId: string | undefined
-) {
-  const subFields = {
-    submissionDate: new Date(),
-    lifecycleState: LifeCycleState.Submitted,
-    lastModifiedDate: new Date(),
-    traineeTisId: formData.traineeTisId
-  };
-  let newFormData: FormData = {};
-  jsonForm.pages.forEach(page => {
-    page.sections.forEach(section => {
-      section.fields.forEach(field => {
-        if (
-          field.visible ||
-          (field.parent &&
-            field?.visibleIf?.includes(newFormData[field.parent]))
-        ) {
-          newFormData[field.name] = formData[field.name];
-        } else newFormData[field.name] = null;
-      });
-    });
-  });
-  const formType = jsonForm.name;
-  const formTypeObject = formActionsAndTypes[formType].type;
-  return savedId
-    ? ({ ...newFormData, ...subFields, id: savedId } as typeof formTypeObject)
-    : ({ ...newFormData, ...subFields } as typeof formTypeObject);
-}
-
-export async function submitForm(
-  jsonForm: Form,
-  formData: FormData,
-  history: any,
-  linkedFormRData: LinkedFormRDataType
-) {
-  const formName = jsonForm.name;
-  const lastSavedFormDataId = formActionsAndTypes[formName].state();
-  const subObject = {
-    ...makeSubObj(jsonForm, formData, lastSavedFormDataId),
-    ...linkedFormRData,
-    localOfficeName: formData.localOfficeName
-  };
-  const action = lastSavedFormDataId
-    ? formActionsAndTypes[formName].update
-    : formActionsAndTypes[formName].save;
-  await store.dispatch(action(subObject));
-  resetForm(formName, history);
-}
-
-async function dispatchFormAction(
-  updatedFormData: any,
-  updateAction: any,
-  saveAction: any
-) {
-  if (updatedFormData.id) {
-    await store.dispatch(
-      updateAction({
-        ...updatedFormData
-      })
-    );
-  } else {
-    await store.dispatch(saveAction(updatedFormData));
-  }
-}
-
 const chooseRedirectPath = (formName: string, confirm?: boolean) => {
   if (formName === "formA") {
     return confirm ? "/formr-a/confirm" : "/formr-a";
@@ -220,54 +108,14 @@ const chooseRedirectPath = (formName: string, confirm?: boolean) => {
   }
 };
 
-export async function saveDraftForm(formName: string, formData: FormData) {
-  const redirectPath = chooseRedirectPath(formName);
-
-  if (formName !== "ltft") {
-    let updatedFormData: FormData;
-    if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
-      updatedFormData = {
-        ...formData,
-        submissionDate: null,
-        lifecycleState: LifeCycleState.Draft,
-        lastModifiedDate: new Date()
-      };
-    } else {
-      updatedFormData = {
-        ...formData,
-        lastModifiedDate: new Date()
-      };
-    }
-    if (formName === "formA") {
-      await dispatchFormAction(updatedFormData, updateFormA, saveFormA);
-    } else {
-      await dispatchFormAction(updatedFormData, updateFormB, saveFormB);
-    }
-  }
-  history.push(redirectPath);
-}
-
-function dispatchUpdateActions(
-  formData: FormData,
-  updateAction: any,
-  canEditAction: any
-) {
-  store.dispatch(updateAction(formData));
-  store.dispatch(canEditAction(true));
-}
-
 export function continueToConfirm(formName: string, formData: FormData) {
   const redirectPath = chooseRedirectPath(formName, true);
   if (formName === "formA") {
-    dispatchUpdateActions(formData as FormRPartA, updatedFormA, updatedCanEdit);
+    store.dispatch(updatedFormA(formData as FormRPartA));
+    store.dispatch(updatedCanEdit(true));
   } else if (formName === "formB") {
-    dispatchUpdateActions(
-      formData as FormRPartB,
-      updatedFormB,
-      updatedCanEditB
-    );
-  } else if (formName === "ltft") {
-    dispatchUpdateActions(formData as LtftObj, updatedLtft, updatedCanEditLtft);
+    store.dispatch(updatedFormB(formData as FormRPartB));
+    store.dispatch(updatedCanEditB(true));
   }
   history.push(redirectPath);
 }
@@ -420,66 +268,167 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   }
   return null;
 }
+// NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission
+export function setFormDataForSubmit(
+  jsonForm: Form,
+  formData: FormRPartA | FormRPartB
+): FormRPartA | FormRPartB {
+  const preciousFormDataBoth = {
+    lifecycleState: LifeCycleState.Submitted,
+    lastModifiedDate: new Date(),
+    submissionDate: new Date(),
+    traineeTisId: formData.traineeTisId as string,
+    isArcp: formData.isArcp as boolean,
+    programmeMembershipId: formData.programmeMembershipId as string,
+    localOfficeName: formData.localOfficeName as string
+  };
 
-function prepFormData(formData: FormData) {
-  let updatedFormData: FormData;
+  // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA
+  const myPreciousFormDataFields =
+    jsonForm.name === "formB"
+      ? preciousFormDataBoth
+      : {
+          ...preciousFormDataBoth,
+          isLeadingToCct: (formData as FormRPartA).isLeadingToCct
+        };
+
+  const newFormData = jsonForm.pages.reduce((fd, page) => {
+    page.sections.forEach(section => {
+      section.fields.forEach(field => {
+        if (
+          field.visible ||
+          (field.parent &&
+            field?.visibleIf?.includes((fd as FormData)[field.parent]))
+        ) {
+          (fd as FormData)[field.name] = (formData as FormData)[field.name];
+        } else {
+          (fd as FormData)[field.name] = null;
+        }
+      });
+    });
+    return fd;
+  }, {} as FormRPartA | FormRPartB);
+
+  return { ...newFormData, ...myPreciousFormDataFields };
+}
+
+export function prepFormData(
+  formData: FormRPartA | FormRPartB,
+  isSubmit: boolean,
+  jsonForm: Form
+) {
+  if (isSubmit) {
+    return setFormDataForSubmit(jsonForm, formData);
+  }
   if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
-    updatedFormData = {
+    return {
       ...formData,
       submissionDate: null,
       lifecycleState: LifeCycleState.Draft,
       lastModifiedDate: new Date()
     };
-  } else {
-    updatedFormData = {
-      ...formData,
-      lastModifiedDate: new Date()
-    };
   }
-  return updatedFormData;
+  return {
+    ...formData,
+    lastModifiedDate: new Date()
+  };
 }
 
-async function updateForm(formData: FormData, formName: string) {
-  if (formName === "formA") {
-    await store.dispatch(autoUpdateFormA(formData as FormRPartA));
-  } else {
-    await store.dispatch(autoUpdateFormB(formData as FormRPartB));
-  }
-}
-
-async function saveForm(formData: FormData, formName: string) {
-  if (formName === "formA") {
-    await store.dispatch(autoSaveFormA(formData as FormRPartA));
-  } else {
-    await store.dispatch(autoSaveFormB(formData as FormRPartB));
-  }
-}
-
-// TODO - needs updating for ltft form
-export async function autosaveFormR(
+async function updateForm(
   formName: string,
-  formData: FormRPartA | FormRPartB
+  formData: FormData,
+  isAutoSave: boolean,
+  isSubmit: boolean
 ) {
-  const lastSavedFormData =
-    formName === "formA"
-      ? store.getState().formA?.formData
-      : store.getState().formB?.formData;
-
-  // update form data for submission
-  const preppedFormData = prepFormData(formData);
-
-  if (lastSavedFormData.id) {
-    await updateForm(
-      { ...preppedFormData, id: lastSavedFormData.id },
-      formName
+  if (formName === "formA") {
+    await store.dispatch(
+      updateFormA({
+        formData: formData as FormRPartA,
+        isAutoSave,
+        isSubmit
+      })
     );
   } else {
-    const linkedDataToSave = {
-      isArcp: formData.isArcp,
-      programmeMembershipId: formData.programmeMembershipId,
-      localOfficeName: formData.localOfficeName
-    };
-    await saveForm({ ...preppedFormData, ...linkedDataToSave }, formName);
+    await store.dispatch(
+      updateFormB({
+        formData: formData as FormRPartB,
+        isAutoSave,
+        isSubmit
+      })
+    );
+  }
+}
+
+async function saveForm(
+  formName: string,
+  formData: FormRPartA | FormRPartB,
+  isAutoSave: boolean,
+  isSubmit: boolean
+) {
+  if (formName === "formA") {
+    await store.dispatch(
+      saveFormA({
+        formData: formData as FormRPartA,
+        isAutoSave,
+        isSubmit
+      })
+    );
+  } else {
+    await store.dispatch(
+      saveFormB({ formData: formData as FormRPartB, isAutoSave, isSubmit })
+    );
+  }
+}
+
+export const getDraftFormId = (
+  formData: FormRPartA | FormRPartB,
+  formName: string
+): string | undefined => {
+  if (formName === "formA") {
+    return formData?.id ?? store.getState().formA?.newFormId;
+  } else {
+    return formData?.id ?? store.getState().formB?.newFormId;
+  }
+};
+
+const getSaveStatus = (formName: string) => {
+  if (formName === "formA") {
+    return store.getState().formA.saveStatus;
+  } else {
+    return store.getState().formB.saveStatus;
+  }
+};
+
+export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
+  if (!isAutoSave) {
+    const autosaveStatus = getSaveStatus(formName);
+    if (autosaveStatus === "succeeded") {
+      history.push(chooseRedirectPath(formName));
+    }
+  }
+};
+
+export async function saveFormR(
+  jsonForm: Form,
+  formData: FormRPartA | FormRPartB,
+  isAutoSave: boolean,
+  isSubmit: boolean
+) {
+  const formName = jsonForm.name;
+  const draftFormId = getDraftFormId(formData, formName);
+  const preppedFormData = prepFormData(formData, isSubmit, jsonForm);
+
+  if (draftFormId) {
+    await updateForm(
+      formName,
+      { ...preppedFormData, id: draftFormId },
+      isAutoSave,
+      isSubmit
+    );
+    handleSaveRedirect(formName, isAutoSave);
+  } else {
+    await saveForm(formName, preppedFormData, isAutoSave, isSubmit);
+    handleSaveRedirect(formName, isAutoSave);
   }
 }
 
@@ -618,30 +567,6 @@ export const determineCurrentValue = (
     return value;
   }
 };
-
-export function setFinalFormFields(
-  lastSavedFormData: FormData,
-  formData: FormData,
-  jsonFormName: FormName
-) {
-  const finalFields = { ...formData };
-
-  if (lastSavedFormData?.id) {
-    finalFields.id = lastSavedFormData.id;
-
-    if (jsonFormName === "ltft") {
-      finalFields.lastModified = lastSavedFormData.lastModified;
-    } else {
-      finalFields.lastModifiedDate = lastSavedFormData.lastModifiedDate;
-      finalFields.lifecycleState = lastSavedFormData.lifecycleState;
-      finalFields.traineeTisId = lastSavedFormData.traineeTisId;
-    }
-  } else if (jsonFormName !== "ltft") {
-    finalFields.traineeTisId = lastSavedFormData.traineeTisId;
-  }
-
-  return finalFields;
-}
 
 // react-select styles
 export const colourStyles = {

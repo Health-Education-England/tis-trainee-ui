@@ -1,6 +1,6 @@
 import { useAppSelector } from "../../redux/hooks/hooks";
 
-export type AutosaveStatusProps = "idle" | "saving" | "succeeded" | "failed";
+export type SaveStatusProps = "idle" | "saving" | "succeeded" | "failed";
 
 type AutoSaveMessageProps = {
   formName: string;
@@ -10,17 +10,15 @@ export const AutosaveMessage: React.FC<AutoSaveMessageProps> = ({
   formName
 }) => {
   const autoSaveStatus = useAppSelector(state =>
-    formName === "formA"
-      ? state.formA.autosaveStatus
-      : state.formB.autosaveStatus
+    formName === "formA" ? state.formA.saveStatus : state.formB.saveStatus
   );
   const latestTimeStamp = useAppSelector(state =>
     formName === "formA"
-      ? state.formA.autoSaveLatestTimeStamp
-      : state.formB.autoSaveLatestTimeStamp
+      ? state.formA.saveLatestTimeStamp
+      : state.formB.saveLatestTimeStamp
   );
 
-  const statusMessages: { [key in AutosaveStatusProps]: string } = {
+  const statusMessages: { [key in SaveStatusProps]: string } = {
     idle: "Waiting for new changes...",
     saving: "In progress...",
     succeeded: `Success - ${latestTimeStamp}`,

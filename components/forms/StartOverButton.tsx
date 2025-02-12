@@ -13,9 +13,9 @@ export const StartOverButton = () => {
   const pathName = useLocation().pathname;
   const formName = pathName.split("/")[1];
 
-  // get id from updated form r data when autosaved form
+  // get id from updated form r (when autosaved)
   const formId = useAppSelector(state =>
-    formName === "formr-a" ? state.formA.formData.id : state.formB.formData.id
+    formName === "formr-a" ? state.formA.newFormId : state.formB.newFormId
   );
   // get id from forms draftFormProps when forms are loaded from db
   const formIdFromDraftFormProps = useAppSelector(
@@ -23,9 +23,7 @@ export const StartOverButton = () => {
   );
 
   const autosaveStatus = useAppSelector(state =>
-    formName === "formr-a"
-      ? state.formA.autosaveStatus
-      : state.formB.autosaveStatus
+    formName === "formr-a" ? state.formA.saveStatus : state.formB.saveStatus
   );
   const isAutosaving = autosaveStatus === "saving";
 

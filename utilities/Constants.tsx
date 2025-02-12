@@ -251,6 +251,8 @@ export const toastErrText = {
   loadSavedFormB: "Couldn't load your saved Form R (Part B).",
   saveFormA: "Couldn't save your Form R (Part A).",
   saveFormB: "Couldn't save your Form R (Part B).",
+  submitFormA: "Couldn't submit your Form R (Part A).",
+  submitFormB: "Couldn't submit your Form R (Part B).",
   updateFormA: "Couldn't update your Form R (Part A).",
   updateFormB: "Couldn't update your Form R (Part B).",
   fetchTraineeProfileData:

@@ -28,7 +28,10 @@ import { submittedFormRPartBs } from "../../../../mock-data/submitted-formr-part
 import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import formBJson from "../../../../components/forms/form-builder/form-r/part-b/formB.json";
-import { Field } from "../../../../components/forms/form-builder/FormBuilder";
+import {
+  Field,
+  Form
+} from "../../../../components/forms/form-builder/FormBuilder";
 
 describe("FormB /create (without Covid)", () => {
   let initialFormBData: FormRPartB;
@@ -56,7 +59,7 @@ describe("FormB /create (without Covid)", () => {
           <FormProvider
             initialData={initialFormBData}
             initialPageFields={initialPageFields}
-            formName="formB"
+            jsonForm={formBJson as Form}
           >
             <FormB />
           </FormProvider>
