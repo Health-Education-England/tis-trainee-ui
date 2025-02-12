@@ -28,10 +28,9 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   //   state => state.ltftSummaryList?.ltftList || []
   // );
   // const ltftListStatus = useAppSelector(state => state.ltftSummaryList?.status);
-  ltftSummaryList = mockLtftsList1;
   const ltftListStatus = "succeeded";
+  const ltftSummaries = mockLtftsList1 || [];
 
-  const ltftSummaries = ltftSummaryList || [];
   const [showSubmitted, setShowSubmitted] = useState(true);
   const [showApproved, setShowApproved] = useState(true);
   const [showWithdrawn, setShowWithdrawn] = useState(true);
