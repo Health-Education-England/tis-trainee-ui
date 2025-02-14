@@ -1,15 +1,26 @@
-import { Table } from "nhsuk-react-components";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  flexRender,
+  SortingState,
+  createColumnHelper
+} from "@tanstack/react-table";
 import {
   fetchLtftSummaryList,
   LtftSummaryObj
 } from "../../../redux/slices/ltftSummaryListSlice";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import Loading from "../../common/Loading";
 import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
+import { TableColumnHeader } from "../../notifications/TableColumnHeader";
+import dayjs from "dayjs";
 
 type LtftSummaryProps = {
   ltftSummaryList?: LtftSummaryObj[];
@@ -33,6 +44,9 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   const [showApproved, setShowApproved] = useState(true);
   const [showWithdrawn, setShowWithdrawn] = useState(true);
 
+  const hasPreviousLtft = ltftSummaries.some(
+    ltft => ltft.status !== "DRAFT" && ltft.status !== "UNSUBMITTED"
+  );
   const filteredLtftSummaries = ltftSummaries.filter(
     item =>
       item.status !== "DRAFT" &&
@@ -51,6 +65,126 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
   const latestSubmitted = sortedLtftSummaries.find(
     i => i.status === "SUBMITTED"
   );
+
+  // React table setup
+  const columnHelper = createColumnHelper<LtftSummaryObj>();
+
+  const columnsDefault = [
+    columnHelper.accessor("name", {
+      id: "name",
+      header: ({ column }) => (
+        <TableColumnHeader
+          column={column}
+          title="Name"
+          data-cy={`table-column_${column.id}`}
+        />
+      ),
+      cell: props => <span>{props.renderValue()}</span>
+    }),
+    columnHelper.accessor("created", {
+      id: "created",
+      header: ({ column }) => (
+        <TableColumnHeader
+          column={column}
+          title="Created date"
+          data-cy={`table-column_${column.id}`}
+        />
+      ),
+      cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
+      sortingFn: "datetime"
+    }),
+    columnHelper.accessor("status", {
+      id: "status",
+      header: ({ column }) => (
+        <TableColumnHeader
+          column={column}
+          title="Status"
+          data-cy={`table-column_${column.id}`}
+        />
+      ),
+      cell: props => <span>{props.renderValue()}</span>
+    }),
+    columnHelper.accessor("lastModified", {
+      id: "lastModified",
+      header: ({ column }) => (
+        <TableColumnHeader
+          column={column}
+          title="Status date"
+          data-cy={`table-column_${column.id}`}
+        />
+      ),
+      cell: props => <span>{dayjs(props.renderValue()).toString()}</span>,
+      sortingFn: "datetime",
+      sortDescFirst: true
+    })
+  ];
+
+  const createColumns = (
+    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    hasPreviousLtft: boolean
+  ) => {
+    const ltftColumn = columnHelper.display({
+      id: "operations",
+      cell: props => (
+        <span>
+          {props.row.original.status === "SUBMITTED" &&
+          props.row.original === latestSubmitted ? (
+            <>
+              <Button
+                data-cy="unsubmitLtftBtnLink"
+                fontWeight="normal"
+                // onClick={onClickEvent}
+                size="small"
+                type="reset"
+                style={{ marginBottom: "0.5em" }}
+              >
+                Unsubmit
+              </Button>
+              <Button
+                data-cy="withdrawLtftBtnLink"
+                fontWeight="normal"
+                // onClick={onClickEvent}
+                size="small"
+                type="reset"
+              >
+                Withdraw
+              </Button>
+            </>
+          ) : null}
+        </span>
+      )
+    });
+    return [...columnsDefault, ltftColumn];
+  };
+
+  const memoData = useMemo(() => {
+    return filteredLtftSummaries;
+  }, [filteredLtftSummaries]);
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "lastModified", desc: true }
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const columns = useMemo(
+    () => createColumns(setIsModalOpen, hasPreviousLtft),
+    [setIsModalOpen, hasPreviousLtft]
+  );
+
+  const table = useReactTable({
+    data: memoData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      sorting
+    },
+    onSortingChange: setSorting,
+    autoResetPageIndex: false
+  });
 
   let content: JSX.Element = <></>;
   // if (ltftListStatus === "loading") content = <Loading />;
@@ -85,65 +219,47 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
           setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
         }
       />
-      <Table responsive data-cy="ltftSummary">
-        <Table.Head>
-          <Table.Row>
-            <Table.Cell>Name</Table.Cell>
-            <Table.Cell>Created date</Table.Cell>
-            <Table.Cell>Status</Table.Cell>
-            <Table.Cell>Status date</Table.Cell>
-            <Table.Cell>Operations</Table.Cell>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>
-          {sortedLtftSummaries.map((item, index) => {
+      <table data-cy="ltft-summary-table">
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => {
             return (
-              <Table.Row
-                key={index}
-                // TODO: click to show LTFT details
-                // onClick={e => {
-                //   e.stopPropagation();
-                //   history.push(`/ltft/view/${row.original.id}`);
-                // }}
-              >
-                <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>
-                  {new Date(item.created).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>{item.status}</Table.Cell>
-                <Table.Cell data-cy={`lastModified-${index}`}>
-                  {new Date(item.lastModified).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>
-                  {item.status === "SUBMITTED" && item === latestSubmitted ? (
-                    <>
-                      <Button
-                        data-cy="unsubmitLtftBtnLink"
-                        fontWeight="normal"
-                        // onClick={onClickEvent}
-                        size="small"
-                        type="reset"
-                        style={{ marginRight: "0.5em" }}
-                      >
-                        Unsubmit
-                      </Button>
-                      <Button
-                        data-cy="withdrawLtftBtnLink"
-                        fontWeight="normal"
-                        // onClick={onClickEvent}
-                        size="small"
-                        type="reset"
-                      >
-                        Withdraw
-                      </Button>
-                    </>
-                  ) : null}
-                </Table.Cell>
-              </Table.Row>
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  );
+                })}
+              </tr>
             );
           })}
-        </Table.Body>
-      </Table>
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => {
+            return (
+              <tr
+                className="table-row"
+                onClick={e => {
+                  e.stopPropagation();
+                  // history.push(`/ltft/view/${row.original.id}`);
+                }}
+                key={row.id}
+                data-cy={`ltft-row-${row.id}`}
+              >
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id} data-cy={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
   return content;
