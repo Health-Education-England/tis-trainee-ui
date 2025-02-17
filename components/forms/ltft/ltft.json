@@ -122,13 +122,6 @@
                   "canGrow": true
                 },
                 {
-                  "name": "dateOfBirth",
-                  "label": "Date of Birth",
-                  "placeholder": "DD/MM/YYYY",
-                  "type": "date",
-                  "visible": true
-                },
-                {
                   "name": "telephoneNumber",
                   "label": "Contact Telephone",
                   "placeholder": "type here...",

@@ -44,39 +44,37 @@ export const mockLtftsList1 = [
 ];
 
 export const mockLtftDraft0: LtftObj = {
-  id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
-  name: "My Programme - Hours Reduction",
   change: {
     calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    cctDate: "2028-11-23",
+    cctDate: "2028-04-02",
     type: "LTFT",
-    startDate: "2025-12-01",
-    wte: 1
+    startDate: "2027-01-01",
+    wte: 0.8
   },
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
-    notGuaranteed: true
+    notGuaranteed: null
   },
   tpdName: "",
   tpdEmail: "",
-  otherDiscussions: [],
+  otherDiscussions: null,
   personalDetails: {
     id: "4",
     title: "Mr",
     surname: "Gilliam",
-    forenames: "Anthony",
-    telephoneNumber: "0161 4960000",
-    mobileNumber: "07700 900000",
-    email: "anthony.gilliam@example.com",
-    gmcNumber: "6621443",
+    forenames: "Anthony Mara",
+    telephoneNumber: "01632960363",
+    mobileNumber: "07465879348",
+    email: "email@email.com",
+    gmcNumber: "1111111",
     gdcNumber: "",
     publicHealthNumber: "",
     skilledWorkerVisaHolder: null
   },
   programmeMembership: {
     id: "a6de88b8-de41-48dd-9492-a518f5001176",
-    name: "General Practice",
+    name: "Cardiology",
     startDate: "2020-01-01",
     endDate: "2028-01-01",
     wte: 1
@@ -85,13 +83,54 @@ export const mockLtftDraft0: LtftObj = {
   reasonsOtherDetail: null,
   status: {
     current: "DRAFT",
-    history: [
-      {
-        status: "DRAFT",
-        timestamp: "2025-01-15T15:06:06.560Z"
-      }
-    ]
+    history: null
+  }
+};
+
+export const mockLtftDraft1: LtftObj = {
+  ...mockLtftDraft0,
+  id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+  name: "My Programme - Hours Reduction",
+  declarations: {
+    discussedWithTpd: true,
+    informationIsCorrect: true,
+    notGuaranteed: true
   },
-  created: "2025-01-15T15:06:06.560Z",
-  lastModified: "2025-01-15T15:06:06.560Z"
+  personalDetails: {
+    ...mockLtftDraft0.personalDetails,
+    skilledWorkerVisaHolder: false
+  }
+};
+
+export const mockLtftDto1 = {
+  id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+  name: "My Programme - Hours Reduction",
+  change: {
+    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    cctDate: "2028-04-02",
+    type: "LTFT",
+    startDate: "2027-01-01",
+    wte: 0.8
+  },
+  declarations: mockLtftDraft1.declarations,
+  discussions: {
+    tpdName: "My tpd name",
+    tpdEmail: "my@tpd.email",
+    other: []
+  },
+  personalDetails: {
+    ...mockLtftDraft1.personalDetails,
+    skilledWorkerVisaHolder: false
+  },
+  programmeMembership: mockLtftDraft1.programmeMembership,
+  reasons: {
+    selected: ["Caring responsibilities", "other"],
+    otherDetail: "my other reason"
+  },
+  status: {
+    current: mockLtftDraft1.status.current,
+    history: []
+  },
+  created: "2025-01-1T14:50:36.941Z",
+  lastModified: "2025-01-15T15:50:36.941Z"
 };
