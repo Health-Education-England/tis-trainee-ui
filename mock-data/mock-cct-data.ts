@@ -44,3 +44,25 @@ export const mockCctList: CctCalculation[] = [
     lastModified: "2025-01-20T11:11:04.100Z"
   }
 ];
+
+export const mockCctCalc: CctCalculation = {
+  id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  name: "My Programme - Hours Reduction",
+  programmeMembership: {
+    id: "a6de88b8-de41-48dd-9492-a518f5001176",
+    name: "Cardiology",
+    startDate: "2020-01-01",
+    endDate: "2028-01-01",
+    wte: 1.0
+  },
+  changes: [
+    {
+      type: "LTFT",
+      startDate: "2027-01-01",
+      wte: 0.8
+    }
+  ],
+  cctDate: "2028-04-02",
+  created: "2024-12-09T10:13:09.559Z",
+  lastModified: "2024-12-09T15:11:04.100Z"
+};

@@ -90,6 +90,10 @@ export function CctSavedDraftsTable() {
   const dispatch = useAppDispatch();
   const cctList = useAppSelector(state => state.cctList.cctList);
   const ltftList = useAppSelector(state => state.ltftSummaryList.ltftList);
+  const tpData = useAppSelector(
+    state => state.traineeProfile.traineeProfileData
+  );
+  const cctSnapshot = useAppSelector(state => state.ltft.LtftCctSnapshot);
   const hasDraftOrUnsubmitted = ltftList.some(
     ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
   );
@@ -171,8 +175,11 @@ export function CctSavedDraftsTable() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
-          // populate the new LTFT form with cct snapshot (full cct calc) and PD details
-          const draftLtft = populateLtftDraft();
+          const draftLtft = populateLtftDraft(
+            cctSnapshot,
+            tpData.personalDetails,
+            tpData.traineeTisId
+          );
           dispatch(updatedLtft(draftLtft));
           setIsModalOpen(false);
           history.push("/ltft/create");

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CctCalculation } from "./cctSlice";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
 
-type LtftFormStatus =
+export type LtftFormStatus =
   | "DRAFT"
   | "SUBMITTED"
   | "UNSUBMITTED"
@@ -10,7 +10,7 @@ type LtftFormStatus =
   | "APPROVED"
   | "REJECTED";
 
-type LtftCctChange = {
+export type LtftCctChange = {
   calculationId: string;
   cctDate: Date | string;
   type: string;
@@ -52,6 +52,16 @@ type LtftPm = {
   wte: number;
 };
 
+type HistoryType = {
+  status: LtftFormStatus;
+  timestamp: string;
+};
+
+export type StatusType = {
+  current: LtftFormStatus;
+  history: HistoryType[] | null;
+};
+
 export type LtftObj = {
   id?: string;
   name?: string;
@@ -64,22 +74,14 @@ export type LtftObj = {
   programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
-  status: {
-    current: LtftFormStatus;
-    history:
-      | {
-          status: LtftFormStatus;
-          timestamp: string;
-        }[]
-      | null;
-  };
+  status: StatusType;
   created?: Date | string;
   lastModified?: Date | string;
 };
 
 type LtftState = {
   formData: LtftObj;
-  LtftCctSnapshot: CctCalculation | null;
+  LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
   canEdit: boolean;
@@ -130,7 +132,7 @@ const initialLtftObj: LtftObj = {
 
 const initialState: LtftState = {
   formData: initialLtftObj,
-  LtftCctSnapshot: null,
+  LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
   canEdit: false
