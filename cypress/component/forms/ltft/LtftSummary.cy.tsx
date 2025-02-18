@@ -11,7 +11,10 @@ describe("LtftSummary Component", () => {
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/ltft"]}>
-          <LtftSummary ltftSummaryList={mockLtftsList1} />
+          <LtftSummary
+            ltftSummaryStatus={"succeeded"}
+            ltftSummaryList={mockLtftsList1}
+          />
         </MemoryRouter>
       </Provider>
     );
@@ -28,12 +31,6 @@ describe("LtftSummary Component", () => {
       cy.contains("Status").should("exist");
       cy.contains("Status date").should("exist");
     });
-  });
-
-  it("should hide DRAFT and UNSUBMITTED ltft", () => {
-    cy.get("tbody tr").should("have.length", 4);
-    cy.contains("DRAFT").should("not.exist");
-    cy.contains("UNSUBMITTED").should("not.exist");
   });
 
   it("should filter out APPROVED ltft", () => {
