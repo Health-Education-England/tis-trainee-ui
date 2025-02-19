@@ -1,21 +1,20 @@
 import { useEffect } from "react";
-import { saveFormR } from "../../utilities/FormBuilderUtilities";
+import {
+  FormDataType,
+  saveDraftForm
+} from "../../utilities/FormBuilderUtilities";
 import { Form } from "../../components/forms/form-builder/FormBuilder";
-import { FormRPartA } from "../../models/FormRPartA";
-import { FormRPartB } from "../../models/FormRPartB";
-import { LtftObj } from "../../redux/slices/ltftSlice";
 
 const useFormAutosave = (
   jsonForm: Form,
-  formData: FormRPartA | FormRPartB | LtftObj,
+  formData: FormDataType,
   isFormDirty: boolean
 ) => {
   const formName = jsonForm.name;
   useEffect(() => {
-    // TODO needs ltft implementation
-    if (isFormDirty && formName !== "ltft") {
+    if (isFormDirty) {
       const timeoutId = setTimeout(() => {
-        saveFormR(jsonForm, formData as FormRPartA | FormRPartB, true, false);
+        saveDraftForm(jsonForm, formData, true, false);
       }, 2000);
 
       return () => {

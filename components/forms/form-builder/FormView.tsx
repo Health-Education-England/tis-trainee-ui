@@ -17,7 +17,7 @@ import {
 } from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
 import {
-  saveFormR,
+  saveDraftForm,
   createErrorObject,
   validateFields
 } from "../../../utilities/FormBuilderUtilities";
@@ -103,7 +103,7 @@ export const FormView = ({
       programmeMembershipId
     } as FormRPartA | FormRPartB;
     setShowModal(false);
-    saveFormR(formJson, updatedFormData, false, true);
+    saveDraftForm(formJson, updatedFormData, false, true);
     setIsSubmitting(false);
   };
 
@@ -180,7 +180,7 @@ export const FormView = ({
                 secondary
                 onClick={async () => {
                   setIsSubmitting(true);
-                  await saveFormR(
+                  await saveDraftForm(
                     formJson,
                     formData as FormRPartA | FormRPartB,
                     false,
