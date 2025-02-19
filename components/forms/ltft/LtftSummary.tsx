@@ -6,7 +6,8 @@ import {
   getPaginationRowModel,
   flexRender,
   SortingState,
-  createColumnHelper
+  createColumnHelper,
+  HeaderContext
 } from "@tanstack/react-table";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
 import { useMemo, useState } from "react";
@@ -45,43 +46,51 @@ const LtftSummary = ({
   const columnHelper = createColumnHelper<LtftSummaryObj>();
 
   // Header
-  const renderNameHeader = ({ column }) => (
+  const renderNameHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
     <TableColumnHeader
       column={column}
       title="Name"
       data-cy={`table-column_${column.id}`}
     />
   );
-  const renderCreatedHeader = ({ column }) => (
+  const renderCreatedHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
     <TableColumnHeader
       column={column}
-      title="Created date"
+      title="Created"
       data-cy={`table-column_${column.id}`}
     />
   );
-  const renderStatusHeader = ({ column }) => (
+  const renderLastModifiedHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Last modified"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderStatusHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
     <TableColumnHeader
       column={column}
       title="Status"
       data-cy={`table-column_${column.id}`}
     />
   );
-  const renderLastModifiedHeader = ({ column }) => (
-    <TableColumnHeader
-      column={column}
-      title="Status date"
-      data-cy={`table-column_${column.id}`}
-    />
-  );
 
   //Header value
-  const renderValue = props => <span>{props.renderValue()}</span>;
-  const renderDayValue = props => (
+  const renderValue = (props: any) => <span>{props.renderValue()}</span>;
+  const renderDayValue = (props: any) => (
     <span>{dayjs(props.renderValue()).toString()}</span>
   );
 
   // Operation Column
-  const renderOperationColumnValue = props => (
+  const renderOperationColumnValue = (props: any) => (
     <>
       {props.row.original.status === "SUBMITTED" &&
       props.row.original === latestSubmitted ? (
@@ -122,17 +131,17 @@ const LtftSummary = ({
       cell: renderDayValue,
       sortingFn: "datetime"
     }),
-    columnHelper.accessor("status", {
-      id: "status",
-      header: renderStatusHeader,
-      cell: renderValue
-    }),
     columnHelper.accessor("lastModified", {
       id: "lastModified",
       header: renderLastModifiedHeader,
       cell: renderDayValue,
       sortingFn: "datetime",
       sortDescFirst: true
+    }),
+    columnHelper.accessor("status", {
+      id: "status",
+      header: renderStatusHeader,
+      cell: renderValue
     }),
     columnHelper.display({
       id: "operations",

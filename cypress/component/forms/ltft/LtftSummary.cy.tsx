@@ -27,9 +27,9 @@ describe("LtftSummary Component", () => {
   it("should display correct table headers", () => {
     cy.get("thead tr").within(() => {
       cy.contains("Name").should("exist");
-      cy.contains("Created date").should("exist");
+      cy.contains("Created").should("exist");
+      cy.contains("Last modified").should("exist");
       cy.contains("Status").should("exist");
-      cy.contains("Status date").should("exist");
     });
   });
 
