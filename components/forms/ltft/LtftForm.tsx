@@ -46,7 +46,7 @@ export function LtftForm() {
     { value: "Trust Administrator", label: "Trust Administrator" }
   ];
 
-  return formData?.declarations.discussedWithTpd ? (
+  return formData?.declarations?.discussedWithTpd ? (
     <div>
       <h2>Main application form</h2>
       <FormProvider

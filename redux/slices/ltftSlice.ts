@@ -1,6 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CctCalculation } from "./cctSlice";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
+import {
+  mapLtftDtoToObj,
+  mapLtftObjToDto
+} from "../../utilities/ltftUtilities";
+import { FormsService } from "../../services/FormsService";
+import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { DateUtilities } from "../../utilities/DateUtilities";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { showToast, ToastType } from "../../components/common/ToastMessage";
 
 export type LtftFormStatus =
   | "DRAFT"
@@ -87,60 +96,49 @@ type LtftState = {
   status: string;
   error: any;
   canEdit: boolean;
-};
-
-const initialLtftObj: LtftObj = {
-  change: {
-    calculationId: "",
-    cctDate: "",
-    type: "",
-    startDate: "",
-    wte: 0,
-    changeId: ""
-  },
-  declarations: {
-    discussedWithTpd: null,
-    informationIsCorrect: null,
-    notGuaranteed: null
-  },
-  tpdName: "",
-  tpdEmail: "",
-  otherDiscussions: null,
-  personalDetails: {
-    title: "",
-    surname: "",
-    forenames: "",
-    telephoneNumber: "",
-    mobileNumber: "",
-    email: "",
-    gmcNumber: "",
-    gdcNumber: "",
-    publicHealthNumber: "",
-    skilledWorkerVisaHolder: null
-  },
-  programmeMembership: {
-    id: "",
-    name: "",
-    startDate: "",
-    endDate: "",
-    wte: 0,
-    designatedBodyCode: ""
-  },
-  reasonsSelected: null,
-  reasonsOtherDetail: null,
-  status: {
-    current: "DRAFT",
-    history: null
-  }
+  editPageNumber: number;
+  saveStatus: SaveStatusProps;
+  newFormId: string | undefined;
+  saveLatestTimeStamp: string;
 };
 
 const initialState: LtftState = {
-  formData: initialLtftObj,
+  formData: {} as LtftObj,
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
-  canEdit: false
+  canEdit: false,
+  editPageNumber: 0,
+  saveStatus: "idle",
+  newFormId: undefined,
+  saveLatestTimeStamp: "none this session"
 };
+
+export const saveLtft = createAsyncThunk(
+  "ltft/saveLtft",
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: LtftObj;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    const formsService = new FormsService();
+    try {
+      const mappedFormDataDto = mapLtftObjToDto(formData);
+      const response = await formsService.saveLtft(mappedFormDataDto);
+      const mappedResLtftObj = mapLtftDtoToObj(response.data);
+      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
+  }
+);
 
 const ltftSlice = createSlice({
   name: "ltft",
@@ -158,6 +156,64 @@ const ltftSlice = createSlice({
     updatedCanEditLtft(state, action: PayloadAction<boolean>) {
       state.canEdit = action.payload;
     }
+  },
+  extraReducers(builder): void {
+    builder
+      .addCase(
+        saveLtft.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        saveLtft.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          state.newFormId = data.id;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModified,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.saveLtft, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(saveLtft.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
+        state.error = error.message;
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.saveLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+      });
   }
 });
 

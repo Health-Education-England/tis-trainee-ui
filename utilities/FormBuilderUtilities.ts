@@ -36,6 +36,7 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
+import { LtftObj, saveLtft } from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -269,7 +270,7 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   return null;
 }
 // NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission
-export function setFormDataForSubmit(
+function setFormRDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {
@@ -312,13 +313,13 @@ export function setFormDataForSubmit(
   return { ...newFormData, ...myPreciousFormDataFields };
 }
 
-export function prepFormData(
+function prepFormRData(
   formData: FormRPartA | FormRPartB,
   isSubmit: boolean,
   jsonForm: Form
 ) {
   if (isSubmit) {
-    return setFormDataForSubmit(jsonForm, formData);
+    return setFormRDataForSubmit(jsonForm, formData);
   }
   if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
     return {
@@ -334,6 +335,12 @@ export function prepFormData(
   };
 }
 
+function prepLtftData(formData: LtftObj, isSubmit: boolean, jsonForm: Form) {
+  // TODO - add similar logic to FormR's
+  return formData;
+}
+
+// TODO - need to add ltft logic
 async function updateForm(
   formName: string,
   formData: FormData,
@@ -361,7 +368,7 @@ async function updateForm(
 
 async function saveForm(
   formName: string,
-  formData: FormRPartA | FormRPartB,
+  formData: FormData,
   isAutoSave: boolean,
   isSubmit: boolean
 ) {
@@ -373,30 +380,36 @@ async function saveForm(
         isSubmit
       })
     );
-  } else {
+  } else if (formName === "formB") {
     await store.dispatch(
       saveFormB({ formData: formData as FormRPartB, isAutoSave, isSubmit })
     );
-  }
+  } else if (formName === "ltft")
+    await store.dispatch(
+      saveLtft({ formData: formData as LtftObj, isAutoSave, isSubmit })
+    );
 }
 
 export const getDraftFormId = (
-  formData: FormRPartA | FormRPartB,
+  formData: FormDataType,
   formName: string
-): string | undefined => {
+): string | null => {
   if (formName === "formA") {
-    return formData?.id ?? store.getState().formA?.newFormId;
-  } else {
-    return formData?.id ?? store.getState().formB?.newFormId;
-  }
+    return formData?.id ?? store.getState().formA?.newFormId ?? null;
+  } else if (formName === "formB") {
+    return formData?.id ?? store.getState().formB?.newFormId ?? null;
+  } else if (formName === "ltft")
+    return formData?.id ?? store.getState().ltft?.newFormId ?? null;
+  return null;
 };
 
 const getSaveStatus = (formName: string) => {
   if (formName === "formA") {
     return store.getState().formA.saveStatus;
-  } else {
+  } else if (formName === "formB") {
     return store.getState().formB.saveStatus;
-  }
+  } else if (formName === "ltft") return store.getState().ltft.saveStatus;
+  return "idle";
 };
 
 export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
@@ -408,15 +421,20 @@ export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
   }
 };
 
-export async function saveFormR(
+export type FormDataType = FormRPartA | FormRPartB | LtftObj;
+
+export async function saveDraftForm(
   jsonForm: Form,
-  formData: FormRPartA | FormRPartB,
+  formData: FormDataType,
   isAutoSave: boolean,
   isSubmit: boolean
 ) {
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
-  const preppedFormData = prepFormData(formData, isSubmit, jsonForm);
+  const isFormR = formName === "formA" || formName === "formB";
+  const preppedFormData = isFormR
+    ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
+    : prepLtftData(formData as LtftObj, isSubmit, jsonForm);
 
   if (draftFormId) {
     await updateForm(
