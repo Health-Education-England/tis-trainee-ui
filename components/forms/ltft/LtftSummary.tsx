@@ -1,33 +1,31 @@
-import { Table } from "nhsuk-react-components";
 import {
-  fetchLtftSummaryList,
-  LtftSummaryObj
-} from "../../../redux/slices/ltftSummaryListSlice";
-import { DateUtilities } from "../../../utilities/DateUtilities";
-import { useEffect, useState } from "react";
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  flexRender,
+  SortingState,
+  createColumnHelper,
+  HeaderContext
+} from "@tanstack/react-table";
+import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
+import { ReactNode, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
-import { useAppDispatch } from "../../../redux/hooks/hooks";
-import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
-import Loading from "../../common/Loading";
-import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
+import { TableColumnHeader } from "../../notifications/TableColumnHeader";
+import dayjs from "dayjs";
+import Loading from "react-loading";
 
 type LtftSummaryProps = {
+  ltftSummaryStatus: string;
   ltftSummaryList?: LtftSummaryObj[];
 };
 
-const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
-  const dispatch = useAppDispatch();
-  const isBetaTester = useIsBetaTester();
-  useEffect(() => {
-    if (isBetaTester) dispatch(fetchLtftSummaryList());
-  }, [dispatch, isBetaTester]);
-
-  // TODO: remove the mock data mockLtftsList1 and resume the data from useAppSelector when ready
-  // const ltftSummaryList = useAppSelector(
-  //   state => state.ltftSummaryList?.ltftList || []
-  // );
-  // const ltftListStatus = useAppSelector(state => state.ltftSummaryList?.status);
-  const ltftSummaries = mockLtftsList1 || [];
+const LtftSummary = ({
+  ltftSummaryStatus,
+  ltftSummaryList
+}: Readonly<LtftSummaryProps>) => {
+  const ltftSummaries = ltftSummaryList || [];
 
   const [showSubmitted, setShowSubmitted] = useState(true);
   const [showApproved, setShowApproved] = useState(true);
@@ -35,117 +33,230 @@ const LtftSummary = ({ ltftSummaryList }: Readonly<LtftSummaryProps>) => {
 
   const filteredLtftSummaries = ltftSummaries.filter(
     item =>
-      item.status !== "DRAFT" &&
-      item.status !== "UNSUBMITTED" &&
       (showSubmitted || item.status !== "SUBMITTED") &&
       (showApproved || item.status !== "APPROVED") &&
       (showWithdrawn || item.status !== "WITHDRAWN")
   );
 
-  const sortedLtftSummaries = DateUtilities.genericSort(
-    filteredLtftSummaries.slice(),
-    "lastModified",
-    true
-  );
-
-  const latestSubmitted = sortedLtftSummaries.find(
+  const latestSubmitted = filteredLtftSummaries.find(
     i => i.status === "SUBMITTED"
   );
 
-  let content: JSX.Element = <></>;
-  // if (ltftListStatus === "loading") content = <Loading />;
-  // if (ltftListStatus === "succeeded")
-  content = (
-    <div>
-      <CheckboxField
-        data-cy="filterApprovedLtft"
-        name="yesToShowApproved"
-        value="yes"
-        label="APPROVED"
-        checked={showApproved}
-        onChange={() => setShowApproved(prevShowApproved => !prevShowApproved)}
-      />
-      <CheckboxField
-        data-cy="filterSubmittedLtft"
-        name="yesToShowSubmitted"
-        value="yes"
-        label="SUBMITTED"
-        checked={showSubmitted}
-        onChange={() =>
-          setShowSubmitted(prevShowSubmitted => !prevShowSubmitted)
-        }
-      />
-      <CheckboxField
-        data-cy="filterWithdrawnLtft"
-        name="yesToShowWithdrawn"
-        value="yes"
-        label="WITHDRAWN"
-        checked={showWithdrawn}
-        onChange={() =>
-          setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
-        }
-      />
-      <Table responsive data-cy="ltftSummary">
-        <Table.Head>
-          <Table.Row>
-            <Table.Cell>Name</Table.Cell>
-            <Table.Cell>Created date</Table.Cell>
-            <Table.Cell>Status</Table.Cell>
-            <Table.Cell>Status date</Table.Cell>
-            <Table.Cell>Operations</Table.Cell>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>
-          {sortedLtftSummaries.map((item, index) => {
-            return (
-              <Table.Row
-                key={index}
-                // TODO: click to show LTFT details
-                // onClick={e => {
-                //   e.stopPropagation();
-                //   history.push(`/ltft/view/${row.original.id}`);
-                // }}
-              >
-                <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>
-                  {new Date(item.created).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>{item.status}</Table.Cell>
-                <Table.Cell data-cy={`lastModified-${index}`}>
-                  {new Date(item.lastModified).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>
-                  {item.status === "SUBMITTED" && item === latestSubmitted ? (
-                    <>
-                      <Button
-                        data-cy="unsubmitLtftBtnLink"
-                        fontWeight="normal"
-                        // onClick={onClickEvent}
-                        size="small"
-                        type="reset"
-                        style={{ marginRight: "0.5em" }}
-                      >
-                        Unsubmit
-                      </Button>
-                      <Button
-                        data-cy="withdrawLtftBtnLink"
-                        fontWeight="normal"
-                        // onClick={onClickEvent}
-                        size="small"
-                        type="reset"
-                      >
-                        Withdraw
-                      </Button>
-                    </>
-                  ) : null}
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
-      </Table>
-    </div>
+  // React table setup
+  const columnHelper = createColumnHelper<LtftSummaryObj>();
+
+  // Header
+  const renderNameHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Name"
+      data-cy={`table-column_${column.id}`}
+    />
   );
+  const renderCreatedHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Created"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderLastModifiedHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Last modified"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderStatusHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Status"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+
+  //Header value
+  const renderValue = (props: { renderValue: () => ReactNode }) => (
+    <span>{props.renderValue()}</span>
+  );
+  const renderDayValue = (props: { renderValue: () => ReactNode }) => (
+    <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
+  );
+
+  // Operation Column
+  const renderOperationColumnValue = (props: {
+    row: { original: LtftSummaryObj };
+  }) => (
+    <>
+      {props.row.original.status === "SUBMITTED" &&
+      props.row.original === latestSubmitted ? (
+        <>
+          <Button
+            data-cy="unsubmitLtftBtnLink"
+            fontWeight="normal"
+            // onClick={onClickEvent}
+            size="small"
+            type="reset"
+            style={{ marginBottom: "0.5em" }}
+          >
+            Unsubmit
+          </Button>
+          <Button
+            data-cy="withdrawLtftBtnLink"
+            fontWeight="normal"
+            // onClick={onClickEvent}
+            size="small"
+            type="reset"
+          >
+            Withdraw
+          </Button>
+        </>
+      ) : null}
+    </>
+  );
+
+  const columnsDefault = [
+    columnHelper.accessor("name", {
+      id: "name",
+      header: renderNameHeader,
+      cell: renderValue
+    }),
+    columnHelper.accessor("created", {
+      id: "created",
+      header: renderCreatedHeader,
+      cell: renderDayValue,
+      sortingFn: "datetime"
+    }),
+    columnHelper.accessor("lastModified", {
+      id: "lastModified",
+      header: renderLastModifiedHeader,
+      cell: renderDayValue,
+      sortingFn: "datetime",
+      sortDescFirst: true
+    }),
+    columnHelper.accessor("status", {
+      id: "status",
+      header: renderStatusHeader,
+      cell: renderValue
+    }),
+    columnHelper.display({
+      id: "operations",
+      cell: renderOperationColumnValue
+    })
+  ];
+
+  const memoData = useMemo(() => {
+    return filteredLtftSummaries;
+  }, [filteredLtftSummaries]);
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "lastModified", desc: true }
+  ]);
+
+  const columns = useMemo(() => columnsDefault, []);
+
+  const table = useReactTable({
+    data: memoData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      sorting
+    },
+    onSortingChange: setSorting,
+    autoResetPageIndex: false
+  });
+
+  let content: JSX.Element = <></>;
+  if (ltftSummaryStatus === "loading") content = <Loading />;
+  if (ltftSummaryStatus === "succeeded")
+    content = (
+      <div>
+        <CheckboxField
+          data-cy="filterApprovedLtft"
+          name="yesToShowApproved"
+          value="yes"
+          label="APPROVED"
+          checked={showApproved}
+          onChange={() =>
+            setShowApproved(prevShowApproved => !prevShowApproved)
+          }
+        />
+        <CheckboxField
+          data-cy="filterSubmittedLtft"
+          name="yesToShowSubmitted"
+          value="yes"
+          label="SUBMITTED"
+          checked={showSubmitted}
+          onChange={() =>
+            setShowSubmitted(prevShowSubmitted => !prevShowSubmitted)
+          }
+        />
+        <CheckboxField
+          data-cy="filterWithdrawnLtft"
+          name="yesToShowWithdrawn"
+          value="yes"
+          label="WITHDRAWN"
+          checked={showWithdrawn}
+          onChange={() =>
+            setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
+          }
+        />
+        <table data-cy="ltft-summary-table">
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th
+                    key={header.id}
+                    data-cy={`ltft-summary-table-${header.id}`}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => {
+              return (
+                <tr
+                  className="table-row"
+                  onClick={e => {
+                    e.stopPropagation();
+                    // history.push(`/ltft/view/${row.original.id}`);
+                  }}
+                  key={row.id}
+                  data-cy={`ltft-row-${row.id}`}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id} data-cy={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
   return content;
 };
 

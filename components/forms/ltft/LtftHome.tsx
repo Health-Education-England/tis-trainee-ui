@@ -10,11 +10,39 @@ import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
-
-//TODO temp - refactor when BE is ready
-const draftOrUnsubmittedLtftSummary = undefined;
+import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
+import { DateUtilities } from "../../../utilities/DateUtilities";
 
 export function LtftHome() {
+  // TODO: remove the mock data mockLtftsList1 and resume the data from useAppSelector when ready
+  const ltftSummary = mockLtftsList1 || [];
+  const ltftSummaryStatus = "succeeded";
+  // const dispatch = useAppDispatch();
+  // const isBetaTester = useIsBetaTester();
+  // useEffect(() => {
+  //   if (isBetaTester) dispatch(fetchLtftSummaryList());
+  // }, [dispatch, isBetaTester]);
+
+  // const ltftSummary = useAppSelector(
+  //   state => state.ltftSummaryList?.ltftList || []
+  // );
+  // const ltftSummaryStatus = useAppSelector(
+  //   state => state.ltftSummaryList?.status
+  // );
+
+  const sortedLtftSummary = DateUtilities.genericSort(
+    ltftSummary.slice(),
+    "lastModified",
+    true
+  );
+
+  const draftOrUnsubmittedLtftSummary = sortedLtftSummary.find(
+    item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
+  );
+  const previousLtftSummaries = sortedLtftSummary.filter(
+    item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
+  );
+
   return (
     <>
       <Card>
@@ -49,7 +77,10 @@ export function LtftHome() {
           <Card.Heading data-cy="ltft-summary-header">
             Previous applications summary
           </Card.Heading>
-          <LtftSummary />
+          <LtftSummary
+            ltftSummaryStatus={ltftSummaryStatus}
+            ltftSummaryList={previousLtftSummaries}
+          />
         </Card.Content>
       </Card>
     </>

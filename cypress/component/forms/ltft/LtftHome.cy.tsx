@@ -15,14 +15,15 @@ describe("LtftHome", () => {
     );
     cy.get('[data-cy="ltft-tracker-header"]')
       .should("exist")
-      .contains("New application");
+      .contains("In progress application");
     cy.get('[data-cy="ltft-summary-header"]')
       .should("exist")
       .contains("Previous applications summary");
-    cy.get('[data-cy="choose-cct-btn"]')
+    cy.get('[data-cy="continue-application-button"]')
       .should("exist")
-      .contains(
-        "Choose a CCT Calculation to begin your Changing hours (LTFT) application"
-      );
+      .contains("Continue draft application");
+    cy.get('[data-cy="ltft-startover-btn"]')
+      .should("exist")
+      .contains("Start over");
   });
 });
