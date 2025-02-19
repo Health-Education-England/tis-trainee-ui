@@ -10,7 +10,7 @@ import {
   HeaderContext
 } from "@tanstack/react-table";
 import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import dayjs from "dayjs";
@@ -84,13 +84,17 @@ const LtftSummary = ({
   );
 
   //Header value
-  const renderValue = (props: any) => <span>{props.renderValue()}</span>;
-  const renderDayValue = (props: any) => (
-    <span>{dayjs(props.renderValue()).toString()}</span>
+  const renderValue = (props: { renderValue: () => ReactNode }) => (
+    <span>{props.renderValue()}</span>
+  );
+  const renderDayValue = (props: { renderValue: () => ReactNode }) => (
+    <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
   );
 
   // Operation Column
-  const renderOperationColumnValue = (props: any) => (
+  const renderOperationColumnValue = (props: {
+    row: { original: LtftSummaryObj };
+  }) => (
     <>
       {props.row.original.status === "SUBMITTED" &&
       props.row.original === latestSubmitted ? (
