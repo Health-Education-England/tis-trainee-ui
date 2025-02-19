@@ -18,6 +18,7 @@ export type PmType = {
   startDate: Date | string;
   endDate: Date | string;
   wte: number | null;
+  designatedBodyCode: string | null;
 };
 
 export type CctCalculation = {
@@ -37,7 +38,8 @@ export const defaultCctCalc: CctCalculation = {
     name: "",
     startDate: "",
     endDate: "",
-    wte: null
+    wte: null,
+    designatedBodyCode: null
   },
   changes: [
     {

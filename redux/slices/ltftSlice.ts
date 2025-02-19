@@ -31,7 +31,6 @@ type LtftDiscussion = {
 };
 
 type LtftPd = {
-  id?: string;
   title?: ProfileSType;
   surname: ProfileSType;
   forenames: ProfileSType;
@@ -50,6 +49,7 @@ type LtftPm = {
   startDate: Date | string;
   endDate: Date | string;
   wte: number;
+  designatedBodyCode: string;
 };
 
 type HistoryType = {
@@ -63,6 +63,7 @@ export type StatusType = {
 };
 
 export type LtftObj = {
+  traineeTisId: string;
   id?: string;
   name?: string;
   change: LtftCctChange;

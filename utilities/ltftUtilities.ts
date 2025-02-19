@@ -13,6 +13,7 @@ export function populateLtftDraft(
   traineeTisId: string
 ): LtftObj {
   const draftLtftForm: LtftObj = {
+    traineeTisId: traineeTisId,
     change: {
       calculationId: cctSnapshot?.id ?? "",
       cctDate: cctSnapshot?.cctDate ?? "",
@@ -29,7 +30,6 @@ export function populateLtftDraft(
     tpdEmail: "",
     otherDiscussions: null,
     personalDetails: {
-      id: traineeTisId,
       title: personalDetails?.title,
       surname: personalDetails?.surname,
       forenames: personalDetails?.forenames,
@@ -46,7 +46,9 @@ export function populateLtftDraft(
       name: cctSnapshot?.programmeMembership.name ?? "",
       startDate: cctSnapshot?.programmeMembership.startDate ?? "",
       endDate: cctSnapshot?.programmeMembership.endDate ?? "",
-      wte: cctSnapshot?.programmeMembership.wte ?? 0
+      wte: cctSnapshot?.programmeMembership.wte ?? 0,
+      designatedBodyCode:
+        cctSnapshot?.programmeMembership.designatedBodyCode ?? ""
     },
     reasonsSelected: null,
     reasonsOtherDetail: null,
@@ -59,6 +61,7 @@ export function populateLtftDraft(
 }
 
 export type LtftDto = {
+  traineeTisId: string;
   id: string | null;
   name: string | null;
   change: LtftCctChange;
@@ -77,7 +80,6 @@ export type LtftDto = {
     }[];
   };
   personalDetails: {
-    id?: string | null;
     title?: ProfileSType;
     forenames: ProfileSType;
     surname: ProfileSType;
@@ -95,6 +97,7 @@ export type LtftDto = {
     startDate: Date | string;
     endDate?: Date | string;
     wte: number;
+    designatedBodyCode?: string;
   };
   reasons: {
     selected: string[];
@@ -115,6 +118,7 @@ export type LtftDto = {
 
 export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
   return {
+    traineeTisId: ltftObj.traineeTisId,
     id: ltftObj.id ?? null,
     name: ltftObj.name ?? null,
     change: {
@@ -140,7 +144,6 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
         })) || []
     },
     personalDetails: {
-      id: ltftObj.personalDetails.id ?? null,
       title: ltftObj.personalDetails.title ?? null,
       surname: ltftObj.personalDetails.surname ?? "",
       forenames: ltftObj.personalDetails.forenames ?? "",
@@ -158,7 +161,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       name: ltftObj.programmeMembership.name,
       startDate: ltftObj.programmeMembership.startDate,
       endDate: ltftObj.programmeMembership.endDate,
-      wte: ltftObj.programmeMembership.wte
+      wte: ltftObj.programmeMembership.wte,
+      designatedBodyCode: ltftObj.programmeMembership.designatedBodyCode ?? null
     },
     reasons: {
       selected: ltftObj.reasonsSelected || [],
@@ -179,6 +183,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
 
 export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
   return {
+    traineeTisId: ltftDto.traineeTisId,
     id: ltftDto.id ?? "",
     name: ltftDto.name ?? "",
     change: {
@@ -201,7 +206,6 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       role: discussion.role
     })),
     personalDetails: {
-      id: ltftDto.personalDetails.id ?? "",
       title: ltftDto.personalDetails.title,
       surname: ltftDto.personalDetails.surname,
       forenames: ltftDto.personalDetails.forenames,
@@ -218,7 +222,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       name: ltftDto.programmeMembership.name,
       startDate: ltftDto.programmeMembership.startDate,
       endDate: ltftDto.programmeMembership.endDate ?? "",
-      wte: ltftDto.programmeMembership.wte
+      wte: ltftDto.programmeMembership.wte,
+      designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? ""
     },
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
