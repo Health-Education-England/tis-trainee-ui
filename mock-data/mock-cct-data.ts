@@ -62,7 +62,8 @@ export const mockCctCalc: CctCalculation = {
     {
       type: "LTFT",
       startDate: "2027-01-01",
-      wte: 0.8
+      wte: 0.8,
+      id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
     }
   ],
   cctDate: "2028-04-02",

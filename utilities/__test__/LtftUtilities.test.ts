@@ -78,6 +78,7 @@ describe("mapLtftObjToDto", () => {
     expect(ltftDto.name).toBe("My Programme - Hours Reduction");
     expect(ltftDto.change).toEqual({
       calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
       cctDate: "2028-04-02",
       type: "LTFT",
       startDate: "2027-01-01",
@@ -146,6 +147,7 @@ describe("mapDtoToLtftObj", () => {
     expect(mockLtftObj.change).toEqual({
       calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       cctDate: "2028-04-02",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
       type: "LTFT",
       startDate: "2027-01-01",
       wte: 0.8

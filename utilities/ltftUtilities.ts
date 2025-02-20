@@ -19,7 +19,8 @@ export function populateLtftDraft(
       cctDate: cctSnapshot?.cctDate ?? "",
       type: "LTFT",
       startDate: cctSnapshot?.changes[0].startDate ?? "",
-      wte: cctSnapshot?.changes[0].wte ?? 0
+      wte: cctSnapshot?.changes[0].wte ?? 0,
+      changeId: cctSnapshot?.changes[0].id ?? ""
     },
     declarations: {
       discussedWithTpd: true,
@@ -126,7 +127,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       cctDate: ltftObj.change.cctDate,
       type: ltftObj.change.type,
       startDate: ltftObj.change.startDate,
-      wte: ltftObj.change.wte
+      wte: ltftObj.change.wte,
+      changeId: ltftObj.change.changeId
     },
     declarations: {
       discussedWithTpd: ltftObj.declarations.discussedWithTpd ?? true,
@@ -191,7 +193,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       cctDate: ltftDto.change.cctDate,
       type: ltftDto.change.type,
       startDate: ltftDto.change.startDate,
-      wte: ltftDto.change.wte
+      wte: ltftDto.change.wte,
+      changeId: ltftDto.change.changeId
     },
     declarations: {
       discussedWithTpd: ltftDto.declarations.discussedWithTpd,

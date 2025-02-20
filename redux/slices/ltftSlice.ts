@@ -16,6 +16,7 @@ export type LtftCctChange = {
   type: string;
   startDate: Date | string;
   wte: number;
+  changeId: string;
 };
 
 type LtftDeclarations = {
@@ -94,7 +95,8 @@ const initialLtftObj: LtftObj = {
     cctDate: "",
     type: "",
     startDate: "",
-    wte: 0
+    wte: 0,
+    changeId: ""
   },
   declarations: {
     discussedWithTpd: null,

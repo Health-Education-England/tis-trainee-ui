@@ -6,6 +6,7 @@ import { showToast, ToastType } from "../../components/common/ToastMessage";
 export type CctType = "LTFT";
 
 export type CctChangeType = {
+  id?: string;
   type: CctType | null;
   startDate: Date | string;
   endDate?: Date | string;

@@ -50,7 +50,8 @@ export const mockLtftDraft0: LtftObj = {
     cctDate: "2028-04-02",
     type: "LTFT",
     startDate: "2027-01-01",
-    wte: 0.8
+    wte: 0.8,
+    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
   },
   declarations: {
     discussedWithTpd: true,
@@ -111,7 +112,8 @@ export const mockLtftDto1 = {
     cctDate: "2028-04-02",
     type: "LTFT",
     startDate: "2027-01-01",
-    wte: 0.8
+    wte: 0.8,
+    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
   },
   declarations: mockLtftDraft1.declarations,
   discussions: {
