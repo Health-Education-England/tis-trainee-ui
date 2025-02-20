@@ -44,6 +44,7 @@ export const mockLtftsList1 = [
 ];
 
 export const mockLtftDraft0: LtftObj = {
+  traineeTisId: "4",
   change: {
     calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     cctDate: "2028-04-02",
@@ -60,7 +61,6 @@ export const mockLtftDraft0: LtftObj = {
   tpdEmail: "",
   otherDiscussions: null,
   personalDetails: {
-    id: "4",
     title: "Mr",
     surname: "Gilliam",
     forenames: "Anthony Mara",
@@ -77,7 +77,8 @@ export const mockLtftDraft0: LtftObj = {
     name: "Cardiology",
     startDate: "2020-01-01",
     endDate: "2028-01-01",
-    wte: 1
+    wte: 1,
+    designatedBodyCode: "WTF3"
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,

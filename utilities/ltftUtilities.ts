@@ -118,7 +118,7 @@ export type LtftDto = {
 
 export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
   return {
-    traineeTisId: ltftObj.traineeTisId,
+    traineeTisId: ltftObj.traineeTisId ?? "",
     id: ltftObj.id ?? null,
     name: ltftObj.name ?? null,
     change: {

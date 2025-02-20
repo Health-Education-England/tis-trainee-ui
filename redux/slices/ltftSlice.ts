@@ -63,7 +63,7 @@ export type StatusType = {
 };
 
 export type LtftObj = {
-  traineeTisId: string;
+  traineeTisId?: string;
   id?: string;
   name?: string;
   change: LtftCctChange;
@@ -121,7 +121,8 @@ const initialLtftObj: LtftObj = {
     name: "",
     startDate: "",
     endDate: "",
-    wte: 0
+    wte: 0,
+    designatedBodyCode: ""
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,

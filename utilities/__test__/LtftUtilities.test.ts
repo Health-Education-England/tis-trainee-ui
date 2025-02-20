@@ -89,7 +89,6 @@ describe("mapLtftObjToDto", () => {
       notGuaranteed: true
     });
     expect(ltftDto.personalDetails).toEqual({
-      id: "4",
       title: "Mr",
       surname: "Gilliam",
       forenames: "Anthony Mara",
@@ -106,7 +105,8 @@ describe("mapLtftObjToDto", () => {
       name: "Cardiology",
       startDate: "2020-01-01",
       endDate: "2028-01-01",
-      wte: 1
+      wte: 1,
+      designatedBodyCode: "WTF3"
     });
     expect(ltftDto.status).toEqual(statusData);
   });
@@ -114,6 +114,7 @@ describe("mapLtftObjToDto", () => {
 
 describe("mapDtoToLtftObj", () => {
   const mockLtftObj = mapLtftDtoToObj({
+    traineeTisId: "4",
     ...mockLtftDto1,
     discussions: {
       tpdName: "My tpd name",
@@ -154,8 +155,8 @@ describe("mapDtoToLtftObj", () => {
       informationIsCorrect: true,
       notGuaranteed: true
     });
+    expect(mockLtftObj.traineeTisId).toEqual("4");
     expect(mockLtftObj.personalDetails).toEqual({
-      id: "4",
       title: "Mr",
       surname: "Gilliam",
       forenames: "Anthony Mara",
@@ -172,7 +173,8 @@ describe("mapDtoToLtftObj", () => {
       name: "Cardiology",
       startDate: "2020-01-01",
       endDate: "2028-01-01",
-      wte: 1
+      wte: 1,
+      designatedBodyCode: "WTF3"
     });
     expect(mockLtftObj.status).toEqual({
       current: "DRAFT",

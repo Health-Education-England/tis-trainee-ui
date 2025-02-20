@@ -9,7 +9,8 @@ export const mockCctList: CctCalculation[] = [
       name: "Cardiology",
       startDate: "2020-01-01",
       endDate: "2028-01-01",
-      wte: 1.0
+      wte: 1.0,
+      designatedBodyCode: "WTF"
     },
     changes: [
       {
@@ -30,7 +31,8 @@ export const mockCctList: CctCalculation[] = [
       name: "Respiratory Medicine",
       startDate: "2024-08-07",
       endDate: "2029-07-31",
-      wte: 1.0
+      wte: 1.0,
+      designatedBodyCode: "WTF2"
     },
     changes: [
       {
@@ -53,7 +55,8 @@ export const mockCctCalc: CctCalculation = {
     name: "Cardiology",
     startDate: "2020-01-01",
     endDate: "2028-01-01",
-    wte: 1.0
+    wte: 1.0,
+    designatedBodyCode: "WTF3"
   },
   changes: [
     {
