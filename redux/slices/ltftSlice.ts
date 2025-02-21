@@ -85,6 +85,7 @@ type LtftState = {
   status: string;
   error: any;
   canEdit: boolean;
+  editPageNumber: number;
 };
 
 const initialLtftObj: LtftObj = {
@@ -135,7 +136,8 @@ const initialState: LtftState = {
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
-  canEdit: false
+  canEdit: false,
+  editPageNumber: 0
 };
 
 const ltftSlice = createSlice({
@@ -153,6 +155,9 @@ const ltftSlice = createSlice({
     },
     updatedCanEditLtft(state, action: PayloadAction<boolean>) {
       state.canEdit = action.payload;
+    },
+    updatedEditPageNumberLtft(state, action: PayloadAction<number>) {
+      state.editPageNumber = action.payload;
     }
   }
 });
@@ -161,7 +166,8 @@ export const {
   resetToInit,
   setLtftCctSnapshot,
   updatedLtft,
-  updatedCanEditLtft
+  updatedCanEditLtft,
+  updatedEditPageNumberLtft
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;
