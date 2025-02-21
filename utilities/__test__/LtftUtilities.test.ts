@@ -78,6 +78,7 @@ describe("mapLtftObjToDto", () => {
     expect(ltftDto.name).toBe("My Programme - Hours Reduction");
     expect(ltftDto.change).toEqual({
       calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
       cctDate: "2028-04-02",
       type: "LTFT",
       startDate: "2027-01-01",
@@ -89,7 +90,6 @@ describe("mapLtftObjToDto", () => {
       notGuaranteed: true
     });
     expect(ltftDto.personalDetails).toEqual({
-      id: "4",
       title: "Mr",
       surname: "Gilliam",
       forenames: "Anthony Mara",
@@ -106,7 +106,8 @@ describe("mapLtftObjToDto", () => {
       name: "Cardiology",
       startDate: "2020-01-01",
       endDate: "2028-01-01",
-      wte: 1
+      wte: 1,
+      designatedBodyCode: "WTF3"
     });
     expect(ltftDto.status).toEqual(statusData);
   });
@@ -114,6 +115,7 @@ describe("mapLtftObjToDto", () => {
 
 describe("mapDtoToLtftObj", () => {
   const mockLtftObj = mapLtftDtoToObj({
+    traineeTisId: "4",
     ...mockLtftDto1,
     discussions: {
       tpdName: "My tpd name",
@@ -145,6 +147,7 @@ describe("mapDtoToLtftObj", () => {
     expect(mockLtftObj.change).toEqual({
       calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       cctDate: "2028-04-02",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
       type: "LTFT",
       startDate: "2027-01-01",
       wte: 0.8
@@ -154,8 +157,8 @@ describe("mapDtoToLtftObj", () => {
       informationIsCorrect: true,
       notGuaranteed: true
     });
+    expect(mockLtftObj.traineeTisId).toEqual("4");
     expect(mockLtftObj.personalDetails).toEqual({
-      id: "4",
       title: "Mr",
       surname: "Gilliam",
       forenames: "Anthony Mara",
@@ -172,7 +175,8 @@ describe("mapDtoToLtftObj", () => {
       name: "Cardiology",
       startDate: "2020-01-01",
       endDate: "2028-01-01",
-      wte: 1
+      wte: 1,
+      designatedBodyCode: "WTF3"
     });
     expect(mockLtftObj.status).toEqual({
       current: "DRAFT",

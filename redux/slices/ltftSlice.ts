@@ -16,6 +16,7 @@ export type LtftCctChange = {
   type: string;
   startDate: Date | string;
   wte: number;
+  changeId: string;
 };
 
 type LtftDeclarations = {
@@ -31,7 +32,6 @@ type LtftDiscussion = {
 };
 
 type LtftPd = {
-  id?: string;
   title?: ProfileSType;
   surname: ProfileSType;
   forenames: ProfileSType;
@@ -50,6 +50,7 @@ type LtftPm = {
   startDate: Date | string;
   endDate: Date | string;
   wte: number;
+  designatedBodyCode: string;
 };
 
 type HistoryType = {
@@ -63,6 +64,7 @@ export type StatusType = {
 };
 
 export type LtftObj = {
+  traineeTisId?: string;
   id?: string;
   name?: string;
   change: LtftCctChange;
@@ -93,7 +95,8 @@ const initialLtftObj: LtftObj = {
     cctDate: "",
     type: "",
     startDate: "",
-    wte: 0
+    wte: 0,
+    changeId: ""
   },
   declarations: {
     discussedWithTpd: null,
@@ -120,7 +123,8 @@ const initialLtftObj: LtftObj = {
     name: "",
     startDate: "",
     endDate: "",
-    wte: 0
+    wte: 0,
+    designatedBodyCode: ""
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
