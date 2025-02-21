@@ -36,7 +36,7 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
-import { LtftObj, saveLtft } from "../redux/slices/ltftSlice";
+import { LtftObj, saveLtft, updateLtft } from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -340,7 +340,6 @@ function prepLtftData(formData: LtftObj, isSubmit: boolean, jsonForm: Form) {
   return formData;
 }
 
-// TODO - need to add ltft logic
 async function updateForm(
   formName: string,
   formData: FormData,
@@ -355,10 +354,18 @@ async function updateForm(
         isSubmit
       })
     );
-  } else {
+  } else if (formName === "formB") {
     await store.dispatch(
       updateFormB({
         formData: formData as FormRPartB,
+        isAutoSave,
+        isSubmit
+      })
+    );
+  } else if (formName === "ltft") {
+    await store.dispatch(
+      updateLtft({
+        formData: formData as LtftObj,
         isAutoSave,
         isSubmit
       })
