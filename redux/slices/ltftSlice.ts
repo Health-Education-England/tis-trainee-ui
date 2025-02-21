@@ -140,6 +140,32 @@ export const saveLtft = createAsyncThunk(
   }
 );
 
+export const updateLtft = createAsyncThunk(
+  "ltft/updateLtft",
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: LtftObj;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    const formsService = new FormsService();
+    try {
+      const mappedFormDataDto = mapLtftObjToDto(formData);
+      const response = await formsService.updateLtft(mappedFormDataDto);
+      const mappedResLtftObj = mapLtftDtoToObj(response.data);
+      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
+  }
+);
+
 const ltftSlice = createSlice({
   name: "ltft",
   initialState,
@@ -209,6 +235,61 @@ const ltftSlice = createSlice({
         if (!isAutoSave && !isSubmit) {
           showToast(
             toastErrText.saveLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+      })
+      .addCase(
+        updateLtft.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        updateLtft.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          state.newFormId = data.id;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModified,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.updateLtft, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(updateLtft.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
+        state.error = error.message;
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.updateLtft,
             ToastType.ERROR,
             `${error.code}-${error.message}`
           );
