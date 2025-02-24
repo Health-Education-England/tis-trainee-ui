@@ -192,6 +192,11 @@ export function CctCalcCreate() {
                                     selectedProgramme.endDate,
                                     false
                                   );
+                                  setFieldValue(
+                                    "programmeMembership.designatedBodyCode",
+                                    selectedProgramme.designatedBodyCode,
+                                    false
+                                  );
                                 }
                               } else {
                                 resetForm({ values: defaultCctCalc });
