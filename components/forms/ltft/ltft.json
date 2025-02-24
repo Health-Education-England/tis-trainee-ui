@@ -178,5 +178,14 @@
       ]
     }
   ],
-  "declarations": []
+  "declarations": [
+    {
+      "name": "informationIsCorrect",
+      "label": "I confirm that the information I have provided is correct and accurate to the best of my knowledge."
+    },
+    {
+      "name": "notGuaranteed",
+      "label": "I understand that approval of my application is not guaranteed."
+    }
+  ]
 }
