@@ -14,6 +14,7 @@ export interface ProgrammeMembership extends IDateBoxed {
   programmeCompletionDate?: Date;
   curricula: Curriculum[];
   conditionsOfJoining: ConditionsOfJoining;
+  designatedBodyCode?: string;
 }
 
 export interface ConditionsOfJoining {

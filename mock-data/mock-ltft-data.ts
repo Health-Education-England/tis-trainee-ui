@@ -44,12 +44,14 @@ export const mockLtftsList1 = [
 ];
 
 export const mockLtftDraft0: LtftObj = {
+  traineeTisId: "4",
   change: {
     calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     cctDate: "2028-04-02",
     type: "LTFT",
     startDate: "2027-01-01",
-    wte: 0.8
+    wte: 0.8,
+    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
   },
   declarations: {
     discussedWithTpd: true,
@@ -60,7 +62,6 @@ export const mockLtftDraft0: LtftObj = {
   tpdEmail: "",
   otherDiscussions: null,
   personalDetails: {
-    id: "4",
     title: "Mr",
     surname: "Gilliam",
     forenames: "Anthony Mara",
@@ -77,7 +78,8 @@ export const mockLtftDraft0: LtftObj = {
     name: "Cardiology",
     startDate: "2020-01-01",
     endDate: "2028-01-01",
-    wte: 1
+    wte: 1,
+    designatedBodyCode: "WTF3"
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
@@ -110,7 +112,8 @@ export const mockLtftDto1 = {
     cctDate: "2028-04-02",
     type: "LTFT",
     startDate: "2027-01-01",
-    wte: 0.8
+    wte: 0.8,
+    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
   },
   declarations: mockLtftDraft1.declarations,
   discussions: {
