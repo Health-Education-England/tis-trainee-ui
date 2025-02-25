@@ -11,6 +11,7 @@ import {
   populateLtftDraft
 } from "../ltftUtilities";
 import { StatusType } from "../../redux/slices/ltftSlice";
+import { date } from "yup";
 
 const otherDiscussions = [
   {
@@ -24,6 +25,9 @@ const otherDiscussions = [
     role: "Educational Supervisor (ES)"
   }
 ];
+
+const dateCreated = "2025-02-01T00:00:00Z";
+const dateModified = "2025-02-02T00:00:00Z";
 
 describe("populateLtftDraft", () => {
   const cctSnapshot = mockCctCalc;
@@ -56,7 +60,9 @@ describe("mapLtftObjToDto", () => {
   const ltftDto = mapLtftObjToDto({
     ...mockLtftDraft1,
     otherDiscussions: otherDiscussions,
-    status: statusData
+    status: statusData,
+    created: dateCreated,
+    lastModified: dateModified
   });
   it("should map discussions correctly", () => {
     expect(ltftDto.discussions).toEqual({
@@ -110,6 +116,8 @@ describe("mapLtftObjToDto", () => {
       designatedBodyCode: "WTF3"
     });
     expect(ltftDto.status).toEqual(statusData);
+    expect(ltftDto.created).toBe(dateCreated);
+    expect(ltftDto.lastModified).toBe(dateModified);
   });
 });
 
@@ -125,7 +133,9 @@ describe("mapDtoToLtftObj", () => {
     reasons: {
       selected: ["Unique opportunities", "other"],
       otherDetail: "my other reason 2"
-    }
+    },
+    created: dateCreated,
+    lastModified: dateModified
   });
   it("should map discussions correctly", () => {
     expect(mockLtftObj.tpdName).toEqual("My tpd name");
@@ -182,5 +192,7 @@ describe("mapDtoToLtftObj", () => {
       current: "DRAFT",
       history: []
     });
+    expect(mockLtftObj.created).toBe(dateCreated);
+    expect(mockLtftObj.lastModified).toBe(dateModified);
   });
 });

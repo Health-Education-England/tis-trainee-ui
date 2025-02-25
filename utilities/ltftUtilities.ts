@@ -236,6 +236,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
         status: historyItem.status,
         timestamp: historyItem.timestamp
       }))
-    }
+    },
+    created: ltftDto.created,
+    lastModified: ltftDto.lastModified
   };
 };
