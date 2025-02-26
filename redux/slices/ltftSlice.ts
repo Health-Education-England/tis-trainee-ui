@@ -62,6 +62,14 @@ type LtftPm = {
   designatedBodyCode: string;
 };
 
+export type StatusInfo = {
+  state: LtftFormStatus;
+  detail: string;
+  modifiedBy: LtftDiscussion;
+  timestamp: Date | string;
+  revision: number;
+};
+
 type HistoryType = {
   status: LtftFormStatus;
   timestamp: string;
@@ -135,6 +143,7 @@ export const saveLtft = createAsyncThunk(
       const mappedResLtftObj = mapLtftDtoToObj(response.data);
       return { data: mappedResLtftObj, isAutoSave, isSubmit };
     } catch (error) {
+      console.log("error", error);
       return rejectWithValue({ error, isAutoSave, isSubmit });
     }
   }
