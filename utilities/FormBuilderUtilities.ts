@@ -36,7 +36,14 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
-import { LtftObj, saveLtft, updateLtft } from "../redux/slices/ltftSlice";
+import {
+  LtftObj,
+  saveLtft,
+  updatedCanEditLtft,
+  updatedEditPageNumberLtft,
+  updatedLtft,
+  updateLtft
+} from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -69,9 +76,12 @@ export async function loadTheSavedForm(
 export function getEditPageNumber(formName: string) {
   if (formName === "formA") {
     return store.getState().formA.editPageNumber;
-  } else {
+  } else if (formName === "formB") {
     return store.getState().formB.editPageNumber;
+  } else if (formName === "ltft") {
+    return store.getState().ltft.editPageNumber;
   }
+  return 0;
 }
 
 // This will be used when reviewing a multi-page form to send the user to the correct page to edit
@@ -117,6 +127,9 @@ export function continueToConfirm(formName: string, formData: FormData) {
   } else if (formName === "formB") {
     store.dispatch(updatedFormB(formData as FormRPartB));
     store.dispatch(updatedCanEditB(true));
+  } else if (formName === "ltft") {
+    store.dispatch(updatedLtft(formData as LtftObj));
+    store.dispatch(updatedCanEditLtft(true));
   }
   history.push(redirectPath);
 }
@@ -126,12 +139,13 @@ export function handleEditSection(
   formName: string,
   history: any
 ) {
-  const redirectPath =
-    formName === "formA" ? "/formr-a/create" : "/formr-b/create";
+  const redirectPath = `${chooseRedirectPath(formName)}/create`;
   if (formName === "formA") {
     store.dispatch(updatedEditPageNumber(pageNum));
-  } else {
+  } else if (formName === "formB") {
     store.dispatch(updatedEditPageNumberB(pageNum));
+  } else if (formName === "ltft") {
+    store.dispatch(updatedEditPageNumberLtft(pageNum));
   }
   history.push(redirectPath);
 }
