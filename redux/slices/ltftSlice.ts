@@ -72,6 +72,14 @@ export type StatusType = {
   history: HistoryType[] | null;
 };
 
+export type StatusInfo = {
+  state: LtftFormStatus;
+  detail: string;
+  modifiedBy: LtftDiscussion;
+  timestamp: string;
+  revision: number;
+};
+
 export type LtftObj = {
   traineeTisId?: string;
   id?: string;

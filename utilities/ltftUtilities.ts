@@ -3,7 +3,8 @@ import { CctCalculation } from "../redux/slices/cctSlice";
 import {
   LtftCctChange,
   LtftFormStatus,
-  LtftObj
+  LtftObj,
+  StatusInfo
 } from "../redux/slices/ltftSlice";
 import { ProfileSType } from "./ProfileUtilities";
 
@@ -105,13 +106,8 @@ export type LtftDto = {
     otherDetail?: string;
   };
   status: {
-    current: LtftFormStatus;
-    history:
-      | {
-          status: LtftFormStatus;
-          timestamp: string;
-        }[]
-      | [];
+    current: StatusInfo;
+    history: StatusInfo[] | [];
   };
   created: Date | string;
   lastModified: Date | string;
@@ -171,11 +167,29 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       otherDetail: ltftObj.reasonsOtherDetail ?? ""
     },
     status: {
-      current: ltftObj.status.current,
+      // TODO: complate status fields with the correct data when implementing state chagning operations
+      current: {
+        state: ltftObj.status.current,
+        detail: "",
+        modifiedBy: {
+          name: "",
+          email: "",
+          role: ""
+        },
+        timestamp: "",
+        revision: 1
+      },
       history:
         ltftObj.status.history?.map(historyItem => ({
-          status: historyItem.status,
-          timestamp: historyItem.timestamp
+          state: historyItem.status,
+          timestamp: historyItem.timestamp,
+          detail: "",
+          modifiedBy: {
+            name: "",
+            email: "",
+            role: ""
+          },
+          revision: 1
         })) || []
     },
     created: ltftObj.created ?? "",
@@ -231,9 +245,9 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     status: {
-      current: ltftDto.status.current,
+      current: ltftDto.status.current.state,
       history: ltftDto.status.history.map(historyItem => ({
-        status: historyItem.status,
+        status: historyItem.state,
         timestamp: historyItem.timestamp
       }))
     },
