@@ -10,7 +10,7 @@ import {
   mapLtftObjToDto,
   populateLtftDraft
 } from "../ltftUtilities";
-import { StatusType } from "../../redux/slices/ltftSlice";
+import { StatusInfo } from "../../redux/slices/ltftSlice";
 import { date } from "yup";
 
 const otherDiscussions = [
@@ -25,6 +25,21 @@ const otherDiscussions = [
     role: "Educational Supervisor (ES)"
   }
 ];
+
+const statusData = {
+  current: {
+    state: "DRAFT",
+    detail: "",
+    modifiedBy: {
+      name: "",
+      email: "",
+      role: ""
+    },
+    timestamp: "",
+    revision: 0
+  } as StatusInfo,
+  history: [] as StatusInfo[]
+};
 
 const dateCreated = "2025-02-01T00:00:00Z";
 const dateModified = "2025-02-02T00:00:00Z";
@@ -44,19 +59,6 @@ describe("populateLtftDraft", () => {
 });
 
 describe("mapLtftObjToDto", () => {
-  const statusData: StatusType = {
-    current: "DRAFT",
-    history: [
-      {
-        status: "DRAFT",
-        timestamp: "2025-02-02T00:00:00Z"
-      },
-      {
-        status: "DRAFT",
-        timestamp: "2025-02-01T00:00:00Z"
-      }
-    ]
-  };
   const ltftDto = mapLtftObjToDto({
     ...mockLtftDraft1,
     otherDiscussions: otherDiscussions,
@@ -134,6 +136,7 @@ describe("mapDtoToLtftObj", () => {
       selected: ["Unique opportunities", "other"],
       otherDetail: "my other reason 2"
     },
+    status: statusData,
     created: dateCreated,
     lastModified: dateModified
   });
@@ -188,11 +191,10 @@ describe("mapDtoToLtftObj", () => {
       wte: 1,
       designatedBodyCode: "WTF3"
     });
-    expect(mockLtftObj.status).toEqual({
-      current: "DRAFT",
-      history: []
-    });
+    expect(mockLtftObj.status).toEqual(statusData);
     expect(mockLtftObj.created).toBe(dateCreated);
     expect(mockLtftObj.lastModified).toBe(dateModified);
   });
 });
+
+//TODO: Add more test for the history when this is implemented

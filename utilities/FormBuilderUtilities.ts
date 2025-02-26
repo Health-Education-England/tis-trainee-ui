@@ -284,7 +284,7 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   return null;
 }
 // NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission
-function setFormRDataForSubmit(
+export function setFormRDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {

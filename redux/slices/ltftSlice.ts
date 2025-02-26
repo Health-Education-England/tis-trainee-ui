@@ -62,14 +62,9 @@ type LtftPm = {
   designatedBodyCode: string;
 };
 
-type HistoryType = {
-  status: LtftFormStatus;
-  timestamp: string;
-};
-
-export type StatusType = {
-  current: LtftFormStatus;
-  history: HistoryType[] | null;
+export type StatusLtft = {
+  current: StatusInfo;
+  history: StatusInfo[];
 };
 
 export type StatusInfo = {
@@ -93,7 +88,7 @@ export type LtftObj = {
   programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
-  status: StatusType;
+  status: StatusLtft;
   created?: Date | string;
   lastModified?: Date | string;
 };

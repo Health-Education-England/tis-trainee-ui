@@ -1,11 +1,6 @@
 import { PersonalDetails } from "../models/PersonalDetails";
 import { CctCalculation } from "../redux/slices/cctSlice";
-import {
-  LtftCctChange,
-  LtftFormStatus,
-  LtftObj,
-  StatusInfo
-} from "../redux/slices/ltftSlice";
+import { LtftCctChange, LtftObj, StatusInfo } from "../redux/slices/ltftSlice";
 import { ProfileSType } from "./ProfileUtilities";
 
 export function populateLtftDraft(
@@ -55,8 +50,18 @@ export function populateLtftDraft(
     reasonsSelected: null,
     reasonsOtherDetail: null,
     status: {
-      current: "DRAFT",
-      history: null
+      current: {
+        state: "DRAFT",
+        detail: "",
+        modifiedBy: {
+          name: "",
+          email: "",
+          role: ""
+        },
+        timestamp: "",
+        revision: 0
+      },
+      history: []
     }
   };
   return draftLtftForm;
@@ -107,7 +112,7 @@ export type LtftDto = {
   };
   status: {
     current: StatusInfo;
-    history: StatusInfo[] | [];
+    history: StatusInfo[];
   };
   created: Date | string;
   lastModified: Date | string;
@@ -167,29 +172,28 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       otherDetail: ltftObj.reasonsOtherDetail ?? ""
     },
     status: {
-      // TODO: complate status fields with the correct data when implementing state chagning operations
       current: {
-        state: ltftObj.status.current,
-        detail: "",
+        state: ltftObj.status.current.state,
+        detail: ltftObj.status.current.detail,
         modifiedBy: {
-          name: "",
-          email: "",
-          role: ""
+          name: ltftObj.status.current.modifiedBy.name,
+          email: ltftObj.status.current.modifiedBy.email,
+          role: ltftObj.status.current.modifiedBy.role
         },
-        timestamp: "",
-        revision: 1
+        timestamp: ltftObj.status.current.timestamp,
+        revision: ltftObj.status.current.revision
       },
       history:
         ltftObj.status.history?.map(historyItem => ({
-          state: historyItem.status,
+          state: historyItem.state,
           timestamp: historyItem.timestamp,
-          detail: "",
+          detail: historyItem.detail,
           modifiedBy: {
-            name: "",
-            email: "",
-            role: ""
+            name: historyItem.modifiedBy.name,
+            email: historyItem.modifiedBy.email,
+            role: historyItem.modifiedBy.role
           },
-          revision: 1
+          revision: historyItem.revision
         })) || []
     },
     created: ltftObj.created ?? "",
@@ -245,10 +249,27 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     status: {
-      current: ltftDto.status.current.state,
+      current: {
+        state: ltftDto.status.current.state,
+        detail: ltftDto.status.current.detail,
+        modifiedBy: {
+          name: ltftDto.status.current.modifiedBy.name,
+          email: ltftDto.status.current.modifiedBy.email,
+          role: ltftDto.status.current.modifiedBy.role
+        },
+        timestamp: ltftDto.status.current.timestamp,
+        revision: ltftDto.status.current.revision
+      },
       history: ltftDto.status.history.map(historyItem => ({
-        status: historyItem.state,
-        timestamp: historyItem.timestamp
+        state: historyItem.state,
+        timestamp: historyItem.timestamp,
+        detail: historyItem.detail,
+        modifiedBy: {
+          name: historyItem.modifiedBy.name,
+          email: historyItem.modifiedBy.email,
+          role: historyItem.modifiedBy.role
+        },
+        revision: historyItem.revision
       }))
     },
     created: ltftDto.created,

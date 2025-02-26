@@ -12,7 +12,7 @@ import {
   getDraftFormId,
   handleSaveRedirect,
   setDraftFormProps,
-  setFormDataForSubmit,
+  setFormRDataForSubmit,
   transformReferenceData
 } from "../FormBuilderUtilities";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
@@ -70,7 +70,7 @@ describe("Get the latest 'draft' form version to open ", () => {
 
 describe("Set formData for submit", () => {
   it("should set user-input hidden form fields to null before submit", () => {
-    const result = setFormDataForSubmit(
+    const result = setFormRDataForSubmit(
       formAJson as Form,
       formANew as FormRPartA
     );
