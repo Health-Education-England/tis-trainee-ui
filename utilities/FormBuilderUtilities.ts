@@ -12,11 +12,12 @@ import {
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
-import store from "../redux/store/store";
+import store, { RootState } from "../redux/store/store";
 import {
   Field,
   Form,
   FormData,
+  FormName,
   MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -37,6 +38,7 @@ import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
 import {
+  deleteLtft,
   LtftObj,
   saveLtft,
   updatedCanEditLtft,
@@ -151,22 +153,18 @@ export function handleEditSection(
 }
 
 export async function isFormDeleted(
-  formName: string,
-  formId: string | undefined,
-  formIdFromDraftFormProps: string | undefined
-) {
-  if (formName === "formr-a") {
-    await store.dispatch(
-      deleteFormA((formId as string) ?? (formIdFromDraftFormProps as string))
-    );
-    return store.getState().formA.status === "succeeded";
-  } else {
-    await store.dispatch(
-      deleteFormB((formId as string) ?? (formIdFromDraftFormProps as string))
-    );
-
-    return store.getState().formB.status === "succeeded";
+  formName: FormName,
+  formId: string
+): Promise<boolean> {
+  if (formName === "formA") {
+    await store.dispatch(deleteFormA(formId));
+  } else if (formName === "formB") {
+    await store.dispatch(deleteFormB(formId));
+  } else if (formName === "ltft") {
+    await store.dispatch(deleteLtft(formId));
   }
+  const state = store.getState() as RootState;
+  return state[formName].status === "succeeded";
 }
 
 // ----------------------------------------------------------
@@ -252,7 +250,7 @@ export interface DraftFormProps {
   programmeMembershipId?: string | null;
 }
 
-export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
+export function setDraftFormRProps(forms: IFormR[]): DraftFormProps | null {
   if (
     forms.length === 0 ||
     forms.every(form => form.lifecycleState === LifeCycleState.Submitted)
@@ -604,6 +602,17 @@ export const determineCurrentValue = (
     return checkedStatus;
   } else {
     return value;
+  }
+};
+
+export const mapFormNameToUrl = (formName: FormName): string => {
+  switch (formName) {
+    case "formA":
+      return "formr-a";
+    case "formB":
+      return "formr-b";
+    case "ltft":
+      return "ltft";
   }
 };
 

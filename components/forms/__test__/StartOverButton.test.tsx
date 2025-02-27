@@ -41,11 +41,11 @@ jest.mock("../../navigation/history", () => ({
   push: jest.fn()
 }));
 
-describe("Startoverbtn Component", () => {
+describe("StartOverButton Component", () => {
   const renderStartOverButton = () => {
     return render(
       <Provider store={store}>
-        <StartOverButton />
+        <StartOverButton formName="formA" isFormButton={true} />
       </Provider>
     );
   };
@@ -54,14 +54,15 @@ describe("Startoverbtn Component", () => {
     (useLocation as jest.Mock).mockReturnValue({ pathname: "/formr-a" });
   });
 
-  it("should NOT render the Startover button when NO formId is available and NO autosave success", () => {
-    const startOverButton = screen.queryByRole("button", {
+  it("should NOT render the StartOver button when NO formId is available and NO autosave success", () => {
+    const { queryByRole } = renderStartOverButton();
+    const startOverButton = queryByRole("button", {
       name: "Start over"
     });
     expect(startOverButton).not.toBeInTheDocument();
   });
 
-  it("Should render the Startover button when initial autosave is successful (i.e. via stored newFormId on successful POST response).", () => {
+  it("should render the StartOver button when initial autosave is successful (i.e. via stored newFormId on successful POST response)", () => {
     store.dispatch(updatedFormA(formANew));
     store.dispatch(updatedNewFormId("123"));
     const { queryByRole } = renderStartOverButton();
@@ -71,7 +72,7 @@ describe("Startoverbtn Component", () => {
     expect(startOverButton).toBeInTheDocument();
   });
 
-  it("Should render the Startover button when formId is available (i.e. from fetched draft form).", () => {
+  it("should render the StartOver button when formId is available (i.e. from fetched draft form)", () => {
     const draftProps: DraftFormProps = {
       id: "123",
       lifecycleState: LifeCycleState.Draft
@@ -85,7 +86,7 @@ describe("Startoverbtn Component", () => {
     expect(startOverButton).toBeInTheDocument();
   });
 
-  it("should call history.push when successful form delete triggered from 'start over' click on forms page (pathname ends with 'create').", async () => {
+  it("should call history.push when successful form delete triggered from 'start over' click on forms page (pathname ends with 'create')", async () => {
     (useLocation as jest.Mock).mockReturnValue({ pathname: "/formr-a/create" });
     const mockIsFormDeleted = jest.fn().mockResolvedValue(true);
     require("../../../utilities/FormBuilderUtilities").isFormDeleted.mockImplementationOnce(
@@ -103,7 +104,7 @@ describe("Startoverbtn Component", () => {
     expect(history.push).toHaveBeenCalledWith("/formr-a");
   });
 
-  it("should call redux dispatch (updatedFormsRefreshNeeded) when successful form delete triggered from 'start over' click on forms list page (CreateList comp).", async () => {
+  it("should call redux dispatch (updatedFormsRefreshNeeded) when successful form delete triggered from 'start over' click on forms list page (CreateList comp)", async () => {
     const mockIsFormDeleted = jest.fn().mockResolvedValue(true);
     require("../../../utilities/FormBuilderUtilities").isFormDeleted.mockImplementationOnce(
       mockIsFormDeleted

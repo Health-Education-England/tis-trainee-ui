@@ -15,11 +15,12 @@ import { resetToInitFormA } from "../../redux/slices/formASlice";
 import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
+import { FormName } from "./form-builder/FormBuilder";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();
   const pathname = useLocation().pathname;
-  const formName = pathname === "/formr-a" ? "formA" : "formB";
+  const formName: FormName = pathname === "/formr-a" ? "formA" : "formB";
   const submittedListDesc = useAppSelector(selectAllSubmittedforms);
   const latestSubDate = submittedListDesc?.length
     ? submittedListDesc[0].submissionDate
@@ -28,6 +29,9 @@ const CreateList = () => {
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
   const needFormsRefresh = useAppSelector(
     state => state.forms?.formsRefreshNeeded
+  );
+  const formIdFromDraftFormProps = useAppSelector(
+    state => state.forms?.draftFormProps?.id
   );
 
   useEffect(() => {
@@ -60,7 +64,11 @@ const CreateList = () => {
           </Row>
           <Row>
             <Col width="one-third">
-              <StartOverButton />
+              <StartOverButton
+                formName={formName}
+                isFormButton={false}
+                formsListDraftId={formIdFromDraftFormProps}
+              />
             </Col>
           </Row>
         </Container>

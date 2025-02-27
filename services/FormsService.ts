@@ -96,4 +96,8 @@ export class FormsService extends ApiService {
   async updateLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
     return this.put<LtftDto>(`/ltft/${mappedFormData.id}`, mappedFormData);
   }
+
+  async deleteLtft(formId: string): Promise<AxiosResponse> {
+    return this.delete(`/ltft/${formId}`);
+  }
 }

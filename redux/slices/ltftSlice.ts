@@ -169,6 +169,14 @@ export const updateLtft = createAsyncThunk(
   }
 );
 
+export const deleteLtft = createAsyncThunk(
+  "ltft/deleteLtft",
+  async (formId: string) => {
+    const formsService = new FormsService();
+    return formsService.deleteLtft(formId);
+  }
+);
+
 const ltftSlice = createSlice({
   name: "ltft",
   initialState,
@@ -300,6 +308,22 @@ const ltftSlice = createSlice({
             `${error.code}-${error.message}`
           );
         }
+      })
+      .addCase(deleteLtft.pending, state => {
+        state.status = "deleting";
+      })
+      .addCase(deleteLtft.fulfilled, state => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.deleteLtft, ToastType.SUCCESS);
+      })
+      .addCase(deleteLtft.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.deleteLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
       });
   }
 });

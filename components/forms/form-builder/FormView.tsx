@@ -195,7 +195,7 @@ export const FormView = ({
               </Button>
             </Col>
             <Col width="one-quarter">
-              <StartOverButton />
+              <StartOverButton formName={formJson.name} isFormButton={true} />
             </Col>
           </Row>
         </Container>
