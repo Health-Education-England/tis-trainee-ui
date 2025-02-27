@@ -29,7 +29,6 @@ export function LtftHome() {
   const ltftFormsListStatus = useAppSelector(
     state => state.ltftSummaryList?.status
   );
-  //TODO - add logic to refresh the list after startover on the home page
   const needLtftFormsRefresh = useAppSelector(
     state => state.ltftSummaryList?.ltftFormsRefreshNeeded
   );
@@ -112,6 +111,7 @@ type TrackerSectionBtnsProps = {
 function TrackerSectionBtns({
   draftOrUnsubmittedLtftSummary
 }: Readonly<TrackerSectionBtnsProps>) {
+  const dispatch = useAppDispatch();
   return (
     <div style={{ marginTop: "2rem" }}>
       {draftOrUnsubmittedLtftSummary ? (
@@ -144,6 +144,7 @@ function TrackerSectionBtns({
               <Button
                 data-cy="choose-cct-btn"
                 onClick={() => {
+                  dispatch(updatedLtftFormsRefreshNeeded(false));
                   history.push("/cct");
                 }}
               >
