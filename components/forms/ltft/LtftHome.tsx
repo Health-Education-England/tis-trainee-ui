@@ -21,6 +21,7 @@ import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import { useEffect } from "react";
 import Loading from "../../common/Loading";
 import { StartOverButton } from "../StartOverButton";
+import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -112,13 +113,19 @@ function TrackerSectionBtns({
   draftOrUnsubmittedLtftSummary
 }: Readonly<TrackerSectionBtnsProps>) {
   const dispatch = useAppDispatch();
+  const handleClick = () => {
+    loadTheSavedForm("/ltft", draftOrUnsubmittedLtftSummary?.id ?? "", history);
+  };
   return (
     <div style={{ marginTop: "2rem" }}>
       {draftOrUnsubmittedLtftSummary ? (
         <Container>
           <Row>
             <Col width="two-thirds">
-              <Button data-cy="continue-application-button">
+              <Button
+                data-cy="continue-application-button"
+                onClick={handleClick}
+              >
                 {`Continue ${
                   draftOrUnsubmittedLtftSummary?.status === "DRAFT"
                     ? "draft"

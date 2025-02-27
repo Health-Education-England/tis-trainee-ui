@@ -177,6 +177,15 @@ export const deleteLtft = createAsyncThunk(
   }
 );
 
+export const loadSavedLtft = createAsyncThunk(
+  "ltft/loadSavedLtft",
+  async (id: string) => {
+    const formsService = new FormsService();
+    const response = await formsService.getLtftFormById(id);
+    return mapLtftDtoToObj(response.data);
+  }
+);
+
 const ltftSlice = createSlice({
   name: "ltft",
   initialState,
@@ -321,6 +330,22 @@ const ltftSlice = createSlice({
         state.error = action.error.message;
         showToast(
           toastErrText.deleteLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
+      })
+      .addCase(loadSavedLtft.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(loadSavedLtft.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.formData = action.payload;
+      })
+      .addCase(loadSavedLtft.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.loadLtft,
           ToastType.ERROR,
           `${action.error.code}-${action.error.message}`
         );

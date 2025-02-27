@@ -100,4 +100,8 @@ export class FormsService extends ApiService {
   async deleteLtft(formId: string): Promise<AxiosResponse> {
     return this.delete(`/ltft/${formId}`);
   }
+
+  async getLtftFormById(id: string): Promise<AxiosResponse<LtftDto>> {
+    return this.get<LtftDto>(`/ltft/${id}`);
+  }
 }

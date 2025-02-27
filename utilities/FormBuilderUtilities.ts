@@ -39,6 +39,7 @@ import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerF
 import history from "../components/navigation/history";
 import {
   deleteLtft,
+  loadSavedLtft,
   LtftObj,
   resetToInitLtft,
   saveLtft,
@@ -69,8 +70,10 @@ export async function loadTheSavedForm(
 ) {
   if (pathName === "/formr-a") {
     await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
-  } else {
+  } else if (pathName === "/formr-b") {
     await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
+  } else if (pathName === "/ltft") {
+    await store.dispatch(loadSavedLtft(id));
   }
   history.push(`${pathName}/create`);
 }
