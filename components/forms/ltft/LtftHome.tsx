@@ -8,82 +8,99 @@ import {
 } from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
-import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
+import {
+  fetchLtftSummaryList,
+  LtftSummaryObj,
+  updatedLtftFormsRefreshNeeded
+} from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
 import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { useEffect } from "react";
+import Loading from "../../common/Loading";
 
 export function LtftHome() {
-  // TODO: remove the mock data mockLtftsList1 and resume the data from useAppSelector when ready
-  const ltftSummary = mockLtftsList1 || [];
-  const ltftSummaryStatus = "succeeded";
-  // const dispatch = useAppDispatch();
-  // const isBetaTester = useIsBetaTester();
-  // useEffect(() => {
-  //   if (isBetaTester) dispatch(fetchLtftSummaryList());
-  // }, [dispatch, isBetaTester]);
+  const ltftSummary = useAppSelector(
+    state => state.ltftSummaryList?.ltftList || []
+  );
+  const ltftFormsListStatus = useAppSelector(
+    state => state.ltftSummaryList?.status
+  );
+  //TODO - add logic to refresh the list after startover on the home page
+  const needLtftFormsRefresh = useAppSelector(
+    state => state.ltftSummaryList?.ltftFormsRefreshNeeded
+  );
+  const dispatch = useAppDispatch();
+  const isBetaTester = useIsBetaTester();
+  useEffect(() => {
+    if (isBetaTester) {
+      dispatch(fetchLtftSummaryList());
+      updatedLtftFormsRefreshNeeded(false);
+    }
+  }, [dispatch, isBetaTester]);
 
-  // const ltftSummary = useAppSelector(
-  //   state => state.ltftSummaryList?.ltftList || []
-  // );
-  // const ltftSummaryStatus = useAppSelector(
-  //   state => state.ltftSummaryList?.status
-  // );
-
+  // TODO - use real data for Summary Table when submission logic added
+  const mockLtftSummary = mockLtftsList1;
   const sortedLtftSummary = DateUtilities.genericSort(
-    ltftSummary.slice(),
+    mockLtftSummary.slice(),
     "lastModified",
     true
-  );
-
-  const draftOrUnsubmittedLtftSummary = sortedLtftSummary.find(
-    item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );
   const previousLtftSummaries = sortedLtftSummary.filter(
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
 
+  const draftOrUnsubmittedLtftSummary = ltftSummary.find(
+    item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
+  );
+
+  if (ltftFormsListStatus === "loading") return <Loading />;
+
   return (
-    <>
-      <Card>
-        <Card.Content>
-          <>
-            <Card.Heading data-cy="ltft-tracker-header">
-              {draftOrUnsubmittedLtftSummary
-                ? "In progress application"
-                : "New application"}
+    ltftFormsListStatus === "succeeded" && (
+      <>
+        <Card>
+          <Card.Content>
+            <>
+              <Card.Heading data-cy="ltft-tracker-header">
+                {draftOrUnsubmittedLtftSummary
+                  ? "In progress application"
+                  : "New application"}
+              </Card.Heading>
+              <LtftTracker
+                draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+              />
+              <TrackerSectionBtns
+                draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+              />
+            </>
+          </Card.Content>
+        </Card>
+        <Card>
+          <Card.Content>
+            <WarningCallout data-cy="ltftWarning">
+              <WarningCallout.Label visuallyHiddenText={false}>
+                For Demonstration Only
+              </WarningCallout.Label>
+              <p>
+                The table below has <strong>dummy data</strong> and is read only
+                for demonstrating the future layout of the LTFT Applications
+                Summary.
+              </p>
+            </WarningCallout>
+            <Card.Heading data-cy="ltft-summary-header">
+              Previous applications summary
             </Card.Heading>
-            <LtftTracker
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+            <LtftSummary
+              ltftSummaryStatus={ltftFormsListStatus}
+              ltftSummaryList={previousLtftSummaries}
             />
-            <TrackerSectionBtns
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-            />
-          </>
-        </Card.Content>
-      </Card>
-      <Card>
-        <Card.Content>
-          <WarningCallout data-cy="ltftWarning">
-            <WarningCallout.Label visuallyHiddenText={false}>
-              For Demonstration Only
-            </WarningCallout.Label>
-            <p>
-              The table below has <strong>dummy data</strong> and is read only
-              for demonstrating the future layout of the LTFT Applications
-              Summary.
-            </p>
-          </WarningCallout>
-          <Card.Heading data-cy="ltft-summary-header">
-            Previous applications summary
-          </Card.Heading>
-          <LtftSummary
-            ltftSummaryStatus={ltftSummaryStatus}
-            ltftSummaryList={previousLtftSummaries}
-          />
-        </Card.Content>
-      </Card>
-    </>
+          </Card.Content>
+        </Card>
+      </>
+    )
   );
 }
 

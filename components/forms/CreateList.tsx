@@ -11,8 +11,6 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
-import { resetToInitFormA } from "../../redux/slices/formASlice";
-import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
 import { FormName } from "./form-builder/FormBuilder";
