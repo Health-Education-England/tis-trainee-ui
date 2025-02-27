@@ -181,7 +181,7 @@ const ltftSlice = createSlice({
   name: "ltft",
   initialState,
   reducers: {
-    resetToInit() {
+    resetToInitLtft() {
       return initialState;
     },
     setLtftCctSnapshot(state, action: PayloadAction<CctCalculation>) {
@@ -329,7 +329,7 @@ const ltftSlice = createSlice({
 });
 
 export const {
-  resetToInit,
+  resetToInitLtft,
   setLtftCctSnapshot,
   updatedLtft,
   updatedCanEditLtft,

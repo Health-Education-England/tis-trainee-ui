@@ -40,6 +40,7 @@ import history from "../components/navigation/history";
 import {
   deleteLtft,
   LtftObj,
+  resetToInitLtft,
   saveLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
@@ -95,20 +96,13 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
   }
 }
 
-export function resetForm(formName: string, history: any) {
-  const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
+export function resetForm(formName: string) {
   if (formName === "formA") {
-    const formAStatus = store.getState().formA.status;
-    if (formAStatus === "succeeded") {
-      store.dispatch(resetToInitFormA());
-      history.push(redirectPath);
-    }
-  } else {
-    const formBStatus = store.getState().formB.status;
-    if (formBStatus === "succeeded") {
-      store.dispatch(resetToInitFormB());
-      history.push(redirectPath);
-    }
+    store.dispatch(resetToInitFormA());
+  } else if (formName === "formB") {
+    store.dispatch(resetToInitFormB());
+  } else if (formName === "ltft") {
+    store.dispatch(resetToInitLtft());
   }
 }
 const chooseRedirectPath = (formName: string, confirm?: boolean) => {

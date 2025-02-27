@@ -5,7 +5,8 @@ import { Button } from "nhsuk-react-components";
 import {
   getDraftFormId,
   isFormDeleted,
-  mapFormNameToUrl
+  mapFormNameToUrl,
+  resetForm
 } from "../../utilities/FormBuilderUtilities";
 import history from "../navigation/history";
 import store from "../../redux/store/store";
@@ -25,12 +26,8 @@ export const StartOverButton = ({
 }: Readonly<StartOverButtonProps>) => {
   const confirm = useConfirm();
   const formId = isFormButton
-    ? getDraftFormId(
-        useAppSelector(state => state[formName].formData),
-        formName
-      )
+    ? getDraftFormId(store.getState()[formName].formData, formName)
     : formsListDraftId;
-  console.log("formId in startover button", formId);
   const saveStatus = useAppSelector(state => state[formName].saveStatus);
   const isSaving = saveStatus === "saving";
 
@@ -63,6 +60,7 @@ export const StartOverButton = ({
 
 // TODO - for ltft forms list refresh
 function checkPush(formName: FormName, isFormButton: boolean) {
+  resetForm(formName);
   if (isFormButton) {
     const mappedUrl = mapFormNameToUrl(formName);
     history.push(`/${mappedUrl}`);

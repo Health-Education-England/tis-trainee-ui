@@ -43,10 +43,6 @@ const CreateList = () => {
     dispatch(fetchFeatureFlags());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(formName === "formA" ? resetToInitFormA() : resetToInitFormB());
-  }, [dispatch, formName]);
-
   let content: JSX.Element = <></>;
 
   if (formRListStatus === "loading" || featFlagStatus === "loading")
