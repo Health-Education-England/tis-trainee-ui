@@ -6,9 +6,10 @@ import { Form, FormName } from "../form-builder/FormBuilder";
 import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useState } from "react";
-import { WarningCallout } from "nhsuk-react-components";
+import { Col, Container, Row, WarningCallout } from "nhsuk-react-components";
 import Declarations from "../form-builder/Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
+import { StartOverButton } from "../StartOverButton";
 
 export const LtftFormView = () => {
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
@@ -36,8 +37,15 @@ export const LtftFormView = () => {
           />
         </form>
       </WarningCallout>
-      <p>Btns to go here: submit (to open modal), save & exit, start over </p>
-      <p>Modal to name the form etc. to go here</p>
+      {/* Btns to go here: submit (to open modal), save & exit, start over */}
+      <Container>
+        <Row>
+          <Col width="one-quarter">
+            <StartOverButton formName={formJson.name} isFormButton={true} />
+          </Col>
+        </Row>
+      </Container>
+      {/* Modal to name the form etc. to go here */}
     </>
   ) : (
     <Redirect to={redirectPath} />
