@@ -6,11 +6,19 @@ import { Form, FormName } from "../form-builder/FormBuilder";
 import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useState } from "react";
-import { Col, Container, Row, WarningCallout } from "nhsuk-react-components";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  WarningCallout
+} from "nhsuk-react-components";
 import Declarations from "../form-builder/Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
+import { makeWarningText } from "../../../utilities/ltftUtilities";
+import { LtftNameModal } from "./LtftNameModal";
 
 export const LtftFormView = () => {
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
@@ -23,6 +31,23 @@ export const LtftFormView = () => {
   const formJson = ltftJson as Form;
   const redirectPath = "/ltft";
   const [canSubmit, setCanSubmit] = useState(false);
+  const [formKey, setFormKey] = useState(Date.now());
+  const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const handleSubClick = () => {
+    setShowModal(true);
+  };
+
+  const handleModalFormClose = () => {
+    setShowModal(false);
+    setIsSubmitting(false);
+    setFormKey(Date.now());
+  };
+
+  const warningText = makeWarningText("preSub");
+
   return formData?.traineeTisId ? (
     <>
       <CctCalcSummaryDetails viewedCalc={cctSnapshot} />
@@ -40,9 +65,24 @@ export const LtftFormView = () => {
             canEdit={canEditStatus}
             formJson={formJson}
           />
+          {canEditStatus && (
+            <Button
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                handleSubClick();
+              }}
+              disabled={
+                !canSubmit || isSubmitting || Object.keys(errors).length > 0
+              }
+              data-cy="BtnSubmit"
+            >
+              Submit Form
+            </Button>
+          )}
         </form>
       </WarningCallout>
-      {/* Btns to go here: submit (to open modal), save & exit, start over */}
+      {/* Btns to go here: save & exit, start over */}
       <Container>
         <Row>
           <Col width="one-quarter">
@@ -51,6 +91,7 @@ export const LtftFormView = () => {
         </Row>
       </Container>
       {/* Modal to name the form etc. to go here */}
+      <LtftNameModal isOpen={showModal} onClose={handleModalFormClose} />
     </>
   ) : (
     <Redirect to={redirectPath} />
