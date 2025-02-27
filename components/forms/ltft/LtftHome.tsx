@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import { useEffect } from "react";
 import Loading from "../../common/Loading";
+import { StartOverButton } from "../StartOverButton";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -39,7 +40,7 @@ export function LtftHome() {
       dispatch(fetchLtftSummaryList());
       updatedLtftFormsRefreshNeeded(false);
     }
-  }, [dispatch, isBetaTester]);
+  }, [dispatch, isBetaTester, needLtftFormsRefresh]);
 
   // TODO - use real data for Summary Table when submission logic added
   const mockLtftSummary = mockLtftsList1;
@@ -128,9 +129,11 @@ function TrackerSectionBtns({
           </Row>
           <Row>
             <Col width="one-third">
-              <Button secondary data-cy="ltft-startover-btn">
-                Start over
-              </Button>
+              <StartOverButton
+                formName="ltft"
+                isFormButton={false}
+                formsListDraftId={draftOrUnsubmittedLtftSummary.id}
+              />
             </Col>
           </Row>
         </Container>

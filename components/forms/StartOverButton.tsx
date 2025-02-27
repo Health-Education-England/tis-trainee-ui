@@ -12,6 +12,7 @@ import history from "../navigation/history";
 import store from "../../redux/store/store";
 import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 import { FormName } from "./form-builder/FormBuilder";
+import { updatedLtftFormsRefreshNeeded } from "../../redux/slices/ltftSummaryListSlice";
 
 export type StartOverButtonProps = {
   formName: FormName;
@@ -58,13 +59,14 @@ export const StartOverButton = ({
   ) : null;
 };
 
-// TODO - for ltft forms list refresh
 function checkPush(formName: FormName, isFormButton: boolean) {
   resetForm(formName);
   if (isFormButton) {
     const mappedUrl = mapFormNameToUrl(formName);
     history.push(`/${mappedUrl}`);
   } else {
-    store.dispatch(updatedFormsRefreshNeeded(true));
+    if (formName !== "ltft") {
+      store.dispatch(updatedFormsRefreshNeeded(true));
+    } else store.dispatch(updatedLtftFormsRefreshNeeded(true));
   }
 }
