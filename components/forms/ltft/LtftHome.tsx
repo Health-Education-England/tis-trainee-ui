@@ -22,6 +22,7 @@ import { useEffect } from "react";
 import Loading from "../../common/Loading";
 import { StartOverButton } from "../StartOverButton";
 import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
+import ErrorPage from "../../common/ErrorPage";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -59,49 +60,50 @@ export function LtftHome() {
 
   if (ltftFormsListStatus === "loading") return <Loading />;
 
+  if (ltftFormsListStatus === "failed")
+    return <ErrorPage message="There was a problem loading this page." />;
+
   return (
-    ltftFormsListStatus === "succeeded" && (
-      <>
-        <Card>
-          <Card.Content>
-            <>
-              <Card.Heading data-cy="ltft-tracker-header">
-                {draftOrUnsubmittedLtftSummary
-                  ? "In progress application"
-                  : "New application"}
-              </Card.Heading>
-              <LtftTracker
-                draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-              />
-              <TrackerSectionBtns
-                draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-              />
-            </>
-          </Card.Content>
-        </Card>
-        <Card>
-          <Card.Content>
-            <WarningCallout data-cy="ltftWarning">
-              <WarningCallout.Label visuallyHiddenText={false}>
-                For Demonstration Only
-              </WarningCallout.Label>
-              <p>
-                The table below has <strong>dummy data</strong> and is read only
-                for demonstrating the future layout of the LTFT Applications
-                Summary.
-              </p>
-            </WarningCallout>
-            <Card.Heading data-cy="ltft-summary-header">
-              Previous applications summary
+    <>
+      <Card>
+        <Card.Content>
+          <>
+            <Card.Heading data-cy="ltft-tracker-header">
+              {draftOrUnsubmittedLtftSummary
+                ? "In progress application"
+                : "New application"}
             </Card.Heading>
-            <LtftSummary
-              ltftSummaryStatus={ltftFormsListStatus}
-              ltftSummaryList={previousLtftSummaries}
+            <LtftTracker
+              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
             />
-          </Card.Content>
-        </Card>
-      </>
-    )
+            <TrackerSectionBtns
+              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+            />
+          </>
+        </Card.Content>
+      </Card>
+      <Card>
+        <Card.Content>
+          <WarningCallout data-cy="ltftWarning">
+            <WarningCallout.Label visuallyHiddenText={false}>
+              For Demonstration Only
+            </WarningCallout.Label>
+            <p>
+              The table below has <strong>dummy data</strong> and is read only
+              for demonstrating the future layout of the LTFT Applications
+              Summary.
+            </p>
+          </WarningCallout>
+          <Card.Heading data-cy="ltft-summary-header">
+            Previous applications summary
+          </Card.Heading>
+          <LtftSummary
+            ltftSummaryStatus={ltftFormsListStatus}
+            ltftSummaryList={previousLtftSummaries}
+          />
+        </Card.Content>
+      </Card>
+    </>
   );
 }
 
