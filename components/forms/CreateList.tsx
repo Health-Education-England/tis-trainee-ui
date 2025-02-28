@@ -60,7 +60,7 @@ const CreateList = () => {
             <Col width="one-third">
               <StartOverButton
                 formName={formName}
-                isFormButton={false}
+                btnLocation="formsList"
                 formsListDraftId={formIdFromDraftFormProps}
               />
             </Col>

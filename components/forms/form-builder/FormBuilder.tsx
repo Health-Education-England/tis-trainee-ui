@@ -307,7 +307,7 @@ export default function FormBuilder({
             </Button>
           </Col>
           <Col width="one-quarter">
-            <StartOverButton formName={jsonFormName} isFormButton={true} />
+            <StartOverButton formName={jsonFormName} btnLocation="form" />
           </Col>
         </Row>
       </Container>

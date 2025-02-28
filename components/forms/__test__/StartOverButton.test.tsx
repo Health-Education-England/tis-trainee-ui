@@ -45,7 +45,7 @@ describe("StartOverButton Component", () => {
   const renderStartOverButton = () => {
     return render(
       <Provider store={store}>
-        <StartOverButton formName="formA" isFormButton={true} />
+        <StartOverButton formName="formA" btnLocation="form" />
       </Provider>
     );
   };

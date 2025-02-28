@@ -144,7 +144,7 @@ function TrackerSectionBtns({
             <Col width="one-third">
               <StartOverButton
                 formName="ltft"
-                isFormButton={false}
+                btnLocation="formsList"
                 formsListDraftId={draftOrUnsubmittedLtftSummary.id}
               />
             </Col>

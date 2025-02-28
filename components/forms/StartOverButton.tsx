@@ -14,21 +14,24 @@ import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 import { FormName } from "./form-builder/FormBuilder";
 import { updatedLtftFormsRefreshNeeded } from "../../redux/slices/ltftSummaryListSlice";
 
+export type BtnLocation = "formsList" | "form" | "formView";
+
 export type StartOverButtonProps = {
   formName: FormName;
-  isFormButton: boolean;
+  btnLocation: BtnLocation;
   formsListDraftId?: string;
 };
 
 export const StartOverButton = ({
   formName,
-  isFormButton,
+  btnLocation,
   formsListDraftId
 }: Readonly<StartOverButtonProps>) => {
   const confirm = useConfirm();
-  const formId = isFormButton
-    ? getDraftFormId(store.getState()[formName].formData, formName)
-    : formsListDraftId;
+  const formId =
+    btnLocation === "formsList"
+      ? formsListDraftId
+      : getDraftFormId(store.getState()[formName].formData, formName);
   const saveStatus = useAppSelector(state => state[formName].saveStatus);
   const isSaving = saveStatus === "saving";
 
@@ -38,15 +41,17 @@ export const StartOverButton = ({
         "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
     })
       .then(async () => {
-        const shouldStartOver = await isFormDeleted(formName, formId as string);
+        const shouldStartOver = formId
+          ? await isFormDeleted(formName, formId as string)
+          : btnLocation === "formView";
         shouldStartOver
-          ? checkPush(formName, isFormButton)
+          ? checkPush(formName, btnLocation)
           : console.log("startover failed");
       })
       .catch(() => console.log("startover cancelled"));
   };
 
-  return formId ? (
+  return formId || btnLocation === "formView" ? (
     <Button
       data-cy="startOverButton"
       reverse
@@ -59,14 +64,14 @@ export const StartOverButton = ({
   ) : null;
 };
 
-function checkPush(formName: FormName, isFormButton: boolean) {
+function checkPush(formName: FormName, btnLocation: BtnLocation) {
   resetForm(formName);
-  if (isFormButton) {
-    const mappedUrl = mapFormNameToUrl(formName);
-    history.push(`/${mappedUrl}`);
-  } else {
+  if (btnLocation === "formsList") {
     if (formName !== "ltft") {
       store.dispatch(updatedFormsRefreshNeeded(true));
     } else store.dispatch(updatedLtftFormsRefreshNeeded(true));
+  } else {
+    const mappedUrl = mapFormNameToUrl(formName);
+    history.push(`/${mappedUrl}`);
   }
 }
