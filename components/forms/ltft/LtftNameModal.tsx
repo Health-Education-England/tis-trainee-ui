@@ -38,7 +38,7 @@ export function LtftNameModal({
                 <TextInputField
                   name="name"
                   id="ltftName"
-                  label="Give your LTFT a name"
+                  label="Please give your Changing hours (LTFT) application a name"
                   placeholder="Type name here..."
                 />
                 <Button

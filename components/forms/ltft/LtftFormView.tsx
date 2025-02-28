@@ -17,7 +17,6 @@ import Declarations from "../form-builder/Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
-import { makeWarningText } from "../../../utilities/ltftUtilities";
 import { LtftNameModal } from "./LtftNameModal";
 
 export const LtftFormView = () => {
@@ -45,8 +44,6 @@ export const LtftFormView = () => {
     setIsSubmitting(false);
     setFormKey(Date.now());
   };
-
-  const warningText = makeWarningText("preSub");
 
   return formData?.traineeTisId ? (
     <>
