@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CctCalculation } from "./cctSlice";
+import { CctCalculation, CctType } from "./cctSlice";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
 import {
   mapLtftDtoToObj,
@@ -22,7 +22,7 @@ export type LtftFormStatus =
 export type LtftCctChange = {
   calculationId: string;
   cctDate: Date | string;
-  type: string;
+  type: CctType;
   startDate: Date | string;
   wte: number;
   changeId: string;

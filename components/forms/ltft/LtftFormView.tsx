@@ -10,11 +10,16 @@ import { Col, Container, Row, WarningCallout } from "nhsuk-react-components";
 import Declarations from "../form-builder/Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
 import { StartOverButton } from "../StartOverButton";
+import { CctCalculation } from "../../../redux/slices/cctSlice";
 
 export const LtftFormView = () => {
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
   const canEditStatus = useAppSelector(state => state.ltft.canEdit);
-  const cctSnapshot = useAppSelector(state => state.ltft.LtftCctSnapshot);
+  const cctSnapshot: CctCalculation = {
+    cctDate: formData?.change?.cctDate,
+    programmeMembership: formData?.programmeMembership,
+    changes: [formData?.change]
+  };
   const formJson = ltftJson as Form;
   const redirectPath = "/ltft";
   const [canSubmit, setCanSubmit] = useState(false);

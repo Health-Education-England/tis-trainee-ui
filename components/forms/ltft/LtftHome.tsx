@@ -21,7 +21,10 @@ import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import { useEffect } from "react";
 import Loading from "../../common/Loading";
 import { StartOverButton } from "../StartOverButton";
-import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
+import {
+  loadTheSavedForm,
+  resetForm
+} from "../../../utilities/FormBuilderUtilities";
 import ErrorPage from "../../common/ErrorPage";
 
 export function LtftHome() {
@@ -40,6 +43,7 @@ export function LtftHome() {
     if (isBetaTester) {
       dispatch(fetchLtftSummaryList());
       updatedLtftFormsRefreshNeeded(false);
+      resetForm("ltft");
     }
   }, [dispatch, isBetaTester, needLtftFormsRefresh]);
 

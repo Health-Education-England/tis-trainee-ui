@@ -118,6 +118,7 @@ export default function FormViewBuilder({
 function displayListValue(fieldVal: any, fieldType?: string) {
   if (fieldVal === null || fieldVal === "") return "Not provided";
   if (fieldType === "array") {
+    if (fieldVal.length === 0) return "Not provided";
     return fieldVal.map((item: any, index: number) => (
       <Card key={index} className="container-form-view">
         <Card.Content>
@@ -143,5 +144,5 @@ function displayListValue(fieldVal: any, fieldType?: string) {
   if (typeof fieldVal === "boolean") {
     return fieldVal ? "Yes" : "No";
   }
-  return fieldVal.toString();
+  return fieldVal?.toString();
 }
