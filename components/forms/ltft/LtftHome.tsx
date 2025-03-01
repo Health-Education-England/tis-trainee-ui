@@ -9,7 +9,6 @@ import {
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
 import {
-  fetchLtftSummaryList,
   LtftSummaryObj,
   updatedLtftFormsRefreshNeeded
 } from "../../../redux/slices/ltftSummaryListSlice";
@@ -17,15 +16,11 @@ import LtftSummary from "./LtftSummary";
 import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
-import { useEffect } from "react";
 import Loading from "../../common/Loading";
 import { StartOverButton } from "../StartOverButton";
-import {
-  loadTheSavedForm,
-  resetForm
-} from "../../../utilities/FormBuilderUtilities";
+import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 import ErrorPage from "../../common/ErrorPage";
+import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -34,18 +29,7 @@ export function LtftHome() {
   const ltftFormsListStatus = useAppSelector(
     state => state.ltftSummaryList?.status
   );
-  const needLtftFormsRefresh = useAppSelector(
-    state => state.ltftSummaryList?.ltftFormsRefreshNeeded
-  );
-  const dispatch = useAppDispatch();
-  const isBetaTester = useIsBetaTester();
-  useEffect(() => {
-    if (isBetaTester) {
-      dispatch(fetchLtftSummaryList());
-      updatedLtftFormsRefreshNeeded(false);
-      resetForm("ltft");
-    }
-  }, [dispatch, isBetaTester, needLtftFormsRefresh]);
+  useLtftHomeStartover();
 
   // TODO - use real data for Summary Table when submission logic added
   const mockLtftSummary = mockLtftsList1;
