@@ -12,11 +12,12 @@ import {
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
-import store from "../redux/store/store";
+import store, { RootState } from "../redux/store/store";
 import {
   Field,
   Form,
   FormData,
+  FormName,
   MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -36,6 +37,17 @@ import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
+import {
+  deleteLtft,
+  loadSavedLtft,
+  LtftObj,
+  resetToInitLtft,
+  saveLtft,
+  updatedCanEditLtft,
+  updatedEditPageNumberLtft,
+  updatedLtft,
+  updateLtft
+} from "../redux/slices/ltftSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -58,8 +70,10 @@ export async function loadTheSavedForm(
 ) {
   if (pathName === "/formr-a") {
     await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
-  } else {
+  } else if (pathName === "/formr-b") {
     await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
+  } else if (pathName === "/ltft") {
+    await store.dispatch(loadSavedLtft(id));
   }
   history.push(`${pathName}/create`);
 }
@@ -68,9 +82,12 @@ export async function loadTheSavedForm(
 export function getEditPageNumber(formName: string) {
   if (formName === "formA") {
     return store.getState().formA.editPageNumber;
-  } else {
+  } else if (formName === "formB") {
     return store.getState().formB.editPageNumber;
+  } else if (formName === "ltft") {
+    return store.getState().ltft.editPageNumber;
   }
+  return 0;
 }
 
 // This will be used when reviewing a multi-page form to send the user to the correct page to edit
@@ -82,20 +99,13 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
   }
 }
 
-export function resetForm(formName: string, history: any) {
-  const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
+export function resetForm(formName: string) {
   if (formName === "formA") {
-    const formAStatus = store.getState().formA.status;
-    if (formAStatus === "succeeded") {
-      store.dispatch(resetToInitFormA());
-      history.push(redirectPath);
-    }
-  } else {
-    const formBStatus = store.getState().formB.status;
-    if (formBStatus === "succeeded") {
-      store.dispatch(resetToInitFormB());
-      history.push(redirectPath);
-    }
+    store.dispatch(resetToInitFormA());
+  } else if (formName === "formB") {
+    store.dispatch(resetToInitFormB());
+  } else if (formName === "ltft") {
+    store.dispatch(resetToInitLtft());
   }
 }
 const chooseRedirectPath = (formName: string, confirm?: boolean) => {
@@ -116,6 +126,9 @@ export function continueToConfirm(formName: string, formData: FormData) {
   } else if (formName === "formB") {
     store.dispatch(updatedFormB(formData as FormRPartB));
     store.dispatch(updatedCanEditB(true));
+  } else if (formName === "ltft") {
+    store.dispatch(updatedLtft(formData as LtftObj));
+    store.dispatch(updatedCanEditLtft(true));
   }
   history.push(redirectPath);
 }
@@ -125,33 +138,30 @@ export function handleEditSection(
   formName: string,
   history: any
 ) {
-  const redirectPath =
-    formName === "formA" ? "/formr-a/create" : "/formr-b/create";
+  const redirectPath = `${chooseRedirectPath(formName)}/create`;
   if (formName === "formA") {
     store.dispatch(updatedEditPageNumber(pageNum));
-  } else {
+  } else if (formName === "formB") {
     store.dispatch(updatedEditPageNumberB(pageNum));
+  } else if (formName === "ltft") {
+    store.dispatch(updatedEditPageNumberLtft(pageNum));
   }
   history.push(redirectPath);
 }
 
 export async function isFormDeleted(
-  formName: string,
-  formId: string | undefined,
-  formIdFromDraftFormProps: string | undefined
-) {
-  if (formName === "formr-a") {
-    await store.dispatch(
-      deleteFormA((formId as string) ?? (formIdFromDraftFormProps as string))
-    );
-    return store.getState().formA.status === "succeeded";
-  } else {
-    await store.dispatch(
-      deleteFormB((formId as string) ?? (formIdFromDraftFormProps as string))
-    );
-
-    return store.getState().formB.status === "succeeded";
+  formName: FormName,
+  formId: string
+): Promise<boolean> {
+  if (formName === "formA") {
+    await store.dispatch(deleteFormA(formId));
+  } else if (formName === "formB") {
+    await store.dispatch(deleteFormB(formId));
+  } else if (formName === "ltft") {
+    await store.dispatch(deleteLtft(formId));
   }
+  const state = store.getState() as RootState;
+  return state[formName].status === "succeeded";
 }
 
 // ----------------------------------------------------------
@@ -237,7 +247,7 @@ export interface DraftFormProps {
   programmeMembershipId?: string | null;
 }
 
-export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
+export function setDraftFormRProps(forms: IFormR[]): DraftFormProps | null {
   if (
     forms.length === 0 ||
     forms.every(form => form.lifecycleState === LifeCycleState.Submitted)
@@ -269,7 +279,7 @@ export function setDraftFormProps(forms: IFormR[]): DraftFormProps | null {
   return null;
 }
 // NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission
-export function setFormDataForSubmit(
+export function setFormRDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {
@@ -312,13 +322,13 @@ export function setFormDataForSubmit(
   return { ...newFormData, ...myPreciousFormDataFields };
 }
 
-export function prepFormData(
+function prepFormRData(
   formData: FormRPartA | FormRPartB,
   isSubmit: boolean,
   jsonForm: Form
 ) {
   if (isSubmit) {
-    return setFormDataForSubmit(jsonForm, formData);
+    return setFormRDataForSubmit(jsonForm, formData);
   }
   if (formData.lifecycleState !== LifeCycleState.Unsubmitted) {
     return {
@@ -332,6 +342,11 @@ export function prepFormData(
     ...formData,
     lastModifiedDate: new Date()
   };
+}
+
+function prepLtftData(formData: LtftObj, isSubmit: boolean, jsonForm: Form) {
+  // TODO - add similar logic to FormR's
+  return formData;
 }
 
 async function updateForm(
@@ -348,10 +363,18 @@ async function updateForm(
         isSubmit
       })
     );
-  } else {
+  } else if (formName === "formB") {
     await store.dispatch(
       updateFormB({
         formData: formData as FormRPartB,
+        isAutoSave,
+        isSubmit
+      })
+    );
+  } else if (formName === "ltft") {
+    await store.dispatch(
+      updateLtft({
+        formData: formData as LtftObj,
         isAutoSave,
         isSubmit
       })
@@ -361,7 +384,7 @@ async function updateForm(
 
 async function saveForm(
   formName: string,
-  formData: FormRPartA | FormRPartB,
+  formData: FormData,
   isAutoSave: boolean,
   isSubmit: boolean
 ) {
@@ -373,30 +396,36 @@ async function saveForm(
         isSubmit
       })
     );
-  } else {
+  } else if (formName === "formB") {
     await store.dispatch(
       saveFormB({ formData: formData as FormRPartB, isAutoSave, isSubmit })
     );
-  }
+  } else if (formName === "ltft")
+    await store.dispatch(
+      saveLtft({ formData: formData as LtftObj, isAutoSave, isSubmit })
+    );
 }
 
 export const getDraftFormId = (
-  formData: FormRPartA | FormRPartB,
+  formData: FormDataType,
   formName: string
-): string | undefined => {
+): string | null => {
   if (formName === "formA") {
-    return formData?.id ?? store.getState().formA?.newFormId;
-  } else {
-    return formData?.id ?? store.getState().formB?.newFormId;
-  }
+    return formData?.id ?? store.getState().formA?.newFormId ?? null;
+  } else if (formName === "formB") {
+    return formData?.id ?? store.getState().formB?.newFormId ?? null;
+  } else if (formName === "ltft")
+    return formData?.id ?? store.getState().ltft?.newFormId ?? null;
+  return null;
 };
 
 const getSaveStatus = (formName: string) => {
   if (formName === "formA") {
     return store.getState().formA.saveStatus;
-  } else {
+  } else if (formName === "formB") {
     return store.getState().formB.saveStatus;
-  }
+  } else if (formName === "ltft") return store.getState().ltft.saveStatus;
+  return "idle";
 };
 
 export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
@@ -408,15 +437,20 @@ export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
   }
 };
 
-export async function saveFormR(
+export type FormDataType = FormRPartA | FormRPartB | LtftObj;
+
+export async function saveDraftForm(
   jsonForm: Form,
-  formData: FormRPartA | FormRPartB,
+  formData: FormDataType,
   isAutoSave: boolean,
   isSubmit: boolean
 ) {
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
-  const preppedFormData = prepFormData(formData, isSubmit, jsonForm);
+  const isFormR = formName === "formA" || formName === "formB";
+  const preppedFormData = isFormR
+    ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
+    : prepLtftData(formData as LtftObj, isSubmit, jsonForm);
 
   if (draftFormId) {
     await updateForm(
@@ -565,6 +599,17 @@ export const determineCurrentValue = (
     return checkedStatus;
   } else {
     return value;
+  }
+};
+
+export const mapFormNameToUrl = (formName: FormName): string => {
+  switch (formName) {
+    case "formA":
+      return "formr-a";
+    case "formB":
+      return "formr-b";
+    case "ltft":
+      return "ltft";
   }
 };
 

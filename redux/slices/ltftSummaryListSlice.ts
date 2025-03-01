@@ -16,12 +16,14 @@ type LtftSummaryList = {
   ltftList: LtftSummaryObj[];
   status: string;
   error: any;
+  ltftFormsRefreshNeeded: boolean;
 };
 
 export const initialState: LtftSummaryList = {
   ltftList: [],
   status: "idle",
-  error: ""
+  error: "",
+  ltftFormsRefreshNeeded: false
 };
 
 export const fetchLtftSummaryList = createAsyncThunk(
@@ -45,6 +47,9 @@ export const ltftSummaryListSlice = createSlice({
     },
     updatedLtftSummaryListStatus: (state, action) => {
       state.status = action.payload;
+    },
+    updatedLtftFormsRefreshNeeded: (state, action) => {
+      state.ltftFormsRefreshNeeded = action.payload;
     }
   },
   extraReducers(builder) {
@@ -68,7 +73,10 @@ export const ltftSummaryListSlice = createSlice({
   }
 });
 
-export const { updatedLtftSummaryList, updatedLtftSummaryListStatus } =
-  ltftSummaryListSlice.actions;
+export const {
+  updatedLtftSummaryList,
+  updatedLtftSummaryListStatus,
+  updatedLtftFormsRefreshNeeded
+} = ltftSummaryListSlice.actions;
 
 export default ltftSummaryListSlice.reducer;

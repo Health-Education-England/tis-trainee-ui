@@ -10,7 +10,10 @@ import { handleCctSubmit } from "../../../utilities/CctUtilities";
 import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import { CalcDetails } from "./CctCalcCreate";
 import ErrorPage from "../../common/ErrorPage";
-import { updatedFormSaveStatus } from "../../../redux/slices/cctSlice";
+import {
+  CctCalculation,
+  updatedFormSaveStatus
+} from "../../../redux/slices/cctSlice";
 
 export function CctCalcSummary() {
   const dispatch = useAppDispatch();
@@ -22,19 +25,10 @@ export function CctCalcSummary() {
   const cctFormSaveStatus = useAppSelector(state => state.cct.formSaveStatus);
   const newCalcMade = useAppSelector(state => state.cct.newCalcMade);
   const viewedCalc = useAppSelector(state => state.cct.cctCalc);
-  const {
-    programmeMembership,
-    cctDate,
-    changes,
-    name,
-    id,
-    created,
-    lastModified
-  } = viewedCalc;
 
   const handleSave = () => {
     dispatch(updatedFormSaveStatus("idle"));
-    if (id) {
+    if (viewedCalc?.id) {
       handleCctSubmit(startSubmitting, stopSubmitting, viewedCalc);
     } else {
       setShowCctNameModal(true);
@@ -43,84 +37,7 @@ export function CctCalcSummary() {
 
   return (
     <>
-      <Card className="pdf-visible">
-        <Card.Content>
-          <Card.Heading data-cy="cct-calc-summary-header">
-            CCT Calculation Summary
-          </Card.Heading>
-          <h3 className={style.panelSubHeader}>Linked Programme</h3>
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Key>Programme name</SummaryList.Key>
-              <SummaryList.Value>{programmeMembership.name}</SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Key>Start date</SummaryList.Key>
-              <SummaryList.Value>
-                {dayjs(programmeMembership.startDate).format("DD/MM/YYYY")}
-              </SummaryList.Value>
-            </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Key>Completion date</SummaryList.Key>
-              <SummaryList.Value>
-                {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          <h3 className={style.panelSubHeader}>Current WTE percentage</h3>
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Key>WTE</SummaryList.Key>
-              <SummaryList.Value>
-                {programmeMembership.wte && programmeMembership.wte * 100}%
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          <h3 className={style.panelSubHeader}>Proposed changes</h3>
-          {changes.map((change, index) => (
-            <div key={index}>
-              <SummaryList noBorder>
-                <SummaryList.Row>
-                  <SummaryList.Key>Change type</SummaryList.Key>
-                  <SummaryList.Value>
-                    {change.type === "LTFT" && "Changing hours (LTFT)"}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Change date</SummaryList.Key>
-                  <SummaryList.Value>
-                    {dayjs(change.startDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Proposed WTE</SummaryList.Key>
-                  <SummaryList.Value data-cy="cct-view-new-wte">
-                    {change.wte && change.wte * 100}%
-                  </SummaryList.Value>
-                </SummaryList.Row>
-              </SummaryList>
-            </div>
-          ))}
-          <SummaryList noBorder>
-            <SummaryList.Row>
-              <SummaryList.Key>New completion date</SummaryList.Key>
-              <SummaryList.Value
-                style={{ color: "green", fontWeight: "bold" }}
-                data-cy="saved-cct-date"
-              >
-                {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
-              </SummaryList.Value>
-            </SummaryList.Row>
-          </SummaryList>
-          {name && created && lastModified && (
-            <CalcDetails
-              created={created}
-              lastModified={lastModified}
-              name={name}
-            />
-          )}
-        </Card.Content>
-      </Card>
+      <CctCalcSummaryDetails viewedCalc={viewedCalc} />
       <Row>
         <Col width="full">
           {cctFormSaveStatus === "failed" && (
@@ -173,5 +90,93 @@ export function CctCalcSummary() {
         viewedCalc={viewedCalc}
       />
     </>
+  );
+}
+
+export function CctCalcSummaryDetails({
+  viewedCalc
+}: Readonly<{ viewedCalc: CctCalculation }>) {
+  const { programmeMembership, cctDate, changes, name, created, lastModified } =
+    viewedCalc;
+
+  return (
+    <Card className="pdf-visible">
+      <Card.Content>
+        <Card.Heading data-cy="cct-calc-summary-header">
+          CCT Calculation Summary
+        </Card.Heading>
+        <h3 className={style.panelSubHeader}>Linked Programme</h3>
+        <SummaryList noBorder>
+          <SummaryList.Row>
+            <SummaryList.Key>Programme name</SummaryList.Key>
+            <SummaryList.Value>{programmeMembership.name}</SummaryList.Value>
+          </SummaryList.Row>
+          <SummaryList.Row>
+            <SummaryList.Key>Start date</SummaryList.Key>
+            <SummaryList.Value>
+              {dayjs(programmeMembership.startDate).format("DD/MM/YYYY")}
+            </SummaryList.Value>
+          </SummaryList.Row>
+          <SummaryList.Row>
+            <SummaryList.Key>Completion date</SummaryList.Key>
+            <SummaryList.Value>
+              {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
+            </SummaryList.Value>
+          </SummaryList.Row>
+        </SummaryList>
+        <h3 className={style.panelSubHeader}>Current WTE percentage</h3>
+        <SummaryList noBorder>
+          <SummaryList.Row>
+            <SummaryList.Key>WTE</SummaryList.Key>
+            <SummaryList.Value>
+              {programmeMembership.wte && programmeMembership.wte * 100}%
+            </SummaryList.Value>
+          </SummaryList.Row>
+        </SummaryList>
+        <h3 className={style.panelSubHeader}>Proposed changes</h3>
+        {changes.map((change, index) => (
+          <div key={index}>
+            <SummaryList noBorder>
+              <SummaryList.Row>
+                <SummaryList.Key>Change type</SummaryList.Key>
+                <SummaryList.Value>
+                  {change.type === "LTFT" && "Changing hours (LTFT)"}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Change date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(change.startDate).format("DD/MM/YYYY")}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Proposed WTE</SummaryList.Key>
+                <SummaryList.Value data-cy="cct-view-new-wte">
+                  {change.wte && change.wte * 100}%
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
+          </div>
+        ))}
+        <SummaryList noBorder>
+          <SummaryList.Row>
+            <SummaryList.Key>New completion date</SummaryList.Key>
+            <SummaryList.Value
+              style={{ color: "green", fontWeight: "bold" }}
+              data-cy="saved-cct-date"
+            >
+              {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
+            </SummaryList.Value>
+          </SummaryList.Row>
+        </SummaryList>
+        {name && created && lastModified && (
+          <CalcDetails
+            created={created}
+            lastModified={lastModified}
+            name={name}
+          />
+        )}
+      </Card.Content>
+    </Card>
   );
 }
