@@ -40,6 +40,11 @@ type LtftDiscussion = {
   role: string;
 };
 
+type LtftStatusDetails = {
+  reason: string;
+  message: string;
+};
+
 type LtftPd = {
   title?: ProfileSType;
   surname: ProfileSType;
@@ -69,7 +74,7 @@ export type StatusLtft = {
 
 export type StatusInfo = {
   state: LtftFormStatus;
-  detail: string;
+  detail: LtftStatusDetails;
   modifiedBy: LtftDiscussion;
   timestamp: string;
   revision: number;

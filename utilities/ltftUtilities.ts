@@ -52,7 +52,10 @@ export function populateLtftDraft(
     status: {
       current: {
         state: "DRAFT",
-        detail: "",
+        detail: {
+          reason: "",
+          message: ""
+        },
         modifiedBy: {
           name: "",
           email: "",
@@ -174,7 +177,10 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
     status: {
       current: {
         state: ltftObj.status.current.state,
-        detail: ltftObj.status.current.detail,
+        detail: {
+          reason: ltftObj.status.current.detail.reason,
+          message: ltftObj.status.current.detail.message
+        },
         modifiedBy: {
           name: ltftObj.status.current.modifiedBy.name,
           email: ltftObj.status.current.modifiedBy.email,
@@ -187,7 +193,10 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
         ltftObj.status.history?.map(historyItem => ({
           state: historyItem.state,
           timestamp: historyItem.timestamp,
-          detail: historyItem.detail,
+          detail: {
+            reason: historyItem.detail.reason,
+            message: historyItem.detail.message
+          },
           modifiedBy: {
             name: historyItem.modifiedBy.name,
             email: historyItem.modifiedBy.email,
@@ -251,7 +260,10 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     status: {
       current: {
         state: ltftDto.status.current.state,
-        detail: ltftDto.status.current.detail,
+        detail: {
+          reason: ltftDto.status.current.detail.reason,
+          message: ltftDto.status.current.detail.message
+        },
         modifiedBy: {
           name: ltftDto.status.current.modifiedBy.name,
           email: ltftDto.status.current.modifiedBy.email,
@@ -263,7 +275,10 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       history: ltftDto.status.history.map(historyItem => ({
         state: historyItem.state,
         timestamp: historyItem.timestamp,
-        detail: historyItem.detail,
+        detail: {
+          reason: historyItem.detail.reason,
+          message: historyItem.detail.message
+        },
         modifiedBy: {
           name: historyItem.modifiedBy.name,
           email: historyItem.modifiedBy.email,

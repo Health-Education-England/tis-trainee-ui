@@ -86,7 +86,10 @@ export const mockLtftDraft0: LtftObj = {
   status: {
     current: {
       state: "DRAFT",
-      detail: "",
+      detail: {
+        reason: "",
+        message: ""
+      },
       modifiedBy: {
         name: "",
         email: "",
