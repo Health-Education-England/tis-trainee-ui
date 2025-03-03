@@ -146,7 +146,10 @@ export const mockLtftDto1 = {
   status: {
     current: {
       state: mockLtftDraft1.status.current,
-      detail: "",
+      detail: {
+        reason: "",
+        message: ""
+      },
       modifiedBy: {
         name: "",
         email: "",

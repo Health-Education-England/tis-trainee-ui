@@ -29,7 +29,10 @@ const otherDiscussions = [
 const statusData = {
   current: {
     state: "DRAFT",
-    detail: "",
+    detail: {
+      reason: "",
+      message: ""
+    },
     modifiedBy: {
       name: "",
       email: "",
@@ -131,6 +134,14 @@ describe("mapDtoToLtftObj", () => {
       tpdName: "My tpd name",
       tpdEmail: "email@4.tpd",
       other: otherDiscussions
+    },
+    change: {
+      calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+      cctDate: "2028-04-02",
+      type: "LTFT",
+      startDate: "2027-01-01",
+      wte: 0.8
     },
     reasons: {
       selected: ["Unique opportunities", "other"],
