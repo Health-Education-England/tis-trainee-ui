@@ -41,6 +41,9 @@ describe("LTFT Form View", () => {
     cy.get('[data-cy="informationIsCorrect"]').should("exist");
     cy.get('[data-cy="notGuaranteed"]').should("exist");
     cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
+    cy.get('[data-cy="BtnSaveDraft"]')
+      .should("exist")
+      .should("not.be.disabled");
   });
 
   it("should enable the submit button when declarations are checked", () => {
@@ -55,8 +58,9 @@ describe("LTFT Form View", () => {
     cy.get('[data-cy="BtnSubmit"]').click();
     cy.get('[data-cy="dialogModal"]').should("exist");
     cy.get('[data-cy="ltftModalWarning"]').should("exist");
-    cy.get('[data-cy="ltft-modal-save-btn"]').should("exist");
-    cy.get('[data-cy="ltft-modal-save-btn"]').should("be.disabled");
+    cy.get('[data-cy="ltft-modal-save-btn"]')
+      .should("exist")
+      .should("be.disabled");
     // should keep disable if trim Name is empty
     cy.get("#ltftName").type("  ");
     cy.get('[data-cy="ltft-modal-save-btn"]').should("be.disabled");
