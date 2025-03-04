@@ -87,6 +87,10 @@ describe("CctCalcView", () => {
     cy.get('[data-cy="cct-save-btn"]').should("exist").click();
     cy.get('[data-cy="dialogModal"]').should("exist");
     cy.get('[data-cy="cct-modal-save-btn"]').should("be.disabled");
+    // should keep disable if trim Name is empty
+    cy.get('[data-cy="name"]').type("  ");
+    cy.get('[data-cy="cct-modal-save-btn"]').should("be.disabled");
+    // should enable the submit button when Name is inputted
     cy.get('[data-cy="name"]').type("😎");
     cy.get('[data-cy="cct-modal-save-btn"]').should("not.be.disabled").click();
     // POST will fail in comp test

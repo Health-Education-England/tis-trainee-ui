@@ -44,7 +44,7 @@ export function LtftNameModal({
                 />
                 <Button
                   type="submit"
-                  disabled={!values.name || isSubmitting}
+                  disabled={!values.name.trim() || isSubmitting}
                   data-cy="ltft-modal-save-btn"
                 >
                   {isSubmitting ? "Saving..." : "Confirm & Continue"}

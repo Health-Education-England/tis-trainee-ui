@@ -57,6 +57,9 @@ describe("LTFT Form View", () => {
     cy.get('[data-cy="ltftModalWarning"]').should("exist");
     cy.get('[data-cy="ltft-modal-save-btn"]').should("exist");
     cy.get('[data-cy="ltft-modal-save-btn"]').should("be.disabled");
+    // should keep disable if trim Name is empty
+    cy.get("#ltftName").type("  ");
+    cy.get('[data-cy="ltft-modal-save-btn"]').should("be.disabled");
     // should enable the submit button when Name is inputted
     cy.get("#ltftName").type("Test Application");
     cy.get('[data-cy="ltft-modal-save-btn"]').should("not.be.disabled");
