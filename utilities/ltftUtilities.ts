@@ -1,10 +1,6 @@
 import { PersonalDetails } from "../models/PersonalDetails";
 import { CctCalculation } from "../redux/slices/cctSlice";
-import {
-  LtftCctChange,
-  LtftFormStatus,
-  LtftObj
-} from "../redux/slices/ltftSlice";
+import { LtftCctChange, LtftObj, StatusInfo } from "../redux/slices/ltftSlice";
 import { ProfileSType } from "./ProfileUtilities";
 
 export function populateLtftDraft(
@@ -54,8 +50,21 @@ export function populateLtftDraft(
     reasonsSelected: null,
     reasonsOtherDetail: null,
     status: {
-      current: "DRAFT",
-      history: null
+      current: {
+        state: "DRAFT",
+        detail: {
+          reason: "",
+          message: ""
+        },
+        modifiedBy: {
+          name: "",
+          email: "",
+          role: ""
+        },
+        timestamp: "",
+        revision: 0
+      },
+      history: []
     }
   };
   return draftLtftForm;
@@ -105,13 +114,8 @@ export type LtftDto = {
     otherDetail?: string;
   };
   status: {
-    current: LtftFormStatus;
-    history:
-      | {
-          status: LtftFormStatus;
-          timestamp: string;
-        }[]
-      | [];
+    current: StatusInfo;
+    history: StatusInfo[];
   };
   created: Date | string;
   lastModified: Date | string;
@@ -171,11 +175,34 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       otherDetail: ltftObj.reasonsOtherDetail ?? ""
     },
     status: {
-      current: ltftObj.status.current,
+      current: {
+        state: ltftObj.status.current.state,
+        detail: {
+          reason: ltftObj.status.current.detail.reason,
+          message: ltftObj.status.current.detail.message
+        },
+        modifiedBy: {
+          name: ltftObj.status.current.modifiedBy.name,
+          email: ltftObj.status.current.modifiedBy.email,
+          role: ltftObj.status.current.modifiedBy.role
+        },
+        timestamp: ltftObj.status.current.timestamp,
+        revision: ltftObj.status.current.revision
+      },
       history:
         ltftObj.status.history?.map(historyItem => ({
-          status: historyItem.status,
-          timestamp: historyItem.timestamp
+          state: historyItem.state,
+          timestamp: historyItem.timestamp,
+          detail: {
+            reason: historyItem.detail.reason,
+            message: historyItem.detail.message
+          },
+          modifiedBy: {
+            name: historyItem.modifiedBy.name,
+            email: historyItem.modifiedBy.email,
+            role: historyItem.modifiedBy.role
+          },
+          revision: historyItem.revision
         })) || []
     },
     created: ltftObj.created ?? "",
@@ -231,11 +258,36 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     status: {
-      current: ltftDto.status.current,
+      current: {
+        state: ltftDto.status.current.state,
+        detail: {
+          reason: ltftDto.status.current.detail.reason,
+          message: ltftDto.status.current.detail.message
+        },
+        modifiedBy: {
+          name: ltftDto.status.current.modifiedBy.name,
+          email: ltftDto.status.current.modifiedBy.email,
+          role: ltftDto.status.current.modifiedBy.role
+        },
+        timestamp: ltftDto.status.current.timestamp,
+        revision: ltftDto.status.current.revision
+      },
       history: ltftDto.status.history.map(historyItem => ({
-        status: historyItem.status,
-        timestamp: historyItem.timestamp
+        state: historyItem.state,
+        timestamp: historyItem.timestamp,
+        detail: {
+          reason: historyItem.detail.reason,
+          message: historyItem.detail.message
+        },
+        modifiedBy: {
+          name: historyItem.modifiedBy.name,
+          email: historyItem.modifiedBy.email,
+          role: historyItem.modifiedBy.role
+        },
+        revision: historyItem.revision
       }))
-    }
+    },
+    created: ltftDto.created,
+    lastModified: ltftDto.lastModified
   };
 };

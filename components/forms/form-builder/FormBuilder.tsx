@@ -17,7 +17,8 @@ import {
   formatFieldName,
   showFormField,
   continueToConfirm,
-  saveFormR
+  saveDraftForm,
+  FormDataType
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
@@ -29,8 +30,6 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
-import { FormRPartA } from "../../../models/FormRPartA";
-import { FormRPartB } from "../../../models/FormRPartB";
 
 type FieldType =
   | "text"
@@ -168,12 +167,7 @@ export default function FormBuilder({
 
   const handleSaveBtnClick = async () => {
     setIsSubmitting(true);
-    await saveFormR(
-      jsonForm,
-      formData as FormRPartA | FormRPartB,
-      false,
-      false
-    );
+    await saveDraftForm(jsonForm, formData as FormDataType, false, false);
     setIsSubmitting(false);
   };
 
@@ -313,7 +307,7 @@ export default function FormBuilder({
             </Button>
           </Col>
           <Col width="one-quarter">
-            <StartOverButton />
+            <StartOverButton formName={jsonFormName} btnLocation="form" />
           </Col>
         </Row>
       </Container>

@@ -84,8 +84,21 @@ export const mockLtftDraft0: LtftObj = {
   reasonsSelected: null,
   reasonsOtherDetail: null,
   status: {
-    current: "DRAFT",
-    history: null
+    current: {
+      state: "DRAFT",
+      detail: {
+        reason: "",
+        message: ""
+      },
+      modifiedBy: {
+        name: "",
+        email: "",
+        role: ""
+      },
+      timestamp: "",
+      revision: 0
+    },
+    history: []
   }
 };
 
@@ -131,7 +144,20 @@ export const mockLtftDto1 = {
     otherDetail: "my other reason"
   },
   status: {
-    current: mockLtftDraft1.status.current,
+    current: {
+      state: mockLtftDraft1.status.current,
+      detail: {
+        reason: "",
+        message: ""
+      },
+      modifiedBy: {
+        name: "",
+        email: "",
+        role: ""
+      },
+      timestamp: "",
+      revision: 0
+    },
     history: []
   },
   created: "2025-01-1T14:50:36.941Z",

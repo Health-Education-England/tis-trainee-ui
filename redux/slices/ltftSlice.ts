@@ -1,6 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CctCalculation } from "./cctSlice";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CctCalculation, CctType } from "./cctSlice";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
+import {
+  mapLtftDtoToObj,
+  mapLtftObjToDto
+} from "../../utilities/ltftUtilities";
+import { FormsService } from "../../services/FormsService";
+import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
+import { DateUtilities } from "../../utilities/DateUtilities";
+import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { showToast, ToastType } from "../../components/common/ToastMessage";
 
 export type LtftFormStatus =
   | "DRAFT"
@@ -13,7 +22,7 @@ export type LtftFormStatus =
 export type LtftCctChange = {
   calculationId: string;
   cctDate: Date | string;
-  type: string;
+  type: CctType;
   startDate: Date | string;
   wte: number;
   changeId: string;
@@ -29,6 +38,11 @@ type LtftDiscussion = {
   name: string;
   email: string;
   role: string;
+};
+
+type LtftStatusDetails = {
+  reason: string;
+  message: string;
 };
 
 type LtftPd = {
@@ -53,14 +67,17 @@ type LtftPm = {
   designatedBodyCode: string;
 };
 
-type HistoryType = {
-  status: LtftFormStatus;
-  timestamp: string;
+export type StatusLtft = {
+  current: StatusInfo;
+  history: StatusInfo[];
 };
 
-export type StatusType = {
-  current: LtftFormStatus;
-  history: HistoryType[] | null;
+export type StatusInfo = {
+  state: LtftFormStatus;
+  detail: LtftStatusDetails;
+  modifiedBy: LtftDiscussion;
+  timestamp: string;
+  revision: number;
 };
 
 export type LtftObj = {
@@ -76,7 +93,7 @@ export type LtftObj = {
   programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
-  status: StatusType;
+  status: StatusLtft;
   created?: Date | string;
   lastModified?: Date | string;
 };
@@ -87,66 +104,98 @@ type LtftState = {
   status: string;
   error: any;
   canEdit: boolean;
-};
-
-const initialLtftObj: LtftObj = {
-  change: {
-    calculationId: "",
-    cctDate: "",
-    type: "",
-    startDate: "",
-    wte: 0,
-    changeId: ""
-  },
-  declarations: {
-    discussedWithTpd: null,
-    informationIsCorrect: null,
-    notGuaranteed: null
-  },
-  tpdName: "",
-  tpdEmail: "",
-  otherDiscussions: null,
-  personalDetails: {
-    title: "",
-    surname: "",
-    forenames: "",
-    telephoneNumber: "",
-    mobileNumber: "",
-    email: "",
-    gmcNumber: "",
-    gdcNumber: "",
-    publicHealthNumber: "",
-    skilledWorkerVisaHolder: null
-  },
-  programmeMembership: {
-    id: "",
-    name: "",
-    startDate: "",
-    endDate: "",
-    wte: 0,
-    designatedBodyCode: ""
-  },
-  reasonsSelected: null,
-  reasonsOtherDetail: null,
-  status: {
-    current: "DRAFT",
-    history: null
-  }
+  editPageNumber: number;
+  saveStatus: SaveStatusProps;
+  newFormId: string | undefined;
+  saveLatestTimeStamp: string;
 };
 
 const initialState: LtftState = {
-  formData: initialLtftObj,
+  formData: {} as LtftObj,
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
-  canEdit: false
+  canEdit: false,
+  editPageNumber: 0,
+  saveStatus: "idle",
+  newFormId: undefined,
+  saveLatestTimeStamp: "none this session"
 };
+
+export const saveLtft = createAsyncThunk(
+  "ltft/saveLtft",
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: LtftObj;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    const formsService = new FormsService();
+    try {
+      const mappedFormDataDto = mapLtftObjToDto(formData);
+      const response = await formsService.saveLtft(mappedFormDataDto);
+      const mappedResLtftObj = mapLtftDtoToObj(response.data);
+      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
+  }
+);
+
+export const updateLtft = createAsyncThunk(
+  "ltft/updateLtft",
+  async (
+    {
+      formData,
+      isAutoSave,
+      isSubmit
+    }: {
+      formData: LtftObj;
+      isAutoSave: boolean;
+      isSubmit: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    const formsService = new FormsService();
+    try {
+      const mappedFormDataDto = mapLtftObjToDto(formData);
+      const response = await formsService.updateLtft(mappedFormDataDto);
+      const mappedResLtftObj = mapLtftDtoToObj(response.data);
+      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+    } catch (error) {
+      return rejectWithValue({ error, isAutoSave, isSubmit });
+    }
+  }
+);
+
+export const deleteLtft = createAsyncThunk(
+  "ltft/deleteLtft",
+  async (formId: string) => {
+    const formsService = new FormsService();
+    return formsService.deleteLtft(formId);
+  }
+);
+
+export const loadSavedLtft = createAsyncThunk(
+  "ltft/loadSavedLtft",
+  async (id: string) => {
+    const formsService = new FormsService();
+    const response = await formsService.getLtftFormById(id);
+    return mapLtftDtoToObj(response.data);
+  }
+);
 
 const ltftSlice = createSlice({
   name: "ltft",
   initialState,
   reducers: {
-    resetToInit() {
+    resetToInitLtft() {
       return initialState;
     },
     setLtftCctSnapshot(state, action: PayloadAction<CctCalculation>) {
@@ -157,15 +206,164 @@ const ltftSlice = createSlice({
     },
     updatedCanEditLtft(state, action: PayloadAction<boolean>) {
       state.canEdit = action.payload;
+    },
+    updatedEditPageNumberLtft(state, action: PayloadAction<number>) {
+      state.editPageNumber = action.payload;
     }
+  },
+  extraReducers(builder): void {
+    builder
+      .addCase(
+        saveLtft.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        saveLtft.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          state.newFormId = data.id;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModified,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.saveLtft, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(saveLtft.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
+        state.error = error.message;
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.saveLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+      })
+      .addCase(
+        updateLtft.pending,
+        (
+          state,
+          {
+            meta: {
+              arg: { isAutoSave }
+            }
+          }
+        ) => {
+          if (isAutoSave) state.saveStatus = "saving";
+        }
+      )
+      .addCase(
+        updateLtft.fulfilled,
+        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+          state.saveStatus = "succeeded";
+          state.formData = data;
+          state.newFormId = data.id;
+          if (isAutoSave)
+            state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
+              data.lastModified,
+              true
+            );
+          if (isSubmit) {
+            showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
+          }
+          if (!isAutoSave && !isSubmit) {
+            showToast(toastSuccessText.updateLtft, ToastType.SUCCESS);
+          }
+        }
+      )
+      .addCase(updateLtft.rejected, (state, action) => {
+        const { error, isAutoSave, isSubmit } = action.payload as {
+          error: any;
+          isAutoSave: boolean;
+          isSubmit: boolean;
+        };
+        state.saveStatus = "failed";
+        state.error = error.message;
+        if (isSubmit) {
+          showToast(
+            toastErrText.submitLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+        if (!isAutoSave && !isSubmit) {
+          showToast(
+            toastErrText.updateLtft,
+            ToastType.ERROR,
+            `${error.code}-${error.message}`
+          );
+        }
+      })
+      .addCase(deleteLtft.pending, state => {
+        state.status = "deleting";
+      })
+      .addCase(deleteLtft.fulfilled, state => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.deleteLtft, ToastType.SUCCESS);
+      })
+      .addCase(deleteLtft.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.deleteLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
+      })
+      .addCase(loadSavedLtft.pending, state => {
+        state.status = "loading";
+      })
+      .addCase(loadSavedLtft.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.formData = action.payload;
+      })
+      .addCase(loadSavedLtft.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.loadLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
+      });
   }
 });
 
 export const {
-  resetToInit,
+  resetToInitLtft,
   setLtftCctSnapshot,
   updatedLtft,
-  updatedCanEditLtft
+  updatedCanEditLtft,
+  updatedEditPageNumberLtft
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;

@@ -238,23 +238,36 @@ export const PANEL_KEYS: any = {
 };
 
 const dodgyConnection = "Please check your internet connection and try again.";
+const formA = "Form R (Part A)";
+const formB = "Form R (Part B)";
+const ltft = "Changing hours (LTFT) form";
+const noDel = "Couldn't delete your draft ";
+const noLoad = "Couldn't load your saved ";
+const noSave = "Couldn't save your ";
+const noUpdate = "Couldn't update your ";
+const noSubmit = "Couldn't submit your ";
 
 export const toastErrText = {
-  deleteFormA: "Couldn't delete your draft Form R (Part A).",
-  deleteFormB: "Couldn't delete your draft Form R (Part B).",
+  deleteFormA: `${noDel}${formA}.`,
+  deleteFormB: `${noDel}${formB}.`,
+  deleteLtft: `${noDel}${ltft}.`,
   fetchFeatureFlags:
     "Couldn't load some of your new form data (feature flags).",
   fetchForms: " Couldn't load your list of saved forms.",
   fetchReference:
     "Couldn't fetch the data to pre-populate your new form (reference data).",
-  loadSavedFormA: "Couldn't load your saved Form R (Part A).",
-  loadSavedFormB: "Couldn't load your saved Form R (Part B).",
-  saveFormA: "Couldn't save your Form R (Part A).",
-  saveFormB: "Couldn't save your Form R (Part B).",
-  submitFormA: "Couldn't submit your Form R (Part A).",
-  submitFormB: "Couldn't submit your Form R (Part B).",
-  updateFormA: "Couldn't update your Form R (Part A).",
-  updateFormB: "Couldn't update your Form R (Part B).",
+  loadSavedFormA: `${noLoad}${formA}.`,
+  loadSavedFormB: `${noLoad}${formB}.`,
+  loadLtft: `${noLoad}${ltft}.`,
+  saveFormA: `${noSave}${formA}.`,
+  saveFormB: `${noSave}${formB}.`,
+  saveLtft: `${noSave}${ltft}.`,
+  submitFormA: `${noSubmit}${formA}.`,
+  submitFormB: `${noSubmit}${formB}.`,
+  submitLtft: `${noSubmit}${ltft}.`,
+  updateFormA: `${noUpdate}${formA}.`,
+  updateFormB: `${noUpdate}${formB}.`,
+  updateLtft: `${noUpdate}${ltft}.`,
   fetchTraineeProfileData:
     "Couldn't load your personal details (profile data).",
   updateUserAttributes:
@@ -283,15 +296,23 @@ export const toastErrText = {
   loadLtftSummaryListMessage: `Couldn't load your list of saved Changing hours (LTFT) forms. ${dodgyConnection}`
 };
 
+const isDel = "has been deleted.";
+const isSave = "has been saved.";
+const isUpdate = "has been updated.";
+const isSubmit = "has been submitted.";
 export const toastSuccessText = {
-  deleteFormA: "Your draft Form R (Part A) has been deleted.",
-  deleteFormB: "Your draft Form R (Part B) has been deleted.",
-  saveFormA: "Your Form R (Part A) has been saved.",
-  saveFormB: "Your Form R (Part B) has been saved.",
-  updateFormA: "Your Form R (Part A) has been updated.",
-  updateFormB: "Your Form R (Part B) has been updated.",
-  submitFormA: "Your Form R (Part A) has been submitted.",
-  submitFormB: "Your Form R (Part B) has been submitted.",
+  deleteFormA: `Your draft ${formA} ${isDel}`,
+  deleteFormB: `Your draft ${formB} ${isDel}`,
+  deleteLtft: `Your draft ${ltft} ${isDel}`,
+  saveFormA: `Your ${formA} ${isSave}`,
+  saveFormB: `Your ${formB} ${isSave}`,
+  saveLtft: `Your ${ltft} ${isSave}`,
+  updateFormA: `Your ${formA} ${isUpdate}`,
+  updateFormB: `Your ${formB} ${isUpdate}`,
+  updateLtft: `Your ${ltft} ${isUpdate}`,
+  submitFormA: `Your ${formA} ${isSubmit}`,
+  submitFormB: `Your ${formB} ${isSubmit}`,
+  submitLtft: `Your ${ltft} ${isSubmit}`,
   verifyPhone:
     "Your phone has been verified. An SMS code from HEE should arrive soon",
   getPreferredMfaSms:

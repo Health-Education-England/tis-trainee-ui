@@ -11,15 +11,14 @@ import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
-import { resetToInitFormA } from "../../redux/slices/formASlice";
-import { resetToInitFormB } from "../../redux/slices/formBSlice";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
+import { FormName } from "./form-builder/FormBuilder";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();
   const pathname = useLocation().pathname;
-  const formName = pathname === "/formr-a" ? "formA" : "formB";
+  const formName: FormName = pathname === "/formr-a" ? "formA" : "formB";
   const submittedListDesc = useAppSelector(selectAllSubmittedforms);
   const latestSubDate = submittedListDesc?.length
     ? submittedListDesc[0].submissionDate
@@ -28,6 +27,9 @@ const CreateList = () => {
   const featFlagStatus = useAppSelector(state => state.featureFlags.status);
   const needFormsRefresh = useAppSelector(
     state => state.forms?.formsRefreshNeeded
+  );
+  const formIdFromDraftFormProps = useAppSelector(
+    state => state.forms?.draftFormProps?.id
   );
 
   useEffect(() => {
@@ -38,10 +40,6 @@ const CreateList = () => {
   useEffect(() => {
     dispatch(fetchFeatureFlags());
   }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(formName === "formA" ? resetToInitFormA() : resetToInitFormB());
-  }, [dispatch, formName]);
 
   let content: JSX.Element = <></>;
 
@@ -60,7 +58,11 @@ const CreateList = () => {
           </Row>
           <Row>
             <Col width="one-third">
-              <StartOverButton />
+              <StartOverButton
+                formName={formName}
+                btnLocation="formsList"
+                formsListDraftId={formIdFromDraftFormProps}
+              />
             </Col>
           </Row>
         </Container>

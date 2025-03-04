@@ -8,7 +8,7 @@ import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import {
   DraftFormProps,
-  setDraftFormProps
+  setDraftFormRProps
 } from "../../utilities/FormBuilderUtilities";
 
 interface IForms {
@@ -68,7 +68,7 @@ const formsSlice = createSlice({
         state.submittedForms = action.payload.filter(
           (form: IFormR) => form.lifecycleState === LifeCycleState.Submitted
         );
-        state.draftFormProps = setDraftFormProps(action.payload);
+        state.draftFormProps = setDraftFormRProps(action.payload);
       })
       .addCase(fetchForms.rejected, (state, { error }) => {
         state.status = "failed";

@@ -6,6 +6,7 @@ import { FeatureFlags } from "../models/FeatureFlags";
 import { IFormR } from "../models/IFormR";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { LtftSummaryObj } from "../redux/slices/ltftSummaryListSlice";
+import { LtftDto } from "../utilities/ltftUtilities";
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
@@ -86,5 +87,21 @@ export class FormsService extends ApiService {
 
   async getLtftSummaryList(): Promise<AxiosResponse<LtftSummaryObj[]>> {
     return this.get<LtftSummaryObj[]>("/ltft");
+  }
+
+  async saveLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
+    return this.post<LtftDto>("/ltft", mappedFormData);
+  }
+
+  async updateLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
+    return this.put<LtftDto>(`/ltft/${mappedFormData.id}`, mappedFormData);
+  }
+
+  async deleteLtft(formId: string): Promise<AxiosResponse> {
+    return this.delete(`/ltft/${formId}`);
+  }
+
+  async getLtftFormById(id: string): Promise<AxiosResponse<LtftDto>> {
+    return this.get<LtftDto>(`/ltft/${id}`);
   }
 }

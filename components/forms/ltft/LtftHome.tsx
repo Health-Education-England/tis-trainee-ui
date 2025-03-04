@@ -8,40 +8,48 @@ import {
 } from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
-import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
+import {
+  LtftSummaryObj,
+  updatedLtftFormsRefreshNeeded
+} from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
 import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import Loading from "../../common/Loading";
+import { StartOverButton } from "../StartOverButton";
+import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
+import ErrorPage from "../../common/ErrorPage";
+import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
 
 export function LtftHome() {
-  // TODO: remove the mock data mockLtftsList1 and resume the data from useAppSelector when ready
-  const ltftSummary = mockLtftsList1 || [];
-  const ltftSummaryStatus = "succeeded";
-  // const dispatch = useAppDispatch();
-  // const isBetaTester = useIsBetaTester();
-  // useEffect(() => {
-  //   if (isBetaTester) dispatch(fetchLtftSummaryList());
-  // }, [dispatch, isBetaTester]);
+  const ltftSummary = useAppSelector(
+    state => state.ltftSummaryList?.ltftList || []
+  );
+  const ltftFormsListStatus = useAppSelector(
+    state => state.ltftSummaryList?.status
+  );
+  useLtftHomeStartover();
 
-  // const ltftSummary = useAppSelector(
-  //   state => state.ltftSummaryList?.ltftList || []
-  // );
-  // const ltftSummaryStatus = useAppSelector(
-  //   state => state.ltftSummaryList?.status
-  // );
-
+  // TODO - use real data for Summary Table when submission logic added
+  const mockLtftSummary = mockLtftsList1;
   const sortedLtftSummary = DateUtilities.genericSort(
-    ltftSummary.slice(),
+    mockLtftSummary.slice(),
     "lastModified",
     true
-  );
-
-  const draftOrUnsubmittedLtftSummary = sortedLtftSummary.find(
-    item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );
   const previousLtftSummaries = sortedLtftSummary.filter(
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
+
+  const draftOrUnsubmittedLtftSummary = ltftSummary.find(
+    item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
+  );
+
+  if (ltftFormsListStatus === "loading") return <Loading />;
+
+  if (ltftFormsListStatus === "failed")
+    return <ErrorPage message="There was a problem loading this page." />;
 
   return (
     <>
@@ -78,7 +86,7 @@ export function LtftHome() {
             Previous applications summary
           </Card.Heading>
           <LtftSummary
-            ltftSummaryStatus={ltftSummaryStatus}
+            ltftSummaryStatus={ltftFormsListStatus}
             ltftSummaryList={previousLtftSummaries}
           />
         </Card.Content>
@@ -94,13 +102,20 @@ type TrackerSectionBtnsProps = {
 function TrackerSectionBtns({
   draftOrUnsubmittedLtftSummary
 }: Readonly<TrackerSectionBtnsProps>) {
+  const dispatch = useAppDispatch();
+  const handleClick = () => {
+    loadTheSavedForm("/ltft", draftOrUnsubmittedLtftSummary?.id ?? "", history);
+  };
   return (
     <div style={{ marginTop: "2rem" }}>
       {draftOrUnsubmittedLtftSummary ? (
         <Container>
           <Row>
             <Col width="two-thirds">
-              <Button data-cy="continue-application-button">
+              <Button
+                data-cy="continue-application-button"
+                onClick={handleClick}
+              >
                 {`Continue ${
                   draftOrUnsubmittedLtftSummary?.status === "DRAFT"
                     ? "draft"
@@ -111,9 +126,11 @@ function TrackerSectionBtns({
           </Row>
           <Row>
             <Col width="one-third">
-              <Button secondary data-cy="ltft-startover-btn">
-                Start over
-              </Button>
+              <StartOverButton
+                formName="ltft"
+                btnLocation="formsList"
+                formsListDraftId={draftOrUnsubmittedLtftSummary.id}
+              />
             </Col>
           </Row>
         </Container>
@@ -124,6 +141,7 @@ function TrackerSectionBtns({
               <Button
                 data-cy="choose-cct-btn"
                 onClick={() => {
+                  dispatch(updatedLtftFormsRefreshNeeded(false));
                   history.push("/cct");
                 }}
               >

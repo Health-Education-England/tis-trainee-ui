@@ -11,7 +11,8 @@ import {
 } from "nhsuk-react-components";
 import {
   formatFieldName,
-  handleEditSection
+  handleEditSection,
+  showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
@@ -28,10 +29,7 @@ function VisibleField({
   formData,
   formErrors
 }: Readonly<VisibleFieldProps>) {
-  const isVisible =
-    field.visible ||
-    field?.visibleIf?.includes(formData[field.parent as string]);
-
+  const isVisible = showFormField(field, formData);
   if (isVisible) {
     if (field.type === "dto") {
       return (
@@ -120,6 +118,7 @@ export default function FormViewBuilder({
 function displayListValue(fieldVal: any, fieldType?: string) {
   if (fieldVal === null || fieldVal === "") return "Not provided";
   if (fieldType === "array") {
+    if (fieldVal.length === 0) return "Not provided";
     return fieldVal.map((item: any, index: number) => (
       <Card key={index} className="container-form-view">
         <Card.Content>
@@ -145,5 +144,5 @@ function displayListValue(fieldVal: any, fieldType?: string) {
   if (typeof fieldVal === "boolean") {
     return fieldVal ? "Yes" : "No";
   }
-  return fieldVal.toString();
+  return fieldVal?.toString();
 }
