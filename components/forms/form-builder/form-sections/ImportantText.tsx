@@ -101,11 +101,11 @@ const ltftDiscussionText2 =
 const ltftOtherDiscussionsText =
   "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposal.";
 
-  const ltftDiscussionText3 =
-    "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
+const ltftDiscussionText3 =
+  "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
 
-  const ltftReasonsText1 =
-    "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process.";
+const ltftReasonsText1 =
+  "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process.";
 
 const ltftReasonsText2 =
   "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reasons.";
@@ -116,7 +116,7 @@ const ltftReasonsText3 =
 const generateTextElement = (texts: string[]) => (
   <span>
     {texts.map((text, index) => (
-      <p key={index} dangerouslySetInnerHTML={{ __html: text }} />
+      <p key={index} dangerouslySetInnerHTML = {{ __html: text }} />
     ))}
   </span>
 );
