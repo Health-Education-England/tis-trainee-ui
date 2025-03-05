@@ -116,7 +116,7 @@ const ltftReasonsText3 =
 const generateTextElement = (texts: string[]) => (
   <span>
     {texts.map((text, index) => (
-      <p key={index} dangerouslySetInnerHTML = {{ __html: text }} />
+      <p key={index} dangerouslySetInnerHTML={{ __html: text }} />
     ))}
   </span>
 );
