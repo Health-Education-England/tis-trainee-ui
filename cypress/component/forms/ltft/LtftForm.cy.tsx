@@ -43,6 +43,9 @@ describe("LtftForm", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
+      "For information on Professional support contact"
+    );
     cy.get(
       ":nth-child(4) > .nhsuk-card__content > .nhsuk-card__heading"
     ).contains("Your Training Programme Director (TPD) details");
@@ -62,7 +65,10 @@ describe("LtftForm", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
+      "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process."
+    );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
       "If your reason isn't in the list then please select 'other reason' and give details in the space provided."
     );
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
