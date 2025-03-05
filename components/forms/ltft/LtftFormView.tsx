@@ -18,6 +18,7 @@ import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { LtftNameModal } from "./LtftNameModal";
+import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 
 export const LtftFormView = () => {
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
@@ -74,9 +75,27 @@ export const LtftFormView = () => {
           )}
         </form>
       </WarningCallout>
-      {/* Btns to go here: save & exit */}
       <Container>
         <Row>
+          <Col width="one-quarter">
+            <Button
+              secondary
+              onClick={async (e: { preventDefault: () => void }) => {
+                setIsSubmitting(true);
+                await saveDraftForm(
+                  formJson,
+                  formData as LtftObj,
+                  false,
+                  false
+                );
+                setIsSubmitting(false);
+              }}
+              disabled={isSubmitting}
+              data-cy="BtnSaveDraft"
+            >
+              {"Save & exit"}
+            </Button>
+          </Col>
           <Col width="one-quarter">
             <StartOverButton formName={formJson.name} btnLocation="formView" />
           </Col>
