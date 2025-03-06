@@ -21,7 +21,7 @@ export const ImportantText = ({ txtName }: ImportantText) => {
 const prepopulatedText =
   "This form has been pre-populated using the information available against your records within the Trainee Information System (TIS). Please check all details and amend where necessary. Amendments made to your details on this form will not automatically update other systems that you may have access to. By submitting this document you are confirming that ALL DETAILS (pre-populated or entered/amended by you) are correct.";
 
-const yourResonsibilityText =
+const yourResponsibilityText =
   "It remains your own responsibility to keep your Designated Body and the GMC informed as soon as possible of any changes to your contact details. Your Local Deanery team remains your Designated Body throughout your time in training. You can update your Designated Body on your GMC Online account under 'My Revalidation'.";
 
 const outcome5Text =
@@ -93,24 +93,30 @@ const unresolvedDecsText =
   "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/RITA/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
 
 const ltftDiscussionText1 =
-  "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposals with prior to completing this form. ";
+  "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";
 
 const ltftDiscussionText2 =
-  "When you submit this appication, your TPD will receive an email which will include a summary of your proposals.";
+  "When you submit this application, your TPD will receive an email which will include a summary of your proposal.";
 
 const ltftOtherDiscussionsText =
-  "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposals.";
+  "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposal.";
+
+const ltftDiscussionText3 =
+  "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
 
 const ltftReasonsText1 =
-  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reasons.";
+  "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process.";
 
 const ltftReasonsText2 =
+  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reasons.";
+
+const ltftReasonsText3 =
   "If your reason isn't in the list then please select 'other reason' and give details in the space provided.";
 
 const generateTextElement = (texts: string[]) => (
   <span>
-    {texts.map(text => (
-      <p key={text}>{text}</p>
+    {texts.map((text, index) => (
+      <p key={index} dangerouslySetInnerHTML={{ __html: text }} />
     ))}
   </span>
 );
@@ -122,11 +128,11 @@ type DisplayText = {
 const displayText: DisplayText = {
   formAImportantNotice: generateTextElement([
     prepopulatedText,
-    yourResonsibilityText
+    yourResponsibilityText
   ]),
   formBImportantNotice: generateTextElement([
     prepopulatedText,
-    yourResonsibilityText,
+    yourResponsibilityText,
     outcome5Text
   ]),
   covid19ImportantNotice: generateTextElement([
@@ -176,10 +182,12 @@ const displayText: DisplayText = {
   ltftDiscussionInstructions: generateTextElement([
     ltftDiscussionText1,
     ltftDiscussionText2,
-    ltftOtherDiscussionsText
+    ltftOtherDiscussionsText,
+    ltftDiscussionText3
   ]),
   ltftReasonsInstructions: generateTextElement([
     ltftReasonsText1,
-    ltftReasonsText2
+    ltftReasonsText2,
+    ltftReasonsText3
   ])
 };
