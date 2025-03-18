@@ -1,27 +1,24 @@
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { Modal } from "../../common/Modal";
 import TextInputField from "../TextInputField";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 
 type LtftNameModalProps = {
+  onSubmit: (values: { name: string }) => void;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export function LtftNameModal({
+  onSubmit,
   isOpen,
   onClose
 }: Readonly<LtftNameModalProps>) {
   const { isSubmitting } = useSubmitting();
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText="Cancel">
-      <Formik
-        initialValues={{ name: "" }}
-        onSubmit={({ name }) => {
-          // Note: to handle submit
-        }}
-      >
+      <Formik initialValues={{ name: "" }} onSubmit={onSubmit}>
         {({ values }) => {
           return (
             <>

@@ -344,11 +344,6 @@ function prepFormRData(
   };
 }
 
-function prepLtftData(formData: LtftObj, isSubmit: boolean, jsonForm: Form) {
-  // TODO - add similar logic to FormR's
-  return formData;
-}
-
 async function updateForm(
   formName: string,
   formData: FormData,
@@ -450,7 +445,7 @@ export async function saveDraftForm(
   const isFormR = formName === "formA" || formName === "formB";
   const preppedFormData = isFormR
     ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
-    : prepLtftData(formData as LtftObj, isSubmit, jsonForm);
+    : formData;
 
   if (draftFormId) {
     await updateForm(

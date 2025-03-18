@@ -104,4 +104,15 @@ export class FormsService extends ApiService {
   async getLtftFormById(id: string): Promise<AxiosResponse<LtftDto>> {
     return this.get<LtftDto>(`/ltft/${id}`);
   }
+
+  async submitLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
+    if (mappedFormData.id) {
+      return this.put<LtftDto>(
+        `/ltft/${mappedFormData.id}/submit`,
+        mappedFormData
+      );
+    }
+    // TODO - BE not implemented yet
+    return this.post<LtftDto>("/ltft/submit", mappedFormData);
+  }
 }

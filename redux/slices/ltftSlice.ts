@@ -139,7 +139,9 @@ export const saveLtft = createAsyncThunk(
     const formsService = new FormsService();
     try {
       const mappedFormDataDto = mapLtftObjToDto(formData);
-      const response = await formsService.saveLtft(mappedFormDataDto);
+      const response = isSubmit
+        ? await formsService.submitLtft(mappedFormDataDto)
+        : await formsService.saveLtft(mappedFormDataDto);
       const mappedResLtftObj = mapLtftDtoToObj(response.data);
       return { data: mappedResLtftObj, isAutoSave, isSubmit };
     } catch (error) {
@@ -165,7 +167,9 @@ export const updateLtft = createAsyncThunk(
     const formsService = new FormsService();
     try {
       const mappedFormDataDto = mapLtftObjToDto(formData);
-      const response = await formsService.updateLtft(mappedFormDataDto);
+      const response = isSubmit
+        ? await formsService.submitLtft(mappedFormDataDto)
+        : await formsService.updateLtft(mappedFormDataDto);
       const mappedResLtftObj = mapLtftDtoToObj(response.data);
       return { data: mappedResLtftObj, isAutoSave, isSubmit };
     } catch (error) {
