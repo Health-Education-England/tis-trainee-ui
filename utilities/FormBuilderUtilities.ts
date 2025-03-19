@@ -344,6 +344,18 @@ function prepFormRData(
   };
 }
 
+function prepLtftData(formData: LtftObj, isSubmit: boolean): LtftObj {
+  if (isSubmit) {
+    const updatedDeclarations = {
+      ...formData.declarations,
+      informationIsCorrect: true,
+      notGuaranteed: true
+    };
+    return { ...formData, declarations: updatedDeclarations };
+  }
+  return formData;
+}
+
 async function updateForm(
   formName: string,
   formData: FormData,
@@ -445,7 +457,7 @@ export async function saveDraftForm(
   const isFormR = formName === "formA" || formName === "formB";
   const preppedFormData = isFormR
     ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
-    : formData;
+    : prepLtftData(formData as LtftObj, isSubmit);
 
   if (draftFormId) {
     await updateForm(
