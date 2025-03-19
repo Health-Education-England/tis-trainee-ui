@@ -112,7 +112,6 @@ export class FormsService extends ApiService {
         mappedFormData
       );
     }
-    // TODO - BE not implemented yet
     return this.post<LtftDto>("/ltft/submit", mappedFormData);
   }
 }

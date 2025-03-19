@@ -11,6 +11,7 @@ import store from "../../redux/store/store";
 import {
   getDraftFormId,
   handleSaveRedirect,
+  prepLtftData,
   setDraftFormRProps,
   setFormRDataForSubmit,
   transformReferenceData
@@ -21,6 +22,7 @@ import { Form } from "../../components/forms/form-builder/FormBuilder";
 import { FormRPartA } from "../../models/FormRPartA";
 import { FormRPartB } from "../../models/FormRPartB";
 import history from "../../components/navigation/history";
+import { mockLtftDraft0, mockLtftDraft1 } from "../../mock-data/mock-ltft-data";
 
 describe("transformReferenceData", () => {
   beforeEach(() => {
@@ -139,5 +141,19 @@ describe("handleSaveRedirect", () => {
     handleSaveRedirect("formA", false);
 
     expect(history.push).not.toHaveBeenCalled();
+  });
+});
+
+describe("prepLtftData", () => {
+  it("should update declarations when isSubmit is true", () => {
+    const result = prepLtftData(mockLtftDraft0, true);
+    console.log("result: ", result);
+    expect(result.declarations.informationIsCorrect).toBe(true);
+    expect(result.declarations.notGuaranteed).toBe(true);
+  });
+
+  it("should return the original object unchanged when isSubmit is false", () => {
+    const result = prepLtftData(mockLtftDraft0, false);
+    expect(result).toEqual(mockLtftDraft0);
   });
 });

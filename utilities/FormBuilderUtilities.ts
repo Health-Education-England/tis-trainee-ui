@@ -344,7 +344,7 @@ function prepFormRData(
   };
 }
 
-function prepLtftData(formData: LtftObj, isSubmit: boolean): LtftObj {
+export function prepLtftData(formData: LtftObj, isSubmit: boolean): LtftObj {
   if (isSubmit) {
     const updatedDeclarations = {
       ...formData.declarations,
