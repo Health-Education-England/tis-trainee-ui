@@ -213,6 +213,9 @@ const ltftSlice = createSlice({
     },
     updatedEditPageNumberLtft(state, action: PayloadAction<number>) {
       state.editPageNumber = action.payload;
+    },
+    updatedLtftSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
+      state.saveStatus = action.payload;
     }
   },
   extraReducers(builder): void {
@@ -367,7 +370,8 @@ export const {
   setLtftCctSnapshot,
   updatedLtft,
   updatedCanEditLtft,
-  updatedEditPageNumberLtft
+  updatedEditPageNumberLtft,
+  updatedLtftSaveStatus
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;

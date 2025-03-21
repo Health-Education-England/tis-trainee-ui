@@ -344,18 +344,6 @@ function prepFormRData(
   };
 }
 
-export function prepLtftData(formData: LtftObj, isSubmit: boolean): LtftObj {
-  if (isSubmit) {
-    const updatedDeclarations = {
-      ...formData.declarations,
-      informationIsCorrect: true,
-      notGuaranteed: true
-    };
-    return { ...formData, declarations: updatedDeclarations };
-  }
-  return formData;
-}
-
 async function updateForm(
   formName: string,
   formData: FormData,
@@ -435,10 +423,14 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
-  if (!isAutoSave) {
-    const autosaveStatus = getSaveStatus(formName);
-    if (autosaveStatus === "succeeded") {
+export const handleSaveRedirect = (
+  formName: string,
+  isAutoSave: boolean,
+  overrideRedirect: boolean | undefined
+) => {
+  if (!isAutoSave && !overrideRedirect) {
+    const saveStatus = getSaveStatus(formName);
+    if (saveStatus === "succeeded") {
       history.push(chooseRedirectPath(formName));
     }
   }
@@ -450,14 +442,15 @@ export async function saveDraftForm(
   jsonForm: Form,
   formData: FormDataType,
   isAutoSave: boolean,
-  isSubmit: boolean
+  isSubmit: boolean,
+  overrideRedirect?: boolean
 ) {
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
   const isFormR = formName === "formA" || formName === "formB";
   const preppedFormData = isFormR
     ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
-    : prepLtftData(formData as LtftObj, isSubmit);
+    : formData;
 
   if (draftFormId) {
     await updateForm(
@@ -466,10 +459,10 @@ export async function saveDraftForm(
       isAutoSave,
       isSubmit
     );
-    handleSaveRedirect(formName, isAutoSave);
+    handleSaveRedirect(formName, isAutoSave, overrideRedirect);
   } else {
     await saveForm(formName, preppedFormData, isAutoSave, isSubmit);
-    handleSaveRedirect(formName, isAutoSave);
+    handleSaveRedirect(formName, isAutoSave, overrideRedirect);
   }
 }
 
