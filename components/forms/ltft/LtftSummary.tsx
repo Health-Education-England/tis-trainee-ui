@@ -16,8 +16,12 @@ import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import dayjs from "dayjs";
 import Loading from "../../common/Loading";
 import history from "../../navigation/history";
+import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
 
-type StatusType = "SUBMITTED" | "APPROVED" | "WITHDRAWN";
+type LtftFormStatusSub = Extract<
+  LtftFormStatus,
+  "SUBMITTED" | "APPROVED" | "WITHDRAWN"
+>;
 
 type LtftSummaryProps = {
   ltftSummaryStatus: string;
@@ -31,7 +35,7 @@ const LtftSummary = ({
   const ltftSummaries = ltftSummaryList || [];
 
   const [visibleStatuses, setVisibleStatuses] = useState<
-    Record<StatusType, boolean>
+    Record<LtftFormStatusSub, boolean>
   >({
     SUBMITTED: true,
     APPROVED: true,
@@ -39,24 +43,18 @@ const LtftSummary = ({
   });
 
   const filteredLtftSummaries = ltftSummaries.filter(
-    item => visibleStatuses[item.status as StatusType]
+    item => visibleStatuses[item.status as LtftFormStatusSub]
   );
 
-  const latestSubmitted = filteredLtftSummaries.find(
-    i => i.status === "SUBMITTED"
-  );
-
-  const toggleStatus = (status: StatusType) => {
+  const toggleStatus = (status: LtftFormStatusSub) => {
     setVisibleStatuses(prev => ({
       ...prev,
       [status]: !prev[status]
     }));
   };
 
-  // React table setup
   const columnHelper = createColumnHelper<LtftSummaryObj>();
 
-  // Header
   const renderNameHeader = ({
     column
   }: HeaderContext<LtftSummaryObj, string>) => (
@@ -94,7 +92,6 @@ const LtftSummary = ({
     />
   );
 
-  //Header value
   const renderValue = (props: { renderValue: () => ReactNode }) => (
     <span>{props.renderValue()}</span>
   );
@@ -102,36 +99,42 @@ const LtftSummary = ({
     <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
   );
 
-  // Operation Column
   const renderOperationColumnValue = (props: {
     row: { original: LtftSummaryObj };
-  }) => (
-    <>
-      {props.row.original.status === "SUBMITTED" ? (
-        <>
-          <Button
-            data-cy="unsubmitLtftBtnLink"
-            fontWeight="normal"
-            // onClick={onClickEvent}
-            size="small"
-            type="reset"
-            style={{ marginBottom: "0.5em" }}
-          >
-            Unsubmit
-          </Button>
-          <Button
-            data-cy="withdrawLtftBtnLink"
-            fontWeight="normal"
-            // onClick={onClickEvent}
-            size="small"
-            type="reset"
-          >
-            Withdraw
-          </Button>
-        </>
-      ) : null}
-    </>
-  );
+  }) => {
+    const renderActionButton = (
+      label: string,
+      dataCy: string,
+      additionalStyle = {}
+    ) => (
+      <Button
+        data-cy={dataCy}
+        fontWeight="normal"
+        onClick={e => {
+          e.stopPropagation();
+          // onClickEvent();
+        }}
+        size="small"
+        type="reset"
+        style={additionalStyle}
+      >
+        {label}
+      </Button>
+    );
+
+    return (
+      <>
+        {props.row.original.status === "SUBMITTED" ? (
+          <>
+            {renderActionButton("Unsubmit", "unsubmitLtftBtnLink", {
+              marginBottom: "0.5em"
+            })}
+            {renderActionButton("Withdraw", "withdrawLtftBtnLink")}
+          </>
+        ) : null}
+      </>
+    );
+  };
 
   const columnsDefault = [
     columnHelper.accessor("name", {
@@ -187,7 +190,11 @@ const LtftSummary = ({
     autoResetPageIndex: false
   });
 
-  const statusFilters: StatusType[] = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+  const statusFilters: LtftFormStatusSub[] = [
+    "APPROVED",
+    "SUBMITTED",
+    "WITHDRAWN"
+  ];
 
   let content: JSX.Element = <></>;
   if (ltftSummaryStatus === "loading") content = <Loading />;
@@ -228,10 +235,7 @@ const LtftSummary = ({
               return (
                 <tr
                   className="table-row"
-                  onClick={e => {
-                    e.stopPropagation();
-                    history.push(`/ltft/${row.original.id}`);
-                  }}
+                  onClick={() => history.push(`/ltft/${row.original.id}`)}
                   key={row.id}
                   data-cy={`ltft-row-${row.id}`}
                 >
