@@ -19,8 +19,10 @@ import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { LtftNameModal } from "./LtftNameModal";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
+import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 
 export const LtftFormView = () => {
+  const { startSubmitting, stopSubmitting, isSubmitting } = useSubmitting();
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
   const canEditStatus = useAppSelector(state => state.ltft.canEdit);
   const cctSnapshot: CctCalculation = {
@@ -32,7 +34,6 @@ export const LtftFormView = () => {
   const redirectPath = "/ltft";
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubClick = () => {
     setShowModal(true);
@@ -40,7 +41,19 @@ export const LtftFormView = () => {
 
   const handleModalFormClose = () => {
     setShowModal(false);
-    setIsSubmitting(false);
+    stopSubmitting();
+  };
+
+  const handleModalFormSubmit = async (values: { name: string }) => {
+    setShowModal(false);
+    startSubmitting();
+    await saveDraftForm(
+      formJson,
+      { ...formData, name: values.name } as LtftObj,
+      false,
+      true
+    );
+    stopSubmitting();
   };
 
   return formData?.traineeTisId ? (
@@ -64,7 +77,7 @@ export const LtftFormView = () => {
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
-                setIsSubmitting(true);
+                startSubmitting();
                 handleSubClick();
               }}
               disabled={!canSubmit || isSubmitting}
@@ -81,14 +94,14 @@ export const LtftFormView = () => {
             <Button
               secondary
               onClick={async (e: { preventDefault: () => void }) => {
-                setIsSubmitting(true);
+                startSubmitting();
                 await saveDraftForm(
                   formJson,
                   formData as LtftObj,
                   false,
                   false
                 );
-                setIsSubmitting(false);
+                stopSubmitting();
               }}
               disabled={isSubmitting}
               data-cy="BtnSaveDraft"
@@ -101,7 +114,11 @@ export const LtftFormView = () => {
           </Col>
         </Row>
       </Container>
-      <LtftNameModal isOpen={showModal} onClose={handleModalFormClose} />
+      <LtftNameModal
+        onSubmit={handleModalFormSubmit}
+        isOpen={showModal}
+        onClose={handleModalFormClose}
+      />
     </>
   ) : (
     <Redirect to={redirectPath} />
