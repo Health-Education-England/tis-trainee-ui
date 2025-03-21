@@ -33,24 +33,17 @@ describe("LtftSummary Component", () => {
     });
   });
 
-  it("should filter out APPROVED ltft", () => {
-    cy.get("[data-cy=filterApprovedLtft]").click();
-    cy.get('[data-cy="ltft-summary-table"]')
-      .contains("APPROVED")
-      .should("not.exist");
+  ["APPROVED", "SUBMITTED", "WITHDRAWN"].forEach(status => {
+    it(`should filter out ${status} ltft`, () => {
+      cy.get(`[data-cy="filter${status}Ltft"]`).click();
+      cy.get('[data-cy="ltft-summary-table"]')
+        .contains(status)
+        .should("not.exist");
+    });
   });
 
-  it("should filter out SUBMITTED ltft", () => {
-    cy.get("[data-cy=filterSubmittedLtft]").click();
-    cy.get('[data-cy="ltft-summary-table"]')
-      .contains("SUBMITTED")
-      .should("not.exist");
-  });
-
-  it("should filter out WITHDRAWN ltft", () => {
-    cy.get("[data-cy=filterWithdrawnLtft]").click();
-    cy.get('[data-cy="ltft-summary-table"]')
-      .contains("WITHDRAWN")
-      .should("not.exist");
+  it("should navigate to correct URL when a row is clicked", () => {
+    cy.get("[data-cy=ltft-summary-table] tbody tr").first().click();
+    cy.url().should("include", "/ltft/123e4567-e89b-12d3-a456-426614174000");
   });
 });
