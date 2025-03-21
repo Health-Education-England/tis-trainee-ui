@@ -13,7 +13,6 @@ import {
   updatedLtftFormsRefreshNeeded
 } from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
-import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
@@ -40,7 +39,7 @@ export function LtftHome() {
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
 
-  const draftOrUnsubmittedLtftSummary = ltftSummary.find(
+  const draftOrUnsubmittedLtftSummary = ltftSummary.filter(
     item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );
 
@@ -59,12 +58,14 @@ export function LtftHome() {
                 ? "In progress application"
                 : "New application"}
             </Card.Heading>
-            <LtftTracker
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+            <LtftSummary
+              ltftSummaryType="CURRENT"
+              ltftSummaryStatus={ltftFormsListStatus}
+              ltftSummaryList={draftOrUnsubmittedLtftSummary}
             />
-            <TrackerSectionBtns
+            {/* <TrackerSectionBtns
               draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-            />
+            /> */}
           </>
         </Card.Content>
       </Card>
@@ -84,6 +85,7 @@ export function LtftHome() {
             Previous applications summary
           </Card.Heading>
           <LtftSummary
+            ltftSummaryType="PREVIOUS"
             ltftSummaryStatus={ltftFormsListStatus}
             ltftSummaryList={previousLtftSummaries}
           />

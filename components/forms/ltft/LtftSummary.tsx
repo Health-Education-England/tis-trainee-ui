@@ -17,14 +17,21 @@ import dayjs from "dayjs";
 import Loading from "../../common/Loading";
 import history from "../../navigation/history";
 
-type StatusType = "SUBMITTED" | "APPROVED" | "WITHDRAWN";
+type StatusType =
+  | "SUBMITTED"
+  | "APPROVED"
+  | "WITHDRAWN"
+  | "DRAFT"
+  | "UNSUBMITTED";
 
 type LtftSummaryProps = {
+  ltftSummaryType: string;
   ltftSummaryStatus: string;
   ltftSummaryList?: LtftSummaryObj[];
 };
 
 const LtftSummary = ({
+  ltftSummaryType,
   ltftSummaryStatus,
   ltftSummaryList
 }: Readonly<LtftSummaryProps>) => {
@@ -35,15 +42,13 @@ const LtftSummary = ({
   >({
     SUBMITTED: true,
     APPROVED: true,
-    WITHDRAWN: true
+    WITHDRAWN: true,
+    DRAFT: true,
+    UNSUBMITTED: true
   });
 
   const filteredLtftSummaries = ltftSummaries.filter(
     item => visibleStatuses[item.status as StatusType]
-  );
-
-  const latestSubmitted = filteredLtftSummaries.find(
-    i => i.status === "SUBMITTED"
   );
 
   const toggleStatus = (status: StatusType) => {
@@ -187,7 +192,12 @@ const LtftSummary = ({
     autoResetPageIndex: false
   });
 
-  const statusFilters: StatusType[] = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+  let statusFilters: StatusType[] = [];
+  if (ltftSummaryType === "CURRENT") {
+    statusFilters = ["DRAFT", "UNSUBMITTED"];
+  } else if (ltftSummaryType === "PREVIOUS") {
+    statusFilters = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+  }
 
   let content: JSX.Element = <></>;
   if (ltftSummaryStatus === "loading") content = <Loading />;
