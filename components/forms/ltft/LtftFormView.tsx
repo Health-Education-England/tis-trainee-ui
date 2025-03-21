@@ -82,7 +82,7 @@ export const LtftFormView = () => {
     );
   }
 
-  if (ltftStatus === "succeeded")
+  if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
         {!canEditStatus && (
@@ -91,17 +91,19 @@ export const LtftFormView = () => {
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>Name</SummaryList.Key>
-                <SummaryList.Value>{formData.name}</SummaryList.Value>
+                <SummaryList.Value data-cy="ltftName">
+                  {formData.name}
+                </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
                 <SummaryList.Key>Created</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="ltftCreated">
                   {dayjs(formData.created).toString()}
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
                 <SummaryList.Key>Submitted</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="ltftSubmitted">
                   {dayjs(formData.lastModified).toString()}
                 </SummaryList.Value>
               </SummaryList.Row>
