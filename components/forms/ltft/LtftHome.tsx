@@ -31,10 +31,8 @@ export function LtftHome() {
   );
   useLtftHomeStartover();
 
-  // TODO - use real data for Summary Table when submission logic added
-  const mockLtftSummary = mockLtftsList1;
   const sortedLtftSummary = DateUtilities.genericSort(
-    mockLtftSummary.slice(),
+    ltftSummary.slice(),
     "lastModified",
     true
   );

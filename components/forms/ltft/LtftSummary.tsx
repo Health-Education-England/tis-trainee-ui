@@ -14,7 +14,10 @@ import { ReactNode, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import dayjs from "dayjs";
-import Loading from "react-loading";
+import Loading from "../../common/Loading";
+import history from "../../navigation/history";
+
+type StatusType = "SUBMITTED" | "APPROVED" | "WITHDRAWN";
 
 type LtftSummaryProps = {
   ltftSummaryStatus: string;
@@ -27,20 +30,28 @@ const LtftSummary = ({
 }: Readonly<LtftSummaryProps>) => {
   const ltftSummaries = ltftSummaryList || [];
 
-  const [showSubmitted, setShowSubmitted] = useState(true);
-  const [showApproved, setShowApproved] = useState(true);
-  const [showWithdrawn, setShowWithdrawn] = useState(true);
+  const [visibleStatuses, setVisibleStatuses] = useState<
+    Record<StatusType, boolean>
+  >({
+    SUBMITTED: true,
+    APPROVED: true,
+    WITHDRAWN: true
+  });
 
   const filteredLtftSummaries = ltftSummaries.filter(
-    item =>
-      (showSubmitted || item.status !== "SUBMITTED") &&
-      (showApproved || item.status !== "APPROVED") &&
-      (showWithdrawn || item.status !== "WITHDRAWN")
+    item => visibleStatuses[item.status as StatusType]
   );
 
   const latestSubmitted = filteredLtftSummaries.find(
     i => i.status === "SUBMITTED"
   );
+
+  const toggleStatus = (status: StatusType) => {
+    setVisibleStatuses(prev => ({
+      ...prev,
+      [status]: !prev[status]
+    }));
+  };
 
   // React table setup
   const columnHelper = createColumnHelper<LtftSummaryObj>();
@@ -96,8 +107,7 @@ const LtftSummary = ({
     row: { original: LtftSummaryObj };
   }) => (
     <>
-      {props.row.original.status === "SUBMITTED" &&
-      props.row.original === latestSubmitted ? (
+      {props.row.original.status === "SUBMITTED" ? (
         <>
           <Button
             data-cy="unsubmitLtftBtnLink"
@@ -177,41 +187,24 @@ const LtftSummary = ({
     autoResetPageIndex: false
   });
 
+  const statusFilters: StatusType[] = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+
   let content: JSX.Element = <></>;
   if (ltftSummaryStatus === "loading") content = <Loading />;
   if (ltftSummaryStatus === "succeeded")
     content = (
       <div>
-        <CheckboxField
-          data-cy="filterApprovedLtft"
-          name="yesToShowApproved"
-          value="yes"
-          label="APPROVED"
-          checked={showApproved}
-          onChange={() =>
-            setShowApproved(prevShowApproved => !prevShowApproved)
-          }
-        />
-        <CheckboxField
-          data-cy="filterSubmittedLtft"
-          name="yesToShowSubmitted"
-          value="yes"
-          label="SUBMITTED"
-          checked={showSubmitted}
-          onChange={() =>
-            setShowSubmitted(prevShowSubmitted => !prevShowSubmitted)
-          }
-        />
-        <CheckboxField
-          data-cy="filterWithdrawnLtft"
-          name="yesToShowWithdrawn"
-          value="yes"
-          label="WITHDRAWN"
-          checked={showWithdrawn}
-          onChange={() =>
-            setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
-          }
-        />
+        {statusFilters.map(status => (
+          <CheckboxField
+            key={status}
+            data-cy={`filter${status}Ltft`}
+            name={`yesToShow${status}`}
+            value="yes"
+            label={status}
+            checked={visibleStatuses[status]}
+            onChange={() => toggleStatus(status)}
+          />
+        ))}
         <table data-cy="ltft-summary-table">
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
@@ -237,7 +230,7 @@ const LtftSummary = ({
                   className="table-row"
                   onClick={e => {
                     e.stopPropagation();
-                    // history.push(`/ltft/view/${row.original.id}`);
+                    history.push(`/ltft/${row.original.id}`);
                   }}
                   key={row.id}
                   data-cy={`ltft-row-${row.id}`}
