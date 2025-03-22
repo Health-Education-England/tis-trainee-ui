@@ -108,18 +108,19 @@ export function resetForm(formName: string) {
     store.dispatch(resetToInitLtft());
   }
 }
-const chooseRedirectPath = (formName: string, confirm?: boolean) => {
-  if (formName === "formA") {
-    return confirm ? "/formr-a/confirm" : "/formr-a";
-  } else if (formName === "formB") {
-    return confirm ? "/formr-b/confirm" : "/formr-b";
-  } else {
-    return confirm ? "/ltft/confirm" : "/ltft";
-  }
+
+type PathSuffix = "/confirm" | "/create" | "";
+
+export const chooseRedirectPath = (
+  formName: FormName,
+  pathSuffix: PathSuffix = ""
+): string => {
+  const urlPath = mapFormNameToUrl(formName);
+  return `/${urlPath}${pathSuffix}`;
 };
 
-export function continueToConfirm(formName: string, formData: FormData) {
-  const redirectPath = chooseRedirectPath(formName, true);
+export function continueToConfirm(formName: FormName, formData: FormData) {
+  const redirectPath = chooseRedirectPath(formName, "/confirm");
   if (formName === "formA") {
     store.dispatch(updatedFormA(formData as FormRPartA));
     store.dispatch(updatedCanEdit(true));
@@ -135,10 +136,10 @@ export function continueToConfirm(formName: string, formData: FormData) {
 
 export function handleEditSection(
   pageNum: number,
-  formName: string,
+  formName: FormName,
   history: any
 ) {
-  const redirectPath = `${chooseRedirectPath(formName)}/create`;
+  const redirectPath = chooseRedirectPath(formName, "/create");
   if (formName === "formA") {
     store.dispatch(updatedEditPageNumber(pageNum));
   } else if (formName === "formB") {
@@ -432,9 +433,9 @@ const getSaveStatus = (formName: string) => {
 };
 
 export const handleSaveRedirect = (
-  formName: string,
+  formName: FormName,
   isAutoSave: boolean,
-  overrideRedirect: boolean | undefined
+  overrideRedirect: boolean
 ) => {
   if (!isAutoSave && !overrideRedirect) {
     const saveStatus = getSaveStatus(formName);
