@@ -58,6 +58,7 @@ export const LtftFormView = () => {
       } as LtftObj,
       false,
       false,
+      true,
       true
     );
     stopSubmitting();
@@ -132,12 +133,7 @@ export const LtftFormView = () => {
               secondary
               onClick={async () => {
                 startSubmitting();
-                await saveDraftForm(
-                  formJson,
-                  formData as LtftObj,
-                  false,
-                  false
-                );
+                await saveDraftForm(formJson, formData as LtftObj);
                 stopSubmitting();
               }}
               disabled={isSubmitting}

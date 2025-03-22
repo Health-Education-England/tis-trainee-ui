@@ -182,9 +182,7 @@ export const FormView = ({
                   setIsSubmitting(true);
                   await saveDraftForm(
                     formJson,
-                    formData as FormRPartA | FormRPartB,
-                    false,
-                    false
+                    formData as FormRPartA | FormRPartB
                   );
                   setIsSubmitting(false);
                 }}

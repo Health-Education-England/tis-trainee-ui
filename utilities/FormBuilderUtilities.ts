@@ -348,7 +348,8 @@ async function updateForm(
   formName: string,
   formData: FormData,
   isAutoSave: boolean,
-  isSubmit: boolean
+  isSubmit: boolean,
+  showFailToastOnly: boolean = false
 ) {
   if (formName === "formA") {
     await store.dispatch(
@@ -371,7 +372,8 @@ async function updateForm(
       updateLtft({
         formData: formData as LtftObj,
         isAutoSave,
-        isSubmit
+        isSubmit,
+        showFailToastOnly
       })
     );
   }
@@ -381,7 +383,8 @@ async function saveForm(
   formName: string,
   formData: FormData,
   isAutoSave: boolean,
-  isSubmit: boolean
+  isSubmit: boolean,
+  showFailToastOnly: boolean
 ) {
   if (formName === "formA") {
     await store.dispatch(
@@ -397,7 +400,12 @@ async function saveForm(
     );
   } else if (formName === "ltft")
     await store.dispatch(
-      saveLtft({ formData: formData as LtftObj, isAutoSave, isSubmit })
+      saveLtft({
+        formData: formData as LtftObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      })
     );
 }
 
@@ -441,9 +449,10 @@ export type FormDataType = FormRPartA | FormRPartB | LtftObj;
 export async function saveDraftForm(
   jsonForm: Form,
   formData: FormDataType,
-  isAutoSave: boolean,
-  isSubmit: boolean,
-  overrideRedirect?: boolean
+  isAutoSave: boolean = false,
+  isSubmit: boolean = false,
+  showFailToastOnly: boolean = false,
+  overrideRedirect: boolean = false
 ) {
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
@@ -457,11 +466,18 @@ export async function saveDraftForm(
       formName,
       { ...preppedFormData, id: draftFormId },
       isAutoSave,
-      isSubmit
+      isSubmit,
+      showFailToastOnly
     );
     handleSaveRedirect(formName, isAutoSave, overrideRedirect);
   } else {
-    await saveForm(formName, preppedFormData, isAutoSave, isSubmit);
+    await saveForm(
+      formName,
+      preppedFormData,
+      isAutoSave,
+      isSubmit,
+      showFailToastOnly
+    );
     handleSaveRedirect(formName, isAutoSave, overrideRedirect);
   }
 }

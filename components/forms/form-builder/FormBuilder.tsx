@@ -167,7 +167,7 @@ export default function FormBuilder({
 
   const handleSaveBtnClick = async () => {
     setIsSubmitting(true);
-    await saveDraftForm(jsonForm, formData as FormDataType, false, false);
+    await saveDraftForm(jsonForm, formData as FormDataType);
     setIsSubmitting(false);
   };
 
