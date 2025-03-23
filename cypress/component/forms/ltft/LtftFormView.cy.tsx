@@ -46,29 +46,28 @@ describe("LTFT Form View", () => {
       .should("not.be.disabled");
   });
 
-  it("should enable the submit button when declarations are checked", () => {
+  it("should enable the submit button when declarations are checked and input name text", () => {
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
     cy.get('[data-cy="informationIsCorrect"]').check();
     cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
+    cy.get('[data-cy="name"]').type("Test Application");
     cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled");
   });
 
-  it("should open the pre-submit modal when submit button is clicked", () => {
+  it("should open the pre-submit modal when submit button is enabled and clickable", () => {
     cy.get('[data-cy="informationIsCorrect"]').check();
     cy.get('[data-cy="notGuaranteed"]').check();
-    cy.get('[data-cy="BtnSubmit"]').click();
-    cy.get('[data-cy="dialogModal"]').should("exist");
-    cy.get('[data-cy="ltftModalWarning"]').should("exist");
-    cy.get('[data-cy="ltft-modal-save-btn"]')
-      .should("exist")
-      .should("be.disabled");
-    // should keep disable if trim Name is empty
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
     cy.get("#ltftName").type("  ");
-    cy.get('[data-cy="ltft-modal-save-btn"]').should("be.disabled");
+    cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
     // should enable the submit button when Name is inputted
     cy.get("#ltftName").type("Test Application");
-    cy.get('[data-cy="ltft-modal-save-btn"]').should("not.be.disabled");
-    // should close the pre-submit modal when clicking Cancel
-    cy.get('[data-cy="dialogModal"] button').contains("Cancel").click();
-    cy.get('[data-cy="dialogModal"]').should("not.be.visible");
+    cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled").click();
+
+    cy.get('[data-cy="dialogModal"]').should("exist");
+    cy.get('[data-cy="ltftModalWarning"]').should("exist");
+
+    // NOTE - Removed the modal-related tests as the modal will not open as before via the btn click because of the new intermediate saveDraftForm call. AFAIK no easy way to mock this logic in Cypress Component tests, so see RTL (Jest) LtftFormView.test.tsx .
   });
 });
