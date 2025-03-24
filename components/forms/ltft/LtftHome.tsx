@@ -1,24 +1,8 @@
-import {
-  ActionLink,
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  WarningCallout
-} from "nhsuk-react-components";
-import { LtftTracker } from "./LtftTracker";
-import history from "../../navigation/history";
-import {
-  LtftSummaryObj,
-  updatedLtftFormsRefreshNeeded
-} from "../../../redux/slices/ltftSummaryListSlice";
+import { ActionLink, Card, Col, Container, Row } from "nhsuk-react-components";
 import LtftSummary from "./LtftSummary";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
-import { StartOverButton } from "../StartOverButton";
-import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
 import { Link } from "react-router-dom";
@@ -55,10 +39,8 @@ export function LtftHome() {
       <Card>
         <Card.Content>
           <>
-            <Card.Heading data-cy="ltft-tracker-header">
-              {draftOrUnsubmittedLtftSummary
-                ? "In progress application"
-                : "New application"}
+            <Card.Heading data-cy="ltft-current-summary-header">
+              In progress application
             </Card.Heading>
             <LtftSummary
               ltftSummaryType="CURRENT"
@@ -68,10 +50,12 @@ export function LtftHome() {
             <Container>
               <Row>
                 <Col width="full">
-                  <Link to="/cct" data-cy="cct-link">
-                    Click here to choose a CCT Calculation to begin a new
-                    Changing hours (LTFT) application
-                  </Link>
+                  <ActionLink>
+                    <Link to="/cct" data-cy="cct-link">
+                      Choose a CCT Calculation to begin a new Changing hours
+                      (LTFT) application
+                    </Link>
+                  </ActionLink>
                 </Col>
               </Row>
             </Container>
@@ -80,17 +64,7 @@ export function LtftHome() {
       </Card>
       <Card>
         <Card.Content>
-          <WarningCallout data-cy="ltftWarning">
-            <WarningCallout.Label visuallyHiddenText={false}>
-              For Demonstration Only
-            </WarningCallout.Label>
-            <p>
-              The table below has <strong>dummy data</strong> and is read only
-              for demonstrating the future layout of the LTFT Applications
-              Summary.
-            </p>
-          </WarningCallout>
-          <Card.Heading data-cy="ltft-summary-header">
+          <Card.Heading data-cy="ltft-previous-summary-header">
             Previous applications summary
           </Card.Heading>
           <LtftSummary
