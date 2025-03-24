@@ -1,4 +1,5 @@
 import {
+  ActionLink,
   Button,
   Card,
   Col,
@@ -13,7 +14,6 @@ import {
   updatedLtftFormsRefreshNeeded
 } from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
-import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
@@ -21,6 +21,7 @@ import { StartOverButton } from "../StartOverButton";
 import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
+import { Link } from "react-router-dom";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -40,7 +41,7 @@ export function LtftHome() {
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
 
-  const draftOrUnsubmittedLtftSummary = ltftSummary.find(
+  const draftOrUnsubmittedLtftSummary = ltftSummary.filter(
     item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );
 
@@ -59,12 +60,21 @@ export function LtftHome() {
                 ? "In progress application"
                 : "New application"}
             </Card.Heading>
-            <LtftTracker
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+            <LtftSummary
+              ltftSummaryType="CURRENT"
+              ltftSummaryStatus={ltftFormsListStatus}
+              ltftSummaryList={draftOrUnsubmittedLtftSummary}
             />
-            <TrackerSectionBtns
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-            />
+            <Container>
+              <Row>
+                <Col width="full">
+                  <Link to="/cct" data-cy="cct-link">
+                    Click here to choose a CCT Calculation to begin a new
+                    Changing hours (LTFT) application
+                  </Link>
+                </Col>
+              </Row>
+            </Container>
           </>
         </Card.Content>
       </Card>
@@ -84,72 +94,12 @@ export function LtftHome() {
             Previous applications summary
           </Card.Heading>
           <LtftSummary
+            ltftSummaryType="PREVIOUS"
             ltftSummaryStatus={ltftFormsListStatus}
             ltftSummaryList={previousLtftSummaries}
           />
         </Card.Content>
       </Card>
     </>
-  );
-}
-
-type TrackerSectionBtnsProps = {
-  draftOrUnsubmittedLtftSummary: LtftSummaryObj | undefined;
-};
-
-function TrackerSectionBtns({
-  draftOrUnsubmittedLtftSummary
-}: Readonly<TrackerSectionBtnsProps>) {
-  const dispatch = useAppDispatch();
-  const handleClick = () => {
-    loadTheSavedForm("/ltft", draftOrUnsubmittedLtftSummary?.id ?? "", history);
-  };
-  return (
-    <div style={{ marginTop: "2rem" }}>
-      {draftOrUnsubmittedLtftSummary ? (
-        <Container>
-          <Row>
-            <Col width="two-thirds">
-              <Button
-                data-cy="continue-application-button"
-                onClick={handleClick}
-              >
-                {`Continue ${
-                  draftOrUnsubmittedLtftSummary?.status === "DRAFT"
-                    ? "draft"
-                    : "unsubmitted"
-                } application`}
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col width="one-third">
-              <StartOverButton
-                formName="ltft"
-                btnLocation="formsList"
-                formsListDraftId={draftOrUnsubmittedLtftSummary.id}
-              />
-            </Col>
-          </Row>
-        </Container>
-      ) : (
-        <Container>
-          <Row>
-            <Col width="two-thirds">
-              <Button
-                data-cy="choose-cct-btn"
-                onClick={() => {
-                  dispatch(updatedLtftFormsRefreshNeeded(false));
-                  history.push("/cct");
-                }}
-              >
-                Choose a CCT Calculation to begin your Changing hours (LTFT)
-                application
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-    </div>
   );
 }

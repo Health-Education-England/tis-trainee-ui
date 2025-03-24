@@ -17,18 +17,21 @@ import dayjs from "dayjs";
 import Loading from "../../common/Loading";
 import history from "../../navigation/history";
 import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
+import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
-  "SUBMITTED" | "APPROVED" | "WITHDRAWN"
+  "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED"
 >;
 
 type LtftSummaryProps = {
+  ltftSummaryType: string;
   ltftSummaryStatus: string;
   ltftSummaryList?: LtftSummaryObj[];
 };
 
 const LtftSummary = ({
+  ltftSummaryType,
   ltftSummaryStatus,
   ltftSummaryList
 }: Readonly<LtftSummaryProps>) => {
@@ -39,7 +42,9 @@ const LtftSummary = ({
   >({
     SUBMITTED: true,
     APPROVED: true,
-    WITHDRAWN: true
+    WITHDRAWN: true,
+    DRAFT: true,
+    UNSUBMITTED: true
   });
 
   const filteredLtftSummaries = ltftSummaries.filter(
@@ -51,6 +56,14 @@ const LtftSummary = ({
       ...prev,
       [status]: !prev[status]
     }));
+  };
+
+  const handleClick = (id: string) => {
+    if (ltftSummaryType === "CURRENT") {
+      loadTheSavedForm("/ltft", id ?? "", history);
+    } else if (ltftSummaryType === "PREVIOUS") {
+      history.push(`/ltft/${id}`);
+    }
   };
 
   const columnHelper = createColumnHelper<LtftSummaryObj>();
@@ -132,6 +145,12 @@ const LtftSummary = ({
             {renderActionButton("Withdraw", "withdrawLtftBtnLink")}
           </>
         ) : null}
+        {props.row.original.status === "DRAFT" ? (
+          <>{renderActionButton("Delete", "deleteLtftBtnLink")}</>
+        ) : null}
+        {props.row.original.status === "UNSUBMITTED" ? (
+          <>{renderActionButton("Withdraw", "withdrawLtftBtnLink")}</>
+        ) : null}
       </>
     );
   };
@@ -190,68 +209,77 @@ const LtftSummary = ({
     autoResetPageIndex: false
   });
 
-  const statusFilters: LtftFormStatusSub[] = [
-    "APPROVED",
-    "SUBMITTED",
-    "WITHDRAWN"
-  ];
+  let statusFilters: LtftFormStatusSub[] = [];
+  if (ltftSummaryType === "CURRENT") {
+    statusFilters = ["DRAFT", "UNSUBMITTED"];
+  } else if (ltftSummaryType === "PREVIOUS") {
+    statusFilters = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+  }
 
   let content: JSX.Element = <></>;
   if (ltftSummaryStatus === "loading") content = <Loading />;
   if (ltftSummaryStatus === "succeeded")
     content = (
       <div>
-        {statusFilters.map(status => (
-          <CheckboxField
-            key={status}
-            data-cy={`filter${status}Ltft`}
-            name={`yesToShow${status}`}
-            value="yes"
-            label={status}
-            checked={visibleStatuses[status]}
-            onChange={() => toggleStatus(status)}
-          />
-        ))}
-        <table data-cy="ltft-summary-table">
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    data-cy={`ltft-summary-table-${header.id}`}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
+        {filteredLtftSummaries.length > 0 ? (
+          <>
+            {statusFilters.map(status => (
+              <CheckboxField
+                key={status}
+                data-cy={`filter${status}Ltft`}
+                name={`yesToShow${status}`}
+                value="yes"
+                label={status}
+                checked={visibleStatuses[status]}
+                onChange={() => toggleStatus(status)}
+              />
             ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => {
-              return (
-                <tr
-                  className="table-row"
-                  onClick={() => history.push(`/ltft/${row.original.id}`)}
-                  key={row.id}
-                  data-cy={`ltft-row-${row.id}`}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} data-cy={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            <table data-cy="ltft-summary-table">
+              <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <th
+                        key={header.id}
+                        data-cy={`ltft-summary-table-${header.id}`}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map(row => {
+                  return (
+                    <tr
+                      className="table-row"
+                      onClick={() => handleClick(row.original.id)}
+                      key={row.id}
+                      data-cy={`ltft-row-${row.id}`}
+                    >
+                      {row.getVisibleCells().map(cell => (
+                        <td key={cell.id} data-cy={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <p data-cy="no-saved-drafts">
+            You have no {ltftSummaryType.toLowerCase()} applications.
+          </p>
+        )}
       </div>
     );
   return content;
