@@ -4,15 +4,18 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
 import {
+  LtftObj,
   updatedCanEditLtft,
   updatedLtft
 } from "../../../../redux/slices/ltftSlice";
-import { mockLtftDraft0 } from "../../../../mock-data/mock-ltft-data";
+import {
+  mockLtftDraft0,
+  mockLtftDraft1
+} from "../../../../mock-data/mock-ltft-data";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
 
-const mountLtftViewWithMockData = () => {
-  store.dispatch(updatedLtft(mockLtftDraft0));
-  store.dispatch(updatedCanEditLtft(true));
+const mountLtftViewWithMockData = (mockLtftObj: LtftObj) => {
+  store.dispatch(updatedLtft(mockLtftObj));
   mount(
     <Provider store={store}>
       <Router history={history}>
@@ -22,9 +25,47 @@ const mountLtftViewWithMockData = () => {
   );
 };
 
-describe("LTFT Form View", () => {
+describe("LTFT Form View - not editable", () => {
+  before(() => {
+    store.dispatch(updatedCanEditLtft(false));
+    mountLtftViewWithMockData({
+      ...mockLtftDraft1,
+      declarations: {
+        discussedWithTpd: true,
+        informationIsCorrect: true,
+        notGuaranteed: true
+      }
+    });
+  });
+
+  it("should render the form as read-only", () => {
+    cy.get('[data-cy="cct-calc-summary-header"]').should("exist");
+    cy.get(
+      '[data-cy="edit-Your Training Programme Director (TPD) details"]'
+    ).should("not.exist");
+    cy.get('[data-cy="edit-Other discussions (if applicable)"]').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="edit-Reason(s) for applying"]').should("not.exist");
+    cy.get('[data-cy="edit-Personal Details"]').should("not.exist");
+    cy.get('[data-cy="informationIsCorrect"]')
+      .should("be.checked")
+      .should("have.attr", "readonly");
+    cy.get('[data-cy="notGuaranteed"]')
+      .should("be.checked")
+      .should("have.attr", "readonly");
+    cy.get('[data-cy="BtnSubmit"]').should("not.exist");
+    cy.get('[data-cy="BtnSaveDraft"]').should("not.exist");
+    cy.get("#ltftName")
+      .should("have.value", "My Programme - Hours Reduction")
+      .should("have.attr", "readonly");
+  });
+});
+
+describe("LTFT Form View - editable & no name", () => {
   beforeEach(() => {
-    mountLtftViewWithMockData();
+    mountLtftViewWithMockData(mockLtftDraft0);
+    store.dispatch(updatedCanEditLtft(true));
   });
   it("renders an existing LTFT form that has just been edited", () => {
     cy.get('[data-cy="cct-calc-summary-header"]')
@@ -69,5 +110,15 @@ describe("LTFT Form View", () => {
     cy.get('[data-cy="ltftModalWarning"]').should("exist");
 
     // NOTE - Removed the modal-related tests as the modal will not open as before via the btn click because of the new intermediate saveDraftForm call. AFAIK no easy way to mock this logic in Cypress Component tests, so see RTL (Jest) LtftFormView.test.tsx .
+  });
+});
+
+describe("LTFT Form View - editable & saved name", () => {
+  before(() => {
+    mountLtftViewWithMockData(mockLtftDraft1);
+  });
+
+  it("should render the saved name in the form", () => {
+    cy.get("#ltftName").should("have.value", "My Programme - Hours Reduction");
   });
 });
