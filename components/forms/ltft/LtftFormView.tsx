@@ -1,8 +1,11 @@
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { Redirect } from "react-router-dom";
-import { LtftObj } from "../../../redux/slices/ltftSlice";
+import {
+  LtftObj,
+  updatedLtftSaveStatus
+} from "../../../redux/slices/ltftSlice";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
-import { Form, FormName } from "../form-builder/FormBuilder";
+import { Form as FormType, FormName } from "../form-builder/FormBuilder";
 import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useState } from "react";
@@ -20,6 +23,9 @@ import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { LtftNameModal } from "./LtftNameModal";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
+import store from "../../../redux/store/store";
+import TextInputField from "../TextInputField";
+import { Form, Formik } from "formik";
 
 export const LtftFormView = () => {
   const { startSubmitting, stopSubmitting, isSubmitting } = useSubmitting();
@@ -30,13 +36,36 @@ export const LtftFormView = () => {
     programmeMembership: formData?.programmeMembership,
     changes: [formData?.change]
   };
-  const formJson = ltftJson as Form;
+  const formJson = ltftJson as FormType;
   const redirectPath = "/ltft";
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const handleSubClick = () => {
-    setShowModal(true);
+  const handleSubClick = async (values: { name: string }) => {
+    const updatedDeclarations = {
+      ...formData.declarations,
+      informationIsCorrect: true,
+      notGuaranteed: true
+    };
+    store.dispatch(updatedLtftSaveStatus("idle"));
+    startSubmitting();
+    await saveDraftForm(
+      formJson,
+      {
+        ...formData,
+        name: values.name,
+        declarations: updatedDeclarations
+      } as LtftObj,
+      false,
+      false,
+      true,
+      false
+    );
+    stopSubmitting();
+    const newSaveStatus = store.getState().ltft.saveStatus;
+    if (newSaveStatus === "succeeded") {
+      setShowModal(true);
+    }
   };
 
   const handleModalFormClose = () => {
@@ -44,15 +73,10 @@ export const LtftFormView = () => {
     stopSubmitting();
   };
 
-  const handleModalFormSubmit = async (values: { name: string }) => {
+  const handleModalFormSubmit = async () => {
     setShowModal(false);
     startSubmitting();
-    await saveDraftForm(
-      formJson,
-      { ...formData, name: values.name } as LtftObj,
-      false,
-      true
-    );
+    await saveDraftForm(formJson, formData, false, true);
     stopSubmitting();
   };
 
@@ -67,53 +91,67 @@ export const LtftFormView = () => {
       />
       <WarningCallout>
         <WarningCallout.Label>Declarations</WarningCallout.Label>
-        <form>
-          <Declarations
-            setCanSubmit={setCanSubmit}
-            canEdit={canEditStatus}
-            formJson={formJson}
-          />
-          {canEditStatus && (
-            <Button
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                startSubmitting();
-                handleSubClick();
-              }}
-              disabled={!canSubmit || isSubmitting}
-              data-cy="BtnSubmit"
-            >
-              Submit Form
-            </Button>
-          )}
-        </form>
+
+        <Declarations
+          setCanSubmit={setCanSubmit}
+          canEdit={canEditStatus}
+          formJson={formJson}
+        />
+        <Formik
+          initialValues={{ name: formData.name ?? "" }}
+          onSubmit={handleSubClick}
+        >
+          {({ values }) => {
+            return (
+              <Form>
+                <TextInputField
+                  name="name"
+                  id="ltftName"
+                  label="Please give your Changing hours (LTFT) application a name"
+                  placeholder="Type name here..."
+                  width="300px"
+                  readOnly={!canEditStatus}
+                />
+                {canEditStatus && (
+                  <Button
+                    type="submit"
+                    disabled={!values.name.trim() || !canSubmit || isSubmitting}
+                    data-cy="BtnSubmit"
+                  >
+                    {isSubmitting ? "Saving..." : "Submit"}
+                  </Button>
+                )}
+              </Form>
+            );
+          }}
+        </Formik>
       </WarningCallout>
-      <Container>
-        <Row>
-          <Col width="one-quarter">
-            <Button
-              secondary
-              onClick={async (e: { preventDefault: () => void }) => {
-                startSubmitting();
-                await saveDraftForm(
-                  formJson,
-                  formData as LtftObj,
-                  false,
-                  false
-                );
-                stopSubmitting();
-              }}
-              disabled={isSubmitting}
-              data-cy="BtnSaveDraft"
-            >
-              {"Save & exit"}
-            </Button>
-          </Col>
-          <Col width="one-quarter">
-            <StartOverButton formName={formJson.name} btnLocation="formView" />
-          </Col>
-        </Row>
-      </Container>
+      {canEditStatus && (
+        <Container>
+          <Row>
+            <Col width="one-quarter">
+              <Button
+                secondary
+                onClick={async () => {
+                  startSubmitting();
+                  await saveDraftForm(formJson, formData);
+                  stopSubmitting();
+                }}
+                disabled={isSubmitting}
+                data-cy="BtnSaveDraft"
+              >
+                {"Save & exit"}
+              </Button>
+            </Col>
+            <Col width="one-quarter">
+              <StartOverButton
+                formName={formJson.name}
+                btnLocation="formView"
+              />
+            </Col>
+          </Row>
+        </Container>
+      )}
       <LtftNameModal
         onSubmit={handleModalFormSubmit}
         isOpen={showModal}

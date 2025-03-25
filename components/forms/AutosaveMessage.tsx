@@ -32,7 +32,7 @@ export const AutosaveMessage: React.FC<AutoSaveMessageProps> = ({
     failed: `Fail - Last autosave success: ${latestTimeStamp}`
   };
 
-  const message = statusMessages[autoSaveStatus as SaveStatusProps];
+  const message = statusMessages[autoSaveStatus];
   return (
     <div>
       <p data-cy="autosaveStatusMsg">{`Autosave status: ${message}`}</p>

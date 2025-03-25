@@ -98,7 +98,7 @@ export type LtftObj = {
   lastModified?: Date | string;
 };
 
-type LtftState = {
+export type LtftState = {
   formData: LtftObj;
   LtftCctSnapshot: CctCalculation;
   status: string;
@@ -110,7 +110,7 @@ type LtftState = {
   saveLatestTimeStamp: string;
 };
 
-const initialState: LtftState = {
+export const initialState: LtftState = {
   formData: {} as LtftObj,
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
@@ -128,11 +128,13 @@ export const saveLtft = createAsyncThunk(
     {
       formData,
       isAutoSave,
-      isSubmit
+      isSubmit,
+      showFailToastOnly
     }: {
       formData: LtftObj;
       isAutoSave: boolean;
       isSubmit: boolean;
+      showFailToastOnly: boolean;
     },
     { rejectWithValue }
   ) => {
@@ -143,7 +145,12 @@ export const saveLtft = createAsyncThunk(
         ? await formsService.submitLtft(mappedFormDataDto)
         : await formsService.saveLtft(mappedFormDataDto);
       const mappedResLtftObj = mapLtftDtoToObj(response.data);
-      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+      return {
+        data: mappedResLtftObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      };
     } catch (error) {
       return rejectWithValue({ error, isAutoSave, isSubmit });
     }
@@ -156,11 +163,13 @@ export const updateLtft = createAsyncThunk(
     {
       formData,
       isAutoSave,
-      isSubmit
+      isSubmit,
+      showFailToastOnly
     }: {
       formData: LtftObj;
       isAutoSave: boolean;
       isSubmit: boolean;
+      showFailToastOnly: boolean;
     },
     { rejectWithValue }
   ) => {
@@ -171,7 +180,12 @@ export const updateLtft = createAsyncThunk(
         ? await formsService.submitLtft(mappedFormDataDto)
         : await formsService.updateLtft(mappedFormDataDto);
       const mappedResLtftObj = mapLtftDtoToObj(response.data);
-      return { data: mappedResLtftObj, isAutoSave, isSubmit };
+      return {
+        data: mappedResLtftObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      };
     } catch (error) {
       return rejectWithValue({ error, isAutoSave, isSubmit });
     }
@@ -213,6 +227,9 @@ const ltftSlice = createSlice({
     },
     updatedEditPageNumberLtft(state, action: PayloadAction<number>) {
       state.editPageNumber = action.payload;
+    },
+    updatedLtftSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
+      state.saveStatus = action.payload;
     }
   },
   extraReducers(builder): void {
@@ -232,7 +249,10 @@ const ltftSlice = createSlice({
       )
       .addCase(
         saveLtft.fulfilled,
-        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+        (
+          state,
+          { payload: { data, isAutoSave, isSubmit, showFailToastOnly } }
+        ) => {
           state.saveStatus = "succeeded";
           state.formData = data;
           state.newFormId = data.id;
@@ -244,7 +264,7 @@ const ltftSlice = createSlice({
           if (isSubmit) {
             showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
           }
-          if (!isAutoSave && !isSubmit) {
+          if (!isAutoSave && !isSubmit && !showFailToastOnly) {
             showToast(toastSuccessText.saveLtft, ToastType.SUCCESS);
           }
         }
@@ -287,7 +307,10 @@ const ltftSlice = createSlice({
       )
       .addCase(
         updateLtft.fulfilled,
-        (state, { payload: { data, isAutoSave, isSubmit } }) => {
+        (
+          state,
+          { payload: { data, isAutoSave, isSubmit, showFailToastOnly } }
+        ) => {
           state.saveStatus = "succeeded";
           state.formData = data;
           state.newFormId = data.id;
@@ -299,7 +322,7 @@ const ltftSlice = createSlice({
           if (isSubmit) {
             showToast(toastSuccessText.submitLtft, ToastType.SUCCESS);
           }
-          if (!isAutoSave && !isSubmit) {
+          if (!isAutoSave && !isSubmit && !showFailToastOnly) {
             showToast(toastSuccessText.updateLtft, ToastType.SUCCESS);
           }
         }
@@ -367,7 +390,8 @@ export const {
   setLtftCctSnapshot,
   updatedLtft,
   updatedCanEditLtft,
-  updatedEditPageNumberLtft
+  updatedEditPageNumberLtft,
+  updatedLtftSaveStatus
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;

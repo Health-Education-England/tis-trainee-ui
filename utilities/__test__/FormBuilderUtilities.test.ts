@@ -9,16 +9,19 @@ import { LifeCycleState } from "../../models/LifeCycleState";
 import { updatedTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
 import store from "../../redux/store/store";
 import {
+  chooseRedirectPath,
   getDraftFormId,
   handleSaveRedirect,
-  prepLtftData,
   setDraftFormRProps,
   setFormRDataForSubmit,
   transformReferenceData
 } from "../FormBuilderUtilities";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
 import { formANew } from "../../mock-data/draft-formr-parta";
-import { Form } from "../../components/forms/form-builder/FormBuilder";
+import {
+  Form,
+  FormName
+} from "../../components/forms/form-builder/FormBuilder";
 import { FormRPartA } from "../../models/FormRPartA";
 import { FormRPartB } from "../../models/FormRPartB";
 import history from "../../components/navigation/history";
@@ -113,28 +116,47 @@ describe("handleSaveRedirect", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  it("should redirect to the correct path if autosaveStatus is 'succeeded' for formB", () => {
-    const mockState = {
-      formB: {
-        saveStatus: "succeeded"
-      }
-    };
-    jest.spyOn(store, "getState").mockReturnValue(mockState as any);
 
-    handleSaveRedirect("formB", false);
+  // Test successful redirects for all form types
+  const successCases = [
+    { formName: "formA", path: "/formr-a" },
+    { formName: "formB", path: "/formr-b" },
+    { formName: "ltft", path: "/ltft" }
+  ];
 
-    expect(history.push).toHaveBeenCalledWith("/formr-b");
+  successCases.forEach(({ formName, path }) => {
+    it(`should redirect to ${path} when saveStatus is 'succeeded' for ${formName}`, () => {
+      const mockState = {
+        [formName]: { saveStatus: "succeeded" }
+      };
+      jest.spyOn(store, "getState").mockReturnValue(mockState as any);
+
+      handleSaveRedirect(formName as FormName, true);
+
+      expect(history.push).toHaveBeenCalledWith(path);
+    });
   });
-  it("should not redirect if isAutoSave is true", () => {
-    handleSaveRedirect("formA", true);
 
-    expect(history.push).not.toHaveBeenCalled();
+  // Test saveStatus values
+  const saveStatusCases = ["idle", "failed"];
+
+  saveStatusCases.forEach(status => {
+    it(`should not redirect when saveStatus is '${status}'`, () => {
+      const mockState = {
+        formA: { saveStatus: status }
+      };
+      jest.spyOn(store, "getState").mockReturnValue(mockState as any);
+
+      handleSaveRedirect("formA", true);
+
+      expect(history.push).not.toHaveBeenCalled();
+    });
   });
-  it("should not redirect if autosaveStatus is not 'succeeded'", () => {
+
+  // Test shouldRedirect parameter
+  it("should not redirect when shouldRedirect is false even if saveStatus is 'succeeded'", () => {
     const mockState = {
-      formA: {
-        saveStatus: "failed"
-      }
+      formA: { saveStatus: "succeeded" }
     };
     jest.spyOn(store, "getState").mockReturnValue(mockState as any);
 
@@ -142,18 +164,46 @@ describe("handleSaveRedirect", () => {
 
     expect(history.push).not.toHaveBeenCalled();
   });
+
+  // Test both conditions must be met
+  it("should only redirect when both conditions are met (saveStatus='succeeded' AND shouldRedirect=true)", () => {
+    const mockState = {
+      ltft: { saveStatus: "succeeded" }
+    };
+    jest.spyOn(store, "getState").mockReturnValue(mockState as any);
+
+    // Both met
+    handleSaveRedirect("ltft", true);
+    expect(history.push).toHaveBeenCalledWith("/ltft");
+
+    jest.clearAllMocks();
+
+    // Only one met
+    handleSaveRedirect("ltft", false);
+    expect(history.push).not.toHaveBeenCalled();
+
+    mockState.ltft.saveStatus = "failed";
+    handleSaveRedirect("ltft", true);
+    expect(history.push).not.toHaveBeenCalled();
+  });
 });
 
-describe("prepLtftData", () => {
-  it("should update declarations when isSubmit is true", () => {
-    const result = prepLtftData(mockLtftDraft0, true);
-    console.log("result: ", result);
-    expect(result.declarations.informationIsCorrect).toBe(true);
-    expect(result.declarations.notGuaranteed).toBe(true);
-  });
+describe("chooseRedirectPath", () => {
+  const testCases = [
+    { formName: "formA", suffix: "", expected: "/formr-a" },
+    { formName: "formB", suffix: "", expected: "/formr-b" },
+    { formName: "ltft", suffix: "", expected: "/ltft" },
+    { formName: "formA", suffix: "/confirm", expected: "/formr-a/confirm" },
+    { formName: "formB", suffix: "/create", expected: "/formr-b/create" },
+    { formName: "ltft", suffix: "/confirm", expected: "/ltft/confirm" }
+  ];
 
-  it("should return the original object unchanged when isSubmit is false", () => {
-    const result = prepLtftData(mockLtftDraft0, false);
-    expect(result).toEqual(mockLtftDraft0);
+  testCases.forEach(({ formName, suffix, expected }) => {
+    it(`should return "${expected}" for form "${formName}" with suffix "${
+      suffix || "none"
+    }"`, () => {
+      const result = chooseRedirectPath(formName as any, suffix as any);
+      expect(result).toBe(expected);
+    });
   });
 });

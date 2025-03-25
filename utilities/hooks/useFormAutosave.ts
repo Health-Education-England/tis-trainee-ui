@@ -14,7 +14,7 @@ const useFormAutosave = (
   useEffect(() => {
     if (isFormDirty) {
       const timeoutId = setTimeout(() => {
-        saveDraftForm(jsonForm, formData, true, false);
+        saveDraftForm(jsonForm, formData, true, false, false, false);
       }, 2000);
 
       return () => {

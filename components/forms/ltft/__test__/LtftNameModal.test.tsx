@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LtftNameModal } from "../LtftNameModal";
 
@@ -7,8 +7,9 @@ import { LtftNameModal } from "../LtftNameModal";
 HTMLDialogElement.prototype.showModal = jest.fn();
 HTMLDialogElement.prototype.close = jest.fn();
 
+const mockUseSubmitting = { isSubmitting: false };
 jest.mock("../../../../utilities/hooks/useSubmitting", () => ({
-  useSubmitting: () => ({ isSubmitting: false })
+  useSubmitting: () => mockUseSubmitting
 }));
 
 describe("LtftNameModal", () => {
@@ -21,30 +22,36 @@ describe("LtftNameModal", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseSubmitting.isSubmitting = false;
   });
 
-  it("calls onSubmit with the correct name data when form is submitted", async () => {
-    const user = userEvent.setup();
+  it("displays the warning confirmation message", () => {
     render(<LtftNameModal {...defaultProps} />);
 
-    const nameInput = screen.getByLabelText(
-      /Please give your Changing hours \(LTFT\) application a name/i
-    );
+    expect(screen.getByText("Important")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Please check the details of the form carefully before submission/i
+      )
+    ).toBeInTheDocument();
+  });
 
-    await act(async () => {
-      await user.type(nameInput, "Test Application");
-    });
+  it("calls onSubmit when Confirm & Continue button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<LtftNameModal {...defaultProps} />);
 
     await act(async () => {
       await user.click(screen.getByText("Confirm & Continue"));
     });
 
-    await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalledTimes(1);
-      expect(mockOnSubmit).toHaveBeenCalledWith(
-        { name: "Test Application" },
-        expect.anything()
-      );
-    });
+    expect(mockOnSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows submitting text when form is being submitted", () => {
+    mockUseSubmitting.isSubmitting = true;
+
+    render(<LtftNameModal {...defaultProps} />);
+
+    expect(screen.getByText("Submitting...")).toBeInTheDocument();
   });
 });

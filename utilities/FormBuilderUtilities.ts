@@ -108,18 +108,19 @@ export function resetForm(formName: string) {
     store.dispatch(resetToInitLtft());
   }
 }
-const chooseRedirectPath = (formName: string, confirm?: boolean) => {
-  if (formName === "formA") {
-    return confirm ? "/formr-a/confirm" : "/formr-a";
-  } else if (formName === "formB") {
-    return confirm ? "/formr-b/confirm" : "/formr-b";
-  } else {
-    return confirm ? "/ltft/confirm" : "/ltft";
-  }
+
+type PathSuffix = "/confirm" | "/create" | "";
+
+export const chooseRedirectPath = (
+  formName: FormName,
+  pathSuffix: PathSuffix = ""
+): string => {
+  const urlPath = mapFormNameToUrl(formName);
+  return `/${urlPath}${pathSuffix}`;
 };
 
-export function continueToConfirm(formName: string, formData: FormData) {
-  const redirectPath = chooseRedirectPath(formName, true);
+export function continueToConfirm(formName: FormName, formData: FormData) {
+  const redirectPath = chooseRedirectPath(formName, "/confirm");
   if (formName === "formA") {
     store.dispatch(updatedFormA(formData as FormRPartA));
     store.dispatch(updatedCanEdit(true));
@@ -135,10 +136,10 @@ export function continueToConfirm(formName: string, formData: FormData) {
 
 export function handleEditSection(
   pageNum: number,
-  formName: string,
+  formName: FormName,
   history: any
 ) {
-  const redirectPath = `${chooseRedirectPath(formName)}/create`;
+  const redirectPath = chooseRedirectPath(formName, "/create");
   if (formName === "formA") {
     store.dispatch(updatedEditPageNumber(pageNum));
   } else if (formName === "formB") {
@@ -323,7 +324,7 @@ export function setFormRDataForSubmit(
 }
 
 function prepFormRData(
-  formData: FormRPartA | FormRPartB,
+  formData: Extract<FormDataType, FormRPartA | FormRPartB>,
   isSubmit: boolean,
   jsonForm: Form
 ) {
@@ -344,23 +345,12 @@ function prepFormRData(
   };
 }
 
-export function prepLtftData(formData: LtftObj, isSubmit: boolean): LtftObj {
-  if (isSubmit) {
-    const updatedDeclarations = {
-      ...formData.declarations,
-      informationIsCorrect: true,
-      notGuaranteed: true
-    };
-    return { ...formData, declarations: updatedDeclarations };
-  }
-  return formData;
-}
-
 async function updateForm(
   formName: string,
   formData: FormData,
   isAutoSave: boolean,
-  isSubmit: boolean
+  isSubmit: boolean,
+  showFailToastOnly: boolean = false
 ) {
   if (formName === "formA") {
     await store.dispatch(
@@ -383,7 +373,8 @@ async function updateForm(
       updateLtft({
         formData: formData as LtftObj,
         isAutoSave,
-        isSubmit
+        isSubmit,
+        showFailToastOnly
       })
     );
   }
@@ -393,7 +384,8 @@ async function saveForm(
   formName: string,
   formData: FormData,
   isAutoSave: boolean,
-  isSubmit: boolean
+  isSubmit: boolean,
+  showFailToastOnly: boolean
 ) {
   if (formName === "formA") {
     await store.dispatch(
@@ -409,7 +401,12 @@ async function saveForm(
     );
   } else if (formName === "ltft")
     await store.dispatch(
-      saveLtft({ formData: formData as LtftObj, isAutoSave, isSubmit })
+      saveLtft({
+        formData: formData as LtftObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      })
     );
 }
 
@@ -435,41 +432,54 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export const handleSaveRedirect = (formName: string, isAutoSave: boolean) => {
-  if (!isAutoSave) {
-    const autosaveStatus = getSaveStatus(formName);
-    if (autosaveStatus === "succeeded") {
-      history.push(chooseRedirectPath(formName));
-    }
-  }
-};
-
 export type FormDataType = FormRPartA | FormRPartB | LtftObj;
 
 export async function saveDraftForm(
   jsonForm: Form,
   formData: FormDataType,
-  isAutoSave: boolean,
-  isSubmit: boolean
+  isAutoSave: boolean = false,
+  isSubmit: boolean = false,
+  showFailToastOnly: boolean = false,
+  shouldRedirect: boolean = true
 ) {
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
   const isFormR = formName === "formA" || formName === "formB";
   const preppedFormData = isFormR
-    ? prepFormRData(formData as FormRPartA | FormRPartB, isSubmit, jsonForm)
-    : prepLtftData(formData as LtftObj, isSubmit);
+    ? prepFormRData(
+        formData as Extract<FormDataType, FormRPartA | FormRPartB>,
+        isSubmit,
+        jsonForm
+      )
+    : formData;
 
   if (draftFormId) {
     await updateForm(
       formName,
       { ...preppedFormData, id: draftFormId },
       isAutoSave,
-      isSubmit
+      isSubmit,
+      showFailToastOnly
     );
-    handleSaveRedirect(formName, isAutoSave);
   } else {
-    await saveForm(formName, preppedFormData, isAutoSave, isSubmit);
-    handleSaveRedirect(formName, isAutoSave);
+    await saveForm(
+      formName,
+      preppedFormData,
+      isAutoSave,
+      isSubmit,
+      showFailToastOnly
+    );
+  }
+  handleSaveRedirect(formName, shouldRedirect);
+}
+
+export function handleSaveRedirect(
+  formName: FormName,
+  shouldRedirect: boolean
+) {
+  const saveStatus = getSaveStatus(formName);
+  if (saveStatus === "succeeded" && shouldRedirect) {
+    history.push(chooseRedirectPath(formName));
   }
 }
 
