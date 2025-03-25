@@ -18,6 +18,9 @@ import Loading from "react-loading";
 import history from "../../navigation/history";
 import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
 import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
+import { ActionModal, ActionType } from "../../common/ActionModal";
+import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
+import { useActionState } from "../../../utilities/hooks/useActionState";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
@@ -35,6 +38,9 @@ const LtftSummary = ({
   ltftSummaryStatus,
   ltftSummaryList
 }: Readonly<LtftSummaryProps>) => {
+  const [showModal, setShowModal] = useState(false);
+  const { startSubmitting, stopSubmitting, isSubmitting } = useSubmitting();
+  const { currentAction, setAction, resetAction } = useActionState();
   const ltftSummaries = ltftSummaryList || [];
 
   const [visibleStatuses, setVisibleStatuses] = useState<
@@ -115,18 +121,21 @@ const LtftSummary = ({
   const renderOperationColumnValue = (props: {
     row: { original: LtftSummaryObj };
   }) => {
+    const handleBtnClick =
+      (label: ActionType) => (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        setAction(label);
+        setShowModal(true);
+        console.log(`Button clicked: ${label} - ${props.row.original.id}`);
+      };
     const renderActionButton = (
-      label: string,
-      dataCy: string,
+      label: Extract<ActionType, "Unsubmit" | "Withdraw" | "Delete">,
       additionalStyle = {}
     ) => (
       <Button
-        data-cy={dataCy}
+        data-cy={`${label.toLowerCase()}LtftBtnLink`}
         fontWeight="normal"
-        onClick={e => {
-          e.stopPropagation();
-          // onClickEvent();
-        }}
+        onClick={handleBtnClick(label)}
         size="small"
         type="reset"
         style={additionalStyle}
@@ -139,17 +148,17 @@ const LtftSummary = ({
       <>
         {props.row.original.status === "SUBMITTED" ? (
           <>
-            {renderActionButton("Unsubmit", "unsubmitLtftBtnLink", {
+            {renderActionButton("Unsubmit", {
               marginBottom: "0.5em"
             })}
-            {renderActionButton("Withdraw", "withdrawLtftBtnLink")}
+            {renderActionButton("Withdraw")}
           </>
         ) : null}
         {props.row.original.status === "DRAFT" ? (
-          <>{renderActionButton("Delete", "deleteLtftBtnLink")}</>
+          <>{renderActionButton("Delete")}</>
         ) : null}
         {props.row.original.status === "UNSUBMITTED" ? (
-          <>{renderActionButton("Withdraw", "withdrawLtftBtnLink")}</>
+          <>{renderActionButton("Withdraw")}</>
         ) : null}
       </>
     );
@@ -276,6 +285,22 @@ const LtftSummary = ({
                 </tbody>
               </table>
             </div>
+            <ActionModal
+              onSubmit={() =>
+                console.log(
+                  `Action Modal submit called: action type: ${currentAction.type}`
+                )
+              }
+              isOpen={showModal}
+              onClose={() => {
+                setShowModal(false);
+                resetAction();
+              }}
+              cancelBtnText="Cancel"
+              warningLabel="Important"
+              warningText={currentAction.warningText}
+              submittingBtnText={currentAction.submittingText}
+            />
           </>
         ) : (
           <p data-cy="no-saved-drafts">

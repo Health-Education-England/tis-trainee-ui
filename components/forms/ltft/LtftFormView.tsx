@@ -23,21 +23,22 @@ import Declarations from "../form-builder/Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
-import { LtftNameModal } from "./LtftNameModal";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import store from "../../../redux/store/store";
 import TextInputField from "../TextInputField";
 import { Form, Formik } from "formik";
-import { Ltft } from "./Ltft";
 import history from "../../navigation/history";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import dayjs from "dayjs";
+import { ActionModal } from "../../common/ActionModal";
+import { useActionState } from "../../../utilities/hooks/useActionState";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
+  const { currentAction, setAction, resetAction } = useActionState();
 
   useEffect(() => {
     if (id) {
@@ -59,6 +60,7 @@ export const LtftFormView = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleSubClick = async (values: { name: string }) => {
+    setAction("Submit");
     const updatedDeclarations = {
       ...formData.declarations,
       informationIsCorrect: true,
@@ -87,6 +89,7 @@ export const LtftFormView = () => {
 
   const handleModalFormClose = () => {
     setShowModal(false);
+    resetAction();
     stopSubmitting();
   };
 
@@ -208,10 +211,14 @@ export const LtftFormView = () => {
             </Row>
           </Container>
         )}
-        <LtftNameModal
+        <ActionModal
           onSubmit={handleModalFormSubmit}
           isOpen={showModal}
           onClose={handleModalFormClose}
+          cancelBtnText="Cancel"
+          warningLabel="Important"
+          warningText={currentAction.warningText}
+          submittingBtnText={currentAction.submittingText}
         />
       </LtftViewWrapper>
     );
