@@ -98,7 +98,7 @@ export type LtftObj = {
   lastModified?: Date | string;
 };
 
-type LtftState = {
+export type LtftState = {
   formData: LtftObj;
   LtftCctSnapshot: CctCalculation;
   status: string;
@@ -110,7 +110,7 @@ type LtftState = {
   saveLatestTimeStamp: string;
 };
 
-const initialState: LtftState = {
+export const initialState: LtftState = {
   formData: {} as LtftObj,
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
