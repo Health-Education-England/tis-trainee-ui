@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
 import { LtftTracker } from "./LtftTracker";
 import history from "../../navigation/history";
 import {
@@ -13,7 +6,6 @@ import {
   updatedLtftFormsRefreshNeeded
 } from "../../../redux/slices/ltftSummaryListSlice";
 import LtftSummary from "./LtftSummary";
-import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
@@ -31,10 +23,8 @@ export function LtftHome() {
   );
   useLtftHomeStartover();
 
-  // TODO - use real data for Summary Table when submission logic added
-  const mockLtftSummary = mockLtftsList1;
   const sortedLtftSummary = DateUtilities.genericSort(
-    mockLtftSummary.slice(),
+    ltftSummary.slice(),
     "lastModified",
     true
   );
@@ -72,16 +62,6 @@ export function LtftHome() {
       </Card>
       <Card>
         <Card.Content>
-          <WarningCallout data-cy="ltftWarning">
-            <WarningCallout.Label visuallyHiddenText={false}>
-              For Demonstration Only
-            </WarningCallout.Label>
-            <p>
-              The table below has <strong>dummy data</strong> and is read only
-              for demonstrating the future layout of the LTFT Applications
-              Summary.
-            </p>
-          </WarningCallout>
           <Card.Heading data-cy="ltft-summary-header">
             Previous applications summary
           </Card.Heading>

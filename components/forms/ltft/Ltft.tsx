@@ -21,6 +21,7 @@ export function Ltft() {
         <Route exact path="/ltft" render={() => <LtftHome />} />
         <Route exact path="/ltft/create" render={() => <LtftForm />} />
         <Route exact path="/ltft/confirm" render={() => <LtftFormView />} />
+        <Route exact path="/ltft/:id" render={() => <LtftFormView />} />
         <Route path="/ltft/*" component={PageNotFound} />
       </Switch>
     </>

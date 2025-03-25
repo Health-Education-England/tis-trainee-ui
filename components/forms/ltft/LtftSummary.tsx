@@ -15,6 +15,13 @@ import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import dayjs from "dayjs";
 import Loading from "react-loading";
+import history from "../../navigation/history";
+import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
+
+type LtftFormStatusSub = Extract<
+  LtftFormStatus,
+  "SUBMITTED" | "APPROVED" | "WITHDRAWN"
+>;
 
 type LtftSummaryProps = {
   ltftSummaryStatus: string;
@@ -27,25 +34,31 @@ const LtftSummary = ({
 }: Readonly<LtftSummaryProps>) => {
   const ltftSummaries = ltftSummaryList || [];
 
-  const [showSubmitted, setShowSubmitted] = useState(true);
-  const [showApproved, setShowApproved] = useState(true);
-  const [showWithdrawn, setShowWithdrawn] = useState(true);
+  const [visibleStatuses, setVisibleStatuses] = useState<
+    Record<LtftFormStatusSub, boolean>
+  >({
+    SUBMITTED: true,
+    APPROVED: true,
+    WITHDRAWN: true
+  });
 
   const filteredLtftSummaries = ltftSummaries.filter(
-    item =>
-      (showSubmitted || item.status !== "SUBMITTED") &&
-      (showApproved || item.status !== "APPROVED") &&
-      (showWithdrawn || item.status !== "WITHDRAWN")
+    item => visibleStatuses[item.status as LtftFormStatusSub]
   );
 
   const latestSubmitted = filteredLtftSummaries.find(
     i => i.status === "SUBMITTED"
   );
 
-  // React table setup
+  const toggleStatus = (status: LtftFormStatusSub) => {
+    setVisibleStatuses(prev => ({
+      ...prev,
+      [status]: !prev[status]
+    }));
+  };
+
   const columnHelper = createColumnHelper<LtftSummaryObj>();
 
-  // Header
   const renderNameHeader = ({
     column
   }: HeaderContext<LtftSummaryObj, string>) => (
@@ -83,7 +96,6 @@ const LtftSummary = ({
     />
   );
 
-  //Header value
   const renderValue = (props: { renderValue: () => ReactNode }) => (
     <span>{props.renderValue()}</span>
   );
@@ -91,37 +103,42 @@ const LtftSummary = ({
     <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
   );
 
-  // Operation Column
   const renderOperationColumnValue = (props: {
     row: { original: LtftSummaryObj };
-  }) => (
-    <>
-      {props.row.original.status === "SUBMITTED" &&
-      props.row.original === latestSubmitted ? (
-        <>
-          <Button
-            data-cy="unsubmitLtftBtnLink"
-            fontWeight="normal"
-            // onClick={onClickEvent}
-            size="small"
-            type="reset"
-            style={{ marginBottom: "0.5em" }}
-          >
-            Unsubmit
-          </Button>
-          <Button
-            data-cy="withdrawLtftBtnLink"
-            fontWeight="normal"
-            // onClick={onClickEvent}
-            size="small"
-            type="reset"
-          >
-            Withdraw
-          </Button>
-        </>
-      ) : null}
-    </>
-  );
+  }) => {
+    const renderActionButton = (
+      label: string,
+      dataCy: string,
+      additionalStyle = {}
+    ) => (
+      <Button
+        data-cy={dataCy}
+        fontWeight="normal"
+        onClick={e => {
+          e.stopPropagation();
+          // onClickEvent();
+        }}
+        size="small"
+        type="reset"
+        style={additionalStyle}
+      >
+        {label}
+      </Button>
+    );
+
+    return (
+      <>
+        {props.row.original.status === "SUBMITTED" ? (
+          <>
+            {renderActionButton("Unsubmit", "unsubmitLtftBtnLink", {
+              marginBottom: "0.5em"
+            })}
+            {renderActionButton("Withdraw", "withdrawLtftBtnLink")}
+          </>
+        ) : null}
+      </>
+    );
+  };
 
   const columnsDefault = [
     columnHelper.accessor("name", {
@@ -177,86 +194,79 @@ const LtftSummary = ({
     autoResetPageIndex: false
   });
 
+  const statusFilters: LtftFormStatusSub[] = [
+    "APPROVED",
+    "SUBMITTED",
+    "WITHDRAWN"
+  ];
+
   let content: JSX.Element = <></>;
   if (ltftSummaryStatus === "loading") content = <Loading />;
-  if (ltftSummaryStatus === "succeeded")
-    content = (
-      <div>
-        <CheckboxField
-          data-cy="filterApprovedLtft"
-          name="yesToShowApproved"
-          value="yes"
-          label="APPROVED"
-          checked={showApproved}
-          onChange={() =>
-            setShowApproved(prevShowApproved => !prevShowApproved)
-          }
-        />
-        <CheckboxField
-          data-cy="filterSubmittedLtft"
-          name="yesToShowSubmitted"
-          value="yes"
-          label="SUBMITTED"
-          checked={showSubmitted}
-          onChange={() =>
-            setShowSubmitted(prevShowSubmitted => !prevShowSubmitted)
-          }
-        />
-        <CheckboxField
-          data-cy="filterWithdrawnLtft"
-          name="yesToShowWithdrawn"
-          value="yes"
-          label="WITHDRAWN"
-          checked={showWithdrawn}
-          onChange={() =>
-            setShowWithdrawn(prevShowWithdrawn => !prevShowWithdrawn)
-          }
-        />
-        <table data-cy="ltft-summary-table">
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    data-cy={`ltft-summary-table-${header.id}`}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => {
-              return (
-                <tr
-                  className="table-row"
-                  onClick={e => {
-                    e.stopPropagation();
-                    // history.push(`/ltft/view/${row.original.id}`);
-                  }}
-                  key={row.id}
-                  data-cy={`ltft-row-${row.id}`}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} data-cy={cell.id}>
+  if (ltftSummaryStatus === "succeeded") {
+    if (filteredLtftSummaries.length === 0) {
+      content = (
+        <p data-cy="noLtftSummary">
+          No Previous Changing hours (LTFT) applications found
+        </p>
+      );
+    } else {
+      content = (
+        <div>
+          {statusFilters.map(status => (
+            <CheckboxField
+              key={status}
+              data-cy={`filter${status}Ltft`}
+              name={`yesToShow${status}`}
+              value="yes"
+              label={status}
+              checked={visibleStatuses[status]}
+              onChange={() => toggleStatus(status)}
+            />
+          ))}
+          <table data-cy="ltft-summary-table">
+            <thead>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th
+                      key={header.id}
+                      data-cy={`ltft-summary-table-${header.id}`}
+                    >
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        header.column.columnDef.header,
+                        header.getContext()
                       )}
-                    </td>
+                    </th>
                   ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => {
+                return (
+                  <tr
+                    className="table-row"
+                    onClick={() => history.push(`/ltft/${row.original.id}`)}
+                    key={row.id}
+                    data-cy={`ltft-row-${row.id}`}
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <td key={cell.id} data-cy={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+  }
   return content;
 };
 
