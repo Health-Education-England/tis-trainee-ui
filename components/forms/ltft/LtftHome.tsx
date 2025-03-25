@@ -40,9 +40,7 @@ export function LtftHome() {
         <Card.Content>
           <>
             <Card.Heading data-cy="ltft-tracker-header">
-              {draftOrUnsubmittedLtftSummary
-                ? "In progress application"
-                : "New application"}
+              In progress applications
             </Card.Heading>
             <LtftSummary
               ltftSummaryType="CURRENT"
@@ -52,10 +50,11 @@ export function LtftHome() {
             <Container>
               <Row>
                 <Col width="full">
+                  To begin a new application{" "}
                   <Link to="/cct" data-cy="cct-link">
-                    Click here to choose a CCT Calculation to begin a new
-                    Changing hours (LTFT) application
-                  </Link>
+                    please go to your list of saved CCT calculations
+                  </Link>{" "}
+                  and click the button to apply for Changing hours (LTFT).
                 </Col>
               </Row>
             </Container>
@@ -65,7 +64,7 @@ export function LtftHome() {
       <Card>
         <Card.Content>
           <Card.Heading data-cy="ltft-summary-header">
-            Previous applications summary
+            Previous applications
           </Card.Heading>
           <LtftSummary
             ltftSummaryType="PREVIOUS"

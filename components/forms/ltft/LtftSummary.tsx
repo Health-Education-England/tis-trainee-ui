@@ -51,10 +51,6 @@ const LtftSummary = ({
     item => visibleStatuses[item.status as LtftFormStatusSub]
   );
 
-  const latestSubmitted = filteredLtftSummaries.find(
-    i => i.status === "SUBMITTED"
-  );
-
   const toggleStatus = (status: LtftFormStatusSub) => {
     setVisibleStatuses(prev => ({
       ...prev,
@@ -224,8 +220,8 @@ const LtftSummary = ({
   if (ltftSummaryStatus === "loading") content = <Loading />;
   if (ltftSummaryStatus === "succeeded")
     content = (
-      <div>
-        {filteredLtftSummaries.length > 0 ? (
+      <>
+        {ltftSummaries.length > 0 ? (
           <>
             {statusFilters.map(status => (
               <CheckboxField
@@ -238,53 +234,55 @@ const LtftSummary = ({
                 onChange={() => toggleStatus(status)}
               />
             ))}
-            <table data-cy="ltft-summary-table">
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <th
-                        key={header.id}
-                        data-cy={`ltft-summary-table-${header.id}`}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => {
-                  return (
-                    <tr
-                      className="table-row"
-                      onClick={() => handleClick(row.original.id)}
-                      key={row.id}
-                      data-cy={`ltft-row-${row.id}`}
-                    >
-                      {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} data-cy={cell.id}>
+            <div className="table-wrapper">
+              <table data-cy="ltft-summary-table">
+                <thead>
+                  {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map(header => (
+                        <th
+                          key={header.id}
+                          data-cy={`ltft-summary-table-${header.id}`}
+                        >
                           {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                            header.column.columnDef.header,
+                            header.getContext()
                           )}
-                        </td>
+                        </th>
                       ))}
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map(row => {
+                    return (
+                      <tr
+                        className="table-row"
+                        onClick={() => handleClick(row.original.id)}
+                        key={row.id}
+                        data-cy={`ltft-row-${row.id}`}
+                      >
+                        {row.getVisibleCells().map(cell => (
+                          <td key={cell.id} data-cy={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </>
         ) : (
           <p data-cy="no-saved-drafts">
             You have no {ltftSummaryType.toLowerCase()} applications.
           </p>
         )}
-      </div>
+      </>
     );
   return content;
 };
