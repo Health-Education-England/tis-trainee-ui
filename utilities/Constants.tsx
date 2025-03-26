@@ -583,8 +583,7 @@ export const ACTION_CONFIG: Record<
   { warning: string; submitting: string }
 > = {
   submit: {
-    warning:
-      "Please check the details of the form carefully before submission.",
+    warning: "Please check the form details carefully before submitting.",
     submitting: "Submitting"
   },
   delete: {

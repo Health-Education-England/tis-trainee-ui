@@ -60,7 +60,7 @@ export const LtftFormView = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleSubClick = async (values: { name: string }) => {
-    setAction("Submit");
+    setAction("Submit", "", formJson.name);
     const updatedDeclarations = {
       ...formData.declarations,
       informationIsCorrect: true,
@@ -216,7 +216,7 @@ export const LtftFormView = () => {
           isOpen={showModal}
           onClose={handleModalFormClose}
           cancelBtnText="Cancel"
-          warningLabel="Important"
+          warningLabel={currentAction.type ?? ""}
           warningText={currentAction.warningText}
           submittingBtnText={currentAction.submittingText}
         />

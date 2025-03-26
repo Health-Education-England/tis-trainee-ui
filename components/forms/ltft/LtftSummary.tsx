@@ -9,7 +9,11 @@ import {
   createColumnHelper,
   HeaderContext
 } from "@tanstack/react-table";
-import { LtftSummaryObj } from "../../../redux/slices/ltftSummaryListSlice";
+import {
+  LtftSummaryObj,
+  updatedLtftFormsRefreshNeeded
+} from "../../../redux/slices/ltftSummaryListSlice";
+import store from "../../../redux/store/store";
 import { ReactNode, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
@@ -17,7 +21,11 @@ import dayjs from "dayjs";
 import Loading from "react-loading";
 import history from "../../navigation/history";
 import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
-import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
+import {
+  checkPush,
+  isFormDeleted,
+  loadTheSavedForm
+} from "../../../utilities/FormBuilderUtilities";
 import { ActionModal, ActionType } from "../../common/ActionModal";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { useActionState } from "../../../utilities/hooks/useActionState";
@@ -124,9 +132,8 @@ const LtftSummary = ({
     const handleBtnClick =
       (label: ActionType) => (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
-        setAction(label);
+        setAction(label, props.row.original.id, "ltft");
         setShowModal(true);
-        console.log(`Button clicked: ${label} - ${props.row.original.id}`);
       };
     const renderActionButton = (
       label: Extract<ActionType, "Unsubmit" | "Withdraw" | "Delete">,
@@ -286,25 +293,40 @@ const LtftSummary = ({
               </table>
             </div>
             <ActionModal
-              onSubmit={() =>
-                console.log(
-                  `Action Modal submit called: action type: ${currentAction.type}`
-                )
-              }
+              onSubmit={async () => {
+                setShowModal(false);
+                store.dispatch(updatedLtftFormsRefreshNeeded(false));
+                // TODO - generic func to handle delete, unsubmit, withdraw
+                if (currentAction.type === "Delete") {
+                  startSubmitting();
+                  const shouldStartOver = await isFormDeleted(
+                    "ltft",
+                    currentAction.id
+                  );
+                  stopSubmitting();
+                  if (shouldStartOver) {
+                    checkPush("ltft", "formsList");
+                  }
+                }
+              }}
               isOpen={showModal}
               onClose={() => {
                 setShowModal(false);
                 resetAction();
               }}
               cancelBtnText="Cancel"
-              warningLabel="Important"
+              warningLabel={currentAction.type ?? ""}
               warningText={currentAction.warningText}
               submittingBtnText={currentAction.submittingText}
             />
           </>
         ) : (
           <p data-cy="no-saved-drafts">
-            You have no {ltftSummaryType.toLowerCase()} applications.
+            You have no{" "}
+            {ltftSummaryType === "CURRENT"
+              ? "in progress"
+              : ltftSummaryType.toLowerCase()}{" "}
+            applications.
           </p>
         )}
       </>

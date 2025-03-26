@@ -1,21 +1,26 @@
 import { useState } from "react";
 import { ActionType } from "../../components/common/ActionModal";
 import { ACTION_CONFIG } from "../Constants";
+import { FormName } from "../../components/forms/form-builder/FormBuilder";
 
 type ActionState = {
-  type: ActionType | "";
+  type: ActionType | null;
   warningText: string;
   submittingText: string;
+  id: string;
+  formName: FormName | null;
 };
 
 export function useActionState() {
   const [currentAction, setCurrentAction] = useState<ActionState>({
-    type: "",
+    type: null,
     warningText: "",
-    submittingText: ""
+    submittingText: "",
+    id: "",
+    formName: null
   });
 
-  const setAction = (label: ActionType) => {
+  const setAction = (label: ActionType, id: string, formName: FormName) => {
     const actionType = label.toLowerCase() as keyof typeof ACTION_CONFIG;
     const actionConfig = ACTION_CONFIG[actionType] || {
       warning: "",
@@ -25,15 +30,19 @@ export function useActionState() {
     setCurrentAction({
       type: label,
       warningText: actionConfig.warning,
-      submittingText: actionConfig.submitting
+      submittingText: actionConfig.submitting,
+      id,
+      formName
     });
   };
 
   const resetAction = () => {
     setCurrentAction({
-      type: "",
+      type: null,
       warningText: "",
-      submittingText: ""
+      submittingText: "",
+      id: "",
+      formName: null
     });
   };
 
