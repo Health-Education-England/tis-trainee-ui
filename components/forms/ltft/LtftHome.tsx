@@ -39,7 +39,7 @@ export function LtftHome() {
       <Card>
         <Card.Content>
           <>
-            <Card.Heading data-cy="ltft-tracker-header">
+            <Card.Heading data-cy="ltft-in-progress-header">
               In progress applications
             </Card.Heading>
             <LtftSummary
@@ -63,7 +63,7 @@ export function LtftHome() {
       </Card>
       <Card>
         <Card.Content>
-          <Card.Heading data-cy="ltft-summary-header">
+          <Card.Heading data-cy="ltft-previous-header">
             Previous applications
           </Card.Heading>
           <LtftSummary

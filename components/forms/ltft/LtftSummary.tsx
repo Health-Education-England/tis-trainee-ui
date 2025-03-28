@@ -35,8 +35,9 @@ type LtftFormStatusSub = Extract<
   "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED"
 >;
 
+type LtftSummaryType = "CURRENT" | "PREVIOUS";
 type LtftSummaryProps = {
-  ltftSummaryType: string;
+  ltftSummaryType: LtftSummaryType;
   ltftSummaryStatus: string;
   ltftSummaryList?: LtftSummaryObj[];
 };
@@ -47,7 +48,7 @@ const LtftSummary = ({
   ltftSummaryList
 }: Readonly<LtftSummaryProps>) => {
   const [showModal, setShowModal] = useState(false);
-  const { startSubmitting, stopSubmitting, isSubmitting } = useSubmitting();
+  const { startSubmitting, stopSubmitting } = useSubmitting();
   const { currentAction, setAction, resetAction } = useActionState();
   const ltftSummaries = ltftSummaryList || [];
 
@@ -251,7 +252,7 @@ const LtftSummary = ({
               />
             ))}
             <div className="table-wrapper">
-              <table data-cy="ltft-summary-table">
+              <table data-cy={`ltft-summary-table-${ltftSummaryType}`}>
                 <thead>
                   {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>

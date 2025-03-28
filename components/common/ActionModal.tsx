@@ -28,17 +28,20 @@ export function ActionModal({
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText={cancelBtnText}>
       <form>
         <WarningCallout data-cy="actionModalWarning">
-          <WarningCallout.Label visuallyHiddenText={false}>
+          <WarningCallout.Label
+            visuallyHiddenText={false}
+            data-cy={`warningLabel-${warningLabel}`}
+          >
             {warningLabel}
           </WarningCallout.Label>
-          <p>{warningText}</p>
-          <p> Are you sure you want to continue?</p>.
+          <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
+          <p data-cy="youSureTxt"> Are you sure you want to continue?</p>.
         </WarningCallout>
         <Button
           onClick={onSubmit}
           type="button"
           disabled={isSubmitting}
-          data-cy="ltft-action-modal-btn"
+          data-cy={`submitBtn-${warningLabel}`}
         >
           {isSubmitting ? `${submittingBtnText}...` : "Confirm & Continue"}
         </Button>

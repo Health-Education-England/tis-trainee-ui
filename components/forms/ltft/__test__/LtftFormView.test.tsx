@@ -52,8 +52,8 @@ jest.mock("../../form-builder/Declarations", () => {
 });
 
 // Simplified modal mock as we only need to check if it renders or not. (full functionality tested in LtftNameModal.test.tsx)
-jest.mock("../LtftNameModal", () => ({
-  LtftNameModal: ({ isOpen }: { isOpen: boolean }) =>
+jest.mock("../../../common/ActionModal", () => ({
+  ActionModal: ({ isOpen }: { isOpen: boolean }) =>
     isOpen ? <div data-testid="ltft-modal">Modal Content</div> : null
 }));
 
