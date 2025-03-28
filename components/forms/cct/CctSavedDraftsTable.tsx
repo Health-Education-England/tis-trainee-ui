@@ -68,8 +68,7 @@ const columnsDefault = [
 ];
 
 const createColumns = (
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  hasDraftOrUnsubmitted: boolean
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const ltftColumn = columnHelper.display({
     id: "makeLtft",
@@ -80,24 +79,16 @@ const createColumns = (
       />
     )
   });
-  if (hasDraftOrUnsubmitted) {
-    return columnsDefault;
-  }
   return [...columnsDefault, ltftColumn];
 };
 
 export function CctSavedDraftsTable() {
   const dispatch = useAppDispatch();
   const cctList = useAppSelector(state => state.cctList.cctList);
-  const ltftList = useAppSelector(state => state.ltftSummaryList.ltftList);
   const tpData = useAppSelector(
     state => state.traineeProfile.traineeProfileData
   );
   const cctSnapshot = useAppSelector(state => state.ltft.LtftCctSnapshot);
-  const hasDraftOrUnsubmitted = ltftList.some(
-    ltft => ltft.status === "DRAFT" || ltft.status === "UNSUBMITTED"
-  );
-
   const memoData = useMemo(() => {
     return cctList;
   }, [cctList]);
@@ -109,8 +100,8 @@ export function CctSavedDraftsTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns = useMemo(
-    () => createColumns(setIsModalOpen, hasDraftOrUnsubmitted),
-    [setIsModalOpen, hasDraftOrUnsubmitted]
+    () => createColumns(setIsModalOpen),
+    [setIsModalOpen]
   );
 
   const table = useReactTable({

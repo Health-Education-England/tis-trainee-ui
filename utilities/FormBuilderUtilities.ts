@@ -48,6 +48,8 @@ import {
   updatedLtft,
   updateLtft
 } from "../redux/slices/ltftSlice";
+import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
+import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -163,6 +165,20 @@ export async function isFormDeleted(
   }
   const state = store.getState() as RootState;
   return state[formName].status === "succeeded";
+}
+
+export type BtnLocation = "formsList" | "form" | "formView";
+
+export function checkPush(formName: FormName, btnLocation: BtnLocation) {
+  resetForm(formName);
+  if (btnLocation === "formsList") {
+    if (formName !== "ltft") {
+      store.dispatch(updatedFormsRefreshNeeded(true));
+    } else store.dispatch(updatedLtftFormsRefreshNeeded(true));
+  } else {
+    const mappedUrl = mapFormNameToUrl(formName);
+    history.push(`/${mappedUrl}`);
+  }
 }
 
 // ----------------------------------------------------------

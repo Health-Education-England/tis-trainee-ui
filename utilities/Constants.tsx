@@ -577,3 +577,26 @@ export const fteOptions = [
   { value: 60, label: "60%" },
   { value: 50, label: "50%" }
 ];
+
+export const ACTION_CONFIG: Record<
+  string,
+  { warning: string; submitting: string }
+> = {
+  submit: {
+    warning: "Please check the form details carefully before submitting.",
+    submitting: "Submitting"
+  },
+  delete: {
+    warning: "Deleting this application will permanently remove it.",
+    submitting: "Deleting"
+  },
+  withdraw: {
+    warning: "Withdrawing this application cannot be undone.",
+    submitting: "Withdrawing"
+  },
+  unsubmit: {
+    warning:
+      "Unsubmitting this application will return it to draft status allowing you to make changes and then re-submit.",
+    submitting: "Unsubmitting"
+  }
+};

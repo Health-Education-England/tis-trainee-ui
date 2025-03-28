@@ -230,6 +230,9 @@ const ltftSlice = createSlice({
     },
     updatedLtftSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
       state.saveStatus = action.payload;
+    },
+    updatedLtftStatus(state, action: PayloadAction<string>) {
+      state.status = action.payload;
     }
   },
   extraReducers(builder): void {
@@ -391,7 +394,8 @@ export const {
   updatedLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
-  updatedLtftSaveStatus
+  updatedLtftSaveStatus,
+  updatedLtftStatus
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;

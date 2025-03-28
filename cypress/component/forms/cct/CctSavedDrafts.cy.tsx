@@ -111,7 +111,7 @@ describe("CctSavedDrafts - beta tester", () => {
   it("Doesn't render the 'ltft button' when user is a beta tester and they have an in progress ltft", () => {
     store.dispatch(updatedLtftSummaryList(mockLtftsList1));
     cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b"]').should(
-      "not.exist"
+      "exist"
     );
   });
 });

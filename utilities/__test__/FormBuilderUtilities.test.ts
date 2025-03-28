@@ -9,6 +9,8 @@ import { LifeCycleState } from "../../models/LifeCycleState";
 import { updatedTraineeProfileData } from "../../redux/slices/traineeProfileSlice";
 import store from "../../redux/store/store";
 import {
+  BtnLocation,
+  checkPush,
   chooseRedirectPath,
   getDraftFormId,
   handleSaveRedirect,
@@ -25,7 +27,8 @@ import {
 import { FormRPartA } from "../../models/FormRPartA";
 import { FormRPartB } from "../../models/FormRPartB";
 import history from "../../components/navigation/history";
-import { mockLtftDraft0, mockLtftDraft1 } from "../../mock-data/mock-ltft-data";
+import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
+import { updatedLtftFormsRefreshNeeded } from "../../redux/slices/ltftSummaryListSlice";
 
 describe("transformReferenceData", () => {
   beforeEach(() => {
@@ -206,4 +209,41 @@ describe("chooseRedirectPath", () => {
       expect(result).toBe(expected);
     });
   });
+});
+
+describe("checkPush", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should dispatch updatedFormsRefreshNeeded when btnLocation is formsList and formName is not ltft", () => {
+    const dispatchSpy = jest.spyOn(store, "dispatch");
+
+    checkPush("formA", "formsList");
+
+    expect(dispatchSpy).toHaveBeenCalledWith(updatedFormsRefreshNeeded(true));
+  });
+
+  it("should dispatch updatedLtftFormsRefreshNeeded when btnLocation is formsList and formName is ltft", () => {
+    const dispatchSpy = jest.spyOn(store, "dispatch");
+
+    checkPush("ltft", "formsList");
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      updatedLtftFormsRefreshNeeded(true)
+    );
+  });
+
+  it.each([
+    ["formA", "/formr-a"],
+    ["formB", "/formr-b"],
+    ["ltft", "/ltft"]
+  ])(
+    "should navigate to '%s' when btnLocation is not formsList and formName is %s",
+    (formName, expectedPath) => {
+      const btnLocation: BtnLocation = "form";
+      checkPush(formName as FormName, btnLocation);
+      expect(history.push).toHaveBeenCalledWith(expectedPath);
+    }
+  );
 });
