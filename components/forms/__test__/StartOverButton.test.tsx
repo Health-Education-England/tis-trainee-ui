@@ -37,12 +37,37 @@ jest.mock("material-ui-confirm", () => ({
 jest.mock("../../../utilities/FormBuilderUtilities", () => ({
   getDraftFormId: jest.fn(),
   isFormDeleted: jest.fn(),
-  mapFormNameToUrl: jest.fn(),
-  resetForm: jest.fn()
+  mapFormNameToUrl: jest.fn().mockReturnValue("formr-a"),
+  resetForm: jest.fn(),
+  checkPush: jest.fn((formName, btnLocation) => {
+    const { resetForm } = require("../../../utilities/FormBuilderUtilities");
+    resetForm(formName);
+    if (btnLocation === "formsList") {
+      const store = require("../../../redux/store/store").default;
+      const {
+        updatedFormsRefreshNeeded
+      } = require("../../../redux/slices/formsSlice");
+      const {
+        updatedLtftFormsRefreshNeeded
+      } = require("../../../redux/slices/ltftSummaryListSlice");
+
+      if (formName !== "ltft") {
+        store.dispatch(updatedFormsRefreshNeeded(true));
+      } else {
+        store.dispatch(updatedLtftFormsRefreshNeeded(true));
+      }
+    } else {
+      const history = require("../../navigation/history").default;
+      history.push("/formr-a");
+    }
+  })
 }));
 
 jest.mock("../../navigation/history", () => ({
-  push: jest.fn()
+  __esModule: true,
+  default: {
+    push: jest.fn()
+  }
 }));
 
 describe("StartOverButton Component", () => {

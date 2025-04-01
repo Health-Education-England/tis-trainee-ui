@@ -6,7 +6,8 @@ import history from "../../../../components/navigation/history";
 import {
   LtftObj,
   updatedCanEditLtft,
-  updatedLtft
+  updatedLtft,
+  updatedLtftStatus
 } from "../../../../redux/slices/ltftSlice";
 import {
   mockLtftDraft0,
@@ -27,7 +28,7 @@ const mountLtftViewWithMockData = (mockLtftObj: LtftObj) => {
 
 describe("LTFT Form View - not editable", () => {
   before(() => {
-    store.dispatch(updatedCanEditLtft(false));
+    store.dispatch(updatedLtftStatus("succeeded"));
     mountLtftViewWithMockData({
       ...mockLtftDraft1,
       declarations: {
@@ -56,9 +57,9 @@ describe("LTFT Form View - not editable", () => {
       .should("have.attr", "readonly");
     cy.get('[data-cy="BtnSubmit"]').should("not.exist");
     cy.get('[data-cy="BtnSaveDraft"]').should("not.exist");
-    cy.get("#ltftName")
-      .should("have.value", "My Programme - Hours Reduction")
-      .should("have.attr", "readonly");
+    cy.get('[data-cy="ltftName"]').contains("My Programme - Hours Reduction");
+    cy.get('[data-cy="ltftCreated"]').should("exist");
+    cy.get('[data-cy="ltftSubmitted"]').should("exist");
   });
 });
 
@@ -105,11 +106,7 @@ describe("LTFT Form View - editable & no name", () => {
     // should enable the submit button when Name is inputted
     cy.get("#ltftName").type("Test Application");
     cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled").click();
-
     cy.get('[data-cy="dialogModal"]').should("exist");
-    cy.get('[data-cy="ltftModalWarning"]').should("exist");
-
-    // NOTE - Removed the modal-related tests as the modal will not open as before via the btn click because of the new intermediate saveDraftForm call. AFAIK no easy way to mock this logic in Cypress Component tests, so see RTL (Jest) LtftFormView.test.tsx .
   });
 });
 

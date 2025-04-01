@@ -3,18 +3,13 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { useConfirm } from "material-ui-confirm";
 import { Button } from "nhsuk-react-components";
 import {
+  BtnLocation,
+  checkPush,
   getDraftFormId,
-  isFormDeleted,
-  mapFormNameToUrl,
-  resetForm
+  isFormDeleted
 } from "../../utilities/FormBuilderUtilities";
-import history from "../navigation/history";
 import store from "../../redux/store/store";
-import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 import { FormName } from "./form-builder/FormBuilder";
-import { updatedLtftFormsRefreshNeeded } from "../../redux/slices/ltftSummaryListSlice";
-
-export type BtnLocation = "formsList" | "form" | "formView";
 
 export type StartOverButtonProps = {
   formName: FormName;
@@ -63,15 +58,3 @@ export const StartOverButton = ({
     </Button>
   ) : null;
 };
-
-function checkPush(formName: FormName, btnLocation: BtnLocation) {
-  resetForm(formName);
-  if (btnLocation === "formsList") {
-    if (formName !== "ltft") {
-      store.dispatch(updatedFormsRefreshNeeded(true));
-    } else store.dispatch(updatedLtftFormsRefreshNeeded(true));
-  } else {
-    const mappedUrl = mapFormNameToUrl(formName);
-    history.push(`/${mappedUrl}`);
-  }
-}

@@ -1,26 +1,11 @@
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  WarningCallout
-} from "nhsuk-react-components";
-import { LtftTracker } from "./LtftTracker";
-import history from "../../navigation/history";
-import {
-  LtftSummaryObj,
-  updatedLtftFormsRefreshNeeded
-} from "../../../redux/slices/ltftSummaryListSlice";
+import { Card, Col, Container, Row } from "nhsuk-react-components";
 import LtftSummary from "./LtftSummary";
-import { mockLtftsList1 } from "../../../mock-data/mock-ltft-data";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
-import { StartOverButton } from "../StartOverButton";
-import { loadTheSavedForm } from "../../../utilities/FormBuilderUtilities";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
+import { Link } from "react-router-dom";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -31,10 +16,8 @@ export function LtftHome() {
   );
   useLtftHomeStartover();
 
-  // TODO - use real data for Summary Table when submission logic added
-  const mockLtftSummary = mockLtftsList1;
   const sortedLtftSummary = DateUtilities.genericSort(
-    mockLtftSummary.slice(),
+    ltftSummary.slice(),
     "lastModified",
     true
   );
@@ -42,7 +25,7 @@ export function LtftHome() {
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
 
-  const draftOrUnsubmittedLtftSummary = ltftSummary.find(
+  const draftOrUnsubmittedLtftSummary = ltftSummary.filter(
     item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );
 
@@ -56,102 +39,40 @@ export function LtftHome() {
       <Card>
         <Card.Content>
           <>
-            <Card.Heading data-cy="ltft-tracker-header">
-              {draftOrUnsubmittedLtftSummary
-                ? "In progress application"
-                : "New application"}
+            <Card.Heading data-cy="ltft-in-progress-header">
+              In progress applications
             </Card.Heading>
-            <LtftTracker
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
+            <LtftSummary
+              ltftSummaryType="CURRENT"
+              ltftSummaryStatus={ltftFormsListStatus}
+              ltftSummaryList={draftOrUnsubmittedLtftSummary}
             />
-            <TrackerSectionBtns
-              draftOrUnsubmittedLtftSummary={draftOrUnsubmittedLtftSummary}
-            />
+            <Container>
+              <Row>
+                <Col width="full">
+                  To begin a new application{" "}
+                  <Link to="/cct" data-cy="cct-link">
+                    please go to your list of saved CCT calculations
+                  </Link>{" "}
+                  and click the button to apply for Changing hours (LTFT).
+                </Col>
+              </Row>
+            </Container>
           </>
         </Card.Content>
       </Card>
       <Card>
         <Card.Content>
-          <WarningCallout data-cy="ltftWarning">
-            <WarningCallout.Label visuallyHiddenText={false}>
-              For Demonstration Only
-            </WarningCallout.Label>
-            <p>
-              The table below has <strong>dummy data</strong> and is read only
-              for demonstrating the future layout of the LTFT Applications
-              Summary.
-            </p>
-          </WarningCallout>
-          <Card.Heading data-cy="ltft-summary-header">
-            Previous applications summary
+          <Card.Heading data-cy="ltft-previous-header">
+            Previous applications
           </Card.Heading>
           <LtftSummary
+            ltftSummaryType="PREVIOUS"
             ltftSummaryStatus={ltftFormsListStatus}
             ltftSummaryList={previousLtftSummaries}
           />
         </Card.Content>
       </Card>
     </>
-  );
-}
-
-type TrackerSectionBtnsProps = {
-  draftOrUnsubmittedLtftSummary: LtftSummaryObj | undefined;
-};
-
-function TrackerSectionBtns({
-  draftOrUnsubmittedLtftSummary
-}: Readonly<TrackerSectionBtnsProps>) {
-  const dispatch = useAppDispatch();
-  const handleClick = () => {
-    loadTheSavedForm("/ltft", draftOrUnsubmittedLtftSummary?.id ?? "", history);
-  };
-  return (
-    <div style={{ marginTop: "2rem" }}>
-      {draftOrUnsubmittedLtftSummary ? (
-        <Container>
-          <Row>
-            <Col width="two-thirds">
-              <Button
-                data-cy="continue-application-button"
-                onClick={handleClick}
-              >
-                {`Continue ${
-                  draftOrUnsubmittedLtftSummary?.status === "DRAFT"
-                    ? "draft"
-                    : "unsubmitted"
-                } application`}
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col width="one-third">
-              <StartOverButton
-                formName="ltft"
-                btnLocation="formsList"
-                formsListDraftId={draftOrUnsubmittedLtftSummary.id}
-              />
-            </Col>
-          </Row>
-        </Container>
-      ) : (
-        <Container>
-          <Row>
-            <Col width="two-thirds">
-              <Button
-                data-cy="choose-cct-btn"
-                onClick={() => {
-                  dispatch(updatedLtftFormsRefreshNeeded(false));
-                  history.push("/cct");
-                }}
-              >
-                Choose a CCT Calculation to begin your Changing hours (LTFT)
-                application
-              </Button>
-            </Col>
-          </Row>
-        </Container>
-      )}
-    </div>
   );
 }
