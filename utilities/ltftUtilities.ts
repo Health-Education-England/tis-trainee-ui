@@ -1,6 +1,16 @@
+import { ReasonMsgObj } from "../components/common/ActionModal";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { CctCalculation } from "../redux/slices/cctSlice";
-import { LtftCctChange, LtftObj, StatusInfo } from "../redux/slices/ltftSlice";
+import {
+  LtftCctChange,
+  LtftObj,
+  StatusInfo,
+  unsubmitLtftForm,
+  withdrawLtftForm
+} from "../redux/slices/ltftSlice";
+import store from "../redux/store/store";
+import { isFormDeleted } from "./FormBuilderUtilities";
+import { ActionState } from "./hooks/useActionState";
 import { ProfileSType } from "./ProfileUtilities";
 
 export function populateLtftDraft(
@@ -291,3 +301,29 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     lastModified: ltftDto.lastModified
   };
 };
+
+export async function handleLtftSummaryModalSub(
+  currentAction: ActionState,
+  reasonObj?: ReasonMsgObj
+) {
+  if (currentAction.type === "Delete") {
+    return await isFormDeleted("ltft", currentAction.id);
+  }
+  if (currentAction.type === "Unsubmit") {
+    return await store.dispatch(
+      unsubmitLtftForm({
+        id: currentAction.id,
+        reasonObj: reasonObj as ReasonMsgObj
+      })
+    );
+  }
+  if (currentAction.type === "Withdraw") {
+    return await store.dispatch(
+      withdrawLtftForm({
+        id: currentAction.id,
+        reasonObj: reasonObj as ReasonMsgObj
+      })
+    );
+  }
+  return false;
+}

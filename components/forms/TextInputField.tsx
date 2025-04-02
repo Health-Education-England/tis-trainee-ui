@@ -21,15 +21,19 @@ interface Props {
   isNumberField?: boolean;
   isTotal?: boolean;
   maxLength?: number;
+  showCharCount?: boolean;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
+  const maxChars = props.maxLength ?? (props.isNumberField ? 4 : 4096);
+  const charsRemaining = maxChars - (field.value?.length || 0);
   const setFieldWidth = (valueLength: number | undefined) => {
     return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, isNumberField, width, isTotal, ...rest } = props;
+  const { hidelabel, isNumberField, width, isTotal, showCharCount, ...rest } =
+    props;
   const setCorrectLabelClass = () => {
     if (error) {
       return "nhsuk-form-group nhsuk-form-group--error";
@@ -57,6 +61,14 @@ const TextInputField: FunctionComponent<Props> = props => {
         data-cy={props.name}
         className={isTotal ? "total-field" : ""}
       />
+      {showCharCount && (
+        <span
+          className="nhsuk-hint nhsuk-character-count__message"
+          data-cy={`${props.name}-char-count`}
+        >
+          You have {charsRemaining} characters remaining
+        </span>
+      )}
       <InputFooterLabel label={props.footer || ""} />
     </div>
   );

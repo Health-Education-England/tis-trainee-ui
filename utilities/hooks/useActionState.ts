@@ -3,7 +3,7 @@ import { ActionType } from "../../components/common/ActionModal";
 import { ACTION_CONFIG } from "../Constants";
 import { FormName } from "../../components/forms/form-builder/FormBuilder";
 
-type ActionState = {
+export type ActionState = {
   type: ActionType | null;
   warningText: string;
   submittingText: string;

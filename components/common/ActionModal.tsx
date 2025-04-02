@@ -1,17 +1,27 @@
 import { Modal } from "./Modal";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useSubmitting } from "../../utilities/hooks/useSubmitting";
+import { Form, Formik } from "formik";
+import MultiChoiceInputField from "../forms/MultiChoiceInputField";
+import TextInputField from "../forms/TextInputField";
+import { ACTION_REASONS } from "../../utilities/Constants";
 
 export type ActionType = "Save" | "Submit" | "Unsubmit" | "Withdraw" | "Delete";
 
+export type ReasonMsgObj = {
+  reason: string;
+  message: string;
+};
+
 type ActionModalProps = {
-  onSubmit: () => void;
+  onSubmit: (values: ReasonMsgObj) => void;
   isOpen: boolean;
   onClose: () => void;
   cancelBtnText: string;
   warningLabel: string;
   warningText: string;
   submittingBtnText: string;
+  actionType?: ActionType;
 };
 
 export function ActionModal({
@@ -21,31 +31,65 @@ export function ActionModal({
   cancelBtnText,
   warningLabel,
   warningText,
-  submittingBtnText
+  submittingBtnText,
+  actionType
 }: Readonly<ActionModalProps>) {
   const { isSubmitting } = useSubmitting();
+  const hasReason = actionType === "Unsubmit" || actionType === "Withdraw";
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText={cancelBtnText}>
-      <form>
-        <WarningCallout data-cy="actionModalWarning">
-          <WarningCallout.Label
-            visuallyHiddenText={false}
-            data-cy={`warningLabel-${warningLabel}`}
-          >
-            {warningLabel}
-          </WarningCallout.Label>
-          <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
-          <p data-cy="youSureTxt"> Are you sure you want to continue?</p>.
-        </WarningCallout>
-        <Button
-          onClick={onSubmit}
-          type="button"
-          disabled={isSubmitting}
-          data-cy={`submitBtn-${warningLabel}`}
+      <WarningCallout data-cy="actionModalWarning">
+        <WarningCallout.Label
+          visuallyHiddenText={false}
+          data-cy={`warningLabel-${warningLabel}`}
         >
-          {isSubmitting ? `${submittingBtnText}...` : "Confirm & Continue"}
-        </Button>
-      </form>
+          {warningLabel}
+        </WarningCallout.Label>
+        <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
+      </WarningCallout>
+      <Formik initialValues={{ reason: "", message: "" }} onSubmit={onSubmit}>
+        {({ values }) => (
+          <>
+            <Form>
+              {hasReason && (
+                <>
+                  <MultiChoiceInputField
+                    name="reason"
+                    type="radios"
+                    items={
+                      actionType === "Unsubmit"
+                        ? [...ACTION_REASONS.UNSUBMIT, ACTION_REASONS.OTHER]
+                        : [...ACTION_REASONS.WITHDRAW, ACTION_REASONS.OTHER]
+                    }
+                    label={`Please choose the primary reason for the ${actionType.toLowerCase()}`}
+                    id="reason"
+                  />
+                  <TextInputField
+                    name="message"
+                    id="message"
+                    label="Please provide any supplementary information if needed"
+                    placeholder="Enter details here..."
+                    width="300px"
+                    rows={3}
+                    showCharCount
+                    maxLength={512}
+                  />
+                </>
+              )}
+              <Button
+                type="submit"
+                disabled={isSubmitting || (hasReason && !values.reason)}
+                data-cy={`submitBtn-${warningLabel}`}
+              >
+                {isSubmitting
+                  ? `${submittingBtnText}...`
+                  : "Confirm & Continue"}
+              </Button>
+            </Form>
+          </>
+        )}
+      </Formik>
     </Modal>
   );
 }

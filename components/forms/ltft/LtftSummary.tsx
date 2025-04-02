@@ -23,12 +23,16 @@ import history from "../../navigation/history";
 import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
 import {
   checkPush,
-  isFormDeleted,
   loadTheSavedForm
 } from "../../../utilities/FormBuilderUtilities";
-import { ActionModal, ActionType } from "../../common/ActionModal";
+import {
+  ActionModal,
+  ActionType,
+  ReasonMsgObj
+} from "../../common/ActionModal";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { useActionState } from "../../../utilities/hooks/useActionState";
+import { handleLtftSummaryModalSub } from "../../../utilities/ltftUtilities";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
@@ -294,20 +298,17 @@ const LtftSummary = ({
               </table>
             </div>
             <ActionModal
-              onSubmit={async () => {
+              onSubmit={async (reasonObj: ReasonMsgObj) => {
                 setShowModal(false);
                 store.dispatch(updatedLtftFormsRefreshNeeded(false));
-                // TODO - generic func to handle delete, unsubmit, withdraw
-                if (currentAction.type === "Delete") {
-                  startSubmitting();
-                  const shouldStartOver = await isFormDeleted(
-                    "ltft",
-                    currentAction.id
-                  );
-                  stopSubmitting();
-                  if (shouldStartOver) {
-                    checkPush("ltft", "formsList");
-                  }
+                startSubmitting();
+                const shouldStartOver = await handleLtftSummaryModalSub(
+                  currentAction,
+                  reasonObj
+                );
+                stopSubmitting();
+                if (shouldStartOver) {
+                  checkPush("ltft", "formsList");
                 }
               }}
               isOpen={showModal}
@@ -319,6 +320,7 @@ const LtftSummary = ({
               warningLabel={currentAction.type ?? ""}
               warningText={currentAction.warningText}
               submittingBtnText={currentAction.submittingText}
+              actionType={currentAction.type as ActionType}
             />
           </>
         ) : (
