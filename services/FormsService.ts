@@ -7,6 +7,7 @@ import { IFormR } from "../models/IFormR";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { LtftSummaryObj } from "../redux/slices/ltftSummaryListSlice";
 import { LtftDto } from "../utilities/ltftUtilities";
+import { ReasonMsgObj } from "../components/common/ActionModal";
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
@@ -106,12 +107,23 @@ export class FormsService extends ApiService {
   }
 
   async submitLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
-    if (mappedFormData.id) {
-      return this.put<LtftDto>(
-        `/ltft/${mappedFormData.id}/submit`,
-        mappedFormData
-      );
-    }
-    return this.post<LtftDto>("/ltft/submit", mappedFormData);
+    return this.put<LtftDto>(
+      `/ltft/${mappedFormData.id}/submit`,
+      mappedFormData
+    );
+  }
+
+  async unsubmitLtft(
+    id: string,
+    reason: ReasonMsgObj
+  ): Promise<AxiosResponse<LtftDto>> {
+    return this.put<LtftDto, ReasonMsgObj>(`/ltft/${id}/unsubmit`, reason);
+  }
+
+  async withdrawLtft(
+    id: string,
+    reason: ReasonMsgObj
+  ): Promise<AxiosResponse<LtftDto>> {
+    return this.put<LtftDto, ReasonMsgObj>(`/ltft/${id}/withdraw`, reason);
   }
 }

@@ -44,9 +44,14 @@ export class ApiService {
     return this.axiosInstance.post(endpoint, formData, params);
   }
 
-  put<T = any>(endpoint: string, formData?: T): Promise<AxiosResponse<T>> {
+  // Note: needed to refactor to allow for different req and res types
+  put<TResponse = any, TRequest = any>(
+    endpoint: string,
+    formData?: TRequest
+  ): Promise<AxiosResponse<TResponse>> {
     return this.axiosInstance.put(endpoint, formData);
   }
+
   delete(endpoint: string): Promise<AxiosResponse> {
     return this.axiosInstance.delete(endpoint);
   }

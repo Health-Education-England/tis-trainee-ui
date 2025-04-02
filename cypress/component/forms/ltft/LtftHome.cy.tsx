@@ -95,7 +95,6 @@ describe("LtftHome", () => {
           "include.text",
           "Deleting this application will permanently remove it."
         );
-        cy.get('[data-cy="youSureTxt"]').should("exist");
         cy.get('[data-cy="submitBtn-Delete"]').click();
       });
     });
@@ -120,10 +119,33 @@ describe("LtftHome", () => {
         ).click();
         cy.get('[data-cy="actionModalWarning"]').should("exist");
         cy.get('[data-cy="warningLabel-Unsubmit"]').contains("Unsubmit");
+        cy.get("#reason-1--label").contains("Change WTE percentage");
+        cy.get("#reason-2--label").contains("Change start date");
+        cy.get("#reason-3--label").contains("other reason");
+        cy.get("#message--label").contains(
+          "Please provide any supplementary information if needed"
+        );
+        cy.get('[data-cy="message-char-count"]').contains(
+          "You have 512 characters remaining"
+        );
+        cy.get('[data-cy="message"]').type("Test unsubmit message");
+        cy.get('[data-cy="message-char-count"]').contains(
+          "You have 491 characters remaining"
+        );
         cy.get('[data-cy="modal-cancel-btn"]')
           .last()
           .contains("Cancel")
           .click();
+
+        // Test withdraw modal
+        cy.get(
+          '[data-cy="1_operations"] > [data-cy="withdrawLtftBtnLink"]'
+        ).click();
+        cy.get('[data-cy="actionModalWarning"]').should("exist");
+        cy.get('[data-cy="warningLabel-Withdraw"]').contains("Withdraw");
+        cy.get("#reason-1--label").contains("Change of circumstances");
+        cy.get("#reason-2--label").contains("other reason");
+        cy.get('[data-cy="modal-cancel-btn"]').last().click();
       });
     });
   });

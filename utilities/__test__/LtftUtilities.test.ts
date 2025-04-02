@@ -11,8 +11,6 @@ import {
   populateLtftDraft
 } from "../ltftUtilities";
 import { StatusInfo } from "../../redux/slices/ltftSlice";
-import { date } from "yup";
-
 const otherDiscussions = [
   {
     name: "My other discussion 1",
@@ -207,5 +205,3 @@ describe("mapDtoToLtftObj", () => {
     expect(mockLtftObj.lastModified).toBe(dateModified);
   });
 });
-
-//TODO: Add more test for the history when this is implemented

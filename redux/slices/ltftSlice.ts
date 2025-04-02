@@ -10,6 +10,7 @@ import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
+import { ReasonMsgObj } from "../../components/common/ActionModal";
 
 export type LtftFormStatus =
   | "DRAFT"
@@ -200,6 +201,22 @@ export const deleteLtft = createAsyncThunk(
   }
 );
 
+export const unsubmitLtftForm = createAsyncThunk(
+  "ltft/unsubmitLtftForm",
+  async ({ id, reasonObj }: { id: string; reasonObj: ReasonMsgObj }) => {
+    const formsService = new FormsService();
+    return formsService.unsubmitLtft(id, reasonObj);
+  }
+);
+
+export const withdrawLtftForm = createAsyncThunk(
+  "ltft/withdrawLtftForm",
+  async ({ id, reasonObj }: { id: string; reasonObj: ReasonMsgObj }) => {
+    const formsService = new FormsService();
+    return formsService.withdrawLtft(id, reasonObj);
+  }
+);
+
 export const loadSavedLtft = createAsyncThunk(
   "ltft/loadSavedLtft",
   async (id: string) => {
@@ -365,6 +382,38 @@ const ltftSlice = createSlice({
         state.error = action.error.message;
         showToast(
           toastErrText.deleteLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
+      })
+      .addCase(unsubmitLtftForm.pending, state => {
+        state.status = "unsubmitting";
+      })
+      .addCase(unsubmitLtftForm.fulfilled, state => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.unsubmitLtft, ToastType.SUCCESS);
+      })
+      .addCase(unsubmitLtftForm.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.unsubmitLtft,
+          ToastType.ERROR,
+          `${action.error.code}-${action.error.message}`
+        );
+      })
+      .addCase(withdrawLtftForm.pending, state => {
+        state.status = "withdrawing";
+      })
+      .addCase(withdrawLtftForm.fulfilled, state => {
+        state.status = "succeeded";
+        showToast(toastSuccessText.withdrawLtft, ToastType.SUCCESS);
+      })
+      .addCase(withdrawLtftForm.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+        showToast(
+          toastErrText.withdrawLtft,
           ToastType.ERROR,
           `${action.error.code}-${action.error.message}`
         );

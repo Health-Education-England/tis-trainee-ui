@@ -246,6 +246,8 @@ const noLoad = "Couldn't load your saved ";
 const noSave = "Couldn't save your ";
 const noUpdate = "Couldn't update your ";
 const noSubmit = "Couldn't submit your ";
+const noUnsubmit = "Couldn't unsubmit your ";
+const noWithdraw = "Couldn't withdraw your ";
 
 export const toastErrText = {
   deleteFormA: `${noDel}${formA}.`,
@@ -268,6 +270,8 @@ export const toastErrText = {
   updateFormA: `${noUpdate}${formA}.`,
   updateFormB: `${noUpdate}${formB}.`,
   updateLtft: `${noUpdate}${ltft}.`,
+  unsubmitLtft: `${noUnsubmit}${ltft}.`,
+  withdrawLtft: `${noWithdraw}${ltft}.`,
   fetchTraineeProfileData:
     "Couldn't load your personal details (profile data).",
   updateUserAttributes:
@@ -300,6 +304,9 @@ const isDel = "has been deleted.";
 const isSave = "has been saved.";
 const isUpdate = "has been updated.";
 const isSubmit = "has been submitted.";
+const isUnsubmit = "has been unsubmitted.";
+const isWithdraw = "has been withdrawn.";
+
 export const toastSuccessText = {
   deleteFormA: `Your draft ${formA} ${isDel}`,
   deleteFormB: `Your draft ${formB} ${isDel}`,
@@ -310,6 +317,8 @@ export const toastSuccessText = {
   updateFormA: `Your ${formA} ${isUpdate}`,
   updateFormB: `Your ${formB} ${isUpdate}`,
   updateLtft: `Your ${ltft} ${isUpdate}`,
+  unsubmitLtft: `Your ${ltft} ${isUnsubmit}`,
+  withdrawLtft: `Your ${ltft} ${isWithdraw}`,
   submitFormA: `Your ${formA} ${isSubmit}`,
   submitFormB: `Your ${formB} ${isSubmit}`,
   submitLtft: `Your ${ltft} ${isSubmit}`,
@@ -599,4 +608,13 @@ export const ACTION_CONFIG: Record<
       "Unsubmitting this application will return it to draft status allowing you to make changes and then re-submit.",
     submitting: "Unsubmitting"
   }
+};
+
+export const ACTION_REASONS = {
+  OTHER: { value: "other", label: "other reason" },
+  UNSUBMIT: [
+    { value: "changePercentage", label: "Change WTE percentage" },
+    { value: "changeStartDate", label: "Change start date" }
+  ],
+  WITHDRAW: [{ value: "changeOfCircs", label: "Change of circumstances" }]
 };
