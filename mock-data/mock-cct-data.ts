@@ -1,4 +1,7 @@
+import dayjs from "dayjs";
 import { CctCalculation } from "../redux/slices/cctSlice";
+
+const changeStartDate = dayjs().format("YYYY-MM-DD");
 
 export const mockCctList: CctCalculation[] = [
   {
@@ -15,7 +18,7 @@ export const mockCctList: CctCalculation[] = [
     changes: [
       {
         type: "LTFT",
-        startDate: "2025-04-01",
+        startDate: changeStartDate,
         wte: 0.7
       }
     ],
@@ -37,7 +40,7 @@ export const mockCctList: CctCalculation[] = [
     changes: [
       {
         type: "LTFT",
-        startDate: "2025-04-01",
+        startDate: changeStartDate,
         wte: 0.6
       }
     ],
