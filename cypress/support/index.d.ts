@@ -54,6 +54,11 @@ declare global {
 
       testDataSourceLink(): Chainable<Element>;
       testData(dataToTest: any, index?: number): Chainable<Element>;
+      fillTextAreaToLimit(
+        selector: string,
+        char: string,
+        limit: number
+      ): Chainable<Element>;
     }
     interface Cypress {
       dayjs(): dayjs.Dayjs;

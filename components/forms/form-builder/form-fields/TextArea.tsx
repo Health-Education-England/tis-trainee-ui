@@ -13,6 +13,8 @@ type TextAreaProps = {
   arrayName?: string;
   rows?: number;
   dtoName?: string;
+  maxLength?: number;
+  showCharCount?: boolean;
 };
 
 export const TextArea: React.FC<TextAreaProps> = ({
@@ -24,9 +26,12 @@ export const TextArea: React.FC<TextAreaProps> = ({
   arrayIndex,
   arrayName,
   rows,
-  dtoName
+  dtoName,
+  maxLength = 1000,
+  showCharCount = true
 }: TextAreaProps) => {
   const { handleBlur, handleChange } = useFormContext();
+  const charsRemaining = maxLength - (value?.length || 0);
   return (
     <>
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
@@ -51,7 +56,16 @@ export const TextArea: React.FC<TextAreaProps> = ({
         placeholder={placeholder}
         rows={rows ?? 10}
         spellCheck={true}
+        maxLength={maxLength}
       />
+      {showCharCount && (
+        <span
+          className="nhsuk-hint nhsuk-character-count__message"
+          data-cy={`${name}-char-count`}
+        >
+          You have {charsRemaining} characters remaining
+        </span>
+      )}
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}

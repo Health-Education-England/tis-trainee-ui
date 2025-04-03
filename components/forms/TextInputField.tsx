@@ -27,13 +27,19 @@ interface Props {
 const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
-  const maxChars = props.maxLength ?? (props.isNumberField ? 4 : 4096);
+  const maxChars = props.maxLength ?? (props.isNumberField ? 4 : 1000);
   const charsRemaining = maxChars - (field.value?.length || 0);
   const setFieldWidth = (valueLength: number | undefined) => {
     return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, isNumberField, width, isTotal, showCharCount, ...rest } =
-    props;
+  const {
+    hidelabel,
+    isNumberField,
+    width,
+    isTotal,
+    showCharCount = true,
+    ...rest
+  } = props;
   const setCorrectLabelClass = () => {
     if (error) {
       return "nhsuk-form-group nhsuk-form-group--error";

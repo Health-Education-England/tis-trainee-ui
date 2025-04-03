@@ -930,6 +930,14 @@ Cypress.Commands.add("checkAndFillSection9", () => {
   cy.get(".nhsuk-error-summary").should("not.exist");
 });
 
+Cypress.Commands.add(
+  "fillTextAreaToLimit",
+  (selector: string, char: string, limit: number) => {
+    const text = char.repeat(limit);
+    cy.get(selector).clear().type(text, { delay: 0 });
+  }
+);
+
 // ### SECTION 10: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection10", () => {
   cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
@@ -938,7 +946,22 @@ Cypress.Commands.add("checkAndFillSection10", () => {
     "Compliments"
   );
   cy.get(".nhsuk-card__heading").contains("Compliments (Not compulsory)");
-  cy.clearAndType('[data-cy="compliments-text-area-input"]', "temp compliment");
+  // Test text area maxLength limit
+  cy.fillTextAreaToLimit('[data-cy="compliments-text-area-input"]', "A", 1000);
+  cy.get('[data-cy="compliments-char-count"]').should(
+    "contain",
+    "You have 0 characters remaining"
+  );
+  cy.get('[data-cy="compliments-text-area-input"]').type("B");
+  cy.get('[data-cy="compliments-char-count"]').should(
+    "contain",
+    "You have 0 characters remaining"
+  );
+  cy.clearAndType('[data-cy="compliments-text-area-input"]', "Test compliment");
+  cy.get('[data-cy="compliments-char-count"]').should(
+    "contain",
+    "You have 985 characters remaining"
+  );
   cy.get(".nhsuk-error-summary").should("not.exist");
   cy.checkElement("BtnSaveDraft");
   cy.get('[data-cy="BtnShortcutToConfirm"]').should("not.exist");
