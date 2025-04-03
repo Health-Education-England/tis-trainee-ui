@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Card, SummaryList, Button, Row, Col } from "nhsuk-react-components";
+import {
+  Card,
+  SummaryList,
+  Button,
+  Row,
+  Col,
+  WarningCallout
+} from "nhsuk-react-components";
 import history from "../../navigation/history";
 import dayjs from "dayjs";
 import { CctNameModal } from "./CctNameModal";
@@ -101,6 +108,19 @@ export function CctCalcSummaryDetails({
 
   return (
     <Card className="pdf-visible">
+      <WarningCallout>
+        <WarningCallout.Label data-cy="cct-calc-warning-label">
+          New completion date
+        </WarningCallout.Label>
+        <p data-cy="cct-calc-warning-text1">
+          Please note: the new completion date shown below is indicative and
+          does not take into account your full circumstances (e.g. Out of
+          Programme, Parental Leave).
+        </p>
+        <p data-cy="cct-calc-warning-text2">
+          Your formal completion date will be agreed at ARCP.
+        </p>
+      </WarningCallout>
       <Card.Content>
         <Card.Heading data-cy="cct-calc-summary-header">
           CCT Calculation Summary

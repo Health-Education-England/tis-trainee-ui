@@ -37,7 +37,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
         data-cy={props.name}
         id={props.id ?? props.name}
         error={error ?? ""}
-        onChange={props.onChange ? props.onChange : field.onChange}
+        onChange={props.onChange ?? field.onChange}
         hint={props.hint}
       >
         {props?.items?.map((item, index) => (
@@ -55,7 +55,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
           </FormChildElement>
         ))}
       </FormElement>
-      <InputFooterLabel label={props.footer || ""} />
+      <InputFooterLabel label={props.footer ?? ""} />
     </div>
   );
 };

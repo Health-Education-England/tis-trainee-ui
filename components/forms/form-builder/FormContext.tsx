@@ -94,14 +94,14 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   ) => {
     setFormData(formData => {
       if (typeof arrayIndex === "number" && arrayName) {
-        const newArray = [...(formData[arrayName] || [])];
+        const newArray = [...(formData[arrayName] ?? [])];
         newArray[arrayIndex] = {
           ...newArray[arrayIndex],
           [name]: value
         };
         return { ...formData, [arrayName]: newArray };
       } else if (dtoName) {
-        const dto = formData[dtoName] || {};
+        const dto = formData[dtoName] ?? {};
         const updatedDto = {
           ...dto,
           [name]: value

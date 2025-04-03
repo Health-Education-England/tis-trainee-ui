@@ -125,13 +125,7 @@ describe("LtftHome", () => {
         cy.get("#message--label").contains(
           "Please provide any supplementary information if needed"
         );
-        cy.get('[data-cy="message-char-count"]').contains(
-          "You have 512 characters remaining"
-        );
         cy.get('[data-cy="message"]').type("Test unsubmit message");
-        cy.get('[data-cy="message-char-count"]').contains(
-          "You have 491 characters remaining"
-        );
         cy.get('[data-cy="modal-cancel-btn"]')
           .last()
           .contains("Cancel")

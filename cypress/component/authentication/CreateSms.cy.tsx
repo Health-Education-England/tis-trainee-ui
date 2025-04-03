@@ -70,7 +70,11 @@ describe("CreateSms sections", () => {
     cy.get("#smsCode--error-message")
       .should("exist")
       .should("include.text", "Code must be min 6 characters in length");
-    cy.get("[data-cy=smsCode]").type("456");
+    cy.get("[data-cy=smsCode]").type("4567");
+    // Test max length of 6
+    cy.get("[data-cy=smsCode]")
+      .should("have.value", "123456")
+      .should("have.attr", "maxlength", "6");
     cy.get("#smsCode--error-message").should("not.exist");
     cy.get("[data-cy=BtnSmsCodeSub]").click();
     // return to section 1 when user status not "succeeded"

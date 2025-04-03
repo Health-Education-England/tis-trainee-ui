@@ -21,18 +21,15 @@ interface Props {
   isNumberField?: boolean;
   isTotal?: boolean;
   maxLength?: number;
-  showCharCount?: boolean;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
   const FormElement = props.rows ? Textarea : Input;
-  const maxChars = props.maxLength ?? (props.isNumberField ? 4 : 4096);
-  const charsRemaining = maxChars - (field.value?.length || 0);
   const setFieldWidth = (valueLength: number | undefined) => {
     return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, isNumberField, width, isTotal, showCharCount, ...rest } =
+  const { hidelabel, isNumberField, width, isTotal, maxLength, ...rest } =
     props;
   const setCorrectLabelClass = () => {
     if (error) {
@@ -53,7 +50,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         onBlur={field.onBlur}
         onChange={field.onChange}
         value={field.value ?? ""}
-        maxLength={props.maxLength ?? (isNumberField ? 4 : 4096)}
+        maxLength={maxLength}
         {...rest}
         readOnly={props.readOnly}
         min="1920-01-01"
@@ -61,15 +58,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         data-cy={props.name}
         className={isTotal ? "total-field" : ""}
       />
-      {showCharCount && (
-        <span
-          className="nhsuk-hint nhsuk-character-count__message"
-          data-cy={`${props.name}-char-count`}
-        >
-          You have {charsRemaining} characters remaining
-        </span>
-      )}
-      <InputFooterLabel label={props.footer || ""} />
+      <InputFooterLabel label={props.footer ?? ""} />
     </div>
   );
 };

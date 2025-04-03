@@ -43,7 +43,7 @@ const MobilePhoneInputField: FunctionComponent<
         <span className="nhsuk-u-visually-hidden">Error: </span>
         {error}
       </span>
-      <InputFooterLabel label={footer || ""} />
+      <InputFooterLabel label={footer ?? ""} />
     </div>
   );
 };
