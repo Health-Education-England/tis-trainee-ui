@@ -71,6 +71,7 @@ const ConfirmSms = () => {
                 name="smsCode"
                 placeholder="Enter code"
                 label={""}
+                maxLength={6}
               />
             </Card.Content>
           </Card>

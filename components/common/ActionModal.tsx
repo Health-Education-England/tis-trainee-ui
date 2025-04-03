@@ -72,8 +72,6 @@ export function ActionModal({
                     placeholder="Enter details here..."
                     width="300px"
                     rows={3}
-                    showCharCount
-                    maxLength={512}
                   />
                 </>
               )}
