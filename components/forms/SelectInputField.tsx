@@ -46,7 +46,7 @@ const SelectInputField: React.FC<Props> = props => {
             ))
           : null}
       </Select>
-      <InputFooterLabel label={footer || ""} />
+      <InputFooterLabel label={footer ?? ""} />
     </div>
   );
 };

@@ -253,7 +253,7 @@ export function handleNumberInput(
 
 export function sumFieldValues(formData: FormData, fields: Field[]) {
   return fields.reduce(
-    (sum, field) => sum + Number(formData[field.name] || 0),
+    (sum, field) => sum + Number(formData[field.name] ?? 0),
     0
   );
 }
@@ -509,11 +509,11 @@ export function createErrorObject(err: {
     const lastObj = keys.reduce((obj, key, i) => {
       if (key.includes("[")) {
         const [arrayKey, arrayIndex] = key.split(/[[\]]/).filter(Boolean);
-        obj[arrayKey] = obj[arrayKey] || [];
-        obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] || {};
+        obj[arrayKey] = obj[arrayKey] ?? [];
+        obj[arrayKey][arrayIndex] = obj[arrayKey][arrayIndex] ?? {};
         return obj[arrayKey][arrayIndex];
       } else {
-        obj[key] = obj[key] || (keys[i + 1]?.includes("[") ? [] : {});
+        obj[key] = obj[key] ?? (keys[i + 1]?.includes("[") ? [] : {});
         return obj[key];
       }
     }, obj);

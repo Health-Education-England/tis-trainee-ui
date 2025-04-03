@@ -58,7 +58,7 @@ const TextInputField: FunctionComponent<Props> = props => {
         data-cy={props.name}
         className={isTotal ? "total-field" : ""}
       />
-      <InputFooterLabel label={props.footer || ""} />
+      <InputFooterLabel label={props.footer ?? ""} />
     </div>
   );
 };
