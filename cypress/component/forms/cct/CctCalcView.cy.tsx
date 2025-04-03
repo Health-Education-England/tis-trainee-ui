@@ -35,6 +35,16 @@ describe("CctCalcView", () => {
     });
     cy.get('[data-cy="backLink-to-cct-home"]').should("exist").click();
     cy.url().should("include", "/cct");
+    cy.get('[data-cy="cct-calc-warning-label"]').contains(
+      "New completion date"
+    );
+    cy.get('[data-cy="cct-calc-warning-text1"]').should(
+      "include.text",
+      "Please note: the new completion date shown below is indicative"
+    );
+    cy.get('[data-cy="cct-calc-warning-text2"]').contains(
+      "Your formal completion date will be agreed at ARCP."
+    );
     cy.get('[data-cy="cct-calc-summary-header"]')
       .should("exist")
       .contains("CCT Calculation Summary");
