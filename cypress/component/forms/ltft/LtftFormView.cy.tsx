@@ -11,7 +11,8 @@ import {
 } from "../../../../redux/slices/ltftSlice";
 import {
   mockLtftDraft0,
-  mockLtftDraft1
+  mockLtftDraft1,
+  mockLtftUnsubmitted0
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
 
@@ -57,6 +58,7 @@ describe("LTFT Form View - not editable", () => {
       .should("have.attr", "readonly");
     cy.get('[data-cy="BtnSubmit"]').should("not.exist");
     cy.get('[data-cy="BtnSaveDraft"]').should("not.exist");
+    cy.get('[data-cy="startOverButton"]').should("not.exist");
     cy.get('[data-cy="ltftName"]').contains("My Programme - Hours Reduction");
     cy.get('[data-cy="ltftCreated"]').should("exist");
     cy.get('[data-cy="ltftSubmitted"]').should("exist");
@@ -86,6 +88,8 @@ describe("LTFT Form View - editable & no name", () => {
     cy.get('[data-cy="BtnSaveDraft"]')
       .should("exist")
       .should("not.be.disabled");
+    cy.get('[data-cy="BtnSaveDraft"]').should("exist");
+    cy.get('[data-cy="startOverButton"]').should("exist");
   });
 
   it("should enable the submit button when declarations are checked and input name text", () => {
@@ -117,5 +121,17 @@ describe("LTFT Form View - editable & saved name", () => {
 
   it("should render the saved name in the form", () => {
     cy.get("#ltftName").should("have.value", "My Programme - Hours Reduction");
+  });
+});
+
+describe("LTFT Form View - unsubmitted", () => {
+  before(() => {
+    mountLtftViewWithMockData(mockLtftUnsubmitted0);
+  });
+
+  it("should render the correct buttons", () => {
+    cy.get('[data-cy="BtnSubmit"]').should("exist").contains("Re-submit");
+    cy.get('[data-cy="BtnSaveDraft"]').should("exist");
+    cy.get('[data-cy="startOverButton"]').should("not.exist");
   });
 });
