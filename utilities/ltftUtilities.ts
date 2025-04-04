@@ -188,8 +188,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       current: {
         state: ltftObj.status.current.state,
         detail: {
-          reason: ltftObj.status.current.detail.reason,
-          message: ltftObj.status.current.detail.message
+          reason: ltftObj?.status?.current?.detail?.reason ?? "",
+          message: ltftObj?.status?.current?.detail?.message ?? ""
         },
         modifiedBy: {
           name: ltftObj.status.current.modifiedBy.name,
@@ -204,8 +204,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
           state: historyItem.state,
           timestamp: historyItem.timestamp,
           detail: {
-            reason: historyItem.detail.reason,
-            message: historyItem.detail.message
+            reason: historyItem?.detail?.reason ?? "",
+            message: historyItem?.detail?.message ?? ""
           },
           modifiedBy: {
             name: historyItem.modifiedBy.name,
@@ -271,11 +271,11 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       current: {
         state: ltftDto.status.current.state,
         detail: {
-          reason: ltftDto.status.current.detail.reason,
-          message: ltftDto.status.current.detail.message
+          reason: ltftDto?.status?.current?.detail?.reason ?? "",
+          message: ltftDto?.status?.current?.detail?.message ?? ""
         },
         modifiedBy: {
-          name: ltftDto.status.current.modifiedBy.name,
+          name: ltftDto?.status?.current.modifiedBy.name,
           email: ltftDto.status.current.modifiedBy.email,
           role: ltftDto.status.current.modifiedBy.role
         },
@@ -286,8 +286,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
         state: historyItem.state,
         timestamp: historyItem.timestamp,
         detail: {
-          reason: historyItem.detail.reason,
-          message: historyItem.detail.message
+          reason: historyItem?.detail?.reason ?? "",
+          message: historyItem?.detail?.message ?? ""
         },
         modifiedBy: {
           name: historyItem.modifiedBy.name,
