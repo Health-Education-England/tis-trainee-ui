@@ -177,7 +177,11 @@ export const LtftFormView = () => {
                       }
                       data-cy="BtnSubmit"
                     >
-                      {isSubmitting ? "Saving..." : "Submit"}
+                      {isSubmitting
+                        ? "Saving..."
+                        : formData.status.current.state === "UNSUBMITTED"
+                        ? "Re-submit"
+                        : "Submit"}
                     </Button>
                   </Form>
                 );
@@ -202,12 +206,14 @@ export const LtftFormView = () => {
                   {"Save & exit"}
                 </Button>
               </Col>
-              <Col width="one-quarter">
-                <StartOverButton
-                  formName={formJson.name}
-                  btnLocation="formView"
-                />
-              </Col>
+              {formData.status.current.state != "UNSUBMITTED" ? (
+                <Col width="one-quarter">
+                  <StartOverButton
+                    formName={formJson.name}
+                    btnLocation="formView"
+                  />
+                </Col>
+              ) : null}
             </Row>
           </Container>
         )}

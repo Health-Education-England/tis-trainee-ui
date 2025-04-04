@@ -151,6 +151,65 @@ export const mockLtftDraft1: LtftObj = {
   }
 };
 
+export const mockLtftUnsubmitted0: LtftObj = {
+  traineeTisId: "4",
+  change: {
+    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    cctDate: "2028-04-02",
+    type: "LTFT",
+    startDate: "2027-01-01",
+    wte: 0.8,
+    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
+  },
+  declarations: {
+    discussedWithTpd: true,
+    informationIsCorrect: null,
+    notGuaranteed: null
+  },
+  tpdName: "",
+  tpdEmail: "",
+  otherDiscussions: null,
+  personalDetails: {
+    title: "Mr",
+    surname: "Gilliam",
+    forenames: "Anthony Mara",
+    telephoneNumber: "01632960363",
+    mobileNumber: "07465879348",
+    email: "email@email.com",
+    gmcNumber: "1111111",
+    gdcNumber: "",
+    publicHealthNumber: "",
+    skilledWorkerVisaHolder: null
+  },
+  programmeMembership: {
+    id: "a6de88b8-de41-48dd-9492-a518f5001176",
+    name: "Cardiology",
+    startDate: "2020-01-01",
+    endDate: "2028-01-01",
+    wte: 1,
+    designatedBodyCode: "WTF3"
+  },
+  reasonsSelected: null,
+  reasonsOtherDetail: null,
+  status: {
+    current: {
+      state: "UNSUBMITTED",
+      detail: {
+        reason: "",
+        message: ""
+      },
+      modifiedBy: {
+        name: "",
+        email: "",
+        role: ""
+      },
+      timestamp: "",
+      revision: 0
+    },
+    history: []
+  }
+};
+
 export const mockLtftDto1 = {
   id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
   name: "My Programme - Hours Reduction",
