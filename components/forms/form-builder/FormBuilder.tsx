@@ -306,7 +306,7 @@ export default function FormBuilder({
               {"Save & exit"}
             </Button>
           </Col>
-          {formData.status.current.state != "UNSUBMITTED" ? (
+          {formData.status?.current?.state != "UNSUBMITTED" ? (
             <Col width="one-quarter">
               <StartOverButton formName={jsonFormName} btnLocation="form" />
             </Col>

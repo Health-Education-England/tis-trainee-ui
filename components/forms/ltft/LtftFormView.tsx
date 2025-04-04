@@ -177,11 +177,12 @@ export const LtftFormView = () => {
                       }
                       data-cy="BtnSubmit"
                     >
-                      {isSubmitting
-                        ? "Saving..."
-                        : formData.status.current.state === "UNSUBMITTED"
-                        ? "Re-submit"
-                        : "Submit"}
+                      {(() => {
+                        if (isSubmitting) return "Saving...";
+                        if (formData.status?.current?.state === "UNSUBMITTED")
+                          return "Re-submit";
+                        return "Submit";
+                      })()}
                     </Button>
                   </Form>
                 );
