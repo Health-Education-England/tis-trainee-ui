@@ -84,6 +84,7 @@ export type StatusInfo = {
 export type LtftObj = {
   traineeTisId?: string;
   id?: string;
+  formRef?: string;
   name?: string;
   change: LtftCctChange;
   declarations: LtftDeclarations;

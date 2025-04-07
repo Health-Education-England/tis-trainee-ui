@@ -83,6 +83,7 @@ export function populateLtftDraft(
 export type LtftDto = {
   traineeTisId: string;
   id: string | null;
+  formRef: string | null;
   name: string | null;
   change: LtftCctChange;
   declarations: {
@@ -135,6 +136,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
   return {
     traineeTisId: ltftObj.traineeTisId ?? "",
     id: ltftObj.id ?? null,
+    formRef: ltftObj.formRef ?? null,
     name: ltftObj.name ?? null,
     change: {
       calculationId: ltftObj.change.calculationId,
@@ -170,7 +172,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       gdcNumber: ltftObj.personalDetails.gdcNumber ?? "",
       publicHealthNumber: ltftObj.personalDetails.publicHealthNumber ?? "",
       skilledWorkerVisaHolder:
-        ltftObj.personalDetails.skilledWorkerVisaHolder ?? false
+        ltftObj.personalDetails.skilledWorkerVisaHolder ?? null
     },
     programmeMembership: {
       id: ltftObj.programmeMembership.id,
@@ -224,6 +226,7 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
   return {
     traineeTisId: ltftDto.traineeTisId,
     id: ltftDto.id ?? "",
+    formRef: ltftDto.formRef ?? "",
     name: ltftDto.name ?? "",
     change: {
       calculationId: ltftDto.change.calculationId,
