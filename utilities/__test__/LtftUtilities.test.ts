@@ -78,7 +78,8 @@ describe("mapLtftObjToDto", () => {
   it("should map reasons correctly", () => {
     expect(ltftDto.reasons).toEqual({
       selected: [],
-      otherDetail: ""
+      otherDetail: "",
+      supportingInformation: null
     });
   });
 
@@ -143,11 +144,13 @@ describe("mapDtoToLtftObj", () => {
     },
     reasons: {
       selected: ["Unique opportunities", "other"],
-      otherDetail: "my other reason 2"
+      otherDetail: "my other reason 2",
+      supportingInformation: "my supporting info"
     },
     status: statusData,
     created: dateCreated,
-    lastModified: dateModified
+    lastModified: dateModified,
+    formRef: "ltft_-1_003"
   });
   it("should map discussions correctly", () => {
     expect(mockLtftObj.tpdName).toEqual("My tpd name");
@@ -161,6 +164,7 @@ describe("mapDtoToLtftObj", () => {
       "other"
     ]);
     expect(mockLtftObj.reasonsOtherDetail).toEqual("my other reason 2");
+    expect(mockLtftObj.supportingInformation).toEqual("my supporting info");
   });
 
   it("should map other properties correctly", () => {

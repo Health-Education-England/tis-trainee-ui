@@ -73,6 +73,7 @@ describe("LtftForm", () => {
     );
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
     cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
+    cy.get('[data-cy="supportingInformation-text-area-input"]').should("exist");
     cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
     cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
     cy.navNext();

@@ -126,6 +126,7 @@ export const mockLtftDraft0: LtftObj = {
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
+  supportingInformation: null,
   status: {
     current: {
       state: "DRAFT",
@@ -201,6 +202,7 @@ export const mockLtftUnsubmitted0: LtftObj = {
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
+  supportingInformation: null,
   status: {
     current: {
       state: "UNSUBMITTED",
@@ -244,7 +246,8 @@ export const mockLtftDto1 = {
   programmeMembership: mockLtftDraft1.programmeMembership,
   reasons: {
     selected: ["Caring responsibilities", "other"],
-    otherDetail: "my other reason"
+    otherDetail: "my other reason",
+    supportingInformation: "My supporting information"
   },
   status: {
     current: {

@@ -63,6 +63,7 @@ describe("LTFT Form View - not editable", () => {
     cy.get('[data-cy="ltftCreated"]').should("exist");
     cy.get('[data-cy="ltftSubmitted"]').should("exist");
     cy.get('[data-cy="ltftRef"]').contains("ltft_-1_001");
+    cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
   });
 });
 
