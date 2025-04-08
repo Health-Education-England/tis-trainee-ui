@@ -104,14 +104,11 @@ const ltftOtherDiscussionsText =
 const ltftDiscussionText3 =
   "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
 
-const ltftReasonsText1 =
-  "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process.";
+export const ltftReasonsText1 =
+  "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
-const ltftReasonsText2 =
-  "Please provide the reason for your Changing hours (LTFT) request. If you have more than one reason, please select multiple reasons.";
-
-const ltftReasonsText3 =
-  "If your reason isn't in the list then please select 'other reason' and give details in the space provided.";
+export const ltftReasonsText2 =
+  "Changing hours (LTFT) requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
 
 const generateTextElement = (texts: string[]) => (
   <span>
@@ -187,7 +184,6 @@ const displayText: DisplayText = {
   ]),
   ltftReasonsInstructions: generateTextElement([
     ltftReasonsText1,
-    ltftReasonsText2,
-    ltftReasonsText3
+    ltftReasonsText2
   ])
 };

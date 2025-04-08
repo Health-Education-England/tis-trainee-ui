@@ -39,7 +39,8 @@ export function FormFieldBuilder({
     isTotal,
     readOnly,
     rows,
-    isMultiSelect
+    isMultiSelect,
+    hint
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
 
@@ -71,6 +72,7 @@ export function FormFieldBuilder({
           isNumberField={isNumberField}
           isTotal={isTotal}
           readOnly={readOnly}
+          hint={hint}
         />
       );
     case "textArea":
@@ -114,6 +116,7 @@ export function FormFieldBuilder({
           arrayName={arrayName}
           dtoName={dtoName}
           isMultiSelect={isMultiSelect}
+          hint={hint}
         />
       );
 

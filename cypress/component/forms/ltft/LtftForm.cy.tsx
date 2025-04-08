@@ -11,6 +11,10 @@ import {
   Field,
   Form
 } from "../../../../components/forms/form-builder/FormBuilder";
+import {
+  ltftReasonsText1,
+  ltftReasonsText2
+} from "../../../../components/forms/form-builder/form-sections/ImportantText";
 
 const mountLtftWithMockData = () => {
   store.dispatch(updatedLtft(mockLtftDraft0));
@@ -66,12 +70,17 @@ describe("LtftForm", () => {
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
     cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
-      "Note: the reason for applying is for reporting purposes only and has no bearing on the decision-making process."
+      ltftReasonsText1
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
-      "If your reason isn't in the list then please select 'other reason' and give details in the space provided."
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").contains(
+      ltftReasonsText2
     );
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
+    cy.get('[data-cy="reasonsSelected-label"]').should("exist");
+    cy.get('[data-cy="reasonsSelected-hint"]').should(
+      "include.text",
+      "You can choose more than one reason and/or 'other reason' if your reason is not listed"
+    );
     cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
     cy.get('[data-cy="supportingInformation-text-area-input"]').should("exist");
     cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
