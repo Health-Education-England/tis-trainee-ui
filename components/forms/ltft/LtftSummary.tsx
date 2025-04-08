@@ -278,6 +278,9 @@ const LtftSummary = ({
                         <th
                           key={header.id}
                           data-cy={`ltft-summary-table-${header.id}`}
+                          style={{
+                            width: header.getSize()
+                          }}
                         >
                           {flexRender(
                             header.column.columnDef.header,

@@ -75,6 +75,9 @@ export const NotificationsTable: React.FC = () => {
                         key={header.id}
                         className="nhsuk-u-padding-left-3"
                         data-cy={`notificationsTable-${header.id}`}
+                        style={{
+                          width: header.getSize()
+                        }}
                       >
                         {flexRender(
                           header.column.columnDef.header,

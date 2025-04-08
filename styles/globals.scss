@@ -843,8 +843,7 @@ ol[type="a"] {
   }
 }
 
-.unread-btn,
-.make-ltft-btn {
+.unread-btn {
   @extend .table-row-btn;
   @extend .hover-active-states;
   background-color: #6c716f;

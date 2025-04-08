@@ -25,6 +25,7 @@ import {
 import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
 import { populateLtftDraft } from "../../../utilities/ltftUtilities";
+import { Button } from "@aws-amplify/ui-react";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -127,7 +128,7 @@ export function CctSavedDraftsTable() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   return (
-                    <th key={header.id}>
+                    <th key={header.id} style={{ width: header.getSize() }}>
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
@@ -198,12 +199,18 @@ function RowLtftActions({
     setIsModalOpen(true);
   };
   return isBetaTester ? (
-    <button
-      className="make-ltft-btn"
+    <Button
       onClick={makeLtftBtnClick}
       data-cy={`make-ltft-btn-${row.id}`}
+      size="small"
+      type="button"
+      style={{
+        minWidth: "18em",
+        maxWidth: "18em",
+        fontWeight: "normal"
+      }}
     >
       Apply for Changing hours (LTFT)
-    </button>
+    </Button>
   ) : null;
 }
