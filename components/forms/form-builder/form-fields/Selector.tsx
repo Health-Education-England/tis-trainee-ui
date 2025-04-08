@@ -6,6 +6,7 @@ import {
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
+import { Hint } from "nhsuk-react-components";
 
 type SelectorProps = {
   name: string;
@@ -17,6 +18,7 @@ type SelectorProps = {
   arrayName?: string;
   dtoName?: string;
   isMultiSelect?: boolean;
+  hint?: string;
 };
 
 export const Selector = ({
@@ -28,7 +30,8 @@ export const Selector = ({
   arrayIndex,
   arrayName,
   dtoName,
-  isMultiSelect
+  isMultiSelect,
+  hint
 }: SelectorProps) => {
   const { handleChange } = useFormContext();
   return (
@@ -36,6 +39,7 @@ export const Selector = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
+      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <Select
         onKeyDown={handleKeyDown}
         options={options}

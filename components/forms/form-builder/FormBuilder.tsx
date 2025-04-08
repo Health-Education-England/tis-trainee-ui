@@ -63,6 +63,7 @@ export type Field = {
   readOnly?: boolean;
   rows?: number;
   isMultiSelect?: boolean;
+  hint?: string;
 };
 export type FormData = {
   [key: string]: any;

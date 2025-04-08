@@ -6,6 +6,7 @@ import {
 import FieldWarningMsg from "../../FieldWarningMsg";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
+import { Hint } from "nhsuk-react-components";
 
 type TextProps = {
   name: string;
@@ -20,6 +21,7 @@ type TextProps = {
   isTotal?: boolean;
   readOnly?: boolean;
   dtoName?: string;
+  hint?: string;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -34,7 +36,8 @@ export const Text: React.FC<TextProps> = ({
   isNumberField,
   isTotal,
   readOnly,
-  dtoName
+  dtoName,
+  hint
 }: TextProps) => {
   const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
     useFormContext();
@@ -43,6 +46,7 @@ export const Text: React.FC<TextProps> = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
+      {hint && <Hint data-cy={`${name}-hint}`}>{hint}</Hint>}
       <input
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}

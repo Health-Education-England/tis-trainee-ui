@@ -78,7 +78,8 @@
               "isMultiSelect": true,
               "optionsKey": "ltftReasons",
               "dependencies": ["reasonsOtherDetail"],
-              "visible": true
+              "visible": true,
+              "hint": "You can choose more than one reason and/or 'other reason' if your reason is not listed."
             },
             {
               "name": "reasonsOtherDetail",
@@ -87,7 +88,8 @@
               "type": "text",
               "visibleIf": ["other"],
               "parent": "reasonsSelected",
-              "visible": false
+              "visible": false,
+              "hint": "Please provide details for your 'other reason'."
             },
             {
               "name": "supportingInformation",
