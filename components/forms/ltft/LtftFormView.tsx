@@ -135,6 +135,12 @@ export const LtftFormView = () => {
                   {dayjs(formData.lastModified).toString()}
                 </SummaryList.Value>
               </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Reference</SummaryList.Key>
+                <SummaryList.Value data-cy="ltftRef">
+                  {formData.formRef}
+                </SummaryList.Value>
+              </SummaryList.Row>
             </SummaryList>
           </>
         )}

@@ -3,19 +3,21 @@ import { LtftObj } from "../redux/slices/ltftSlice";
 export const mockLtftDraftList = [
   {
     id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
-    name: "GP hours reduction",
+    name: "",
     programmeMembershipId: "a6de88b8-de41-48dd-9492-a518f5001176",
     status: "DRAFT",
-    created: "2025-01-1T14:50:36.941Z",
-    lastModified: "2025-01-15T15:50:36.941Z"
+    created: "2025-01-01T14:50:36.941Z",
+    lastModified: "2025-01-15T15:50:36.941Z",
+    formRef: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174000",
-    name: "Programme hours reduction 1",
+    name: "",
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b407",
     status: "DRAFT",
     created: "2024-12-15T14:50:36.941Z",
-    lastModified: "2024-12-15T15:50:36.941Z"
+    lastModified: "2024-12-15T15:50:36.941Z",
+    formRef: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -23,7 +25,8 @@ export const mockLtftDraftList = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "UNSUBMITTED",
     created: "2024-10-15T14:50:36.941Z",
-    lastModified: "2024-10-15T15:50:36.941Z"
+    lastModified: "2024-10-15T15:50:36.941Z",
+    formRef: "ltft_-1_003"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174002",
@@ -31,17 +34,19 @@ export const mockLtftDraftList = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "UNSUBMITTED",
     created: "2024-08-15T14:50:36.941Z",
-    lastModified: "2024-08-15T15:50:36.941Z"
+    lastModified: "2024-08-15T15:50:36.941Z",
+    formRef: "ltft_-1_004"
   }
 ];
 export const mockLtftsList1 = [
   {
     id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
-    name: "GP hours reduction",
+    name: "",
     programmeMembershipId: "a6de88b8-de41-48dd-9492-a518f5001176",
     status: "DRAFT",
     created: "2025-01-01T14:50:36.941Z",
-    lastModified: "2025-01-15T15:50:36.941Z"
+    lastModified: "2025-01-15T15:50:36.941Z",
+    formRef: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174000",
@@ -49,7 +54,8 @@ export const mockLtftsList1 = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b407",
     status: "APPROVED",
     created: "2024-12-15T14:50:36.941Z",
-    lastModified: "2024-12-15T15:50:36.941Z"
+    lastModified: "2024-12-15T15:50:36.941Z",
+    formRef: "ltft_-1_002"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -57,7 +63,8 @@ export const mockLtftsList1 = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "SUBMITTED",
     created: "2024-10-15T14:50:36.941Z",
-    lastModified: "2024-10-15T15:50:36.941Z"
+    lastModified: "2024-10-15T15:50:36.941Z",
+    formRef: "ltft_-1_003"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -65,7 +72,8 @@ export const mockLtftsList1 = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "SUBMITTED",
     created: "2024-09-15T14:50:36.941Z",
-    lastModified: "2024-09-15T15:50:36.941Z"
+    lastModified: "2024-09-15T15:50:36.941Z",
+    formRef: "ltft_-1_004"
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -73,7 +81,8 @@ export const mockLtftsList1 = [
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "WITHDRAWN",
     created: "2024-08-15T14:50:36.941Z",
-    lastModified: "2024-08-15T15:50:36.941Z"
+    lastModified: "2024-08-15T15:50:36.941Z",
+    formRef: "ltft_-1_005"
   }
 ];
 
@@ -139,6 +148,7 @@ export const mockLtftDraft0: LtftObj = {
 export const mockLtftDraft1: LtftObj = {
   ...mockLtftDraft0,
   id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+  formRef: "ltft_-1_001",
   name: "My Programme - Hours Reduction",
   declarations: {
     discussedWithTpd: true,

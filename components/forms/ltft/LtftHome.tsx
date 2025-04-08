@@ -48,7 +48,7 @@ export function LtftHome() {
               ltftSummaryList={draftOrUnsubmittedLtftSummary}
             />
             <Container>
-              <Row>
+              <Row style={{ fontSize: "19px" }}>
                 <Col width="full">
                   To begin a new application{" "}
                   <Link to="/cct" data-cy="cct-link">

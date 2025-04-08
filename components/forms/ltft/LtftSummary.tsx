@@ -110,7 +110,16 @@ const LtftSummary = ({
   }: HeaderContext<LtftSummaryObj, string>) => (
     <TableColumnHeader
       column={column}
-      title="Last modified"
+      title="Updated"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderFormRefHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Reference"
       data-cy={`table-column_${column.id}`}
     />
   );
@@ -150,7 +159,7 @@ const LtftSummary = ({
         onClick={handleBtnClick(label)}
         size="small"
         type="reset"
-        style={additionalStyle}
+        style={{ minWidth: "6em", ...additionalStyle }}
       >
         {label}
       </Button>
@@ -194,6 +203,11 @@ const LtftSummary = ({
       cell: renderDayValue,
       sortingFn: "datetime",
       sortDescFirst: true
+    }),
+    columnHelper.accessor("formRef", {
+      id: "formRef",
+      header: renderFormRefHeader,
+      cell: renderValue
     }),
     columnHelper.accessor("status", {
       id: "status",
@@ -264,6 +278,9 @@ const LtftSummary = ({
                         <th
                           key={header.id}
                           data-cy={`ltft-summary-table-${header.id}`}
+                          style={{
+                            width: header.getSize()
+                          }}
                         >
                           {flexRender(
                             header.column.columnDef.header,

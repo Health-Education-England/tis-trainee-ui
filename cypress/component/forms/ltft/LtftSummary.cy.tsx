@@ -8,8 +8,6 @@ import {
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
 import { MemoryRouter } from "react-router-dom";
-import * as FormBuilderUtilities from "../../../../utilities/FormBuilderUtilities";
-import history from "../../../../components/navigation/history";
 
 describe("LtftSummary Component", () => {
   describe("CURRENT type filtering", () => {
@@ -28,19 +26,23 @@ describe("LtftSummary Component", () => {
     });
 
     it("should sort by lastModified descending by default", () => {
-      cy.get('[data-cy^="ltft-row-"]').eq(0).contains("GP hours reduction");
+      cy.get('[data-cy^="ltft-row-"]')
+        .eq(0)
+        .should("include.text", "Wed, 15 Jan 2025 15:50:36 GMT");
       cy.get('[data-cy^="ltft-row-"]')
         .eq(3)
-        .contains("Programme hours reduction 5");
+        .should("include.text", "Thu, 15 Aug 2024 15:50:36 GMT");
     });
 
     it("should change sort order when clicking column headers", () => {
       const nameSortToggler =
         '[data-cy="ltft-summary-table-name"] > div > .table-header-btn > .nhsuk-u-padding-left-2';
       cy.get(nameSortToggler).click();
-      cy.get('[data-cy^="ltft-row-"]').first().contains("GP hours reduction");
+      cy.get('[data-cy^="ltft-row-"]').first().should("include.text", "");
       cy.get(nameSortToggler).click();
-      cy.get('[data-cy^="ltft-row-"]').last().contains("GP hours reduction");
+      cy.get('[data-cy^="ltft-row-"]')
+        .first()
+        .contains("Programme hours reduction 5");
     });
 
     it("should display DRAFT and UNSUBMITTED filters", () => {
@@ -55,18 +57,16 @@ describe("LtftSummary Component", () => {
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 4);
       cy.get('[data-cy="filterDRAFTLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
-      cy.contains("GP hours reduction").should("not.exist");
+      cy.contains("Wed, 15 Jan 2025 15:50:36 GMT").should("not.exist");
       cy.contains("Programme hours reduction 2").should("exist");
       cy.contains("Programme hours reduction 5").should("exist");
     });
 
     it("should filter table when toggling UNSUBMITTED status", () => {
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 4);
-
       cy.get('[data-cy="filterUNSUBMITTEDLtft"]').click();
-
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
-      cy.contains("GP hours reduction").should("exist");
+      cy.contains("Wed, 15 Jan 2025 15:50:36 GMT").should("exist");
       cy.contains("Programme hours reduction 2").should("not.exist");
       cy.contains("Programme hours reduction 5").should("not.exist");
     });
@@ -121,6 +121,9 @@ describe("LtftSummary Component", () => {
       cy.get('[data-cy="filterSUBMITTEDLtft"]').click();
       cy.get('[data-cy="filterWITHDRAWNLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
+      cy.get('[data-cy^="ltft-row-"]')
+        .last()
+        .should("include.text", "ltft_-1_002");
       cy.contains("Programme hours reduction 1").should("exist");
     });
   });
