@@ -59,6 +59,7 @@ export function populateLtftDraft(
     },
     reasonsSelected: null,
     reasonsOtherDetail: null,
+    supportingInformation: null,
     status: {
       current: {
         state: "DRAFT",
@@ -123,6 +124,7 @@ export type LtftDto = {
   reasons: {
     selected: string[];
     otherDetail?: string;
+    supportingInformation: string | null;
   };
   status: {
     current: StatusInfo;
@@ -184,7 +186,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
     },
     reasons: {
       selected: ltftObj.reasonsSelected || [],
-      otherDetail: ltftObj.reasonsOtherDetail ?? ""
+      otherDetail: ltftObj.reasonsOtherDetail ?? "",
+      supportingInformation: ltftObj.supportingInformation ?? null
     },
     status: {
       current: {
@@ -270,6 +273,7 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
     },
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
+    supportingInformation: ltftDto.reasons.supportingInformation ?? null,
     status: {
       current: {
         state: ltftDto.status.current.state,

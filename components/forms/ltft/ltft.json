@@ -88,6 +88,13 @@
               "visibleIf": ["other"],
               "parent": "reasonsSelected",
               "visible": false
+            },
+            {
+              "name": "supportingInformation",
+              "label": "Please provide any additional information to support your application (if needed).",
+              "placeholder": "type here...",
+              "type": "textArea",
+              "visible": true
             }
           ]
         }

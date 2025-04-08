@@ -95,6 +95,7 @@ export type LtftObj = {
   programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
+  supportingInformation: string | null;
   status: StatusLtft;
   created?: Date | string;
   lastModified?: Date | string;
