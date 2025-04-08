@@ -62,6 +62,7 @@ describe("LTFT Form View - not editable", () => {
     cy.get('[data-cy="ltftName"]').contains("My Programme - Hours Reduction");
     cy.get('[data-cy="ltftCreated"]').should("exist");
     cy.get('[data-cy="ltftSubmitted"]').should("exist");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_-1_001");
   });
 });
 

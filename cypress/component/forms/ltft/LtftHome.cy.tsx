@@ -79,10 +79,13 @@ describe("LtftHome", () => {
         cy.get('[data-cy="filterDRAFTLtft"]').should("be.checked");
         cy.get('[data-cy="filterUNSUBMITTEDLtft"]').should("be.checked");
 
-        // Check first row content
+        // Check first row (DRAFT) content
         cy.get(
           '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_name"]'
-        ).contains("GP hours reduction");
+        ).should("have.text", "");
+        cy.get(
+          '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_formRef"]'
+        ).should("have.text", "");
         cy.get(
           '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_status"] > span'
         ).contains("DRAFT");
@@ -109,6 +112,9 @@ describe("LtftHome", () => {
         cy.get(
           '[data-cy="ltft-summary-table-PREVIOUS"] > tbody > [data-cy="ltft-row-1"] > [data-cy="1_name"]'
         ).contains("Programme hours reduction 2");
+        cy.get(
+          '[data-cy="ltft-summary-table-PREVIOUS"] > tbody > [data-cy="ltft-row-1"] > [data-cy="1_formRef"]'
+        ).contains("ltft_-1_003");
         cy.get(
           '[data-cy="ltft-summary-table-PREVIOUS"] > tbody > [data-cy="ltft-row-1"] > [data-cy="1_status"]'
         ).contains("SUBMITTED");
