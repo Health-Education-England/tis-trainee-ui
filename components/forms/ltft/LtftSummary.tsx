@@ -33,6 +33,9 @@ import {
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { useActionState } from "../../../utilities/hooks/useActionState";
 import { handleLtftSummaryModalSub } from "../../../utilities/ltftUtilities";
+import { ACTION_REASONS } from "../../../utilities/Constants";
+import { Label } from "nhsuk-react-components";
+import InfoTooltip from "../../common/InfoTooltip";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
@@ -132,6 +135,15 @@ const LtftSummary = ({
       data-cy={`table-column_${column.id}`}
     />
   );
+  const renderReasonHeader = ({
+    column
+  }: HeaderContext<LtftSummaryObj, string>) => (
+    <TableColumnHeader
+      column={column}
+      title="Reason"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
 
   const renderValue = (props: { renderValue: () => ReactNode }) => (
     <span>{props.renderValue()}</span>
@@ -139,6 +151,65 @@ const LtftSummary = ({
   const renderDayValue = (props: { renderValue: () => ReactNode }) => (
     <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
   );
+
+  const renderStatusColumnValue = (props: {
+    row: { original: LtftSummaryObj };
+  }) => {
+    return (
+      <>
+        {props.row.original.status}
+        {props.row.original.status === "UNSUBMITTED" &&
+        props.row.original.modifiedByRole ? (
+          <>
+            {" "}
+            by
+            {props.row.original.modifiedByRole === "TRAINEE" ? (
+              <> me</>
+            ) : (
+              " Local Office"
+            )}
+          </>
+        ) : null}
+      </>
+    );
+  };
+
+  const renderReasonColumnValue = (props: {
+    row: { original: LtftSummaryObj };
+  }) => {
+    const handleTooltipClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+    };
+    return (
+      <>
+        {props.row.original.status === "UNSUBMITTED" &&
+        props.row.original.statusReason ? (
+          <>
+            {ACTION_REASONS.UNSUBMIT.find(
+              reason => reason.value === props.row.original.statusReason
+            )?.label || "Other reason"}
+          </>
+        ) : null}
+        {props.row.original.status === "WITHDRAWN" &&
+        props.row.original.statusReason ? (
+          <>
+            {ACTION_REASONS.WITHDRAW.find(
+              reason => reason.value === props.row.original.statusReason
+            )?.label || "Other reason"}
+          </>
+        ) : null}
+        {props.row.original.status === "UNSUBMITTED" &&
+        props.row.original.statusMessage ? (
+          <Label size="s" onClick={handleTooltipClick}>
+            <InfoTooltip
+              tooltipId={`${props.row.original.id}-statusMessage`}
+              content={props.row.original.statusMessage}
+            />
+          </Label>
+        ) : null}
+      </>
+    );
+  };
 
   const renderOperationColumnValue = (props: {
     row: { original: LtftSummaryObj };
@@ -209,10 +280,15 @@ const LtftSummary = ({
       header: renderFormRefHeader,
       cell: renderValue
     }),
-    columnHelper.accessor("status", {
+    columnHelper.display({
       id: "status",
       header: renderStatusHeader,
-      cell: renderValue
+      cell: renderStatusColumnValue
+    }),
+    columnHelper.display({
+      id: "reason",
+      header: renderReasonHeader,
+      cell: renderReasonColumnValue
     }),
     columnHelper.display({
       id: "operations",

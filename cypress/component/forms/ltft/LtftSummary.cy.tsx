@@ -76,6 +76,34 @@ describe("LtftSummary Component", () => {
       cy.get('[data-cy="filterUNSUBMITTEDLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("not.exist");
     });
+
+    it("should show modified by role on UNSUBMITTED application", () => {
+      cy.get('[data-cy="2_status"]').should(
+        "have.text",
+        "UNSUBMITTED by Local Office"
+      );
+      cy.get('[data-cy="3_status"]').should("have.text", "UNSUBMITTED by me");
+    });
+
+    it("should show reason and message on UNSUBMITTED application", () => {
+      cy.get('[data-cy="2_reason"]').should(
+        "contain.text",
+        "Change WTE percentage"
+      );
+      cy.get('[data-cy="2_reason"]')
+        .find('[data-cy$="-statusMessage-icon"]')
+        .should("not.exist");
+      cy.get('[data-cy="3_reason"]')
+        .should("contain.text", "Other reason")
+        .find('[data-cy$="-statusMessage-icon"]')
+        .click();
+      cy.get(".tooltipContent")
+        .should("be.visible")
+        .and(
+          "contain.text",
+          "Mock status message with long long long paragraph"
+        );
+    });
   });
 
   describe("PREVIOUS type filtering", () => {

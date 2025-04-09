@@ -24,6 +24,9 @@ export const mockLtftDraftList = [
     name: "Programme hours reduction 2",
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "UNSUBMITTED",
+    statusReason: "changePercentage",
+    statusMessage: "",
+    modifiedByRole: "ADMIN",
     created: "2024-10-15T14:50:36.941Z",
     lastModified: "2024-10-15T15:50:36.941Z",
     formRef: "ltft_-1_003"
@@ -33,6 +36,9 @@ export const mockLtftDraftList = [
     name: "Programme hours reduction 5",
     programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
     status: "UNSUBMITTED",
+    statusReason: "other",
+    statusMessage: "Mock status message with long long long paragraph",
+    modifiedByRole: "TRAINEE",
     created: "2024-08-15T14:50:36.941Z",
     lastModified: "2024-08-15T15:50:36.941Z",
     formRef: "ltft_-1_004"
