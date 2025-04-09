@@ -9,6 +9,9 @@ export type LtftSummaryObj = {
   programmeMembershipId: string;
   formRef: string;
   status: string;
+  statusReason: string;
+  statusMessage: string;
+  modifiedByRole: string;
   created: string;
   lastModified: string;
 };

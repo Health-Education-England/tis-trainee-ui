@@ -87,7 +87,7 @@ describe("LtftHome", () => {
           '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_formRef"]'
         ).should("have.text", "");
         cy.get(
-          '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_status"] > span'
+          '[data-cy="ltft-summary-table-CURRENT"] > tbody > [data-cy="ltft-row-0"] > [data-cy="0_status"]'
         ).contains("DRAFT");
 
         // Test deletion modal
