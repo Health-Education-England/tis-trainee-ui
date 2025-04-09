@@ -187,7 +187,7 @@ const LtftSummary = ({
           <>
             {ACTION_REASONS.UNSUBMIT.find(
               reason => reason.value === props.row.original.statusReason
-            )?.label || "Other reason"}
+            )?.label ?? "Other reason"}
           </>
         ) : null}
         {props.row.original.status === "WITHDRAWN" &&
@@ -195,7 +195,7 @@ const LtftSummary = ({
           <>
             {ACTION_REASONS.WITHDRAW.find(
               reason => reason.value === props.row.original.statusReason
-            )?.label || "Other reason"}
+            )?.label ?? "Other reason"}
           </>
         ) : null}
         {props.row.original.status === "UNSUBMITTED" &&
