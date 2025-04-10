@@ -179,7 +179,7 @@ const Profile = () => {
                       className="internal-link"
                       data-cy={`updateGmcLink`}
                       onClick={handleChangeLinkClick}
-                      variation="link"
+                      size="small"
                     >
                       change
                     </Button>

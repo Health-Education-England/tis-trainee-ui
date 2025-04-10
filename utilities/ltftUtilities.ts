@@ -12,6 +12,7 @@ import store from "../redux/store/store";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 import { ProfileSType } from "./ProfileUtilities";
+import * as yup from "yup";
 
 export function populateLtftDraft(
   cctSnapshot: CctCalculation,
@@ -334,3 +335,20 @@ export async function handleLtftSummaryModalSub(
   }
   return false;
 }
+
+export const validateInput = <T>(
+  value: T,
+  schema: yup.SchemaOf<T>,
+  setError: React.Dispatch<React.SetStateAction<string | null>>
+): boolean => {
+  try {
+    schema.validateSync(value);
+    setError(null);
+    return true;
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      setError(error.message);
+    }
+    return false;
+  }
+};

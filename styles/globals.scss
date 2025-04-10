@@ -1130,3 +1130,7 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
   margin-left: 3rem;
   padding-left: 0.25rem;
 }
+
+.date-field {
+  max-width: 8em;
+}
