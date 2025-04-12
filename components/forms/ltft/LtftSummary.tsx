@@ -92,7 +92,7 @@ const LtftSummary = ({
 
   const renderNameHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Name"
@@ -101,7 +101,7 @@ const LtftSummary = ({
   );
   const renderCreatedHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Created"
@@ -110,7 +110,7 @@ const LtftSummary = ({
   );
   const renderLastModifiedHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Updated"
@@ -119,7 +119,7 @@ const LtftSummary = ({
   );
   const renderFormRefHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Reference"
@@ -128,7 +128,7 @@ const LtftSummary = ({
   );
   const renderStatusHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Status"
@@ -137,7 +137,7 @@ const LtftSummary = ({
   );
   const renderReasonHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Reason"
