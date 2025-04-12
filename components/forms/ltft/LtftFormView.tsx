@@ -20,7 +20,7 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import Declarations from "../form-builder/Declarations";
-import { CctCalcSummaryDetails } from "../cct/CctCalcSummary";
+import { CctCalcSummaryDetails } from "../cct/CctCalcSummaryDetails";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
@@ -34,6 +34,7 @@ import ErrorPage from "../../common/ErrorPage";
 import dayjs from "dayjs";
 import { ActionModal } from "../../common/ActionModal";
 import { useActionState } from "../../../utilities/hooks/useActionState";
+import ScrollToTop from "../../common/ScrollToTop";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -58,6 +59,7 @@ export const LtftFormView = () => {
   const formJson = ltftJson as FormType;
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const ltftFormStatus = formData?.status?.current?.state;
 
   const handleSubClick = async (values: { name: string }) => {
     setAction("Submit", "", formJson.name);
@@ -144,7 +146,10 @@ export const LtftFormView = () => {
             </SummaryList>
           </>
         )}
-        <CctCalcSummaryDetails viewedCalc={cctSnapshot} />
+        <CctCalcSummaryDetails
+          viewedCalc={cctSnapshot}
+          ltftFormStatus={ltftFormStatus}
+        />
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
@@ -243,6 +248,7 @@ function LtftViewWrapper({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+      <ScrollToTop />
       <BackLink
         className="back-link"
         data-cy="backLink-to-ltft-home"
