@@ -228,26 +228,14 @@ export function CctCalcSummaryDetails({
                         <SummaryList.Key>Proposed WTE</SummaryList.Key>
                         <SummaryList.Value data-cy="cct-view-new-wte">
                           {editableFields.wte ? (
-                            <div
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <TextInputField
-                                name="wte"
-                                label="Proposed WTE"
-                                width={2}
-                                data-cy="wte-input"
-                                hidelabel
-                              />
-                              <span
-                                style={{
-                                  marginBottom: "auto",
-                                  marginTop: "0.5rem",
-                                  marginLeft: "0.25rem"
-                                }}
-                              >
-                                %
-                              </span>
-                            </div>
+                            <TextInputField
+                              name="wte"
+                              label="Proposed WTE"
+                              width={2}
+                              data-cy="wte-input"
+                              hidelabel
+                              inputSymbol="%"
+                            />
                           ) : (
                             <span data-cy="wte-readonly">
                               {displayValues.wte}

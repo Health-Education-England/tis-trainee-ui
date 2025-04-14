@@ -21,6 +21,7 @@ interface Props {
   isNumberField?: boolean;
   isTotal?: boolean;
   maxLength?: number;
+  inputSymbol?: string;
 }
 
 const TextInputField: FunctionComponent<Props> = props => {
@@ -29,35 +30,61 @@ const TextInputField: FunctionComponent<Props> = props => {
   const setFieldWidth = (valueLength: number | undefined) => {
     return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
   };
-  const { hidelabel, isNumberField, width, isTotal, maxLength, ...rest } =
-    props;
+  const {
+    hidelabel,
+    isNumberField,
+    width,
+    isTotal,
+    maxLength,
+    inputSymbol,
+    ...rest
+  } = props;
   const setCorrectLabelClass = () => {
     if (error) {
       return "nhsuk-form-group nhsuk-form-group--error";
     }
     return props.hidelabel ? "hide-label nhsuk-form-group" : "nhsuk-form-group";
   };
+  const showInputSymbol = () => {
+    if (error) return null;
+    if (inputSymbol) {
+      return (
+        <span
+          style={{
+            marginLeft: "2px"
+          }}
+          data-cy="input-symbol"
+        >
+          {inputSymbol}
+        </span>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className={setCorrectLabelClass()}>
-      <FormElement
-        onKeyDown={handleKeyDown}
-        onInput={e => handleNumberInput(isNumberField, e)}
-        width={width ?? setFieldWidth(field.value?.length)}
-        disabled={props.disabled}
-        error={error ?? ""}
-        id={props.id ?? props.name}
-        onBlur={field.onBlur}
-        onChange={field.onChange}
-        value={field.value ?? ""}
-        maxLength={maxLength}
-        {...rest}
-        readOnly={props.readOnly}
-        min="1920-01-01"
-        max="2119-12-31"
-        data-cy={props.name}
-        className={isTotal ? "total-field" : ""}
-      />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <FormElement
+          onKeyDown={handleKeyDown}
+          onInput={e => handleNumberInput(isNumberField, e)}
+          width={width ?? setFieldWidth(field.value?.length)}
+          disabled={props.disabled}
+          error={error ?? ""}
+          id={props.id ?? props.name}
+          onBlur={field.onBlur}
+          onChange={field.onChange}
+          value={field.value ?? ""}
+          maxLength={maxLength}
+          {...rest}
+          readOnly={props.readOnly}
+          min="1920-01-01"
+          max="2119-12-31"
+          data-cy={props.name}
+          className={isTotal ? "total-field" : ""}
+        />
+        {showInputSymbol()}
+      </div>
       <InputFooterLabel label={props.footer ?? ""} />
     </div>
   );

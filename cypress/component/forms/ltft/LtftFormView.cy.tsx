@@ -163,6 +163,7 @@ describe("LTFT Form View - unsubmitted", () => {
     );
     cy.get('[data-cy="cct-recalculate-btn"]').should("not.exist");
     cy.get('[data-cy="edit-btn_date"]').should("include.text", "Edit").click();
+    cy.get('[data-cy="input-symbol"]').should("not.exist");
     cy.get('[data-cy="cct-recalculate-btn"]').should("exist");
     cy.get('[data-cy="changeDate-readonly"]').should("not.exist");
     cy.get('[data-cy="changeDate"]')
@@ -197,10 +198,14 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="wte-readonly"]').should("include.text", "80%");
     cy.get('[data-cy="edit-btn_wte"]').should("include.text", "Edit").click();
     cy.get('[data-cy="wte-readonly"]').should("not.exist");
+    cy.get('[data-cy="input-symbol"]')
+      .should("exist")
+      .should("include.text", "%");
     cy.get('[data-cy="wte"]').clear().type("100");
     cy.get("#wte--error-message")
       .should("exist")
       .should("include.text", "WTE values must be different");
+    cy.get('[data-cy="input-symbol"]').should("not.exist");
     cy.get('[data-cy="cct-recalculate-btn"]').should("be.disabled");
     cy.get('[data-cy="wte"]').clear().type("60");
     cy.get("#wte--error-message").should("not.exist");
