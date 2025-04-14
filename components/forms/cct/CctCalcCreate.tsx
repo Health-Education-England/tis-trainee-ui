@@ -312,14 +312,7 @@ export function CctCalcCreate() {
                               <div>
                                 {values.changes.map((_, index: number) => (
                                   <Fragment key={index}>
-                                    <div
-                                      style={{
-                                        background: "#D8DDE0",
-                                        border: "solid grey 4px",
-                                        padding: "16px",
-                                        marginBottom: "16px"
-                                      }}
-                                    >
+                                    <div className="cct-calc-container">
                                       <Row>
                                         <Col width="one-quarter">
                                           <SelectInputField
