@@ -74,10 +74,13 @@ export async function loadTheSavedForm(
     await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
   } else if (pathName === "/formr-b") {
     await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
-  } else if (pathName === "/ltft") {
+  } else if (pathName === "/ltft" || pathName === "/ltft/confirm") {
     await store.dispatch(loadSavedLtft(id));
   }
-  history.push(`${pathName}/create`);
+  if (pathName === "/ltft/confirm") {
+    store.dispatch(updatedCanEditLtft(true));
+    history.push(pathName);
+  } else history.push(`${pathName}/create`);
 }
 
 // This is used in FormBuilder to set the initial page value (needed because when reviewing/editing mutli-page form needs to take user to the correct page)

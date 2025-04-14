@@ -115,9 +115,13 @@ export const LtftFormView = () => {
   if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
-        {!canEditStatus && (
+        {(!canEditStatus || ltftFormStatus === "UNSUBMITTED") && (
           <>
-            <h2>Submitted application</h2>
+            <h2>
+              {`${ltftFormStatus.charAt(0)}${ltftFormStatus
+                .slice(1)
+                .toLowerCase()} application`}
+            </h2>
             <SummaryList>
               <SummaryList.Row>
                 <SummaryList.Key>Name</SummaryList.Key>
