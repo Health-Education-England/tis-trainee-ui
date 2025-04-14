@@ -160,8 +160,8 @@ export function CctCalcSummaryDetails({
                 <Row>
                   <Col width="full">
                     {ltftFormStatus === "UNSUBMITTED" && (
-                      <WarningCallout>
-                        <WarningCallout.Label>
+                      <WarningCallout data-cy="cct-recalc-warning-callout">
+                        <WarningCallout.Label data-cy="cct-recalc-warning-label">
                           Recalculating your New completion date
                         </WarningCallout.Label>
                         <p>
@@ -171,8 +171,8 @@ export function CctCalcSummaryDetails({
                           your <strong>New completion date</strong>.
                         </p>
                         <p>
-                          Please note: Any updated values are not saved until
-                          you 're-submit' the application (see below).
+                          {`Please note: Any updated values are not saved until
+                          you 're-submit' the application (see below).`}
                         </p>
                       </WarningCallout>
                     )}
@@ -205,7 +205,9 @@ export function CctCalcSummaryDetails({
                               hidelabel
                             />
                           ) : (
-                            <span>{displayValues.changeDate}</span>
+                            <span data-cy="changeDate-readonly">
+                              {displayValues.changeDate}
+                            </span>
                           )}
                         </SummaryList.Value>
                         {ltftFormStatus === "UNSUBMITTED" && (
@@ -215,6 +217,7 @@ export function CctCalcSummaryDetails({
                               size="small"
                               style={{ minWidth: "9em" }}
                               onClick={() => toggleEditMode("changeDate")}
+                              data-cy="edit-btn_date"
                             >
                               {editableFields.changeDate ? "Revert" : "Edit"}
                             </BtnAmplify>
@@ -246,7 +249,9 @@ export function CctCalcSummaryDetails({
                               </span>
                             </div>
                           ) : (
-                            <span>{displayValues.wte}</span>
+                            <span data-cy="wte-readonly">
+                              {displayValues.wte}
+                            </span>
                           )}
                         </SummaryList.Value>
                         {ltftFormStatus === "UNSUBMITTED" && (
@@ -256,6 +261,7 @@ export function CctCalcSummaryDetails({
                               size="small"
                               style={{ minWidth: "9em" }}
                               onClick={() => toggleEditMode("wte")}
+                              data-cy="edit-btn_wte"
                             >
                               {editableFields.wte ? "Revert" : "Edit"}
                             </BtnAmplify>

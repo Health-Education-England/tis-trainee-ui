@@ -123,6 +123,7 @@ describe("LTFT Form View - editable & saved name", () => {
 
   it("should render the saved name in the form", () => {
     cy.get("#ltftName").should("have.value", "My Programme - Hours Reduction");
+    cy.get('[data-cy="cct-recalc-warning-label"]').should("not.exist");
   });
 });
 
@@ -131,7 +132,81 @@ describe("LTFT Form View - unsubmitted", () => {
     mountLtftViewWithMockData(mockLtftUnsubmitted0);
   });
 
-  it("should render the correct buttons", () => {
+  it("should render the editable section and correct buttons", () => {
+    cy.get('[data-cy="UNSUBMITTED-header"]')
+      .should("exist")
+      .contains("Unsubmitted application");
+    cy.get('[data-cy="ltftName"]').contains("my Unsubmitted LTFT");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
+
+    // recalc section
+    cy.get('[data-cy="cct-recalc-warning-label"]').contains(
+      "Recalculating your New completion date"
+    );
+    cy.get('[data-cy="cct-recalc-warning-callout"] > p')
+      .first()
+      .should(
+        "include.text",
+        "If required, please edit the Change date and/or Proposed WTE"
+      );
+    cy.get('[data-cy="cct-recalc-warning-callout"] > p')
+      .last()
+      .should(
+        "include.text",
+        "Please note: Any updated values are not saved until"
+      );
+
+    // changeDate field edit
+    cy.get('[data-cy="changeDate-readonly"]').should(
+      "include.text",
+      "01/01/2027"
+    );
+    cy.get('[data-cy="cct-recalculate-btn"]').should("not.exist");
+    cy.get('[data-cy="edit-btn_date"]').should("include.text", "Edit").click();
+    cy.get('[data-cy="cct-recalculate-btn"]').should("exist");
+    cy.get('[data-cy="changeDate-readonly"]').should("not.exist");
+    cy.get('[data-cy="changeDate"]')
+      .should("exist")
+      .should("have.value", "2027-01-01");
+    cy.get('[data-cy="changeDate"]').type("2022-06-30");
+    cy.get("#changeDate--error-message")
+      .should("exist")
+      .should("include.text", "Change date cannot be before today");
+
+    // revert changeDate field
+    cy.get('[data-cy="edit-btn_date"]')
+      .should("include.text", "Revert")
+      .click();
+    cy.get("#changeDate--error-message").should("not.exist");
+    cy.get('[data-cy="changeDate"]').should("not.exist");
+    cy.get('[data-cy="changeDate-readonly"]')
+      .should("exist")
+      .should("include.text", "01/01/2027");
+
+    // edit changeDate again
+    cy.get('[data-cy="edit-btn_date"]').should("include.text", "Edit").click();
+    cy.get('[data-cy="changeDate-readonly"]').should("not.exist");
+    cy.get('[data-cy="changeDate"]')
+      .should("exist")
+      .should("have.value", "2022-06-30");
+    cy.get("#changeDate--error-message").should("exist");
+    cy.get('[data-cy="changeDate"]').type("2027-06-30");
+    cy.get("#changeDate--error-message").should("not.exist");
+
+    // Wte field edit
+    cy.get('[data-cy="wte-readonly"]').should("include.text", "80%");
+    cy.get('[data-cy="edit-btn_wte"]').should("include.text", "Edit").click();
+    cy.get('[data-cy="wte-readonly"]').should("not.exist");
+    cy.get('[data-cy="wte"]').clear().type("100");
+    cy.get("#wte--error-message")
+      .should("exist")
+      .should("include.text", "WTE values must be different");
+    cy.get('[data-cy="cct-recalculate-btn"]').should("be.disabled");
+    cy.get('[data-cy="wte"]').clear().type("60");
+    cy.get("#wte--error-message").should("not.exist");
+    cy.get('[data-cy="cct-recalculate-btn"]').should("not.be.disabled").click();
+    cy.get('[data-cy="saved-cct-date"]').should("include.text", "04/05/2028");
+
     cy.get('[data-cy="BtnSubmit"]').should("exist").contains("Re-submit");
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");

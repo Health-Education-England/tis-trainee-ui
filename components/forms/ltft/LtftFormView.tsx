@@ -117,7 +117,7 @@ export const LtftFormView = () => {
       <LtftViewWrapper>
         {(!canEditStatus || ltftFormStatus === "UNSUBMITTED") && (
           <>
-            <h2>
+            <h2 data-cy={`${ltftFormStatus}-header`}>
               {`${ltftFormStatus.charAt(0)}${ltftFormStatus
                 .slice(1)
                 .toLowerCase()} application`}
