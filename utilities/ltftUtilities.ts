@@ -1,14 +1,16 @@
 import { ReasonMsgObj } from "../components/common/ActionModal";
 import { PersonalDetails } from "../models/PersonalDetails";
-import { CctCalculation } from "../redux/slices/cctSlice";
+import { CctCalculation, CctChangeType } from "../redux/slices/cctSlice";
 import {
   LtftCctChange,
   LtftObj,
   StatusInfo,
   unsubmitLtftForm,
+  updatedLtft,
   withdrawLtftForm
 } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
+import { calcLtftChange } from "./CctUtilities";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 import { ProfileSType } from "./ProfileUtilities";
@@ -334,3 +336,29 @@ export async function handleLtftSummaryModalSub(
   }
   return false;
 }
+
+export const recalculateCctDate = (
+  endDate: Date | string,
+  currentWte: number,
+  changeDateValue: string,
+  wteValue: string
+): void => {
+  const updatedCompletionDate = calcLtftChange(endDate, currentWte, {
+    type: "LTFT",
+    startDate: changeDateValue,
+    wte: Number(wteValue) / 100
+  } as CctChangeType);
+
+  const currentLtftData = store.getState().ltft.formData;
+  const updatedLtftData = {
+    ...currentLtftData,
+    change: {
+      ...currentLtftData.change,
+      startDate: changeDateValue,
+      wte: Number(wteValue) / 100,
+      cctDate: updatedCompletionDate
+    }
+  };
+
+  store.dispatch(updatedLtft(updatedLtftData));
+};

@@ -80,11 +80,15 @@ const LtftSummary = ({
     }));
   };
 
-  const handleClick = (id: string) => {
+  const handleClick = (rowOb: LtftSummaryObj) => {
     if (ltftSummaryType === "CURRENT") {
-      loadTheSavedForm("/ltft", id ?? "", history);
+      loadTheSavedForm(
+        rowOb.status === "UNSUBMITTED" ? "/ltft/confirm" : "/ltft",
+        rowOb.id ?? "",
+        history
+      );
     } else if (ltftSummaryType === "PREVIOUS") {
-      history.push(`/ltft/${id}`);
+      history.push(`/ltft/${rowOb.id}`);
     }
   };
 
@@ -92,7 +96,7 @@ const LtftSummary = ({
 
   const renderNameHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Name"
@@ -101,7 +105,7 @@ const LtftSummary = ({
   );
   const renderCreatedHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Created"
@@ -110,7 +114,7 @@ const LtftSummary = ({
   );
   const renderLastModifiedHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Updated"
@@ -119,7 +123,7 @@ const LtftSummary = ({
   );
   const renderFormRefHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Reference"
@@ -128,7 +132,7 @@ const LtftSummary = ({
   );
   const renderStatusHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Status"
@@ -137,7 +141,7 @@ const LtftSummary = ({
   );
   const renderReasonHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Reason"
@@ -372,7 +376,7 @@ const LtftSummary = ({
                     return (
                       <tr
                         className="table-row"
-                        onClick={() => handleClick(row.original.id)}
+                        onClick={() => handleClick(row.original)}
                         key={row.id}
                         data-cy={`ltft-row-${row.id}`}
                       >

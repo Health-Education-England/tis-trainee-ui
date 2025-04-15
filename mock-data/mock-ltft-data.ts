@@ -170,6 +170,8 @@ export const mockLtftDraft1: LtftObj = {
 
 export const mockLtftUnsubmitted0: LtftObj = {
   traineeTisId: "4",
+  name: "my Unsubmitted LTFT",
+  formRef: "ltft_4_001",
   change: {
     calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     cctDate: "2028-04-02",
