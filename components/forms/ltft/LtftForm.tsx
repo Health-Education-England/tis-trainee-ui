@@ -4,6 +4,7 @@ import ErrorPage from "../../common/ErrorPage";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
 import { FormProvider } from "../form-builder/FormContext";
 import ltftJson from "./ltft.json";
+import { LtftStatusDetails } from "./LtftStatusDetails";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
 export function LtftForm() {
@@ -49,6 +50,7 @@ export function LtftForm() {
   return formData?.declarations?.discussedWithTpd ? (
     <div>
       <h2>Main application form</h2>
+      <LtftStatusDetails {...formData}></LtftStatusDetails>
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}

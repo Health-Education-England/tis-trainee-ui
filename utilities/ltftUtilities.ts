@@ -9,6 +9,7 @@ import {
   withdrawLtftForm
 } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
+import { ACTION_REASONS } from "./Constants";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 import { ProfileSType } from "./ProfileUtilities";
@@ -333,4 +334,24 @@ export async function handleLtftSummaryModalSub(
     );
   }
   return false;
+}
+export function getStatusReasonLabel(
+  status: string,
+  statusReason: string
+): string {
+  if (status === "UNSUBMITTED" && statusReason) {
+    return (
+      ACTION_REASONS.UNSUBMIT.find(reason => reason.value === statusReason)
+        ?.label ?? "Other reason"
+    );
+  }
+
+  if (status === "WITHDRAWN" && statusReason) {
+    return (
+      ACTION_REASONS.WITHDRAW.find(reason => reason.value === statusReason)
+        ?.label ?? "Other reason"
+    );
+  }
+
+  return "";
 }

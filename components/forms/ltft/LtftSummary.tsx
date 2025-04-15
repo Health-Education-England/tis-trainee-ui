@@ -128,7 +128,7 @@ const LtftSummary = ({
   );
   const renderStatusHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Status"
@@ -137,7 +137,7 @@ const LtftSummary = ({
   );
   const renderReasonHeader = ({
     column
-  }: HeaderContext<LtftSummaryObj, string>) => (
+  }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
       title="Reason"
@@ -198,7 +198,8 @@ const LtftSummary = ({
             )?.label ?? "Other reason"}
           </>
         ) : null}
-        {props.row.original.status === "UNSUBMITTED" &&
+        {(props.row.original.status === "UNSUBMITTED" ||
+          props.row.original.status === "WITHDRAWN") &&
         props.row.original.statusMessage ? (
           <Label size="s" onClick={handleTooltipClick}>
             <InfoTooltip
