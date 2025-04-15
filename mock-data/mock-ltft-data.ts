@@ -215,13 +215,13 @@ export const mockLtftUnsubmitted0: LtftObj = {
     current: {
       state: "UNSUBMITTED",
       detail: {
-        reason: "",
-        message: ""
+        reason: "changePercentage",
+        message: "status reason message"
       },
       modifiedBy: {
-        name: "",
-        email: "",
-        role: ""
+        name: "Admin Name",
+        email: "admin@nhs.net",
+        role: "ADMIN"
       },
       timestamp: "",
       revision: 0

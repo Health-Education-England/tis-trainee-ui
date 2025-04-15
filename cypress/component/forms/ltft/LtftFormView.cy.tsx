@@ -56,14 +56,15 @@ describe("LTFT Form View - not editable", () => {
     cy.get('[data-cy="notGuaranteed"]')
       .should("be.checked")
       .should("have.attr", "readonly");
+    cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
     cy.get('[data-cy="BtnSubmit"]').should("not.exist");
     cy.get('[data-cy="BtnSaveDraft"]').should("not.exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
-    cy.get('[data-cy="ltftName"]').contains("My Programme - Hours Reduction");
-    cy.get('[data-cy="ltftCreated"]').should("exist");
-    cy.get('[data-cy="ltftSubmitted"]').should("exist");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_-1_001");
-    cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
+    // status details section should not exist in DRAFT
+    cy.get('[data-cy="ltftName"]').should("not.exist");
+    cy.get('[data-cy="ltftCreated"]').should("not.exist");
+    cy.get('[data-cy="ltftModified"]').should("not.exist");
+    cy.get('[data-cy="ltftRef"]').should("not.exist");
   });
 });
 
@@ -133,11 +134,20 @@ describe("LTFT Form View - unsubmitted", () => {
   });
 
   it("should render the editable section and correct buttons", () => {
+    // status details section
     cy.get('[data-cy="UNSUBMITTED-header"]')
       .should("exist")
       .contains("Unsubmitted application");
     cy.get('[data-cy="ltftName"]').contains("my Unsubmitted LTFT");
+    cy.get('[data-cy="ltftCreated"]').should("exist");
+    cy.get('[data-cy="ltftModified"]').should("exist");
+    cy.get('[data-cy="ltftModifiedBy"]').contains(
+      "Admin: Admin Name (admin@nhs.net)"
+    );
+    cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
+    cy.get('[data-cy="ltftMessage"]').contains("status reason message");
     cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
+    cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
 
     // recalc section
     cy.get('[data-cy="cct-recalc-warning-label"]').contains(
