@@ -7,13 +7,13 @@ import {
   selectAllSubmittedforms,
   updatedFormsRefreshNeeded
 } from "../../redux/slices/formsSlice";
-import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import FormsListBtn from "../../components/forms/FormsListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "./StartOverButton";
 import { FormName } from "./form-builder/FormBuilder";
+import ErrorPage from "../common/ErrorPage";
 
 const CreateList = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ const CreateList = () => {
     ? submittedListDesc[0].submissionDate
     : null;
   const formRListStatus = useAppSelector(state => state.forms?.status);
-  const featFlagStatus = useAppSelector(state => state.featureFlags.status);
+
   const needFormsRefresh = useAppSelector(
     state => state.forms?.formsRefreshNeeded
   );
@@ -37,16 +37,13 @@ const CreateList = () => {
     dispatch(updatedFormsRefreshNeeded(false));
   }, [dispatch, pathname, needFormsRefresh]);
 
-  useEffect(() => {
-    dispatch(fetchFeatureFlags());
-  }, [dispatch]);
-
-  let content: JSX.Element = <></>;
-
-  if (formRListStatus === "loading" || featFlagStatus === "loading")
-    content = <Loading />;
-  if (formRListStatus === "succeeded" && featFlagStatus === "succeeded")
-    content = (
+  if (formRListStatus === "loading") return <Loading />;
+  if (formRListStatus === "failed")
+    return (
+      <ErrorPage message="There was a problem loading your saved forms. Please try reloading them by refreshing the page." />
+    );
+  if (formRListStatus === "succeeded")
+    return (
       <>
         <ScrollTo />
         <br />
@@ -73,7 +70,7 @@ const CreateList = () => {
         />
       </>
     );
-  return content;
+  return null;
 };
 
 export default CreateList;
