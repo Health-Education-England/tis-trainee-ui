@@ -35,6 +35,7 @@ import dayjs from "dayjs";
 import { ActionModal } from "../../common/ActionModal";
 import { useActionState } from "../../../utilities/hooks/useActionState";
 import ScrollToTop from "../../common/ScrollToTop";
+import { LtftStatusDetails } from "./LtftStatusDetails";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -115,41 +116,7 @@ export const LtftFormView = () => {
   if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
-        {(!canEditStatus || ltftFormStatus === "UNSUBMITTED") && (
-          <>
-            <h2 data-cy={`${ltftFormStatus}-header`}>
-              {`${ltftFormStatus.charAt(0)}${ltftFormStatus
-                .slice(1)
-                .toLowerCase()} application`}
-            </h2>
-            <SummaryList>
-              <SummaryList.Row>
-                <SummaryList.Key>Name</SummaryList.Key>
-                <SummaryList.Value data-cy="ltftName">
-                  {formData.name}
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key>Created</SummaryList.Key>
-                <SummaryList.Value data-cy="ltftCreated">
-                  {dayjs(formData.created).toString()}
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key>Submitted</SummaryList.Key>
-                <SummaryList.Value data-cy="ltftSubmitted">
-                  {dayjs(formData.lastModified).toString()}
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key>Reference</SummaryList.Key>
-                <SummaryList.Value data-cy="ltftRef">
-                  {formData.formRef}
-                </SummaryList.Value>
-              </SummaryList.Row>
-            </SummaryList>
-          </>
-        )}
+        <LtftStatusDetails {...formData}></LtftStatusDetails>
         <CctCalcSummaryDetails
           viewedCalc={cctSnapshot}
           ltftFormStatus={ltftFormStatus}

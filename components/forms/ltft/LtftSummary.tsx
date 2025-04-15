@@ -32,7 +32,10 @@ import {
 } from "../../common/ActionModal";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { useActionState } from "../../../utilities/hooks/useActionState";
-import { handleLtftSummaryModalSub } from "../../../utilities/ltftUtilities";
+import {
+  getStatusReasonLabel,
+  handleLtftSummaryModalSub
+} from "../../../utilities/ltftUtilities";
 import { ACTION_REASONS } from "../../../utilities/Constants";
 import { Label } from "nhsuk-react-components";
 import InfoTooltip from "../../common/InfoTooltip";
@@ -186,23 +189,12 @@ const LtftSummary = ({
     };
     return (
       <>
-        {props.row.original.status === "UNSUBMITTED" &&
-        props.row.original.statusReason ? (
-          <>
-            {ACTION_REASONS.UNSUBMIT.find(
-              reason => reason.value === props.row.original.statusReason
-            )?.label ?? "Other reason"}
-          </>
-        ) : null}
-        {props.row.original.status === "WITHDRAWN" &&
-        props.row.original.statusReason ? (
-          <>
-            {ACTION_REASONS.WITHDRAW.find(
-              reason => reason.value === props.row.original.statusReason
-            )?.label ?? "Other reason"}
-          </>
-        ) : null}
-        {props.row.original.status === "UNSUBMITTED" &&
+        {getStatusReasonLabel(
+          props.row.original.status,
+          props.row.original.statusReason
+        )}
+        {(props.row.original.status === "UNSUBMITTED" ||
+          props.row.original.status === "WITHDRAWN") &&
         props.row.original.statusMessage ? (
           <Label size="s" onClick={handleTooltipClick}>
             <InfoTooltip

@@ -11,6 +11,7 @@ import {
 } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
 import { calcLtftChange } from "./CctUtilities";
+import { ACTION_REASONS } from "./Constants";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 import { ProfileSType } from "./ProfileUtilities";
@@ -362,3 +363,24 @@ export const recalculateCctDate = (
 
   store.dispatch(updatedLtft(updatedLtftData));
 };
+
+export function getStatusReasonLabel(
+  status: string,
+  statusReason: string
+): string {
+  if (status === "UNSUBMITTED" && statusReason) {
+    return (
+      ACTION_REASONS.UNSUBMIT.find(reason => reason.value === statusReason)
+        ?.label ?? "Other reason"
+    );
+  }
+
+  if (status === "WITHDRAWN" && statusReason) {
+    return (
+      ACTION_REASONS.WITHDRAW.find(reason => reason.value === statusReason)
+        ?.label ?? "Other reason"
+    );
+  }
+
+  return "";
+}
