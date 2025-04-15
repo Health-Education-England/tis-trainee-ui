@@ -16,7 +16,6 @@ import {
   Col,
   Container,
   Row,
-  SummaryList,
   WarningCallout
 } from "nhsuk-react-components";
 import Declarations from "../form-builder/Declarations";
@@ -31,7 +30,6 @@ import { Form, Formik } from "formik";
 import history from "../../navigation/history";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
-import dayjs from "dayjs";
 import { ActionModal } from "../../common/ActionModal";
 import { useActionState } from "../../../utilities/hooks/useActionState";
 import ScrollToTop from "../../common/ScrollToTop";

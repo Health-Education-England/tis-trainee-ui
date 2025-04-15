@@ -36,7 +36,6 @@ import {
   getStatusReasonLabel,
   handleLtftSummaryModalSub
 } from "../../../utilities/ltftUtilities";
-import { ACTION_REASONS } from "../../../utilities/Constants";
 import { Label } from "nhsuk-react-components";
 import InfoTooltip from "../../common/InfoTooltip";
 
