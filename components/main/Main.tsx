@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect, useLocation } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Profile from "../profile/Profile";
 import FormRPartA from "../forms/form-builder/form-r/part-a/FormRPartA";
 import FormRPartB from "../forms/form-builder/form-r/part-b/FormRPartB";
@@ -13,7 +13,7 @@ import Home from "../home/Home";
 import { Placements } from "../placements/Placements";
 import { Programmes } from "../programmes/Programmes";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
-import GlobalAlert from "./GlobalAlert";
+import { GlobalAlert } from "./GlobalAlert";
 import CojView from "../forms/conditionOfJoining/CojView";
 import TSSHeader from "../navigation/TSSHeader";
 import packageJson from "../../package.json";
@@ -26,17 +26,14 @@ import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
 import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
 import ErrorPage from "../common/ErrorPage";
-import { useActionsAndAlertsDataLoader } from "../../utilities/hooks/useActionsAndAlertDataLoader";
 
 const appVersion = packageJson.version;
 
 export const Main = () => {
   const isBetaTester = useIsBetaTester();
-  const pathname = useLocation().pathname;
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
   useRedirectHandler();
-  useActionsAndAlertsDataLoader();
 
   if (isCriticalLoading)
     return (
@@ -52,7 +49,7 @@ export const Main = () => {
   if (isCriticalSuccess)
     return (
       <ConfirmProvider>
-        {pathname !== "/action-summary" ? <GlobalAlert /> : null}
+        <GlobalAlert />
         <PageTitle />
         <TSSHeader />
         <Breadcrumbs />
