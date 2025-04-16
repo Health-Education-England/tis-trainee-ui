@@ -2,9 +2,12 @@ import store from "../../../../redux/store/store";
 import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import { mockLtftDraft0 } from "../../../../mock-data/mock-ltft-data";
+import {
+  mockLtftDraft0,
+  mockLtftUnsubmitted0
+} from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
-import { updatedLtft } from "../../../../redux/slices/ltftSlice";
+import { LtftObj, updatedLtft } from "../../../../redux/slices/ltftSlice";
 import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
 import ltftJson from "../../../../components/forms/ltft/ltft.json";
 import {
@@ -16,8 +19,8 @@ import {
   ltftReasonsText2
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
 
-const mountLtftWithMockData = () => {
-  store.dispatch(updatedLtft(mockLtftDraft0));
+const mountLtftWithMockData = (mockLtftObj: LtftObj) => {
+  store.dispatch(updatedLtft(mockLtftObj));
   const initialPageFields = ltftJson.pages[0].sections.flatMap(
     section => section.fields as Field[]
   );
@@ -25,7 +28,7 @@ const mountLtftWithMockData = () => {
     <Provider store={store}>
       <MemoryRouter initialEntries={["/ltft/create"]}>
         <FormProvider
-          initialData={mockLtftDraft0}
+          initialData={mockLtftObj}
           initialPageFields={initialPageFields}
           jsonForm={ltftJson as Form}
         >
@@ -36,9 +39,15 @@ const mountLtftWithMockData = () => {
   );
 };
 
-describe("LtftForm", () => {
+describe("LtftForm - draft", () => {
   it("renders the ltft form for completion", () => {
-    mountLtftWithMockData();
+    mountLtftWithMockData(mockLtftDraft0);
+    // status details section should not exist in DRAFT
+    cy.get('[data-cy="ltftName"]').should("not.exist");
+    cy.get('[data-cy="ltftCreated"]').should("not.exist");
+    cy.get('[data-cy="ltftModified"]').should("not.exist");
+    cy.get('[data-cy="ltftRef"]').should("not.exist");
+
     // page 1
     cy.get("h2").contains("Main application form");
     cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
@@ -99,5 +108,23 @@ describe("LtftForm", () => {
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
+  });
+});
+
+describe("LtftForm - unsubmitted", () => {
+  it("should render status details section", () => {
+    mountLtftWithMockData(mockLtftUnsubmitted0);
+    cy.get('[data-cy="UNSUBMITTED-header"]')
+      .should("exist")
+      .contains("Unsubmitted application");
+    cy.get('[data-cy="ltftName"]').contains("my Unsubmitted LTFT");
+    cy.get('[data-cy="ltftCreated"]').should("exist");
+    cy.get('[data-cy="ltftModified"]').should("exist");
+    cy.get('[data-cy="ltftModifiedBy"]').contains(
+      "Admin: Admin Name (admin@nhs.net)"
+    );
+    cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
+    cy.get('[data-cy="ltftMessage"]').contains("status reason message");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
   });
 });
