@@ -35,7 +35,7 @@ export const GlobalAlert = () => {
 
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
 
-  if (isActionsAndAlertLoading) {
+  if (isActionsAndAlertLoading && preferredMfa !== "NOMFA") {
     return <Loading />;
   }
 
@@ -49,7 +49,7 @@ export const GlobalAlert = () => {
         {isActionsAndAlertError && preferredMfa !== "NOMFA" && (
           <>
             <p className="nhsuk-error-summary__title">
-              There was a problem loading any outstanding actions relating to
+              There was a problem loading any outstanding actions to confirm
               your Programmes and Placements. Please try again by refreshing the
               page.
             </p>

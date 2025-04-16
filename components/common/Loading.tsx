@@ -1,13 +1,36 @@
 import React from "react";
-import ReactLoading from "react-loading";
+import ReactLoading, { LoadingType } from "react-loading";
 
-export default function Loading() {
+type LoadingProps = {
+  color?: string;
+  height?: any;
+  width?: any;
+  delay?: number;
+  type?: LoadingType;
+  className?: string;
+};
+
+export default function Loading({
+  color = "#005eb8",
+  height = 100,
+  width = 100,
+  delay = 0,
+  type = "bubbles",
+  className = ""
+}: LoadingProps) {
+  const loadingType: LoadingType = type;
+
   return (
-    <ReactLoading
-      data-cy="loading"
-      type={"bars"}
-      color={"black"}
-      aria-label="loading-bars"
-    ></ReactLoading>
+    <div className={`loading ${className}`}>
+      <ReactLoading
+        data-cy="loading"
+        type={loadingType}
+        color={color}
+        height={height}
+        width={width}
+        delay={delay}
+        aria-label="loading-icon"
+      />
+    </div>
   );
 }
