@@ -1,14 +1,14 @@
 import React from "react";
 import ReactLoading, { LoadingType } from "react-loading";
 
-type LoadingProps = {
+type LoadingProps = Readonly<{
   color?: string;
   height?: any;
   width?: any;
   delay?: number;
   type?: LoadingType;
   className?: string;
-};
+}>;
 
 export default function Loading({
   color = "#005eb8",
