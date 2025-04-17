@@ -16,6 +16,9 @@ interface IUser {
   preferredMfa: string;
   username: string;
   cognitoGroups: string[] | undefined;
+  features: {
+    ltft: boolean;
+  };
   signingCojProgName: string | null;
   signingCojPmId: string;
   signingCoj: boolean;
@@ -34,6 +37,9 @@ const initialState: IUser = {
   preferredMfa: "NOMFA",
   username: "",
   cognitoGroups: undefined,
+  features: {
+    ltft: false
+  },
   signingCojProgName: null,
   signingCojPmId: "",
   signingCoj: false,
@@ -42,14 +48,12 @@ const initialState: IUser = {
   redirected: false
 };
 
-export const getCognitoGroups = createAsyncThunk(
-  "user/getCognitoGroups",
+export const fetchUserAuthInfo = createAsyncThunk(
+  "user/fetchUserAuthInfo",
   async () => {
     const user = await Auth.currentAuthenticatedUser();
-    const cogGroups = await user.signInUserSession.accessToken.payload[
-      "cognito:groups"
-    ];
-    return cogGroups;
+    const { idToken } = user.signInUserSession;
+    return idToken.payload;
   }
 );
 
@@ -176,11 +180,12 @@ const userSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(getCognitoGroups.fulfilled, (state, action) => {
+      .addCase(fetchUserAuthInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.cognitoGroups = action.payload;
+        state.cognitoGroups = action.payload["cognito:groups"] || [];
+        state.features = action.payload.features;
       })
-      .addCase(getCognitoGroups.rejected, (state, action) => {
+      .addCase(fetchUserAuthInfo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
