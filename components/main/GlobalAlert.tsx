@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import React from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { useOutstandingActions } from "../../utilities/hooks/action-summary/useOutstandingActions";
-import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActions";
-import { useInProgressActions } from "../../utilities/hooks/action-summary/useInProgressActions";
+import { useActionsAndAlertsDataLoader } from "../../utilities/hooks/useActionsAndAlertDataLoader";
 import { Fieldset } from "nhsuk-react-components";
 import {
   faClock,
@@ -11,60 +9,35 @@ import {
   faExclamationTriangle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useAlertStatusData } from "../../utilities/hooks/useAlertStatusData";
+import Loading from "../common/Loading";
 
-const GlobalAlert = () => {
-  // Don't show the Global alert if the user has not set their MFA
+export const GlobalAlert = () => {
+  const { isActionsAndAlertLoading, isActionsAndAlertError } =
+    useActionsAndAlertsDataLoader();
+
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  // BOOKMARK
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
-  // ACTION SUMMARY
-  const draftFormProps = !!useAppSelector(state => state.forms?.draftFormProps);
-  const { unsignedCojCount, programmeActions, placementActions } =
-    useOutstandingActions();
-  const unsignedCoJ = unsignedCojCount > 0;
-  const unreviewedProgramme = programmeActions.length > 0;
-  const unreviewedPlacement = placementActions.length > 0;
-  const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
-  const inProgressFormR =
-    isInProgressFormA || isInProgressFormB || draftFormProps;
-  const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
-    useInfoActions();
-  const importantInfo: boolean =
-    !!infoActionsA.isForInfoYearPlusSubForm ||
-    !!infoActionsB.isForInfoYearPlusSubForm ||
-    noSubFormRA ||
-    noSubFormRB;
 
-  const showActionsSummaryAlert =
-    (unsignedCoJ ||
-      inProgressFormR ||
-      draftFormProps ||
-      importantInfo ||
-      unreviewedProgramme ||
-      unreviewedPlacement) &&
-    preferredMfa !== "NOMFA";
+  const alertStatusData = useAlertStatusData();
+  const { showActionsSummaryAlert } = alertStatusData;
 
   const alerts = {
+    actionSummary: {
+      status: showActionsSummaryAlert && preferredMfa !== "NOMFA",
+      component: <ActionsSummaryAlert {...alertStatusData} />
+    },
     bookmark: {
       status: showBookmarkAlert,
       component: <BookmarkAlert />
-    },
-    outstandingActions: {
-      status: showActionsSummaryAlert,
-      component: (
-        <ActionsSummaryAlert
-          unsignedCoJ={unsignedCoJ}
-          inProgressFormR={inProgressFormR}
-          importantInfo={importantInfo}
-          unreviewedProgramme={unreviewedProgramme}
-          unreviewedPlacement={unreviewedPlacement}
-        />
-      )
     }
   };
 
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
-  const { bookmark, outstandingActions } = alerts;
+
+  if (isActionsAndAlertLoading && preferredMfa !== "NOMFA") {
+    return null;
+  }
 
   return hasAlerts ? (
     <aside
@@ -73,21 +46,18 @@ const GlobalAlert = () => {
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
-        {outstandingActions.status && (
-          <ActionsSummaryAlert
-            unsignedCoJ={unsignedCoJ}
-            inProgressFormR={inProgressFormR}
-            importantInfo={importantInfo}
-            unreviewedProgramme={unreviewedProgramme}
-            unreviewedPlacement={unreviewedPlacement}
-          />
+        {isActionsAndAlertError && preferredMfa !== "NOMFA" && (
+          <p className="nhsuk-error-summary__title">
+            There was a problem loading any outstanding actions to confirm your
+            Programmes and Placements. Please try again by refreshing the page.
+          </p>
         )}
-        {bookmark.status && <BookmarkAlert />}
+        {alerts.actionSummary.status && alerts.actionSummary.component}
+        {alerts.bookmark.status && alerts.bookmark.component}
       </div>
     </aside>
   ) : null;
 };
-export default GlobalAlert;
 
 function BookmarkAlert() {
   return (
@@ -122,39 +92,48 @@ function ActionsSummaryAlert({
   unreviewedProgramme,
   unreviewedPlacement
 }: Readonly<ActionsAlertProps>) {
-  const conditions = [
-    {
-      check: () =>
-        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
-        !inProgressFormR,
-      body: (
+  const pathname = useLocation().pathname;
+  const isActionSummaryPage = pathname === "/action-summary";
+  const alertMessage = getActionAlertMessage(
+    unsignedCoJ,
+    inProgressFormR,
+    unreviewedProgramme,
+    unreviewedPlacement
+  );
+
+  return (
+    <div data-cy="actionsSummaryAlert">
+      {alertMessage.body && (
+        <span data-cy={alertMessage.cyTag}>{alertMessage.body}</span>
+      )}
+      {importantInfo && (
+        <span data-cy={"checkFormRSubs"}>
+          <p>
+            <FontAwesomeIcon icon={faInfoCircle} size="lg" color="#005eb8" />{" "}
+            Please review your Form R submissions.
+          </p>
+        </span>
+      )}
+      {isActionSummaryPage ? null : (
         <p>
-          <FontAwesomeIcon
-            icon={faExclamationTriangle}
-            size="lg"
-            color="#d5281b"
-          />
-          You have outstanding actions to complete.
+          <Link to="/action-summary">View action summary</Link> for details.
         </p>
-      ),
-      cyTag: "outstandingAction"
-    },
-    {
-      check: () =>
-        !(unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
-        inProgressFormR,
-      body: (
-        <p>
-          <FontAwesomeIcon icon={faClock} size="lg" color="#E45245" /> You have
-          in progress actions to complete.
-        </p>
-      ),
-      cyTag: "inProgressFormR"
-    },
-    {
-      check: () =>
-        (unsignedCoJ || unreviewedProgramme || unreviewedPlacement) &&
-        inProgressFormR,
+      )}
+    </div>
+  );
+}
+
+function getActionAlertMessage(
+  unsignedCoJ: boolean,
+  inProgressFormR: boolean,
+  unreviewedProgramme: boolean,
+  unreviewedPlacement: boolean
+) {
+  const hasOutstandingActions =
+    unsignedCoJ || unreviewedProgramme || unreviewedPlacement;
+
+  if (hasOutstandingActions && inProgressFormR) {
+    return {
       body: (
         <p>
           <FontAwesomeIcon
@@ -166,27 +145,36 @@ function ActionsSummaryAlert({
         </p>
       ),
       cyTag: "unsignedCoJAndInProgressFormR"
-    }
-  ];
+    };
+  }
 
-  const { body, cyTag } = conditions.find(({ check }) => check()) ?? {
-    body: null
-  };
+  if (hasOutstandingActions) {
+    return {
+      body: (
+        <p>
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            size="lg"
+            color="#d5281b"
+          />
+          You have outstanding actions to complete.
+        </p>
+      ),
+      cyTag: "outstandingAction"
+    };
+  }
 
-  return (
-    <div data-cy="actionsSummaryAlert">
-      <span data-cy={cyTag}>{body}</span>
-      {importantInfo && (
-        <span data-cy={"checkFormRSubs"}>
-          <p>
-            <FontAwesomeIcon icon={faInfoCircle} size="lg" color="#005eb8" />{" "}
-            Please review your Form R submissions.
-          </p>
-        </span>
-      )}
-      <p>
-        See <Link to="/action-summary">Action Summary</Link> for details.
-      </p>
-    </div>
-  );
+  if (inProgressFormR) {
+    return {
+      body: (
+        <p>
+          <FontAwesomeIcon icon={faClock} size="lg" color="#E45245" /> You have
+          in progress actions to complete.
+        </p>
+      ),
+      cyTag: "inProgressFormR"
+    };
+  }
+
+  return { body: null, cyTag: null };
 }

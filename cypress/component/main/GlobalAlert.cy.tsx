@@ -1,7 +1,7 @@
 import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import GlobalAlert from "../../../components/main/GlobalAlert";
+import { GlobalAlert } from "../../../components/main/GlobalAlert";
 import history from "../../../components/navigation/history";
 import {
   mockOutstandingActions,
@@ -25,31 +25,21 @@ import { updatedActionsData } from "../../../redux/slices/traineeActionsSlice";
 
 describe("GlobalAlert", () => {
   const mountComponent = (
-    redirected: boolean,
-    preferredMfa?: string,
-    formAList?: IFormR[],
-    formBList?: IFormR[],
-    unsignedCojs?: ProgrammeMembership[],
-    unreviewedActions?: TraineeAction[]
+    redirected: boolean = false,
+    preferredMfa: string = "NOMFA",
+    formAList: IFormR[] = [],
+    formBList: IFormR[] = [],
+    unsignedCojs: ProgrammeMembership[] = [],
+    unreviewedActions: TraineeAction[] = []
   ) => {
     const MockedGlobalAlert: React.FC = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedRedirected(redirected));
-      if (preferredMfa) {
-        dispatch(updatedPreferredMfa(preferredMfa));
-      }
-      if (formAList) {
-        dispatch(updatedFormAList(formAList));
-      }
-      if (formBList) {
-        dispatch(updatedFormBList(formBList));
-      }
-      if (unsignedCojs) {
-        dispatch(updatedUnsignedCojs(unsignedCojs));
-      }
-      if (unreviewedActions) {
-        dispatch(updatedActionsData(unreviewedActions));
-      }
+      dispatch(updatedPreferredMfa(preferredMfa));
+      dispatch(updatedFormAList(formAList));
+      dispatch(updatedFormBList(formBList));
+      dispatch(updatedUnsignedCojs(unsignedCojs));
+      dispatch(updatedActionsData(unreviewedActions));
       return <GlobalAlert />;
     };
 
@@ -63,7 +53,7 @@ describe("GlobalAlert", () => {
   };
 
   it("should not render the Global Action Summary Alert if the user has not set their MFA", () => {
-    mountComponent(false);
+    mountComponent();
     cy.get("[data-cy=globalAlert]").should("not.exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");
     cy.get("[data-cy=bookmarkAlert]").should("not.exist");
@@ -93,7 +83,7 @@ describe("GlobalAlert", () => {
   });
 
   it("should render Global Bookmark alert (redirect is true) but no Action Summary (recent submitted Form R, no unsigned CoJ)", () => {
-    mountComponent(true, "SMS", [mockFormList[0]], [mockFormList[1]]);
+    mountComponent(true, "SMS", [mockFormList[0]], [mockFormList[1]], [], []);
     cy.get("[data-cy=globalAlert]").should("exist");
     cy.get("[data-cy=bookmarkAlert]").should("exist");
     cy.get("[data-cy=actionsSummaryAlert]").should("not.exist");

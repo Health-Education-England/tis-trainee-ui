@@ -107,6 +107,9 @@ export function noSubmittedForms(formList: IFormR[]) {
 }
 
 function isAnyFormInProgress(formList: IFormR[]): boolean {
+  if (!formList || formList.length < 1) {
+    return false;
+  }
   return (
     formList.filter(
       form =>

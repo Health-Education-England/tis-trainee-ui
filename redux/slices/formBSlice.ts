@@ -10,7 +10,7 @@ import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import store from "../store/store";
+import { RootState } from "../store/store";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 interface IFormB {
   formBList: IFormR[];
@@ -77,14 +77,17 @@ type ReturnedLoadSavedFormB = {
 
 export const loadSavedFormB = createAsyncThunk(
   "formB/fetchFormB",
-  async ({
-    id,
-    linkedFormRData
-  }: {
-    id: string;
-    linkedFormRData?: LinkedFormRDataType;
-  }): Promise<ReturnedLoadSavedFormB> => {
-    const state = store.getState();
+  async (
+    {
+      id,
+      linkedFormRData
+    }: {
+      id: string;
+      linkedFormRData?: LinkedFormRDataType;
+    },
+    { getState }
+  ): Promise<ReturnedLoadSavedFormB> => {
+    const state = getState() as RootState;
     const covidFlagStatus =
       state.featureFlags.featureFlags.formRPartB.covidDeclaration;
     const formsService = new FormsService();
