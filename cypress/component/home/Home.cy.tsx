@@ -4,7 +4,7 @@ import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import Home from "../../../components/home/Home";
 import {
-  updatedCognitoGroups,
+  updatedLtftPilot,
   updatedPreferredMfa
 } from "../../../redux/slices/userSlice";
 import history from "../../../components/navigation/history";
@@ -42,7 +42,7 @@ describe("Home with no MFA set up", () => {
 describe("Home with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-participant"]));
+    store.dispatch(updatedLtftPilot(true));
     mount(
       <Provider store={store}>
         <Router history={history}>

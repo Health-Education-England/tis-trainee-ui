@@ -12,12 +12,12 @@ import {
   updatedLtftSummaryList,
   updatedLtftSummaryListStatus
 } from "../../../../redux/slices/ltftSummaryListSlice";
-import { updatedCognitoGroups } from "../../../../redux/slices/userSlice";
+import { updatedLtftPilot } from "../../../../redux/slices/userSlice";
 import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
 
 describe("CctSavedDrafts", () => {
   beforeEach(() => {
-    store.dispatch(updatedCognitoGroups(["beta-participant"]));
+    store.dispatch(updatedLtftPilot(true));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>
@@ -70,9 +70,9 @@ describe("CctSavedDrafts", () => {
   });
 });
 
-describe("CctSavedDrafts - beta tester", () => {
+describe("CctSavedDrafts - ltft pilot", () => {
   beforeEach(() => {
-    store.dispatch(updatedCognitoGroups(["beta-participant"]));
+    store.dispatch(updatedLtftPilot(true));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));
@@ -85,7 +85,7 @@ describe("CctSavedDrafts - beta tester", () => {
     );
   });
 
-  it("Renders the 'ltft button' when user is a beta tester and they have no in progress ltfts", () => {
+  it("Renders the 'ltft button' when user is in the ltft pilot and they have no in progress ltfts", () => {
     store.dispatch(updatedLtftSummaryList(mockLtftsList1.slice(1)));
     cy.get('[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
       .should("exist")
@@ -108,7 +108,7 @@ describe("CctSavedDrafts - beta tester", () => {
     cy.url().should("include", "/ltft/create");
   });
 
-  it("Doesn't render the 'ltft button' when user is a beta tester and they have an in progress ltft", () => {
+  it("Doesn't render the 'ltft button' when user is in the ltft pilot and they have an in progress ltft", () => {
     store.dispatch(updatedLtftSummaryList(mockLtftsList1));
     cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b"]').should(
       "exist"
@@ -116,9 +116,8 @@ describe("CctSavedDrafts - beta tester", () => {
   });
 });
 
-describe("CctSavedDrafts - not a beta tester", () => {
+describe("CctSavedDrafts - not in the ltft pilot", () => {
   before(() => {
-    store.dispatch(updatedCognitoGroups(["other-consultants"]));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));
@@ -132,7 +131,7 @@ describe("CctSavedDrafts - not a beta tester", () => {
     );
   });
 
-  it("doesn't render the 'ltft button' when user is not a beta tester", () => {
+  it("doesn't render the 'ltft button' when user is not in the ltft pilot", () => {
     cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b]').should(
       "not.exist"
     );

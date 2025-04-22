@@ -23,9 +23,9 @@ jest.mock("../../../redux/slices/ltftSummaryListSlice", () => ({
   }))
 }));
 
-jest.mock("../useIsBetaTester", () => ({
+jest.mock("../useIsLtftPilot", () => ({
   __esModule: true,
-  default: jest.fn(() => true)
+  useIsLtftPilot: jest.fn(() => true)
 }));
 
 //Custom Type for test state to avoid having to use the real RootState type!
@@ -62,7 +62,7 @@ describe("useLtftHomeStartover", () => {
     });
   });
 
-  it("should dispatch actions and call resetForm when isBetaTester is true", async () => {
+  it("should dispatch actions and call resetForm when isLtftPilot is true", async () => {
     render(
       <Provider store={testStore}>
         <TestComponent />

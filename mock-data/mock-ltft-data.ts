@@ -52,7 +52,10 @@ export const mockLtftsList1 = [
     status: "DRAFT",
     created: "2025-01-01T14:50:36.941Z",
     lastModified: "2025-01-15T15:50:36.941Z",
-    formRef: ""
+    formRef: "",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174000",
@@ -61,7 +64,10 @@ export const mockLtftsList1 = [
     status: "APPROVED",
     created: "2024-12-15T14:50:36.941Z",
     lastModified: "2024-12-15T15:50:36.941Z",
-    formRef: "ltft_-1_002"
+    formRef: "ltft_-1_002",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -70,7 +76,10 @@ export const mockLtftsList1 = [
     status: "SUBMITTED",
     created: "2024-10-15T14:50:36.941Z",
     lastModified: "2024-10-15T15:50:36.941Z",
-    formRef: "ltft_-1_003"
+    formRef: "ltft_-1_003",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -79,7 +88,10 @@ export const mockLtftsList1 = [
     status: "SUBMITTED",
     created: "2024-09-15T14:50:36.941Z",
     lastModified: "2024-09-15T15:50:36.941Z",
-    formRef: "ltft_-1_004"
+    formRef: "ltft_-1_004",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -88,7 +100,10 @@ export const mockLtftsList1 = [
     status: "WITHDRAWN",
     created: "2024-08-15T14:50:36.941Z",
     lastModified: "2024-08-15T15:50:36.941Z",
-    formRef: "ltft_-1_005"
+    formRef: "ltft_-1_005",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   }
 ];
 
