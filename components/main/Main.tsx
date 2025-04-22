@@ -22,7 +22,7 @@ import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 import { Cct } from "../forms/cct/Cct";
 import { Ltft } from "../forms/ltft/Ltft";
-import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
+import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
 import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
 import ErrorPage from "../common/ErrorPage";
@@ -30,7 +30,7 @@ import ErrorPage from "../common/ErrorPage";
 const appVersion = packageJson.version;
 
 export const Main = () => {
-  const isBetaTester = useIsBetaTester();
+  const isLtftPilot = useIsLtftPilot();
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
   useRedirectHandler();
@@ -72,7 +72,7 @@ export const Main = () => {
             <Route path="/mfa" component={MFA} />
             <Route path="/notifications" component={Notifications} />
             <Route path="/cct" component={Cct} />
-            {isBetaTester ? <Route path="/ltft" component={Ltft} /> : null}
+            {isLtftPilot ? <Route path="/ltft" component={Ltft} /> : null}
             <Redirect exact path="/" to="/home" />
             <Route path="/*" component={PageNotFound} />
           </Switch>

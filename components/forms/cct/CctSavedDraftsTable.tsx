@@ -22,7 +22,7 @@ import {
   setLtftCctSnapshot,
   updatedLtft
 } from "../../../redux/slices/ltftSlice";
-import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
 import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 import { Button } from "@aws-amplify/ui-react";
@@ -192,13 +192,13 @@ function RowLtftActions({
   row,
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {
-  const isBetaTester = useIsBetaTester();
+  const isLtftPilot = useIsLtftPilot();
   const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     store.dispatch(setLtftCctSnapshot(row));
     setIsModalOpen(true);
   };
-  return isBetaTester ? (
+  return isLtftPilot ? (
     <Button
       onClick={makeLtftBtnClick}
       data-cy={`make-ltft-btn-${row.id}`}

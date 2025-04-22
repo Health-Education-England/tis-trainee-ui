@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import useIsBetaTester from "./useIsBetaTester";
+import { useIsLtftPilot } from "./useIsLtftPilot";
 import {
   fetchLtftSummaryList,
   updatedLtftFormsRefreshNeeded
@@ -9,16 +9,16 @@ import { resetForm } from "../FormBuilderUtilities";
 
 export const useLtftHomeStartover = () => {
   const dispatch = useAppDispatch();
-  const isBetaTester = useIsBetaTester();
+  const isLtftPilot = useIsLtftPilot();
   const needLtftFormsRefresh = useAppSelector(
     state => state.ltftSummaryList?.ltftFormsRefreshNeeded
   );
 
   useEffect(() => {
-    if (isBetaTester) {
+    if (isLtftPilot) {
       dispatch(fetchLtftSummaryList());
       updatedLtftFormsRefreshNeeded(false);
       resetForm("ltft");
     }
-  }, [dispatch, isBetaTester, needLtftFormsRefresh]);
+  }, [dispatch, isLtftPilot, needLtftFormsRefresh]);
 };

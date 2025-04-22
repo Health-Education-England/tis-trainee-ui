@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
-import useIsBetaTester from "../../utilities/hooks/useIsBetaTester";
+import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +17,7 @@ const TSSHeader = () => {
     state => state.notifications.status
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  const isBetaTester = useIsBetaTester();
+  const isLtftPilot = useIsLtftPilot();
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
@@ -84,7 +84,7 @@ const TSSHeader = () => {
         </span>
       </div>
       <Header.Nav className="header-nav">
-        {makeTSSHeaderLinks(preferredMfa, isBetaTester)}
+        {makeTSSHeaderLinks(preferredMfa, isLtftPilot)}
         <div className="nhsuk-header__navigation-item mobile-only-nav">
           <SignOutBtn />
         </div>
@@ -94,7 +94,7 @@ const TSSHeader = () => {
 };
 export default TSSHeader;
 
-function makeTSSHeaderLinks(preferredMfa: string, isBetaTester: boolean) {
+function makeTSSHeaderLinks(preferredMfa: string, isLtftPilot: boolean) {
   const paths = [
     {
       path: "action-summary",
@@ -145,7 +145,7 @@ function makeTSSHeaderLinks(preferredMfa: string, isBetaTester: boolean) {
       name: "Changing hours (LTFT)",
       mobileOnly: false,
       showWithNoMfa: false,
-      showForBetaTesters: true
+      showForLtftPilot: true
     }
   ];
 
@@ -154,7 +154,7 @@ function makeTSSHeaderLinks(preferredMfa: string, isBetaTester: boolean) {
     name: string;
     mobileOnly: boolean;
     showWithNoMfa: boolean;
-    showForBetaTesters?: boolean;
+    showForLtftPilot?: boolean;
   }) => (
     <div
       key={pathObj.name}
@@ -163,7 +163,7 @@ function makeTSSHeaderLinks(preferredMfa: string, isBetaTester: boolean) {
       }`}
       hidden={
         (preferredMfa === "NOMFA" && !pathObj.showWithNoMfa) ||
-        (pathObj.showForBetaTesters && !isBetaTester)
+        (pathObj?.showForLtftPilot && !isLtftPilot)
       }
     >
       <NavLink

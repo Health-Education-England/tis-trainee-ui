@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAlertStatusData } from "../../utilities/hooks/useAlertStatusData";
-import Loading from "../common/Loading";
 
 export const GlobalAlert = () => {
   const { isActionsAndAlertLoading, isActionsAndAlertError } =
