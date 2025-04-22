@@ -13,7 +13,8 @@ export const mockCctList: CctCalculation[] = [
       startDate: "2020-01-01",
       endDate: "2028-01-01",
       wte: 1.0,
-      designatedBodyCode: "WTF"
+      designatedBodyCode: "WTF",
+      managingDeanery: "North West"
     },
     changes: [
       {
@@ -35,7 +36,8 @@ export const mockCctList: CctCalculation[] = [
       startDate: "2024-08-07",
       endDate: "2029-07-31",
       wte: 1.0,
-      designatedBodyCode: "WTF2"
+      designatedBodyCode: "WTF2",
+      managingDeanery: "North East"
     },
     changes: [
       {
@@ -59,7 +61,8 @@ export const mockCctCalc: CctCalculation = {
     startDate: "2020-01-01",
     endDate: "2028-01-01",
     wte: 1.0,
-    designatedBodyCode: "WTF3"
+    designatedBodyCode: "WTF3",
+    managingDeanery: "North North West"
   },
   changes: [
     {

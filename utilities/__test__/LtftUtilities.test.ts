@@ -117,7 +117,8 @@ describe("mapLtftObjToDto", () => {
       startDate: "2020-01-01",
       endDate: "2028-01-01",
       wte: 1,
-      designatedBodyCode: "WTF3"
+      designatedBodyCode: "WTF3",
+      managingDeanery: "North North West"
     });
     expect(ltftDto.status).toEqual(statusData);
     expect(ltftDto.created).toBe(dateCreated);
@@ -202,7 +203,8 @@ describe("mapDtoToLtftObj", () => {
       startDate: "2020-01-01",
       endDate: "2028-01-01",
       wte: 1,
-      designatedBodyCode: "WTF3"
+      designatedBodyCode: "WTF3",
+      managingDeanery: "North North West"
     });
     expect(mockLtftObj.status).toEqual(statusData);
     expect(mockLtftObj.created).toBe(dateCreated);
