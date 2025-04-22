@@ -197,6 +197,11 @@ export function CctCalcCreate() {
                                     selectedProgramme.designatedBodyCode,
                                     false
                                   );
+                                  setFieldValue(
+                                    "programmeMembership.managingDeanery",
+                                    selectedProgramme.managingDeanery,
+                                    false
+                                  );
                                 }
                               } else {
                                 resetForm({ values: defaultCctCalc });

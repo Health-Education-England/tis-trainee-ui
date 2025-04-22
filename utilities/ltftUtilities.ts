@@ -58,7 +58,8 @@ export function populateLtftDraft(
       endDate: cctSnapshot?.programmeMembership.endDate ?? "",
       wte: cctSnapshot?.programmeMembership.wte ?? 0,
       designatedBodyCode:
-        cctSnapshot?.programmeMembership.designatedBodyCode ?? ""
+        cctSnapshot?.programmeMembership.designatedBodyCode ?? "",
+      managingDeanery: cctSnapshot?.programmeMembership.managingDeanery ?? ""
     },
     reasonsSelected: null,
     reasonsOtherDetail: null,
@@ -123,6 +124,7 @@ export type LtftDto = {
     endDate?: Date | string;
     wte: number;
     designatedBodyCode?: string;
+    managingDeanery?: string;
   };
   reasons: {
     selected: string[];
@@ -185,7 +187,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       startDate: ltftObj.programmeMembership.startDate,
       endDate: ltftObj.programmeMembership.endDate,
       wte: ltftObj.programmeMembership.wte,
-      designatedBodyCode: ltftObj.programmeMembership.designatedBodyCode ?? null
+      designatedBodyCode: ltftObj.programmeMembership.designatedBodyCode ?? null,
+      managingDeanery: ltftObj.programmeMembership.managingDeanery ?? null
     },
     reasons: {
       selected: ltftObj.reasonsSelected || [],
@@ -272,7 +275,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       startDate: ltftDto.programmeMembership.startDate,
       endDate: ltftDto.programmeMembership.endDate ?? "",
       wte: ltftDto.programmeMembership.wte,
-      designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? ""
+      designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
+      managingDeanery: ltftDto.programmeMembership.managingDeanery ?? ""
     },
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,

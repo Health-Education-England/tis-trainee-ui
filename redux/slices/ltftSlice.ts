@@ -66,6 +66,7 @@ type LtftPm = {
   endDate: Date | string;
   wte: number;
   designatedBodyCode: string;
+  managingDeanery: string;
 };
 
 export type StatusLtft = {

@@ -128,7 +128,8 @@ export const mockLtftDraft0: LtftObj = {
     startDate: "2020-01-01",
     endDate: "2028-01-01",
     wte: 1,
-    designatedBodyCode: "WTF3"
+    designatedBodyCode: "WTF3",
+    managingDeanery: "North North West"
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
@@ -206,7 +207,8 @@ export const mockLtftUnsubmitted0: LtftObj = {
     startDate: "2020-01-01",
     endDate: "2028-01-01",
     wte: 1,
-    designatedBodyCode: "WTF3"
+    designatedBodyCode: "WTF3",
+    managingDeanery: "North North West"
   },
   reasonsSelected: null,
   reasonsOtherDetail: null,
