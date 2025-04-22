@@ -7,24 +7,20 @@ import { Main } from "../../../components/main/Main";
 import { updatedTraineeProfileStatus } from "../../../redux/slices/traineeProfileSlice";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedRedirected } from "../../../redux/slices/userSlice";
 import { updatedReferenceStatus } from "../../../redux/slices/referenceSlice";
 import { Authenticator } from "@aws-amplify/ui-react";
 
 describe("Main", () => {
   const mountComponent = (
-    status: string,
-    referenceStatus?: string,
-    redirected?: boolean
+    status = "idle",
+    referenceStatus: string = "idle",
+    _hasCriticalError = false
   ) => {
-    const MockedMain: React.FC = () => {
+    const MockedMain = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileStatus(status));
       if (referenceStatus) {
         dispatch(updatedReferenceStatus(referenceStatus));
-      }
-      if (redirected !== undefined) {
-        dispatch(updatedRedirected(redirected));
       }
       return <Main />;
     };
@@ -40,32 +36,24 @@ describe("Main", () => {
     );
   };
 
-  it("should return Loading comp if data loading ", () => {
+  it("should show loading component when data is loading", () => {
     mountComponent("loading");
+    cy.get(".centreSpinner").should("exist");
     cy.get("[data-cy=BtnMenu]").should("not.exist");
   });
 
-  it("should show bookmark alert when previously redirected", () => {
-    mountComponent("succeeded", "succeeded", true);
-    cy.get("[data-cy=bookmarkAlert]").should("exist");
-  });
-
-  it("should show bookmark alert when currently redirected", () => {
-    history.push("test?redirected=1");
-    mountComponent("succeeded", "succeeded", false);
-    cy.get("[data-cy=bookmarkAlert]").should("exist");
-  });
-
-  it("should not show bookmark alert when not redirected", () => {
-    history.push("test");
-    mountComponent("succeeded", "succeeded", false);
-    cy.get("[data-cy=bookmarkAlert]").should("not.exist");
+  it("should show error page when there is a critical error", () => {
+    mountComponent("failed", "failed", true);
+    cy.contains("There was an error loading the app data").should("be.visible");
+    cy.contains("Please try again by refreshing the page").should("be.visible");
   });
 
   it("should remove the redirected parameter from the URL", () => {
     history.push("test?redirected=1&abc=123");
-    mountComponent("succeeded", "succeeded", false);
+    mountComponent();
     cy.wait(1000);
     cy.url().then(url => expect(url.endsWith("/test?abc=123")).to.be.true);
   });
+
+  //Note: Other GlobalAlert tests are in GlobalAlert.cy.tsx and GlobalAlert.test.tsx
 });
