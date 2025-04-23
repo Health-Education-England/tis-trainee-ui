@@ -9,16 +9,16 @@ import { useEffect } from "react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
 import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
-import useIsBetaTester from "../../../utilities/hooks/useIsBetaTester";
+import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
-  const isBetaTester = useIsBetaTester();
+  const isLtftPilot = useIsLtftPilot();
 
   useEffect(() => {
     dispatch(loadCctList());
-    if (isBetaTester) dispatch(fetchLtftSummaryList());
-  }, [dispatch, isBetaTester]);
+    if (isLtftPilot) dispatch(fetchLtftSummaryList());
+  }, [dispatch, isLtftPilot]);
 
   return (
     <>

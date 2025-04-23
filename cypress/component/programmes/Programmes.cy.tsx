@@ -19,7 +19,7 @@ import {
 import history from "../../../components/navigation/history";
 import React from "react";
 import {
-  updatedCognitoGroups,
+  updatedLtftPilot,
   updatedPreferredMfa
 } from "../../../redux/slices/userSlice";
 import {
@@ -38,7 +38,6 @@ const mountProgrammesWithMockData = (
   profileStatus: string = "idle",
   programmeMemberships: ProgrammeMembership[] = mockProgrammeMemberships,
   actionsData: any[] = [],
-  cognitoGroups: any[] = [],
   formAList: any = mockFormList,
   formBList: any = mockFormList
 ) => {
@@ -55,9 +54,7 @@ const mountProgrammesWithMockData = (
     );
     dispatch(updatedTraineeProfileStatus(profileStatus));
     dispatch(updatedActionsData(actionsData));
-    if (cognitoGroups.length > 0) {
-      dispatch(updatedCognitoGroups(cognitoGroups));
-    }
+    dispatch(updatedLtftPilot(true));
     dispatch(updatedFormAList(formAList));
     dispatch(updatedFormBList(formBList));
     return <Programmes />;

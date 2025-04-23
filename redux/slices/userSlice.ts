@@ -15,7 +15,9 @@ interface IUser {
   totpCode: string;
   preferredMfa: string;
   username: string;
-  cognitoGroups: string[] | undefined;
+  features: {
+    ltft: boolean;
+  };
   signingCojProgName: string | null;
   signingCojPmId: string;
   signingCoj: boolean;
@@ -33,7 +35,9 @@ const initialState: IUser = {
   totpCode: "",
   preferredMfa: "NOMFA",
   username: "",
-  cognitoGroups: undefined,
+  features: {
+    ltft: false
+  },
   signingCojProgName: null,
   signingCojPmId: "",
   signingCoj: false,
@@ -42,14 +46,13 @@ const initialState: IUser = {
   redirected: false
 };
 
-export const getCognitoGroups = createAsyncThunk(
-  "user/getCognitoGroups",
+export const fetchUserAuthInfo = createAsyncThunk(
+  "user/fetchUserAuthInfo",
   async () => {
     const user = await Auth.currentAuthenticatedUser();
-    const cogGroups = await user.signInUserSession.accessToken.payload[
-      "cognito:groups"
-    ];
-    return cogGroups;
+    const { idToken } = user.signInUserSession;
+    console.log("idToken payload", idToken.payload);
+    return idToken.payload;
   }
 );
 
@@ -152,8 +155,11 @@ const userSlice = createSlice({
     updatedPreferredMfa(state, action: PayloadAction<string>) {
       return { ...state, preferredMfa: action.payload };
     },
-    updatedCognitoGroups(state, action: PayloadAction<Array<string>>) {
-      return { ...state, cognitoGroups: action.payload };
+    updatedLtftPilot(state, action: PayloadAction<boolean>) {
+      return {
+        ...state,
+        features: { ...state.features, ltft: action.payload }
+      };
     },
     updatedsigningCojProgName(state, action: PayloadAction<null | string>) {
       return { ...state, signingCojProgName: action.payload };
@@ -176,11 +182,11 @@ const userSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(getCognitoGroups.fulfilled, (state, action) => {
+      .addCase(fetchUserAuthInfo.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.cognitoGroups = action.payload;
+        state.features = action.payload.features;
       })
-      .addCase(getCognitoGroups.rejected, (state, action) => {
+      .addCase(fetchUserAuthInfo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
@@ -292,7 +298,7 @@ export const {
   updatedTotpSection,
   updatedSmsSection,
   updatedPreferredMfa,
-  updatedCognitoGroups,
+  updatedLtftPilot,
   updatedsigningCojProgName,
   updatedsigningCojPmId,
   updatedsigningCoj,

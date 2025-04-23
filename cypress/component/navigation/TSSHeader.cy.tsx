@@ -4,7 +4,7 @@ import history from "../../../components/navigation/history";
 import { Provider } from "react-redux";
 import store from "../../../redux/store/store";
 import {
-  updatedCognitoGroups,
+  updatedLtftPilot,
   updatedPreferredMfa
 } from "../../../redux/slices/userSlice";
 import { Authenticator } from "@aws-amplify/ui-react";
@@ -36,7 +36,7 @@ const comp = (
 describe("Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-participant"]));
+    store.dispatch(updatedLtftPilot(true));
     mount(comp);
   });
 
@@ -121,7 +121,7 @@ describe("Header with NOMFA", () => {
 describe("Desktop Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedCognitoGroups(["beta-participant"]));
+    store.dispatch(updatedLtftPilot(true));
     mount(comp);
     cy.viewport(1024, 768);
   });

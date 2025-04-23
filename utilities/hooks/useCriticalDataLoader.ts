@@ -4,7 +4,7 @@ import { fetchTraineeProfileData } from "../../redux/slices/traineeProfileSlice"
 import { fetchReference } from "../../redux/slices/referenceSlice";
 import { fetchFeatureFlags } from "../../redux/slices/featureFlagsSlice";
 import {
-  getCognitoGroups,
+  fetchUserAuthInfo,
   getPreferredMfa
 } from "../../redux/slices/userSlice";
 
@@ -42,7 +42,7 @@ export const useCriticalDataLoader = () => {
   useEffect(() => {
     if (!authActionsDispatched) {
       dispatch(getPreferredMfa());
-      dispatch(getCognitoGroups());
+      dispatch(fetchUserAuthInfo());
       setAuthActionsDispatched(true);
     }
   }, [authActionsDispatched, dispatch]);
