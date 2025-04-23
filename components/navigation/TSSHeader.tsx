@@ -83,7 +83,7 @@ const TSSHeader = () => {
           </a>
         </span>
       </div>
-      <Header.Nav className="header-nav">
+      <Header.Nav style={{ maxWidth: "100%" }}>
         {makeTSSHeaderLinks(preferredMfa, isLtftPilot)}
         <div className="nhsuk-header__navigation-item mobile-only-nav">
           <SignOutBtn />

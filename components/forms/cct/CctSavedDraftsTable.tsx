@@ -207,7 +207,8 @@ function RowLtftActions({
       style={{
         minWidth: "18em",
         maxWidth: "18em",
-        fontWeight: "normal"
+        fontWeight: "normal",
+        cursor: "pointer"
       }}
     >
       Apply for Changing hours (LTFT)
