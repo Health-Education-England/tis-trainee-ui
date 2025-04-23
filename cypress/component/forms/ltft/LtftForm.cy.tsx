@@ -56,7 +56,7 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
       "For information on Professional support contact"
     );
     cy.get(

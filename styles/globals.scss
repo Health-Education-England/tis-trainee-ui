@@ -23,6 +23,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.nhsuk-width-container {
+  max-width: 990px;
+}
+
 [data-amplify-authenticator] {
   font-family: "Frutiger W01", Arial, sans-serif;
   background-color: #005eb8;
@@ -690,9 +694,35 @@ ol[type="a"] {
   }
 }
 
-// ---- Notifications table ----
+// ---- tables ----
 .table-wrapper {
+  width: 100%;
   overflow-x: auto;
+  border-radius: 4px;
+  margin: 16px 0;
+}
+
+.table-wrapper thead {
+  background-color: #f0f4f5;
+  position: sticky;
+  top: 0;
+}
+
+.table-wrapper tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.table-wrapper tr.table-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.table-wrapper tr.table-row:hover {
+  background-color: #f2f8ff;
+}
+
+.table-wrapper td[data-cy*="status"] {
+  font-weight: 500;
 }
 
 // ---- Notifications table pagination ----
@@ -739,14 +769,6 @@ ol[type="a"] {
   }
 }
 
-// Row
-.table-row {
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-  &:hover {
-    background-color: #cbe0d9;
-  }
-}
 .row-read {
   font-weight: normal;
   background-color: #d8dde0;
@@ -822,37 +844,13 @@ ol[type="a"] {
   }
 }
 
-.table-row-btn {
-  padding: 2px;
-  border: 1px solid #4c6272;
-  box-shadow: 0 1px 0 #4e6475;
-  border-radius: 4px;
-  color: whitesmoke;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.hover-active-states {
-  &:hover {
-    background-color: #212b32;
-    transform: scale(1.05);
-  }
-  &:active {
-    background-color: #003f6d;
-    transform: scale(0.95);
-  }
-}
-
 .unread-btn {
-  @extend .table-row-btn;
-  @extend .hover-active-states;
-  background-color: #6c716f;
   margin-right: 8px;
   min-width: 200px;
 }
 
 .unread-icon {
-  color: white;
+  color: $nhsTracker3;
   margin-right: 0.5em;
 }
 

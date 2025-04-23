@@ -95,9 +95,6 @@ const unresolvedDecsText =
 const ltftDiscussionText1 =
   "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";
 
-const ltftDiscussionText2 =
-  "When you submit this application, your TPD will receive an email which will include a summary of your proposal.";
-
 const ltftOtherDiscussionsText =
   "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposal.";
 
@@ -178,7 +175,6 @@ const displayText: DisplayText = {
   newUnresolvedDecsInstructions: generateTextElement([unresolvedDecsText]),
   ltftDiscussionInstructions: generateTextElement([
     ltftDiscussionText1,
-    ltftDiscussionText2,
     ltftOtherDiscussionsText,
     ltftDiscussionText3
   ]),

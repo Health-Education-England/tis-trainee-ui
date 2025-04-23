@@ -225,7 +225,7 @@ const LtftSummary = ({
         onClick={handleBtnClick(label)}
         size="small"
         type="reset"
-        style={{ minWidth: "6em", ...additionalStyle }}
+        style={{ minWidth: "6em", cursor: "pointer", ...additionalStyle }}
       >
         {label}
       </Button>
