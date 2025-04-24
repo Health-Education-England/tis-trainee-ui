@@ -45,7 +45,7 @@ export const FormFields = {
   },
   signUp: {
     email: {
-      placeholder: "Email (used by HEE)",
+      placeholder: "Email (used by TIS)",
       isRequired: true,
       labelHidden: true
     },
