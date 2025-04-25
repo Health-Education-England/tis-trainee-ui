@@ -357,7 +357,7 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "East of England": "england.tis.eoe@nhs.net",
   "Kent, Surrey and Sussex": "PGMDE support portal",
   "North Central and East London": "PGMDE support portal",
-  "North East": "england.specialtytraining.ne@nhs.net",
+  "North East": "england.netssqueries@nhs.net",
   "North West": "england.wpi.nw@nhs.net",
   "North West London": "PGMDE support portal",
   "South London": "PGMDE support portal",
