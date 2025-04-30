@@ -26,13 +26,30 @@ import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
 import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
 import ErrorPage from "../common/ErrorPage";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import {
+  fetchUserAuthInfo,
+  getPreferredMfa
+} from "../../redux/slices/userSlice";
 
 const appVersion = packageJson.version;
 
 export const Main = () => {
+  const dispatch = useAppDispatch();
+  const [authActionsDispatched, setAuthActionsDispatched] = useState(false);
   const isLtftPilot = useIsLtftPilot();
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
+
+  // Fetch user auth data if not already dispatched
+  useEffect(() => {
+    if (!authActionsDispatched) {
+      dispatch(getPreferredMfa());
+      dispatch(fetchUserAuthInfo());
+      setAuthActionsDispatched(true);
+    }
+  }, [authActionsDispatched, dispatch]);
   useRedirectHandler();
 
   if (isCriticalLoading)
