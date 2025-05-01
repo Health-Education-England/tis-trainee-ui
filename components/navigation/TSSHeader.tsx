@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
-import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
+import { useIsLtftEnabled } from "../../utilities/hooks/useIsLtftEnabled";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +17,7 @@ const TSSHeader = () => {
     state => state.notifications.status
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
 
   useEffect(() => {
     if (notificationsStatus === "idle") {

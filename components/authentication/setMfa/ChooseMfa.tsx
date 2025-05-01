@@ -10,7 +10,7 @@ import MultiChoiceInputField from "../../forms/MultiChoiceInputField";
 import * as Yup from "yup";
 import ScrollTo from "../../forms/ScrollTo";
 import history from "../../navigation/history";
-import { MFAStatus } from "../../../models/MFAStatus";
+import { MFAStatus, MFAType } from "../../../models/MFAStatus";
 import { useEffect } from "react";
 
 const ChooseMfa = () => {
@@ -107,7 +107,7 @@ const ChooseMfa = () => {
 export default ChooseMfa;
 
 type MfaWarningProps = {
-  readonly preferredMfa: string;
+  readonly preferredMfa: MFAType;
 };
 
 function MfaWarning({ preferredMfa }: MfaWarningProps) {
@@ -125,19 +125,17 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
         </p>
       ) : (
         <p data-cy="mfaAlreadyText">
-          You have already set up{/* */}
-          <b>{getPrefMfa(preferredMfa)}</b>
-          {/* */}to verify your identity when you log in to TIS Self-Service. If
-          you want to redo the process or verify your identity a different way
-          then please continue.
+          You have already set up{" "}
+          <b>
+            {preferredMfa === "TOTP"
+              ? "your Authenticator App for MFA"
+              : "SMS for MFA"}
+          </b>{" "}
+          to verify your identity when you log in to TIS Self-Service. If you
+          want to redo the process or verify your identity a different way then
+          please continue.
         </p>
       )}
     </WarningCallout>
   );
-}
-
-function getPrefMfa(prefMfa: string) {
-  return prefMfa === MFAStatus.TOTP
-    ? " your Authenticator App for MFA "
-    : " SMS for MFA ";
 }

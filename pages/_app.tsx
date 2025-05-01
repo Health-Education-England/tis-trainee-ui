@@ -17,12 +17,28 @@ const HJSV: string = "6";
 
 Amplify.configure({
   Auth: {
-    mandatorySignIn: true,
-    region: config.cognito.REGION,
-    userPoolId: config.cognito.USER_POOL_ID,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: config.cognito.APP_CLIENT_ID,
-    authenticationFlowType: config.cognito.USER_PASSWORD_AUTH
+    Cognito: {
+      userPoolId: config.USER_POOL_ID as string,
+      userPoolClientId: config.APP_CLIENT_ID as string,
+      identityPoolId: config.IDENTITY_POOL_ID as string,
+      loginWith: {
+        email: true
+      },
+      signUpVerificationMethod: "code",
+      userAttributes: {
+        email: {
+          required: true
+        }
+      },
+      allowGuestAccess: false,
+      passwordFormat: {
+        minLength: 8,
+        requireLowercase: true,
+        requireUppercase: true,
+        requireNumbers: true,
+        requireSpecialCharacters: true
+      }
+    }
   }
 });
 

@@ -23,9 +23,9 @@ jest.mock("../../../redux/slices/ltftSummaryListSlice", () => ({
   }))
 }));
 
-jest.mock("../useIsLtftPilot", () => ({
+jest.mock("../useIsLtftEnabled", () => ({
   __esModule: true,
-  useIsLtftPilot: jest.fn(() => true)
+  useIsLtftEnabled: jest.fn(() => true)
 }));
 
 //Custom Type for test state to avoid having to use the real RootState type!

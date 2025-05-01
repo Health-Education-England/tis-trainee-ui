@@ -15,7 +15,7 @@ import {
   resetError,
   setPreferredMfa,
   updatedTotpSection,
-  updateUserAttributes,
+  updateUserAttribute,
   verifyTotp
 } from "../../../../redux/slices/userSlice";
 import { QRCodeSVG } from "qrcode.react";
@@ -63,7 +63,7 @@ const VerifyTotp = () => {
 
   const removePhoneNo = async () => {
     const attrib = { phone_number: "" };
-    await dispatch(updateUserAttributes(attrib));
+    await dispatch(updateUserAttribute(attrib));
     return store.getState().user.status;
   };
 

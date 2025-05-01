@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   incrementSmsSection,
   resetError,
-  updateUserAttributes,
+  updateUserAttribute,
   verifyPhone
 } from "../../../../redux/slices/userSlice";
 import store from "../../../../redux/store/store";
@@ -16,8 +16,8 @@ const VerifySms = () => {
   const dispatch = useAppDispatch();
 
   const updatePhoneAttrib = async (mobNo: string) => {
-    const attrib = { phone_number: mobNo };
-    await dispatch(updateUserAttributes(attrib));
+    const attrib = { key: "phone_number", value: mobNo };
+    await dispatch(updateUserAttribute(attrib));
     return store.getState().user.status;
   };
 

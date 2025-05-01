@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import style from "../Common.module.scss";
-import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
+import { useIsLtftEnabled } from "../../utilities/hooks/useIsLtftEnabled";
 
 const handleClick = (route: string) => history.push(route);
 
@@ -16,7 +16,7 @@ interface HomeCardProps {
 
 const Home = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
 
   if (preferredMfa === "NOMFA") {
     return <Redirect to="/mfa" />;

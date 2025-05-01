@@ -22,7 +22,7 @@ import {
   setLtftCctSnapshot,
   updatedLtft
 } from "../../../redux/slices/ltftSlice";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
+import { useIsLtftEnabled } from "../../../utilities/hooks/useIsLtftEnabled";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
 import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 import { Button } from "@aws-amplify/ui-react";
@@ -192,7 +192,7 @@ function RowLtftActions({
   row,
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
   const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     store.dispatch(setLtftCctSnapshot(row));

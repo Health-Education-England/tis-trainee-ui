@@ -9,11 +9,11 @@ import { useEffect } from "react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
 import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
+import { useIsLtftEnabled } from "../../../utilities/hooks/useIsLtftEnabled";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
 
   useEffect(() => {
     dispatch(loadCctList());

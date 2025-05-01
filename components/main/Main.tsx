@@ -22,23 +22,21 @@ import ActionSummary from "../actionSummary/ActionSummary";
 import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 import { Cct } from "../forms/cct/Cct";
 import { Ltft } from "../forms/ltft/Ltft";
-import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
+
 import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
+import { useIsLtftEnabled } from "../../utilities/hooks/useIsLtftEnabled";
 import ErrorPage from "../common/ErrorPage";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import {
-  fetchUserAuthInfo,
-  getPreferredMfa
-} from "../../redux/slices/userSlice";
+import { useAppDispatch } from "../../redux/hooks/hooks";
+import { fetchLtftStatus, getPreferredMfa } from "../../redux/slices/userSlice";
 
 const appVersion = packageJson.version;
 
 export const Main = () => {
   const dispatch = useAppDispatch();
   const [authActionsDispatched, setAuthActionsDispatched] = useState(false);
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
 
@@ -46,7 +44,7 @@ export const Main = () => {
   useEffect(() => {
     if (!authActionsDispatched) {
       dispatch(getPreferredMfa());
-      dispatch(fetchUserAuthInfo());
+      dispatch(fetchLtftStatus());
       setAuthActionsDispatched(true);
     }
   }, [authActionsDispatched, dispatch]);

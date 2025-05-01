@@ -1,5 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Auth } from "aws-amplify";
+import {
+  fetchAuthSession,
+  fetchMFAPreference,
+  getCurrentUser,
+  setUpTOTP,
+  updateUserAttribute as amplifyUpdateUserAttribute,
+  type UpdateUserAttributeOutput as AmplifyUpdateUserAttributeOutput,
+  verifyUserAttribute,
+  confirmUserAttribute,
+  setPreferredMFA,
+  verifyTOTP
+} from "aws-amplify/auth";
 import { MFAType } from "../../models/MFAStatus";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
@@ -46,37 +57,45 @@ const initialState: IUser = {
   redirected: false
 };
 
-export const fetchUserAuthInfo = createAsyncThunk(
-  "user/fetchUserAuthInfo",
+type IdTokenPayload = {
+  features: {
+    ltft: boolean;
+  };
+  [key: string]: any;
+};
+
+export const fetchLtftStatus = createAsyncThunk(
+  "user/fetchLtftStatus",
   async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const { idToken } = user.signInUserSession;
-    console.log("idToken payload", idToken.payload);
-    return idToken.payload;
+    const session = await fetchAuthSession();
+    return session.tokens?.idToken?.payload as IdTokenPayload;
   }
 );
 
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
-    const { preferredMFA } = await Auth.currentAuthenticatedUser();
-    return preferredMFA;
+    const mfaPreference = await fetchMFAPreference();
+    return mfaPreference.preferred;
   }
 );
 
 export const updateTotpCode = createAsyncThunk(
   "user/updateTotpCode",
   async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.setupTOTP(user);
+    return setUpTOTP();
   }
 );
 
-export const updateUserAttributes = createAsyncThunk(
-  "user/updateUserAttributes",
-  async (attrib: { phone_number: string }) => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.updateUserAttributes(user, attrib);
+export const updateUserAttribute = createAsyncThunk(
+  "user/updateUserAttribute",
+  async (attrib: { key: string; value: string }) => {
+    return amplifyUpdateUserAttribute({
+      userAttribute: {
+        attributeKey: attrib.key,
+        value: attrib.value
+      }
+    }) as Promise<AmplifyUpdateUserAttributeOutput>;
   }
 );
 
@@ -182,17 +201,18 @@ const userSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(fetchUserAuthInfo.fulfilled, (state, action) => {
+      .addCase(fetchLtftStatus.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.features = action.payload.features;
+        state.features.ltft =
+          (action.payload.features.ltft as boolean) || false;
       })
-      .addCase(fetchUserAuthInfo.rejected, (state, action) => {
+      .addCase(fetchLtftStatus.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMfa = action.payload;
+        state.preferredMfa = action.payload ?? "NOMFA";
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";
@@ -211,14 +231,14 @@ const userSlice = createSlice({
           `${error.code}-${error.message}`
         );
       })
-      .addCase(updateUserAttributes.fulfilled, (state, _action) => {
+      .addCase(updateUserAttribute.fulfilled, (state, _action) => {
         state.status = "succeeded";
       })
-      .addCase(updateUserAttributes.rejected, (state, { error }) => {
+      .addCase(updateUserAttribute.rejected, (state, { error }) => {
         state.status = "failed";
         state.error = error.message;
         showToast(
-          toastErrText.updateUserAttributes,
+          toastErrText.updateUserAttribute,
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );

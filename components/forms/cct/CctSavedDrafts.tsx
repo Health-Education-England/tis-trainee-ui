@@ -1,11 +1,11 @@
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
+import { useIsLtftEnabled } from "../../../utilities/hooks/useIsLtftEnabled";
 import ErrorPage from "../../common/ErrorPage";
 import Loading from "../../common/Loading";
 import { CctSavedDraftsTable } from "./CctSavedDraftsTable";
 
 export function CctSavedDrafts() {
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
   const cctListStatus = useAppSelector(state => state.cctList.status);
   const ltftSummaryListStatus = useAppSelector(
     state => state.ltftSummaryList.status

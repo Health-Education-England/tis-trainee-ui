@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { useIsLtftPilot } from "./useIsLtftPilot";
+import { useIsLtftEnabled } from "./useIsLtftEnabled";
 import {
   fetchLtftSummaryList,
   updatedLtftFormsRefreshNeeded
@@ -9,7 +9,7 @@ import { resetForm } from "../FormBuilderUtilities";
 
 export const useLtftHomeStartover = () => {
   const dispatch = useAppDispatch();
-  const isLtftPilot = useIsLtftPilot();
+  const isLtftPilot = useIsLtftEnabled();
   const needLtftFormsRefresh = useAppSelector(
     state => state.ltftSummaryList?.ltftFormsRefreshNeeded
   );

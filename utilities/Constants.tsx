@@ -274,7 +274,7 @@ export const toastErrText = {
   withdrawLtft: `${noWithdraw}${ltft}.`,
   fetchTraineeProfileData:
     "Couldn't load your personal details (profile data).",
-  updateUserAttributes:
+  updateUserAttribute:
     "Couldn't update your user information (user attributes).",
   verifyPhone: "Couldn't send you an SMS code to sign in (verify phone).",
   verifyUserAttributeSubmit:
