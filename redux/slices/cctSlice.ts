@@ -61,6 +61,8 @@ type CctState = {
   newCalcMade: boolean;
   formSaveStatus: string | number;
   formSaveError: any;
+  formDeleteStatus: string | number;
+  formDeleteError: any;
 };
 
 const initialState: CctState = {
@@ -69,7 +71,9 @@ const initialState: CctState = {
   error: "",
   newCalcMade: false,
   formSaveStatus: "idle",
-  formSaveError: ""
+  formSaveError: "",
+  formDeleteStatus: "idle",
+  formDeleteError: ""
 };
 
 export const loadSavedCctCalc = createAsyncThunk(
@@ -96,6 +100,14 @@ export const updateCctCalc = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response = await traineeProfileService.updateCctCalculation(cctCalc);
     return response.data;
+  }
+);
+
+export const deleteCctCalc = createAsyncThunk(
+  "cct/deleteCctCalc",
+  async (cctId: string) => {
+    const traineeProfileService = new TraineeProfileService();
+    return await traineeProfileService.deleteCctCalculation(cctId);
   }
 );
 
@@ -173,6 +185,22 @@ const cctSlice = createSlice({
         state.formSaveError = error.message;
         showToast(
           toastErrText.updateCctCalcMessage,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(deleteCctCalc.pending, state => {
+        state.formDeleteStatus = "loading";
+      })
+      .addCase(deleteCctCalc.fulfilled, state => {
+        state.formDeleteStatus = "succeeded";
+        showToast(toastSuccessText.deleteCct, ToastType.SUCCESS);
+      })
+      .addCase(deleteCctCalc.rejected, (state, { error }) => {
+        state.formDeleteStatus = "failed";
+        state.formDeleteError = error.message;
+        showToast(
+          toastErrText.deleteCct,
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );

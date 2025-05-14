@@ -67,4 +67,10 @@ export class TraineeProfileService extends ApiService {
   ): Promise<AxiosResponse<CctCalculation>> {
     return this.put<CctCalculation>(`/cct/calculation/${cctCalc.id}`, cctCalc);
   }
+
+  async deleteCctCalculation(
+    cctId: string
+  ): Promise<AxiosResponse<CctCalculation>> {
+    return this.delete(`/cct/calculation/${cctId}`);
+  }
 }

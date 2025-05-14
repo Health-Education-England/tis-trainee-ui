@@ -16,6 +16,7 @@ import history from "../../navigation/history";
 import store from "../../../redux/store/store";
 import {
   CctCalculation,
+  deleteCctCalc,
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
 import {
@@ -26,6 +27,8 @@ import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
 import { populateLtftDraft } from "../../../utilities/ltftUtilities";
 import { Button } from "@aws-amplify/ui-react";
+import { loadCctList } from "../../../redux/slices/cctListSlice";
+import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -193,25 +196,60 @@ function RowLtftActions({
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {
   const isLtftPilot = useIsLtftPilot();
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
+
   const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     store.dispatch(setLtftCctSnapshot(row));
     setIsModalOpen(true);
   };
-  return isLtftPilot ? (
-    <Button
-      onClick={makeLtftBtnClick}
-      data-cy={`make-ltft-btn-${row.id}`}
-      size="small"
-      type="button"
-      style={{
-        minWidth: "18em",
-        maxWidth: "18em",
-        fontWeight: "normal",
-        cursor: "pointer"
-      }}
-    >
-      Apply for Changing hours (LTFT)
-    </Button>
-  ) : null;
+
+  const deleteCctCalcAndReloadList = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
+    startSubmitting();
+    await store.dispatch(deleteCctCalc(row.id as string));
+    const deleteStatus = store.getState().cct.formDeleteStatus;
+    if (deleteStatus === "succeeded") {
+      store.dispatch(loadCctList());
+    }
+    stopSubmitting();
+  };
+
+  return (
+    <div style={{ display: "flex", gap: "1em" }}>
+      {isLtftPilot && (
+        <Button
+          onClick={makeLtftBtnClick}
+          data-cy={`make-ltft-btn-${row.id}`}
+          size="small"
+          type="button"
+          style={{
+            minWidth: "18em",
+            maxWidth: "18em",
+            backgroundColor: "#005eb8",
+            color: "white",
+            cursor: "pointer"
+          }}
+        >
+          Apply for Changing hours (LTFT)
+        </Button>
+      )}
+      <Button
+        onClick={deleteCctCalcAndReloadList}
+        data-cy={`delete-cct-btn-${row.id}`}
+        size="small"
+        type="button"
+        style={{
+          backgroundColor: "#d5281b",
+          color: "white",
+          cursor: "pointer"
+        }}
+        disabled={isSubmitting}
+      >
+        Delete
+      </Button>
+    </div>
+  );
 }

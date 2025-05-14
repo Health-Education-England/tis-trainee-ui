@@ -238,14 +238,27 @@ const LtftSummary = ({
             {renderActionButton("Unsubmit", {
               marginBottom: "0.5em"
             })}
-            {renderActionButton("Withdraw")}
+            {renderActionButton("Withdraw", {
+              backgroundColor: "#d5281b",
+              color: "white"
+            })}
           </>
         ) : null}
         {props.row.original.status === "DRAFT" ? (
-          <>{renderActionButton("Delete")}</>
+          <>
+            {renderActionButton("Delete", {
+              backgroundColor: "#d5281b",
+              color: "white"
+            })}
+          </>
         ) : null}
         {props.row.original.status === "UNSUBMITTED" ? (
-          <>{renderActionButton("Withdraw")}</>
+          <>
+            {renderActionButton("Withdraw", {
+              backgroundColor: "#d5281b",
+              color: "white"
+            })}
+          </>
         ) : null}
       </>
     );
