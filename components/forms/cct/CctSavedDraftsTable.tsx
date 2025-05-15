@@ -77,10 +77,7 @@ const createColumns = (
   const ltftColumn = columnHelper.display({
     id: "makeLtft",
     cell: props => (
-      <RowLtftActions
-        row={props.row.original}
-        setIsModalOpen={setIsModalOpen}
-      />
+      <RowCctActions row={props.row.original} setIsModalOpen={setIsModalOpen} />
     )
   });
   return [...columnsDefault, ltftColumn];
@@ -191,7 +188,7 @@ type RowLtftActionsProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function RowLtftActions({
+export function RowCctActions({
   row,
   setIsModalOpen
 }: Readonly<RowLtftActionsProps>) {

@@ -27,7 +27,7 @@ import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
 import ErrorPage from "../common/ErrorPage";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch } from "../../redux/hooks/hooks";
 import {
   fetchUserAuthInfo,
   getPreferredMfa
