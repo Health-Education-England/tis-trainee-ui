@@ -236,7 +236,7 @@ export const PANEL_KEYS: any = {
   curricula: "Curricula",
   conditionsOfJoining: "Conditions of Joining"
 };
-
+const cct = "CCT calculation";
 const dodgyConnection = "Please check your internet connection and try again.";
 const formA = "Form R (Part A)";
 const formB = "Form R (Part B)";
@@ -250,6 +250,7 @@ const noUnsubmit = "Couldn't unsubmit your ";
 const noWithdraw = "Couldn't withdraw your ";
 
 export const toastErrText = {
+  deleteCct: `${noDel}${cct}.`,
   deleteFormA: `${noDel}${formA}.`,
   deleteFormB: `${noDel}${formB}.`,
   deleteLtft: `${noDel}${ltft}.`,
@@ -308,6 +309,7 @@ const isUnsubmit = "has been unsubmitted.";
 const isWithdraw = "has been withdrawn.";
 
 export const toastSuccessText = {
+  deleteCct: `Your ${cct} ${isDel}`,
   deleteFormA: `Your draft ${formA} ${isDel}`,
   deleteFormB: `Your draft ${formB} ${isDel}`,
   deleteLtft: `Your draft ${ltft} ${isDel}`,

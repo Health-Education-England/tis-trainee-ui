@@ -68,25 +68,8 @@ describe("CctSavedDrafts", () => {
       .click();
     cy.url().should("include", "/cct/view/6756c2b57ee98643d6f3dd8b");
   });
-});
 
-describe("CctSavedDrafts - ltft pilot", () => {
-  beforeEach(() => {
-    store.dispatch(updatedLtftPilot(true));
-    store.dispatch(updatedCctList(mockCctList));
-    store.dispatch(updatedCctListStatus("succeeded"));
-    store.dispatch(updatedLtftSummaryListStatus("succeeded"));
-    mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/cct"]}>
-          <CctSavedDrafts />
-        </MemoryRouter>
-      </Provider>
-    );
-  });
-
-  it("Renders the 'ltft button' when user is in the ltft pilot and they have no in progress ltfts", () => {
-    store.dispatch(updatedLtftSummaryList(mockLtftsList1.slice(1)));
+  it("renders the LTFT button in addition to the Delete button when user is in the ltft pilot", () => {
     cy.get('[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
       .should("exist")
       .click();
@@ -107,17 +90,11 @@ describe("CctSavedDrafts - ltft pilot", () => {
     cy.get('[data-cy="confirm-ltft-btn"]').should("not.be.disabled").click();
     cy.url().should("include", "/ltft/create");
   });
-
-  it("Doesn't render the 'ltft button' when user is in the ltft pilot and they have an in progress ltft", () => {
-    store.dispatch(updatedLtftSummaryList(mockLtftsList1));
-    cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b"]').should(
-      "exist"
-    );
-  });
 });
 
 describe("CctSavedDrafts - not in the ltft pilot", () => {
   before(() => {
+    store.dispatch(updatedLtftPilot(false));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));
@@ -132,8 +109,11 @@ describe("CctSavedDrafts - not in the ltft pilot", () => {
   });
 
   it("doesn't render the 'ltft button' when user is not in the ltft pilot", () => {
-    cy.get('[data-cy="make-ltft-btn-6756c2b57ee98643d6f3dd8b]').should(
-      "not.exist"
-    );
+    cy.get(
+      '[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]'
+    ).should("not.exist");
+    cy.get('[data-cy="delete-cct-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
+      .should("exist")
+      .click();
   });
 });

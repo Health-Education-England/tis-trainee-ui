@@ -200,7 +200,7 @@ export const deleteLtft = createAsyncThunk(
   "ltft/deleteLtft",
   async (formId: string) => {
     const formsService = new FormsService();
-    return formsService.deleteLtft(formId);
+    return await formsService.deleteLtft(formId);
   }
 );
 
@@ -208,7 +208,7 @@ export const unsubmitLtftForm = createAsyncThunk(
   "ltft/unsubmitLtftForm",
   async ({ id, reasonObj }: { id: string; reasonObj: ReasonMsgObj }) => {
     const formsService = new FormsService();
-    return formsService.unsubmitLtft(id, reasonObj);
+    return await formsService.unsubmitLtft(id, reasonObj);
   }
 );
 
@@ -216,7 +216,7 @@ export const withdrawLtftForm = createAsyncThunk(
   "ltft/withdrawLtftForm",
   async ({ id, reasonObj }: { id: string; reasonObj: ReasonMsgObj }) => {
     const formsService = new FormsService();
-    return formsService.withdrawLtft(id, reasonObj);
+    return await formsService.withdrawLtft(id, reasonObj);
   }
 );
 
@@ -380,13 +380,13 @@ const ltftSlice = createSlice({
         state.status = "succeeded";
         showToast(toastSuccessText.deleteLtft, ToastType.SUCCESS);
       })
-      .addCase(deleteLtft.rejected, (state, action) => {
+      .addCase(deleteLtft.rejected, (state, { error }) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = error.message;
         showToast(
           toastErrText.deleteLtft,
           ToastType.ERROR,
-          `${action.error.code}-${action.error.message}`
+          `${error.code}-${error.message}`
         );
       })
       .addCase(unsubmitLtftForm.pending, state => {
