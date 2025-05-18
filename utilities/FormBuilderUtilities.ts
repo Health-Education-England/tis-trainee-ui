@@ -12,7 +12,7 @@ import {
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
-import store, { RootState } from "../redux/store/store";
+import store from "../redux/store/store";
 import {
   Field,
   Form,
@@ -166,7 +166,7 @@ export async function isFormDeleted(
   } else if (formName === "ltft") {
     await store.dispatch(deleteLtft(formId));
   }
-  const state = store.getState() as RootState;
+  const state = store.getState();
   return state[formName].status === "succeeded";
 }
 
