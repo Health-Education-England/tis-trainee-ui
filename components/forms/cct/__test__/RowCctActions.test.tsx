@@ -1,34 +1,27 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { RowCctActions } from "../CctSavedDraftsTable";
 import store from "../../../../redux/store/store";
 import { Provider } from "react-redux";
-import { deleteCctCalc } from "../../../../redux/slices/cctSlice";
 import { mockCctList } from "../../../../mock-data/mock-cct-data";
 
-let storeState = {
-  cct: { formDeleteStatus: "idle" }
-};
+let mockIsLtftPilotEnabled = false;
 
 jest.mock("../../../../redux/store/store", () => ({
   __esModule: true,
   default: {
-    dispatch: jest.fn(action => Promise.resolve(action)),
-    getState: jest.fn(() => storeState),
+    dispatch: jest.fn(),
+    getState: jest.fn(),
     subscribe: jest.fn(() => jest.fn()),
     replaceReducer: jest.fn()
   }
 }));
 
-jest.mock("../../../../redux/slices/cctSlice", () => ({
-  deleteCctCalc: jest.fn()
-}));
-
-jest.mock("../../../../redux/slices/cctListSlice", () => ({
-  loadCctList: jest.fn(() => "MOCK_LOAD_ACTION")
+jest.mock("../../../../redux/slices/ltftSlice", () => ({
+  setLtftCctSnapshot: jest.fn(() => "MOCK_LTFT_ACTION")
 }));
 
 jest.mock("../../../../utilities/hooks/useIsLtftPilot", () => ({
-  useIsLtftPilot: () => false
+  useIsLtftPilot: () => mockIsLtftPilotEnabled
 }));
 
 jest.mock("../../../../components/navigation/history", () => ({
@@ -43,73 +36,94 @@ jest.mock("../../../../utilities/hooks/useSubmitting", () => ({
   })
 }));
 
-describe("RowCctActions - Delete Button", () => {
+describe("RowCctActions component", () => {
   const mockRow = mockCctList[0];
   const mockSetIsModalOpen = jest.fn();
+  const mockSetIsCctModalOpen = jest.fn();
+  const mockSetCalcToDelete = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    storeState = { cct: { formDeleteStatus: "idle" } };
+    mockIsLtftPilotEnabled = false;
   });
 
-  it("should call deleteCctCalc and loadCctList when delete button is clicked", async () => {
-    // Setup deleteCctCalc to simulate a successful delete
-    (deleteCctCalc as unknown as jest.Mock).mockReturnValue(
-      "MOCK_DELETE_ACTION"
-    );
-
-    // Set up the dispatch mock to change the state after "delete" action
-    (store.dispatch as jest.Mock).mockImplementation(action => {
-      if (action === "MOCK_DELETE_ACTION") {
-        storeState = { cct: { formDeleteStatus: "succeeded" } };
-      }
-      return Promise.resolve();
-    });
-
+  it("renders the delete button", () => {
     render(
       <Provider store={store}>
-        <RowCctActions row={mockRow} setIsModalOpen={mockSetIsModalOpen} />
+        <RowCctActions
+          row={mockRow}
+          setIsModalOpen={mockSetIsModalOpen}
+          setIsCctModalOpen={mockSetIsCctModalOpen}
+          setCalcToDelete={mockSetCalcToDelete}
+        />
       </Provider>
     );
 
     const deleteButton = screen.getByRole("button", { name: /Delete/i });
     expect(deleteButton).toBeInTheDocument();
-
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(deleteCctCalc).toHaveBeenCalledWith(mockRow.id);
-      expect(store.dispatch).toHaveBeenCalledWith("MOCK_DELETE_ACTION");
-      expect(store.dispatch).toHaveBeenCalledWith("MOCK_LOAD_ACTION");
-    });
   });
 
-  it("should not call loadCctList if delete operation fails", async () => {
-    (deleteCctCalc as unknown as jest.Mock).mockReturnValue(
-      "MOCK_DELETE_ACTION"
-    );
-
-    (store.dispatch as jest.Mock).mockImplementation(action => {
-      if (action === "MOCK_DELETE_ACTION") {
-        storeState = { cct: { formDeleteStatus: "failed" } };
-      }
-      return Promise.resolve();
-    });
-
+  it("sets calculation ID and opens CCT delete modal when delete button is clicked", () => {
     render(
       <Provider store={store}>
-        <RowCctActions row={mockRow} setIsModalOpen={mockSetIsModalOpen} />
+        <RowCctActions
+          row={mockRow}
+          setIsModalOpen={mockSetIsModalOpen}
+          setIsCctModalOpen={mockSetIsCctModalOpen}
+          setCalcToDelete={mockSetCalcToDelete}
+        />
       </Provider>
     );
 
     const deleteButton = screen.getByRole("button", { name: /Delete/i });
     fireEvent.click(deleteButton);
 
-    await waitFor(() => {
-      expect(deleteCctCalc).toHaveBeenCalledWith(mockRow.id);
-      expect(store.dispatch).toHaveBeenCalledWith("MOCK_DELETE_ACTION");
+    expect(mockSetCalcToDelete).toHaveBeenCalledWith(mockRow.id);
+    expect(mockSetIsCctModalOpen).toHaveBeenCalledWith(true);
+  });
+
+  describe("with LTFT pilot feature enabled", () => {
+    beforeEach(() => {
+      mockIsLtftPilotEnabled = true;
     });
 
-    expect(store.dispatch).not.toHaveBeenCalledWith("MOCK_LOAD_ACTION");
+    it("renders the LTFT button when LTFT pilot is enabled", () => {
+      render(
+        <Provider store={store}>
+          <RowCctActions
+            row={mockRow}
+            setIsModalOpen={mockSetIsModalOpen}
+            setIsCctModalOpen={mockSetIsCctModalOpen}
+            setCalcToDelete={mockSetCalcToDelete}
+          />
+        </Provider>
+      );
+
+      const ltftButton = screen.getByRole("button", {
+        name: /Apply for Changing hours/i
+      });
+      expect(ltftButton).toBeInTheDocument();
+    });
+
+    it("dispatches action and opens LTFT modal when LTFT button is clicked", () => {
+      render(
+        <Provider store={store}>
+          <RowCctActions
+            row={mockRow}
+            setIsModalOpen={mockSetIsModalOpen}
+            setIsCctModalOpen={mockSetIsCctModalOpen}
+            setCalcToDelete={mockSetCalcToDelete}
+          />
+        </Provider>
+      );
+
+      const ltftButton = screen.getByRole("button", {
+        name: /Apply for Changing hours/i
+      });
+      fireEvent.click(ltftButton);
+
+      expect(store.dispatch).toHaveBeenCalledWith("MOCK_LTFT_ACTION");
+      expect(mockSetIsModalOpen).toHaveBeenCalledWith(true);
+    });
   });
 });

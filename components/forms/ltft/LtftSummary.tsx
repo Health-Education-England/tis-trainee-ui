@@ -220,12 +220,14 @@ const LtftSummary = ({
       additionalStyle = {}
     ) => (
       <Button
-        data-cy={`${label.toLowerCase()}LtftBtnLink`}
-        fontWeight="normal"
-        onClick={handleBtnClick(label)}
+        type="button"
+        variation={
+          label === "Delete" || label === "Withdraw" ? "destructive" : "warning"
+        }
         size="small"
-        type="reset"
-        style={{ minWidth: "6em", cursor: "pointer", ...additionalStyle }}
+        onClick={handleBtnClick(label)}
+        data-cy={`${label.toLowerCase()}LtftBtnLink`}
+        style={{ minWidth: "6em", ...additionalStyle }}
       >
         {label}
       </Button>
@@ -238,27 +240,14 @@ const LtftSummary = ({
             {renderActionButton("Unsubmit", {
               marginBottom: "0.5em"
             })}
-            {renderActionButton("Withdraw", {
-              backgroundColor: "#d5281b",
-              color: "white"
-            })}
+            {renderActionButton("Withdraw")}
           </>
         ) : null}
         {props.row.original.status === "DRAFT" ? (
-          <>
-            {renderActionButton("Delete", {
-              backgroundColor: "#d5281b",
-              color: "white"
-            })}
-          </>
+          <>{renderActionButton("Delete")}</>
         ) : null}
         {props.row.original.status === "UNSUBMITTED" ? (
-          <>
-            {renderActionButton("Withdraw", {
-              backgroundColor: "#d5281b",
-              color: "white"
-            })}
-          </>
+          <>{renderActionButton("Withdraw")}</>
         ) : null}
       </>
     );

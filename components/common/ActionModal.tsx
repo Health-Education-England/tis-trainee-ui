@@ -50,42 +50,38 @@ export function ActionModal({
       </WarningCallout>
       <Formik initialValues={{ reason: "", message: "" }} onSubmit={onSubmit}>
         {({ values }) => (
-          <>
-            <Form>
-              {hasReason && (
-                <>
-                  <MultiChoiceInputField
-                    name="reason"
-                    type="radios"
-                    items={
-                      actionType === "Unsubmit"
-                        ? [...ACTION_REASONS.UNSUBMIT, ACTION_REASONS.OTHER]
-                        : [...ACTION_REASONS.WITHDRAW, ACTION_REASONS.OTHER]
-                    }
-                    label={`Please choose the primary reason for the ${actionType.toLowerCase()}`}
-                    id="reason"
-                  />
-                  <TextInputField
-                    name="message"
-                    id="message"
-                    label="Please provide any supplementary information if needed"
-                    placeholder="Enter details here..."
-                    width="300px"
-                    rows={3}
-                  />
-                </>
-              )}
-              <Button
-                type="submit"
-                disabled={isSubmitting || (hasReason && !values.reason)}
-                data-cy={`submitBtn-${warningLabel}`}
-              >
-                {isSubmitting
-                  ? `${submittingBtnText}...`
-                  : "Confirm & Continue"}
-              </Button>
-            </Form>
-          </>
+          <Form>
+            {hasReason && (
+              <>
+                <MultiChoiceInputField
+                  name="reason"
+                  type="radios"
+                  items={
+                    actionType === "Unsubmit"
+                      ? [...ACTION_REASONS.UNSUBMIT, ACTION_REASONS.OTHER]
+                      : [...ACTION_REASONS.WITHDRAW, ACTION_REASONS.OTHER]
+                  }
+                  label={`Please choose the primary reason for the ${actionType.toLowerCase()}`}
+                  id="reason"
+                />
+                <TextInputField
+                  name="message"
+                  id="message"
+                  label="Please provide any supplementary information if needed"
+                  placeholder="Enter details here..."
+                  width="300px"
+                  rows={3}
+                />
+              </>
+            )}
+            <Button
+              type="submit"
+              disabled={isSubmitting || (hasReason && !values.reason)}
+              data-cy={`submitBtn-${warningLabel}`}
+            >
+              {isSubmitting ? `${submittingBtnText}...` : "Confirm & Continue"}
+            </Button>
+          </Form>
         )}
       </Formik>
     </Modal>

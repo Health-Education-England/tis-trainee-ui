@@ -21,7 +21,7 @@ export function useActionState() {
   });
 
   const setAction = (label: ActionType, id: string, formName: FormName) => {
-    const actionType = label.toLowerCase() as keyof typeof ACTION_CONFIG;
+    const actionType = label.toLowerCase();
     const actionConfig = ACTION_CONFIG[actionType] || {
       warning: "",
       submitting: ""

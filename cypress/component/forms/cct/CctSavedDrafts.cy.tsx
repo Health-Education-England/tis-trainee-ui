@@ -74,7 +74,7 @@ describe("CctSavedDrafts", () => {
       .should("exist")
       .click();
     // Check modal
-    cy.get('[data-cy="dialogModal"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("be.visible");
     cy.get('[data-cy="ltft-declarations-modal-heading"]').contains(
       "Before proceeding to the main Changing hours (LTFT) application..."
     );
@@ -115,5 +115,15 @@ describe("CctSavedDrafts - not in the ltft pilot", () => {
     cy.get('[data-cy="delete-cct-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
       .should("exist")
       .click();
+    cy.get('[data-cy="dialogModal"]').should("be.visible");
+    cy.get('[data-cy="warningLabel-Delete calculation"]').should("exist");
+    cy.get('[data-cy="warningText-Delete calculation"]')
+      .should("exist")
+      .contains(
+        "Are you sure you want to delete this calculation? This action cannot be undone."
+      );
+    cy.get('[data-cy="modal-cancel-btn"]').should("exist");
+    cy.get('[data-cy="submitBtn-Delete calculation"]').should("exist").click();
+    cy.get('[data-cy="dialogModal"]').should("not.be.visible");
   });
 });
