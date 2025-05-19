@@ -30,6 +30,7 @@ import { Button } from "@aws-amplify/ui-react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { ActionModal } from "../../common/ActionModal";
+import { sureText } from "../../../utilities/Constants";
 
 const columnHelper = createColumnHelper<CctCalculation>();
 
@@ -109,10 +110,9 @@ export function CctSavedDraftsTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCctModalOpen, setIsCctModalOpen] = useState(false);
   const [calcIdToDelete, setCalcIdToDelete] = useState<string | null>(null);
-  const { startSubmitting, stopSubmitting } = useSubmitting();
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
 
   const deleteCctCalcAndReloadList = async () => {
-    setIsCctModalOpen(false);
     startSubmitting();
     await store.dispatch(deleteCctCalc(calcIdToDelete as string));
     const deleteStatus = store.getState().cct.formDeleteStatus;
@@ -121,6 +121,7 @@ export function CctSavedDraftsTable() {
     }
     stopSubmitting();
     setCalcIdToDelete(null);
+    setIsCctModalOpen(false);
   };
 
   const columns = useMemo(
@@ -205,10 +206,10 @@ export function CctSavedDraftsTable() {
         isOpen={isCctModalOpen}
         onClose={() => setIsCctModalOpen(false)}
         cancelBtnText="Cancel"
-        warningLabel="Delete calculation"
-        warningText="Are you sure you want to delete this calculation? This action cannot be undone."
+        warningLabel="Deleting"
+        warningText={sureText}
         submittingBtnText="Deleting..."
-        actionType="Delete"
+        isSubmitting={isSubmitting}
       />
     </div>
   ) : (
@@ -230,7 +231,6 @@ export function RowCctActions({
   setCalcToDelete
 }: Readonly<RowLtftActionsProps>) {
   const isLtftPilot = useIsLtftPilot();
-  const { isSubmitting } = useSubmitting();
 
   const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -238,7 +238,7 @@ export function RowCctActions({
     setIsModalOpen(true);
   };
 
-  const makeCctBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const deleteCctBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setCalcToDelete(row.id as string);
     setIsCctModalOpen(true);
@@ -265,10 +265,7 @@ export function RowCctActions({
         type="button"
         variation="destructive"
         size="small"
-        isDisabled={isSubmitting}
-        isLoading={isSubmitting}
-        loadingText="Deleting..."
-        onClick={makeCctBtnClick}
+        onClick={deleteCctBtnClick}
         data-cy={`delete-cct-btn-${row.id}`}
       >
         Delete

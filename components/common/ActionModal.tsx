@@ -1,6 +1,5 @@
 import { Modal } from "./Modal";
 import { Button, WarningCallout } from "nhsuk-react-components";
-import { useSubmitting } from "../../utilities/hooks/useSubmitting";
 import { Form, Formik } from "formik";
 import MultiChoiceInputField from "../forms/MultiChoiceInputField";
 import TextInputField from "../forms/TextInputField";
@@ -14,7 +13,7 @@ export type ReasonMsgObj = {
 };
 
 type ActionModalProps = {
-  onSubmit: (values: ReasonMsgObj) => void;
+  onSubmit: (values?: ReasonMsgObj) => void;
   isOpen: boolean;
   onClose: () => void;
   cancelBtnText: string;
@@ -22,6 +21,7 @@ type ActionModalProps = {
   warningText: string;
   submittingBtnText: string;
   actionType?: ActionType;
+  isSubmitting: boolean;
 };
 
 export function ActionModal({
@@ -32,9 +32,9 @@ export function ActionModal({
   warningLabel,
   warningText,
   submittingBtnText,
-  actionType
+  actionType,
+  isSubmitting = false
 }: Readonly<ActionModalProps>) {
-  const { isSubmitting } = useSubmitting();
   const hasReason = actionType === "Unsubmit" || actionType === "Withdraw";
 
   return (

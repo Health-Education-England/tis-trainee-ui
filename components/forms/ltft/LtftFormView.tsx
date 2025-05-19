@@ -47,7 +47,7 @@ export const LtftFormView = () => {
   }, [id, dispatch]);
 
   const ltftStatus = useAppSelector(state => state.ltft.status);
-  const { startSubmitting, stopSubmitting, isSubmitting } = useSubmitting();
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
   const canEditStatus = useAppSelector(state => state.ltft.canEdit);
   const cctSnapshot: CctCalculation = {
@@ -95,10 +95,11 @@ export const LtftFormView = () => {
   };
 
   const handleModalFormSubmit = async () => {
-    setShowModal(false);
     startSubmitting();
     await saveDraftForm(formJson, formData, false, true);
     stopSubmitting();
+    setShowModal(false);
+    resetAction();
   };
 
   if (ltftStatus === "loading") return <Loading />;
@@ -206,6 +207,7 @@ export const LtftFormView = () => {
           warningLabel={currentAction.type ?? ""}
           warningText={currentAction.warningText}
           submittingBtnText={currentAction.submittingText}
+          isSubmitting={isSubmitting}
         />
       </LtftViewWrapper>
     );
