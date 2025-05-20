@@ -589,20 +589,22 @@ export const fteOptions = [
   { value: 50, label: "50%" }
 ];
 
+export const sureText = "Are you sure? This action cannot be undone.";
+
 export const ACTION_CONFIG: Record<
   string,
   { warning: string; submitting: string }
 > = {
   submit: {
-    warning: "Please check the form details carefully before submitting.",
+    warning: "Have you checked the details carefully before submitting?",
     submitting: "Submitting"
   },
   delete: {
-    warning: "Deleting this application will permanently remove it.",
+    warning: `${sureText}`,
     submitting: "Deleting"
   },
   withdraw: {
-    warning: "Withdrawing this application cannot be undone.",
+    warning: `${sureText}`,
     submitting: "Withdrawing"
   },
   unsubmit: {

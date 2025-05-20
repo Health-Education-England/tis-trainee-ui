@@ -11,14 +11,17 @@ export type ActionState = {
   formName: FormName | null;
 };
 
+const defaultActionState: ActionState = {
+  type: null,
+  warningText: "",
+  submittingText: "",
+  id: "",
+  formName: null
+};
+
 export function useActionState() {
-  const [currentAction, setCurrentAction] = useState<ActionState>({
-    type: null,
-    warningText: "",
-    submittingText: "",
-    id: "",
-    formName: null
-  });
+  const [currentAction, setCurrentAction] =
+    useState<ActionState>(defaultActionState);
 
   const setAction = (label: ActionType, id: string, formName: FormName) => {
     const actionType = label.toLowerCase();
@@ -37,13 +40,7 @@ export function useActionState() {
   };
 
   const resetAction = () => {
-    setCurrentAction({
-      type: null,
-      warningText: "",
-      submittingText: "",
-      id: "",
-      formName: null
-    });
+    setCurrentAction(defaultActionState);
   };
 
   return {

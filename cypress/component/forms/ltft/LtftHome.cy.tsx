@@ -8,6 +8,7 @@ import {
   updatedLtftSummaryListStatus
 } from "../../../../redux/slices/ltftSummaryListSlice";
 import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
+import { sureText } from "../../../../utilities/Constants";
 
 const mountLtftHome = () => {
   mount(
@@ -96,7 +97,7 @@ describe("LtftHome", () => {
         cy.get('[data-cy="warningLabel-Delete"]').contains("Delete");
         cy.get('[data-cy="warningText-Delete"]').should(
           "include.text",
-          "Deleting this application will permanently remove it."
+          `${sureText}`
         );
         cy.get('[data-cy="submitBtn-Delete"]').click();
       });

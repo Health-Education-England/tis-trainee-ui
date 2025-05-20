@@ -40,7 +40,6 @@ describe("CctSavedDraftsTable - Delete Logic", () => {
 
   // Recreate the function to test directly
   const deleteCctCalcAndReloadList = async (): Promise<void> => {
-    setIsCctModalOpen(false);
     startSubmitting();
 
     // Mock the calcIdToDelete value directly
@@ -57,6 +56,7 @@ describe("CctSavedDraftsTable - Delete Logic", () => {
 
     stopSubmitting();
     setCalcIdToDelete(null);
+    setIsCctModalOpen(false);
   };
 
   beforeEach(() => {

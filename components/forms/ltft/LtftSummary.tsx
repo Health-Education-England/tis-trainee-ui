@@ -57,7 +57,7 @@ const LtftSummary = ({
   ltftSummaryList
 }: Readonly<LtftSummaryProps>) => {
   const [showModal, setShowModal] = useState(false);
-  const { startSubmitting, stopSubmitting } = useSubmitting();
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const { currentAction, setAction, resetAction } = useActionState();
   const ltftSummaries = ltftSummaryList || [];
 
@@ -388,8 +388,7 @@ const LtftSummary = ({
               </table>
             </div>
             <ActionModal
-              onSubmit={async (reasonObj: ReasonMsgObj) => {
-                setShowModal(false);
+              onSubmit={async (reasonObj?: ReasonMsgObj) => {
                 store.dispatch(updatedLtftFormsRefreshNeeded(false));
                 startSubmitting();
                 const shouldStartOver = await handleLtftSummaryModalSub(
@@ -397,9 +396,11 @@ const LtftSummary = ({
                   reasonObj
                 );
                 stopSubmitting();
+                setShowModal(false);
                 if (shouldStartOver) {
                   checkPush("ltft", "formsList");
                 }
+                resetAction();
               }}
               isOpen={showModal}
               onClose={() => {
@@ -407,10 +408,11 @@ const LtftSummary = ({
                 resetAction();
               }}
               cancelBtnText="Cancel"
-              warningLabel={currentAction.type ?? ""}
+              warningLabel={currentAction.type as ActionType}
               warningText={currentAction.warningText}
               submittingBtnText={currentAction.submittingText}
               actionType={currentAction.type as ActionType}
+              isSubmitting={isSubmitting}
             />
           </>
         ) : (

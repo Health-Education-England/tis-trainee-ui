@@ -116,14 +116,12 @@ describe("CctSavedDrafts - not in the ltft pilot", () => {
       .should("exist")
       .click();
     cy.get('[data-cy="dialogModal"]').should("be.visible");
-    cy.get('[data-cy="warningLabel-Delete calculation"]').should("exist");
-    cy.get('[data-cy="warningText-Delete calculation"]')
+    cy.get('[data-cy="warningLabel-Deleting"]').should("exist");
+    cy.get('[data-cy="warningText-Deleting"]')
       .should("exist")
-      .contains(
-        "Are you sure you want to delete this calculation? This action cannot be undone."
-      );
+      .contains("Are you sure? This action cannot be undone.");
     cy.get('[data-cy="modal-cancel-btn"]').should("exist");
-    cy.get('[data-cy="submitBtn-Delete calculation"]').should("exist").click();
+    cy.get('[data-cy="submitBtn-Deleting"]').should("exist").click();
     cy.get('[data-cy="dialogModal"]').should("not.be.visible");
   });
 });
