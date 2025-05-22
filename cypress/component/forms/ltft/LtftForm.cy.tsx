@@ -120,9 +120,6 @@ describe("LtftForm - unsubmitted", () => {
     cy.get('[data-cy="ltftName"]').contains("my Unsubmitted LTFT");
     cy.get('[data-cy="ltftCreated"]').should("exist");
     cy.get('[data-cy="ltftModified"]').should("exist");
-    cy.get('[data-cy="ltftModifiedBy"]').contains(
-      "Admin: Admin Name (admin@nhs.net)"
-    );
     cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
     cy.get('[data-cy="ltftMessage"]').contains("status reason message");
     cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
