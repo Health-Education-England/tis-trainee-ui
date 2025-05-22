@@ -1,6 +1,7 @@
 import { SummaryList } from "nhsuk-react-components";
 import { LinkedFormRDataType } from "./FormLinkerForm";
 import dayjs from "dayjs";
+import { getLinkedProgrammeDetails } from "../../../utilities/FormRUtilities";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 
 export function FormLinkerSummary({
@@ -8,14 +9,13 @@ export function FormLinkerSummary({
   programmeMembershipId,
   managingDeanery
 }: Readonly<LinkedFormRDataType>) {
-  const programmeMemberships = useAppSelector(
+  const progMems = useAppSelector(
     state => state.traineeProfile.traineeProfileData.programmeMemberships
   );
-  const linkedProgramme = programmeMemberships.find(
-    prog => prog.tisId === programmeMembershipId
+  const linkedProgramme = getLinkedProgrammeDetails(
+    progMems,
+    programmeMembershipId
   );
-  const linkedProgrammeName = linkedProgramme?.programmeName;
-  const linkedProgrammeStartDate = linkedProgramme?.startDate;
 
   const calcIsArcpValue = (v: boolean | null) => {
     if (typeof v !== "boolean") {
@@ -29,8 +29,8 @@ export function FormLinkerSummary({
     {
       key: "Linked Programme:",
       value: linkedProgramme
-        ? `${linkedProgrammeName} (start: ${dayjs(
-            linkedProgrammeStartDate
+        ? `${linkedProgramme.programmeName} (start: ${dayjs(
+            linkedProgramme.startDate
           ).format("DD/MM/YYYY")})`
         : "Linked programme not set."
     },

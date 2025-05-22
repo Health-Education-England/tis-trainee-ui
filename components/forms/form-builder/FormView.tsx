@@ -13,6 +13,7 @@ import {
 import {
   filterManagingDeanery,
   FormRUtilities,
+  getLinkedProgrammeDetails,
   makeWarningText
 } from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
@@ -29,6 +30,7 @@ import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
 import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 
 type FormViewProps = {
   formData: FormData;
@@ -56,6 +58,10 @@ export const FormView = ({
       page.sections.flatMap(section => section.fields)
     );
   }, [formJson.pages]);
+
+  const ProgMems = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.programmeMemberships
+  );
 
   // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
@@ -96,11 +102,16 @@ export const FormView = ({
       data.programmeMembershipId as string
     );
 
+    const linkedProgramme =
+      getLinkedProgrammeDetails(ProgMems, data.programmeMembershipId) ??
+      undefined;
+
     const updatedFormData = {
       ...formData,
       isArcp,
       localOfficeName,
-      programmeMembershipId
+      programmeMembershipId,
+      programmeSpecialty: linkedProgramme?.programmeName
     } as FormRPartA | FormRPartB;
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);

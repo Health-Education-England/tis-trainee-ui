@@ -3,7 +3,6 @@ import { FormRPartB, Work } from "./FormRPartB";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
-import { isValidOption } from "../utilities/FormBuilderUtilities";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function ProfileToFormRPartBInitialValues(
@@ -11,10 +10,6 @@ export function ProfileToFormRPartBInitialValues(
   linkedFormRData?: LinkedFormRDataType
 ): FormRPartB {
   const pd = traineeProfileData.personalDetails;
-  const programme = ProfileUtilities.getRecentProgramme(
-    traineeProfileData.programmeMemberships
-  );
-  const curriculum = ProfileUtilities.getCurriculum(programme);
   const work = traineeProfileData.placements.map<Work>(placement => ({
     typeOfWork: StringUtilities.argsToString(
       placement.placementType,
@@ -36,12 +31,12 @@ export function ProfileToFormRPartBInitialValues(
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
     email: "",
-    localOfficeName: linkedFormRData?.managingDeanery ?? null,
+    localOfficeName: linkedFormRData?.managingDeanery,
     prevRevalBody: pd?.prevRevalBody,
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
     prevRevalDate: pd?.prevRevalDate,
-    programmeSpecialty: isValidOption("curriculum", curriculum?.curriculumName),
+    programmeSpecialty: linkedFormRData?.linkedProgramme?.programmeName,
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
     work: workFilteredSorted,
@@ -73,7 +68,7 @@ export function ProfileToFormRPartBInitialValues(
     lastModifiedDate: null,
     isDeclarationAccepted: false,
     isConsentAccepted: false,
-    isArcp: linkedFormRData?.isArcp ?? null,
-    programmeMembershipId: linkedFormRData?.programmeMembershipId ?? null
+    isArcp: linkedFormRData?.isArcp,
+    programmeMembershipId: linkedFormRData?.programmeMembershipId
   };
 }

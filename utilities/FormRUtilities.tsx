@@ -140,3 +140,13 @@ export const filterManagingDeanery = (PmId: string) =>
     .traineeProfile.traineeProfileData.programmeMemberships.filter(
       prog => prog.tisId === PmId
     )[0]?.managingDeanery;
+
+export function getLinkedProgrammeDetails(
+  programMemberships: ProgrammeMembership[] | undefined,
+  programMembershipId: string | null | undefined
+): ProgrammeMembership | null {
+  if (!programMembershipId || !programMemberships) return null;
+  return (
+    programMemberships.find(prog => prog.tisId === programMembershipId) ?? null
+  );
+}

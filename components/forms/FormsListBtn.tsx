@@ -9,6 +9,7 @@ import { FormLinkerModal } from "./form-linker/FormLinkerModal";
 import {
   filterManagingDeanery,
   FormRUtilities,
+  getLinkedProgrammeDetails,
   makeWarningText
 } from "../../utilities/FormRUtilities";
 import { LinkedFormRDataType } from "./form-linker/FormLinkerForm";
@@ -53,8 +54,13 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
     const managingDeanery = filterManagingDeanery(
       data.programmeMembershipId as string
-    ); // we know it's not null at this point
-    const linkedFormRData = { ...data, managingDeanery };
+    );
+    const linkedProgramme =
+      getLinkedProgrammeDetails(
+        traineeProfileData.programmeMemberships,
+        data.programmeMembershipId
+      ) ?? undefined;
+    const linkedFormRData = { ...data, managingDeanery, linkedProgramme };
     setShowModal(false);
     if (draftFormProps?.id) {
       loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData); // UNSUBMITTED

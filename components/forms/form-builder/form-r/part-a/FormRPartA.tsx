@@ -10,14 +10,8 @@ import FormBuilder, { Form, FormName } from "../../FormBuilder";
 import { formAValidationSchema } from "./formAValidationSchema";
 import { FormView } from "../../FormView";
 import { useSelectFormData } from "../../../../../utilities/hooks/useSelectFormData";
-import {
-  filterCurriculumOptions,
-  transformReferenceData
-} from "../../../../../utilities/FormBuilderUtilities";
-import {
-  selectAllReference,
-  selectCurriculumOptions
-} from "../../../../../redux/slices/referenceSlice";
+import { transformReferenceData } from "../../../../../utilities/FormBuilderUtilities";
+import { selectAllReference } from "../../../../../redux/slices/referenceSlice";
 import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
 import { FormRPartA } from "../../../../../models/FormRPartA";
 import { FormProvider } from "../../FormContext";
@@ -27,17 +21,13 @@ export default function FormA() {
   const referenceData = transformReferenceData(
     useAppSelector(selectAllReference)
   );
-  const filteredCurriculumOptions = filterCurriculumOptions(
-    useAppSelector(selectCurriculumOptions),
-    "MEDICAL_CURRICULUM"
-  );
+
   const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
     (declaration: string) => ({ label: declaration, value: declaration })
   );
   const formOptions = {
     ...referenceData,
-    programmeDeclarationOptions,
-    filteredCurriculumOptions
+    programmeDeclarationOptions
   };
 
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
