@@ -59,6 +59,8 @@ const tootInstructionsText3 =
   "Please enter 0 (zero) where you have no days against a TOOT category.";
 const tootInstructionsText4 =
   "Partial days should be rounded up to the nearest whole day.";
+const tootInstructionsText5 =
+  "TOOT <strong>does not include</strong> study leave, paid annual leave, prospectively approved time out of programme for training/research (OOPT/OOPR) or periods of time between training programmes (e.g. between core and specialty training).";
 
 const gmpDeclarationsText1 =
   "These declarations are compulsory and relate to the Good Medical Practice guidance issued by the GMC.";
@@ -149,7 +151,8 @@ const displayText: DisplayText = {
     tootInstructionsText1,
     tootInstructionsText2,
     tootInstructionsText3,
-    tootInstructionsText4
+    tootInstructionsText4,
+    tootInstructionsText5
   ]),
   gmpDeclarationsInstructions: generateTextElement([
     gmpDeclarationsText1,
