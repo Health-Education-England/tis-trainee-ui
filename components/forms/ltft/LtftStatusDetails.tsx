@@ -38,6 +38,19 @@ export const LtftStatusDetails = (formData: LtftObj) => {
               formData.status?.current?.state === "WITHDRAWN") && (
               <>
                 <SummaryList.Row>
+                  <SummaryList.Key>
+                    {StringUtilities.capitalize(
+                      formData.status?.current?.state
+                    )}{" "}
+                    by
+                  </SummaryList.Key>
+                  <SummaryList.Value data-cy="ltftModifiedBy">
+                    {formData.status.current.modifiedBy.role === "TRAINEE"
+                      ? "Me"
+                      : "TIS Admin"}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
                   <SummaryList.Key>Reason</SummaryList.Key>
                   <SummaryList.Value data-cy="ltfReason">
                     {getStatusReasonLabel(
