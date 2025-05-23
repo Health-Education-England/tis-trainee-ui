@@ -45,20 +45,9 @@ export const LtftStatusDetails = (formData: LtftObj) => {
                     by
                   </SummaryList.Key>
                   <SummaryList.Value data-cy="ltftModifiedBy">
-                    {formData.status.current.modifiedBy.role && (
-                      <>
-                        {StringUtilities.capitalize(
-                          formData.status.current.modifiedBy.role
-                        )}
-                        :{" "}
-                      </>
-                    )}
-                    {formData.status.current.modifiedBy.name && (
-                      <>{formData.status.current.modifiedBy.name}</>
-                    )}
-                    {formData.status.current.modifiedBy.email && (
-                      <> ({formData.status.current.modifiedBy.email})</>
-                    )}
+                    {formData.status.current.modifiedBy.role === "TRAINEE"
+                      ? "Me"
+                      : "TIS Admin"}
                   </SummaryList.Value>
                 </SummaryList.Row>
                 <SummaryList.Row>
