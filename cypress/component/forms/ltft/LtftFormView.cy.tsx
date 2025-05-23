@@ -142,6 +142,7 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="ltftCreated"]').should("exist");
     cy.get('[data-cy="ltftModified"]').should("exist");
     cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
+    cy.get('[data-cy="ltftModifiedBy"]').contains("TIS Admin");
     cy.get('[data-cy="ltftMessage"]').contains("status reason message");
     cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
     cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
