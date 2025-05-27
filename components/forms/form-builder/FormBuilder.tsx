@@ -59,7 +59,6 @@ export type Field = {
   width?: number;
   isNumberField?: boolean;
   contributesToTotal?: string;
-  isTotal?: boolean;
   readOnly?: boolean;
   rows?: number;
   isMultiSelect?: boolean;
