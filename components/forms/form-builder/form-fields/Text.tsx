@@ -44,7 +44,7 @@ export const Text: React.FC<TextProps> = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint}`}>{hint}</Hint>}
+      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <input
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}

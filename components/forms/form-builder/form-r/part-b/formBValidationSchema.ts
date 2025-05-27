@@ -163,7 +163,6 @@ const formBValidationSchemaDefault = yup.object({
       " please choose a previous Revalidation date from the past",
       value => DateUtilities.IsPastDate(value)
     ),
-  programmeSpecialty: StringValidationSchema("Programme / Training Specialty"),
   dualSpecialty: yup.string(),
 
   // Work - section 2
