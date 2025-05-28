@@ -88,7 +88,7 @@ export const FormView = ({
   const linkedFormData: LinkedFormRDataType = {
     isArcp: formData.isArcp,
     programmeMembershipId: formData.programmeMembershipId,
-    managingDeanery: formData.localOfficeName
+    localOfficeName: formData.localOfficeName
   };
 
   const handleSubClick = () => {

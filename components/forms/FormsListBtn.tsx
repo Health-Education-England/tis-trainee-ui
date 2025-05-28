@@ -52,7 +52,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = filterManagingDeanery(
+    const localOfficeName = filterManagingDeanery(
       data.programmeMembershipId as string
     );
     const linkedProgramme =
@@ -60,7 +60,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
         traineeProfileData.programmeMemberships,
         data.programmeMembershipId
       ) ?? undefined;
-    const linkedFormRData = { ...data, managingDeanery, linkedProgramme };
+    const linkedFormRData = { ...data, localOfficeName, linkedProgramme };
     setShowModal(false);
     if (draftFormProps?.id) {
       loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData); // UNSUBMITTED

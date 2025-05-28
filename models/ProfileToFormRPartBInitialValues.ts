@@ -31,7 +31,7 @@ export function ProfileToFormRPartBInitialValues(
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
     email: "",
-    localOfficeName: linkedFormRData?.managingDeanery,
+    localOfficeName: linkedFormRData?.localOfficeName,
     prevRevalBody: pd?.prevRevalBody,
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,

@@ -17,8 +17,8 @@ import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 export type LinkedFormRDataType = {
   isArcp: null | boolean;
   programmeMembershipId: null | string;
-  managingDeanery?: string;
   linkedProgramme?: ProgrammeMembership;
+  localOfficeName?: string;
 };
 type FormLinkerFormProps = {
   onSubmit: (data: LinkedFormRDataType) => void;

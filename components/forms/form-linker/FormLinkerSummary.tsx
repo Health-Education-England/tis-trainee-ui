@@ -7,7 +7,7 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 export function FormLinkerSummary({
   isArcp,
   programmeMembershipId,
-  managingDeanery
+  localOfficeName
 }: Readonly<LinkedFormRDataType>) {
   const progMems = useAppSelector(
     state => state.traineeProfile.traineeProfileData.programmeMemberships
@@ -36,7 +36,7 @@ export function FormLinkerSummary({
     },
     {
       key: "Managing Deanery / Local Office:",
-      value: managingDeanery ?? "Not set"
+      value: localOfficeName ?? "Not set"
     }
   ];
 
