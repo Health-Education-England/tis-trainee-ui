@@ -134,7 +134,7 @@ export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
   return programmes.sort(selectLinkedProgrammeOptionsSorter);
 };
 
-export const filterManagingDeanery = (PmId: string) =>
+export const filterManagingDeanery = (PmId: string): string | undefined =>
   store
     .getState()
     .traineeProfile.traineeProfileData.programmeMemberships.filter(
@@ -144,9 +144,37 @@ export const filterManagingDeanery = (PmId: string) =>
 export function getLinkedProgrammeDetails(
   programMemberships: ProgrammeMembership[] | undefined,
   programMembershipId: string | null | undefined
-): ProgrammeMembership | null {
-  if (!programMembershipId || !programMemberships) return null;
-  return (
-    programMemberships.find(prog => prog.tisId === programMembershipId) ?? null
+): ProgrammeMembership | undefined {
+  if (!programMembershipId || !programMemberships) return;
+  return programMemberships.find(prog => prog.tisId === programMembershipId);
+}
+
+type ProcessedFormData = {
+  isArcp: boolean | null;
+  programmeMembershipId: string | null;
+  localOfficeName?: string;
+  linkedProgramme?: ProgrammeMembership;
+};
+
+export function processLinkedFormData(
+  data: LinkedFormRDataType,
+  programmeMemberships: ProgrammeMembership[]
+): ProcessedFormData {
+  const { isArcp, programmeMembershipId } = data;
+
+  const localOfficeName = filterManagingDeanery(
+    programmeMembershipId as string
   );
+
+  const linkedProgramme = getLinkedProgrammeDetails(
+    programmeMemberships,
+    programmeMembershipId
+  );
+
+  return {
+    isArcp,
+    programmeMembershipId,
+    localOfficeName,
+    linkedProgramme
+  };
 }

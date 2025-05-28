@@ -7,10 +7,9 @@ import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormLinkerModal } from "./form-linker/FormLinkerModal";
 import {
-  filterManagingDeanery,
   FormRUtilities,
-  getLinkedProgrammeDetails,
-  makeWarningText
+  makeWarningText,
+  processLinkedFormData
 } from "../../utilities/FormRUtilities";
 import { LinkedFormRDataType } from "./form-linker/FormLinkerForm";
 import { updatedSaveStatus } from "../../redux/slices/formASlice";
@@ -52,24 +51,25 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const localOfficeName = filterManagingDeanery(
-      data.programmeMembershipId as string
+    const processedFormRData = processLinkedFormData(
+      data,
+      traineeProfileData.programmeMemberships
     );
-    const linkedProgramme =
-      getLinkedProgrammeDetails(
-        traineeProfileData.programmeMemberships,
-        data.programmeMembershipId
-      ) ?? undefined;
-    const linkedFormRData = { ...data, localOfficeName, linkedProgramme };
+
     setShowModal(false);
     if (draftFormProps?.id) {
-      loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData); // UNSUBMITTED
+      loadTheSavedForm(
+        pathName,
+        draftFormProps?.id,
+        history,
+        processedFormRData
+      ); // UNSUBMITTED
     } else {
       FormRUtilities.loadNewForm(
         pathName,
         history,
         traineeProfileData,
-        linkedFormRData
+        processedFormRData
       );
     }
   };

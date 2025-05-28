@@ -11,10 +11,9 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import {
-  filterManagingDeanery,
   FormRUtilities,
-  getLinkedProgrammeDetails,
-  makeWarningText
+  makeWarningText,
+  processLinkedFormData
 } from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
 import {
@@ -97,21 +96,12 @@ export const FormView = ({
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
     setIsSubmitting(true);
-    const { isArcp, programmeMembershipId } = data;
-    const localOfficeName = filterManagingDeanery(
-      data.programmeMembershipId as string
-    );
 
-    const linkedProgramme =
-      getLinkedProgrammeDetails(ProgMems, data.programmeMembershipId) ??
-      undefined;
+    const processedFormData = processLinkedFormData(data, ProgMems);
 
     const updatedFormData = {
       ...formData,
-      isArcp,
-      localOfficeName,
-      programmeMembershipId,
-      programmeSpecialty: linkedProgramme?.programmeName
+      ...processedFormData
     } as FormRPartA | FormRPartB;
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);
