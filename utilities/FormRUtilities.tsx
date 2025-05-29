@@ -17,6 +17,7 @@ import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+
 export class FormRUtilities {
   public static async handleRowClick(
     id: string,
@@ -134,12 +135,11 @@ export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
   return programmes.sort(selectLinkedProgrammeOptionsSorter);
 };
 
-export const filterManagingDeanery = (PmId: string): string | undefined =>
-  store
-    .getState()
-    .traineeProfile.traineeProfileData.programmeMemberships.filter(
-      prog => prog.tisId === PmId
-    )[0]?.managingDeanery;
+export const filterManagingDeanery = (
+  programmeMemberships: ProgrammeMembership[],
+  PmId: string
+): string | undefined =>
+  programmeMemberships?.filter(prog => prog.tisId === PmId)[0]?.managingDeanery;
 
 export function getLinkedProgrammeDetails(
   programMemberships: ProgrammeMembership[] | undefined,
@@ -163,6 +163,7 @@ export function processLinkedFormData(
   const { isArcp, programmeMembershipId } = data;
 
   const localOfficeName = filterManagingDeanery(
+    programmeMemberships,
     programmeMembershipId as string
   );
 
