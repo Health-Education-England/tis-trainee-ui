@@ -507,7 +507,16 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   // check 'other' option conditional rendering
   cy.clickSelect('[data-cy="prevRevalBody"]', "oth");
   cy.get('[data-cy="prevRevalBodyOther-label"]').should("exist");
+
+  // Check validation for 'other' option choices
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("exist");
   cy.clickSelect('[data-cy="prevRevalBodyOther"]', null, true);
+  cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("not.exist");
+
+  cy.clickSelect('[data-cy="prevRevalBody"]', "oth");
+  cy.clickSelect('[data-cy="prevRevalBodyOther"]', null);
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("not.exist");
 
   // more date validation
   cy.clearAndType('[data-cy="currRevalDate-input"]', prevRevalDate);
@@ -517,12 +526,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   cy.clearAndType('[data-cy="currRevalDate-input"]', currRevalDate);
   cy.get(".field-warning-msg").should("not.exist");
-
-  // check prev DB for reval - 'other' is not required
-  cy.get(
-    '[data-cy="prevRevalBodyOther"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
-  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("not.exist");
 
   // complete the required fields
   cy.clearAndType('[data-cy="forename-input"]', `Bob-${currentDate}`);

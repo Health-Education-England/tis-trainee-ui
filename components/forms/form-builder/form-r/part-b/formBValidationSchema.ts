@@ -145,7 +145,9 @@ const formBValidationSchemaDefault = yup.object({
     .max(255, "Email must be shorter than 255 characters")
     .required("Email is required"),
   prevRevalBody: yup.string().nullable(),
-  prevRevalBodyOther: yup.string().nullable(),
+  prevRevalBodyOther: StringValidationSchema(
+    "'Other' Previous Revalidation Body"
+  ),
   currRevalDate: yup
     .date()
     .typeError("Current Revalidation date must be a valid date")
