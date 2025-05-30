@@ -19,7 +19,6 @@ interface Props {
   disabled?: boolean;
   onBlur?: any;
   isNumberField?: boolean;
-  isTotal?: boolean;
   maxLength?: number;
   inputSymbol?: string;
 }
@@ -34,7 +33,7 @@ const TextInputField: FunctionComponent<Props> = props => {
     hidelabel,
     isNumberField,
     width,
-    isTotal,
+    readOnly,
     maxLength,
     inputSymbol,
     ...rest
@@ -81,7 +80,7 @@ const TextInputField: FunctionComponent<Props> = props => {
           min="1920-01-01"
           max="2119-12-31"
           data-cy={props.name}
-          className={isTotal ? "total-field" : ""}
+          className={readOnly ? "readonly-field" : ""}
         />
         {showInputSymbol()}
       </div>

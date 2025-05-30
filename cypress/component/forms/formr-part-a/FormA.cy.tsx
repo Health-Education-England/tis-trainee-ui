@@ -26,6 +26,7 @@ import {
   Field,
   Form
 } from "../../../../components/forms/form-builder/FormBuilder";
+import { mockLinkedFormRData } from "../../../../mock-data/draft-formr-parta";
 
 describe("FormA", () => {
   beforeEach(() => {
@@ -38,8 +39,11 @@ describe("FormA", () => {
   });
   it("renders the Form A for completing when path is /formr-a/create", () => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    const initialisedFormAData =
-      ProfileToFormRPartAInitialValues(mockTraineeProfile);
+    const linkedFormRData = mockLinkedFormRData;
+    const initialisedFormAData = ProfileToFormRPartAInitialValues(
+      mockTraineeProfile,
+      linkedFormRData
+    );
     store.dispatch(updatedFormA(initialisedFormAData));
     const initialPageFields = formAJson.pages[0].sections.flatMap(
       section => section.fields as Field[]

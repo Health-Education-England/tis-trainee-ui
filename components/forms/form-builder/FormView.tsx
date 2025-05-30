@@ -11,9 +11,9 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import {
-  filterManagingDeanery,
   FormRUtilities,
-  makeWarningText
+  makeWarningText,
+  processLinkedFormData
 } from "../../../utilities/FormRUtilities";
 import history from "../../navigation/history";
 import {
@@ -29,6 +29,7 @@ import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
 import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 
 type FormViewProps = {
   formData: FormData;
@@ -57,6 +58,10 @@ export const FormView = ({
     );
   }, [formJson.pages]);
 
+  const ProgMems = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.programmeMemberships
+  );
+
   // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
     if (canEditStatus && !isSubmitting) {
@@ -82,7 +87,7 @@ export const FormView = ({
   const linkedFormData: LinkedFormRDataType = {
     isArcp: formData.isArcp,
     programmeMembershipId: formData.programmeMembershipId,
-    managingDeanery: formData.localOfficeName
+    localOfficeName: formData.localOfficeName
   };
 
   const handleSubClick = () => {
@@ -91,16 +96,12 @@ export const FormView = ({
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
     setIsSubmitting(true);
-    const { isArcp, programmeMembershipId } = data;
-    const localOfficeName = filterManagingDeanery(
-      data.programmeMembershipId as string
-    );
+
+    const processedFormData = processLinkedFormData(data, ProgMems);
 
     const updatedFormData = {
       ...formData,
-      isArcp,
-      localOfficeName,
-      programmeMembershipId
+      ...processedFormData
     } as FormRPartA | FormRPartB;
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);

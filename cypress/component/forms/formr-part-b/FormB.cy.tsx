@@ -32,6 +32,9 @@ import {
   Field,
   Form
 } from "../../../../components/forms/form-builder/FormBuilder";
+import { mockLinkedFormRData } from "../../../../mock-data/draft-formr-parta";
+
+const linkedFormRData = mockLinkedFormRData;
 
 describe("FormB /create (without Covid)", () => {
   let initialFormBData: FormRPartB;
@@ -43,8 +46,10 @@ describe("FormB /create (without Covid)", () => {
       updatedReference(transformReferenceData(mockedCombinedReference))
     );
     store.dispatch(updatedPreferredMfa("SMS"));
+
     initialFormBData = ProfileToFormRPartBInitialValues(
-      mockTraineeProfileFormB
+      mockTraineeProfileFormB,
+      linkedFormRData
     );
     store.dispatch(updatedFormB(initialFormBData));
   });
@@ -69,27 +74,14 @@ describe("FormB /create (without Covid)", () => {
 
     // 1. Personal Details
 
-    // This is just for the component tests ----------
-    // default programmeSpecialty value was provided but didn't match dropdown options so isValidOption utils function returns empty string which fires an error
-    cy.navNext();
-    cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
-    cy.get(".nhsuk-error-summary")
-      .should("exist")
-      .contains("Programme / Training Specialty is required");
-    cy.get('[data-cy="navNext"]').should(
-      "have.class",
-      "nhsuk-pagination__link nhsuk-pagination__link--next disabled-link"
-    );
-    cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
-    cy.get(".react-select__value-container").contains("ACCS Anaesthetics");
-    cy.get(".nhsuk-error-summary").should(
-      "not.contain",
-      "Programme / Training Specialty is required"
-    );
-    // ----------------------------------------------
     cy.get('[data-cy="progress-header"] > h3').contains(
       "Part 1 of 10 - Personal Details"
     );
+    cy.get('[data-cy="programmeSpecialty-input"]').should(
+      "have.value",
+      "Cardiology"
+    );
+
     cy.checkAndFillSection1();
     cy.navNext();
 
@@ -218,7 +210,8 @@ describe("FormB /create (with Covid)", () => {
     );
     store.dispatch(updatedPreferredMfa("SMS"));
     const initialFormBData = ProfileToFormRPartBInitialValues(
-      mockTraineeProfileFormBCovid
+      mockTraineeProfileFormBCovid,
+      linkedFormRData
     );
     // Bit of a hack to get the Covid object in the store
     // See FormB redux slice loadSavedFormB reducer for the logic

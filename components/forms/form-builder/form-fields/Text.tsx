@@ -18,7 +18,6 @@ type TextProps = {
   arrayName?: string;
   width?: number;
   isNumberField?: boolean;
-  isTotal?: boolean;
   readOnly?: boolean;
   dtoName?: string;
   hint?: string;
@@ -34,7 +33,6 @@ export const Text: React.FC<TextProps> = ({
   arrayName,
   width = 20,
   isNumberField,
-  isTotal,
   readOnly,
   dtoName,
   hint
@@ -46,7 +44,7 @@ export const Text: React.FC<TextProps> = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint}`}>{hint}</Hint>}
+      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <input
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
@@ -67,7 +65,7 @@ export const Text: React.FC<TextProps> = ({
         className={`nhsuk-input nhsuk-input--width-${
           fieldWidthData?.fieldName === name ? fieldWidthData.width : width
         } ${fieldError ? "nhsuk-input--error" : ""} ${
-          isTotal ? "total-field" : ""
+          readOnly ? "readonly-field" : ""
         }`}
         placeholder={placeholder}
         aria-labelledby={`${name}--label`}

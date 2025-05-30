@@ -6,6 +6,7 @@ import {
 import {
   filterProgrammesForLinker,
   makeWarningText,
+  processLinkedFormData,
   sortProgrammesForLinker
 } from "../FormRUtilities";
 
@@ -105,5 +106,82 @@ describe("FormRUtilities - makeWarningText", () => {
       dayjs().subtract(32, "day").toDate()
     );
     expect(warningText).toBeNull();
+  });
+});
+
+describe("FormRUtilities - processLinkedFormData", () => {
+  const testProgrammeMemberships = [
+    {
+      ...mockProgrammeMemberships[0],
+      tisId: "1",
+      managingDeanery: "Local Office 1"
+    },
+    {
+      ...mockProgrammeMemberships[1],
+      tisId: "2",
+      managingDeanery: "Local Office 2"
+    }
+  ];
+
+  it("should process form data and return expected structure", () => {
+    const linkedFormData = {
+      isArcp: true,
+      programmeMembershipId: "1"
+    };
+
+    const result = processLinkedFormData(
+      linkedFormData,
+      testProgrammeMemberships
+    );
+
+    expect(result).toHaveProperty("isArcp");
+    expect(result).toHaveProperty("programmeMembershipId");
+    expect(result).toHaveProperty("localOfficeName");
+    expect(result).toHaveProperty("linkedProgramme");
+  });
+
+  it("should find linkedProgramme and localOfficeName when programmeMembershipId matches", () => {
+    const linkedFormData = {
+      isArcp: true,
+      programmeMembershipId: "1"
+    };
+
+    const result = processLinkedFormData(
+      linkedFormData,
+      testProgrammeMemberships
+    );
+    expect(result.isArcp).toBe(true);
+    expect(result.programmeMembershipId).toBe("1");
+    expect(result.linkedProgramme?.tisId).toBe("1");
+    expect(result.localOfficeName).toBe("Local Office 1");
+  });
+
+  it("should not find linkedProgramme and localOfficeName when programmeMembershipId doesn't match", () => {
+    const linkedFormData = {
+      isArcp: true,
+      programmeMembershipId: "999"
+    };
+
+    const result = processLinkedFormData(
+      linkedFormData,
+      testProgrammeMemberships
+    );
+
+    expect(result.linkedProgramme).toBeUndefined();
+    expect(result.localOfficeName).toBeUndefined();
+  });
+
+  it("should not find linkedProgramme when programmeMembershipId is null", () => {
+    const linkedFormData = {
+      isArcp: null,
+      programmeMembershipId: null
+    };
+
+    const result = processLinkedFormData(
+      linkedFormData,
+      testProgrammeMemberships
+    );
+
+    expect(result.linkedProgramme).toBeUndefined();
   });
 });
