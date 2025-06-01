@@ -81,11 +81,9 @@ export default function FormA() {
                 initialData={formData}
                 initialPageFields={initialPageFields}
                 jsonForm={formJson}
+                validationSchema={formAValidationSchema}
               >
-                <FormBuilder
-                  options={formOptions}
-                  validationSchema={formAValidationSchema}
-                />
+                <FormBuilder options={formOptions} />
               </FormProvider>
             ) : (
               <Redirect to={redirectPath} />

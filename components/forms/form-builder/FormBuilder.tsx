@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   ArrowLeftIcon,
@@ -11,9 +11,7 @@ import {
   Row
 } from "nhsuk-react-components";
 import {
-  createErrorObject,
   getEditPageNumber,
-  validateFields,
   formatFieldName,
   showFormField,
   continueToConfirm,
@@ -91,7 +89,6 @@ export type Form = {
 };
 type FormBuilderProps = {
   options: any;
-  validationSchema: any;
 };
 export type MatcherName = "prevDateTest" | "postcodeTest";
 export type Warning = {
@@ -104,17 +101,16 @@ export type ReturnedWidthData = {
   width: number;
 };
 
-export default function FormBuilder({
-  options,
-  validationSchema
-}: Readonly<FormBuilderProps>) {
+export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
   const {
     formData,
     isFormDirty,
     setIsFormDirty,
-    currentPageFields,
     setCurrentPageFields,
-    jsonForm
+    jsonForm,
+    formErrors,
+    validateCurrentPage,
+    clearErrors
   } = useFormContext();
 
   const jsonFormName = jsonForm.name;
@@ -122,7 +118,6 @@ export default function FormBuilder({
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);
   const [currentPage, setCurrentPage] = useState(initialPageValue);
-  const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
@@ -132,38 +127,19 @@ export default function FormBuilder({
     );
   }, [currentPage, pages, formData, setCurrentPageFields]);
 
-  useEffect(() => {
-    if (isFormDirty) {
-      validateFields(currentPageFields, formData, validationSchema)
-        .then(() => {
-          setFormErrors({});
-        })
-        .catch((err: { inner: { path: string; message: string }[] }) => {
-          setFormErrors(() => {
-            const newErrors = createErrorObject(err);
-            return newErrors;
-          });
-        });
-    }
-  }, [formData, currentPageFields, validationSchema, isFormDirty]);
-
-  const handlePageChange = (e: { preventDefault: () => void }) => {
+  const handlePageChange = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsFormDirty(false);
-    validateFields(currentPageFields, formData, validationSchema)
-      .then(() => {
-        if (currentPage === lastPage || canEditStatus) {
-          continueToConfirm(jsonFormName, formData);
-        } else {
-          setCurrentPage(currentPage + 1);
-        }
-      })
-      .catch((err: { inner: { path: string; message: string }[] }) => {
-        setFormErrors(() => {
-          const newErrors = createErrorObject(err);
-          return newErrors;
-        });
-      });
+
+    const isValid = await validateCurrentPage();
+
+    if (isValid) {
+      if (currentPage === lastPage || canEditStatus) {
+        continueToConfirm(jsonFormName, formData);
+      } else {
+        setCurrentPage(currentPage + 1);
+      }
+    }
   };
 
   const handleSaveBtnClick = async () => {
@@ -200,7 +176,7 @@ export default function FormBuilder({
           )}
           <AutosaveNote />
           {pages[currentPage]?.sections.map((section: Section) => (
-            <React.Fragment key={section.sectionHeader}>
+            <Fragment key={section.sectionHeader}>
               <Card feature>
                 <Card.Content>
                   <Card.Heading>{section.sectionHeader}</Card.Heading>
@@ -221,7 +197,7 @@ export default function FormBuilder({
                   })}
                 </Card.Content>
               </Card>
-            </React.Fragment>
+            </Fragment>
           ))}
         </div>
       )}
@@ -240,7 +216,7 @@ export default function FormBuilder({
                 }
                 onClick={() => {
                   setIsFormDirty(false);
-                  setFormErrors({});
+                  clearErrors();
                   setCurrentPage(currentPage - 1);
                 }}
                 data-cy="navPrevious"

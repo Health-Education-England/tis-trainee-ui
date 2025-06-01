@@ -1,11 +1,19 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect
+} from "react";
 import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
   ReturnedWarning,
   setTextFieldWidth,
   showFieldMatchWarning,
-  sumFieldValues
+  sumFieldValues,
+  validateFields,
+  createErrorObject
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
@@ -33,7 +41,6 @@ type FormContextType = {
   ) => void;
   isFormDirty: boolean;
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
-  currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
   jsonForm: Form;
   fieldWarning: ReturnedWarning | null;
@@ -42,6 +49,10 @@ type FormContextType = {
   setFieldWidthData: React.Dispatch<
     React.SetStateAction<ReturnedWidthData | null>
   >;
+  formErrors: any;
+  setFormErrors: React.Dispatch<React.SetStateAction<any>>;
+  validateCurrentPage: () => Promise<boolean>;
+  clearErrors: () => void;
 };
 
 const FormContext = createContext<FormContextType>({} as FormContextType);
@@ -60,6 +71,7 @@ type FormProviderProps = {
   initialData: FormData;
   initialPageFields: Field[];
   jsonForm: Form;
+  validationSchema: any;
   children: React.ReactNode;
 };
 
@@ -67,7 +79,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   children,
   initialData,
   initialPageFields,
-  jsonForm
+  jsonForm,
+  validationSchema
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
@@ -78,12 +91,41 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   );
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
+  const [formErrors, setFormErrors] = useState<any>({});
 
   useFormAutosave(
     jsonForm,
     formData as FormRPartA | FormRPartB | LtftObj,
     isFormDirty
   );
+
+  // validate when form is dirty
+  useEffect(() => {
+    if (isFormDirty) {
+      validateFields(currentPageFields, formData, validationSchema)
+        .then(() => {
+          setFormErrors({});
+        })
+        .catch((err: { inner: { path: string; message: string }[] }) => {
+          setFormErrors(createErrorObject(err));
+        });
+    }
+  }, [formData, currentPageFields, validationSchema, isFormDirty]);
+
+  const validateCurrentPage = useCallback(async (): Promise<boolean> => {
+    try {
+      await validateFields(currentPageFields, formData, validationSchema);
+      setFormErrors({});
+      return true;
+    } catch (err: any) {
+      setFormErrors(createErrorObject(err));
+      return false;
+    }
+  }, [currentPageFields, formData, validationSchema]);
+
+  const clearErrors = useCallback(() => {
+    setFormErrors({});
+  }, []);
 
   const updateFormData = (
     name: string,
@@ -165,10 +207,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       }
 
       if (totalName) {
-        const fieldsToTotal = currentPageFields.filter(
-          field => field.contributesToTotal === totalName
-        );
         setFormData((prevFormData: FormData) => {
+          const fieldsToTotal = currentPageFields.filter(
+            field => field.contributesToTotal === totalName
+          );
           const total = sumFieldValues(prevFormData, fieldsToTotal);
           return {
             ...prevFormData,
@@ -195,7 +237,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       fieldWarning,
       setFieldWarning,
       fieldWidthData,
-      setFieldWidthData
+      setFieldWidthData,
+      formErrors,
+      setFormErrors,
+      validateCurrentPage,
+      clearErrors
     }),
     [
       formData,
@@ -205,7 +251,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       handleBlur,
       handleChange,
       fieldWarning,
-      fieldWidthData
+      fieldWidthData,
+      formErrors,
+      validateCurrentPage,
+      clearErrors
     ]
   );
 

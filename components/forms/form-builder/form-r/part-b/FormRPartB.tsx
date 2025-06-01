@@ -104,11 +104,9 @@ export default function FormB() {
                 initialData={formDataWithSortedWork}
                 initialPageFields={initialPageFields}
                 jsonForm={finalFormJson}
+                validationSchema={formValidationSchema}
               >
-                <FormBuilder
-                  options={formOptions}
-                  validationSchema={formValidationSchema}
-                />
+                <FormBuilder options={formOptions} />
               </FormProvider>
             ) : (
               <Redirect to={redirectPath} />
