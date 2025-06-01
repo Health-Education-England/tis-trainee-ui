@@ -55,11 +55,9 @@ export function LtftForm() {
         initialData={formData}
         initialPageFields={initialPageFields}
         jsonForm={ltftJson as Form}
+        validationSchema={ltftValidationSchema}
       >
-        <FormBuilder
-          options={{ yesNo, ltftReasons, ltftRoles }}
-          validationSchema={ltftValidationSchema}
-        />
+        <FormBuilder options={{ yesNo, ltftReasons, ltftRoles }} />
       </FormProvider>
     </div>
   ) : (

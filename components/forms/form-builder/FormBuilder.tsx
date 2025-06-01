@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   ArrowLeftIcon,
@@ -12,15 +12,12 @@ import {
 } from "nhsuk-react-components";
 import {
   formatFieldName,
-  showFormField,
-  saveDraftForm,
-  FormDataType
+  showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { Link } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
-import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import ScrollToTop from "../../common/ScrollToTop";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
@@ -108,14 +105,15 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
     formErrors,
     currentPage,
     handlePageChange,
-    goToPreviousPage
+    goToPreviousPage,
+    isSubmitting,
+    handleSaveDraft,
+    canEditStatus
   } = useFormContext();
 
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
   useEffect(() => {
     setCurrentPageFields(
@@ -124,13 +122,8 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
   }, [currentPage, pages, formData, setCurrentPageFields]);
 
   const handleFormSubmit = (e: { preventDefault: () => void }) => {
-    handlePageChange(e, canEditStatus);
-  };
-
-  const handleSaveBtnClick = async () => {
-    setIsSubmitting(true);
-    await saveDraftForm(jsonForm, formData as FormDataType);
-    setIsSubmitting(false);
+    e.preventDefault();
+    handlePageChange();
   };
 
   return (
@@ -256,7 +249,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
               secondary
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
-                handleSaveBtnClick();
+                handleSaveDraft();
               }}
               disabled={isSubmitting} // need isAutoSaving too eventually
               data-cy="BtnSaveDraft"

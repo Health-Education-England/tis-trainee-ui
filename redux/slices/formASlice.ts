@@ -180,6 +180,7 @@ const formASlice = createSlice({
       })
       .addCase(loadSavedFormA.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.editPageNumber = 0;
         state.formData = action.payload;
       })
       .addCase(loadSavedFormA.rejected, (state, { error }) => {

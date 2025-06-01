@@ -15,12 +15,15 @@ import {
   validateFields,
   createErrorObject,
   getEditPageNumber,
-  continueToConfirm
+  continueToConfirm,
+  saveDraftForm,
+  FormDataType
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { LtftObj } from "../../../redux/slices/ltftSlice";
+import { useCanEditStatus } from "../../../utilities/hooks/useCanEditStatus";
 
 type FormContextType = {
   formData: FormData;
@@ -55,11 +58,11 @@ type FormContextType = {
   formErrors: any;
   setFormErrors: React.Dispatch<React.SetStateAction<any>>;
   currentPage: number;
-  handlePageChange: (
-    e: { preventDefault: () => void },
-    canEditStatus: boolean
-  ) => Promise<void>;
+  handlePageChange: () => Promise<void>;
   goToPreviousPage: () => void;
+  isSubmitting: boolean;
+  handleSaveDraft: () => Promise<void>;
+  canEditStatus: boolean;
 };
 
 const FormContext = createContext<FormContextType>({} as FormContextType);
@@ -103,6 +106,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
   const [formErrors, setFormErrors] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const canEditStatus = useCanEditStatus(jsonForm.name);
 
   useFormAutosave(
     jsonForm,
@@ -138,24 +143,25 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     setFormErrors({});
   }, []);
 
-  const handlePageChange = useCallback(
-    async (e: { preventDefault: () => void }, canEditStatus: boolean) => {
-      e.preventDefault();
-      setIsFormDirty(false);
+  const handlePageChange = useCallback(async () => {
+    setIsFormDirty(false);
+    const isValid = await validateCurrentPage();
+    const lastPage = jsonForm.pages.length - 1;
 
-      const isValid = await validateCurrentPage();
-      const lastPage = jsonForm.pages.length - 1;
-
-      if (isValid) {
-        if (currentPage === lastPage || canEditStatus) {
-          continueToConfirm(jsonForm.name, formData);
-        } else {
-          setCurrentPage(currentPage + 1);
-        }
+    if (isValid) {
+      if (currentPage === lastPage || canEditStatus) {
+        continueToConfirm(jsonForm.name, formData);
+      } else {
+        setCurrentPage(currentPage + 1);
       }
-    },
-    [currentPage, formData, jsonForm, validateCurrentPage]
-  );
+    }
+  }, [currentPage, formData, jsonForm, validateCurrentPage, canEditStatus]);
+
+  const handleSaveDraft = useCallback(async () => {
+    setIsSubmitting(true);
+    await saveDraftForm(jsonForm, formData as FormDataType);
+    setIsSubmitting(false);
+  }, [formData, jsonForm]);
 
   const goToPreviousPage = useCallback(() => {
     setIsFormDirty(false);
@@ -278,7 +284,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       setFormErrors,
       currentPage,
       handlePageChange,
-      goToPreviousPage
+      goToPreviousPage,
+      isSubmitting,
+      handleSaveDraft,
+      canEditStatus
     }),
     [
       formData,
@@ -293,7 +302,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       formErrors,
       currentPage,
       handlePageChange,
-      goToPreviousPage
+      goToPreviousPage,
+      isSubmitting,
+      handleSaveDraft,
+      canEditStatus
     ]
   );
 
