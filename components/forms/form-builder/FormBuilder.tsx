@@ -11,10 +11,8 @@ import {
   Row
 } from "nhsuk-react-components";
 import {
-  getEditPageNumber,
   formatFieldName,
   showFormField,
-  continueToConfirm,
   saveDraftForm,
   FormDataType
 } from "../../../utilities/FormBuilderUtilities";
@@ -105,19 +103,17 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
   const {
     formData,
     isFormDirty,
-    setIsFormDirty,
     setCurrentPageFields,
     jsonForm,
     formErrors,
-    validateCurrentPage,
-    clearErrors
+    currentPage,
+    handlePageChange,
+    goToPreviousPage
   } = useFormContext();
 
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
-  const initialPageValue = getEditPageNumber(jsonFormName);
-  const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
 
@@ -127,19 +123,8 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
     );
   }, [currentPage, pages, formData, setCurrentPageFields]);
 
-  const handlePageChange = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setIsFormDirty(false);
-
-    const isValid = await validateCurrentPage();
-
-    if (isValid) {
-      if (currentPage === lastPage || canEditStatus) {
-        continueToConfirm(jsonFormName, formData);
-      } else {
-        setCurrentPage(currentPage + 1);
-      }
-    }
+  const handleFormSubmit = (e: { preventDefault: () => void }) => {
+    handlePageChange(e, canEditStatus);
   };
 
   const handleSaveBtnClick = async () => {
@@ -149,7 +134,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
   };
 
   return (
-    <form onSubmit={handlePageChange} acceptCharset="UTF-8">
+    <form onSubmit={handleFormSubmit} acceptCharset="UTF-8">
       <ScrollToTop
         errors={formErrors}
         page={currentPage}
@@ -214,11 +199,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
                 className={
                   "nhsuk-pagination__link nhsuk-pagination__link--prev"
                 }
-                onClick={() => {
-                  setIsFormDirty(false);
-                  clearErrors();
-                  setCurrentPage(currentPage - 1);
-                }}
+                onClick={goToPreviousPage}
                 data-cy="navPrevious"
               >
                 <span className="nhsuk-pagination__title">{"Previous"}</span>
@@ -238,7 +219,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
               className={`nhsuk-pagination__link nhsuk-pagination__link--next ${
                 Object.keys(formErrors).length > 0 ? "disabled-link" : ""
               }`}
-              onClick={handlePageChange}
+              onClick={handleFormSubmit}
               data-cy="navNext"
             >
               <span className="nhsuk-pagination__title">{"Next"}</span>
@@ -262,7 +243,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
           {canEditStatus && (
             <Col width="one-half">
               <Button
-                onClick={handlePageChange}
+                onClick={handleFormSubmit}
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
