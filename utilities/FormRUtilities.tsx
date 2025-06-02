@@ -17,6 +17,7 @@ import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+
 export class FormRUtilities {
   public static async handleRowClick(
     id: string,
@@ -134,9 +135,47 @@ export const sortProgrammesForLinker = (programmes: ProgrammeMembership[]) => {
   return programmes.sort(selectLinkedProgrammeOptionsSorter);
 };
 
-export const filterManagingDeanery = (PmId: string) =>
-  store
-    .getState()
-    .traineeProfile.traineeProfileData.programmeMemberships.filter(
-      prog => prog.tisId === PmId
-    )[0]?.managingDeanery;
+export const filterManagingDeanery = (
+  programmeMemberships: ProgrammeMembership[],
+  PmId: string
+): string | undefined =>
+  programmeMemberships?.filter(prog => prog.tisId === PmId)[0]?.managingDeanery;
+
+export function getLinkedProgrammeDetails(
+  programMemberships: ProgrammeMembership[] | undefined,
+  programMembershipId: string | null | undefined
+): ProgrammeMembership | undefined {
+  if (!programMembershipId || !programMemberships) return;
+  return programMemberships.find(prog => prog.tisId === programMembershipId);
+}
+
+type ProcessedFormData = {
+  isArcp: boolean | null;
+  programmeMembershipId: string | null;
+  localOfficeName?: string;
+  linkedProgramme?: ProgrammeMembership;
+};
+
+export function processLinkedFormData(
+  data: LinkedFormRDataType,
+  programmeMemberships: ProgrammeMembership[]
+): ProcessedFormData {
+  const { isArcp, programmeMembershipId } = data;
+
+  const localOfficeName = filterManagingDeanery(
+    programmeMemberships,
+    programmeMembershipId as string
+  );
+
+  const linkedProgramme = getLinkedProgrammeDetails(
+    programmeMemberships,
+    programmeMembershipId
+  );
+
+  return {
+    isArcp,
+    programmeMembershipId,
+    localOfficeName,
+    linkedProgramme
+  };
+}

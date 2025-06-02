@@ -604,12 +604,12 @@ ol[type="a"] {
   margin-left: -1em;
 }
 
-.total-field {
+.readonly-field {
   border: none;
   background-color: lightgray;
 }
 
-.total-field:focus {
+.readonly-field:focus {
   outline: none;
   border: none;
 }

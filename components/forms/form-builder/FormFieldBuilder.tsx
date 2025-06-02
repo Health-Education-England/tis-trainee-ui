@@ -36,7 +36,6 @@ export function FormFieldBuilder({
     optionsKey,
     width,
     isNumberField,
-    isTotal,
     readOnly,
     rows,
     isMultiSelect,
@@ -70,7 +69,6 @@ export function FormFieldBuilder({
           dtoName={dtoName}
           width={width}
           isNumberField={isNumberField}
-          isTotal={isTotal}
           readOnly={readOnly}
           hint={hint}
         />

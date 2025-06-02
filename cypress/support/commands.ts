@@ -330,17 +330,15 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1]').should("not.exist");
   cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
   cy.clearAndType('[data-cy="completionDate-input"]', "2032-12-30");
+  cy.get('[data-cy="programmeSpecialty-hint"]').should(
+    "have.text",
+    "This field is pre-populated from your linked Programme."
+  );
+  cy.get('[data-cy="programmeSpecialty-input"]').should(
+    "have.attr",
+    "readonly"
+  );
 
-  const selector =
-    '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__indicators .react-select__clear-indicator';
-  cy.get("body").then($body => {
-    if ($body.find(selector).length > 0) {
-      cy.get(selector).click();
-    }
-  });
-  cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
-  cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
-  cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("not.exist");
   cy.get('[data-cy="college-inline-error-msg"]').should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clickSelect('[data-cy="college"]', "dent", true);
@@ -448,10 +446,10 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   ).click();
   cy.get('[data-cy="currRevalDate-input"]').clear();
   cy.get('[data-cy="prevRevalDate-input"]').clear();
-  cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
-  cy.get(
-    '[data-cy="programmeSpecialty"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator '
-  ).click();
+  cy.get('[data-cy="programmeSpecialty-input"]').should(
+    "have.attr",
+    "readonly"
+  );
   cy.clickSelect('[data-cy="dualSpecialty"]', null, true);
   cy.get(
     '[data-cy="dualSpecialty"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
@@ -470,9 +468,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
   ).should("exist");
-  cy.get(
-    '[data-cy="error-txt-Programme / Training Specialty is required"]'
-  ).should("exist");
 
   // (non-required fields)
   cy.get('[data-cy="error-txt-Previous Revalidation date is required"]').should(
@@ -488,7 +483,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="gmcNumber-inline-error-msg"]').should("exist");
   cy.get('[data-cy="email-inline-error-msg"]').should("exist");
   cy.get('[data-cy="currRevalDate-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="programmeSpecialty-inline-error-msg"]').should("exist");
 
   // (non-required fields)
   cy.get('[data-cy="prevRevalDate-inline-error-msg"]').should("not.exist");
@@ -523,7 +517,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   cy.clearAndType('[data-cy="currRevalDate-input"]', currRevalDate);
   cy.get(".field-warning-msg").should("not.exist");
-  cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
 
   // check prev DB for reval - 'other' is not required
   cy.get(

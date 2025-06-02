@@ -7,9 +7,9 @@ import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormLinkerModal } from "./form-linker/FormLinkerModal";
 import {
-  filterManagingDeanery,
   FormRUtilities,
-  makeWarningText
+  makeWarningText,
+  processLinkedFormData
 } from "../../utilities/FormRUtilities";
 import { LinkedFormRDataType } from "./form-linker/FormLinkerForm";
 import { updatedSaveStatus } from "../../redux/slices/formASlice";
@@ -51,19 +51,25 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    const managingDeanery = filterManagingDeanery(
-      data.programmeMembershipId as string
-    ); // we know it's not null at this point
-    const linkedFormRData = { ...data, managingDeanery };
+    const processedFormRData = processLinkedFormData(
+      data,
+      traineeProfileData.programmeMemberships
+    );
+
     setShowModal(false);
     if (draftFormProps?.id) {
-      loadTheSavedForm(pathName, draftFormProps?.id, history, linkedFormRData); // UNSUBMITTED
+      loadTheSavedForm(
+        pathName,
+        draftFormProps?.id,
+        history,
+        processedFormRData
+      ); // UNSUBMITTED
     } else {
       FormRUtilities.loadNewForm(
         pathName,
         history,
         traineeProfileData,
-        linkedFormRData
+        processedFormRData
       );
     }
   };

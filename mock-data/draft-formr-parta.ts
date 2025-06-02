@@ -1,4 +1,5 @@
 import { LifeCycleState } from "../models/LifeCycleState";
+import { mockProgrammeMemberships } from "./trainee-profile";
 
 export const formANew = {
   address1: "585-6360 Interdum Street",
@@ -153,4 +154,12 @@ export const formANoTraineeTisId = {
   submissionDate: "",
   lastModifiedDate: "2020-04-15",
   otherImmigrationStatus: "Other status"
+};
+
+// Note: I've used this for FormRPartA and FormRPartB
+export const mockLinkedFormRData = {
+  isArcp: false,
+  programmeMembershipId: "1",
+  managingDeanery: "North West",
+  linkedProgramme: mockProgrammeMemberships[0]
 };

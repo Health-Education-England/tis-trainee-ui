@@ -76,9 +76,10 @@
             {
               "name": "programmeSpecialty",
               "label": "Programme/Training Specialty",
-              "type": "select",
-              "optionsKey": "curriculum",
-              "visible": true
+              "type": "text",
+              "visible": true,
+              "readOnly": true,
+              "hint": "This field is pre-populated from your linked Programme."
             },
             {
               "name": "dualSpecialty",
@@ -226,7 +227,6 @@
               "visible": true,
               "width": 3,
               "isNumberField": true,
-              "isTotal": true,
               "readOnly": true
             }
           ]

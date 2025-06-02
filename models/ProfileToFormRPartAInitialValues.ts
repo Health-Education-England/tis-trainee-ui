@@ -3,10 +3,7 @@ import { LifeCycleState } from "./LifeCycleState";
 import { TraineeProfile } from "./TraineeProfile";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import store from "../redux/store/store";
-import {
-  filterCurriculumOptions,
-  isValidOption
-} from "../utilities/FormBuilderUtilities";
+import { isValidOption } from "../utilities/FormBuilderUtilities";
 import { CombinedReferenceData } from "./CombinedReferenceData";
 import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
@@ -15,11 +12,6 @@ export function ProfileToFormRPartAInitialValues(
   linkedFormRData?: LinkedFormRDataType
 ): FormRPartA {
   const refData: CombinedReferenceData = store.getState().reference.combinedRef;
-  const filteredCurriculumData: { value: string; label: string }[] | undefined =
-    filterCurriculumOptions(
-      store.getState().reference.curriculumOptions,
-      "MEDICAL_CURRICULUM"
-    );
   const pd = traineeProfileData.personalDetails;
 
   const programme = ProfileUtilities.getRecentProgramme(
@@ -31,7 +23,7 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
-    localOfficeName: linkedFormRData?.managingDeanery ?? null,
+    localOfficeName: linkedFormRData?.localOfficeName,
     dateOfBirth: pd?.dateOfBirth ?? null,
     gender: isValidOption("gender", pd?.gender, refData),
     immigrationStatus: "",
@@ -47,12 +39,7 @@ export function ProfileToFormRPartAInitialValues(
     mobileNumber: pd?.mobileNumber,
     email: "",
     isLeadingToCct: false,
-    programmeSpecialty: isValidOption(
-      "curriculum",
-      curriculum?.curriculumName,
-      null,
-      filteredCurriculumData
-    ),
+    programmeSpecialty: linkedFormRData?.linkedProgramme?.programmeName,
     cctSpecialty1: isValidOption("curriculum", curriculum?.curriculumName),
     cctSpecialty2: "",
     college: "",
@@ -67,7 +54,7 @@ export function ProfileToFormRPartAInitialValues(
     lifecycleState: LifeCycleState.New,
     submissionDate: null,
     lastModifiedDate: null,
-    isArcp: linkedFormRData?.isArcp ?? null,
-    programmeMembershipId: linkedFormRData?.programmeMembershipId ?? null
+    isArcp: linkedFormRData?.isArcp,
+    programmeMembershipId: linkedFormRData?.programmeMembershipId
   };
 }
