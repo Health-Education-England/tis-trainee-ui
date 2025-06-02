@@ -58,7 +58,7 @@ type FormContextType = {
   formErrors: any;
   setFormErrors: React.Dispatch<React.SetStateAction<any>>;
   currentPage: number;
-  handlePageChange: () => Promise<void>;
+  handlePageChange: (isShortcut?: boolean) => Promise<void>;
   goToPreviousPage: () => void;
   isSubmitting: boolean;
   handleSaveDraft: () => Promise<void>;
@@ -143,19 +143,22 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     setFormErrors({});
   }, []);
 
-  const handlePageChange = useCallback(async () => {
-    setIsFormDirty(false);
-    const isValid = await validateCurrentPage();
-    const lastPage = jsonForm.pages.length - 1;
+  const handlePageChange = useCallback(
+    async (isShortcut: boolean = false) => {
+      setIsFormDirty(false);
+      const isValid = await validateCurrentPage();
+      const lastPage = jsonForm.pages.length - 1;
 
-    if (isValid) {
-      if (currentPage === lastPage || canEditStatus) {
-        continueToConfirm(jsonForm.name, formData);
-      } else {
-        setCurrentPage(currentPage + 1);
+      if (isValid) {
+        if (currentPage === lastPage || isShortcut) {
+          continueToConfirm(jsonForm.name, formData);
+        } else {
+          setCurrentPage(currentPage + 1);
+        }
       }
-    }
-  }, [currentPage, formData, jsonForm, validateCurrentPage, canEditStatus]);
+    },
+    [currentPage, formData, jsonForm, validateCurrentPage]
+  );
 
   const handleSaveDraft = useCallback(async () => {
     setIsSubmitting(true);

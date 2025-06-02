@@ -231,6 +231,7 @@ const formBSlice = createSlice({
       .addCase(loadSavedFormB.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.editPageNumber = 0;
+        state.canEdit = false;
         state.formData =
           action.payload.covidFlagStatus &&
           action.payload.finalForm.haveCovidDeclarations === null

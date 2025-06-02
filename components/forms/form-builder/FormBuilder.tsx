@@ -121,10 +121,8 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
     );
   }, [currentPage, pages, formData, setCurrentPageFields]);
 
-  const handleFormSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    handlePageChange();
-  };
+  const handleFormSubmit = () => handlePageChange();
+  const handleShortcutClick = () => handlePageChange(true);
 
   return (
     <form onSubmit={handleFormSubmit} acceptCharset="UTF-8">
@@ -236,7 +234,7 @@ export default function FormBuilder({ options }: Readonly<FormBuilderProps>) {
           {canEditStatus && (
             <Col width="one-half">
               <Button
-                onClick={handleFormSubmit}
+                onClick={handleShortcutClick}
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
