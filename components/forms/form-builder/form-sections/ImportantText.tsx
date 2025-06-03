@@ -87,12 +87,12 @@ const newResolvedDecsText2 =
 const newResolvedDecsText3 =
   "PREVIOUS declarations declared on your last Form R Part B are recorded in Parts 6 & 7.";
 const newResolvedDecsText4 =
-  "If you know of any RESOLVED significant events/complaints/other investigations since your last ARCP/RITA/Appraisal, you are required to have written a reflection on these in your Portfolio. When completing a declaration below, please identify where in your Portfolio the reflection(s) can be found.";
+  "If you know of any RESOLVED significant events/complaints/other investigations since your last ARCP/Appraisal, you are required to have written a reflection on these in your Portfolio. When completing a declaration below, please identify where in your Portfolio the reflection(s) can be found.";
 const newResolvedDecsText5 =
   "Please DO NOT include any patient-identifiable information on this form.";
 
 const unresolvedDecsText =
-  "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/RITA/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
+  "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
 
 const ltftDiscussionText1 =
   "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";

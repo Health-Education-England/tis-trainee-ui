@@ -280,7 +280,7 @@
           "fields": [
             {
               "name": "healthStatement",
-              "label": "Please use this section to declare any information relating to your health which you feel would be beneficial to the ARCP/RITA panel or Responsible Officer.",
+              "label": "Please use this section to declare any information relating to your health which you feel would be beneficial to the ARCP panel or Responsible Officer.",
               "placeholder": "type here...",
               "type": "textArea",
               "visible": true
@@ -383,7 +383,7 @@
           "fields": [
             {
               "name": "haveCurrentDeclarations",
-              "label": "Do you have any NEW Significant Events, Complaints, Other investigations to declare since your previous ARCP/RITA/Appraisal that have since been RESOLVED?",
+              "label": "Do you have any NEW Significant Events, Complaints, Other investigations to declare since your previous ARCP/Appraisal that have since been RESOLVED?",
               "type": "radio",
               "optionsKey": "yesNo",
               "visible": true,
@@ -594,7 +594,7 @@
     },
     {
       "name": "isConsentAccepted",
-      "label": "I give permission for my past and present ARCP/RITA portfolios and / or appraisal documentation to be viewed by my Responsible Officer and any appropriate person nominated by the Responsible Officer. Additionally if my Responsible Officer or Designated Body changes during my training period, I give permission for my current Responsible Officer to share this information with my new Responsible Officer for the purposes of Revalidation."
+      "label": "I give permission for my past and present ARCP portfolios and / or appraisal documentation to be viewed by my Responsible Officer and any appropriate person nominated by the Responsible Officer. Additionally if my Responsible Officer or Designated Body changes during my training period, I give permission for my current Responsible Officer to share this information with my new Responsible Officer for the purposes of Revalidation."
     }
   ]
 }
