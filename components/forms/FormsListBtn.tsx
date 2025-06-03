@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import { DateType } from "../../utilities/DateUtilities";
-import { loadTheSavedForm } from "../../utilities/FormBuilderUtilities";
+import {
+  loadTheSavedForm,
+  resetForm
+} from "../../utilities/FormBuilderUtilities";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { FormLinkerModal } from "./form-linker/FormLinkerModal";
 import {
@@ -33,6 +36,10 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
   const isFormDeleting = useAppSelector(
     state => state[formName].status === "deleting"
   );
+
+  useEffect(() => {
+    resetForm(formName);
+  }, [formName, resetForm]);
 
   const handleBtnClick = async () => {
     // NOTE: this is needed for edge case where stale state from race between form click save event & redirect and auto update event.

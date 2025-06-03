@@ -426,8 +426,6 @@ const ltftSlice = createSlice({
       })
       .addCase(loadSavedLtft.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.editPageNumber = 0;
-        state.canEdit = false;
         state.formData = action.payload;
       })
       .addCase(loadSavedLtft.rejected, (state, action) => {
