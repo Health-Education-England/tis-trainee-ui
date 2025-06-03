@@ -146,12 +146,15 @@ export default function FormBuilder({
     }
   }, [formData, currentPageFields, validationSchema, isFormDirty]);
 
-  const handlePageChange = (e: { preventDefault: () => void }) => {
+  const handlePageChange = (
+    e: { preventDefault: () => void },
+    isShortcut?: boolean
+  ) => {
     e.preventDefault();
     setIsFormDirty(false);
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
-        if (currentPage === lastPage || canEditStatus) {
+        if (currentPage === lastPage || isShortcut) {
           continueToConfirm(jsonFormName, formData);
         } else {
           setCurrentPage(currentPage + 1);
@@ -285,7 +288,9 @@ export default function FormBuilder({
           {canEditStatus && (
             <Col width="one-half">
               <Button
-                onClick={handlePageChange}
+                onClick={(e: { preventDefault: () => void }) =>
+                  handlePageChange(e, true)
+                }
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
