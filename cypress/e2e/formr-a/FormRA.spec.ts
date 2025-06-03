@@ -135,7 +135,6 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     ).should("exist");
     cy.get('[data-cy="navNext"]').click();
     cy.get(".nhsuk-error-summary").should("exist");
-    cy.clickSelect('[data-cy="programmeSpecialty"]', null, true);
     cy.clickSelect('[data-cy="cctSpecialty1"]', null, true);
     cy.clickSelect('[data-cy="college"]', null, true);
     cy.clearAndType('[data-cy="completionDate-input"]', completionDate);
