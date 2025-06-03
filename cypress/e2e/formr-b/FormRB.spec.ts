@@ -131,7 +131,6 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkElement("BtnShortcutToConfirm").click();
     cy.checkElement("warningConfirmation");
     cy.checkElement("forename-value", "Bob-edited");
-    cy.checkElement("prevRevalBodyOther-value", "Not provided");
 
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();

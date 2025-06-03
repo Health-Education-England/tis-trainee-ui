@@ -25,6 +25,13 @@ export function LtftHome() {
     item => item.status !== "DRAFT" && item.status !== "UNSUBMITTED"
   );
 
+  // Code to trigger hotjar survey via gtag (GA event)
+  if (previousLtftSummaries.length > 0) {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "at_least_one_submitted_ltft");
+    }
+  }
+
   const draftOrUnsubmittedLtftSummary = ltftSummary.filter(
     item => item.status === "DRAFT" || item.status === "UNSUBMITTED"
   );

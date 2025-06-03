@@ -100,10 +100,6 @@ export const LtftFormView = () => {
     stopSubmitting();
     setShowModal(false);
     resetAction();
-    // Track form submission to use this GA event for a Hotjar event to trigger a LTFT Hotjar survey.
-    if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("event", "ltft_form_submitted");
-    }
   };
 
   if (ltftStatus === "loading") return <Loading />;
