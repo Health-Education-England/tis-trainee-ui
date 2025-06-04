@@ -96,12 +96,16 @@ export const FormView = ({
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
     setIsSubmitting(true);
-
     const processedFormData = processLinkedFormData(data, ProgMems);
+    const { isArcp, programmeMembershipId, localOfficeName } =
+      processedFormData;
 
     const updatedFormData = {
       ...formData,
-      ...processedFormData
+      isArcp,
+      programmeMembershipId,
+      localOfficeName,
+      programmeSpecialty: processedFormData.linkedProgramme?.programmeName
     } as FormRPartA | FormRPartB;
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);
