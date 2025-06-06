@@ -338,9 +338,9 @@ export const toastSuccessText = {
 
 export const supportCatOptions = [
   { value: "Authenticator", label: "Authenticator" },
+  { value: "Changing Hours - LTFT", label: "Changing Hours - LTFT" },
   { value: "Conditions of Joining", label: "Conditions of Joining" },
   { value: "Data Quality", label: "Data Quality" },
-  { value: "Digital Staff Passport", label: "Digital Staff Passport" },
   { value: "FormR", label: "FormR" },
   { value: "Login", label: "Login" },
   { value: "Personal data", label: "Personal data" },
