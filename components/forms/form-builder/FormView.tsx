@@ -30,6 +30,7 @@ import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { useAppSelector } from "../../../redux/hooks/hooks";
+import { StringUtilities } from "../../../utilities/StringUtilities";
 
 type FormViewProps = {
   formData: FormData;
@@ -85,7 +86,7 @@ export const FormView = ({
   ]);
 
   const linkedFormData: LinkedFormRDataType = {
-    isArcp: formData.isArcp,
+    isArcp: StringUtilities.convertToBool(formData.isArcp),
     programmeMembershipId: formData.programmeMembershipId,
     localOfficeName: formData.localOfficeName
   };
