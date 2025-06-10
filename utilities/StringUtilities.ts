@@ -33,4 +33,12 @@ export class StringUtilities {
     if (!str) return str;
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
+
+  public static convertToBool(
+    val: string | boolean | null | undefined
+  ): boolean {
+    if (val === true) return true;
+    if (typeof val === "string" && val.toLowerCase() === "true") return true;
+    return false;
+  }
 }

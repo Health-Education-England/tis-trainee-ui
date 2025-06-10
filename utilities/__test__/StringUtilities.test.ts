@@ -34,3 +34,37 @@ describe("StringUtilities", () => {
     );
   });
 });
+it("should return true when string 'true' is passed", () => {
+  expect(StringUtilities.convertToBool("true")).toBe(true);
+});
+
+it("should return true when boolean true is passed", () => {
+  expect(StringUtilities.convertToBool(true)).toBe(true);
+});
+
+it("should return false when string 'false' is passed", () => {
+  expect(StringUtilities.convertToBool("false")).toBe(false);
+});
+
+it("should return false when boolean false is passed", () => {
+  expect(StringUtilities.convertToBool(false)).toBe(false);
+});
+
+it("should return false when null is passed", () => {
+  expect(StringUtilities.convertToBool(null)).toBe(false);
+});
+
+it("should return false when undefined is passed", () => {
+  expect(StringUtilities.convertToBool(undefined)).toBe(false);
+});
+
+it("should return false when any other string is passed", () => {
+  expect(StringUtilities.convertToBool("yes")).toBe(false);
+  expect(StringUtilities.convertToBool("1")).toBe(false);
+});
+
+it("should handle case-insensitive 'true' strings", () => {
+  expect(StringUtilities.convertToBool("TRUE")).toBe(true);
+  expect(StringUtilities.convertToBool("True")).toBe(true);
+  expect(StringUtilities.convertToBool("tRuE")).toBe(true);
+});
