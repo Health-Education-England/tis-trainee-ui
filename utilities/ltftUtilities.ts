@@ -187,7 +187,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       startDate: ltftObj.programmeMembership.startDate,
       endDate: ltftObj.programmeMembership.endDate,
       wte: ltftObj.programmeMembership.wte,
-      designatedBodyCode: ltftObj.programmeMembership.designatedBodyCode ?? null,
+      designatedBodyCode:
+        ltftObj.programmeMembership.designatedBodyCode ?? null,
       managingDeanery: ltftObj.programmeMembership.managingDeanery ?? null
     },
     reasons: {
@@ -387,4 +388,13 @@ export function getStatusReasonLabel(
   }
 
   return "";
+}
+
+export function isValidProgramme(progId: string): boolean {
+  if (!progId) return false;
+  const progIdsToCheckAgainst = store.getState().user.features.ltftProgrammes;
+  if (progIdsToCheckAgainst.length < 1) {
+    return false;
+  }
+  return progIdsToCheckAgainst.some(id => id === progId);
 }
