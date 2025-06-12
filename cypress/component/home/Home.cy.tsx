@@ -4,10 +4,11 @@ import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import Home from "../../../components/home/Home";
 import {
-  updatedLtftPilot,
-  updatedPreferredMfa
+  updatedPreferredMfa,
+  updatedUserFeatures
 } from "../../../redux/slices/userSlice";
 import history from "../../../components/navigation/history";
+import { mockUserFeatures1 } from "../../../mock-data/trainee-profile";
 
 const homeCards = [
   "Profile",
@@ -42,7 +43,7 @@ describe("Home with no MFA set up", () => {
 describe("Home with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedLtftPilot(true));
+    store.dispatch(updatedUserFeatures(mockUserFeatures1));
     mount(
       <Provider store={store}>
         <Router history={history}>

@@ -12,12 +12,16 @@ import {
   updatedLtftSummaryList,
   updatedLtftSummaryListStatus
 } from "../../../../redux/slices/ltftSummaryListSlice";
-import { updatedLtftPilot } from "../../../../redux/slices/userSlice";
+import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
 import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
+import {
+  mockUserFeatures1,
+  mockUserFeatures3
+} from "../../../../mock-data/trainee-profile";
 
 describe("CctSavedDrafts", () => {
   beforeEach(() => {
-    store.dispatch(updatedLtftPilot(true));
+    store.dispatch(updatedUserFeatures(mockUserFeatures1));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>
@@ -66,10 +70,16 @@ describe("CctSavedDrafts", () => {
       .first()
       .contains("bob1")
       .click();
-    cy.url().should("include", "/cct/view/6756c2b57ee98643d6f3dd8b");
+    cy.url().should(
+      "include",
+      "/cct/view/6756c2b2-3c1f-4b8d-9e0a-5f6c7d8e9f0a"
+    );
   });
 
-  it("renders the LTFT button in addition to the Delete button when user is in the ltft pilot", () => {
+  it("renders the LTFT button in addition to the Delete button when user is in the ltft pilot and has a valid programme", () => {
+    cy.get(
+      '[data-cy="make-ltft-btn-6756c2b2-3c1f-4b8d-9e0a-5f6c7d8e9f0a"]'
+    ).should("not.exist");
     cy.get('[data-cy="make-ltft-btn-c96468cc-075c-4ac8-a5a2-1b53220a807e"]')
       .should("exist")
       .click();
@@ -94,7 +104,7 @@ describe("CctSavedDrafts", () => {
 
 describe("CctSavedDrafts - not in the ltft pilot", () => {
   before(() => {
-    store.dispatch(updatedLtftPilot(false));
+    store.dispatch(updatedUserFeatures(mockUserFeatures3));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));

@@ -6,6 +6,11 @@ import { showToast, ToastType } from "../../components/common/ToastMessage";
 
 export type CojVersionType = "GG9" | "GG10";
 
+export type UserFeaturesType = {
+  ltft: boolean;
+  ltftProgrammes: string[];
+};
+
 interface IUser {
   status: string;
   tempMfa: string;
@@ -15,9 +20,7 @@ interface IUser {
   totpCode: string;
   preferredMfa: string;
   username: string;
-  features: {
-    ltft: boolean;
-  };
+  features: UserFeaturesType;
   signingCojProgName: string | null;
   signingCojPmId: string;
   signingCoj: boolean;
@@ -36,7 +39,8 @@ const initialState: IUser = {
   preferredMfa: "NOMFA",
   username: "",
   features: {
-    ltft: false
+    ltft: false,
+    ltftProgrammes: []
   },
   signingCojProgName: null,
   signingCojPmId: "",
@@ -51,7 +55,6 @@ export const fetchUserAuthInfo = createAsyncThunk(
   async () => {
     const user = await Auth.currentAuthenticatedUser();
     const { idToken } = user.signInUserSession;
-    console.log("idToken payload", idToken.payload);
     return idToken.payload;
   }
 );
@@ -155,10 +158,13 @@ const userSlice = createSlice({
     updatedPreferredMfa(state, action: PayloadAction<string>) {
       return { ...state, preferredMfa: action.payload };
     },
-    updatedLtftPilot(state, action: PayloadAction<boolean>) {
+    updatedUserFeatures(state, action: PayloadAction<UserFeaturesType>) {
       return {
         ...state,
-        features: { ...state.features, ltft: action.payload }
+        features: {
+          ...state.features,
+          ...action.payload
+        }
       };
     },
     updatedsigningCojProgName(state, action: PayloadAction<null | string>) {
@@ -298,7 +304,7 @@ export const {
   updatedTotpSection,
   updatedSmsSection,
   updatedPreferredMfa,
-  updatedLtftPilot,
+  updatedUserFeatures,
   updatedsigningCojProgName,
   updatedsigningCojPmId,
   updatedsigningCoj,

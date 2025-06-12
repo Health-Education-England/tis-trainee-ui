@@ -14,13 +14,14 @@ import {
   mockOutstandingActions,
   mockProgrammeMembershipNoTrainingNumber,
   mockProgrammeMembershipNoResponsibleOfficer,
-  mockProgrammeMembershipsForGrouping
+  mockProgrammeMembershipsForGrouping,
+  mockUserFeatures1
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
 import {
-  updatedLtftPilot,
-  updatedPreferredMfa
+  updatedPreferredMfa,
+  updatedUserFeatures
 } from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
@@ -54,7 +55,7 @@ const mountProgrammesWithMockData = (
     );
     dispatch(updatedTraineeProfileStatus(profileStatus));
     dispatch(updatedActionsData(actionsData));
-    dispatch(updatedLtftPilot(true));
+    dispatch(updatedUserFeatures(mockUserFeatures1));
     dispatch(updatedFormAList(formAList));
     dispatch(updatedFormBList(formBList));
     return <Programmes />;
