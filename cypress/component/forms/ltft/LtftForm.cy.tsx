@@ -15,6 +15,7 @@ import {
   Form
 } from "../../../../components/forms/form-builder/FormBuilder";
 import {
+  ltftDiscussionText2,
   ltftReasonsText1,
   ltftReasonsText2
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
@@ -56,18 +57,24 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").should(
+      "include.text",
+      ltftDiscussionText2.slice(0, 100)
+    );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
       "For information on Professional support contact"
     );
     cy.get(
       ":nth-child(4) > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Your Training Programme Director (TPD) details");
+    ).contains("Your pre-approver details");
+    cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
     cy.get('[data-cy="tpdEmail-inline-error-msg"]')
       .should("exist")
       .contains("Email address is required");
     cy.navNext(true);
     cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
+    cy.get('[data-cy="tpdEmail-label"]').contains("Pre-approver email");
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
