@@ -38,11 +38,12 @@ export const LtftDeclarationsModal = ({
             checked={decValues.discussedWithTpd}
             onChange={handleCheckboxChange}
           >
-            {`I have discussed the proposals outlined in the CCT Calculation with
-            my Training Programme Director (TPD).`}
+            {`I have discussed the proposal outlined in the CCT calculation with my pre-approver.`}
           </Checkboxes.Box>
           <Hint className="checkbox-hint">
-            If you do not know who your TPD is, please{" "}
+            Your pre-approver will usually be your Training Programme Director
+            (TPD), but for GP programmes may be your GP Programme Manager. If
+            you are unsure who your pre-approver is, please{" "}
             <Link to="/support">contact your Local Office support</Link>.
           </Hint>
           <Checkboxes.Box

@@ -7,18 +7,18 @@
       "expanderLinkName": "",
       "sections": [
         {
-          "sectionHeader": "Your Training Programme Director (TPD) details",
+          "sectionHeader": "Your pre-approver details",
           "fields": [
             {
               "name": "tpdName",
-              "label": "TPD Name",
+              "label": "Pre-approver name",
               "placeholder": "type here...",
               "type": "text",
               "visible": true
             },
             {
               "name": "tpdEmail",
-              "label": "TPD Email Address",
+              "label": "Pre-approver email address",
               "placeholder": "type here...",
               "type": "text",
               "visible": true

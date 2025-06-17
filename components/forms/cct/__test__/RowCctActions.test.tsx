@@ -5,12 +5,20 @@ import { Provider } from "react-redux";
 import { mockCctList } from "../../../../mock-data/mock-cct-data";
 
 let mockIsLtftPilotEnabled = false;
+let mockIsValidProgramme = true;
 
 jest.mock("../../../../redux/store/store", () => ({
   __esModule: true,
   default: {
     dispatch: jest.fn(),
-    getState: jest.fn(),
+    getState: jest.fn(() => ({
+      user: {
+        features: {
+          ltft: true,
+          ltftProgrammes: ["some-id"]
+        }
+      }
+    })),
     subscribe: jest.fn(() => jest.fn()),
     replaceReducer: jest.fn()
   }
@@ -22,6 +30,11 @@ jest.mock("../../../../redux/slices/ltftSlice", () => ({
 
 jest.mock("../../../../utilities/hooks/useIsLtftPilot", () => ({
   useIsLtftPilot: () => mockIsLtftPilotEnabled
+}));
+
+jest.mock("../../../../utilities/ltftUtilities", () => ({
+  isValidProgramme: () => mockIsValidProgramme,
+  populateLtftDraft: jest.fn()
 }));
 
 jest.mock("../../../../components/navigation/history", () => ({

@@ -25,7 +25,10 @@ import {
 } from "../../../redux/slices/ltftSlice";
 import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
 import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
-import { populateLtftDraft } from "../../../utilities/ltftUtilities";
+import {
+  isValidProgramme,
+  populateLtftDraft
+} from "../../../utilities/ltftUtilities";
 import { Button } from "@aws-amplify/ui-react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
@@ -246,7 +249,7 @@ export function RowCctActions({
 
   return (
     <div style={{ display: "flex", gap: "1em" }}>
-      {isLtftPilot && (
+      {isLtftPilot && isValidProgramme(row.programmeMembership.id) && (
         <Button
           type="button"
           variation="primary"

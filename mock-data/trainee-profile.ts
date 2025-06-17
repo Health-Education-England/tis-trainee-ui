@@ -13,7 +13,7 @@ import {
   yesterday
 } from "../utilities/DateUtilities";
 import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
-import { CojVersionType } from "../redux/slices/userSlice";
+import { CojVersionType, UserFeaturesType } from "../redux/slices/userSlice";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -946,3 +946,21 @@ export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
 
 export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
   [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
+
+export const mockUserFeatures1: UserFeaturesType = {
+  ltft: true,
+  ltftProgrammes: [
+    "93dae29a-fd44-4b59-8779-3e7d3d90b237",
+    "d84cb879-8651-4a25-bc08-7b3c2dee06b7",
+    "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+    "b505d0c6-a6ea-44b7-b321-3f463d2d2035"
+  ]
+};
+export const mockUserFeatures2: UserFeaturesType = {
+  ltft: true,
+  ltftProgrammes: []
+};
+export const mockUserFeatures3: UserFeaturesType = {
+  ltft: false,
+  ltftProgrammes: []
+};

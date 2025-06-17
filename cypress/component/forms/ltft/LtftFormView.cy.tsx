@@ -77,9 +77,7 @@ describe("LTFT Form View - editable & no name", () => {
     cy.get('[data-cy="cct-calc-summary-header"]')
       .should("exist")
       .contains("CCT Calculation Summary");
-    cy.get(
-      '[data-cy="edit-Your Training Programme Director (TPD) details"]'
-    ).should("exist");
+    cy.get('[data-cy="edit-Your pre-approver details"]').should("exist");
     cy.get('[data-cy="edit-Other discussions (if applicable)"]').should(
       "exist"
     );

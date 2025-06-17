@@ -5,7 +5,7 @@ const changeStartDate = dayjs().format("YYYY-MM-DD");
 
 export const mockCctList: CctCalculation[] = [
   {
-    id: "6756c2b57ee98643d6f3dd8b",
+    id: "6756c2b2-3c1f-4b8d-9e0a-5f6c7d8e9f0a",
     name: "bob1",
     programmeMembership: {
       id: "a6de88b8-de41-48dd-9492-a518f5001176",
@@ -31,7 +31,7 @@ export const mockCctList: CctCalculation[] = [
     id: "c96468cc-075c-4ac8-a5a2-1b53220a807e",
     name: "bob2",
     programmeMembership: {
-      id: "541",
+      id: "93dae29a-fd44-4b59-8779-3e7d3d90b237",
       name: "Respiratory Medicine",
       startDate: "2024-08-07",
       endDate: "2029-07-31",

@@ -95,7 +95,10 @@ const unresolvedDecsText =
   "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
 
 const ltftDiscussionText1 =
-  "Please provide the contact details of the Training Programme Director (TPD) you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";
+  "Please provide the contact details of the pre-approver you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";
+
+export const ltftDiscussionText2 =
+  "Your pre-approver will usually be your Training Programme Director (TPD) but for a GP programme it may be your GP Programme Manager. If you are unsure who your pre-approver is, please <a href='/support' target='_new'>contact your Local Office support</a>.";
 
 const ltftOtherDiscussionsText =
   "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposal.";
@@ -178,6 +181,7 @@ const displayText: DisplayText = {
   newUnresolvedDecsInstructions: generateTextElement([unresolvedDecsText]),
   ltftDiscussionInstructions: generateTextElement([
     ltftDiscussionText1,
+    ltftDiscussionText2,
     ltftOtherDiscussionsText,
     ltftDiscussionText3
   ]),

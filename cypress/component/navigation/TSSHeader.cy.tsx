@@ -4,11 +4,15 @@ import history from "../../../components/navigation/history";
 import { Provider } from "react-redux";
 import store from "../../../redux/store/store";
 import {
-  updatedLtftPilot,
-  updatedPreferredMfa
+  updatedPreferredMfa,
+  updatedUserFeatures
 } from "../../../redux/slices/userSlice";
 import { Authenticator } from "@aws-amplify/ui-react";
 import TSSHeader from "../../../components/navigation/TSSHeader";
+import {
+  mockUserFeatures1,
+  mockUserFeatures2
+} from "../../../mock-data/trainee-profile";
 
 const navLinks = [
   { name: "Changing hours (LTFT)", href: "/ltft" },
@@ -36,7 +40,7 @@ const comp = (
 describe("Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedLtftPilot(true));
+    store.dispatch(updatedUserFeatures(mockUserFeatures1));
     mount(comp);
   });
 
@@ -121,7 +125,7 @@ describe("Header with NOMFA", () => {
 describe("Desktop Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-    store.dispatch(updatedLtftPilot(true));
+    store.dispatch(updatedUserFeatures(mockUserFeatures2));
     mount(comp);
     cy.viewport(1024, 768);
   });
