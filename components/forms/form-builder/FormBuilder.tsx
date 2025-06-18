@@ -113,7 +113,8 @@ export default function FormBuilder({
     setIsFormDirty,
     currentPageFields,
     setCurrentPageFields,
-    jsonForm
+    jsonForm,
+    isAutosaving
   } = useFormContext();
 
   const jsonFormName = jsonForm.name;
@@ -305,10 +306,10 @@ export default function FormBuilder({
                 e.preventDefault();
                 handleSaveBtnClick();
               }}
-              disabled={isSubmitting} // need isAutoSaving too eventually
+              disabled={isSubmitting || isAutosaving}
               data-cy="BtnSaveDraft"
             >
-              {"Save & exit"}
+              {isSubmitting || isAutosaving ? "Saving..." : "Save & exit"}
             </Button>
           </Col>
           {formData.status?.current?.state != "UNSUBMITTED" ? (

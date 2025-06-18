@@ -8,20 +8,24 @@ import { Form } from "../../components/forms/form-builder/FormBuilder";
 const useFormAutosave = (
   jsonForm: Form,
   formData: FormDataType,
-  isFormDirty: boolean
+  isFormDirty: boolean,
+  setIsAutoSaving: (isAutoSaving: boolean) => void
 ) => {
   const formName = jsonForm.name;
   useEffect(() => {
     if (isFormDirty) {
+      setIsAutoSaving(true);
       const timeoutId = setTimeout(() => {
-        saveDraftForm(jsonForm, formData, true, false, false, false);
+        saveDraftForm(jsonForm, formData, true, false, false, false).finally(
+          () => setIsAutoSaving(false)
+        );
       }, 2000);
 
       return () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [formData, formName, isFormDirty]);
+  }, [formData, formName, isFormDirty, setIsAutoSaving]);
 };
 
 export default useFormAutosave;
