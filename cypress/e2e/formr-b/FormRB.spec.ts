@@ -83,7 +83,7 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkAndFillSection4();
     cy.navNext();
     cy.checkAndFillSection5();
-    cy.checkElement("BtnSaveDraft").click();
+    cy.checkElement("BtnSaveExit-formB").click();
     cy.checkElement("btn-Edit saved draft form");
   });
 

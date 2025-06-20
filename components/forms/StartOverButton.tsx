@@ -37,7 +37,7 @@ export const StartOverButton = ({
     })
       .then(async () => {
         const shouldStartOver = formId
-          ? await isFormDeleted(formName, formId as string)
+          ? await isFormDeleted(formName, formId)
           : btnLocation === "formView";
         shouldStartOver
           ? checkPush(formName, btnLocation)

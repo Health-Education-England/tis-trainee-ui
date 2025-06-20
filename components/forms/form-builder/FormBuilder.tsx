@@ -30,6 +30,7 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
+import { SaveAndExitButton } from "../SaveAndExitButton";
 
 type FieldType =
   | "text"
@@ -300,17 +301,12 @@ export default function FormBuilder({
             </Col>
           )}
           <Col width="one-quarter">
-            <Button
-              secondary
-              onClick={(e: { preventDefault: () => void }) => {
-                e.preventDefault();
-                handleSaveBtnClick();
-              }}
-              disabled={isSubmitting || isAutosaving}
-              data-cy="BtnSaveDraft"
-            >
-              {isSubmitting || isAutosaving ? "Saving..." : "Save & exit"}
-            </Button>
+            <SaveAndExitButton
+              onClick={handleSaveBtnClick}
+              isSubmitting={isSubmitting}
+              isAutosaving={isAutosaving}
+              formName={jsonFormName}
+            />
           </Col>
           {formData.status?.current?.state != "UNSUBMITTED" ? (
             <Col width="one-quarter">
