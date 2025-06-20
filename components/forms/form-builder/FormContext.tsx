@@ -42,6 +42,7 @@ type FormContextType = {
   setFieldWidthData: React.Dispatch<
     React.SetStateAction<ReturnedWidthData | null>
   >;
+  isAutosaving: boolean;
 };
 
 const FormContext = createContext<FormContextType>({} as FormContextType);
@@ -78,11 +79,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   );
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
+  const [isAutosaving, setIsAutosaving] = useState<boolean>(false);
 
   useFormAutosave(
     jsonForm,
     formData as FormRPartA | FormRPartB | LtftObj,
-    isFormDirty
+    isFormDirty,
+    setIsAutosaving
   );
 
   const updateFormData = (
@@ -195,7 +198,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       fieldWarning,
       setFieldWarning,
       fieldWidthData,
-      setFieldWidthData
+      setFieldWidthData,
+      isAutosaving
     }),
     [
       formData,
@@ -205,7 +209,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       handleBlur,
       handleChange,
       fieldWarning,
-      fieldWidthData
+      fieldWidthData,
+      isAutosaving
     ]
   );
 

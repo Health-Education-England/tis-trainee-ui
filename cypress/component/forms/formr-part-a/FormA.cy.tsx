@@ -198,7 +198,7 @@ describe("Form A View (/form-a/confirm)", () => {
         const nonExistEls = [
           "warningConfirmation",
           "BtnSubmit",
-          "BtnSaveDraft",
+          "BtnSaveExit-formA",
           "startOverButton",
           "edit-Personal Details"
         ];

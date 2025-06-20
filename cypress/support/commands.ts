@@ -277,7 +277,7 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
   cy.get(".nhsuk-error-summary").should("not.exist");
 
-  cy.get('[data-cy="BtnSaveDraft"]').should("not.be", "disabled");
+  cy.get('[data-cy="BtnSaveExit-formA"]').should("not.be", "disabled");
 });
 
 Cypress.Commands.add("checkAndFillFormASection2", () => {
@@ -435,12 +435,23 @@ Cypress.Commands.add("checkAndFillSection1", () => {
     cy.get(selector).should("exist").contains(text);
   });
 
+  // check the 'save & exit' button is not disabled when form not dirty/no autosave triggered
+  cy.get('[data-cy="BtnSaveExit-formB"]')
+    .should("not.be.disabled")
+    .should("have.text", "Save & exit");
+
   // clear page first
   cy.get('[data-cy="forename-input"]').clear();
   cy.get('[data-cy="surname-input"]').clear();
   cy.get('[data-cy="gmcNumber-input"]').clear();
   cy.get('[data-cy="email-input"]').clear();
   cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
+
+  // check the 'save & exit' button is disabled when form dirty and and autosave is triggered
+  cy.get('[data-cy="BtnSaveExit-formB"]')
+    .should("be.disabled")
+    .should("have.text", "Saving...");
+
   cy.get(
     '[data-cy="prevRevalBody"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
   ).click();
@@ -936,7 +947,7 @@ Cypress.Commands.add("checkAndFillSection10", () => {
   cy.get(".nhsuk-card__heading").contains("Compliments (Not compulsory)");
   cy.clearAndType('[data-cy="compliments-text-area-input"]', "temp compliment");
   cy.get(".nhsuk-error-summary").should("not.exist");
-  cy.checkElement("BtnSaveDraft");
+  cy.checkElement("BtnSaveExit-formB");
   cy.get('[data-cy="BtnShortcutToConfirm"]').should("not.exist");
 });
 

@@ -123,7 +123,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.get(
       '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
     ).click();
-    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get('[data-cy="BtnSaveExit-formA"]').click();
     cy.get('[data-cy="btn-Edit saved draft form"]').should("exist").click();
     cy.get('[data-cy="startOverButton"]').should("exist");
     cy.get('[data-cy="navNext"]').click();
@@ -175,7 +175,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
     cy.checkForFormLinkerAndComplete();
-    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get('[data-cy="BtnSaveExit-formA"]').click();
     cy.contains(
       "[data-cy=toastText]",
       "Couldn't save your Form R (Part A)."
@@ -192,7 +192,7 @@ describe("Form R Part A - 'save form' toast messages", () => {
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
     cy.checkForFormLinkerAndComplete();
-    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get('[data-cy="BtnSaveExit-formA"]').click();
     cy.contains(
       "[data-cy=toastText]",
       "Your Form R (Part A) has been saved."
