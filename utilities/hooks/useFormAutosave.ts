@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   FormDataType,
   saveDraftForm
@@ -8,24 +8,32 @@ import { Form } from "../../components/forms/form-builder/FormBuilder";
 const useFormAutosave = (
   jsonForm: Form,
   formData: FormDataType,
-  isFormDirty: boolean,
   setIsAutoSaving: (isAutoSaving: boolean) => void
 ) => {
   const formName = jsonForm.name;
-  useEffect(() => {
-    if (isFormDirty) {
-      setIsAutoSaving(true);
-      const timeoutId = setTimeout(() => {
-        saveDraftForm(jsonForm, formData, true, false, false, false).finally(
-          () => setIsAutoSaving(false)
-        );
-      }, 2000);
+  const firstRender = useRef(false);
 
-      return () => {
-        clearTimeout(timeoutId);
-      };
+  useEffect(() => {
+    firstRender.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
     }
-  }, [formData, formName, isFormDirty, setIsAutoSaving]);
+    setIsAutoSaving(true);
+    const timeoutId = setTimeout(() => {
+      saveDraftForm(jsonForm, formData, true, false, false, false).finally(() =>
+        setIsAutoSaving(false)
+      );
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      setIsAutoSaving(false);
+    };
+  }, [formData, formName, setIsAutoSaving]);
 };
 
 export default useFormAutosave;

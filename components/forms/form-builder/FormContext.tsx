@@ -84,7 +84,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   useFormAutosave(
     jsonForm,
     formData as FormRPartA | FormRPartB | LtftObj,
-    isFormDirty,
     setIsAutosaving
   );
 
