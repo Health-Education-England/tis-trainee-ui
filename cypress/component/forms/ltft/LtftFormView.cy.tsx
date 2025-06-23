@@ -15,6 +15,7 @@ import {
   mockLtftUnsubmitted0
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
+import { FileUtilities } from "../../../../utilities/FileUtilities";
 
 const mountLtftViewWithMockData = (mockLtftObj: LtftObj) => {
   store.dispatch(updatedLtft(mockLtftObj));
@@ -41,6 +42,7 @@ describe("LTFT Form View - not editable", () => {
   });
 
   it("should render the form as read-only", () => {
+    cy.get('[data-cy="savePdfBtn"]').should("exist");
     cy.get('[data-cy="cct-calc-summary-header"]').should("exist");
     cy.get(
       '[data-cy="edit-Your Training Programme Director (TPD) details"]'
@@ -74,6 +76,7 @@ describe("LTFT Form View - editable & no name", () => {
     store.dispatch(updatedCanEditLtft(true));
   });
   it("renders an existing LTFT form that has just been edited", () => {
+    cy.get('[data-cy="savePdfBtn"]').should("exist");
     cy.get('[data-cy="cct-calc-summary-header"]')
       .should("exist")
       .contains("CCT Calculation Summary");
@@ -221,5 +224,17 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="BtnSubmit"]').should("exist").contains("Re-submit");
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
+  });  
+
+describe("LtftDownloadPDF", () => {
+  beforeEach(() => {
+    mountLtftViewWithMockData(mockLtftDraft1);
   });
+  it("should show 'save Pdf' button and able to download PDF for DRAFT", () => {
+    cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
+    cy.get('[data-cy="savePdfBtn"]').should("exist");
+    cy.get("[data-cy=savePdfBtn]").click();
+    cy.get("@DownloadPDF").should("have.been.called");
+  });
+});
 });

@@ -51,3 +51,11 @@ export function downloadCojPdf(
     return setShowPdfHelp(true);
   }
 }
+
+export function downloadLtftPdf(
+  id: string
+) {
+    FileUtilities.downloadPdf(`ltft_${id}.pdf`, () =>
+      formsService.downloadTraineeLtftPdf(id)
+    );
+}
