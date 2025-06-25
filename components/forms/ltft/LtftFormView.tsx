@@ -35,6 +35,7 @@ import { useActionState } from "../../../utilities/hooks/useActionState";
 import ScrollToTop from "../../common/ScrollToTop";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
+import InfoTooltip from "../../common/InfoTooltip";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -118,12 +119,23 @@ export const LtftFormView = () => {
       <LtftViewWrapper>
         <Button
           data-cy="savePdfBtn"
+          disabled={
+            !formData.id
+          }
           onClick={() => {
             downloadLtftPdf(formData.id ?? "");
           }}
         >
           Save a copy as a PDF
-        </Button>
+        </Button>        
+        {!formData.id ? (
+          <>&nbsp;
+            <InfoTooltip
+              tooltipId={"pdfButtonInfo"}
+              content="The PDF download button would be disabled if the LTFT is unsaved. Please save before downdloading the PDF."
+            />
+          </>
+        ) : null}
         <LtftStatusDetails {...formData}></LtftStatusDetails>
         <CctCalcSummaryDetails
           viewedCalc={cctSnapshot}

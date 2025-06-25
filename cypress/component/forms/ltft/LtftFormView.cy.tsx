@@ -225,16 +225,30 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
   });  
+});
 
-describe("LtftDownloadPDF", () => {
+describe("Disable Ltft PDF Download Button (no form ID)", () => {
+  beforeEach(() => {
+    mountLtftViewWithMockData(mockLtftDraft0);
+  });
+  it("should disable 'save Pdf' button for LTFT without form ID", () => {
+    cy.get('[data-cy="savePdfBtn"]')
+      .should("exist")
+      .should("be.disabled");
+    cy.get('[data-cy="pdfButtonInfo-icon"]')
+      .should("be.visible");
+  });
+});
+
+describe("Download Ltft PDF", () => {
   beforeEach(() => {
     mountLtftViewWithMockData(mockLtftDraft1);
   });
-  it("should show 'save Pdf' button and able to download PDF for DRAFT", () => {
+  it("should show 'save Pdf' button and able to download PDF for LTFT with form ID", () => {
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
-    cy.get('[data-cy="savePdfBtn"]').should("exist");
+    cy.get('[data-cy="savePdfBtn"]').should("exist").should("not.be.disabled");
     cy.get("[data-cy=savePdfBtn]").click();
     cy.get("@DownloadPDF").should("have.been.called");
+    cy.get('[data-cy="pdfButtonInfo-icon"]').should("not.exist");
   });
-});
 });
