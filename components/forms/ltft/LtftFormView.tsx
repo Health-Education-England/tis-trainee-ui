@@ -34,6 +34,8 @@ import { ActionModal } from "../../common/ActionModal";
 import { useActionState } from "../../../utilities/hooks/useActionState";
 import ScrollToTop from "../../common/ScrollToTop";
 import { LtftStatusDetails } from "./LtftStatusDetails";
+import { downloadLtftPdf } from "../../../utilities/FileUtilities";
+import InfoTooltip from "../../common/InfoTooltip";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -115,6 +117,24 @@ export const LtftFormView = () => {
   if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
+        <Button
+          data-cy="savePdfBtn"
+          disabled={!formData.id}
+          onClick={() => {
+            downloadLtftPdf(formData.id ?? "");
+          }}
+        >
+          Save a copy as a PDF
+        </Button>
+        {!formData.id ? (
+          <>
+            &nbsp;
+            <InfoTooltip
+              tooltipId={"pdfButtonInfo"}
+              content="Please save before downloading the PDF."
+            />
+          </>
+        ) : null}
         <LtftStatusDetails {...formData}></LtftStatusDetails>
         <CctCalcSummaryDetails
           viewedCalc={cctSnapshot}
