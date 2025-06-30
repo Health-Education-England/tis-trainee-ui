@@ -131,7 +131,7 @@ export const LtftFormView = () => {
             &nbsp;
             <InfoTooltip
               tooltipId={"pdfButtonInfo"}
-              content="The PDF download button would be disabled if the LTFT is unsaved. Please save before downdloading the PDF."
+              content="Please save before downloading the PDF."
             />
           </>
         ) : null}

@@ -28,17 +28,17 @@ export class FormsService extends ApiService {
   }
 
   async downloadTraineeLtftPdf(id: string) {
-    let requestConfig: AxiosRequestConfig<string> = {
+    const requestConfig: AxiosRequestConfig = {
       headers: {
         Accept: "application/pdf"
       },
       responseType: "blob"
     };
-    return this.axiosInstance.get<string, AxiosResponse<Blob>>(
+    return this.axiosInstance.get<Blob, AxiosResponse<Blob>>(
       "/ltft/" + id,
       requestConfig
     );
-  }
+}
 
   async saveTraineeFormRPartA(
     formData: FormRPartA
