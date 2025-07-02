@@ -867,6 +867,18 @@ export const mockOutstandingActions: TraineeAction[] = [
     },
     availableFrom: new Date(oneWeekAgo),
     dueBy: new Date(yesterday)
+  },
+  //non REVIEW_DATA type action
+  {
+    id: "6",
+    type: "another type",
+    traineeTisId: "12345",
+    tisReferenceInfo: {
+      id: "315",
+      type: TisReferenceType.placement
+    },
+    availableFrom: new Date(oneWeekAgo),
+    dueBy: new Date(yesterday)
   }
 ];
 
