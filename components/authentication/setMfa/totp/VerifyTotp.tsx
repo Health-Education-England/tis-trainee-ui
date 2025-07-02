@@ -13,21 +13,21 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import {
   getPreferredMfa,
   resetError,
-  setPreferredMfa,
-  updatedTotpSection,
-  updateUserAttributes,
-  verifyTotp
+  updatedTotpSection
 } from "../../../../redux/slices/userSlice";
 import { QRCodeSVG } from "qrcode.react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../../../components/forms/TextInputField";
-import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
-import { MFAType } from "../../../../models/MFAStatus";
 import styles from "../../../authentication/Auth.module.scss";
 import { ToastType, showToast } from "../../../common/ToastMessage";
 import { toastSuccessText } from "../../../../utilities/Constants";
+import {
+  updateMFAPreference,
+  verifyTOTPSetup,
+  updateUserAttribute
+} from "aws-amplify/auth";
 
 const VerifyTotp = () => {
   const dispatch = useAppDispatch();
@@ -50,39 +50,28 @@ const VerifyTotp = () => {
     };
   }, [expired, dispatch]);
 
-  const verifyTotpInput = async (totpInput: string) => {
-    await dispatch(verifyTotp(totpInput));
-    return store.getState().user.status;
-  };
+  const handleTotpSub = async (totpStr: string) => {
+    try {
+      await verifyTOTPSetup({ code: totpStr });
+      const mfaPrefObj: { [key: string]: string } = {
+        totp: "PREFERRED"
+      };
+      await updateMFAPreference(mfaPrefObj);
 
-  const updateMfa = async () => {
-    const pref: MFAType = "TOTP";
-    await dispatch(setPreferredMfa(pref));
-    return store.getState().user.status;
-  };
-
-  const removePhoneNo = async () => {
-    const attrib = { phone_number: "" };
-    await dispatch(updateUserAttributes(attrib));
-    return store.getState().user.status;
-  };
-
-  const handleTotpSub = async (totp: string) => {
-    const getBack = () => {
+      const attrib = { key: "phone_number", value: "" };
+      await updateUserAttribute({
+        userAttribute: {
+          attributeKey: attrib.key,
+          value: attrib.value
+        }
+      });
+      await dispatch(getPreferredMfa());
+      history.push("/home");
+      showToast(toastSuccessText.getPreferredMfaTotp, ToastType.SUCCESS);
+    } catch (error) {
+      console.error("Failed to set up TOTP MFA: ", error);
       dispatch(updatedTotpSection(1));
       dispatch(resetError());
-    };
-    const res = await verifyTotpInput(totp);
-    if (res === "succeeded") {
-      const resU = await updateMfa();
-      if (resU === "succeeded") {
-        const resR = await removePhoneNo();
-        if (resR === "succeeded") {
-          await dispatch(getPreferredMfa());
-          history.push("/home");
-          showToast(toastSuccessText.getPreferredMfaTotp, ToastType.SUCCESS);
-        } else getBack();
-      } else getBack();
     }
   };
 

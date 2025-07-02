@@ -6,34 +6,33 @@ import { Button, Card } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   incrementSmsSection,
-  resetError,
-  updateUserAttributes,
-  verifyPhone
+  resetError
 } from "../../../../redux/slices/userSlice";
-import store from "../../../../redux/store/store";
+import {
+  sendUserAttributeVerificationCode,
+  updateUserAttribute
+} from "aws-amplify/auth";
 
 const VerifySms = () => {
   const dispatch = useAppDispatch();
-
-  const updatePhoneAttrib = async (mobNo: string) => {
-    const attrib = { phone_number: mobNo };
-    await dispatch(updateUserAttributes(attrib));
-    return store.getState().user.status;
+  const stepForward = () => {
+    dispatch(resetError());
+    dispatch(incrementSmsSection());
   };
-
-  const verifPhone = async () => {
-    await dispatch(verifyPhone());
-    return store.getState().user.status;
-  };
-
   const handleSmsVerify = async (mobilePhoneNumber: string) => {
-    const res = await updatePhoneAttrib(mobilePhoneNumber);
-    if (res === "succeeded") {
-      const resV = await verifPhone();
-      if (resV === "succeeded") {
-        dispatch(resetError());
-        dispatch(incrementSmsSection());
-      }
+    try {
+      await updateUserAttribute({
+        userAttribute: {
+          attributeKey: "phone_number",
+          value: mobilePhoneNumber
+        }
+      });
+      await sendUserAttributeVerificationCode({
+        userAttributeKey: "phone_number"
+      });
+      stepForward();
+    } catch (error) {
+      console.error("Failed to handle SMS verification: ", error);
     }
   };
 

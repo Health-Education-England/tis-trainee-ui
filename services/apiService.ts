@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import * as Sentry from "@sentry/browser";
-import { Auth } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export const onFulfilled = async function (response: any) {
   // Any status code that lie within the range of 2xx.
@@ -23,9 +23,8 @@ export class ApiService {
     });
 
     this.axiosInstance.interceptors.request.use(async function (config: any) {
-      let user = await Auth.currentAuthenticatedUser();
-      config.headers.authorization = `Bearer ${user.signInUserSession.idToken.jwtToken}`;
-
+      const session = await fetchAuthSession();
+      config.headers.authorization = `Bearer ${session.tokens?.idToken?.toString()}`;
       return config;
     });
 

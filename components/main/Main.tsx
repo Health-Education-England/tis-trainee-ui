@@ -29,7 +29,7 @@ import ErrorPage from "../common/ErrorPage";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import {
-  fetchUserAuthInfo,
+  fetchUserSession,
   getPreferredMfa
 } from "../../redux/slices/userSlice";
 
@@ -46,7 +46,7 @@ export const Main = () => {
   useEffect(() => {
     if (!authActionsDispatched) {
       dispatch(getPreferredMfa());
-      dispatch(fetchUserAuthInfo());
+      dispatch(fetchUserSession());
       setAuthActionsDispatched(true);
     }
   }, [authActionsDispatched, dispatch]);

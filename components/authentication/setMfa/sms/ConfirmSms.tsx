@@ -6,47 +6,36 @@ import { VerifySMSCodeValidationSchema } from "../ValidationSchema";
 import {
   decrementSmsSection,
   getPreferredMfa,
-  resetError,
-  setPreferredMfa,
-  verifyUserAttributeSubmit
+  resetError
 } from "../../../../redux/slices/userSlice";
-import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
-import { MFAType } from "../../../../models/MFAStatus";
 import { ToastType, showToast } from "../../../common/ToastMessage";
 import { toastSuccessText } from "../../../../utilities/Constants";
+import { confirmUserAttribute, updateMFAPreference } from "aws-amplify/auth";
 
 const ConfirmSms = () => {
   const dispatch = useAppDispatch();
 
-  const verifyCodeSub = async (code: string) => {
-    const attrib: string = "phone_number";
-    await dispatch(verifyUserAttributeSubmit({ attrib, code }));
-    return store.getState().user.status;
-  };
-
-  const updateMfa = async () => {
-    const pref: MFAType = "SMS";
-    await dispatch(setPreferredMfa(pref));
-    return store.getState().user.status;
-  };
-
   const handleSmsSub = async (smsCode: string) => {
-    const res = await verifyCodeSub(smsCode);
     const stepBack = () => {
       dispatch(resetError());
       dispatch(decrementSmsSection());
     };
-    if (res === "succeeded") {
-      const resU = await updateMfa();
-      if (resU === "succeeded") {
-        await dispatch(getPreferredMfa());
-        history.push("/home");
-        showToast(toastSuccessText.getPreferredMfaSms, ToastType.SUCCESS);
-      } else {
-        stepBack();
-      }
-    } else {
+    try {
+      await confirmUserAttribute({
+        userAttributeKey: "phone_number",
+        confirmationCode: smsCode
+      });
+      const mfaPrefObj: { [key: string]: string } = {
+        sms: "PREFERRED",
+        totp: "NOT_PREFERRED"
+      };
+      await updateMFAPreference(mfaPrefObj);
+      await dispatch(getPreferredMfa());
+      history.push("/home");
+      showToast(toastSuccessText.getPreferredMfaSms, ToastType.SUCCESS);
+    } catch (error) {
+      console.error("Failed to set up SMS MFA: ", error);
       stepBack();
     }
   };

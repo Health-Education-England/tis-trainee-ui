@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Auth } from "aws-amplify";
-import { MFAType } from "../../models/MFAStatus";
-import { toastErrText, toastSuccessText } from "../../utilities/Constants";
+import { toastErrText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
+import {
+  fetchMFAPreference,
+  getCurrentUser,
+  setUpTOTP,
+  fetchAuthSession
+} from "aws-amplify/auth";
 
 export type CojVersionType = "GG9" | "GG10";
+
+export type MfaAttribType = "email" | "phone_number";
 
 export type UserFeaturesType = {
   ltft: boolean;
@@ -50,69 +56,31 @@ const initialState: IUser = {
   redirected: false
 };
 
-export const fetchUserAuthInfo = createAsyncThunk(
-  "user/fetchUserAuthInfo",
+export const fetchUserSession = createAsyncThunk(
+  "user/fetchUserSession",
   async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const { idToken } = user.signInUserSession;
-    return idToken.payload;
+    const session = await fetchAuthSession();
+    return session.tokens?.idToken?.payload;
   }
 );
 
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
-    const { preferredMFA } = await Auth.currentAuthenticatedUser();
-    return preferredMFA;
+    const mfaPreference = await fetchMFAPreference();
+    return mfaPreference.preferred;
   }
 );
 
 export const updateTotpCode = createAsyncThunk(
   "user/updateTotpCode",
   async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.setupTOTP(user);
-  }
-);
-
-export const updateUserAttributes = createAsyncThunk(
-  "user/updateUserAttributes",
-  async (attrib: { phone_number: string }) => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.updateUserAttributes(user, attrib);
-  }
-);
-
-export const verifyPhone = createAsyncThunk("user/verifyPhone", async () => {
-  return Auth.verifyCurrentUserAttribute("phone_number");
-});
-
-export const verifyTotp = createAsyncThunk(
-  "user/verifyTotp",
-  async (totpInput: string) => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.verifyTotpToken(user, totpInput);
-  }
-);
-
-export const verifyUserAttributeSubmit = createAsyncThunk(
-  "user/verifyUserAttributeSubmit",
-  async (userAttribSubData: any) => {
-    const { attrib, code } = userAttribSubData;
-    return Auth.verifyCurrentUserAttributeSubmit(attrib, code);
-  }
-);
-
-export const setPreferredMfa = createAsyncThunk(
-  "user/setPreferredMfa",
-  async (pref: MFAType) => {
-    const user = await Auth.currentAuthenticatedUser();
-    return Auth.setPreferredMFA(user, pref);
+    return (await setUpTOTP()).sharedSecret;
   }
 );
 
 export const getUsername = createAsyncThunk("user/getUsername", async () => {
-  const { username } = await Auth.currentAuthenticatedUser();
+  const { username } = await getCurrentUser();
   return username;
 });
 
@@ -188,17 +156,17 @@ const userSlice = createSlice({
   },
   extraReducers(builder): void {
     builder
-      .addCase(fetchUserAuthInfo.fulfilled, (state, action) => {
+      .addCase(fetchUserSession.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.features = action.payload.features;
+        state.features = action?.payload?.features as UserFeaturesType;
       })
-      .addCase(fetchUserAuthInfo.rejected, (state, action) => {
+      .addCase(fetchUserSession.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMfa = action.payload;
+        state.preferredMfa = action.payload ?? "NOMFA";
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";
@@ -213,67 +181,6 @@ const userSlice = createSlice({
         state.error = error.message;
         showToast(
           toastErrText.updateTotpCode,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(updateUserAttributes.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-      })
-      .addCase(updateUserAttributes.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.updateUserAttributes,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(verifyPhone.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-        showToast(toastSuccessText.verifyPhone, ToastType.SUCCESS);
-      })
-      .addCase(verifyPhone.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.verifyPhone,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(verifyTotp.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-      })
-      .addCase(verifyTotp.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.verifyTotp,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(verifyUserAttributeSubmit.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-      })
-      .addCase(verifyUserAttributeSubmit.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.verifyUserAttributeSubmit,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(setPreferredMfa.fulfilled, (state, _action) => {
-        state.status = "succeeded";
-      })
-      .addCase(setPreferredMfa.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.setPreferredMfa,
           ToastType.ERROR,
           `${error.code}-${error.message}`
         );
