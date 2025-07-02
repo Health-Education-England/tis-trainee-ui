@@ -63,7 +63,9 @@ export function PanelsCreator({
             ...filteredPanel
           } = panel;
           const currentAction = unreviewedActions.filter(
-            action => action.tisReferenceInfo.id === panel.tisId
+            action =>
+              action.tisReferenceInfo.id === panel.tisId &&
+              action.type === "REVIEW_DATA"
           );
           return (
             <Card.GroupItem key={index} width="one-half">
