@@ -10,6 +10,8 @@ import {
 
 export type CojVersionType = "GG9" | "GG10";
 
+export type MFAType = "TOTP" | "SMS" | "EMAIL" | "NOMFA";
+
 export type MfaAttribType = "email" | "phone_number";
 
 export type UserFeaturesType = {
@@ -19,12 +21,12 @@ export type UserFeaturesType = {
 
 interface IUser {
   status: string;
-  tempMfa: string;
+  tempMfa: MFAType;
   smsSection: number;
   totpSection: number;
   error: any;
   totpCode: string;
-  preferredMfa: string;
+  preferredMfa: MFAType;
   username: string;
   features: UserFeaturesType;
   signingCojProgName: string | null;
@@ -102,7 +104,7 @@ const userSlice = createSlice({
     resetError(state) {
       return { ...state, status: "idle", error: "" };
     },
-    updatedTempMfa(state, action: PayloadAction<string>) {
+    updatedTempMfa(state, action: PayloadAction<MFAType>) {
       return { ...state, tempMfa: action.payload };
     },
     decrementSmsSection: state => {
@@ -123,7 +125,7 @@ const userSlice = createSlice({
     resetStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
     },
-    updatedPreferredMfa(state, action: PayloadAction<string>) {
+    updatedPreferredMfa(state, action: PayloadAction<MFAType>) {
       return { ...state, preferredMfa: action.payload };
     },
     updatedUserFeatures(state, action: PayloadAction<UserFeaturesType>) {

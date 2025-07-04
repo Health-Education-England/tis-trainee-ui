@@ -2,6 +2,7 @@ import { Formik } from "formik";
 import { Button, Card, Details, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
+  MFAType,
   resetMfaJourney,
   updatedTempMfa
 } from "../../../redux/slices/userSlice";
@@ -10,7 +11,6 @@ import MultiChoiceInputField from "../../forms/MultiChoiceInputField";
 import * as Yup from "yup";
 import ScrollTo from "../../forms/ScrollTo";
 import history from "../../navigation/history";
-import { MFAStatus } from "../../../models/MFAStatus";
 import { useEffect } from "react";
 
 const ChooseMfa = () => {
@@ -18,8 +18,9 @@ const ChooseMfa = () => {
   useEffect(() => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
-  const preferredMfa: string = useAppSelector(state => state.user.preferredMfa);
-
+  const preferredMfa: MFAType = useAppSelector(
+    state => state.user.preferredMfa
+  );
   return (
     <>
       <ScrollTo />
@@ -31,7 +32,7 @@ const ChooseMfa = () => {
           mfaChoice: Yup.string().required("Please choose an option")
         })}
         onSubmit={values => {
-          dispatch(updatedTempMfa(values.mfaChoice));
+          dispatch(updatedTempMfa(values.mfaChoice as MFAType));
           history.push(`/mfa/${values.mfaChoice.toLowerCase()}`);
         }}
       >
@@ -107,7 +108,7 @@ const ChooseMfa = () => {
 export default ChooseMfa;
 
 type MfaWarningProps = {
-  readonly preferredMfa: string;
+  readonly preferredMfa: MFAType;
 };
 
 function MfaWarning({ preferredMfa }: MfaWarningProps) {
@@ -117,27 +118,21 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
       <WarningCallout.Label visuallyHiddenText={false}>
         Important
       </WarningCallout.Label>
-
-      {preferredMfa === "NOMFA" ? (
-        <p data-cy="mfaSetupText">
-          Before you can access TIS Self-Service, you must first secure your
-          account by adding MFA to your sign-in journey.
-        </p>
-      ) : (
-        <p data-cy="mfaAlreadyText">
-          You have already set up{/* */}
-          <b>{getPrefMfa(preferredMfa)}</b>
-          {/* */}to verify your identity when you log in to TIS Self-Service. If
-          you want to redo the process or verify your identity a different way
-          then please continue.
-        </p>
-      )}
+      <p>{getPrefMfa(preferredMfa)}</p>
     </WarningCallout>
   );
 }
 
-function getPrefMfa(prefMfa: string) {
-  return prefMfa === MFAStatus.TOTP
-    ? " your Authenticator App for MFA "
-    : " SMS for MFA ";
+function getPrefMfa(prefMfa: MFAType) {
+  const mfaDescriptions: Record<MFAType, string> = {
+    TOTP: "Authenticator App",
+    SMS: " SMS",
+    EMAIL: " Email",
+    NOMFA:
+      " Before you can access TIS Self-Service, you must first secure your account by adding MFA to your sign-in journey."
+  };
+  if (prefMfa === "NOMFA") {
+    return mfaDescriptions[prefMfa];
+  }
+  return `${mfaDescriptions[prefMfa]} MFA is already set up. If you want to redo the process or verify your identity a different way then please continue.`;
 }
