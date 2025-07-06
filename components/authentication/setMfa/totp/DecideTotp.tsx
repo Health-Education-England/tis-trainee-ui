@@ -2,11 +2,9 @@ import { Formik } from "formik";
 import { Button, Card, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import { updatedTotpSection } from "../../../../redux/slices/userSlice";
-import { toastErrText, YES_NO_OPTIONS } from "../../../../utilities/Constants";
+import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import ThreeMinMsg from "./ThreeMinMsg";
-import { setUpTOTP } from "aws-amplify/auth";
-import { showToast, ToastType } from "../../../common/ToastMessage";
 interface IDecideTotp {
   handleSectionSubmit: () => void;
 }
@@ -20,17 +18,7 @@ const DecideTotp = ({ handleSectionSubmit }: IDecideTotp) => {
       }}
       onSubmit={async values => {
         if (values.appInstalledAlready === "true") {
-          try {
-            await setUpTOTP();
-            dispatch(updatedTotpSection(3));
-          } catch (error: unknown) {
-            console.error("Failed to set up TOTP: ", error);
-            showToast(
-              toastErrText.updateTotpCode,
-              ToastType.ERROR,
-              `${(error as any).code}-${(error as any).message}`
-            );
-          }
+          dispatch(updatedTotpSection(3));
         } else handleSectionSubmit();
       }}
     >

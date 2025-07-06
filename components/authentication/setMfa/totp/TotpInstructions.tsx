@@ -24,9 +24,10 @@ const TotpInstructions = () => {
           <Details.Text>
             <p data-cy="msAuthInfoText">
               Below are instructions to help you install Microsoft Authenticator
-              on your Android or iPhone but please choose any combination of
-              Authenticator App and device you most prefer.
+              on your Android phone or iPhone. Please note that Microsoft
+              Athenticator works on mobile devices only (includes iPad).
             </p>
+            <p>You can use any other Authenticator app if you prefer.</p>
           </Details.Text>
         </Details>
         <Card feature data-cy="scanQrPanel" className={styles.panelBack}>
@@ -40,19 +41,19 @@ const TotpInstructions = () => {
               <Row>
                 <Col width="one-half">
                   <img
-                    className={styles.qrAuth}
                     data-cy="qrApple"
-                    alt="Get it from the App store"
-                    src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RWHRpz?ver=9319&q=90&m=2&h=2147483647&w=2147483647&b=%23FFFFFFFF&aim=true"
+                    alt="App Store (Apple) MS Authenticator QR Code"
+                    src="https://support.microsoft.com/images/en-us/8d591290-28d1-4c5a-8392-bf7ebbb2875b"
                   ></img>
+                  <p>App Store (Apple)</p>
                 </Col>
                 <Col width="one-half">
                   <img
-                    className={styles.qrAuth}
                     data-cy="qrAndroid"
-                    alt="Get it from the Google Play store"
-                    src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RWHRpj?ver=90bf&q=90&m=2&h=2147483647&w=2147483647&b=%23FFFFFFFF&aim=true"
+                    alt="Google Play store MS Authenticator QR Code"
+                    src="https://support.microsoft.com/images/en-us/752f5229-e6bb-4ce8-8f48-d6d255212648"
                   ></img>
+                  <p>Google Play store</p>
                 </Col>
               </Row>
             </Container>
@@ -75,8 +76,8 @@ const TotpInstructions = () => {
           </Details.Text>
           <Details.Text data-cy="altTotpDownloadText">
             <p>
-              If you need an alternative to a QR code then please click a link
-              below to download an Authenticator App:
+              If you need an alternative to a QR code then please click a logo
+              link below to download an Authenticator App:
             </p>
           </Details.Text>
           <Details.Text data-cy="altTotpDownloadLinks">

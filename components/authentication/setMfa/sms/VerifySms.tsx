@@ -4,23 +4,26 @@ import { MobilePhoneValidationSchema } from "../ValidationSchema";
 import MobilePhoneInputField from "../../../../components/forms/MobilePhoneInputField";
 import { Button, Card } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import {
-  incrementSmsSection,
-  resetError
-} from "../../../../redux/slices/userSlice";
+import { incrementSmsSection } from "../../../../redux/slices/userSlice";
 import {
   sendUserAttributeVerificationCode,
   updateUserAttribute
 } from "aws-amplify/auth";
+import { useState } from "react";
+import ErrorPage from "../../../common/ErrorPage";
+import { useSubmitting } from "../../../../utilities/hooks/useSubmitting";
 
 const VerifySms = () => {
   const dispatch = useAppDispatch();
+  const [verifySMSError, setVerifySMSError] = useState(false);
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
+
   const stepForward = () => {
-    dispatch(resetError());
     dispatch(incrementSmsSection());
   };
   const handleSmsVerify = async (mobilePhoneNumber: string) => {
     try {
+      startSubmitting();
       await updateUserAttribute({
         userAttribute: {
           attributeKey: "phone_number",
@@ -33,6 +36,9 @@ const VerifySms = () => {
       stepForward();
     } catch (error) {
       console.error("Failed to handle SMS verification: ", error);
+      setVerifySMSError(true);
+    } finally {
+      stopSubmitting();
     }
   };
 
@@ -40,11 +46,12 @@ const VerifySms = () => {
     <Formik
       initialValues={{ mobilePhoneNumber: "" }}
       onSubmit={values => {
+        setVerifySMSError(false);
         handleSmsVerify(values.mobilePhoneNumber);
       }}
       validationSchema={MobilePhoneValidationSchema}
     >
-      {({ isValid, isSubmitting }) => (
+      {({ isValid }) => (
         <Form>
           {" "}
           <Card feature>
@@ -55,13 +62,12 @@ const VerifySms = () => {
               <MobilePhoneInputField name="mobilePhoneNumber" />
             </Card.Content>
           </Card>
-          <Button
-            disabled={!isValid || isSubmitting}
-            type="submit"
-            data-cy="BtnContinue"
-          >
-            {isSubmitting ? "Sending..." : "Send SMS authentication code"}
+          <Button disabled={!isValid} type="submit" data-cy="BtnContinue">
+            {isSubmitting ? "Sending..." : "Send SMS verification code"}
           </Button>
+          {verifySMSError && (
+            <ErrorPage message="There was a problem setting up your phone for SMS MFA Authentication. Please try again." />
+          )}
         </Form>
       )}
     </Formik>

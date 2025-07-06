@@ -1,10 +1,5 @@
 import { Formik } from "formik";
 import { Button, Form } from "nhsuk-react-components";
-import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import {
-  getUsername,
-  updateTotpCode
-} from "../../../../redux/slices/userSlice";
 import ThreeMinMsg from "./ThreeMinMsg";
 import TotpInstructions from "./TotpInstructions";
 interface IInstallTotp {
@@ -12,17 +7,13 @@ interface IInstallTotp {
 }
 
 const InstallTotp = ({ handleSectionSubmit }: IInstallTotp) => {
-  const dispatch = useAppDispatch();
-
   return (
     <Formik
       initialValues={{
         mfaChoice: "",
         appInstalledNow: null
       }}
-      onSubmit={_values => {
-        dispatch(updateTotpCode());
-        dispatch(getUsername());
+      onSubmit={async _values => {
         handleSectionSubmit();
       }}
     >

@@ -27,8 +27,7 @@ const ConfirmSms = () => {
         confirmationCode: smsCode
       });
       const mfaPrefObj: { [key: string]: string } = {
-        sms: "PREFERRED",
-        totp: "NOT_PREFERRED"
+        sms: "PREFERRED"
       };
       await updateMFAPreference(mfaPrefObj);
       await dispatch(getPreferredMfa());
@@ -36,6 +35,7 @@ const ConfirmSms = () => {
       showToast(toastSuccessText.getPreferredMfaSms, ToastType.SUCCESS);
     } catch (error) {
       console.error("Failed to set up SMS MFA: ", error);
+      showToast("Failed to set up SMS MFA. Please try again.", ToastType.ERROR);
       stepBack();
     }
   };

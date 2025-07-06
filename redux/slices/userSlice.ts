@@ -1,12 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { toastErrText } from "../../utilities/Constants";
-import { showToast, ToastType } from "../../components/common/ToastMessage";
-import {
-  fetchMFAPreference,
-  getCurrentUser,
-  setUpTOTP,
-  fetchAuthSession
-} from "aws-amplify/auth";
+import { fetchMFAPreference, fetchAuthSession } from "aws-amplify/auth";
 
 export type CojVersionType = "GG9" | "GG10";
 
@@ -25,7 +18,6 @@ interface IUser {
   smsSection: number;
   totpSection: number;
   error: any;
-  totpCode: string;
   preferredMfa: MFAType;
   username: string;
   features: UserFeaturesType;
@@ -43,7 +35,6 @@ const initialState: IUser = {
   smsSection: 1,
   totpSection: 1,
   error: "",
-  totpCode: "",
   preferredMfa: "NOMFA",
   username: "",
   features: {
@@ -74,18 +65,6 @@ export const getPreferredMfa = createAsyncThunk(
   }
 );
 
-export const updateTotpCode = createAsyncThunk(
-  "user/updateTotpCode",
-  async () => {
-    return (await setUpTOTP()).sharedSecret;
-  }
-);
-
-export const getUsername = createAsyncThunk("user/getUsername", async () => {
-  const { username } = await getCurrentUser();
-  return username;
-});
-
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -97,8 +76,7 @@ const userSlice = createSlice({
         tempMfa: "NOMFA",
         smsSection: 1,
         totpSection: 1,
-        error: "",
-        totpCode: ""
+        error: ""
       };
     },
     resetError(state) {
@@ -171,27 +149,6 @@ const userSlice = createSlice({
         state.preferredMfa = action.payload ?? "NOMFA";
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(updateTotpCode.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.totpCode = action.payload;
-      })
-      .addCase(updateTotpCode.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.updateTotpCode,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
-      })
-      .addCase(getUsername.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.username = action.payload;
-      })
-      .addCase(getUsername.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
