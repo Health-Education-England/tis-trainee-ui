@@ -135,5 +135,5 @@ function getPrefMfa(prefMfa: MFAType) {
   if (prefMfa === "NOMFA") {
     return mfaDescriptions[prefMfa];
   }
-  return `${mfaDescriptions[prefMfa]} MFA is already set up. If you want to redo the process or verify your identity a different way then please continue.`;
+  return `${mfaDescriptions[prefMfa]} MFA is currently your preferred MFA method when you sign in. If you want to redo the process or verify your identity a different way then please continue.`;
 }

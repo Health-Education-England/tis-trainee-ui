@@ -19,6 +19,7 @@ interface IUser {
   totpSection: number;
   error: any;
   preferredMfa: MFAType;
+  enabledMfa?: MFAType[];
   username: string;
   features: UserFeaturesType;
   signingCojProgName: string | null;
@@ -36,6 +37,7 @@ const initialState: IUser = {
   totpSection: 1,
   error: "",
   preferredMfa: "NOMFA",
+  enabledMfa: [],
   username: "",
   features: {
     ltft: false,
@@ -61,7 +63,10 @@ export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
     const mfaPreference = await fetchMFAPreference();
-    return mfaPreference.preferred;
+    return {
+      preferred: mfaPreference.preferred,
+      enabled: mfaPreference.enabled
+    };
   }
 );
 
@@ -146,7 +151,8 @@ const userSlice = createSlice({
       })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMfa = action.payload ?? "NOMFA";
+        state.preferredMfa = action.payload.preferred ?? "NOMFA";
+        state.enabledMfa = action.payload.enabled ?? [];
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";

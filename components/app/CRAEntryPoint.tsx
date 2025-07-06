@@ -58,7 +58,12 @@ function CRAEntryPoint() {
 
     SignIn: {
       Footer() {
-        return <AuthSupportLinks action="Sign in" />;
+        return (
+          <>
+            <Authenticator.SignIn.Footer />
+            <AuthSupportLinks action="Sign in" />
+          </>
+        );
       }
     }
   };
