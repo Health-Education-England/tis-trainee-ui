@@ -8,7 +8,6 @@ import { Fieldset } from "nhsuk-react-components";
 import { ProfilePanels } from "../profile/ProfilePanels";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { TraineeProfileName } from "../../models/TraineeProfile";
-import { useProfile } from "../../utilities/hooks/useProfile";
 
 type ProfilePageProps = {
   title: string;
@@ -21,12 +20,6 @@ export function ProfilePage({
   profileName,
   warningText
 }: Readonly<ProfilePageProps>) {
-  const { preferredMfa } = useProfile();
-
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
-
   return (
     <>
       <PageTitle title={title} />

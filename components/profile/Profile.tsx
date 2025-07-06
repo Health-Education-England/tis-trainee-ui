@@ -108,15 +108,9 @@ const Profile = () => {
     dispatch(resetMfaJourney());
   }, [dispatch]);
 
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-
   const isLoading: boolean = useAppSelector(
     state => state.traineeProfile.gmcStatus === "loading"
   );
-
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
 
   if (isLoading) {
     return <Loading />;

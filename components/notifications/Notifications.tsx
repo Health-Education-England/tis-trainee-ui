@@ -1,17 +1,12 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import ScrollTo from "../forms/ScrollTo";
 import PageTitle from "../common/PageTitle";
 import { Fieldset } from "nhsuk-react-components";
-import { useAppSelector } from "../../redux/hooks/hooks";
 import PageNotFound from "../common/PageNotFound";
 import { NotificationsTable } from "./NotificationsTable";
 import { NotificationMessage } from "./NotificationMessage";
 
 export const Notifications = () => {
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
   return (
     <>
       <PageTitle title="Notifications" />

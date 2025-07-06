@@ -1,6 +1,6 @@
 import { Card, Fieldset, Label } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -32,8 +32,6 @@ export default function ActionSummary() {
     dispatch(loadFormBList());
   }, [dispatch]);
 
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-
   // OUTSTANDING ACTIONS
   const { unsignedCojCount, programmeActions, placementActions } =
     useOutstandingActions();
@@ -49,10 +47,6 @@ export default function ActionSummary() {
     state =>
       state.formA.status === "loading" || state.formB.status === "loading"
   );
-
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
 
   if (isformRListLoading) return <Loading />;
 
