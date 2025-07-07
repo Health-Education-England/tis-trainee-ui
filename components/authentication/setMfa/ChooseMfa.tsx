@@ -21,6 +21,16 @@ const ChooseMfa = () => {
   const preferredMfa: MFAType = useAppSelector(
     state => state.user.preferredMfa
   );
+
+  const getMfaOptions = (preferredType: MFAType) => {
+    if (preferredType === "NOMFA" || preferredType === "SMS") {
+      return MFA_OPTIONS;
+    } else if (preferredType === "TOTP") {
+      return MFA_OPTIONS.filter(option => option.value === "EMAIL");
+    } else {
+      return MFA_OPTIONS.filter(option => option.value === "TOTP");
+    }
+  };
   return (
     <>
       <ScrollTo />
@@ -87,7 +97,7 @@ const ChooseMfa = () => {
                   type="radios"
                   id="mfaChoice"
                   name="mfaChoice"
-                  items={MFA_OPTIONS}
+                  items={getMfaOptions(preferredMfa)}
                 ></MultiChoiceInputField>
               </Card.Content>
             </Card>
@@ -135,5 +145,5 @@ function getPrefMfa(prefMfa: MFAType) {
   if (prefMfa === "NOMFA" || prefMfa === "SMS") {
     return mfaDescriptions[prefMfa];
   }
-  return `${mfaDescriptions[prefMfa]} MFA is currently your preferred MFA method when you sign in. If you want to redo the process or verify your identity a different way then please continue.`;
+  return `${mfaDescriptions[prefMfa]} MFA is currently your preferred MFA method when you sign in. If you want to verify your identity a different way then please choose another method below.`;
 }
