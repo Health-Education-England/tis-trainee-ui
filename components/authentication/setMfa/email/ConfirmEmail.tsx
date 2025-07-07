@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Card, Details } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
 import history from "../../../navigation/history";
@@ -6,13 +5,13 @@ import { ToastType, showToast } from "../../../common/ToastMessage";
 import { toastSuccessText } from "../../../../utilities/Constants";
 import { updateMFAPreference } from "aws-amplify/auth";
 import { getPreferredMfa } from "../../../../redux/slices/userSlice";
+import { useSubmitting } from "../../../../utilities/hooks/useSubmitting";
 
 const ConfirmEmail = () => {
   const dispatch = useAppDispatch();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const handleConfirmEmail = async () => {
-    setIsSubmitting(true);
+    startSubmitting();
     try {
       const mfaPrefObj: { [key: string]: string } = {
         email: "PREFERRED"
@@ -28,7 +27,7 @@ const ConfirmEmail = () => {
         ToastType.ERROR
       );
     } finally {
-      setIsSubmitting(false);
+      stopSubmitting();
     }
   };
 
