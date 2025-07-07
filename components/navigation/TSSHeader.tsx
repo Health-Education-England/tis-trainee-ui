@@ -162,7 +162,8 @@ function makeTSSHeaderLinks(preferredMfa: string, isLtftPilot: boolean) {
         pathObj.mobileOnly ? "mobile-only-nav" : ""
       }`}
       hidden={
-        (preferredMfa === "NOMFA" && !pathObj.showWithNoMfa) ||
+        ((preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
+          !pathObj.showWithNoMfa) ||
         (pathObj?.showForLtftPilot && !isLtftPilot)
       }
     >

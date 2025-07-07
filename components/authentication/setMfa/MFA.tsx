@@ -6,6 +6,7 @@ import CreateSms from "./sms/CreateSms";
 import CreateTotp from "./totp/CreateTotp";
 import PageNotFound from "../../common/PageNotFound";
 import style from "../../Common.module.scss";
+import ConfirmEmail from "./email/ConfirmEmail";
 
 const MFA = () => {
   return (
@@ -21,6 +22,7 @@ const MFA = () => {
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
+        <Route exact path="/mfa/email" component={ConfirmEmail} />
         <Route exact path="/mfa/sms" component={CreateSms} />
         <Route exact path="/mfa/totp" component={CreateTotp} />
         <Route exact path="/mfa" component={ChooseMfa} />

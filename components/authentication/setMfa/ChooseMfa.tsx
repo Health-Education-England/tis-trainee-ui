@@ -81,7 +81,8 @@ const ChooseMfa = () => {
             <Card feature>
               <Card.Content>
                 <Card.Heading>
-                  When I log in, I want to verify my identity with a code
+                  Next time I sign in, I want to verify my identity with a One
+                  Time Password (OTP)
                 </Card.Heading>
                 <MultiChoiceInputField
                   type="radios"
@@ -127,12 +128,12 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
 function getPrefMfa(prefMfa: MFAType) {
   const mfaDescriptions: Record<MFAType, string> = {
     TOTP: "Authenticator App",
-    SMS: " SMS",
-    EMAIL: " Email",
+    SMS: "We no longer support SMS as an MFA method as it is less secure and more expensive than other MFA methods. Please choose another one.",
+    EMAIL: "Email",
     NOMFA:
-      " Before you can access TIS Self-Service, you must first secure your account by adding MFA to your sign-in journey."
+      "Before you can access TIS Self-Service, you must first secure your account by adding MFA to your sign-in journey."
   };
-  if (prefMfa === "NOMFA") {
+  if (prefMfa === "NOMFA" || prefMfa === "SMS") {
     return mfaDescriptions[prefMfa];
   }
   return `${mfaDescriptions[prefMfa]} MFA is currently your preferred MFA method when you sign in. If you want to redo the process or verify your identity a different way then please continue.`;
