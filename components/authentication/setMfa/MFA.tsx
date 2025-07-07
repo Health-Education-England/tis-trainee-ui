@@ -2,7 +2,6 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import PageTitle from "../../common/PageTitle";
 import { Fieldset } from "nhsuk-react-components";
 import ChooseMfa from "./ChooseMfa";
-import CreateSms from "./sms/CreateSms";
 import CreateTotp from "./totp/CreateTotp";
 import PageNotFound from "../../common/PageNotFound";
 import style from "../../Common.module.scss";
@@ -23,7 +22,6 @@ const MFA = () => {
       </Fieldset>
       <Switch>
         <Route exact path="/mfa/email" component={ConfirmEmail} />
-        <Route exact path="/mfa/sms" component={CreateSms} />
         <Route exact path="/mfa/totp" component={CreateTotp} />
         <Route exact path="/mfa" component={ChooseMfa} />
         <Redirect exact path="/" to="/mfa" />

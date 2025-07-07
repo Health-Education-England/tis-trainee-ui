@@ -51,11 +51,12 @@ const ConfirmEmail = () => {
             <Details.Summary>Why use Email MFA?</Details.Summary>
             <Details.Text>
               <p>
+                {`
                 Email MFA provides additional security without requiring a
                 mobile phone. It is more secure than SMS MFA and it's convenient
                 as you can access your email from multiple devices. The
                 verification codes expire after a short period, ensuring only
-                you can access your account.
+                you can access your account.`}
               </p>
             </Details.Text>
           </Details>
