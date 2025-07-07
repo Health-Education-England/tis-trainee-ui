@@ -223,7 +223,7 @@ type RenderQRCodeContentProps = {
   generateQrCode: () => void;
 };
 
-function RenderQRCodeContent({
+export function RenderQRCodeContent({
   qrCode,
   isLoading,
   isExpired,

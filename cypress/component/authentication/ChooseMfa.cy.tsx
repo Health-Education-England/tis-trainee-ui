@@ -8,7 +8,7 @@ import store from "../../../redux/store/store";
 import ChooseMfa from "../../../components/authentication/setMfa/ChooseMfa";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import { MFAType, updatedPreferredMfa } from "../../../redux/slices/userSlice";
 
 describe("ChooseMfa", () => {
   it("should render the MFA options and error if no selection made", () => {
@@ -28,28 +28,58 @@ describe("ChooseMfa", () => {
     cy.get("[data-cy=mfaSummary]").should("exist").click();
     cy.get("[data-cy=whyTotpText] > p").should(
       "include.text",
-      "We recommend installing an Authenticator App to generate the 6-digit code as this is more secure and reliable than SMS."
+      "The most secure MFA is an Authenticator App "
     );
-    cy.get('[data-cy="mfaSetupText"]')
+    cy.get('[data-cy="mfaSetup"]')
       .should("exist")
       .should("include.text", "Before you can access TIS Self-Service");
   });
 
-  it("should render the 'MFA already set-up' warning msg if MFA has been set.", () => {
-    const MockedChooseMfaAlreadyMfa = () => {
+  const testMfaType = (
+    mfaType: MFAType,
+    expectedText: string,
+    dataCyTag: string
+  ) => {
+    const MockedChooseMfa = () => {
       const dispatch = useDispatch();
-      dispatch(updatedPreferredMfa("SMS"));
+      dispatch(updatedPreferredMfa(mfaType));
       return <ChooseMfa />;
     };
+
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedChooseMfaAlreadyMfa />
+          <MockedChooseMfa />
         </Router>
       </Provider>
     );
-    cy.get('[data-cy="mfaAlreadyText"]')
+
+    cy.get(`[data-cy="${dataCyTag}"]`)
       .should("exist")
-      .should("include.text", "You have already set up SMS for MFA");
+      .should("include.text", expectedText);
+  };
+
+  it("should render 'TOTP' message when Authenticator App is the preferred MFA", () => {
+    testMfaType(
+      "TOTP",
+      "Authenticator App MFA is currently your preferred MFA method",
+      "mfaAlreadyWarning"
+    );
+  });
+
+  it("should render 'EMAIL' message when Email is the preferred MFA", () => {
+    testMfaType(
+      "EMAIL",
+      "Email MFA is currently your preferred MFA method",
+      "mfaAlreadyWarning"
+    );
+  });
+
+  it("should render the SMS deprecation message when SMS is the preferred MFA", () => {
+    testMfaType(
+      "SMS",
+      "We no longer support SMS as an MFA method",
+      "mfaAlreadyWarning"
+    );
   });
 });
