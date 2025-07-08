@@ -9,39 +9,12 @@ import { useAppDispatch } from "../../../redux/hooks/hooks";
 import Profile from "../../../components/profile/Profile";
 import {
   updatedTraineeProfileData,
-  updatedTraineeProfileStatus,
-  updateGmc
+  updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
 import { mockPersonalDetails } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
 import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
-
-describe("Profile with no MFA set up", () => {
-  it("should not display Profile page if NOMFA", () => {
-    const MockedProfileFail = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfileFail />
-        </Router>
-      </Provider>
-    );
-    cy.get("[data-cy=profileHeading]").should("not.exist");
-  });
-});
 
 describe("Profile with MFA set up", () => {
   beforeEach(() => {

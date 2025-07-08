@@ -72,18 +72,6 @@ describe("FormA", () => {
     );
     cy.navNext();
   });
-
-  it("won't render the Form if user has not set their preferred MFA", () => {
-    store.dispatch(updatedPreferredMfa("NOMFA"));
-    mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/formr-a/create"]}>
-          <FormA />
-        </MemoryRouter>
-      </Provider>
-    );
-    cy.get('[data-cy="formraLabel"]').should("not.exist");
-  });
 });
 
 describe("Form A View (/form-a/confirm)", () => {

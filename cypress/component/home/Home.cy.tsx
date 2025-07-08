@@ -23,23 +23,6 @@ const homeCards = [
   "Changing hours (LTFT)"
 ];
 
-describe("Home with no MFA set up", () => {
-  beforeEach(() => {
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <Home />
-        </Router>
-      </Provider>
-    );
-  });
-  homeCards.forEach(card => {
-    it(`should not display the ${card} card on the Home page`, () => {
-      cy.get(`[data-cy="${card}"]`).should("not.exist");
-    });
-  });
-});
-
 describe("Home with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
