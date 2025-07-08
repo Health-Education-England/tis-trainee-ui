@@ -15,12 +15,8 @@ interface HomeCardProps {
 }
 
 const Home = () => {
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const isLtftPilot = useIsLtftPilot();
 
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
       <Fieldset.Legend size="m" data-cy="tssOverview">

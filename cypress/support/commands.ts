@@ -150,7 +150,7 @@ Cypress.Commands.add("signIn", () => {
   cy.get('[type="password"]').clear().type(Cypress.env("password"));
   cy.get(".amplify-button--primary").click();
   cy.task("generateOTP").then(token => {
-    cy.get('[type="number"]').type(`${token}{enter}`);
+    cy.get('input[name="confirmation_code"]').type(`${token}{enter}`);
   });
 });
 

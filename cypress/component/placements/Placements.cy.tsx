@@ -18,7 +18,7 @@ import {
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import { MFAType, updatedPreferredMfa } from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
@@ -28,7 +28,7 @@ import { Placement } from "../../../models/Placement";
 
 const mountPlacementsWithMockData = (
   placements: Placement[],
-  prefMfa: string = "NOMFA",
+  prefMfa: MFAType = "NOMFA",
   profileStatus: string = "idle",
   actionsData: any = [mockOutstandingActions[3]]
 ) => {
@@ -56,13 +56,6 @@ const mountPlacementsWithMockData = (
     </Provider>
   );
 };
-
-describe("Placements with no MFA set up", () => {
-  it("should not display Placements page if NOMFA", () => {
-    mountPlacementsWithMockData([mockPlacements[0]]);
-    cy.get("[data-cy=placementsHeading]").should("not.exist");
-  });
-});
 
 describe("Placements with MFA set up", () => {
   it("should display Placements when MFA set up", () => {

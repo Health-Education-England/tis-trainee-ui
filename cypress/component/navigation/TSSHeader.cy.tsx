@@ -39,7 +39,7 @@ const comp = (
 
 describe("Header with MFA set up", () => {
   beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(updatedPreferredMfa("TOTP"));
     store.dispatch(updatedUserFeatures(mockUserFeatures1));
     mount(comp);
   });
@@ -77,54 +77,9 @@ describe("Header with MFA set up", () => {
   });
 });
 
-describe("Header with NOMFA", () => {
-  beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("NOMFA"));
-    mount(comp);
-  });
-
-  const noMfaNavLinks = [
-    { name: "Support", href: "/support" },
-    { name: "MFA set-up", href: "/mfa" }
-  ];
-
-  const mfaOnlyLinks = navLinks.slice(0, 2);
-
-  noMfaNavLinks.forEach(link => {
-    it(`should show the ${link.name} link in the nav menu`, () => {
-      cy.get(`[data-cy="${link.name}"]`)
-        .should("exist")
-        .should("contain.text", `${link.name}`)
-        .should("have.attr", "href", `${link.href}`);
-    });
-  });
-
-  mfaOnlyLinks.forEach(link => {
-    it(`should not show the ${link.name} link in the nav menu`, () => {
-      cy.get(`[data-cy="${link.name}"]`).should("not.be.visible");
-    });
-  });
-  it("should contain menu and sign out buttons", () => {
-    cy.get(`[data-cy=menuToggleBtn]`).should("exist");
-    cy.get("[data-cy=signOutBtn]").should("exist");
-  });
-
-  it("should contain the menu title and alternative menu close icon", () => {
-    cy.get(".nhsuk-header__navigation-title").should("not.be.visible");
-    cy.get(".nhsuk-header__navigation-close").should("not.be.visible");
-    cy.get(`[data-cy=menuToggleBtn]`).click();
-    cy.get(".nhsuk-header__navigation-title")
-      .should("be.visible")
-      .should("contain.text", "Menu");
-    cy.get(".nhsuk-header__navigation-close").should("be.visible").click();
-    cy.get(".nhsuk-header__navigation-title").should("not.be.visible");
-    cy.get(".nhsuk-header__navigation-close").should("not.be.visible");
-  });
-});
-
 describe("Desktop Header with MFA set up", () => {
   beforeEach(() => {
-    store.dispatch(updatedPreferredMfa("SMS"));
+    store.dispatch(updatedPreferredMfa("TOTP"));
     store.dispatch(updatedUserFeatures(mockUserFeatures2));
     mount(comp);
     cy.viewport(1024, 768);

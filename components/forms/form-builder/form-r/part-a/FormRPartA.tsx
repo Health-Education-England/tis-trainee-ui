@@ -30,15 +30,12 @@ export default function FormA() {
     programmeDeclarationOptions
   };
 
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const canEditStatus = useAppSelector(state => state.formA.canEdit);
   const formJson = formAJson as Form;
   const initialPageFields = formJson.pages[0].sections.flatMap(
     section => section.fields
   );
   const redirectPath = "/formr-a";
-
-  if (preferredMfa === "NOMFA") return <Redirect to="/mfa" />;
 
   return (
     <>

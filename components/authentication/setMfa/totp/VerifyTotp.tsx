@@ -8,81 +8,92 @@ import {
   Input,
   WarningCallout
 } from "nhsuk-react-components";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import {
-  getPreferredMfa,
-  resetError,
-  setPreferredMfa,
-  updatedTotpSection,
-  updateUserAttributes,
-  verifyTotp
-} from "../../../../redux/slices/userSlice";
+import { useEffect, useRef, useState } from "react";
+import { useAppDispatch } from "../../../../redux/hooks/hooks";
+import { getPreferredMfa } from "../../../../redux/slices/userSlice";
 import { QRCodeSVG } from "qrcode.react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../../../../components/forms/TextInputField";
-import store from "../../../../redux/store/store";
 import history from "../../../navigation/history";
-import { MFAType } from "../../../../models/MFAStatus";
 import styles from "../../../authentication/Auth.module.scss";
 import { ToastType, showToast } from "../../../common/ToastMessage";
 import { toastSuccessText } from "../../../../utilities/Constants";
+import {
+  updateMFAPreference,
+  verifyTOTPSetup,
+  updateUserAttribute,
+  getCurrentUser,
+  setUpTOTP
+} from "aws-amplify/auth";
+import ErrorPage from "../../../common/ErrorPage";
+import Loading from "../../../common/Loading";
 
 const VerifyTotp = () => {
   const dispatch = useAppDispatch();
   const totpName = "NHS TIS Self-Service";
-  const totpStr = useAppSelector(state => state.user.totpCode);
-  const username = useAppSelector(state => state.user.username);
-  const qrCode = `otpauth://totp/${encodeURI(
-    totpName
-  )}:${username}?secret=${totpStr}&issuer=${encodeURI(totpName)}`;
+  const [isLoading, setIsLoading] = useState(true);
+  const [qrCode, setQrCode] = useState("");
+  const [totpStr, setTotpStr] = useState("");
+  const setupTOTPRef = useRef(false);
+  const [isExpired, setIsExpired] = useState(false);
+  const [errorQR, setErrorQR] = useState(false);
+  const [errorVerifyCode, setErrorVerifyCode] = useState(false);
 
-  const [expired, setExpired] = useState(false);
-  useEffect(() => {
-    let timeOut = setTimeout(() => setExpired(true), 180000);
-    if (expired) {
-      dispatch(updatedTotpSection(1));
-      dispatch(resetError());
+  const generateQrCode = async () => {
+    setIsLoading(true);
+    setIsExpired(false);
+    setErrorQR(false);
+    try {
+      const { username } = await getCurrentUser();
+      const { sharedSecret } = await setUpTOTP();
+      setTotpStr(sharedSecret);
+      setQrCode(
+        `otpauth://totp/${encodeURI(
+          totpName
+        )}:${username}?secret=${sharedSecret}&issuer=${encodeURI(totpName)}`
+      );
+    } catch (error) {
+      console.error("Failed to set up TOTP: ", error);
+      setErrorQR(true);
+    } finally {
+      setIsLoading(false);
     }
-    return () => {
-      clearTimeout(timeOut);
-    };
-  }, [expired, dispatch]);
-
-  const verifyTotpInput = async (totpInput: string) => {
-    await dispatch(verifyTotp(totpInput));
-    return store.getState().user.status;
   };
 
-  const updateMfa = async () => {
-    const pref: MFAType = "TOTP";
-    await dispatch(setPreferredMfa(pref));
-    return store.getState().user.status;
-  };
+  useEffect(() => {
+    if (!setupTOTPRef.current) {
+      setupTOTPRef.current = true;
+      generateQrCode();
+    }
+    const timeOut = setTimeout(() => {
+      setIsExpired(true);
+    }, 180000);
 
-  const removePhoneNo = async () => {
-    const attrib = { phone_number: "" };
-    await dispatch(updateUserAttributes(attrib));
-    return store.getState().user.status;
-  };
+    return () => clearTimeout(timeOut);
+  }, []);
 
-  const handleTotpSub = async (totp: string) => {
-    const getBack = () => {
-      dispatch(updatedTotpSection(1));
-      dispatch(resetError());
-    };
-    const res = await verifyTotpInput(totp);
-    if (res === "succeeded") {
-      const resU = await updateMfa();
-      if (resU === "succeeded") {
-        const resR = await removePhoneNo();
-        if (resR === "succeeded") {
-          await dispatch(getPreferredMfa());
-          history.push("/home");
-          showToast(toastSuccessText.getPreferredMfaTotp, ToastType.SUCCESS);
-        } else getBack();
-      } else getBack();
+  const handleTotpSub = async (totpStr: string) => {
+    try {
+      await verifyTOTPSetup({ code: totpStr });
+      const mfaPrefObj: { [key: string]: string } = {
+        totp: "PREFERRED"
+      };
+      await updateMFAPreference(mfaPrefObj);
+
+      const attrib = { key: "phone_number", value: "" };
+      await updateUserAttribute({
+        userAttribute: {
+          attributeKey: attrib.key,
+          value: attrib.value
+        }
+      });
+      await dispatch(getPreferredMfa());
+      history.push("/home");
+      showToast(toastSuccessText.getPreferredMfaTotp, ToastType.SUCCESS);
+    } catch (error) {
+      console.error("Failed to set up TOTP MFA: ", error);
+      setErrorVerifyCode(true);
     }
   };
 
@@ -127,63 +138,74 @@ const VerifyTotp = () => {
                 button then scan the QR Code below.
               </Fieldset.Legend>
               <div className={styles.qrTss}>
-                <QRCodeSVG
-                  data-cy="tssQrCode"
-                  size={192}
-                  value={qrCode}
-                  includeMargin={true}
+                <RenderQRCodeContent
+                  qrCode={qrCode}
+                  isLoading={isLoading}
+                  isExpired={isExpired}
+                  errorQR={errorQR}
+                  generateQrCode={generateQrCode}
                 />
               </div>
-              <Details>
-                <Details.Summary data-cy="tssQrCodeHelp">
-                  Unable to scan QR code?
-                </Details.Summary>
-                <Details.Text>
-                  <p>
-                    If you are not using a mobile Authenticator App or are
-                    unable to see the QR code, you can enter the following code
-                    instead.
-                  </p>
-                  <Input
-                    data-cy="tssQrCodeStr"
-                    onFocus={event => event.target.select()}
-                    defaultValue={totpStr}
-                    label=""
-                    readOnly
-                  />
-                </Details.Text>
-              </Details>
-              <Formik
-                initialValues={{ confirmTOTPCode: "" }}
-                validationSchema={Yup.object({
-                  confirmTOTPCode: Yup.string()
-                    .required("TOTP code required")
-                    .min(6, "Code must be min 6 characters in length")
-                    .max(6, "Code must be max 6 characters in length")
-                })}
-                onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
-              >
-                {({ isValid, isSubmitting, handleSubmit }) => (
-                  <Form>
-                    <TextInputField
-                      width={10}
-                      name="confirmTOTPCode"
-                      label="Enter the 6-digit code from the 'NHS TIS Self-Service' account installed on your phone."
-                      placeholder="6-digit code"
-                    />
-                    <Button
-                      onClick={(e: { preventDefault: () => void }) => {
-                        e.preventDefault();
-                        handleSubmit();
-                      }}
-                      disabled={!isValid || isSubmitting}
-                      data-cy="BtnTotpCodeSub"
-                    >
-                      {isSubmitting ? "Verifying..." : " Verify code & Log in"}
-                    </Button>
-                  </Form>
-                )}
-              </Formik>
+              {isExpired || isLoading ? null : (
+                <>
+                  <Details>
+                    <Details.Summary data-cy="tssQrCodeHelp">
+                      Unable to scan QR code?
+                    </Details.Summary>
+                    <Details.Text>
+                      <p>
+                        If you are not using a mobile Authenticator App or are
+                        unable to see the QR code, you can enter the following
+                        code instead.
+                      </p>
+                      <Input
+                        data-cy="tssQrCodeStr"
+                        onFocus={event => event.target.select()}
+                        defaultValue={totpStr}
+                        label=""
+                        readOnly
+                      />
+                    </Details.Text>
+                  </Details>
+                  <Formik
+                    initialValues={{ confirmTOTPCode: "" }}
+                    validationSchema={Yup.object({
+                      confirmTOTPCode: Yup.string()
+                        .required("TOTP code required")
+                        .min(6, "Code must be min 6 characters in length")
+                        .max(6, "Code must be max 6 characters in length")
+                    })}
+                    onSubmit={values => handleTotpSub(values.confirmTOTPCode)}
+                  >
+                    {({ isValid, isSubmitting, handleSubmit }) => (
+                      <Form>
+                        <TextInputField
+                          width={10}
+                          name="confirmTOTPCode"
+                          label="Enter the 6-digit code from the 'NHS TIS Self-Service' account installed on your phone."
+                          placeholder="6-digit code"
+                        />
+                        <Button
+                          onClick={(e: { preventDefault: () => void }) => {
+                            e.preventDefault();
+                            setErrorVerifyCode(false);
+                            handleSubmit();
+                          }}
+                          disabled={!isValid || isSubmitting}
+                          data-cy="BtnTotpCodeSub"
+                        >
+                          {isSubmitting
+                            ? "Verifying..."
+                            : " Verify code & Log in"}
+                        </Button>
+                        {errorVerifyCode && (
+                          <ErrorPage message="There was an error verifying the TOTP code. Please try again." />
+                        )}
+                      </Form>
+                    )}
+                  </Formik>
+                </>
+              )}
             </Card.Content>
           </Card>
         </Card.Content>
@@ -191,5 +213,62 @@ const VerifyTotp = () => {
     </>
   );
 };
-
 export default VerifyTotp;
+
+type RenderQRCodeContentProps = {
+  qrCode: string;
+  isLoading: boolean;
+  isExpired: boolean;
+  errorQR: boolean;
+  generateQrCode: () => void;
+};
+
+export function RenderQRCodeContent({
+  qrCode,
+  isLoading,
+  isExpired,
+  errorQR,
+  generateQrCode
+}: Readonly<RenderQRCodeContentProps>) {
+  if (isLoading) {
+    return (
+      <>
+        <p>Generating your QR code...</p>
+        <Loading data-cy="loadingQrCode" />
+      </>
+    );
+  }
+
+  if (errorQR) {
+    return (
+      <div>
+        <ErrorPage message="There was an error generating a QR Code. Please try again." />
+        <Button onClick={generateQrCode} data-cy="refreshQrCodeBtnError">
+          Generate new QR Code
+        </Button>
+      </div>
+    );
+  }
+
+  if (isExpired) {
+    return (
+      <div>
+        <p data-cy="qrCodeExpired">
+          The QR code has expired. Please generate a new one.
+        </p>
+        <Button onClick={generateQrCode} data-cy="refreshQrCodeBtn">
+          Generate New QR Code
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <QRCodeSVG
+      data-cy="tssQrCode"
+      size={192}
+      value={qrCode}
+      includeMargin={true}
+    />
+  );
+}

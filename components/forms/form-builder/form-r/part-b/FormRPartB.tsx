@@ -19,7 +19,6 @@ import { ProfileUtilities } from "../../../../../utilities/ProfileUtilities";
 import { FormProvider } from "../../FormContext";
 
 export default function FormB() {
-  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const canEditStatus = useAppSelector(state => state.formB.canEdit);
 
   const redirectPath = "/formr-b";
@@ -70,9 +69,7 @@ export default function FormB() {
     yesNo,
     covidProgressSelfRate
   });
-  if (preferredMfa === "NOMFA") {
-    return <Redirect to="/mfa" />;
-  }
+
   return (
     <>
       <PageTitle title="Form R Part-B" />

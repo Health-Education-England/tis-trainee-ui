@@ -98,27 +98,32 @@ describe("CreateTotp sections", () => {
     cy.get("[data-cy=threeMinReminderText]")
       .should("exist")
       .should("include.text", "You have 3 minutes to scan the QR code below");
-    cy.get("[data-cy=addTssTotpHeader] > :nth-child(1)").should(
-      "contain.text",
-      "Add 'NHS TIS-Self-Service' to your Authenticator App"
-    );
-    cy.get("[data-cy=msAuthInfoSummary]").should("exist").click();
-    cy.get("[data-cy=tssQrCode]").should("exist");
-    cy.get("[data-cy=tssQrCodeHelp]").click();
-    cy.get("[data-cy=tssQrCodeStr]").should("be.visible");
-    cy.get("[data-cy=confirmTOTPCode]")
-      .should("be.visible")
-      .should("have.attr", "placeholder", "6-digit code");
-    // return to totp setup when QR code expires after 3 mins
-    cy.wait(180000);
-    cy.get("[data-cy=appInstalledAlreadyChoose]").should("exist");
-    //then return to totp verification section
-    cy.get("[data-cy=appInstalledAlready0]").click();
-    cy.get(".nhsuk-button")
-      .should("exist")
+    cy.get("[data-cy=addTssTotpHeader] > :nth-child(1)")
       .should(
         "contain.text",
-        "Add 'NHS TIS Self-Service' to your Authenticator App"
-      );
+        "Add 'NHS TIS-Self-Service' to your Authenticator App"
+      )
+      .click();
+    // progress to installing the Authenticator App
+    cy.get('[data-cy="threeMinReminderText"]')
+      .should("exist")
+      .should("include.text", "You have 3 minutes");
+    cy.get(
+      '[data-cy="addTssTotpHeader"] > :nth-child(1) > :nth-child(1)'
+    ).should("exist");
+    cy.get('[data-cy="msAuthInfoSummary"]').should("exist").click();
+    cy.get('[data-cy="dataSourceLink"]').should("exist");
+    cy.get('[data-cy="tssQrCodeHelp"] > .nhsuk-details__summary-text')
+      .should("exist")
+      .click();
+    cy.get('[data-cy="confirmTOTPCode"]').should("exist");
+
+    // check if the QR code error is visible
+    cy.get('[data-cy="error-message-text"]').should(
+      "include.text",
+      "There was an error generating a QR Code. Please try again."
+    );
+    cy.get('[data-cy="refreshQrCodeBtnError"]').should("exist").click();
   });
+  // see VerifyTotp.test.tsx for more tests on the QR code rendering states
 });

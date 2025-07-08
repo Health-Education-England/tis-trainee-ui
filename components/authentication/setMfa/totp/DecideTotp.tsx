@@ -1,10 +1,7 @@
 import { Formik } from "formik";
 import { Button, Card, Form } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../../redux/hooks/hooks";
-import {
-  updatedTotpSection,
-  updateTotpCode
-} from "../../../../redux/slices/userSlice";
+import { updatedTotpSection } from "../../../../redux/slices/userSlice";
 import { YES_NO_OPTIONS } from "../../../../utilities/Constants";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
 import ThreeMinMsg from "./ThreeMinMsg";
@@ -19,9 +16,8 @@ const DecideTotp = ({ handleSectionSubmit }: IDecideTotp) => {
       initialValues={{
         appInstalledAlready: null
       }}
-      onSubmit={values => {
+      onSubmit={async values => {
         if (values.appInstalledAlready === "true") {
-          dispatch(updateTotpCode());
           dispatch(updatedTotpSection(3));
         } else handleSectionSubmit();
       }}

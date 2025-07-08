@@ -2,7 +2,7 @@ import { Flex, View } from "@aws-amplify/ui-react";
 import styles from "../../Auth.module.scss";
 import { NHSEnglandLogoWhite } from "../../../../public/NHSEnglandLogoWhite";
 
-const AuthHeader = (): JSX.Element => {
+export const AuthHeader = (): JSX.Element => {
   return (
     <>
       <Flex className={styles.authLogo}>
@@ -18,5 +18,3 @@ const AuthHeader = (): JSX.Element => {
     </>
   );
 };
-
-export default AuthHeader;

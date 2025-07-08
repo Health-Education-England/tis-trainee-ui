@@ -27,11 +27,12 @@ import { useRedirectHandler } from "../../utilities/hooks/useRedirectHandler";
 import { useCriticalDataLoader } from "../../utilities/hooks/useCriticalDataLoader";
 import ErrorPage from "../common/ErrorPage";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import {
-  fetchUserAuthInfo,
+  fetchUserSession,
   getPreferredMfa
 } from "../../redux/slices/userSlice";
+import history from "../navigation/history";
 
 const appVersion = packageJson.version;
 
@@ -41,13 +42,18 @@ export const Main = () => {
   const isLtftPilot = useIsLtftPilot();
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
+  const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   // Fetch user auth data if not already dispatched
   useEffect(() => {
     if (!authActionsDispatched) {
-      dispatch(getPreferredMfa());
-      dispatch(fetchUserAuthInfo());
-      setAuthActionsDispatched(true);
+      Promise.all([dispatch(fetchUserSession()), dispatch(getPreferredMfa())])
+        .then(() => {
+          setAuthActionsDispatched(true);
+        })
+        .catch(error => {
+          console.error("Error fetching user session or preferred MFA:", error);
+        });
     }
   }, [authActionsDispatched, dispatch]);
   useRedirectHandler();
@@ -62,8 +68,15 @@ export const Main = () => {
     return (
       <ErrorPage message="There was an error loading the app data. Please try again by refreshing the page." />
     );
-
-  if (isCriticalSuccess)
+  if (
+    authActionsDispatched &&
+    preferredMfa === "NOMFA" &&
+    !window.location.pathname.startsWith("/mfa")
+  ) {
+    history.push("/mfa");
+    return <Redirect to="/mfa" />;
+  }
+  if (isCriticalSuccess && authActionsDispatched)
     return (
       <ConfirmProvider>
         <GlobalAlert />
