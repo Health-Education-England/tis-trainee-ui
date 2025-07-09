@@ -1,6 +1,4 @@
 import { Card, Fieldset } from "nhsuk-react-components";
-import { Redirect } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks/hooks";
 import history from "../navigation/history";
 import style from "../Common.module.scss";
 import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";

@@ -4,7 +4,6 @@ import { Button } from "@aws-amplify/ui-react";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import DataSourceMsg from "../common/DataSourceMsg";
-import { Redirect } from "react-router-dom";
 import style from "../Common.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
