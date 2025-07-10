@@ -70,7 +70,7 @@ export const Main = () => {
     );
   if (
     authActionsDispatched &&
-    preferredMfa === "NOMFA" &&
+    (preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
     !window.location.pathname.startsWith("/mfa")
   ) {
     history.push("/mfa");
