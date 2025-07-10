@@ -1,5 +1,4 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
 import DataSourceMsg from "../common/DataSourceMsg";

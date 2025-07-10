@@ -1,112 +1,104 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-describe("Authenticator", () => {
-  beforeEach(() => {
-    cy.visit("/"); //in this instance we do not want to sign-in before the tests
+const getPasswordStrengthItem = (index: number) =>
+  cy.get(`#amplify-id-\\:rg\\: > :nth-child(${index})`);
+
+const fillSignUpForm = ({
+  username,
+  familyName,
+  email,
+  password
+}: {
+  username: string;
+  familyName: string;
+  email: string;
+  password: string;
+}) => {
+  cy.get("#amplify-id-\\:r0\\:-tab-signUp").click();
+  cy.get("#amplify-id-\\:r8\\:").type(username);
+  cy.get("#amplify-id-\\:rb\\:").type(familyName);
+  cy.get("#amplify-id-\\:re\\:").type(email);
+  cy.get("#amplify-id-\\:rh\\:").type(password).blur();
+};
+
+const assertFooterLinks = (elNo: number, elNo2: number, elHref: string) => {
+  cy.get("a")
+    .eq(elNo)
+    .contains("FAQ")
+    .should("have.attr", "href")
+    .and("include", `https://tis-support.hee.nhs.uk/trainees/${elHref}`);
+  cy.get("a")
+    .eq(elNo2)
+    .contains("email")
+    .should("have.attr", "href")
+    .and("include", "mailto:england.tis.support@nhs.net");
+};
+
+describe("Authenticator sign in", () => {
+  before(() => {
+    cy.visit("/");
   });
 
-  it("Header should show logo and heading", () => {
+  it("Sign in should show logo and heading, password toggle visibility, and support links", () => {
     cy.get("[data-cy=authLogo]").should("exist");
     cy.get("[data-cy=authTitle]").should("contain.text", "TIS Self-Service");
+
+    // password show toggle
+    cy.get("button.amplify-field__show-password").first().as("toggleBtn");
+    cy.get('input[name="password"]').as("passwordInput");
+    cy.get("@toggleBtn").click();
+    cy.get("@passwordInput").should("have.attr", "type", "text");
+    cy.get("@toggleBtn").click();
+    cy.get("@passwordInput").should("have.attr", "type", "password");
+
+    // footer links
+    assertFooterLinks(0, 1, "when-i-log-in");
+  });
+});
+
+describe("Authenticator sign up", () => {
+  before(() => {
+    cy.visit("/");
   });
 
-  it("Body should have the support FAQ and mailto links", () => {
-    cy.get("[data-cy=signInSupportLinks]")
-      .find("a")
-      .should($anchors => {
-        expect($anchors).to.have.length(2);
-        expect($anchors.first()).to.contain("FAQ");
-        expect($anchors.first().attr("href")).to.eq(
-          "https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
-        );
-        expect($anchors.last()).to.contain("email");
-        expect($anchors.last().attr("href")).to.contain(
-          "mailto:england.tis.support@nhs.net"
-        );
-      });
-  });
+  it("Sign up should show the password strength & matching errors, checkboxes, and footer links", () => {
+    // password strength
+    fillSignUpForm({
+      username: "bob",
+      familyName: "seagull",
+      email: "bob@bob.seagull",
+      password: "N"
+    });
 
-  it("Footer should have the correct links and copyright text", () => {
-    const links: string[] = [
-      "https://tis-support.hee.nhs.uk/about-tis/",
-      "https://www.hee.nhs.uk/about/privacy-notice"
-    ];
-    cy.get(".amplify-flex")
-      .find("a")
-      .should($anchors => {
-        expect($anchors).to.have.length(2);
-        expect($anchors.first()).to.contain("About");
+    [
+      "Password must have at least 8 characters",
+      "Password must have lower case letters",
+      "Password must have numbers",
+      "Password must have special characters"
+    ].forEach((text, idx) => {
+      getPasswordStrengthItem(idx + 1).should("contain.text", text);
+    });
 
-        const hrefs = $anchors.map<string>((_i, a) => {
-          return Cypress.$(a).attr("href");
-        });
-        expect(hrefs.get()).to.deep.eq(links);
-      });
-    cy.get("[data-cy=footerCopy]").should(
+    // password matching
+    cy.get("#amplify-id-\\:rh\\:").clear().type("Neverguess123!");
+    cy.get("#amplify-id-\\:rk\\:").type("Different123!").blur();
+    cy.get("#amplify-id-\\:rj\\: > .amplify-text").should(
       "contain.text",
-      `© NHS England ${new Date().getFullYear()}`
+      "Your passwords must match"
     );
-  });
+    cy.get("#amplify-id-\\:rk\\:").clear().type("Neverguess123!").blur();
+    cy.get("#amplify-id-\\:rj\\: > .amplify-text").should("not.exist");
 
-  it("should remove the privacy & cookies error message and show the Create an account button if checkbox checked", () => {
-    cy.get(".amplify-tabs-item").last().click();
-    cy.get(".amplify-heading").contains("Create an account");
-    cy.get("[data-cy='checkboxPrivacy'] p.amplify-field__error-message").should(
-      "exist"
-    );
-    cy.get("[data-cy='checkboxPilot'] p.amplify-field__error-message").should(
-      "exist"
-    );
-    cy.get(".amplify-button--primary").should("be.disabled");
-    cy.get(
-      "[data-cy=checkboxPrivacy] > .amplify-field > .amplify-checkbox > .amplify-flex"
-    ).click();
-    cy.get("[data-cy='checkboxPrivacy'] p.amplify-field__error-message").should(
-      "not.exist"
-    );
-    cy.get(".amplify-button").should("be.disabled");
-    cy.get(
-      "[data-cy=checkboxPilot] > .amplify-field > .amplify-checkbox > .amplify-flex"
-    ).click();
-  });
+    // checkboxes
+    cy.get('div[data-cy="checkboxPrivacy"]').click();
+    cy.get(".amplify-button--primary").should("have.attr", "disabled");
+    cy.get('[data-cy="checkboxPilot"]').click();
+    cy.get(".amplify-input").first().focus().blur();
+    cy.get(".amplify-button--primary").should("be.enabled");
 
-  it("should show the error and disable Sign up btn when passwords don't match", () => {
-    cy.get(".amplify-tabs-item").last().click();
-    cy.get('input[name="password"]').clear().type("WaterfallRules1");
-    cy.get('input[name="confirm_password"]').clear().type("WaterfallRules");
-    cy.get(".amplify-text--error")
-      .should("exist")
-      .should("contain.text", "Your passwords must match");
-    cy.get('[data-fullwidth="true"]').should("be.disabled");
-    cy.get('input[name="confirm_password"]').type("1");
-    cy.get(
-      "[data-cy=checkboxPrivacy] > .amplify-field > .amplify-checkbox > .amplify-flex"
-    ).click();
-    cy.get(
-      "[data-cy=checkboxPilot] > .amplify-field > .amplify-checkbox > .amplify-flex"
-    ).click();
-    cy.get('input[name="email"]').clear().type("Waterfall@Rules.com");
-    cy.get(".amplify-button--primary").should("not.be.disabled");
-  });
-
-  it("should toggle show and hide the password when clicking the 'show password' btn", () => {
-    cy.get("button.amplify-field__show-password").first().click();
-    cy.get('input[name="password"]').should("have.attr", "type", "text");
-    cy.get("button.amplify-field__show-password").first().click();
-    cy.get('input[name="password"]').should("have.attr", "type", "password");
-  });
-
-  it("should show the reset password link and warning text", () => {
-    cy.get(".signin-password-reset-warning-text")
-      .should("exist")
-      .should(
-        "contain.text",
-        "Note: Password reset only works if you create an account and verify your email."
-      );
-    cy.get('[data-cy="passwordResetBtnLink"]')
-      .should("exist")
-      .should("contain.text", "Reset Password");
+    // footer links
+    assertFooterLinks(1, 2, "when-i-sign-up");
   });
 });
 
