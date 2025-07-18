@@ -28,7 +28,10 @@ export function CctHome() {
         </WarningCallout.Label>
         <p>
           If your programme is not listed or any of the details are incorrect,
-          please <Link to="/support">contact your Local Office support</Link>
+          please{" "}
+          <Link to="/support" target="_blank">
+            contact your Local Office support
+          </Link>
         </p>
       </WarningCallout>
       <p className={style.panelSubHeader} data-cy="cct-home-subheader-prog">
