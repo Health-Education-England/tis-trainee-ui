@@ -489,7 +489,10 @@ export const onboardingTrackerInfoText = {
     <p>
       If you do notice any discrepancies when reviewing the{" "}
       <Link to="/programmes">Programme</Link> data, please contact{" "}
-      <Link to="/support">Local Office support</Link>.
+      <Link to="/support" target="_blank">
+        Local Office support
+      </Link>
+      .
     </p>
   ),
   SIGN_COJ: (
@@ -555,7 +558,11 @@ export const onboardingTrackerInfoText = {
       </p>
       <p>
         If you do notice any discrepancies when reviewing the Placement details,
-        please contact <Link to="/support">Local Office support</Link>.
+        please contact{" "}
+        <Link to="/support" target="_blank">
+          Local Office support
+        </Link>
+        .
       </p>
     </>
   ),
