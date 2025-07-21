@@ -84,8 +84,8 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
           CYPRESS_coverage: false
           NODE_OPTIONS: --max_old_space_size=4096
