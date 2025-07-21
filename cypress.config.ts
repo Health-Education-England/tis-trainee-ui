@@ -38,5 +38,10 @@ export default defineConfig({
       return config;
     }
   },
+  env: {
+    username: "",
+    password: "",
+    secret: ""
+  },
   blockHosts: ["*.google-analytics.com", "*.hotjar.com"]
 });
