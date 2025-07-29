@@ -12,6 +12,7 @@ import {
 import {
   mockLtftDraft0,
   mockLtftDraft1,
+  mockLtftRejected0,
   mockLtftUnsubmitted0
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
@@ -224,6 +225,27 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="BtnSubmit"]').should("exist").contains("Re-submit");
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
+  });  
+});
+
+describe("LTFT Form View - rejected", () => {
+  before(() => {
+    mountLtftViewWithMockData(mockLtftRejected0);
+  });
+
+  it("should render rejected reason", () => {
+    // status details section
+    cy.get('[data-cy="REJECTED-header"]')
+      .should("exist")
+      .contains("Rejected application");
+    cy.get('[data-cy="ltftName"]').contains("my Rejected LTFT");
+    cy.get('[data-cy="ltftCreated"]').should("exist");
+    cy.get('[data-cy="ltftModified"]').should("exist");
+    cy.get('[data-cy="ltfReason"]').contains("Rejected reason");
+    cy.get('[data-cy="ltftModifiedBy"]').contains("TIS Admin");
+    cy.get('[data-cy="ltftMessage"]').contains("Rejected message");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_5_001");
+    cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
   });  
 });
 
