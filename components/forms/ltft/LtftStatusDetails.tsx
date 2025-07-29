@@ -28,7 +28,8 @@ export const LtftStatusDetails = (formData: LtftObj) => {
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
-                {StringUtilities.capitalize(formData.status?.current?.state)} date
+                {StringUtilities.capitalize(formData.status?.current?.state)}{" "}
+                date
               </SummaryList.Key>
               <SummaryList.Value data-cy="ltftModified">
                 {dayjs(formData.lastModified).toString()}

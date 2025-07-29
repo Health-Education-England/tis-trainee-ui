@@ -147,8 +147,11 @@ const LtftSummary = ({
     <span>{props.renderValue()}</span>
   );
   const renderDayValue = (props: { renderValue: () => ReactNode }) => (
-    <time dateTime={`props.renderValue()`} data-tooltip={dayjs(props.renderValue() as Date | string).toString()}>
-      {dayjs(props.renderValue() as Date | string).format('D MMM YYYY')}
+    <time
+      dateTime={`props.renderValue()`}
+      data-tooltip={dayjs(props.renderValue() as Date | string).toString()}
+    >
+      {dayjs(props.renderValue() as Date | string).format("D MMM YYYY")}
     </time>
   );
 
