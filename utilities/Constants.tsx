@@ -617,10 +617,12 @@ export const ACTION_CONFIG: Record<
 };
 
 export const ACTION_REASONS = {
-  OTHER: { value: "other", label: "other reason" },
   UNSUBMIT: [
     { value: "changePercentage", label: "Change WTE percentage" },
-    { value: "changeStartDate", label: "Change start date" }
+    { value: "changeStartDate", label: "Change start date" },
+    { value: "other", label: "other reason" }
   ],
-  WITHDRAW: [{ value: "changeOfCircs", label: "Change of circumstances" }]
+  WITHDRAW: [
+    { value: "changeOfCircs", label: "Change of circumstances" },
+    { value: "other", label: "other reason" }]
 };
