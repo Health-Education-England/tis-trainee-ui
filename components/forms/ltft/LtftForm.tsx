@@ -33,6 +33,7 @@ export function LtftForm() {
 
   const ltftRoles = [
     { value: "Associate Dean", label: "Associate Dean" },
+    { value: "Clinical Supervisor", label: "Clinical Supervisor" },
     {
       value: "Educational Supervisor (ES)",
       label: "Educational Supervisor (ES)"
