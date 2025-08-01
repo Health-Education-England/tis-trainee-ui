@@ -109,7 +109,9 @@ export function CctCalcCreate() {
             </p>
             <p>
               If your programme is not listed, please{" "}
-              <Link to="/support">contact your Local Office support</Link>
+              <Link to="/support" target="_blank">
+                contact your Local Office support
+              </Link>
             </p>
           </WarningCallout>
           {progsArrNotPast.length > 0 ? (

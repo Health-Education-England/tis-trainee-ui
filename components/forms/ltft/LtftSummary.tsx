@@ -41,7 +41,7 @@ import InfoTooltip from "../../common/InfoTooltip";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
-  "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED"
+  "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED" | "REJECTED"
 >;
 
 type LtftSummaryType = "CURRENT" | "PREVIOUS";
@@ -68,7 +68,8 @@ const LtftSummary = ({
     APPROVED: true,
     WITHDRAWN: true,
     DRAFT: true,
-    UNSUBMITTED: true
+    UNSUBMITTED: true,
+    REJECTED: true
   });
 
   const filteredLtftSummaries = ltftSummaries.filter(
@@ -105,21 +106,12 @@ const LtftSummary = ({
       data-cy={`table-column_${column.id}`}
     />
   );
-  const renderCreatedHeader = ({
-    column
-  }: HeaderContext<LtftSummaryObj, unknown>) => (
-    <TableColumnHeader
-      column={column}
-      title="Created"
-      data-cy={`table-column_${column.id}`}
-    />
-  );
   const renderLastModifiedHeader = ({
     column
   }: HeaderContext<LtftSummaryObj, unknown>) => (
     <TableColumnHeader
       column={column}
-      title="Updated"
+      title="Last Updated"
       data-cy={`table-column_${column.id}`}
     />
   );
@@ -155,7 +147,12 @@ const LtftSummary = ({
     <span>{props.renderValue()}</span>
   );
   const renderDayValue = (props: { renderValue: () => ReactNode }) => (
-    <span>{dayjs(props.renderValue() as Date | string).toString()}</span>
+    <time
+      dateTime={`props.renderValue()`}
+      data-tooltip={dayjs(props.renderValue() as Date | string).toString()}
+    >
+      {dayjs(props.renderValue() as Date | string).format("D MMM YYYY")}
+    </time>
   );
 
   const renderStatusColumnValue = (props: {
@@ -193,7 +190,8 @@ const LtftSummary = ({
           props.row.original.statusReason
         )}
         {(props.row.original.status === "UNSUBMITTED" ||
-          props.row.original.status === "WITHDRAWN") &&
+          props.row.original.status === "WITHDRAWN" ||
+          props.row.original.status === "REJECTED") &&
         props.row.original.statusMessage ? (
           <Label size="s" onClick={handleTooltipClick}>
             <InfoTooltip
@@ -259,12 +257,6 @@ const LtftSummary = ({
       header: renderNameHeader,
       cell: renderValue
     }),
-    columnHelper.accessor("created", {
-      id: "created",
-      header: renderCreatedHeader,
-      cell: renderDayValue,
-      sortingFn: "datetime"
-    }),
     columnHelper.accessor("lastModified", {
       id: "lastModified",
       header: renderLastModifiedHeader,
@@ -321,7 +313,7 @@ const LtftSummary = ({
   if (ltftSummaryType === "CURRENT") {
     statusFilters = ["DRAFT", "UNSUBMITTED"];
   } else if (ltftSummaryType === "PREVIOUS") {
-    statusFilters = ["APPROVED", "SUBMITTED", "WITHDRAWN"];
+    statusFilters = ["APPROVED", "REJECTED", "SUBMITTED", "WITHDRAWN"];
   }
 
   let content: JSX.Element = <></>;

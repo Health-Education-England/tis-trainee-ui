@@ -44,7 +44,10 @@ export const LtftDeclarationsModal = ({
             Your pre-approver will usually be your Training Programme Director
             (TPD), but for GP programmes may be your GP Programme Manager. If
             you are unsure who your pre-approver is, please{" "}
-            <Link to="/support">contact your Local Office support</Link>.
+            <Link to="/support" target="_blank">
+              contact your Local Office support
+            </Link>
+            .
           </Hint>
           <Checkboxes.Box
             name="understandStartover"

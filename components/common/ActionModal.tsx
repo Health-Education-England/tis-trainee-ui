@@ -58,8 +58,8 @@ export function ActionModal({
                   type="radios"
                   items={
                     actionType === "Unsubmit"
-                      ? [...ACTION_REASONS.UNSUBMIT, ACTION_REASONS.OTHER]
-                      : [...ACTION_REASONS.WITHDRAW, ACTION_REASONS.OTHER]
+                      ? [...ACTION_REASONS.UNSUBMIT]
+                      : [...ACTION_REASONS.WITHDRAW]
                   }
                   label={`Please choose the primary reason for the ${actionType.toLowerCase()}`}
                   id="reason"

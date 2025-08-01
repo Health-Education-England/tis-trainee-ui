@@ -21,8 +21,9 @@ jobs:
         continue-on-error: true
         env:
           CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
         with:
           browser: chrome
 

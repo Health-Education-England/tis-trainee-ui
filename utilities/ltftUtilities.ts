@@ -376,18 +376,18 @@ export function getStatusReasonLabel(
   if (status === "UNSUBMITTED" && statusReason) {
     return (
       ACTION_REASONS.UNSUBMIT.find(reason => reason.value === statusReason)
-        ?.label ?? "Other reason"
+        ?.label ?? statusReason
     );
   }
 
   if (status === "WITHDRAWN" && statusReason) {
     return (
       ACTION_REASONS.WITHDRAW.find(reason => reason.value === statusReason)
-        ?.label ?? "Other reason"
+        ?.label ?? statusReason
     );
   }
 
-  return "";
+  return statusReason || "";
 }
 
 export function isValidProgramme(progId: string): boolean {

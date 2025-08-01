@@ -21,21 +21,23 @@ export const LtftStatusDetails = (formData: LtftObj) => {
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
-              <SummaryList.Key>Created</SummaryList.Key>
+              <SummaryList.Key>Created date</SummaryList.Key>
               <SummaryList.Value data-cy="ltftCreated">
                 {dayjs(formData.created).toString()}
               </SummaryList.Value>
             </SummaryList.Row>
             <SummaryList.Row>
               <SummaryList.Key>
-                {StringUtilities.capitalize(formData.status?.current?.state)}
+                {StringUtilities.capitalize(formData.status?.current?.state)}{" "}
+                date
               </SummaryList.Key>
               <SummaryList.Value data-cy="ltftModified">
                 {dayjs(formData.lastModified).toString()}
               </SummaryList.Value>
             </SummaryList.Row>
             {(formData.status?.current?.state === "UNSUBMITTED" ||
-              formData.status?.current?.state === "WITHDRAWN") && (
+              formData.status?.current?.state === "WITHDRAWN" ||
+              formData.status?.current?.state === "REJECTED") && (
               <>
                 <SummaryList.Row>
                   <SummaryList.Key>

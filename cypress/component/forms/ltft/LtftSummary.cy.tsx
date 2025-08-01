@@ -28,10 +28,10 @@ describe("LtftSummary Component", () => {
     it("should sort by lastModified descending by default", () => {
       cy.get('[data-cy^="ltft-row-"]')
         .eq(0)
-        .should("include.text", "Wed, 15 Jan 2025 15:50:36 GMT");
+        .should("include.text", "15 Jan 2025");
       cy.get('[data-cy^="ltft-row-"]')
         .eq(3)
-        .should("include.text", "Thu, 15 Aug 2024 15:50:36 GMT");
+        .should("include.text", "15 Aug 2024");
     });
 
     it("should change sort order when clicking column headers", () => {
@@ -66,7 +66,7 @@ describe("LtftSummary Component", () => {
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 4);
       cy.get('[data-cy="filterUNSUBMITTEDLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
-      cy.contains("Wed, 15 Jan 2025 15:50:36 GMT").should("exist");
+      cy.contains("15 Jan 2025").should("exist");
       cy.contains("Programme hours reduction 2").should("not.exist");
       cy.contains("Programme hours reduction 5").should("not.exist");
     });
@@ -94,7 +94,7 @@ describe("LtftSummary Component", () => {
         .find('[data-cy$="-statusMessage-icon"]')
         .should("not.exist");
       cy.get('[data-cy="3_reason"]')
-        .should("contain.text", "Other reason")
+        .should("contain.text", "other reason")
         .find('[data-cy$="-statusMessage-icon"]')
         .click();
       cy.get(".tooltipContent")
@@ -121,8 +121,9 @@ describe("LtftSummary Component", () => {
       );
     });
 
-    it("should display APPROVED, SUBMITTED, and WITHDRAWN filters", () => {
+    it("should display APPROVED, REJECTED, SUBMITTED, and WITHDRAWN filters", () => {
       cy.get('[data-cy="filterAPPROVEDLtft"]').should("exist");
+      cy.get('[data-cy="filterREJECTEDLtft"]').should("exist");
       cy.get('[data-cy="filterSUBMITTEDLtft"]').should("exist");
       cy.get('[data-cy="filterWITHDRAWNLtft"]').should("exist");
       cy.get('[data-cy="filterDRAFTLtft"]').should("not.exist");
@@ -132,6 +133,11 @@ describe("LtftSummary Component", () => {
     it("should filter table when toggling APPROVED status", () => {
       cy.get('[data-cy="filterAPPROVEDLtft"]').click();
       cy.contains("Programme hours reduction 1").should("not.exist");
+    });
+
+    it("should filter table when toggling REJECTED status", () => {
+      cy.get('[data-cy="filterREJECTEDLtft"]').click();
+      cy.contains("Programme hours reduction 5").should("not.exist");
     });
 
     it("should filter table when toggling SUBMITTED status", () => {
@@ -146,6 +152,7 @@ describe("LtftSummary Component", () => {
     });
 
     it("should show only relevant rows when multiple filters are combined", () => {
+      cy.get('[data-cy="filterREJECTEDLtft"]').click();
       cy.get('[data-cy="filterSUBMITTEDLtft"]').click();
       cy.get('[data-cy="filterWITHDRAWNLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
@@ -153,6 +160,19 @@ describe("LtftSummary Component", () => {
         .last()
         .should("include.text", "ltft_-1_002");
       cy.contains("Programme hours reduction 1").should("exist");
+    });    
+
+    it("should show reason and message on REJECTED application", () => {
+      cy.get('[data-cy="5_reason"]')
+        .should("contain.text", "Rejected Reason")
+        .find('[data-cy$="-statusMessage-icon"]')
+        .click();
+      cy.get(".tooltipContent")
+        .should("be.visible")
+        .and(
+          "contain.text",
+          "Rejected Message"
+        );
     });
   });
 });
