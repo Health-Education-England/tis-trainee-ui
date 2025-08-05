@@ -43,6 +43,7 @@ import {
 import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 import { ProfilePanels } from "../../profile/ProfilePanels";
 import { isPastIt } from "../../../utilities/DateUtilities";
+import { ExpanderMsg } from "../../common/ExpanderMsg";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -113,6 +114,7 @@ export function CctCalcCreate() {
                 contact your Local Office support
               </Link>
             </p>
+            <ExpanderMsg expanderName="skilledVisaWorker" />
           </WarningCallout>
           {progsArrNotPast.length > 0 ? (
             <>
