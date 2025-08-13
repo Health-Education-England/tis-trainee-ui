@@ -1059,6 +1059,18 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   cy.get('[data-cy="cct-calc-header"]')
     .should("exist")
     .contains("CCT Calculator - Changing hours (LTFT)");
+  cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
+    .should("exist")
+    .contains("Are you are tier 2 skilled visa worker?");
+
+  cy.get(
+    '[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text'
+  ).click();
+
+  cy.get('[data-cy="skilledVisaWorkerText"]').should(
+    "contain",
+    "Please be aware that there are minimum requirements"
+  );
 
   // prog modal
   cy.get('[data-cy="show-prog-modal-btn"]').should("be.visible").click();
