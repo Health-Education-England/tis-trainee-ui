@@ -363,8 +363,8 @@
             {
               "name": "previousDeclarationSummary",
               "type": "textArea",
-              "placeholder": "type here...",
-              "label": "Summary of unresolved declarations",
+              "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
+              "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
               "visibleIf": [true],
               "parent": "havePreviousUnresolvedDeclarations"
@@ -447,8 +447,8 @@
             {
               "name": "currentDeclarationSummary",
               "type": "textArea",
-              "placeholder": "type here...",
-              "label": "Summary of new unresolved declarations",
+              "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
+              "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
               "visibleIf": [true],
               "parent": "haveCurrentUnresolvedDeclarations"
