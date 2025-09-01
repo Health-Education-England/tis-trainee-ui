@@ -1,11 +1,11 @@
 export interface TraineeAction {
   id: string;
   type: string;
-  traineeTisId: string;
+  traineeId: string;
   tisReferenceInfo: TisReferenceInfo;
-  availableFrom: Date;
-  dueBy: Date;
-  completed?: Date;
+  availableFrom: Date | string;
+  dueBy: Date | string;
+  completed: Date | null;
 }
 
 export interface TisReferenceInfo {
@@ -13,7 +13,4 @@ export interface TisReferenceInfo {
   type: TisReferenceType;
 }
 
-export enum TisReferenceType {
-  programmeMembership = "PROGRAMME_MEMBERSHIP",
-  placement = "PLACEMENT"
-}
+export type TisReferenceType = "PROGRAMME_MEMBERSHIP" | "PLACEMENT";

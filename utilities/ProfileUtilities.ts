@@ -9,6 +9,7 @@ import {
   today
 } from "./DateUtilities";
 import { IDateBoxed, IDateBoxedGroup } from "../models/IDateBoxed";
+import { TraineeProfile } from "../models/TraineeProfile";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -136,4 +137,77 @@ export class ProfileUtilities {
       groupedDateBoxed
     );
   };
+}
+
+export function matchPlacementActionsToProgrammes(
+  actions: any[],
+  profile: TraineeProfile
+): Map<string, string> {
+  const { programmeMemberships = [], placements = [] } = profile;
+
+  if (!actions?.length || !programmeMemberships.length || !placements.length) {
+    return new Map<string, string>();
+  }
+
+  const placementMap = placements.reduce((map, placement) => {
+    placement.tisId && map.set(placement.tisId, placement);
+    return map;
+  }, new Map<string, Placement>());
+
+  const placementActions = actions.filter(
+    action =>
+      action.type === "REVIEW_DATA" &&
+      action.tisReferenceInfo?.type === "PLACEMENT" &&
+      action.tisReferenceInfo?.id
+  );
+
+  return placementActions.reduce((actionMap, action) => {
+    const placementId = action.tisReferenceInfo?.id;
+
+    const placement = placementMap.get(placementId);
+
+    if (!placement?.specialty || !placement?.startDate) {
+      return actionMap;
+    }
+
+    // Find matching programme using Array.find
+    const matchingProgramme = programmeMemberships.find(programme => {
+      if (
+        !programme?.tisId ||
+        !programme?.programmeName ||
+        !programme?.startDate
+      ) {
+        return false;
+      }
+
+      try {
+        // Calculate the first day of the programme's start month
+        const programmeStartDate = new Date(programme.startDate);
+        const firstDayOfStartMonth = new Date(
+          programmeStartDate.getFullYear(),
+          programmeStartDate.getMonth(),
+          1
+        );
+
+        const programmeEndDate = new Date(programme.endDate);
+        const placementStartDate = new Date(placement.startDate);
+        const placementSpecialty = placement.specialty.trim().toLowerCase();
+        const programmeName = programme.programmeName.trim().toLowerCase();
+
+        return (
+          placementSpecialty === programmeName &&
+          placementStartDate >= firstDayOfStartMonth &&
+          placementStartDate <= programmeEndDate
+        );
+      } catch (error) {
+        console.error(`Error comparing placement to programme:`, error);
+        return false;
+      }
+    });
+
+    matchingProgramme?.tisId &&
+      actionMap.set(action.id, matchingProgramme.tisId);
+
+    return actionMap;
+  }, new Map<string, string>());
 }

@@ -23,7 +23,19 @@ export const fetchTraineeActionsData = createAsyncThunk(
     const actionsService = new TraineeActionsService();
     const response: AxiosResponse<TraineeAction[]> =
       await actionsService.getIncompleteTraineeActions();
-    return response.data;
+    const rawData = response.data;
+
+    const finalData = rawData.map(action => ({
+      ...action,
+      availableFrom: new Date(action.availableFrom),
+      dueBy: new Date(action.dueBy),
+      completed: action.completed ? new Date(action.completed) : null,
+      tisReferenceInfo: {
+        ...action.tisReferenceInfo,
+        type: action.tisReferenceInfo.type
+      }
+    }));
+    return finalData;
   }
 );
 

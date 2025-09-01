@@ -22,13 +22,13 @@ export function getAllOutstandingSummaryActions(
   const unsignedCojCount = unsignedCojs.length;
   const programmeActions = traineeActionsData.filter(
     action =>
-      action.tisReferenceInfo.type === TisReferenceType.programmeMembership &&
+      action.tisReferenceInfo.type === "PROGRAMME_MEMBERSHIP" &&
       today >= dayjs(action.availableFrom).format("YYYY-MM-DD") &&
       action.type === "REVIEW_DATA"
   );
   const placementActions = traineeActionsData.filter(
     action =>
-      action.tisReferenceInfo.type === TisReferenceType.placement &&
+      action.tisReferenceInfo.type === "PLACEMENT" &&
       today >= dayjs(action.availableFrom).format("YYYY-MM-DD") &&
       action.type === "REVIEW_DATA"
   );

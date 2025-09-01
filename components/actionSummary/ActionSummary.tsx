@@ -1,24 +1,14 @@
-import { Card, Fieldset, Label } from "nhsuk-react-components";
+import dayjs from "dayjs";
+import { Card, Fieldset, Table } from "nhsuk-react-components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheckCircle,
-  faExclamationCircle,
-  faQuestionCircle
-} from "@fortawesome/free-solid-svg-icons";
-import Loading from "../common/Loading";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import style from "../Common.module.scss";
-import FormMessage from "./FormMessage";
-import { DateUtilities } from "../../utilities/DateUtilities";
-import { useOutstandingActions } from "../../utilities/hooks/action-summary/useOutstandingActions";
-import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActions";
-import { useInProgressActions } from "../../utilities/hooks/action-summary/useInProgressActions";
-import DataSourceMsg from "../common/DataSourceMsg";
 import { useEffect } from "react";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
-import { loadFormAList } from "../../redux/slices/formASlice";
-import { loadFormBList } from "../../redux/slices/formBSlice";
+import { groupAllActionsByProgrammeMembership } from "../../utilities/TraineeActionsUtilities";
+import { TraineeAction } from "../../models/TraineeAction";
 
 export default function ActionSummary() {
   const dispatch = useAppDispatch();
@@ -27,28 +17,19 @@ export default function ActionSummary() {
     dispatch(resetMfaJourney());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(loadFormAList());
-    dispatch(loadFormBList());
-  }, [dispatch]);
-
-  // OUTSTANDING ACTIONS
-  const { unsignedCojCount, programmeActions, placementActions } =
-    useOutstandingActions();
-
-  // FORM R SUBMISSIONS (FOR INFO)
-  const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
-    useInfoActions();
-
-  // IN PROGRESS
-  const { isInProgressFormA, isInProgressFormB } = useInProgressActions();
-
-  const isformRListLoading = useAppSelector(
-    state =>
-      state.formA.status === "loading" || state.formB.status === "loading"
+  const traineeProfile = useAppSelector(
+    state => state.traineeProfile.traineeProfileData
   );
 
-  if (isformRListLoading) return <Loading />;
+  const programmeMemberships = traineeProfile.programmeMemberships;
+  const traineeOutstandingActions = useAppSelector(
+    state => state.traineeActions.traineeActionsData
+  );
+  const groupedOutstandingActions = groupAllActionsByProgrammeMembership(
+    traineeOutstandingActions,
+    programmeMemberships,
+    traineeProfile
+  );
 
   return (
     <div data-cy="actionSummary">
@@ -61,259 +42,99 @@ export default function ActionSummary() {
           Action Summary
         </Fieldset.Legend>
       </Fieldset>
-      <Card.Group>
-        <Card.GroupItem width="full">
-          <Card>
+      {groupedOutstandingActions.length === 0 ? (
+        <p className="nhsuk-body" data-cy="noOutstandingActions">
+          No outstanding actions for any programme membership.
+        </p>
+      ) : (
+        groupedOutstandingActions.map(group => (
+          <Card key={group["Programme ID"]}>
             <Card.Content>
-              <Card feature>
-                <Card.Content>
-                  <Card.Heading data-cy="outstandingHeading">
-                    Outstanding
-                  </Card.Heading>
-                  {/* ----------------- outstanding ------------- */}
-                  {/* **** COJ unsigned ********* */}
-                  <ul className="no-bullet">
-                    <Label size="l" style={{ color: "#005EB8" }}>
-                      Conditions of Joining (Programme)
-                    </Label>
-                    {unsignedCojCount > 0 && (
-                      <li data-cy="unsignedCoJ">
-                        <Label size="s">
-                          <FontAwesomeIcon
-                            icon={faExclamationCircle}
-                            color="#DA291C"
-                            size="lg"
-                          />{" "}
-                          You have {unsignedCojCount} unsigned{" "}
-                          <Link to="/programmes">
-                            {`Conditions of Joining Agreement${
-                              unsignedCojCount > 1 ? "s" : ""
-                            }`}
-                          </Link>
-                          .
-                        </Label>
-                      </li>
-                    )}
-                    {unsignedCojCount < 1 && (
-                      <li data-cy="allCoJSigned">
-                        <Label size="s">
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            color="#007F3B"
-                            size="lg"
-                          />{" "}
-                          All your{" "}
-                          <Link to="/programmes">
-                            Conditions of Joining Agreements
-                          </Link>{" "}
-                          are signed.
-                        </Label>
-                      </li>
-                    )}
-                  </ul>
-                  {programmeActions.length > 0 && (
-                    <ul className="no-bullet">
-                      <Label size="l" style={{ color: "#005EB8" }}>
-                        Programme Membership
-                      </Label>
-                      <li data-cy="incompleteAction">
-                        <Label size="s">
-                          <FontAwesomeIcon
-                            icon={faExclamationCircle}
-                            color="#DA291C"
-                            size="lg"
-                          />{" "}
-                          You have {programmeActions.length}{" "}
-                          <Link to="/programmes">
-                            {`Programme Membership${
-                              programmeActions.length > 1 ? "s" : ""
-                            }`}
-                          </Link>{" "}
-                          to review, including training numbers (NTN/DRN) for
-                          current and upcoming programmes.
-                        </Label>
-                      </li>
-                    </ul>
-                  )}
-                  {placementActions.length > 0 && (
-                    <ul className="no-bullet">
-                      <Label size="l" style={{ color: "#005EB8" }}>
-                        Placement
-                      </Label>
-                      <li data-cy="incompleteAction">
-                        <Label size="s">
-                          <FontAwesomeIcon
-                            icon={faExclamationCircle}
-                            color="#DA291C"
-                            size="lg"
-                          />{" "}
-                          You have {placementActions.length}{" "}
-                          <Link to="/placements">
-                            {`Placement${
-                              placementActions.length > 1 ? "s" : ""
-                            }`}
-                          </Link>{" "}
-                          to review.
-                        </Label>
-                      </li>
-                    </ul>
-                  )}
-                </Card.Content>
-              </Card>
-              {/* ----------------- Form R submissions (for info) ------ */}
-              <Card feature>
-                <Card.Content>
-                  <Card.Heading data-cy="formRSubsHeading">
-                    Form R submissions
-                  </Card.Heading>
-                  <ul className="no-bullet">
-                    {/* **** Form A - LABEL ****/}
-                    <Label
-                      size="l"
-                      style={{ color: "#005EB8" }}
-                      data-cy="formASubHeader"
-                    >
-                      Form R (Part A)
-                    </Label>
-                    {/* **** Form A - NO SUB ****/}
-                    {noSubFormRA && (
-                      <FormMessage formType="A" message="infoNoFormEver" />
-                    )}
-                    {/* **** Form A - SUBMITTED ****/}
-                    {/* **** Form A - LATEST SUB DATE WITHIN LAST YEAR ****/}
-                    {infoActionsA.latestSubDateForm &&
-                      infoActionsA.isForInfoWithinYearSubForm && (
-                        <FormMessage
-                          formType="A"
-                          message="infoLatestSubFormRWithinYear"
-                          latestSubFormDate={DateUtilities.ToLocalDate(
-                            infoActionsA.latestSubDateForm
-                          )}
-                        />
-                      )}
-                    {/* **** Form A - LATEST SUB DATE YEAR PLUS ****/}
-                    {infoActionsA.latestSubDateForm &&
-                      infoActionsA.isForInfoYearPlusSubForm && (
-                        <FormMessage
-                          formType="A"
-                          message="infoLatestSubFormRYearPlus"
-                          latestSubFormDate={DateUtilities.ToLocalDate(
-                            infoActionsA.latestSubDateForm
-                          )}
-                        />
-                      )}
-                    {/* **** Form B - LABEL ****/}
-                    <Label
-                      size="l"
-                      style={{ color: "#005EB8" }}
-                      data-cy="formASubHeader"
-                    >
-                      Form R (Part B)
-                    </Label>
-                    {/* **** Form B - NO SUB ****/}
-                    {noSubFormRB && (
-                      <FormMessage formType="B" message="infoNoFormEver" />
-                    )}
-                    {/* **** Form B - SUBMITTED ****/}
-                    {/* **** Form B - LATEST SUB DATE WITHIN LAST YEAR ****/}
-                    {infoActionsB.latestSubDateForm &&
-                      infoActionsB.isForInfoWithinYearSubForm && (
-                        <FormMessage
-                          formType="B"
-                          message="infoLatestSubFormRWithinYear"
-                          latestSubFormDate={DateUtilities.ToLocalDate(
-                            infoActionsB.latestSubDateForm
-                          )}
-                        />
-                      )}
-                    {/* **** Form B - LATEST SUB DATE YEAR PLUS ****/}
-                    {infoActionsB.latestSubDateForm &&
-                      infoActionsB.isForInfoYearPlusSubForm && (
-                        <FormMessage
-                          formType="B"
-                          message="infoLatestSubFormRYearPlus"
-                          latestSubFormDate={DateUtilities.ToLocalDate(
-                            infoActionsB.latestSubDateForm
-                          )}
-                        />
-                      )}
-                  </ul>
-                </Card.Content>
-              </Card>
-              {/* ----------------- In progress ---------------------- */}
-              <Card feature>
-                <Card.Content>
-                  <Card.Heading data-cy="inProgressHeading">
-                    In progress
-                  </Card.Heading>
-
-                  <ul className="no-bullet">
-                    {isInProgressFormA && (
-                      <>
-                        <Label size="l" style={{ color: "#005EB8" }}>
-                          Form R (Part A)
-                        </Label>
-                        <FormMessage formType="A" message="inProgress" />
-                      </>
-                    )}
-                    {isInProgressFormB && (
-                      <>
-                        <Label size="l" style={{ color: "#005EB8" }}>
-                          Form R (Part B)
-                        </Label>
-                        <FormMessage formType="B" message="inProgress" />
-                      </>
-                    )}
-                    {!isInProgressFormA && !isInProgressFormB && (
-                      <>
-                        <Label size="l" style={{ color: "#005EB8" }}>
-                          Form R
-                        </Label>
-                        <li>
-                          <Label size="s">
+              <Card.Heading>{group["Programme Membership name"]}</Card.Heading>
+              <Table responsive>
+                <Table.Head>
+                  <Table.Row>
+                    <Table.Cell>Action</Table.Cell>
+                    <Table.Cell>Due From</Table.Cell>
+                    <Table.Cell>Status</Table.Cell>
+                  </Table.Row>
+                </Table.Head>
+                <Table.Body>
+                  {group["Outstanding actions"].map(action => {
+                    if (!action.type) return null;
+                    const actionInfo = getActionTypeInfo(action);
+                    if (!actionInfo) return null;
+                    const { label, link } = actionInfo;
+                    return (
+                      <Table.Row key={action.id}>
+                        <Table.Cell>
+                          <Link to={link}>{label}</Link>
+                        </Table.Cell>
+                        <Table.Cell>
+                          {dayjs(action.availableFrom).format("DD/MM/YYYY")}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span>
                             <FontAwesomeIcon
-                              icon={faCheckCircle}
-                              color="#007F3B"
-                              size="lg"
+                              icon={faExclamationCircle}
+                              color="red"
                             />{" "}
-                            You have no saved draft forms.
-                          </Label>
-                        </li>
-                      </>
-                    )}
-                  </ul>
-                </Card.Content>
-              </Card>
-              <Card feature>
-                <Card.Content>
-                  <Card.Heading data-cy="otherChecksHeading">
-                    Other checks
-                  </Card.Heading>
-                  <ul className="no-bullet">
-                    <li>
-                      <Label size="s">
-                        <FontAwesomeIcon
-                          icon={faQuestionCircle}
-                          color="#005EB8"
-                          size="lg"
-                        />{" "}
-                        <>
-                          Are your <Link to="/profile">Profile details</Link>,{" "}
-                          <Link to="/placements">Placements</Link>, and{" "}
-                          <Link to="/programmes">Programmes</Link> correct and
-                          up-to-date?
-                        </>
-                      </Label>
-                    </li>
-                  </ul>
-                  <DataSourceMsg />
-                </Card.Content>
-              </Card>
+                            Outstanding
+                          </span>
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  })}
+                </Table.Body>
+              </Table>
             </Card.Content>
           </Card>
-        </Card.GroupItem>
-        <Card.GroupItem width="full"></Card.GroupItem>
-      </Card.Group>
+        ))
+      )}
     </div>
   );
+}
+
+function getActionTypeInfo(action: TraineeAction) {
+  if (action.type === "REVIEW_DATA") {
+    const referenceType = action.tisReferenceInfo?.type;
+
+    if (referenceType === "PLACEMENT") {
+      return {
+        label: "Review your Placement Details",
+        link: "/placements"
+      };
+    } else if (referenceType === "PROGRAMME_MEMBERSHIP") {
+      return {
+        label: "Agree your Programme Details",
+        link: "/programmes"
+      };
+    }
+  }
+
+  const actionTypeMap: Record<string, { label: string; link: string }> = {
+    SIGN_COJ: {
+      label: "Sign your Conditions of Joining",
+      link: `/programmes/${action.tisReferenceInfo.id}/sign-coj`
+    },
+    SIGN_FORM_R_PART_A: {
+      label: "Submit a new Form R Part A",
+      link: "/formr-a"
+    },
+    SIGN_FORM_R_PART_B: {
+      label: "Submit a new Form R Part B",
+      link: "/formr-b"
+    }
+  };
+
+  const typeInfo = actionTypeMap[action.type];
+  if (!typeInfo) {
+    console.warn(`Unknown action type: ${action.type}`);
+    return null;
+  }
+
+  return {
+    label: typeInfo.label,
+    link: typeInfo.link
+  };
 }

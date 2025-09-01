@@ -1,10 +1,12 @@
 import { ProfileSType } from "../utilities/ProfileUtilities";
+import { Signature } from "./TraineeProfile";
 export interface PersonalDetails {
   surname: ProfileSType;
   forenames: ProfileSType;
   knownAs: ProfileSType;
   maidenName: ProfileSType;
   title: ProfileSType;
+  role: string[];
   personOwner: ProfileSType;
   dateOfBirth: Date | string | null;
   gender: ProfileSType;
@@ -33,6 +35,7 @@ export interface PersonalDetails {
   prevRevalBodyOther: ProfileSType;
   currRevalDate: Date | string | null;
   prevRevalDate: Date | string | null;
+  signature: Signature | null;
 }
 
 export const initialPersonalDetails: PersonalDetails = {
@@ -64,9 +67,11 @@ export const initialPersonalDetails: PersonalDetails = {
   prevRevalDate: null,
   publicHealthNumber: null,
   qualification: null,
+  role: [],
   settled: null,
   surname: null,
   telephoneNumber: null,
   title: null,
-  visaIssued: null
+  visaIssued: null,
+  signature: null
 };
