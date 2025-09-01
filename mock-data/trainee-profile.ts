@@ -2,18 +2,21 @@ import dayjs from "dayjs";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { Status } from "../models/Status";
-import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import {
+  mockResponsibleOfficer,
+  ProgrammeMembership
+} from "../models/ProgrammeMembership";
 import { Placement } from "../models/Placement";
 import {
   oneWeekAgo,
-  today,
   todayDate,
   twelveWeeksAhead,
   twelveWeeksAheadPlusOneDay,
-  yesterday
+  yesterday,
+  today
 } from "../utilities/DateUtilities";
-import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
 import { CojVersionType, UserFeaturesType } from "../redux/slices/userSlice";
+import { TraineeAction } from "../models/TraineeAction";
 
 export const mockPersonalDetails: PersonalDetails = {
   surname: "Gilliam",
@@ -21,6 +24,7 @@ export const mockPersonalDetails: PersonalDetails = {
   knownAs: "Ivy",
   maidenName: "N/A",
   title: "Mr",
+  role: ["DR in Training"],
   personOwner: "Thames Valley",
   dateOfBirth: "1911-11-30",
   gender: "Male",
@@ -48,7 +52,8 @@ export const mockPersonalDetails: PersonalDetails = {
   prevRevalBody: "",
   prevRevalBodyOther: "",
   prevRevalDate: "2021-12-31",
-  currRevalDate: "2021-12-31"
+  currRevalDate: "2021-12-31",
+  signature: null
 };
 
 export const mockProgrammeMemberships: ProgrammeMembership[] = [
@@ -61,30 +66,36 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeNumber: "EOE8945",
     trainingNumber: "EOE/ABC-123/1111111/C",
     managingDeanery: "East of England",
-    responsibleOfficer: {
-      firstName: "Hugh",
-      lastName: "Rangel"
-    },
+    responsibleOfficer: mockResponsibleOfficer,
     programmeMembershipType: "SUBSTANTIVE",
     status: Status.Current,
     curricula: [
       {
         curriculumTisId: "1",
+        curriculumMembershipId: "455002",
         curriculumName: "ST1",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-01-01"),
         curriculumEndDate: new Date("2023-01-01")
       },
       {
         curriculumTisId: "2",
+        curriculumMembershipId: "455003",
         curriculumName: "ST2",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "ACF_OTHER_FUNDING",
         curriculumStartDate: new Date("2020-06-01"),
         curriculumEndDate: new Date("2024-06-01")
       },
       {
         curriculumTisId: "3",
+        curriculumMembershipId: "455004",
         curriculumName: "ST3",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-08-01"),
         curriculumEndDate: new Date("2025-08-01")
@@ -104,30 +115,36 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     programmeNumber: "EOE8950",
     trainingNumber: "EOE/XYZ-789/1111111/C",
     managingDeanery: "East of England",
-    responsibleOfficer: {
-      firstName: "Hugh",
-      lastName: "Rangel"
-    },
+    responsibleOfficer: mockResponsibleOfficer,
     programmeMembershipType: "LAT",
     status: Status.Current,
     curricula: [
       {
         curriculumTisId: "4",
+        curriculumMembershipId: "455002",
         curriculumName: "ST4",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2022-01-01"),
         curriculumEndDate: new Date("2023-01-01")
       },
       {
         curriculumTisId: "5",
+        curriculumMembershipId: "455003",
         curriculumName: "ST5",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "ACF_OTHER_FUNDING",
         curriculumStartDate: new Date("2022-06-01"),
         curriculumEndDate: new Date("2024-06-01")
       },
       {
         curriculumTisId: "6",
+        curriculumMembershipId: "455004",
         curriculumName: "ST6",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2022-08-01"),
         curriculumEndDate: new Date("2025-08-01")
@@ -153,7 +170,10 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     curricula: [
       {
         curriculumTisId: "1",
+        curriculumMembershipId: "455002",
         curriculumName: "ST1",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-01-01"),
         curriculumEndDate: new Date("2023-01-01")
@@ -176,7 +196,10 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     curricula: [
       {
         curriculumTisId: "1",
+        curriculumMembershipId: "455002",
         curriculumName: "ST1",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-01-01"),
         curriculumEndDate: new Date("2023-01-01")
@@ -199,7 +222,10 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     curricula: [
       {
         curriculumTisId: "1",
+        curriculumMembershipId: "455002",
         curriculumName: "ST1",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-01-01"),
         curriculumEndDate: new Date("2023-01-01")
@@ -222,7 +248,10 @@ export const mockProgrammeMembershipsForGrouping: ProgrammeMembership[] = [
     curricula: [
       {
         curriculumTisId: "1",
+        curriculumMembershipId: "455002",
         curriculumName: "ST1",
+        curriculumSpecialty: "Cardiology",
+        curriculumSpecialtyCode: "030",
         curriculumSubType: "MEDICAL_CURRICULUM",
         curriculumStartDate: new Date("2020-01-01"),
         curriculumEndDate: new Date("2023-01-01")
@@ -289,21 +318,30 @@ export const mockProgrammeMembershipNoMedicalCurricula = {
       curriculumName: "ST4",
       curriculumSubType: "DENTAL_CURRICULUM",
       curriculumStartDate: new Date("2022-01-01"),
-      curriculumEndDate: new Date("2025-01-01")
+      curriculumEndDate: new Date("2025-01-01"),
+      curriculumMembershipId: "455002",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     },
     {
       curriculumTisId: "5",
       curriculumName: "ST5",
       curriculumSubType: "ACF_OTHER_FUNDING",
       curriculumStartDate: new Date("2022-06-01"),
-      curriculumEndDate: new Date("2025-06-01")
+      curriculumEndDate: new Date("2025-06-01"),
+      curriculumMembershipId: "455003",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     },
     {
       curriculumTisId: "6",
       curriculumName: "ST6",
       curriculumSubType: "DENTAL_CURRICULUM",
       curriculumStartDate: new Date("2022-08-01"),
-      curriculumEndDate: new Date("2025-08-01")
+      curriculumEndDate: new Date("2025-08-01"),
+      curriculumMembershipId: "455004",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     }
   ],
   conditionsOfJoining: {
@@ -329,21 +367,30 @@ export const mockProgrammeMembershipDuplicateCurriculaStart = {
       curriculumName: "C",
       curriculumSubType: "MEDICAL_CURRICULUM",
       curriculumStartDate: new Date("2022-01-01"),
-      curriculumEndDate: new Date("2025-02-01")
+      curriculumEndDate: new Date("2025-02-01"),
+      curriculumMembershipId: "455002",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     },
     {
       curriculumTisId: "5",
       curriculumName: "A",
       curriculumSubType: "MEDICAL_CURRICULUM",
       curriculumStartDate: new Date("2022-01-01"),
-      curriculumEndDate: new Date("2025-01-01")
+      curriculumEndDate: new Date("2025-01-01"),
+      curriculumMembershipId: "455003",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     },
     {
       curriculumTisId: "6",
       curriculumName: "B",
       curriculumSubType: "MEDICAL_CURRICULUM",
       curriculumStartDate: new Date("2022-01-01"),
-      curriculumEndDate: new Date("2025-03-01")
+      curriculumEndDate: new Date("2025-03-01"),
+      curriculumMembershipId: "455004",
+      curriculumSpecialty: "Cardiology",
+      curriculumSpecialtyCode: "030"
     }
   ],
   conditionsOfJoining: {
@@ -360,10 +407,7 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   startDate: new Date("2010-10-14"),
   endDate: new Date("2011-10-14"),
   managingDeanery: "",
-  responsibleOfficer: {
-    firstName: "",
-    lastName: ""
-  },
+  responsibleOfficer: mockResponsibleOfficer,
   curricula: [],
   conditionsOfJoining: {
     signedAt: new Date("2010-10-14"),
@@ -380,10 +424,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
-    responsibleOfficer: {
-      firstName: "",
-      lastName: ""
-    },
+    responsibleOfficer: mockResponsibleOfficer,
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -398,10 +439,7 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
-    responsibleOfficer: {
-      firstName: "",
-      lastName: ""
-    },
+    responsibleOfficer: mockResponsibleOfficer,
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -420,8 +458,11 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
     responsibleOfficer: {
-      firstName: "",
-      lastName: ""
+      emailAddress: null,
+      firstName: null,
+      lastName: null,
+      gmcId: null,
+      phoneNumber: null
     },
     curricula: [],
     conditionsOfJoining: {
@@ -437,10 +478,7 @@ export const mockProgrammeMembershipNoTrainingNumber: ProgrammeMembership[] = [
     startDate: new Date("2010-10-14"),
     endDate: new Date("2011-10-14"),
     managingDeanery: "",
-    responsibleOfficer: {
-      firstName: "",
-      lastName: ""
-    },
+    responsibleOfficer: mockResponsibleOfficer,
     curricula: [],
     conditionsOfJoining: {
       signedAt: null,
@@ -698,6 +736,7 @@ export const mockPlacementNonTemplatedField = {
 export const mockTraineeProfile: TraineeProfile = {
   traineeTisId: "123",
   personalDetails: mockPersonalDetails,
+  qualifications: [],
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
@@ -705,6 +744,7 @@ export const mockTraineeProfile: TraineeProfile = {
 export const mockTraineeProfileNoMatch: TraineeProfile = {
   traineeTisId: "456",
   personalDetails: { ...mockPersonalDetails, personOwner: "TIS on Mars" },
+  qualifications: [],
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
@@ -712,6 +752,7 @@ export const mockTraineeProfileNoMatch: TraineeProfile = {
 export const mockTraineeProfileNoGMC: TraineeProfile = {
   traineeTisId: "789",
   personalDetails: { ...mockPersonalDetails, gmcNumber: "" },
+  qualifications: [],
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
@@ -800,85 +841,92 @@ export const mockOutstandingActions: TraineeAction[] = [
   {
     id: "0",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "1",
-      type: TisReferenceType.programmeMembership
+      type: "PLACEMENT"
     },
     availableFrom: new Date(twelveWeeksAhead),
-    dueBy: new Date(twelveWeeksAhead)
+    dueBy: new Date(twelveWeeksAhead),
+    completed: null
   },
   // Non-due Outstanding action
   {
     id: "1",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "1",
-      type: TisReferenceType.programmeMembership
+      type: "PROGRAMME_MEMBERSHIP"
     },
     availableFrom: new Date(oneWeekAgo),
-    dueBy: new Date(today)
+    dueBy: new Date(today),
+    completed: null
   },
   // Overdue action
   {
     id: "2",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "1",
-      type: TisReferenceType.programmeMembership
+      type: "PROGRAMME_MEMBERSHIP"
     },
     availableFrom: new Date(oneWeekAgo),
-    dueBy: new Date(yesterday)
+    dueBy: new Date(yesterday),
+    completed: null
   },
   // Future action (not to show)
   {
     id: "3",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "1",
-      type: TisReferenceType.placement
+      type: "PLACEMENT"
     },
     availableFrom: new Date(twelveWeeksAhead),
-    dueBy: new Date(twelveWeeksAhead)
+    dueBy: new Date(twelveWeeksAhead),
+    completed: null
   },
   // Non-due Outstanding action
   {
     id: "4",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "315",
-      type: TisReferenceType.placement
+      type: "PLACEMENT"
     },
     availableFrom: new Date(oneWeekAgo),
-    dueBy: new Date(today)
+    dueBy: new Date(today),
+    completed: null
   },
   // Overdue action
   {
     id: "5",
     type: "REVIEW_DATA",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "315",
-      type: TisReferenceType.placement
+      type: "PLACEMENT"
     },
     availableFrom: new Date(oneWeekAgo),
-    dueBy: new Date(yesterday)
+    dueBy: new Date(yesterday),
+    completed: null
   },
   //non REVIEW_DATA type action
   {
     id: "6",
     type: "another type",
-    traineeTisId: "12345",
+    traineeId: "12345",
     tisReferenceInfo: {
       id: "315",
-      type: TisReferenceType.placement
+      type: "PLACEMENT"
     },
     availableFrom: new Date(oneWeekAgo),
-    dueBy: new Date(yesterday)
+    dueBy: new Date(yesterday),
+    completed: null
   }
 ];
 
@@ -889,6 +937,7 @@ export const mockTraineeProfileCovid: TraineeProfile = {
     dateOfBirth: "2020-01-01",
     currRevalDate: "2028-01-01"
   },
+  qualifications: [],
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements
 };
@@ -975,4 +1024,139 @@ export const mockUserFeatures2: UserFeaturesType = {
 export const mockUserFeatures3: UserFeaturesType = {
   ltft: false,
   ltftProgrammes: []
+};
+
+export const mockProfileDataToTestPlacementActions: TraineeProfile = {
+  traineeTisId: "111111",
+  personalDetails: {
+    surname: "Burke",
+    forenames: "Jimmy",
+    knownAs: null,
+    maidenName: null,
+    title: "Dr",
+    role: ["DR in Training"],
+    personOwner: "North Central and East London",
+    dateOfBirth: "1980-04-03",
+    gender: "Male",
+    qualification: "Bachelor of Medicine, Bachelor of Surgery (BMBS)",
+    dateAttained: "2010-05-09",
+    medicalSchool: "University of Grimbsy",
+    telephoneNumber: "111111111111",
+    mobileNumber: "111111111111",
+    email: "j_burke@hot.com",
+    address1: "Flat 90410",
+    address2: "Burke Way",
+    address3: "Burketon",
+    address4: "Burkeside",
+    postCode: "IAM1 2ME",
+    gmcNumber: "1111111",
+    gmcStatus: null,
+    gdcNumber: null,
+    gdcStatus: null,
+    publicHealthNumber: null,
+    eeaResident: null,
+    permitToWork: null,
+    settled: null,
+    visaIssued: null,
+    detailsNumber: null,
+    prevRevalBody: null,
+    prevRevalBodyOther: null,
+    currRevalDate: null,
+    prevRevalDate: null,
+    signature: {
+      signedAt: "2025-08-31T15:05:48.231159158Z",
+      validUntil: "2025-09-01T15:05:48.231159158Z",
+      hmac: "6443c178e2dfed0013eaa6ce193b88f3772c898e8b6dd3eebe04c118a511bc3b"
+    }
+  },
+  qualifications: [
+    {
+      tisId: "335188",
+      qualification: "Bachelor of Medicine, Bachelor of Surgery (BMBS)",
+      dateAttained: "2010-05-09",
+      medicalSchool: "University of Grimbsy"
+    }
+  ],
+  programmeMemberships: [
+    {
+      tisId: "e9401242-a0dd-4a1c-9551-7164e5c776d9",
+      trainingNumber: "LDN/001.852/7991976/C",
+      programmeTisId: "18725",
+      programmeName: "General (Internal) Medicine",
+      programmeNumber: "LON241",
+      managingDeanery: "North Central and East London",
+      designatedBody: "NHSE Education North Central and East London",
+      designatedBodyCode: "1-1RUZV4H",
+      programmeMembershipType: "SUBSTANTIVE",
+      startDate: "2025-02-05",
+      endDate: "2028-02-01",
+      programmeCompletionDate: new Date("2028-02-01"),
+      status: Status.Current,
+      curricula: [
+        {
+          curriculumTisId: "168",
+          curriculumName: "Stroke Medicine",
+          curriculumSubType: "SUB_SPECIALTY",
+          curriculumSpecialty: "Stroke Medicine",
+          curriculumSpecialtyCode: "852",
+          curriculumStartDate: new Date("2025-02-05"),
+          curriculumEndDate: new Date("2028-02-01"),
+          curriculumMembershipId: "468543"
+        },
+        {
+          curriculumTisId: "75",
+          curriculumName: "General (internal) Medicine",
+          curriculumSubType: "MEDICAL_CURRICULUM",
+          curriculumSpecialty: "General (internal) Medicine",
+          curriculumSpecialtyCode: "001",
+          curriculumStartDate: new Date("2025-02-05"),
+          curriculumEndDate: new Date("2028-02-01"),
+          curriculumMembershipId: "455002"
+        }
+      ],
+      trainingPathway: "CCT",
+      conditionsOfJoining: {
+        signedAt: new Date("2025-05-14T09:10:14.912Z"),
+        version: "GG10"
+      },
+      responsibleOfficer: {
+        emailAddress: "billy.sheen@hee.nhs.uk",
+        firstName: "Billy",
+        lastName: "Sheen",
+        gmcId: "111111111",
+        phoneNumber: null
+      },
+      signature: {
+        signedAt: "2025-08-31T15:05:48.231671127Z",
+        validUntil: "2025-09-01T15:05:48.231671127Z",
+        hmac: "be4abce371f3f8964e3bb97050e91a5133d9343df4c1bb373a3c2b67d5937aec"
+      }
+    }
+  ],
+  placements: [
+    {
+      tisId: "2657088",
+      startDate: "2025-08-05",
+      endDate: "2026-08-05",
+      site: "Queen's Hospital",
+      siteKnownAs: "Billy's Hospital (4Q)",
+      siteLocation: "Burke Way or the High Way",
+      otherSites: [],
+      grade: "ST4",
+      specialty: "General (internal) Medicine",
+      subSpecialty: "",
+      postAllowsSubspecialty: true,
+      otherSpecialties: [],
+      placementType: "In Post",
+      employingBody: "Billy NHS Trust",
+      trainingBody: "Billy NHS Trust",
+      wholeTimeEquivalent: "1",
+      status: Status.Current,
+      signature: {
+        signedAt: "2025-08-31T15:05:48.231308620Z",
+        validUntil: "2025-09-01T15:05:48.231308620Z",
+        hmac: "b09b48a4a8863f59af8e4bc8a43e3d0e961550352fdf18d43c0240f22dabfdf4"
+      }
+    }
+  ]
 };

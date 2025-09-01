@@ -1,7 +1,15 @@
 import { Status } from "./Status";
 import { IDateBoxed } from "./IDateBoxed";
 import { CojVersionType } from "../redux/slices/userSlice";
+import { Signature } from "./TraineeProfile";
 
+export const mockResponsibleOfficer = {
+  emailAddress: null,
+  firstName: null,
+  lastName: null,
+  gmcId: null,
+  phoneNumber: null
+};
 export interface ProgrammeMembership extends IDateBoxed {
   programmeTisId?: string;
   programmeName: string;
@@ -14,7 +22,10 @@ export interface ProgrammeMembership extends IDateBoxed {
   programmeCompletionDate?: Date;
   curricula: Curriculum[];
   conditionsOfJoining: ConditionsOfJoining;
+  designatedBody?: string;
   designatedBodyCode?: string;
+  trainingPathway?: string;
+  signature?: Signature;
 }
 
 export interface ConditionsOfJoining {
@@ -24,15 +35,21 @@ export interface ConditionsOfJoining {
 
 export interface Curriculum {
   curriculumTisId: string;
+  curriculumMembershipId: string;
   curriculumName: string;
+  curriculumSpecialty: string;
+  curriculumSpecialtyCode: string;
   curriculumSubType: string;
   curriculumStartDate: Date;
   curriculumEndDate: Date;
 }
 
 export interface ResponsibleOfficer {
-  firstName: string;
-  lastName: string;
+  emailAddress: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  gmcId: string | null;
+  phoneNumber: string | null;
 }
 
 export const programmePanelTemplate: ProgrammeMembership = {
@@ -43,10 +60,7 @@ export const programmePanelTemplate: ProgrammeMembership = {
   startDate: "",
   endDate: "",
   managingDeanery: "",
-  responsibleOfficer: {
-    firstName: "",
-    lastName: ""
-  },
+  responsibleOfficer: mockResponsibleOfficer,
   curricula: [],
   conditionsOfJoining: {
     signedAt: null,
