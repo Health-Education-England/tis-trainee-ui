@@ -1,5 +1,6 @@
 import {
   ActionLink,
+  Card,
   Hint,
   Table,
   WarningCallout
@@ -10,9 +11,13 @@ import {
   DateType,
   isWithinRange
 } from "../../utilities/DateUtilities";
-import { FormRUtilities } from "../../utilities/FormRUtilities";
-import styles from "./FormR.module.scss";
+import { FormRUtilities, getLinkedProgrammeDetails } from "../../utilities/FormRUtilities";
 import history from "../navigation/history";
+import { ReactNode, useMemo, useState } from "react";
+import { CellContext, createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, HeaderContext, SortingState, useReactTable } from "@tanstack/react-table";
+import { TableColumnHeader } from "../notifications/TableColumnHeader";
+import dayjs from "dayjs";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 interface ISubmittedFormsList {
   formRList: IFormR[];
@@ -25,32 +30,165 @@ const SubmittedFormsList = ({
   path,
   latestSubDate
 }: ISubmittedFormsList) => {
+  const columnHelper = createColumnHelper<IFormR>();
+  
+    const renderIdHeader = ({
+      column
+    }: HeaderContext<IFormR, unknown>) => (
+      <TableColumnHeader
+        column={column}
+        title="Form ID"
+        data-cy={`table-column_${column.id}`}
+      />
+    );
+    const renderPmHeader = ({
+      column
+    }: HeaderContext<IFormR, unknown>) => (
+      <TableColumnHeader
+        column={column}
+        title="Linked Programme"
+        data-cy={`table-column_${column.id}`}
+      />
+    );
+    const renderSubmitDateHeader = ({
+      column
+    }: HeaderContext<IFormR, unknown>) => (
+      <TableColumnHeader
+        column={column}
+        title="Submitted Date"
+        data-cy={`table-column_${column.id}`}
+      />
+    );
+    const renderStatusHeader = ({
+      column
+    }: HeaderContext<IFormR, unknown>) => (
+      <TableColumnHeader
+        column={column}
+        title="Status"
+        data-cy={`table-column_${column.id}`}
+      />
+    );
+  
+    const renderValue = (props: { renderValue: () => ReactNode }) => (
+      <span>{props.renderValue()}</span>
+    );
+    const renderDayValue = (props: CellContext<IFormR, Date | string | null | undefined>) => (
+      <time
+        dateTime={`props.renderValue()`}
+        data-tooltip={dayjs(props.renderValue() as Date | string).toString()}
+      >
+        {dayjs(props.renderValue() as Date | string).format("DD/MM/YYYY")}
+      </time>
+    );
+    const progMems = useAppSelector(
+      state => state.traineeProfile.traineeProfileData.programmeMemberships
+    );
+    const renderPmValue = (props: { renderValue: () => ReactNode }) => (
+      <>
+        {getLinkedProgrammeDetails(progMems, (props.renderValue() as string))?.programmeName ?? 
+          "Linked programme not set."}
+      </>
+    );
+  
+    const columnsDefault = [
+      columnHelper.accessor("id", {
+        id: "id",
+        header: renderIdHeader,
+        cell: renderValue
+      }),
+      columnHelper.accessor("programmeMembershipId", {
+        id: "programmeMembershipId",
+        header: renderPmHeader,
+        cell: renderPmValue
+      }),
+      columnHelper.accessor("submissionDate", {
+        id: "submissionDate",
+        header: renderSubmitDateHeader,
+        cell: renderDayValue,
+        sortingFn: "datetime",
+        sortDescFirst: true
+      }),
+      columnHelper.accessor("lifecycleState", {
+        id: "status",
+        header: renderStatusHeader,
+        cell: renderValue
+      })
+    ];
+  
+    const [sorting, setSorting] = useState<SortingState>([
+      { id: "submissionDate", desc: true }
+    ]);
+  
+    const columns = useMemo(() => columnsDefault, []);
+  
+    const table = useReactTable({
+      data: formRList,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      state: {
+        sorting
+      },
+      onSortingChange: setSorting,
+      autoResetPageIndex: false
+    });
+    
   let content: JSX.Element | JSX.Element[];
 
   if (formRList.length) {
-    content = formRList.map((formData: IFormR) => (
-      <Table.Row key={formData.id} className={styles.listTableRow}>
-        <td>
-          <ActionLink
-            onClick={() =>
-              FormRUtilities.handleRowClick(formData.id!, path, history)
-            }
-            data-cy="submittedForm"
-          >
-            {`Form submitted on ${DateUtilities.ConvertToLondonTime(
-              formData.submissionDate
-            )}`}
-          </ActionLink>
-        </td>
-      </Table.Row>
-    ));
+    content = (
+      <div className="table-wrapper">
+        <table data-cy={`formr-summary-table`}>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th
+                    key={header.id}
+                    data-cy={`ltft-summary-table-${header.id}`}
+                    style={{
+                      width: header.getSize()
+                    }}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => {
+              return (
+                <tr
+                  className="table-row"
+                  onClick={() => FormRUtilities.handleRowClick(row.original.id!, path, history)}
+                  key={row.id}
+                  data-cy={`ltft-row-${row.id}`}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id} data-cy={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
   } else
     content = (
-      <Table.Row>
-        <td>
-          <p data-cy="noSubmittedFormsMsg">No forms submitted yet.</p>
-        </td>
-      </Table.Row>
+      <p data-cy="noSubmittedFormsMsg">
+        You have no submitted forms.
+      </p>
     );
   return (
     <>
@@ -88,16 +226,14 @@ const SubmittedFormsList = ({
           <b>save a copy as a PDF</b> will appear here.
         </Hint>
       )}
-      <Table>
-        <Table.Head>
-          <Table.Row>
-            <td>
-              <b>Submitted forms</b>
-            </td>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>{content}</Table.Body>
-      </Table>
+      <Card>
+        <Card.Content>
+          <Card.Heading data-cy="ltft-previous-header">
+            Previous applications
+          </Card.Heading>
+          {content}
+        </Card.Content>
+      </Card>
     </>
   );
 };
