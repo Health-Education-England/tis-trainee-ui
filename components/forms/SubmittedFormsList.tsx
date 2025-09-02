@@ -11,10 +11,23 @@ import {
   DateType,
   isWithinRange
 } from "../../utilities/DateUtilities";
-import { FormRUtilities, getLinkedProgrammeDetails } from "../../utilities/FormRUtilities";
+import {
+  FormRUtilities,
+  getLinkedProgrammeDetails
+} from "../../utilities/FormRUtilities";
 import history from "../navigation/history";
 import { ReactNode, useMemo, useState } from "react";
-import { CellContext, createColumnHelper, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, HeaderContext, SortingState, useReactTable } from "@tanstack/react-table";
+import {
+  CellContext,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  HeaderContext,
+  SortingState,
+  useReactTable
+} from "@tanstack/react-table";
 import { TableColumnHeader } from "../notifications/TableColumnHeader";
 import dayjs from "dayjs";
 import { useAppSelector } from "../../redux/hooks/hooks";
@@ -31,109 +44,105 @@ const SubmittedFormsList = ({
   latestSubDate
 }: ISubmittedFormsList) => {
   const columnHelper = createColumnHelper<IFormR>();
-  
-    const renderIdHeader = ({
-      column
-    }: HeaderContext<IFormR, unknown>) => (
-      <TableColumnHeader
-        column={column}
-        title="Form ID"
-        data-cy={`table-column_${column.id}`}
-      />
-    );
-    const renderPmHeader = ({
-      column
-    }: HeaderContext<IFormR, unknown>) => (
-      <TableColumnHeader
-        column={column}
-        title="Linked Programme"
-        data-cy={`table-column_${column.id}`}
-      />
-    );
-    const renderSubmitDateHeader = ({
-      column
-    }: HeaderContext<IFormR, unknown>) => (
-      <TableColumnHeader
-        column={column}
-        title="Submitted Date"
-        data-cy={`table-column_${column.id}`}
-      />
-    );
-    const renderStatusHeader = ({
-      column
-    }: HeaderContext<IFormR, unknown>) => (
-      <TableColumnHeader
-        column={column}
-        title="Status"
-        data-cy={`table-column_${column.id}`}
-      />
-    );
-  
-    const renderValue = (props: { renderValue: () => ReactNode }) => (
-      <span>{props.renderValue()}</span>
-    );
-    const renderDayValue = (props: CellContext<IFormR, Date | string | null | undefined>) => (
-      <time
-        dateTime={`props.renderValue()`}
-        data-tooltip={dayjs(props.renderValue() as Date | string).toString()}
-      >
-        {dayjs(props.renderValue() as Date | string).format("DD/MM/YYYY")}
-      </time>
-    );
-    const progMems = useAppSelector(
-      state => state.traineeProfile.traineeProfileData.programmeMemberships
-    );
-    const renderPmValue = (props: { renderValue: () => ReactNode }) => (
-      <>
-        {getLinkedProgrammeDetails(progMems, (props.renderValue() as string))?.programmeName ?? 
-          "Linked programme not set."}
-      </>
-    );
-  
-    const columnsDefault = [
-      columnHelper.accessor("id", {
-        id: "id",
-        header: renderIdHeader,
-        cell: renderValue
-      }),
-      columnHelper.accessor("programmeMembershipId", {
-        id: "programmeMembershipId",
-        header: renderPmHeader,
-        cell: renderPmValue
-      }),
-      columnHelper.accessor("submissionDate", {
-        id: "submissionDate",
-        header: renderSubmitDateHeader,
-        cell: renderDayValue,
-        sortingFn: "datetime",
-        sortDescFirst: true
-      }),
-      columnHelper.accessor("lifecycleState", {
-        id: "status",
-        header: renderStatusHeader,
-        cell: renderValue
-      })
-    ];
-  
-    const [sorting, setSorting] = useState<SortingState>([
-      { id: "submissionDate", desc: true }
-    ]);
-  
-    const columns = useMemo(() => columnsDefault, []);
-  
-    const table = useReactTable({
-      data: formRList,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      state: {
-        sorting
-      },
-      onSortingChange: setSorting,
-      autoResetPageIndex: false
-    });
-    
+
+  const renderIdHeader = ({ column }: HeaderContext<IFormR, unknown>) => (
+    <TableColumnHeader
+      column={column}
+      title="Form ID"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderPmHeader = ({ column }: HeaderContext<IFormR, unknown>) => (
+    <TableColumnHeader
+      column={column}
+      title="Linked Programme"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderSubmitDateHeader = ({
+    column
+  }: HeaderContext<IFormR, unknown>) => (
+    <TableColumnHeader
+      column={column}
+      title="Submitted Date"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+  const renderStatusHeader = ({ column }: HeaderContext<IFormR, unknown>) => (
+    <TableColumnHeader
+      column={column}
+      title="Status"
+      data-cy={`table-column_${column.id}`}
+    />
+  );
+
+  const renderValue = (props: { renderValue: () => ReactNode }) => (
+    <span>{props.renderValue()}</span>
+  );
+  const renderDayValue = (
+    props: CellContext<IFormR, Date | string | null | undefined>
+  ) => (
+    <time
+      dateTime={`props.renderValue()`}
+      data-tooltip={dayjs(props.renderValue() as Date | string).toString()}
+    >
+      {dayjs(props.renderValue() as Date | string).format("DD/MM/YYYY")}
+    </time>
+  );
+  const progMems = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.programmeMemberships
+  );
+  const renderPmValue = (props: { renderValue: () => ReactNode }) => (
+    <>
+      {getLinkedProgrammeDetails(progMems, props.renderValue() as string)
+        ?.programmeName ?? "Linked programme not set."}
+    </>
+  );
+
+  const columnsDefault = [
+    columnHelper.accessor("id", {
+      id: "id",
+      header: renderIdHeader,
+      cell: renderValue
+    }),
+    columnHelper.accessor("programmeMembershipId", {
+      id: "programmeMembershipId",
+      header: renderPmHeader,
+      cell: renderPmValue
+    }),
+    columnHelper.accessor("submissionDate", {
+      id: "submissionDate",
+      header: renderSubmitDateHeader,
+      cell: renderDayValue,
+      sortingFn: "datetime",
+      sortDescFirst: true
+    }),
+    columnHelper.accessor("lifecycleState", {
+      id: "status",
+      header: renderStatusHeader,
+      cell: renderValue
+    })
+  ];
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "submissionDate", desc: true }
+  ]);
+
+  const columns = useMemo(() => columnsDefault, []);
+
+  const table = useReactTable({
+    data: formRList,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      sorting
+    },
+    onSortingChange: setSorting,
+    autoResetPageIndex: false
+  });
+
   let content: JSX.Element | JSX.Element[];
 
   if (formRList.length) {
@@ -165,7 +174,13 @@ const SubmittedFormsList = ({
               return (
                 <tr
                   className="table-row"
-                  onClick={() => FormRUtilities.handleRowClick(row.original.id!, path, history)}
+                  onClick={() =>
+                    FormRUtilities.handleRowClick(
+                      row.original.id!,
+                      path,
+                      history
+                    )
+                  }
                   key={row.id}
                   data-cy={`ltft-row-${row.id}`}
                 >
@@ -185,11 +200,7 @@ const SubmittedFormsList = ({
       </div>
     );
   } else
-    content = (
-      <p data-cy="noSubmittedFormsMsg">
-        You have no submitted forms.
-      </p>
-    );
+    content = <p data-cy="noSubmittedFormsMsg">You have no submitted forms.</p>;
   return (
     <>
       {formRList.length ? (
