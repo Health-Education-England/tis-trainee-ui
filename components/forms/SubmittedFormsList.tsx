@@ -1,10 +1,4 @@
-import {
-  ActionLink,
-  Card,
-  Hint,
-  Table,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Card, Hint, WarningCallout } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
 import {
   DateUtilities,
@@ -145,30 +139,31 @@ const SubmittedFormsList = ({
 
   let content: JSX.Element | JSX.Element[];
 
+  const renderTableHeader = () => (
+    <thead>
+      {table.getHeaderGroups().map(headerGroup => (
+        <tr key={headerGroup.id}>
+          {headerGroup.headers.map(header => (
+            <th
+              key={header.id}
+              data-cy={`formr-summary-table-${header.id}`}
+              style={{
+                width: header.getSize()
+              }}
+            >
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </th>
+          ))}
+        </tr>
+      ))}
+    </thead>
+  );
+
   if (formRList.length) {
     content = (
       <div className="table-wrapper">
         <table data-cy={`formr-summary-table`}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th
-                    key={header.id}
-                    data-cy={`ltft-summary-table-${header.id}`}
-                    style={{
-                      width: header.getSize()
-                    }}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
+          {renderTableHeader()}
           <tbody>
             {table.getRowModel().rows.map(row => {
               return (
@@ -182,7 +177,7 @@ const SubmittedFormsList = ({
                     )
                   }
                   key={row.id}
-                  data-cy={`ltft-row-${row.id}`}
+                  data-cy={`formr-row-${row.id}`}
                 >
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id} data-cy={cell.id}>
@@ -239,7 +234,7 @@ const SubmittedFormsList = ({
       )}
       <Card>
         <Card.Content>
-          <Card.Heading data-cy="ltft-previous-header">
+          <Card.Heading data-cy="formr-previous-header">
             Previous applications
           </Card.Heading>
           {content}
