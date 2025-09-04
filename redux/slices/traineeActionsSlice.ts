@@ -9,12 +9,14 @@ interface IAction {
   traineeActionsData: TraineeAction[];
   status: string;
   error: any;
+  refreshNeeded: boolean;
 }
 
 export const initialState: IAction = {
   traineeActionsData: [],
   status: "idle",
-  error: ""
+  error: "",
+  refreshNeeded: false
 };
 
 export const fetchTraineeActionsData = createAsyncThunk(
@@ -61,6 +63,12 @@ const traineeActionsSlice = createSlice({
         ...state,
         traineeActionsData: action.payload
       };
+    },
+    setActionsRefreshNeeded(state, action: PayloadAction<boolean>) {
+      return {
+        ...state,
+        refreshNeeded: action.payload
+      };
     }
   },
   extraReducers(builder) {
@@ -102,8 +110,11 @@ const traineeActionsSlice = createSlice({
 
 export default traineeActionsSlice.reducer;
 
-export const { updatedActionsData, resetTraineeAction } =
-  traineeActionsSlice.actions;
+export const {
+  updatedActionsData,
+  resetTraineeAction,
+  setActionsRefreshNeeded
+} = traineeActionsSlice.actions;
 
 export const selectTraineeActions = (state: { traineeActions: IAction }) =>
   state.traineeActions.traineeActionsData;
