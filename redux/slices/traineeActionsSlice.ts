@@ -5,7 +5,7 @@ import { TraineeAction } from "../../models/TraineeAction";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 
-interface IAction {
+export interface IAction {
   traineeActionsData: TraineeAction[];
   status: string;
   error: any;

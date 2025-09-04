@@ -1,116 +1,169 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, queryByAttribute } from "@testing-library/react";
 import { GlobalAlert } from "../GlobalAlert";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
+import { MemoryRouter } from "react-router-dom";
+import userReducer, { IUser } from "../../../redux/slices/userSlice";
+import traineeActionsReducer, {
+  IAction
+} from "../../../redux/slices/traineeActionsSlice";
+import { RootState } from "../../../redux/store/store";
 
-// Create mock hooks that return values we control
-let mockActionsData = {
-  isActionsAndAlertLoading: false,
-  isActionsAndAlertSuccess: true,
-  isActionsAndAlertError: false
+type GlobalAlertTestState = {
+  user: Partial<IUser>;
+  traineeActions: Partial<IAction>;
 };
 
-let mockAlertData = {
-  unsignedCoJ: false,
-  inProgressFormR: false,
-  importantInfo: false,
-  unreviewedProgramme: false,
-  unreviewedPlacement: false,
-  showActionsSummaryAlert: false
-};
-
-// Mock the hooks
-jest.mock("../../../utilities/hooks/useActionsAndAlertDataLoader", () => ({
-  useActionsAndAlertsDataLoader: () => mockActionsData
+// Mock the useTraineeActions hook
+jest.mock("../../../utilities/hooks/useTraineeActions", () => ({
+  useTraineeActions: jest.fn()
 }));
 
-jest.mock("../../../utilities/hooks/useAlertStatusData", () => ({
-  useAlertStatusData: () => mockAlertData
-}));
+import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 
-describe("GlobalAlert Error States", () => {
+describe("GlobalAlert", () => {
+  const mockUseTraineeActions = useTraineeActions as jest.Mock;
+
   beforeEach(() => {
-    // Reset mocks to default values before each test
-    mockActionsData = {
-      isActionsAndAlertLoading: false,
-      isActionsAndAlertSuccess: true,
-      isActionsAndAlertError: false
-    };
-
-    mockAlertData = {
-      unsignedCoJ: false,
-      inProgressFormR: false,
-      importantInfo: false,
-      unreviewedProgramme: false,
-      unreviewedPlacement: false,
-      showActionsSummaryAlert: false
-    };
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: false });
   });
 
-  const renderWithStore = (customState = {}) => {
-    const defaultState = {
-      user: {
-        preferredMfa: "SMS",
-        redirected: false
-      }
-    };
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    const mergedState = {
-      ...defaultState,
-      ...customState
-    };
-
+  const renderWithProviders = (
+    ui: React.ReactElement,
+    {
+      route = "/",
+      initialState = {
+        user: {
+          preferredMfa: "SMS",
+          redirected: false,
+          status: "succeeded",
+          tempMfa: "NOMFA",
+          totpSection: 0,
+          error: ""
+        },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: "",
+          refreshNeeded: false
+        }
+      } as GlobalAlertTestState
+    } = {}
+  ) => {
     const store = configureStore({
-      reducer: () => mergedState
+      reducer: {
+        user: userReducer,
+        traineeActions: traineeActionsReducer
+      },
+      preloadedState: initialState as unknown as RootState
     });
 
     return render(
       <Provider store={store}>
-        <BrowserRouter>
-          <GlobalAlert />
-        </BrowserRouter>
+        <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
       </Provider>
     );
   };
 
-  it("should display error message when isActionsAndAlertError is true and preferredMfa is not NOMFA", () => {
-    mockActionsData.isActionsAndAlertError = true;
-    mockAlertData.showActionsSummaryAlert = true;
+  test("renders nothing when no alerts are needed", () => {
+    renderWithProviders(<GlobalAlert />);
+    expect(screen.queryByTestId("globalAlert")).not.toBeInTheDocument();
+  });
 
-    renderWithStore();
+  test("renders action summary alert when there are outstanding actions and not on action-summary page", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
 
+    const { container } = renderWithProviders(<GlobalAlert />, {
+      route: "/home"
+    });
+
+    const getByDataCy = (value: string) =>
+      queryByAttribute("data-cy", container, value);
+
+    expect(getByDataCy("globalAlert")).toBeInTheDocument();
+    expect(getByDataCy("outstandingTraineeActions")).toBeInTheDocument();
     expect(
-      screen.getByText(/There was a problem loading any outstanding actions/i)
+      screen.getByText(/You have outstanding actions to complete/i)
     ).toBeInTheDocument();
   });
 
-  it("should not display error message when isActionsAndAlertError is false", () => {
-    renderWithStore();
+  test("does not render action summary alert when on action-summary page", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
 
-    expect(
-      screen.queryByText(/There was a problem loading any outstanding actions/i)
-    ).not.toBeInTheDocument();
-  });
-
-  it("should not display error message when isActionsAndAlertError is true but preferredMfa is NOMFA", () => {
-    mockActionsData.isActionsAndAlertError = true;
-
-    renderWithStore({
-      user: { preferredMfa: "NOMFA", redirected: false }
+    renderWithProviders(<GlobalAlert />, {
+      route: "/action-summary"
     });
 
     expect(
-      screen.queryByText(/There was a problem loading any outstanding actions/i)
+      screen.queryByTestId("outstandingTraineeActions")
     ).not.toBeInTheDocument();
   });
 
-  it("should render nothing when isActionsAndAlertLoading is true and preferredMfa is not NOMFA", () => {
-    mockActionsData.isActionsAndAlertLoading = true;
+  test("renders bookmark alert when redirected is true", () => {
+    const { container } = renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: true },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
 
-    renderWithStore();
+    expect(
+      queryByAttribute("data-cy", container, "globalAlert")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "bookmarkAlert")
+    ).toBeInTheDocument();
+    expect(screen.getByText(/We have moved/i)).toBeInTheDocument();
+  });
 
-    expect(document.body.textContent).toBe("");
+  test("renders both alerts when conditions for both are met", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
+
+    const { container } = renderWithProviders(<GlobalAlert />, {
+      route: "/placements",
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: true },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    expect(
+      queryByAttribute("data-cy", container, "globalAlert")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "outstandingTraineeActions")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "bookmarkAlert")
+    ).toBeInTheDocument();
+  });
+
+  test("renders nothing when preferredMfa is NOMFA", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
+
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "NOMFA", redirected: true },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+    expect(screen.queryByTestId("globalAlert")).not.toBeInTheDocument();
   });
 });
