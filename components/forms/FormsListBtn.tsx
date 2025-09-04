@@ -39,7 +39,7 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
 
   useEffect(() => {
     resetForm(formName);
-  }, [formName, resetForm]);
+  }, [formName]);
 
   const handleBtnClick = async () => {
     // NOTE: this is needed for edge case where stale state from race between form click save event & redirect and auto update event.

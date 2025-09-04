@@ -293,7 +293,7 @@ const LtftSummary = ({
     { id: "lastModified", desc: true }
   ]);
 
-  const columns = useMemo(() => columnsDefault, []);
+  const columns = useMemo(() => columnsDefault, [columnsDefault]);
 
   const table = useReactTable({
     data: memoData,

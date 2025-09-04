@@ -1,58 +1,11 @@
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { LifeCycleState } from "../models/LifeCycleState";
-import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { DateType } from "./DateUtilities";
 import { IFormR } from "../models/IFormR";
-import { TisReferenceType, TraineeAction } from "../models/TraineeAction";
 dayjs.extend(isBetween);
 
-export type OutstandingSummaryActions = {
-  unsignedCojCount: number;
-  programmeActions: TraineeAction[];
-  placementActions: TraineeAction[];
-};
-
-// OUTSTANDING (and Global Alert)
-export function getAllOutstandingSummaryActions(
-  unsignedCojs: ProgrammeMembership[],
-  traineeActionsData: TraineeAction[]
-): OutstandingSummaryActions {
-  const today = dayjs().format("YYYY-MM-DD");
-  const unsignedCojCount = unsignedCojs.length;
-  const programmeActions = traineeActionsData.filter(
-    action =>
-      action.tisReferenceInfo.type === "PROGRAMME_MEMBERSHIP" &&
-      today >= dayjs(action.availableFrom).format("YYYY-MM-DD") &&
-      action.type === "REVIEW_DATA"
-  );
-  const placementActions = traineeActionsData.filter(
-    action =>
-      action.tisReferenceInfo.type === "PLACEMENT" &&
-      today >= dayjs(action.availableFrom).format("YYYY-MM-DD") &&
-      action.type === "REVIEW_DATA"
-  );
-  return {
-    unsignedCojCount,
-    programmeActions,
-    placementActions
-  };
-}
-
-// IN PROGRESS
-export function getAllInProgressSummaryActions(
-  formAList: IFormR[],
-  formBList: IFormR[]
-) {
-  const isInProgressFormA = isAnyFormInProgress(formAList);
-  const isInProgressFormB = isAnyFormInProgress(formBList);
-  return {
-    isInProgressFormA,
-    isInProgressFormB
-  };
-}
-
-// info section
+// keep using this logic for TrainingNumber temporarily until https://hee-tis.atlassian.net/browse/TIS21-7721
 export function getAllInfoFormRSubmissionSummaryActions(
   formListA: IFormR[],
   formListB: IFormR[]
@@ -106,19 +59,6 @@ export function noSubmittedForms(formList: IFormR[]) {
   }
   const filteredSubList = filterSubmittedFormList(formList);
   return filteredSubList.length < 1;
-}
-
-function isAnyFormInProgress(formList: IFormR[]): boolean {
-  if (!formList || formList.length < 1) {
-    return false;
-  }
-  return (
-    formList.filter(
-      form =>
-        form.lifecycleState === LifeCycleState.Draft ||
-        form.lifecycleState === LifeCycleState.Unsubmitted
-    ).length > 0
-  );
 }
 
 export function getLatestSubDate(formList: IFormR[]) {
