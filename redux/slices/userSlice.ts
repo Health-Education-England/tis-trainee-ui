@@ -12,7 +12,7 @@ export type UserFeaturesType = {
   ltftProgrammes: string[];
 };
 
-interface IUser {
+export interface IUser {
   status: string;
   tempMfa: MFAType;
   smsSection: number;
