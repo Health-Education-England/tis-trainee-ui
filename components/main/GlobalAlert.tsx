@@ -1,13 +1,24 @@
 import React from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
-
 import { Fieldset } from "nhsuk-react-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { Link, useLocation } from "react-router-dom";
+import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 
 export const GlobalAlert = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
+  if (preferredMfa === "NOMFA") return null;
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
+  const { hasOutstandingActions } = useTraineeActions();
+  const pathname = useLocation().pathname;
+  const isActionSummaryPage = pathname === "/action-summary";
 
   const alerts = {
+    actionSummary: {
+      status: hasOutstandingActions && !isActionSummaryPage,
+      component: <ActionsSummaryAlert />
+    },
     bookmark: {
       status: showBookmarkAlert,
       component: <BookmarkAlert />
@@ -15,10 +26,6 @@ export const GlobalAlert = () => {
   };
 
   const hasAlerts = Object.values(alerts).some(alert => alert.status);
-
-  if (preferredMfa !== "NOMFA") {
-    return null;
-  }
 
   return hasAlerts ? (
     <aside
@@ -28,10 +35,25 @@ export const GlobalAlert = () => {
     >
       <div className="nhsuk-width-container">
         {alerts.bookmark.status && alerts.bookmark.component}
+        {alerts.actionSummary.status && alerts.actionSummary.component}
       </div>
     </aside>
   ) : null;
 };
+
+function ActionsSummaryAlert() {
+  return (
+    <div data-cy="outstandingTraineeActions">
+      <p>
+        <FontAwesomeIcon icon={faExclamationCircle} size="lg" color="red" /> You
+        have outstanding actions to complete.
+      </p>
+      <p>
+        <Link to="/action-summary">Go to Action Summary page</Link> for details.
+      </p>
+    </div>
+  );
+}
 
 function BookmarkAlert() {
   return (
