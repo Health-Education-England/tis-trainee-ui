@@ -25,6 +25,7 @@ export const initialState: IProfile = {
   traineeProfileData: {
     traineeTisId: "",
     personalDetails: initialPersonalDetails,
+    qualifications: [],
     programmeMemberships: [],
     placements: []
   },
