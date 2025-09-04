@@ -1,14 +1,14 @@
 import dayjs from "dayjs";
 import { Card, Fieldset, Table } from "nhsuk-react-components";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { useAppDispatch } from "../../redux/hooks/hooks";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import style from "../Common.module.scss";
 import { useEffect } from "react";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
-import { groupAllActionsByProgrammeMembership } from "../../utilities/TraineeActionsUtilities";
 import { TraineeAction } from "../../models/TraineeAction";
+import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 
 export default function ActionSummary() {
   const dispatch = useAppDispatch();
@@ -17,19 +17,7 @@ export default function ActionSummary() {
     dispatch(resetMfaJourney());
   }, [dispatch]);
 
-  const traineeProfile = useAppSelector(
-    state => state.traineeProfile.traineeProfileData
-  );
-
-  const programmeMemberships = traineeProfile.programmeMemberships;
-  const traineeOutstandingActions = useAppSelector(
-    state => state.traineeActions.traineeActionsData
-  );
-  const groupedOutstandingActions = groupAllActionsByProgrammeMembership(
-    traineeOutstandingActions,
-    programmeMemberships,
-    traineeProfile
-  );
+  const { groupedOutstandingActions } = useTraineeActions();
 
   return (
     <div data-cy="actionSummary">
