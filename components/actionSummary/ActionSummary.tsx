@@ -32,7 +32,7 @@ export default function ActionSummary() {
       </Fieldset>
       {groupedOutstandingActions.length === 0 ? (
         <p className="nhsuk-body" data-cy="noOutstandingActions">
-          No outstanding actions for any programme membership.
+          No outstanding actions for any Programme Membership.
         </p>
       ) : (
         groupedOutstandingActions.map(group => (
@@ -89,12 +89,12 @@ function getActionTypeInfo(action: TraineeAction) {
 
     if (referenceType === "PLACEMENT") {
       return {
-        label: "Review your Placement Details",
+        label: "Review your Placement details",
         link: "/placements"
       };
     } else if (referenceType === "PROGRAMME_MEMBERSHIP") {
       return {
-        label: "Agree your Programme Details",
+        label: "Review your Programme Membership details",
         link: "/programmes"
       };
     }
