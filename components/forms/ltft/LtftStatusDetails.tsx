@@ -1,8 +1,8 @@
 import { SummaryList } from "nhsuk-react-components";
-import { LtftObj } from "../../../redux/slices/ltftSlice";
 import dayjs from "dayjs";
 import { getStatusReasonLabel } from "../../../utilities/ltftUtilities";
 import { StringUtilities } from "../../../utilities/StringUtilities";
+import { LtftObj } from "../../../models/LtftTypes";
 
 export const LtftStatusDetails = (formData: LtftObj) => {
   return (

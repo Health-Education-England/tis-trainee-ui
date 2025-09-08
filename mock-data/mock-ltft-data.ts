@@ -1,4 +1,4 @@
-import { LtftObj } from "../redux/slices/ltftSlice";
+import { LtftObj } from "../models/LtftTypes";
 
 export const mockLtftDraftList = [
   {

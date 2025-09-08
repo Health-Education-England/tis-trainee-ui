@@ -2,26 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FormsService } from "../../services/FormsService";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { toastErrText } from "../../utilities/Constants";
-
-export type LtftSummaryObj = {
-  id: string;
-  name: string;
-  programmeMembershipId: string;
-  formRef: string;
-  status: string;
-  statusReason: string;
-  statusMessage: string;
-  modifiedByRole: string;
-  created: string;
-  lastModified: string;
-};
-
-type LtftSummaryList = {
-  ltftList: LtftSummaryObj[];
-  status: string;
-  error: any;
-  ltftFormsRefreshNeeded: boolean;
-};
+import { LtftSummaryList, LtftSummaryObj } from "../../models/LtftTypes";
 
 export const initialState: LtftSummaryList = {
   ltftList: [],

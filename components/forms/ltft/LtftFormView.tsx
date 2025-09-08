@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useParams } from "react-router-dom";
 import {
   loadSavedLtft,
-  LtftObj,
   updatedLtftSaveStatus
 } from "../../../redux/slices/ltftSlice";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
@@ -36,6 +35,7 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
+import { LtftObj } from "../../../models/LtftTypes";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();

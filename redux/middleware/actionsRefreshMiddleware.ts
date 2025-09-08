@@ -1,9 +1,11 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import { completeTraineeAction } from "../slices/traineeActionsSlice";
+import {
+  completeTraineeAction,
+  setActionsRefreshNeeded
+} from "../slices/traineeActionsSlice";
 import { saveFormA, updateFormA } from "../slices/formASlice";
 import { saveFormB, updateFormB } from "../slices/formBSlice";
 import { signCoj } from "../slices/traineeProfileSlice";
-import { setActionsRefreshNeeded } from "../slices/traineeActionsSlice";
 
 export const actionsRefreshMiddleware = createListenerMiddleware();
 

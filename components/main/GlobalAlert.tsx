@@ -8,10 +8,11 @@ import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 
 export const GlobalAlert = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  if (preferredMfa === "NOMFA") return null;
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
+  if (preferredMfa === "NOMFA") return null;
+
   const isActionSummaryPage = pathname === "/action-summary";
 
   const alerts = {

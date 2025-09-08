@@ -40,7 +40,6 @@ import history from "../components/navigation/history";
 import {
   deleteLtft,
   loadSavedLtft,
-  LtftObj,
   resetToInitLtft,
   saveLtft,
   updatedCanEditLtft,
@@ -50,6 +49,7 @@ import {
 } from "../redux/slices/ltftSlice";
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
+import { LtftObj } from "../models/LtftTypes";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;

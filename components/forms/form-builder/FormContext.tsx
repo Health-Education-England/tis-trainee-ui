@@ -10,7 +10,7 @@ import {
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
-import { LtftObj } from "../../../redux/slices/ltftSlice";
+import { LtftObj } from "../../../models/LtftTypes";
 
 type FormContextType = {
   formData: FormData;
