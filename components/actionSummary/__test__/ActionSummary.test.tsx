@@ -1,5 +1,10 @@
 import React from "react";
-import { render, screen, queryByAttribute } from "@testing-library/react";
+import {
+  render,
+  screen,
+  queryByAttribute,
+  fireEvent
+} from "@testing-library/react";
 import ActionSummary from "../ActionSummary";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -10,6 +15,7 @@ import {
   multiplePmActionTypeData,
   unknownActionTypeData
 } from "../../../mock-data/mock-trainee-actions-data";
+import { setActionsRefreshNeeded } from "../../../redux/slices/traineeActionsSlice";
 
 jest.mock("../../../utilities/hooks/useTraineeActions", () => ({
   useTraineeActions: jest.fn()
@@ -148,5 +154,29 @@ describe("ActionSummary", () => {
 
     const icons = document.querySelectorAll('svg[color="red"]');
     expect(icons.length).toBe(7);
+  });
+
+  test("renders refresh button", () => {
+    const { container } = renderWithProviders(<ActionSummary />);
+    const getByDataCy = (value: string) =>
+      queryByAttribute("data-cy", container, value);
+
+    const refreshButton = getByDataCy("refreshActionsButton");
+    expect(refreshButton).toBeInTheDocument();
+    expect(refreshButton).toHaveTextContent("Refresh data");
+  });
+
+  test("clicking the refresh button calls the refresh action", () => {
+    const { container } = renderWithProviders(<ActionSummary />);
+    const getByDataCy = (value: string) =>
+      queryByAttribute("data-cy", container, value);
+
+    mockDispatch.mockClear();
+
+    const refreshButton = getByDataCy("refreshActionsButton");
+    if (refreshButton) fireEvent.click(refreshButton);
+
+    expect(mockDispatch).toHaveBeenCalledTimes(1);
+    expect(mockDispatch).toHaveBeenCalledWith(setActionsRefreshNeeded(true));
   });
 });

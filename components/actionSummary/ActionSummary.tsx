@@ -1,14 +1,18 @@
 import dayjs from "dayjs";
-import { Card, Fieldset, Table } from "nhsuk-react-components";
+import { Button, Card, Fieldset, Table } from "nhsuk-react-components";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExclamationCircle,
+  faSyncAlt
+} from "@fortawesome/free-solid-svg-icons";
 import style from "../Common.module.scss";
 import { useEffect } from "react";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import { TraineeAction } from "../../models/TraineeAction";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
+import { setActionsRefreshNeeded } from "../../redux/slices/traineeActionsSlice";
 
 export default function ActionSummary() {
   const dispatch = useAppDispatch();
@@ -19,16 +23,36 @@ export default function ActionSummary() {
 
   const { groupedOutstandingActions } = useTraineeActions();
 
+  const handleRefresh = () => {
+    dispatch(setActionsRefreshNeeded(true));
+  };
+
   return (
     <div data-cy="actionSummary">
       <Fieldset>
-        <Fieldset.Legend
-          isPageHeading
-          className={style.fieldLegHeader}
-          data-cy="actionSummaryHeading"
-        >
-          Action Summary
-        </Fieldset.Legend>
+        <div className="nhsuk-grid-row">
+          <div className="nhsuk-grid-column-two-thirds">
+            <Fieldset.Legend
+              isPageHeading
+              className={style.fieldLegHeader}
+              data-cy="actionSummaryHeading"
+            >
+              Action Summary
+            </Fieldset.Legend>
+          </div>
+          <div
+            className="nhsuk-grid-column-one-third"
+            style={{ textAlign: "right" }}
+          >
+            <Button
+              onClick={handleRefresh}
+              secondary
+              data-cy="refreshActionsButton"
+            >
+              <FontAwesomeIcon icon={faSyncAlt} /> Refresh data
+            </Button>
+          </div>
+        </div>
       </Fieldset>
       {groupedOutstandingActions.length === 0 ? (
         <p className="nhsuk-body" data-cy="noOutstandingActions">
