@@ -67,7 +67,7 @@ export default function ActionSummary() {
                 <Table.Head>
                   <Table.Row>
                     <Table.Cell>Action</Table.Cell>
-                    <Table.Cell>Due From</Table.Cell>
+                    <Table.Cell>Due By</Table.Cell>
                     <Table.Cell>Status</Table.Cell>
                   </Table.Row>
                 </Table.Head>
@@ -83,7 +83,7 @@ export default function ActionSummary() {
                           <Link to={link}>{label}</Link>
                         </Table.Cell>
                         <Table.Cell>
-                          {dayjs(action.availableFrom).format("DD/MM/YYYY")}
+                          {dayjs(action.dueBy).format("DD/MM/YYYY")}
                         </Table.Cell>
                         <Table.Cell>
                           <span>

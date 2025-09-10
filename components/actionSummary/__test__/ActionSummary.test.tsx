@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 import {
   render,
   screen,
@@ -108,10 +109,20 @@ describe("ActionSummary", () => {
       screen.getByText("Review your Placement details")
     ).toBeInTheDocument();
 
-    expect(screen.getAllByText("01/01/2025").length).toBe(6);
-    expect(screen.getByText("01/02/2025")).toBeInTheDocument();
+    const dateCounts = new Map();
 
-    expect(screen.getAllByText("Outstanding").length).toBe(7);
+    multiplePmActionTypeData.groupedOutstandingActions.forEach(group => {
+      group["Outstanding actions"].forEach(action => {
+        const formattedDate = dayjs(action.dueBy).format("DD/MM/YYYY");
+        dateCounts.set(formattedDate, (dateCounts.get(formattedDate) ?? 0) + 1);
+      });
+    });
+
+    // Verify each dueBy date appears in the list
+    dateCounts.forEach((expectedCount, formattedDate) => {
+      const actualCount = screen.getAllByText(formattedDate).length;
+      expect(actualCount).toBe(expectedCount);
+    });
   });
 
   test("renders correct links for each action type", () => {

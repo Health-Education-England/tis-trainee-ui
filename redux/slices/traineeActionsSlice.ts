@@ -31,11 +31,7 @@ export const fetchTraineeActionsData = createAsyncThunk(
       ...action,
       availableFrom: new Date(action.availableFrom),
       dueBy: new Date(action.dueBy),
-      completed: action.completed ? new Date(action.completed) : null,
-      tisReferenceInfo: {
-        ...action.tisReferenceInfo,
-        type: action.tisReferenceInfo.type
-      }
+      completed: action.completed ? new Date(action.completed) : null
     }));
     return finalData;
   }

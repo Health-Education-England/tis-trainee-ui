@@ -156,7 +156,6 @@ export function matchPlacementActionsToProgrammes(
 
   const placementActions = actions.filter(
     action =>
-      action.type === "REVIEW_DATA" &&
       action.tisReferenceInfo?.type === "PLACEMENT" &&
       action.tisReferenceInfo?.id
   );
@@ -170,7 +169,6 @@ export function matchPlacementActionsToProgrammes(
       return actionMap;
     }
 
-    // Find matching programme using Array.find
     const matchingProgramme = programmeMemberships.find(programme => {
       if (
         !programme?.tisId ||
@@ -195,7 +193,7 @@ export function matchPlacementActionsToProgrammes(
         const programmeName = programme.programmeName.trim().toLowerCase();
 
         return (
-          placementSpecialty === programmeName &&
+          programmeName.startsWith(placementSpecialty) &&
           placementStartDate >= firstDayOfStartMonth &&
           placementStartDate <= programmeEndDate
         );

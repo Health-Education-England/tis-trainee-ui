@@ -247,9 +247,17 @@ describe("matchPlacementActionsToProgrammes", () => {
     expect(result.size).toBe(0);
   });
 
-  it("should not match when action type is not REVIEW_DATA", () => {
+  it("should not match when tisReferenceInfo id is missing", () => {
+    const actionWithMissingId = {
+      ...mockActions[0],
+      id: "action-missing-id",
+      tisReferenceInfo: {
+        type: "PLACEMENT"
+      }
+    };
+
     const result = matchPlacementActionsToProgrammes(
-      [mockActions[3]],
+      [actionWithMissingId],
       mockProfileDataToTestPlacementActions
     );
 
@@ -337,5 +345,43 @@ describe("matchPlacementActionsToProgrammes", () => {
     );
 
     expect(result.size).toBe(0);
+  });
+
+  it("should match various programme name formats that start with the specialty", () => {
+    const specialty = "general practice";
+    const variations = [
+      "general practice (London)",
+      "general practice/ London",
+      "general practice - London",
+      "general practice London"
+    ];
+
+    variations.forEach(programmeName => {
+      // Create a profile with this programme name variation
+      const profileWithVariation = {
+        ...mockProfileDataToTestPlacementActions,
+        placements: [
+          {
+            ...mockProfileDataToTestPlacementActions.placements[0],
+            specialty: specialty
+          }
+        ],
+        programmeMemberships: [
+          {
+            ...mockProfileDataToTestPlacementActions.programmeMemberships[0],
+            programmeName: programmeName
+          }
+        ]
+      };
+
+      const result = matchPlacementActionsToProgrammes(
+        [mockActions[0]],
+        profileWithVariation
+      );
+      expect(result.has("action-1")).toBe(true);
+      expect(result.get("action-1")).toBe(
+        "e9401242-a0dd-4a1c-9551-7164e5c776d9"
+      );
+    });
   });
 });
