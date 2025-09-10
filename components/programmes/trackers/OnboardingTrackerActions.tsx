@@ -216,7 +216,13 @@ Readonly<TssTraineeActionProps>) {
           </div>
           {textLink && !actionIsInactive ? (
             <p>
-              <Link to={textLink}>{actionText}</Link>
+              {textLink.startsWith("http") ? (
+                <a href={textLink} target="_blank" rel="noopener noreferrer">
+                  {actionText}
+                </a>
+              ) : (
+                <Link to={textLink}>{actionText}</Link>
+              )}
             </p>
           ) : (
             <p>{actionText}</p>
