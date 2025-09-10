@@ -143,8 +143,8 @@ describe("Form R (Part B) - Submit a new form", () => {
   it("Should show the submitted form in the list", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
-    cy.contains("Submitted forms").should("exist");
-    cy.checkElement("submittedForm").first().click();
+    cy.contains("Previous applications").should("exist");
+    cy.get('[data-cy="formr-row-0"]').click();
     cy.get('[data-cy="submissionDateTop"]').should(
       "include.text",
       `Form submitted on: ${today.format("DD/MM/YYYY")}`
@@ -157,6 +157,6 @@ describe("Form R (Part B) - Submit a new form", () => {
     //check linkage
     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
     cy.get('[data-cy="backLink"]').click();
-    cy.contains("Submitted forms").should("exist");
+    cy.contains("Previous applications").should("exist");
   });
 });

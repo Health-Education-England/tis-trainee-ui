@@ -83,9 +83,9 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     // final submit via linker modal
     cy.get('[data-cy="form-linker-submit-btn"]').click();
 
-    cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="Submit new form"]').should("exist");
-    cy.get("[data-cy=submittedForm]").first().click();
+    cy.contains("Previous applications").should("exist"); 
+    cy.get('[data-cy="formr-row-0"]').click();
     cy.get('[data-cy="email-value"]').should(
       "have.text",
       "traineeui.tester@hee.nhs.uk"
@@ -96,7 +96,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
     // Navigate back to the list
     cy.get('[data-cy="backLink"]').should("exist").click();
-    cy.contains("Submitted forms").should("exist");
+    cy.contains("Previous applications").should("exist");
   });
 });
 
