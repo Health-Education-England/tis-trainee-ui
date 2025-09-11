@@ -5,16 +5,18 @@ import { TraineeAction } from "../../models/TraineeAction";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 
-interface IAction {
+export interface IAction {
   traineeActionsData: TraineeAction[];
   status: string;
   error: any;
+  refreshNeeded: boolean;
 }
 
 export const initialState: IAction = {
   traineeActionsData: [],
   status: "idle",
-  error: ""
+  error: "",
+  refreshNeeded: false
 };
 
 export const fetchTraineeActionsData = createAsyncThunk(
@@ -23,7 +25,15 @@ export const fetchTraineeActionsData = createAsyncThunk(
     const actionsService = new TraineeActionsService();
     const response: AxiosResponse<TraineeAction[]> =
       await actionsService.getIncompleteTraineeActions();
-    return response.data;
+    const rawData = response.data;
+
+    const finalData = rawData.map(action => ({
+      ...action,
+      availableFrom: new Date(action.availableFrom),
+      dueBy: new Date(action.dueBy),
+      completed: action.completed ? new Date(action.completed) : null
+    }));
+    return finalData;
   }
 );
 
@@ -48,6 +58,12 @@ const traineeActionsSlice = createSlice({
       return {
         ...state,
         traineeActionsData: action.payload
+      };
+    },
+    setActionsRefreshNeeded(state, action: PayloadAction<boolean>) {
+      return {
+        ...state,
+        refreshNeeded: action.payload
       };
     }
   },
@@ -90,8 +106,11 @@ const traineeActionsSlice = createSlice({
 
 export default traineeActionsSlice.reducer;
 
-export const { updatedActionsData, resetTraineeAction } =
-  traineeActionsSlice.actions;
+export const {
+  updatedActionsData,
+  resetTraineeAction,
+  setActionsRefreshNeeded
+} = traineeActionsSlice.actions;
 
 export const selectTraineeActions = (state: { traineeActions: IAction }) =>
   state.traineeActions.traineeActionsData;

@@ -33,6 +33,7 @@ import {
   getPreferredMfa
 } from "../../redux/slices/userSlice";
 import history from "../navigation/history";
+import { useTraineeActionsRefresh } from "../../utilities/hooks/useTraineeActionsRefresh";
 
 const appVersion = packageJson.version;
 
@@ -42,6 +43,8 @@ export const Main = () => {
   const isLtftPilot = useIsLtftPilot();
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
+  // Refresh trainee actions data only if user completes an action
+  useTraineeActionsRefresh();
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
 
   // Fetch user auth data if not already dispatched

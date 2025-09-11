@@ -5,9 +5,8 @@ import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
 import { IFormR } from "../models/IFormR";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-import { LtftSummaryObj } from "../redux/slices/ltftSummaryListSlice";
-import { LtftDto } from "../utilities/ltftUtilities";
 import { ReasonMsgObj } from "../components/common/ActionModal";
+import { LtftDto, LtftSummaryObj } from "../models/LtftTypes";
 export class FormsService extends ApiService {
   constructor() {
     super("/api/forms");
@@ -38,7 +37,7 @@ export class FormsService extends ApiService {
       "/ltft/" + id,
       requestConfig
     );
-}
+  }
 
   async saveTraineeFormRPartA(
     formData: FormRPartA

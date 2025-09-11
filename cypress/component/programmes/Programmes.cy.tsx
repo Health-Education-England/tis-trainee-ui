@@ -20,6 +20,7 @@ import {
 import history from "../../../components/navigation/history";
 import React from "react";
 import {
+  MFAType,
   updatedPreferredMfa,
   updatedUserFeatures
 } from "../../../redux/slices/userSlice";
@@ -35,7 +36,7 @@ import { FileUtilities } from "../../../utilities/FileUtilities";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 
 const mountProgrammesWithMockData = (
-  prefMfa: string = "NOMFA",
+  prefMfa: MFAType = "NOMFA",
   profileStatus: string = "idle",
   programmeMemberships: ProgrammeMembership[] = mockProgrammeMemberships,
   actionsData: any[] = [],
@@ -49,6 +50,7 @@ const mountProgrammesWithMockData = (
       updatedTraineeProfileData({
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
+        qualifications: [],
         programmeMemberships: programmeMemberships,
         placements: []
       })
@@ -93,7 +95,7 @@ describe("Programmes with MFA set up", () => {
       .should("contain.text", "EOE/ABC-123/1111111/C");
     cy.get("[data-cy=responsibleOfficer0Val]")
       .should("exist")
-      .should("contain.text", "Hugh Rangel");
+      .should("contain.text", "Not currently available");
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");

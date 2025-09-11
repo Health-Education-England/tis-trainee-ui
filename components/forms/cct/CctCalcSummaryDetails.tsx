@@ -7,7 +7,6 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
-import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
 import style from "../../Common.module.scss";
 import dayjs from "dayjs";
 import { Button as BtnAmplify } from "@aws-amplify/ui-react";
@@ -21,6 +20,7 @@ import { recalculateCctDate } from "../../../utilities/ltftUtilities";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../TextInputField";
+import { LtftFormStatus } from "../../../models/LtftTypes";
 
 export function CctCalcSummaryDetails({
   viewedCalc,

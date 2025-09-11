@@ -1,4 +1,4 @@
-import { LtftObj } from "../../../redux/slices/ltftSlice";
+import { LtftObj } from "../../../models/LtftTypes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";

@@ -39,6 +39,7 @@ const mountPlacementsWithMockData = (
       updatedTraineeProfileData({
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
+        qualifications: [],
         programmeMemberships: [],
         placements: placements
       })

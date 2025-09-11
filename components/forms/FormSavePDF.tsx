@@ -27,7 +27,7 @@ const FormSavePDF = ({ history, path, pmId }: IFormSave) => {
             data-cy="backLink"
             onClick={() => FormRUtilities.historyPush(history, path)}
           >
-            Back to forms list
+            Back
           </BackLink>
         </Col>
       </Row>

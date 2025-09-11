@@ -9,10 +9,7 @@ import {
   createColumnHelper,
   HeaderContext
 } from "@tanstack/react-table";
-import {
-  LtftSummaryObj,
-  updatedLtftFormsRefreshNeeded
-} from "../../../redux/slices/ltftSummaryListSlice";
+import { updatedLtftFormsRefreshNeeded } from "../../../redux/slices/ltftSummaryListSlice";
 import store from "../../../redux/store/store";
 import { ReactNode, useMemo, useState } from "react";
 import { Button, CheckboxField } from "@aws-amplify/ui-react";
@@ -20,7 +17,6 @@ import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import dayjs from "dayjs";
 import Loading from "react-loading";
 import history from "../../navigation/history";
-import { LtftFormStatus } from "../../../redux/slices/ltftSlice";
 import {
   checkPush,
   loadTheSavedForm
@@ -38,6 +34,7 @@ import {
 } from "../../../utilities/ltftUtilities";
 import { Label } from "nhsuk-react-components";
 import InfoTooltip from "../../common/InfoTooltip";
+import { LtftFormStatus, LtftSummaryObj } from "../../../models/LtftTypes";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
@@ -204,87 +201,6 @@ const LtftSummary = ({
     );
   };
 
-  const renderOperationColumnValue = (props: {
-    row: { original: LtftSummaryObj };
-  }) => {
-    const handleBtnClick =
-      (label: ActionType) => (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation();
-        setAction(label, props.row.original.id, "ltft");
-        setShowModal(true);
-      };
-    const renderActionButton = (
-      label: Extract<ActionType, "Unsubmit" | "Withdraw" | "Delete">,
-      additionalStyle = {}
-    ) => (
-      <Button
-        type="button"
-        variation={
-          label === "Delete" || label === "Withdraw" ? "destructive" : "warning"
-        }
-        size="small"
-        onClick={handleBtnClick(label)}
-        data-cy={`${label.toLowerCase()}LtftBtnLink`}
-        style={{ minWidth: "6em", ...additionalStyle }}
-      >
-        {label}
-      </Button>
-    );
-
-    return (
-      <>
-        {props.row.original.status === "SUBMITTED" ? (
-          <>
-            {renderActionButton("Unsubmit", {
-              marginBottom: "0.5em"
-            })}
-            {renderActionButton("Withdraw")}
-          </>
-        ) : null}
-        {props.row.original.status === "DRAFT" ? (
-          <>{renderActionButton("Delete")}</>
-        ) : null}
-        {props.row.original.status === "UNSUBMITTED" ? (
-          <>{renderActionButton("Withdraw")}</>
-        ) : null}
-      </>
-    );
-  };
-
-  const columnsDefault = [
-    columnHelper.accessor("name", {
-      id: "name",
-      header: renderNameHeader,
-      cell: renderValue
-    }),
-    columnHelper.accessor("lastModified", {
-      id: "lastModified",
-      header: renderLastModifiedHeader,
-      cell: renderDayValue,
-      sortingFn: "datetime",
-      sortDescFirst: true
-    }),
-    columnHelper.accessor("formRef", {
-      id: "formRef",
-      header: renderFormRefHeader,
-      cell: renderValue
-    }),
-    columnHelper.display({
-      id: "status",
-      header: renderStatusHeader,
-      cell: renderStatusColumnValue
-    }),
-    columnHelper.display({
-      id: "reason",
-      header: renderReasonHeader,
-      cell: renderReasonColumnValue
-    }),
-    columnHelper.display({
-      id: "operations",
-      cell: renderOperationColumnValue
-    })
-  ];
-
   const memoData = useMemo(() => {
     return filteredLtftSummaries;
   }, [filteredLtftSummaries]);
@@ -293,7 +209,90 @@ const LtftSummary = ({
     { id: "lastModified", desc: true }
   ]);
 
-  const columns = useMemo(() => columnsDefault, []);
+  const columns = useMemo(() => {
+    const renderOperationColumnValue = (props: {
+      row: { original: LtftSummaryObj };
+    }) => {
+      const handleBtnClick =
+        (label: ActionType) => (e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation();
+          setAction(label, props.row.original.id, "ltft");
+          setShowModal(true);
+        };
+      const renderActionButton = (
+        label: Extract<ActionType, "Unsubmit" | "Withdraw" | "Delete">,
+        additionalStyle = {}
+      ) => (
+        <Button
+          type="button"
+          variation={
+            label === "Delete" || label === "Withdraw"
+              ? "destructive"
+              : "warning"
+          }
+          size="small"
+          onClick={handleBtnClick(label)}
+          data-cy={`${label.toLowerCase()}LtftBtnLink`}
+          style={{ minWidth: "6em", ...additionalStyle }}
+        >
+          {label}
+        </Button>
+      );
+
+      return (
+        <>
+          {props.row.original.status === "SUBMITTED" ? (
+            <>
+              {renderActionButton("Unsubmit", {
+                marginBottom: "0.5em"
+              })}
+              {renderActionButton("Withdraw")}
+            </>
+          ) : null}
+          {props.row.original.status === "DRAFT" ? (
+            <>{renderActionButton("Delete")}</>
+          ) : null}
+          {props.row.original.status === "UNSUBMITTED" ? (
+            <>{renderActionButton("Withdraw")}</>
+          ) : null}
+        </>
+      );
+    };
+
+    return [
+      columnHelper.accessor("name", {
+        id: "name",
+        header: renderNameHeader,
+        cell: renderValue
+      }),
+      columnHelper.accessor("lastModified", {
+        id: "lastModified",
+        header: renderLastModifiedHeader,
+        cell: renderDayValue,
+        sortingFn: "datetime",
+        sortDescFirst: true
+      }),
+      columnHelper.accessor("formRef", {
+        id: "formRef",
+        header: renderFormRefHeader,
+        cell: renderValue
+      }),
+      columnHelper.display({
+        id: "status",
+        header: renderStatusHeader,
+        cell: renderStatusColumnValue
+      }),
+      columnHelper.display({
+        id: "reason",
+        header: renderReasonHeader,
+        cell: renderReasonColumnValue
+      }),
+      columnHelper.display({
+        id: "operations",
+        cell: renderOperationColumnValue
+      })
+    ];
+  }, [columnHelper, setAction]);
 
   const table = useReactTable({
     data: memoData,

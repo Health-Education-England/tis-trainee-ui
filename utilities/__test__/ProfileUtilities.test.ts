@@ -1,4 +1,7 @@
-import { ProfileUtilities } from "../ProfileUtilities";
+import {
+  ProfileUtilities,
+  matchPlacementActionsToProgrammes
+} from "../ProfileUtilities";
 import {
   isCurrentDateBoxed,
   isFutureDateBoxed,
@@ -17,7 +20,8 @@ import {
   mockProgrammeMembershipNoMedicalCurricula,
   mockProgrammeMembershipDuplicateCurriculaStart,
   mockPlacements,
-  mockPlacementsForGrouping
+  mockPlacementsForGrouping,
+  mockProfileDataToTestPlacementActions
 } from "../../mock-data/trainee-profile";
 import { NEW_WORK } from "../Constants";
 import {
@@ -27,6 +31,9 @@ import {
   trimmedAndSortedWorkArrWithTwoFutureOnSameDay
 } from "../../mock-data/work-placements-list";
 import { Work } from "../../models/FormRPartB";
+import { ProgrammeMembership } from "../../models/ProgrammeMembership";
+import { Placement } from "../../models/Placement";
+import { mockActionsTestData } from "../../mock-data/mock-trainee-actions-data";
 
 describe("ProfileUtilities", () => {
   it("should sort work in desc order by end date", () => {
@@ -146,9 +153,7 @@ describe("Profile utilities - groupPlacementsByDate", () => {
 
   it("should group programme memberships correctly", () => {
     expect(
-      ProfileUtilities.groupDateBoxedByDate(
-        mockProgrammeMembershipsForGrouping
-      )
+      ProfileUtilities.groupDateBoxedByDate(mockProgrammeMembershipsForGrouping)
     ).toEqual({
       future: [mockProgrammeMembershipsForGrouping[3]],
       upcoming: [mockProgrammeMembershipsForGrouping[2]],
@@ -206,6 +211,177 @@ describe("Profile utilities - groupPlacementsByDate", () => {
       upcoming: [mockPlacementsForGrouping[2]],
       current: [mockPlacementsForGrouping[1]],
       past: [mockPlacementsForGrouping[0]]
+    });
+  });
+});
+
+describe("matchPlacementActionsToProgrammes", () => {
+  const mockActions = mockActionsTestData;
+
+  it("should match a placement action to a programme when valid", () => {
+    const result = matchPlacementActionsToProgrammes(
+      mockActions,
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(result.size).toBe(1);
+    expect(result.has("action-1")).toBe(true);
+    expect(result.get("action-1")).toBe("e9401242-a0dd-4a1c-9551-7164e5c776d9");
+  });
+
+  it("should not match when placement ID doesn't exist in profile", () => {
+    const result = matchPlacementActionsToProgrammes(
+      [mockActions[1]],
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(result.size).toBe(0);
+  });
+
+  it("should not match when reference type is not PLACEMENT", () => {
+    const result = matchPlacementActionsToProgrammes(
+      [mockActions[2]],
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(result.size).toBe(0);
+  });
+
+  it("should not match when tisReferenceInfo id is missing", () => {
+    const actionWithMissingId = {
+      ...mockActions[0],
+      id: "action-missing-id",
+      tisReferenceInfo: {
+        type: "PLACEMENT"
+      }
+    };
+
+    const result = matchPlacementActionsToProgrammes(
+      [actionWithMissingId],
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(result.size).toBe(0);
+  });
+
+  it("should handle empty arrays gracefully", () => {
+    const emptyResult = matchPlacementActionsToProgrammes(
+      [],
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(emptyResult.size).toBe(0);
+  });
+
+  it("should handle empty profile data gracefully", () => {
+    const emptyProfileResult = matchPlacementActionsToProgrammes(mockActions, {
+      traineeTisId: "test",
+      personalDetails: mockProfileDataToTestPlacementActions.personalDetails,
+      programmeMemberships: [],
+      placements: [],
+      qualifications: []
+    });
+
+    expect(emptyProfileResult.size).toBe(0);
+  });
+
+  it("should match multiple actions to their respective programmes", () => {
+    // Create two actions referencing the same placement
+    const multipleActions = [
+      mockActions[0],
+      {
+        ...mockActions[0],
+        id: "action-5"
+      }
+    ];
+
+    const result = matchPlacementActionsToProgrammes(
+      multipleActions,
+      mockProfileDataToTestPlacementActions
+    );
+
+    expect(result.size).toBe(2);
+    expect(result.has("action-1")).toBe(true);
+    expect(result.has("action-5")).toBe(true);
+    expect(result.get("action-1")).toBe("e9401242-a0dd-4a1c-9551-7164e5c776d9");
+    expect(result.get("action-5")).toBe("e9401242-a0dd-4a1c-9551-7164e5c776d9");
+  });
+
+  it("should handle malformed placement data", () => {
+    // Create a profile with malformed placement (missing specialty)
+    const malformedProfile = {
+      ...mockProfileDataToTestPlacementActions,
+      placements: [
+        {
+          ...mockProfileDataToTestPlacementActions.placements[0],
+          specialty: null
+        } as unknown as Placement
+      ]
+    };
+
+    const result = matchPlacementActionsToProgrammes(
+      [mockActions[0]],
+      malformedProfile
+    );
+
+    expect(result.size).toBe(0);
+  });
+
+  it("should handle malformed programme data", () => {
+    // Create a profile with malformed programme (missing name)
+    const malformedProfile = {
+      ...mockProfileDataToTestPlacementActions,
+      programmeMemberships: [
+        {
+          ...mockProfileDataToTestPlacementActions.programmeMemberships[0],
+          programmeName: null // Missing programme name
+        } as unknown as ProgrammeMembership
+      ]
+    };
+
+    const result = matchPlacementActionsToProgrammes(
+      [mockActions[0]],
+      malformedProfile
+    );
+
+    expect(result.size).toBe(0);
+  });
+
+  it("should match various programme name formats that start with the specialty", () => {
+    const specialty = "general practice";
+    const variations = [
+      "general practice (London)",
+      "general practice/ London",
+      "general practice - London",
+      "general practice London"
+    ];
+
+    variations.forEach(programmeName => {
+      // Create a profile with this programme name variation
+      const profileWithVariation = {
+        ...mockProfileDataToTestPlacementActions,
+        placements: [
+          {
+            ...mockProfileDataToTestPlacementActions.placements[0],
+            specialty: specialty
+          }
+        ],
+        programmeMemberships: [
+          {
+            ...mockProfileDataToTestPlacementActions.programmeMemberships[0],
+            programmeName: programmeName
+          }
+        ]
+      };
+
+      const result = matchPlacementActionsToProgrammes(
+        [mockActions[0]],
+        profileWithVariation
+      );
+      expect(result.has("action-1")).toBe(true);
+      expect(result.get("action-1")).toBe(
+        "e9401242-a0dd-4a1c-9551-7164e5c776d9"
+      );
     });
   });
 });

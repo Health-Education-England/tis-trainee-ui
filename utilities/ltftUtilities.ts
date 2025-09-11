@@ -1,10 +1,8 @@
 import { ReasonMsgObj } from "../components/common/ActionModal";
+import { LtftDto, LtftObj } from "../models/LtftTypes";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { CctCalculation, CctChangeType } from "../redux/slices/cctSlice";
 import {
-  LtftCctChange,
-  LtftObj,
-  StatusInfo,
   unsubmitLtftForm,
   updatedLtft,
   withdrawLtftForm
@@ -14,7 +12,6 @@ import { calcLtftChange } from "./CctUtilities";
 import { ACTION_REASONS } from "./Constants";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
-import { ProfileSType } from "./ProfileUtilities";
 
 export function populateLtftDraft(
   cctSnapshot: CctCalculation,
@@ -84,60 +81,6 @@ export function populateLtftDraft(
   };
   return draftLtftForm;
 }
-
-export type LtftDto = {
-  traineeTisId: string;
-  id: string | null;
-  formRef: string | null;
-  name: string | null;
-  change: LtftCctChange;
-  declarations: {
-    discussedWithTpd: boolean | null;
-    informationIsCorrect: boolean | null;
-    notGuaranteed: boolean | null;
-  };
-  discussions: {
-    tpdName: string;
-    tpdEmail: string;
-    other: {
-      name: string;
-      email: string;
-      role: string;
-    }[];
-  };
-  personalDetails: {
-    title?: ProfileSType;
-    forenames: ProfileSType;
-    surname: ProfileSType;
-    telephoneNumber?: string | null;
-    mobileNumber?: string | null;
-    email: ProfileSType;
-    gmcNumber?: string | null;
-    gdcNumber?: string | null;
-    publicHealthNumber?: string | null;
-    skilledWorkerVisaHolder: boolean | null;
-  };
-  programmeMembership: {
-    id: string;
-    name: string;
-    startDate: Date | string;
-    endDate?: Date | string;
-    wte: number;
-    designatedBodyCode?: string;
-    managingDeanery?: string;
-  };
-  reasons: {
-    selected: string[];
-    otherDetail?: string;
-    supportingInformation: string | null;
-  };
-  status: {
-    current: StatusInfo;
-    history: StatusInfo[];
-  };
-  created: Date | string;
-  lastModified: Date | string;
-};
 
 export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
   return {

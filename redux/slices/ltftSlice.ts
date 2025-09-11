@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CctCalculation, CctType } from "./cctSlice";
-import { ProfileSType } from "../../utilities/ProfileUtilities";
+import { CctCalculation } from "./cctSlice";
 import {
   mapLtftDtoToObj,
   mapLtftObjToDto
@@ -11,108 +10,7 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { ReasonMsgObj } from "../../components/common/ActionModal";
-
-export type LtftFormStatus =
-  | "DRAFT"
-  | "SUBMITTED"
-  | "UNSUBMITTED"
-  | "WITHDRAWN"
-  | "APPROVED"
-  | "REJECTED";
-
-export type LtftCctChange = {
-  calculationId: string;
-  cctDate: Date | string;
-  type: CctType;
-  startDate: Date | string;
-  wte: number;
-  changeId: string;
-};
-
-type LtftDeclarations = {
-  discussedWithTpd: boolean | null;
-  informationIsCorrect: boolean | null;
-  notGuaranteed: boolean | null;
-};
-
-type LtftDiscussion = {
-  name: string;
-  email: string;
-  role: string;
-};
-
-type LtftStatusDetails = {
-  reason: string;
-  message: string;
-};
-
-type LtftPd = {
-  title?: ProfileSType;
-  surname: ProfileSType;
-  forenames: ProfileSType;
-  telephoneNumber: ProfileSType;
-  mobileNumber: ProfileSType;
-  email: ProfileSType;
-  gmcNumber: ProfileSType;
-  gdcNumber: ProfileSType;
-  publicHealthNumber: ProfileSType;
-  skilledWorkerVisaHolder: boolean | null;
-};
-
-type LtftPm = {
-  id: string;
-  name: string;
-  startDate: Date | string;
-  endDate: Date | string;
-  wte: number;
-  designatedBodyCode: string;
-  managingDeanery: string;
-};
-
-export type StatusLtft = {
-  current: StatusInfo;
-  history: StatusInfo[];
-};
-
-export type StatusInfo = {
-  state: LtftFormStatus;
-  detail: LtftStatusDetails;
-  modifiedBy: LtftDiscussion;
-  timestamp: string;
-  revision: number;
-};
-
-export type LtftObj = {
-  traineeTisId?: string;
-  id?: string;
-  formRef?: string;
-  name?: string;
-  change: LtftCctChange;
-  declarations: LtftDeclarations;
-  tpdName: string;
-  tpdEmail: string;
-  otherDiscussions: LtftDiscussion[] | null;
-  personalDetails: LtftPd;
-  programmeMembership: LtftPm;
-  reasonsSelected: string[] | null;
-  reasonsOtherDetail: string | null;
-  supportingInformation: string | null;
-  status: StatusLtft;
-  created?: Date | string;
-  lastModified?: Date | string;
-};
-
-export type LtftState = {
-  formData: LtftObj;
-  LtftCctSnapshot: CctCalculation;
-  status: string;
-  error: any;
-  canEdit: boolean;
-  editPageNumber: number;
-  saveStatus: SaveStatusProps;
-  newFormId: string | undefined;
-  saveLatestTimeStamp: string;
-};
+import { LtftObj, LtftState } from "../../models/LtftTypes";
 
 export const initialState: LtftState = {
   formData: {} as LtftObj,
