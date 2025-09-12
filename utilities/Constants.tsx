@@ -396,7 +396,8 @@ export const onboardingTrackerActionText = {
   ROYAL_SOCIETY_REGISTRATION: {
     actionText: royalSocietyText,
     faIcon: faUserFriends,
-    textLink: null
+    textLink:
+      "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
   },
   REVIEW_PROGRAMME: {
     actionText: reviewProgrammeText,
@@ -624,5 +625,6 @@ export const ACTION_REASONS = {
   ],
   WITHDRAW: [
     { value: "changeOfCircs", label: "Change of circumstances" },
-    { value: "other", label: "other reason" }]
+    { value: "other", label: "other reason" }
+  ]
 };

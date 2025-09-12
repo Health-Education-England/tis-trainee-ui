@@ -26,6 +26,13 @@ describe("OnboardingTracker", () => {
     cy.get(
       ":nth-child(1) > .tracker-section-header > .tracker-section-header_name"
     ).contains("Welcome (16 weeks)");
+    cy.get(":nth-child(1) > :nth-child(4) > .action-card > p > a")
+      .contains("Register with Royal Society/ Faculty")
+      .should(
+        "have.attr",
+        "href",
+        "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
+      );
     cy.get(
       ":nth-child(1) > :nth-child(2) > .action-card > .action-card-contents > .svg-inline--fa > path"
     ).click({ force: true });
