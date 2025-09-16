@@ -310,6 +310,7 @@ export function setFormRDataForSubmit(
     traineeTisId: formData.traineeTisId as string,
     isArcp: formData.isArcp as boolean,
     programmeMembershipId: formData.programmeMembershipId as string,
+    programmeName: formData.programmeName as string,
     localOfficeName: formData.localOfficeName as string
   };
 

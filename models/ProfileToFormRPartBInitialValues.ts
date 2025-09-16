@@ -69,6 +69,7 @@ export function ProfileToFormRPartBInitialValues(
     isDeclarationAccepted: false,
     isConsentAccepted: false,
     isArcp: linkedFormRData?.isArcp,
-    programmeMembershipId: linkedFormRData?.programmeMembershipId
+    programmeMembershipId: linkedFormRData?.programmeMembershipId,
+    programmeName: linkedFormRData?.linkedProgramme?.programmeName
   };
 }
