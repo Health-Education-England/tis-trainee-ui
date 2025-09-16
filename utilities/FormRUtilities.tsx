@@ -152,7 +152,6 @@ export function getLinkedProgrammeDetails(
 type ProcessedFormData = {
   isArcp: boolean | null;
   programmeMembershipId: string | null;
-  programmeName?: string | null;
   localOfficeName?: string;
   linkedProgramme?: ProgrammeMembership;
 };
@@ -173,12 +172,9 @@ export function processLinkedFormData(
     programmeMembershipId
   );
 
-  const programmeName = linkedProgramme?.programmeName;
-
   return {
     isArcp,
     programmeMembershipId,
-    programmeName,
     localOfficeName,
     linkedProgramme
   };

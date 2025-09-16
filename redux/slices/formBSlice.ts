@@ -99,7 +99,6 @@ export const loadSavedFormB = createAsyncThunk(
         ...fetchedForm,
         isArcp: linkedFormRData.isArcp,
         programmeMembershipId: linkedFormRData.programmeMembershipId,
-        programmeName: linkedFormRData?.linkedProgramme?.programmeName,
         localOfficeName: linkedFormRData.localOfficeName,
         programmeSpecialty: linkedFormRData.linkedProgramme?.programmeName
       };
