@@ -36,6 +36,7 @@ export interface FormRPartA extends IFormR {
   otherImmigrationStatus: string;
   isArcp?: boolean | null;
   programmeMembershipId?: string | null;
+  programmeName?: string | null;
 }
 
 export const initialFormRABeforeProfileData: FormRPartA = {

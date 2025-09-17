@@ -6,4 +6,5 @@ export interface IFormR {
   lastModifiedDate: DateType;
   lifecycleState: LifeCycleState;
   programmeMembershipId?: string | null;
+  programmeName?: string | null;
 }

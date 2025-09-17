@@ -30,6 +30,7 @@ export const formANew = {
   otherImmigrationStatus: "",
   postCode: "SW1A1AA",
   programmeMembershipId: "a6de88b8-de41-48dd-9492-a518f5001176",
+  programmeName: "Cardiology",
   programmeMembershipType: "Substantive",
   programmeSpecialty: "Geriatric Medicine",
   qualification: "Degree",

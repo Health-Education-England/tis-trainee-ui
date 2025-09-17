@@ -106,7 +106,8 @@ export const FormView = ({
       isArcp,
       programmeMembershipId,
       localOfficeName,
-      programmeSpecialty: processedFormData.linkedProgramme?.programmeName
+      programmeSpecialty: processedFormData.linkedProgramme?.programmeName,
+      programmeName: processedFormData.linkedProgramme?.programmeName
     } as FormRPartA | FormRPartB;
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);

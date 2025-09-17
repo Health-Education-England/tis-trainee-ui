@@ -32,7 +32,7 @@ import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
 import { SaveAndExitButton } from "../SaveAndExitButton";
 
-type FieldType =
+export type FieldType =
   | "text"
   | "textArea"
   | "radio"

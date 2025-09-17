@@ -43,6 +43,7 @@ export interface FormRPartB extends IFormR {
   isConsentAccepted?: boolean;
   isArcp?: boolean | null;
   programmeMembershipId?: string | null;
+  programmeName?: string | null;
 }
 
 export interface Declaration {

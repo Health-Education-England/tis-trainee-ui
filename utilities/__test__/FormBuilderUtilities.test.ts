@@ -87,6 +87,18 @@ describe("Set formData for submit", () => {
   });
 });
 
+describe("Set formData programmeName for submit", () => {
+  it("should set programme name before submit", () => {
+    const result = setFormRDataForSubmit(
+      formAJson as Form,
+      formANew as FormRPartA
+    );
+    expect((result as FormRPartA).programmeName).toEqual(
+      formANew.programmeName
+    );
+  });
+});
+
 describe("getDraftFormId", () => {
   it("should return formData.id if it exists for formA", () => {
     const formData: FormRPartA = {
