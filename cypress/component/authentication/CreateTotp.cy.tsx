@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks/hooks";

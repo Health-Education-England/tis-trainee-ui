@@ -1,4 +1,4 @@
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import Createlist from "../../../components/forms/CreateList";
