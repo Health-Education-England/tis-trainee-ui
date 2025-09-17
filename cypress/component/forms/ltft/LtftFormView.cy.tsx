@@ -1,4 +1,4 @@
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
@@ -225,7 +225,7 @@ describe("LTFT Form View - unsubmitted", () => {
     cy.get('[data-cy="BtnSubmit"]').should("exist").contains("Re-submit");
     cy.get('[data-cy="BtnSaveDraft"]').should("exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
-  });  
+  });
 });
 
 describe("LTFT Form View - rejected", () => {
@@ -246,7 +246,7 @@ describe("LTFT Form View - rejected", () => {
     cy.get('[data-cy="ltftMessage"]').contains("Rejected message");
     cy.get('[data-cy="ltftRef"]').contains("ltft_5_001");
     cy.get('[data-cy="supportingInformation-value"]').contains("Not provided");
-  });  
+  });
 });
 
 describe("Disable Ltft PDF Download Button (no form ID)", () => {
@@ -254,11 +254,8 @@ describe("Disable Ltft PDF Download Button (no form ID)", () => {
     mountLtftViewWithMockData(mockLtftDraft0);
   });
   it("should disable 'save Pdf' button for LTFT without form ID", () => {
-    cy.get('[data-cy="savePdfBtn"]')
-      .should("exist")
-      .should("be.disabled");
-    cy.get('[data-cy="pdfButtonInfo-icon"]')
-      .should("be.visible");
+    cy.get('[data-cy="savePdfBtn"]').should("exist").should("be.disabled");
+    cy.get('[data-cy="pdfButtonInfo-icon"]').should("be.visible");
   });
 });
 

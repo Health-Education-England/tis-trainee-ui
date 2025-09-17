@@ -1,4 +1,4 @@
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import SubmittedFormsList from "../../../components/forms/SubmittedFormsList";
@@ -50,9 +50,12 @@ describe("SubmittedFormsList", () => {
       "contain.text",
       "To save a PDF copy of your submitted form, please click on a form below and then click the Save a copy as a PDF button at the top of that page."
     );
-    cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");    
+    cy.get("[data-cy=noSubmittedFormsMsg]").should("not.exist");
     cy.get("[data-cy=0_id]").should("contain.text", "5e972ec9b9b5781b94eb1270");
-    cy.get("[data-cy=0_programmeMembershipId]").should("contain.text", "Linked programme not set.");
+    cy.get("[data-cy=0_programmeMembershipId]").should(
+      "contain.text",
+      "Linked programme not set."
+    );
     cy.get("[data-cy=0_submissionDate]").should("contain.text", "02/07/2022");
     cy.get("[data-cy=0_status]").should("contain.text", "SUBMITTED");
     cy.get("[data-cy=3_submissionDate]").should("contain.text", "22/04/2020");

@@ -1,4 +1,4 @@
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { Router } from "react-router-dom";
 import TSSFooter from "../../../components/navigation/TSSFooter";
 import history from "../../../components/navigation/history";

@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import store from "../../../../redux/store/store";
 import { LtftHome } from "../../../../components/forms/ltft/LtftHome";
 import {

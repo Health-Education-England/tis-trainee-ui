@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
