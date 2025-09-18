@@ -1,6 +1,6 @@
 import React from "react";
 import MultiChoiceInputField from "../../../components/forms/MultiChoiceInputField";
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { KeyValue } from "../../../models/KeyValue";
 import { Formik, Form } from "formik";
 

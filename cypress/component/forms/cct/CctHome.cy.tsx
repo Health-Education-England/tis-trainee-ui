@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { CctHome } from "../../../../components/forms/cct/CctHome";
 import store from "../../../../redux/store/store";
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 import dayjs from "dayjs";

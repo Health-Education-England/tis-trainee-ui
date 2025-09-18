@@ -1,4 +1,4 @@
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import React from "react";
 import { COJ_EPOCH } from "../../../utilities/Constants";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../../models/ProgrammeMembership";

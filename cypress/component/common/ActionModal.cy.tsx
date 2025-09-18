@@ -1,4 +1,4 @@
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { ActionModal } from "../../../components/common/ActionModal";
 import { sureText } from "../../../utilities/Constants";
 

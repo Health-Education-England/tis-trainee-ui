@@ -1,4 +1,4 @@
-import { mount } from "cypress/react";
+import { mount } from "cypress/react18";
 import { Router } from "react-router-dom";
 import history from "../../../components/navigation/history";
 import { Authenticator } from "@aws-amplify/ui-react";
