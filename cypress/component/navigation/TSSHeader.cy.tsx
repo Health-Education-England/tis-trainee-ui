@@ -1,4 +1,4 @@
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { Router } from "react-router-dom";
 import history from "../../../components/navigation/history";
 import { Provider } from "react-redux";
