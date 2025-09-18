@@ -160,7 +160,7 @@ describe("LtftSummary Component", () => {
         .last()
         .should("include.text", "ltft_-1_002");
       cy.contains("Programme hours reduction 1").should("exist");
-    });    
+    });
 
     it("should show reason and message on REJECTED application", () => {
       cy.get('[data-cy="5_reason"]')
@@ -169,10 +169,7 @@ describe("LtftSummary Component", () => {
         .click();
       cy.get(".tooltipContent")
         .should("be.visible")
-        .and(
-          "contain.text",
-          "Rejected Message"
-        );
+        .and("contain.text", "Rejected Message");
     });
   });
 });
