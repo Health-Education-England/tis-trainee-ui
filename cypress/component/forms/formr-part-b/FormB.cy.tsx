@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference path="../../../../cypress/support/index.d.ts" />
 
-import { mount } from "cypress/react18";
+import { mount } from "cypress/react";
 import { MemoryRouter } from "react-router-dom";
 import FormB from "../../../../components/forms/form-builder/form-r/part-b/FormRPartB";
 import { Provider } from "react-redux";
