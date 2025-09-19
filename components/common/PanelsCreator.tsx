@@ -101,7 +101,7 @@ export function PanelsCreator({
                               size="s"
                               data-cy="NewProgrammeOnboardingText"
                             >
-                              {`'New Programme' onboarding journey`}
+                              Onboarding Tracker
                             </Label>
                           </SummaryList.Key>
                           <SummaryList.Value>
@@ -304,8 +304,6 @@ function displayTheCorrectListItem(
     case "trainingNumber":
       return (
         <TrainingNumber
-          conditionsOfJoining={panel["conditionsOfJoining"]}
-          startDate={panel["startDate"]}
           trainingNumber={panel[panelProp]}
           gmcNumber={
             store.getState().traineeProfile.traineeProfileData.personalDetails
@@ -315,6 +313,7 @@ function displayTheCorrectListItem(
             store.getState().traineeProfile.traineeProfileData.personalDetails
               .gdcNumber
           }
+          panelId={panel.tisId}
         />
       );
     case "otherSites":

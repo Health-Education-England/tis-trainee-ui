@@ -409,12 +409,12 @@ export const onboardingTrackerActionText = {
     textLink: "/programmes",
     faIcon: faCircle
   },
-  FORMR_PARTA: {
+  SIGN_FORM_R_PART_A: {
     actionText: formRPartAText,
     textLink: "/formr-a",
     faIcon: faCircle
   },
-  FORMR_PARTB: {
+  SIGN_FORM_R_PART_B: {
     actionText: formRPartBText,
     textLink: "/formr-b",
     faIcon: faCircle
@@ -461,8 +461,8 @@ export type ProgOnboardingTagType =
   | "ROYAL_SOCIETY_REGISTRATION"
   | "REVIEW_PROGRAMME"
   | "SIGN_COJ"
-  | "FORMR_PARTA"
-  | "FORMR_PARTB"
+  | "SIGN_FORM_R_PART_A"
+  | "SIGN_FORM_R_PART_B"
   | "TRAINING_NUMBER"
   | "LTFT"
   | "DEFER"
@@ -510,14 +510,14 @@ export const onboardingTrackerInfoText = {
       </p>
     </>
   ),
-  FORMR_PARTA: (
+  SIGN_FORM_R_PART_A: (
     <p>
       When you submit your <Link to="/formr-a">FormR Part A</Link> & Part B
       {formRTxt}
       <Link to="/programmes">Programme</Link>.
     </p>
   ),
-  FORMR_PARTB: (
+  SIGN_FORM_R_PART_B: (
     <p>
       When you submit your <Link to="/formr-b">FormR Part B</Link> & Part A
       {formRTxt}
@@ -628,3 +628,13 @@ export const ACTION_REASONS = {
     { value: "other", label: "other reason" }
   ]
 };
+
+// Trainee Actions that are considered "completed" if not in outstanding list
+export const traineeActionsCompletedWhenNotOutstanding: ProgOnboardingTagType[] =
+  [
+    "REVIEW_PROGRAMME",
+    "SIGN_COJ",
+    "SIGN_FORM_R_PART_A",
+    "SIGN_FORM_R_PART_B",
+    "REVIEW_PLACEMENT"
+  ];

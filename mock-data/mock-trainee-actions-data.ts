@@ -127,3 +127,78 @@ export const mockActionsTestData = [
     completed: null
   }
 ];
+
+export const mockActionsTestData2 = [
+  {
+    id: "67a0d0a6a4e9c627ff903537",
+    type: "REVIEW_DATA",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "2657088",
+      type: "PLACEMENT"
+    },
+    availableFrom: "2024-11-13",
+    dueBy: "2025-02-05",
+    completed: null
+  },
+  {
+    id: "687574876925e42d15ee5a5c",
+    type: "SIGN_FORM_R_PART_A",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "e9401242-a0dd-4a1c-9551-7164e5c776d9",
+      type: "PROGRAMME_MEMBERSHIP"
+    },
+    availableFrom: "2025-07-14",
+    dueBy: "2025-02-05",
+    completed: null
+  },
+  {
+    id: "687574876925e42d15ee5a5d",
+    type: "SIGN_FORM_R_PART_B",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "e9401242-a0dd-4a1c-9551-7164e5c776d9",
+      type: "PROGRAMME_MEMBERSHIP"
+    },
+    availableFrom: "2025-07-14",
+    dueBy: "2025-02-05",
+    completed: null
+  },
+  {
+    id: "68407a67c5619027efb58e39",
+    type: "REVIEW_DATA",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "e9401242-a0dd-4a1c-9551-7164e5c776d9",
+      type: "PROGRAMME_MEMBERSHIP"
+    },
+    availableFrom: "2025-06-04",
+    dueBy: "2025-02-05",
+    completed: null
+  },
+  {
+    id: "67d7e8ab047210168bef4606",
+    type: "REVIEW_DATA",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "d84e7ad0-139b-45a0-b318-7324e0bc3f28",
+      type: "PROGRAMME_MEMBERSHIP"
+    },
+    availableFrom: "2025-03-17",
+    dueBy: "2025-02-05",
+    completed: null
+  },
+  {
+    id: "6841da9bc5619027efb61940",
+    type: "REVIEW_DATA",
+    traineeId: "47165",
+    tisReferenceInfo: {
+      id: "2673509",
+      type: "PLACEMENT"
+    },
+    availableFrom: "2025-05-14",
+    dueBy: "2025-08-06",
+    completed: null
+  }
+];

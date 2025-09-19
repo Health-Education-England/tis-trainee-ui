@@ -13,24 +13,9 @@ export type OnboardingActionType =
   | "DAY_ONE_EMAIL"
   | "CONNECT_RO";
 
-export type OnboardingActionState =
-  | "incomplete"
+export type OnboardingActionStatus =
+  | "outstanding"
   | "completed"
-  | "unsubmitted"
-  | "submitted"
-  | "draft"
   | "not available"
   | "not tracked"
   | null;
-
-export type OnboardingTrackerStatusActionType = {
-  action: OnboardingActionType;
-  state: OnboardingActionState;
-  date: Date | null;
-};
-
-export type OnboardingTrackerType = {
-  programmeMembershipId: string;
-  traineeTisId: string;
-  trackerStatus: OnboardingTrackerStatusActionType[];
-};
