@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
 import { CojUtilities } from "../../utilities/CojUtilities";
-import { useInfoActions } from "../../utilities/hooks/action-summary/useInfoActions";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
 
 type TrainingNumberProps = {
@@ -23,32 +23,31 @@ export function TrainingNumber({
     startDate &&
     CojUtilities.canBeSigned(new Date(startDate));
 
-  const { noSubFormRA, noSubFormRB, infoActionsA, infoActionsB } =
-    useInfoActions();
+  // TODO: Temporarily delete requiresFormRA and requiresFormRB logic - will be re-added in follow-up PR
+  const requiresFormRA = false;
+  const requiresFormRB = false;
+  const isValidGmcNum = !!gmcNumber && /^\d{7}$/.test(gmcNumber);
+  const isValidGdcNum = !!gdcNumber && /^\d{5}$/.test(gdcNumber);
 
-  const requiresFormRA = noSubFormRA || infoActionsA.isForInfoYearPlusSubForm;
-  const requiresFormRB = noSubFormRB || infoActionsB.isForInfoYearPlusSubForm;
-  const requiresGmc =
-    gmcNumber == null || gmcNumber == undefined || !/^\d{7}$/.test(gmcNumber);
-  const requiresGdc =
-    gdcNumber == null || gdcNumber == undefined || !/^\d{5}$/.test(gdcNumber);
-  const requiresGmcOrGdc = requiresGmc && requiresGdc;
+  const hasUnmetRequirements = requiresCoj || requiresFormRA || requiresFormRB;
+  if (!trainingNumber)
+    return <div data-cy="trainingNumberNa">Not Available</div>;
 
-  return !trainingNumber ||
-    (!requiresCoj &&
-      !requiresFormRA &&
-      !requiresFormRB &&
-      !requiresGmcOrGdc) ? (
-    <div data-cy="trainingNumberText">{trainingNumber ?? "Not Available"}</div>
-  ) : (
+  if ((isValidGmcNum || isValidGdcNum) && !hasUnmetRequirements)
+    return <div data-cy="trainingNumberText">{trainingNumber}</div>;
+
+  return (
     <div>
       Available after submitting:
       <ul>
         {requiresCoj && <li data-cy="requireCoj">Conditions of Joining</li>}
         {requiresFormRA && <li data-cy="requireFormRA">Form R Part A</li>}
         {requiresFormRB && <li data-cy="requireFormRB">Form R Part B</li>}
-        {requiresGmcOrGdc && (
-          <li data-cy="requireGmcOrGdc">Personal GMC/GDC no.</li>
+        {(!isValidGmcNum || !isValidGdcNum) && (
+          <>
+            <li data-cy="requireGmcOrGdc">a valid Personal GMC/GDC no.</li>
+            <Link to="/profile">Go to Profile to update</Link>
+          </>
         )}
       </ul>
     </div>
