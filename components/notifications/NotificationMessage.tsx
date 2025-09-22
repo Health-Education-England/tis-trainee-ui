@@ -22,6 +22,7 @@ export const NotificationMessage = () => {
   const notificationMessageStatus = useAppSelector(
     state => state.notifications.msgStatus
   );
+  const previousPage = activeNotification?.type === "EMAIL" ? "/notifications/email" : "/notifications/in-app"
 
   useEffect(() => {
     store.dispatch(getNotificationMessage(id));
@@ -35,7 +36,7 @@ export const NotificationMessage = () => {
             data-testid="backLink-to-notifications"
             className="back-link"
             data-cy="backLink"
-            onClick={() => history.push("/notifications")}
+            onClick={() => history.push(previousPage)}
           >
             Back to list
           </BackLink>
@@ -65,7 +66,7 @@ export const NotificationMessage = () => {
             </Col>
           </Row>
         </Container>
-      ) : (
+       ) : (
         <ErrorPage message={toastErrText.fetchNotificationMessage} />
       )}
     </div>

@@ -15,13 +15,27 @@ import { updateNotificationStatus } from "../../utilities/NotificationsUtilities
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
-import { columns } from "./columns";
-import { Label } from "nhsuk-react-components";
+import { emailColumns, inAppColumns } from "./columns";
+import { Button, Label } from "nhsuk-react-components";
+import { NotificationType } from "../../redux/slices/notificationsSlice";
+import { AllFailedCheckbox } from "./AllFailedCheckbox";
+// import history from "../navigation/history";
 
-export const NotificationsTable: React.FC = () => {
-  const notificationsData = useAppSelector(
-    state => state.notifications.notificationsList
-  );
+export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type }) => {
+  let notificationsData: NotificationType[]; //TODO: replace let
+  let columns = []; //TODO: replace let
+  if (type === "IN_APP") {
+    notificationsData = useAppSelector(
+      state => state.notifications.inAppNotificationsList
+    );
+    columns = inAppColumns;
+  }
+  else {    
+    notificationsData = useAppSelector(
+      state => state.notifications.emailNotificationsList
+    );    
+    columns = emailColumns;
+  }
   const memoData = useMemo(() => notificationsData, [notificationsData]);
 
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -56,6 +70,21 @@ export const NotificationsTable: React.FC = () => {
 
   return notificationsData.length > 0 ? (
     <>
+      <Button
+        type="button"
+        className="notification-btn"
+        data-cy="emailBtn"
+        // onClick={history.push("/notifications/email")}
+      >Email
+      </Button>
+      <Button
+        type="button"
+        className="notification-btn"
+        data-cy="inAppBtn"
+        // onClick={history.push("/notifications/in-app")}
+      >In App
+      </Button>
+      <br/>
       <DebouncedInput
         value={globalFilter}
         onChange={value => setGlobalFilter(String(value))}
@@ -83,9 +112,9 @@ export const NotificationsTable: React.FC = () => {
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {header.column.columnDef.id === "status" && (
-                          <AllUnreadCheckbox header={header} />
-                        )}
+                        {header.column.columnDef.id === "status" && 
+                        ((type==="IN_APP") ? <AllUnreadCheckbox header={header} /> : <AllFailedCheckbox header={header} />)                        
+                        }
                       </th>
                     );
                   })}

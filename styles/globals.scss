@@ -783,12 +783,16 @@ ol[type="a"] {
   border-top: solid 1px #bfc3c6;
 }
 
-.status-read {
+.status-read, .status-sent {
   color: #006400;
 }
 
 .status-unread {
   color: #005eb8;
+}
+
+.status-failed {
+  color: #ED8B00;
 }
 
 .back-link {

@@ -10,7 +10,7 @@ export const NotificationsBtn = ({
   unreadNotificationCount
 }: NotificationsBtnType) => {
   const handleBtnClick = () => {
-    history.push("/notifications");
+    history.push("/notifications/in-app");
   };
   return (
     <Button

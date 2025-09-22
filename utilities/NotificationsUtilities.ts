@@ -1,14 +1,20 @@
 import {
+  NotificationMsgType,
   NotificationStatus,
   NotificationType,
   markNotificationAsRead,
   markNotificationAsUnread,
   resetNotificationsStatus,
+  updatedActiveNotification,
   updatedNotificationUpdateInProgress,
   updatedNotificationsList
 } from "../redux/slices/notificationsSlice";
 import store from "../redux/store/store";
 import history from "../components/navigation/history";
+
+export function switchNotificationType(msgType: NotificationMsgType) {
+  store.dispatch(switchNotificationType(msgType));
+}
 
 export function updateNotificationStatusFE(
   row: NotificationType,
@@ -56,7 +62,15 @@ export async function updateNotificationStatus(
   store.dispatch(updatedNotificationUpdateInProgress(true));
   // update FE first to see immediate change
   updateNotificationStatusFE(row, newStatus);
-  // then make BE call
-  await updateNotificationStatusBE(row, newStatus);
+
+  if (row.type === "IN_APP") {    
+    // then make BE call
+    await updateNotificationStatusBE(row, newStatus);
+  }
+  else {
+    store.dispatch(updatedActiveNotification(row));
+    history.push(`/notifications/${row.id}`);
+  }
+  
   store.dispatch(updatedNotificationUpdateInProgress(false));
 }
