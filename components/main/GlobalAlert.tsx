@@ -11,6 +11,7 @@ export const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
+
   if (preferredMfa === "NOMFA") return null;
 
   const isActionSummaryPage = pathname === "/action-summary";
@@ -23,6 +24,10 @@ export const GlobalAlert = () => {
     bookmark: {
       status: showBookmarkAlert,
       component: <BookmarkAlert />
+    },
+    survey: {
+      status: true,
+      component: <SurveyAlert />
     }
   };
 
@@ -35,6 +40,7 @@ export const GlobalAlert = () => {
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
+        {alerts.survey.status && alerts.survey.component}
         {alerts.bookmark.status && alerts.bookmark.component}
         {alerts.actionSummary.status && alerts.actionSummary.component}
       </div>
@@ -69,6 +75,31 @@ function BookmarkAlert() {
       <p>
         Please update any bookmarks or password managers to use the new{" "}
         <a href="/">{window.location.origin}</a> address.
+      </p>
+    </div>
+  );
+}
+
+function SurveyAlert() {
+  return (
+    <div data-cy="surveyAlert" className="survey-alert">
+      <p>
+        <b>Help us improve TSS:</b> We are running an annual survey to better
+        understand how TSS is meeting user needs, where we can do better, and
+        the impact of changes.
+      </p>
+      <p>
+        It should only take a few minutes to complete, and will really help
+        improve the service.
+      </p>
+      <p>
+        <a
+          href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdURjBMUjU2R09MRDBRNkkwWTNPMkJaQ1ZBWC4u&route=shorturl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ➔ Take the survey now
+        </a>
       </p>
     </div>
   );
