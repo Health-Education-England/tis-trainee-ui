@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { Fieldset } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExclamationCircle,
+  faTimes
+} from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 
@@ -11,6 +14,7 @@ export const GlobalAlert = () => {
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
+  const [surveyDismissed, setSurveyDismissed] = useState(false);
 
   if (preferredMfa === "NOMFA") return null;
 
@@ -26,8 +30,8 @@ export const GlobalAlert = () => {
       component: <BookmarkAlert />
     },
     survey: {
-      status: true,
-      component: <SurveyAlert />
+      status: !surveyDismissed,
+      component: <SurveyAlert onDismiss={() => setSurveyDismissed(true)} />
     }
   };
 
@@ -80,9 +84,16 @@ function BookmarkAlert() {
   );
 }
 
-function SurveyAlert() {
+function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
   return (
     <div data-cy="surveyAlert" className="survey-alert">
+      <button
+        className="survey-alert-close"
+        aria-label="Dismiss survey alert"
+        onClick={onDismiss}
+      >
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
       <p>
         <b>Help us improve TSS:</b> We are running an annual survey to better
         understand how TSS is meeting user needs, where we can do better, and

@@ -161,6 +161,23 @@ body {
   margin: 0;
 }
 
+.survey-alert {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.survey-alert-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+}
+
 .nhsuk-pagination__link {
   cursor: pointer;
 }
