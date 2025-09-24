@@ -235,7 +235,7 @@ const SubmittedFormsList = ({
       <Card>
         <Card.Content>
           <Card.Heading data-cy="formr-previous-header">
-            Previous applications
+            Submitted forms
           </Card.Heading>
           {content}
         </Card.Content>

@@ -84,7 +84,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="form-linker-submit-btn"]').click();
 
     cy.get('[data-cy="Submit new form"]').should("exist");
-    cy.contains("Previous applications").should("exist"); 
+    cy.contains("Submitted forms").should("exist"); 
     cy.get('[data-cy="formr-row-0"]').click();
     cy.get('[data-cy="email-value"]').should(
       "have.text",
@@ -96,7 +96,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
     // Navigate back to the list
     cy.get('[data-cy="backLink"]').should("exist").click();
-    cy.contains("Previous applications").should("exist");
+    cy.contains("Submitted forms").should("exist");
   });
 });
 
