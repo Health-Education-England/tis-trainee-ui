@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { Fieldset } from "nhsuk-react-components";
+import { ActionLink, CloseIcon, Fieldset } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faExclamationCircle,
@@ -92,7 +92,7 @@ function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         aria-label="Dismiss survey alert"
         onClick={onDismiss}
       >
-        <FontAwesomeIcon icon={faTimes} />
+        <CloseIcon />
       </button>
       <p>
         <b>Help us improve TSS:</b> We are running an annual survey to better
@@ -104,13 +104,14 @@ function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         improve the service.
       </p>
       <p>
-        <a
+        <ActionLink
           href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdURjBMUjU2R09MRDBRNkkwWTNPMkJaQ1ZBWC4u&route=shorturl"
           target="_blank"
           rel="noopener noreferrer"
+          className="survey-link"
         >
-          ➔ Take the survey now
-        </a>
+          Take the survey now
+        </ActionLink>
       </p>
     </div>
   );

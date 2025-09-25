@@ -163,11 +163,9 @@ body {
 
 .survey-alert {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem 1.5rem;
+  width: 100%;
+  padding: 2rem 0 0 8px;
   margin-bottom: 1rem;
-  border-radius: 4px;
 }
 
 .survey-alert-close {
@@ -176,6 +174,12 @@ body {
   right: 0.75rem;
   background: none;
   border: none;
+  cursor: pointer;
+}
+
+.survey-link {
+  display: inline-flex;
+  align-items: center;
 }
 
 .nhsuk-pagination__link {
