@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { ActionLink, CloseIcon, Fieldset } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faExclamationCircle,
-  faTimes
-} from "@fortawesome/free-solid-svg-icons";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 
