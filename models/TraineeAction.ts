@@ -14,3 +14,9 @@ export interface TisReferenceInfo {
 }
 
 export type TisReferenceType = "PROGRAMME_MEMBERSHIP" | "PLACEMENT";
+
+export type GroupedTraineeActionsForProgramme = {
+  "Programme ID": string;
+  "Programme Membership name": string;
+  "Outstanding actions": TraineeAction[];
+};

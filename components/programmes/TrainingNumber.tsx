@@ -1,31 +1,27 @@
 import { Link } from "react-router-dom";
-import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
-import { CojUtilities } from "../../utilities/CojUtilities";
 import { ProfileSType } from "../../utilities/ProfileUtilities";
+import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
+import { calcTrainingNumStatus } from "../../utilities/OnboardingTrackerUtilities";
 
 type TrainingNumberProps = {
-  conditionsOfJoining: ConditionsOfJoiningModel;
-  startDate: string | null;
   trainingNumber: string | null;
   gmcNumber: ProfileSType;
   gdcNumber: ProfileSType;
+  panelId: string;
 };
 
 export function TrainingNumber({
-  conditionsOfJoining,
-  startDate,
   trainingNumber,
   gmcNumber,
-  gdcNumber
+  gdcNumber,
+  panelId
 }: Readonly<TrainingNumberProps>) {
-  const requiresCoj =
-    !conditionsOfJoining.signedAt &&
-    startDate &&
-    CojUtilities.canBeSigned(new Date(startDate));
+  const { filteredActionsBelongingToThisProg } = useTraineeActions(panelId);
+  const { details } = calcTrainingNumStatus(filteredActionsBelongingToThisProg);
 
-  // TODO: Temporarily delete requiresFormRA and requiresFormRB logic - will be re-added in follow-up PR
-  const requiresFormRA = false;
-  const requiresFormRB = false;
+  const requiresCoj = details["SIGN_COJ"] === "outstanding";
+  const requiresFormRA = details["SIGN_FORM_R_PART_A"] === "outstanding";
+  const requiresFormRB = details["SIGN_FORM_R_PART_B"] === "outstanding";
   const isValidGmcNum = !!gmcNumber && /^\d{7}$/.test(gmcNumber);
   const isValidGdcNum = !!gdcNumber && /^\d{5}$/.test(gdcNumber);
 
