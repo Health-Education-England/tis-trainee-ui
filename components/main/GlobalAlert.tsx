@@ -86,33 +86,36 @@ function BookmarkAlert() {
 
 function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
   return (
-    <div data-cy="surveyAlert" className="survey-alert">
+    <div className="survey-alert" data-cy="surveyAlert">
+      <div>
+        <p>
+          <b>Help us improve TSS:</b> We are running an annual survey to better
+          understand how TSS is meeting user needs, where we can do better, and
+          the impact of changes.
+        </p>
+        <p>
+          It should only take a few minutes to complete, and will really help
+          improve the service.
+        </p>
+        <p>
+          <ActionLink
+            href="https..."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="survey-link"
+          >
+            Take the survey now
+          </ActionLink>
+        </p>
+      </div>
       <button
         className="survey-alert-close"
         aria-label="Dismiss survey alert"
+        title="Dismiss survey alert"
         onClick={onDismiss}
       >
         <CloseIcon />
       </button>
-      <p>
-        <b>Help us improve TSS:</b> We are running an annual survey to better
-        understand how TSS is meeting user needs, where we can do better, and
-        the impact of changes.
-      </p>
-      <p>
-        It should only take a few minutes to complete, and will really help
-        improve the service.
-      </p>
-      <p>
-        <ActionLink
-          href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdURjBMUjU2R09MRDBRNkkwWTNPMkJaQ1ZBWC4u&route=shorturl"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="survey-link"
-        >
-          Take the survey now
-        </ActionLink>
-      </p>
     </div>
   );
 }
