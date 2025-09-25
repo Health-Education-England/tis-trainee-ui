@@ -10,7 +10,7 @@ export function OnboardingTrackerLink({
   return (
     <p>
       <Link to={`/programmes/${progPanelId}/onboarding-tracker`}>
-        View the Onboarding journey
+        Track your onboarding journey for this programme
       </Link>
     </p>
   );
