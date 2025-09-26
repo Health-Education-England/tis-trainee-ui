@@ -5,7 +5,6 @@ import { useAppSelector } from "../../../redux/hooks/hooks";
 import { OnboardingTrackerActions } from "./OnboardingTrackerActions";
 import history from "../../navigation/history";
 import ScrollToTop from "../../common/ScrollToTop";
-import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import ErrorPage from "../../common/ErrorPage";
 
 export function OnboardingTracker() {
@@ -38,7 +37,7 @@ export function OnboardingTracker() {
           {`Onboarding Tracker for ${panel?.programmeName}`}
         </Fieldset.Legend>
       </Fieldset>
-      <OnboardingTrackerActions panel={panel as ProgrammeMembership} />
+      <OnboardingTrackerActions panel={panel} />
     </>
   ) : (
     <ErrorPage message="No Tracker data found for this programme. Please try again." />

@@ -8,7 +8,6 @@ import {
 } from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
-import { CojUtilities } from "../../utilities/CojUtilities";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 
