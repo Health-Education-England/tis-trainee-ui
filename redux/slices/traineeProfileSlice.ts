@@ -8,14 +8,11 @@ import {
 } from "../../models/PersonalDetails";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
-import { CojUtilities } from "../../utilities/CojUtilities";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 
-interface IProfile {
+export interface IProfile {
   traineeProfileData: TraineeProfile;
-  hasSignableCoj: boolean;
-  unsignedCojs: ProgrammeMembership[];
   status: string;
   gmcStatus: string;
   error: any;
@@ -29,8 +26,6 @@ export const initialState: IProfile = {
     programmeMemberships: [],
     placements: []
   },
-  hasSignableCoj: false,
-  unsignedCojs: [],
   status: "idle",
   gmcStatus: "idle",
   error: ""
@@ -76,10 +71,7 @@ const traineeProfileSlice = createSlice({
     updatedTraineeProfileData(state, action: PayloadAction<TraineeProfile>) {
       return {
         ...state,
-        traineeProfileData: action.payload,
-        hasSignableCoj: CojUtilities.canAnyBeSigned(
-          action.payload.programmeMemberships
-        )
+        traineeProfileData: action.payload
       };
     },
     updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
@@ -111,10 +103,6 @@ const traineeProfileSlice = createSlice({
           true
         );
         state.traineeProfileData.placements = sortedPlacements;
-        state.hasSignableCoj = CojUtilities.canAnyBeSigned(sortedProgrammes);
-        state.unsignedCojs = CojUtilities.unsignedCojs(
-          state.traineeProfileData.programmeMemberships
-        );
       })
       .addCase(fetchTraineeProfileData.rejected, (state, { error }) => {
         state.status = "failed";
@@ -136,11 +124,6 @@ const traineeProfileSlice = createSlice({
           pm => pm.tisId === tisId
         );
         state.traineeProfileData.programmeMemberships[index] = action.payload;
-
-        // Show/hide the COJ alert.
-        state.hasSignableCoj = CojUtilities.canAnyBeSigned(
-          state.traineeProfileData.programmeMemberships
-        );
       })
       .addCase(signCoj.rejected, (state, action) => {
         state.status = "failed";

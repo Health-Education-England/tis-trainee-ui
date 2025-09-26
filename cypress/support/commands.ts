@@ -1078,8 +1078,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   cy.get('[data-cy="dialogModal"] > div > h2').first().contains("Programmes");
   cy.get('[data-cy="dialogModal"] > div > h2').last().contains("Placements");
   cy.get('[data-cy="currentExpand"]').first().should("exist").click();
-  cy.get('[data-cy="subheaderOnboarding"]').should("exist");
-  cy.get('[data-cy="subheaderLtft"]').should("exist");
+  cy.get('[data-cy="subheaderOnboarding"]').should("not.exist");
   cy.get('[data-cy="modal-cancel-btn"]').should("exist").click();
   cy.get('[data-cy="dialogModal"]').should("not.be.visible");
 
