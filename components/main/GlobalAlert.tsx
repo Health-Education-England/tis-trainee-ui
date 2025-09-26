@@ -96,7 +96,7 @@ function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         </p>
         <p>
           <ActionLink
-            href="https..."
+            href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdURjBMUjU2R09MRDBRNkkwWTNPMkJaQ1ZBWC4u&route=shorturl"
             target="_blank"
             rel="noopener noreferrer"
             className="survey-link"
