@@ -161,6 +161,22 @@ body {
   margin: 0;
 }
 
+.survey-alert {
+  display: flex;
+  align-items: flex-start;
+}
+
+.survey-alert-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.survey-link {
+  display: inline-flex;
+  align-items: center;
+}
+
 .nhsuk-pagination__link {
   cursor: pointer;
 }
