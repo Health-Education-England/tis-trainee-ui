@@ -1,16 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchMFAPreference, fetchAuthSession } from "aws-amplify/auth";
+import { UserFeaturesType } from "../../models/FeatureFlags";
 
 export type CojVersionType = "GG9" | "GG10";
 
 export type MFAType = "TOTP" | "SMS" | "EMAIL" | "NOMFA";
 
 export type MfaAttribType = "email" | "phone_number";
-
-export type UserFeaturesType = {
-  ltft: boolean;
-  ltftProgrammes: string[];
-};
 
 export interface IUser {
   status: string;
@@ -40,8 +36,46 @@ const initialState: IUser = {
   enabledMfa: [],
   username: "",
   features: {
-    ltft: false,
-    ltftProgrammes: []
+    actions: {
+      enabled: false
+    },
+    cct: {
+      enabled: false
+    },
+    details: {
+      enabled: false,
+      placements: {
+        enabled: false
+      },
+      profile: {
+        enabled: false,
+        gmcUpdate: {
+          enabled: false
+        }
+      },
+      programmes: {
+        enabled: false,
+        conditionsOfJoining: {
+          enabled: false
+        },
+        confirmation: {
+          enabled: false
+        }
+      }
+    },
+    forms: {
+      enabled: false,
+      formr: {
+        enabled: false
+      },
+      ltft: {
+        enabled: false,
+        qualifyingProgrammes: []
+      }
+    },
+    notifications: {
+      enabled: false
+    }
   },
   signingCojProgName: null,
   signingCojPmId: "",

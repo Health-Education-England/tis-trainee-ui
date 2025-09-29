@@ -335,7 +335,7 @@ export function getStatusReasonLabel(
 
 export function isValidProgramme(progId: string): boolean {
   if (!progId) return false;
-  const progIdsToCheckAgainst = store.getState().user.features.ltftProgrammes;
+  const progIdsToCheckAgainst = store.getState().user.features.forms.ltft.qualifyingProgrammes;
   if (progIdsToCheckAgainst.length < 1) {
     return false;
   }
