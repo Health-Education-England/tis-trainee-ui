@@ -34,14 +34,18 @@ import { mockFormList } from "../../../mock-data/formr-list";
 import { updatedFormBList } from "../../../redux/slices/formBSlice";
 import { FileUtilities } from "../../../utilities/FileUtilities";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
+import { TraineeAction } from "../../../models/TraineeAction";
+import { FormRPartA } from "../../../models/FormRPartA";
+import { FormRPartB } from "../../../models/FormRPartB";
+import dayjs from "dayjs";
 
 const mountProgrammesWithMockData = (
   prefMfa: MFAType = "NOMFA",
   profileStatus: string = "idle",
   programmeMemberships: ProgrammeMembership[] = mockProgrammeMemberships,
-  actionsData: any[] = [],
-  formAList: any = mockFormList,
-  formBList: any = mockFormList
+  actionsData: TraineeAction[] = [],
+  formAList: FormRPartA[] = mockFormList as FormRPartA[],
+  formBList: FormRPartB[] = mockFormList as FormRPartB[]
 ) => {
   const MockedProgrammes = () => {
     const dispatch = useAppDispatch();
@@ -80,8 +84,27 @@ describe("Programmes with no MFA set up", () => {
 });
 
 describe("Programmes with MFA set up", () => {
-  it("should display Programmes when MFA set up", () => {
-    mountProgrammesWithMockData("SMS", "succeeded");
+  const createUpdatedProgrammeMemberships = (
+    subtractYears: number,
+    addDays: number = 0
+  ) => {
+    const updatedProgrammeMemberships = [...mockProgrammeMemberships];
+    updatedProgrammeMemberships[0] = {
+      ...updatedProgrammeMemberships[0],
+      startDate: dayjs()
+        .subtract(subtractYears, "year")
+        .add(addDays, "day")
+        .format("YYYY-MM-DD")
+    };
+    return updatedProgrammeMemberships;
+  };
+  it("should display current Programme but no Onboarding Tracker link when start date is not within a year", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      updatedProgrammeMemberships
+    );
     cy.get('[data-cy="currentExpand"]').click();
     cy.get('[data-cy="subheaderDetails"]').contains("Details");
     cy.get(".nhsuk-details__summary-text").should("exist");
@@ -99,20 +122,32 @@ describe("Programmes with MFA set up", () => {
     cy.get("[data-cy=currDates]")
       .last()
       .should("contain.text", "01/08/2022 - 01/08/2025");
-    cy.get('[data-cy="subheaderOnboarding"]').contains("Onboarding");
-    cy.get('[data-cy="NewProgrammeOnboardingText"]').should(
-      "include.text",
-      "'New Programme' onboarding journey"
-    );
-    cy.get(
-      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
-    )
-      .should("have.attr", "href", "/programmes/1/onboarding-tracker")
-      .and("include.text", "View");
+    cy.get('[data-cy="subheaderOnboarding"]').should("not.exist");
     cy.get('[data-cy="cct-link-header"]')
       .first()
       .contains("Need a Changing hours (LTFT) calculation?");
     // both progs and placements use same panel creator component so not repeating placement tests
+  });
+
+  it("Should display current Programme and Onboarding Tracker link when start date is within a year", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1, 1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      updatedProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="subheaderOnboarding"]').contains("Onboarding");
+    cy.get('[data-cy="NewProgrammeOnboardingText"]').should(
+      "include.text",
+      "Onboarding Tracker"
+    );
+
+    cy.get(
+      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
+    )
+      .should("have.attr", "href", "/programmes/1/onboarding-tracker")
+      .and("include.text", "Track your onboarding journey for this programme");
   });
 
   it("should show alternative text when no Programme/ panel data available", () => {
