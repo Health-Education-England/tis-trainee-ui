@@ -14,8 +14,12 @@ jest.mock("../../../../redux/store/store", () => ({
     getState: jest.fn(() => ({
       user: {
         features: {
-          ltft: true,
-          ltftProgrammes: ["some-id"]
+          forms: {
+            ltft: {
+              enabled: true,
+              qualifyingProgrammes: ["some-id"]
+            }
+          }
         }
       }
     })),
