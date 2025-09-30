@@ -15,7 +15,8 @@ import {
   yesterday,
   today
 } from "../utilities/DateUtilities";
-import { CojVersionType, UserFeaturesType } from "../redux/slices/userSlice";
+import { CojVersionType } from "../redux/slices/userSlice";
+import { UserFeaturesType } from "../models/FeatureFlags";
 import { TraineeAction } from "../models/TraineeAction";
 
 export const mockPersonalDetails: PersonalDetails = {
@@ -1008,8 +1009,53 @@ export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
 export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
   [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
 
-export const mockUserFeatures1: UserFeaturesType = {
+const mockUserFeatures: UserFeaturesType = {
+  actions: {
+    enabled: false
+  },
+  cct: {
+    enabled: false
+  },
+  details: {
+    enabled: false,
+    placements: {
+      enabled: false
+    },
+    profile: {
+      enabled: false,
+      gmcUpdate: {
+        enabled: false
+      }
+    },
+    programmes: {
+      enabled: false,
+      conditionsOfJoining: {
+        enabled: false
+      },
+      confirmation: {
+        enabled: false
+      }
+    }
+  },
   forms: {
+    enabled: false,
+    formr: {
+      enabled: false
+    },
+    ltft: {
+      enabled: false,
+      qualifyingProgrammes: []
+    }
+  },
+  notifications: {
+    enabled: false
+  }
+};
+
+export const mockUserFeatures1: UserFeaturesType = {
+  ...mockUserFeatures,
+  forms: {
+    ...mockUserFeatures.forms,
     ltft: {
       enabled: true,
       qualifyingProgrammes: [
@@ -1023,8 +1069,10 @@ export const mockUserFeatures1: UserFeaturesType = {
 };
 
 export const mockUserFeatures2: UserFeaturesType = {
+  ...mockUserFeatures,
   forms: {
-      ltft: {
+    ...mockUserFeatures.forms,
+    ltft: {
       enabled: true,
       qualifyingProgrammes: []
     }
@@ -1032,12 +1080,14 @@ export const mockUserFeatures2: UserFeaturesType = {
 };
 
 export const mockUserFeatures3: UserFeaturesType = {
+  ...mockUserFeatures,
   forms: {
+    ...mockUserFeatures.forms,
     ltft: {
-    enabled: false,
-    qualifyingProgrammes: []
+      enabled: false,
+      qualifyingProgrammes: []
+    }
   }
-}
 };
 
 export const mockProfileDataToTestPlacementActions: TraineeProfile = {
