@@ -12,6 +12,10 @@ export type UserFeaturesType = {
   notifications: Feature;
 }
 
+export type FeatureFlag =
+  | boolean
+  | ((userFeatures: UserFeaturesType) => boolean);
+
 export type Feature = {
   enabled: boolean;
 }
