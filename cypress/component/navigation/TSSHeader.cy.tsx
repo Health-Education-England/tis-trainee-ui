@@ -10,21 +10,35 @@ import {
 import { Authenticator } from "@aws-amplify/ui-react";
 import TSSHeader from "../../../components/navigation/TSSHeader";
 import {
-  mockUserFeatures1,
-  mockUserFeatures2
+  mockUserFeaturesLtftPilot,
+  mockUserFeaturesNonSpecialty,
+  mockUserFeaturesSpecialty,
+  mockUserFeaturesUnauthenticated
 } from "../../../mock-data/trainee-profile";
 
-const navLinks = [
-  { name: "Changing hours (LTFT)", href: "/ltft" },
+const navLinksBase = [
+  { name: "Support", href: "/support" },
+  { name: "MFA set-up", href: "/mfa" }
+];
+
+const navLinksNonSpecialty = [
+  ...navLinksBase,
   { name: "Profile", href: "/profile" },
   { name: "Placements", href: "/placements" },
-  { name: "Programmes", href: "/programmes" },
+  { name: "Programmes", href: "/programmes" }
+];
+
+const navLinksSpecialty = [
+  ...navLinksNonSpecialty,
   { name: "Form R (A)", href: "/formr-a" },
   { name: "Form R (B)", href: "/formr-b" },
   { name: "Action Summary", href: "/action-summary" },
-  { name: "CCT", href: "/cct" },
-  { name: "Support", href: "/support" },
-  { name: "MFA set-up", href: "/mfa" }
+  { name: "CCT", href: "/cct" }
+];
+
+const navLinksLtftPilot = [
+  ...navLinksSpecialty,
+  { name: "Changing hours (LTFT)", href: "/ltft" }
 ];
 
 const comp = (
@@ -40,7 +54,6 @@ const comp = (
 describe("Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("TOTP"));
-    store.dispatch(updatedUserFeatures(mockUserFeatures1));
     mount(comp);
   });
 
@@ -59,14 +72,6 @@ describe("Header with MFA set up", () => {
     );
   });
 
-  navLinks.forEach(link => {
-    it(`should show the ${link.name} link in the nav menu`, () => {
-      cy.get(`[data-cy="${link.name}"]`)
-        .should("exist")
-        .should("contain.text", `${link.name}`)
-        .should("have.attr", "href", `${link.href}`);
-    });
-  });
   it("should contain menu and sign out buttons", () => {
     cy.get(`[data-cy=menuToggleBtn]`)
       .should("exist")
@@ -75,12 +80,99 @@ describe("Header with MFA set up", () => {
       .should("exist")
       .should("contain.text", "Sign out");
   });
+
+  describe("Unauthenticated user features", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesUnauthenticated));
+      mount(comp);
+    });
+
+    navLinksBase.forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+        .its("length")
+        .should("eq", navLinksBase.length);
+    });
+  });
+
+  describe("Non-specialty user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));
+      mount(comp);
+    });
+
+    navLinksNonSpecialty.forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+        .its("length")
+        .should("eq", navLinksNonSpecialty.length);
+    });
+  });
+
+  describe("Specialty user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
+      mount(comp);
+    });
+
+    navLinksSpecialty.forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+        .its("length")
+        .should("eq", navLinksSpecialty.length);
+    });
+  });
+
+  describe("LTFT pilot user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
+      mount(comp);
+    });
+
+    navLinksLtftPilot.forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+        .its("length")
+        .should("eq", navLinksLtftPilot.length);
+    });
+  });
 });
 
 describe("Desktop Header with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("TOTP"));
-    store.dispatch(updatedUserFeatures(mockUserFeatures2));
     mount(comp);
     cy.viewport(1024, 768);
   });
@@ -90,15 +182,6 @@ describe("Desktop Header with MFA set up", () => {
       .should("be.visible")
       .should("have.attr", "href", "/");
     cy.get("[data-cy=tssName]").should("contain.text", "TIS Self-Service");
-  });
-
-  navLinks.slice(0, -2).forEach(link => {
-    it(`should show the ${link.name} link in the nav menu`, () => {
-      cy.get(`[data-cy="${link.name}"]`)
-        .should("be.visible")
-        .should("contain.text", `${link.name}`)
-        .should("have.attr", "href", `${link.href}`);
-    });
   });
 
   it("should contain top nav container", () => {
@@ -112,5 +195,82 @@ describe("Desktop Header with MFA set up", () => {
       .should("be.visible")
       .should("contain.text", "MFA set-up")
       .should("have.attr", "href", "/mfa");
+  });
+
+  describe("Unauthenticated user features", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesUnauthenticated));
+      mount(comp);
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:visible').should("not.exist");
+    });
+  });
+
+  describe("Non-specialty user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));
+      mount(comp);
+    });
+
+    navLinksNonSpecialty.slice(2).forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:visible')
+        .its("length")
+        .should("eq", navLinksNonSpecialty.length - 2);
+    });
+  });
+
+  describe("Specialty user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
+      mount(comp);
+    });
+
+    navLinksSpecialty.slice(2).forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:visible')
+        .its("length")
+        .should("eq", navLinksSpecialty.length - 2);
+    });
+  });
+
+  describe("LTFT pilot user", () => {
+    beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
+      mount(comp);
+    });
+
+    navLinksLtftPilot.slice(2).forEach(link => {
+      it(`should show the ${link.name} link in the nav menu`, () => {
+        cy.get(`[data-cy="${link.name}"]`)
+          .should("exist")
+          .should("contain.text", `${link.name}`)
+          .should("have.attr", "href", `${link.href}`);
+      });
+    });
+
+    it("should not display any unexpected links", () => {
+      cy.get('[data-cy="nav-link-wrapper"]:visible')
+        .its("length")
+        .should("eq", navLinksLtftPilot.length - 2);
+    });
   });
 });

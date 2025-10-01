@@ -22,7 +22,11 @@ const Home = () => {
       {cardGroups.map((group, index) => (
         <Card.Group key={index}>
           {group.map(card => (
-            <Card.GroupItem key={card.linkHeader} width="one-third">
+            <Card.GroupItem
+              data-cy="card-group-item"
+              key={card.linkHeader}
+              width="one-third"
+            >
               <PageCard {...card} userFeatures={userFeatures} />
             </Card.GroupItem>
           ))}

@@ -15,7 +15,7 @@ import {
   mockProgrammeMembershipNoTrainingNumber,
   mockProgrammeMembershipNoResponsibleOfficer,
   mockProgrammeMembershipsForGrouping,
-  mockUserFeatures1
+  mockUserFeaturesLtftPilot
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -61,7 +61,7 @@ const mountProgrammesWithMockData = (
     );
     dispatch(updatedTraineeProfileStatus(profileStatus));
     dispatch(updatedActionsData(actionsData));
-    dispatch(updatedUserFeatures(mockUserFeatures1));
+    dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
     dispatch(updatedFormAList(formAList));
     dispatch(updatedFormBList(formBList));
     return <Programmes />;

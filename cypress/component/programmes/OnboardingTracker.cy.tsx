@@ -15,7 +15,7 @@ import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import {
   mockPersonalDetails,
   mockProgrammeMemberships,
-  mockUserFeatures1
+  mockUserFeaturesLtftPilot
 } from "../../../mock-data/trainee-profile";
 import { mockFormList } from "../../../mock-data/formr-list";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
@@ -51,7 +51,7 @@ const mountOnboardingTrackerWithMockData = (
     );
     dispatch(updatedTraineeProfileStatus(profileStatus));
     dispatch(updatedActionsData(actionsData));
-    dispatch(updatedUserFeatures(mockUserFeatures1));
+    dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
     dispatch(updatedFormAList(formAList));
     dispatch(updatedFormBList(formBList));
     return <OnboardingTracker />;

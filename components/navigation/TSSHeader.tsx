@@ -179,6 +179,7 @@ function makeTSSHeaderLinks(
     featureEnabled: boolean;
   }) => (
     <div
+      data-cy="nav-link-wrapper"
       key={pathObj.name}
       className={`nhsuk-header__navigation-item ${
         pathObj.mobileOnly ? "mobile-only-nav" : ""
