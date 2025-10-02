@@ -1009,7 +1009,7 @@ export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
 export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
   [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
 
-export const mockUserFeaturesUnauthenticated: UserFeaturesType = {
+export const mockUserFeaturesNone: UserFeaturesType = {
   actions: {
     enabled: false
   },

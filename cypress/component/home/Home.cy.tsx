@@ -12,7 +12,7 @@ import {
   mockUserFeaturesLtftPilot,
   mockUserFeaturesNonSpecialty,
   mockUserFeaturesSpecialty,
-  mockUserFeaturesUnauthenticated
+  mockUserFeaturesNone
 } from "../../../mock-data/trainee-profile";
 
 const baseCards = ["Support", "MFA"];
@@ -35,10 +35,10 @@ const specialtyCards = [
 const ltftPilotCards = [...specialtyCards, "Changing hours (LTFT)"];
 
 describe("Home with MFA set up", () => {
-  describe("Unauthenticated user", () => {
+  describe("When all features disabled", () => {
     beforeEach(() => {
       store.dispatch(updatedPreferredMfa("SMS"));
-      store.dispatch(updatedUserFeatures(mockUserFeaturesUnauthenticated));
+      store.dispatch(updatedUserFeatures(mockUserFeaturesNone));
       mount(
         <Provider store={store}>
           <Router history={history}>

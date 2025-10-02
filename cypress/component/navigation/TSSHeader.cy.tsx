@@ -13,7 +13,7 @@ import {
   mockUserFeaturesLtftPilot,
   mockUserFeaturesNonSpecialty,
   mockUserFeaturesSpecialty,
-  mockUserFeaturesUnauthenticated
+  mockUserFeaturesNone
 } from "../../../mock-data/trainee-profile";
 
 const navLinksBase = [
@@ -81,9 +81,9 @@ describe("Header with MFA set up", () => {
       .should("contain.text", "Sign out");
   });
 
-  describe("Unauthenticated user features", () => {
+  describe("When all features disabled", () => {
     beforeEach(() => {
-      store.dispatch(updatedUserFeatures(mockUserFeaturesUnauthenticated));
+      store.dispatch(updatedUserFeatures(mockUserFeaturesNone));
       mount(comp);
     });
 
@@ -197,9 +197,9 @@ describe("Desktop Header with MFA set up", () => {
       .should("have.attr", "href", "/mfa");
   });
 
-  describe("Unauthenticated user features", () => {
+  describe("When all features disabled", () => {
     beforeEach(() => {
-      store.dispatch(updatedUserFeatures(mockUserFeaturesUnauthenticated));
+      store.dispatch(updatedUserFeatures(mockUserFeaturesNone));
       mount(comp);
     });
 
