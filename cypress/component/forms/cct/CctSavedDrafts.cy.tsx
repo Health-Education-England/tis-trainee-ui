@@ -15,13 +15,13 @@ import {
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
 import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
 import {
-  mockUserFeatures1,
-  mockUserFeatures3
+  mockUserFeaturesLtftPilot,
+  mockUserFeaturesSpecialty
 } from "../../../../mock-data/trainee-profile";
 
 describe("CctSavedDrafts", () => {
   beforeEach(() => {
-    store.dispatch(updatedUserFeatures(mockUserFeatures1));
+    store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/cct"]}>
@@ -104,7 +104,7 @@ describe("CctSavedDrafts", () => {
 
 describe("CctSavedDrafts - not in the ltft pilot", () => {
   before(() => {
-    store.dispatch(updatedUserFeatures(mockUserFeatures3));
+    store.dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
     store.dispatch(updatedCctList(mockCctList));
     store.dispatch(updatedCctListStatus("succeeded"));
     store.dispatch(updatedLtftSummaryListStatus("succeeded"));

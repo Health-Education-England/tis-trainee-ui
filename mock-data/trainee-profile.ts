@@ -1009,7 +1009,7 @@ export const mockProgrammesForLinkerTestOutsideArcp: ProgrammeMembership[] = [
 export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[] =
   [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
 
-const mockUserFeatures: UserFeaturesType = {
+export const mockUserFeaturesNone: UserFeaturesType = {
   actions: {
     enabled: false
   },
@@ -1052,10 +1052,96 @@ const mockUserFeatures: UserFeaturesType = {
   }
 };
 
-export const mockUserFeatures1: UserFeaturesType = {
-  ...mockUserFeatures,
+export const mockUserFeaturesNonSpecialty: UserFeaturesType = {
+  actions: {
+    enabled: false
+  },
+  cct: {
+    enabled: false
+  },
+  details: {
+    enabled: true,
+    placements: {
+      enabled: true
+    },
+    profile: {
+      enabled: true,
+      gmcUpdate: {
+        enabled: false
+      }
+    },
+    programmes: {
+      enabled: true,
+      conditionsOfJoining: {
+        enabled: false
+      },
+      confirmation: {
+        enabled: false
+      }
+    }
+  },
   forms: {
-    ...mockUserFeatures.forms,
+    enabled: false,
+    formr: {
+      enabled: false
+    },
+    ltft: {
+      enabled: false,
+      qualifyingProgrammes: []
+    }
+  },
+  notifications: {
+    enabled: false
+  }
+};
+
+export const mockUserFeaturesSpecialty: UserFeaturesType = {
+  actions: {
+    enabled: true
+  },
+  cct: {
+    enabled: true
+  },
+  details: {
+    enabled: true,
+    placements: {
+      enabled: true
+    },
+    profile: {
+      enabled: true,
+      gmcUpdate: {
+        enabled: true
+      }
+    },
+    programmes: {
+      enabled: true,
+      conditionsOfJoining: {
+        enabled: true
+      },
+      confirmation: {
+        enabled: true
+      }
+    }
+  },
+  forms: {
+    enabled: true,
+    formr: {
+      enabled: true
+    },
+    ltft: {
+      enabled: false, // Pilot-only.
+      qualifyingProgrammes: []
+    }
+  },
+  notifications: {
+    enabled: true
+  }
+};
+
+export const mockUserFeaturesLtftPilot: UserFeaturesType = {
+  ...mockUserFeaturesSpecialty,
+  forms: {
+    ...mockUserFeaturesSpecialty.forms,
     ltft: {
       enabled: true,
       qualifyingProgrammes: [
@@ -1068,23 +1154,12 @@ export const mockUserFeatures1: UserFeaturesType = {
   }
 };
 
-export const mockUserFeatures2: UserFeaturesType = {
-  ...mockUserFeatures,
+export const mockUserFeaturesLtftPilotNoProgrammes: UserFeaturesType = {
+  ...mockUserFeaturesSpecialty,
   forms: {
-    ...mockUserFeatures.forms,
+    ...mockUserFeaturesSpecialty.forms,
     ltft: {
       enabled: true,
-      qualifyingProgrammes: []
-    }
-  }
-};
-
-export const mockUserFeatures3: UserFeaturesType = {
-  ...mockUserFeatures,
-  forms: {
-    ...mockUserFeatures.forms,
-    ltft: {
-      enabled: false,
       qualifyingProgrammes: []
     }
   }

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
 import { getNotifications } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
-import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
+import { UserFeaturesType } from "../../models/FeatureFlags";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +17,7 @@ const TSSHeader = () => {
     state => state.notifications.status
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  const isLtftPilot = useIsLtftPilot();
+  const userFeatures = useAppSelector(state => state.user.features);
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
@@ -84,7 +84,7 @@ const TSSHeader = () => {
         </span>
       </div>
       <Header.Nav style={{ maxWidth: "100%" }}>
-        {makeTSSHeaderLinks(preferredMfa, isLtftPilot)}
+        {makeTSSHeaderLinks(preferredMfa, userFeatures)}
         <div className="nhsuk-header__navigation-item mobile-only-nav">
           <SignOutBtn />
         </div>
@@ -94,58 +94,80 @@ const TSSHeader = () => {
 };
 export default TSSHeader;
 
-function makeTSSHeaderLinks(preferredMfa: string, isLtftPilot: boolean) {
+function makeTSSHeaderLinks(
+  preferredMfa: string,
+  userFeatures: UserFeaturesType
+) {
   const paths = [
     {
       path: "action-summary",
       name: "Action Summary",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.actions.enabled
     },
     {
       path: "programmes",
       name: "Programmes",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.details.programmes.enabled
     },
     {
       path: "placements",
       name: "Placements",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.details.placements.enabled
     },
     {
       path: "cct",
       name: "CCT",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.cct.enabled
     },
     {
       path: "formr-a",
       name: "Form R (A)",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.forms.formr.enabled
     },
     {
       path: "formr-b",
       name: "Form R (B)",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.forms.formr.enabled
     },
-    { path: "support", name: "Support", mobileOnly: true, showWithNoMfa: true },
-    { path: "mfa", name: "MFA set-up", mobileOnly: true, showWithNoMfa: true },
+    {
+      path: "support",
+      name: "Support",
+      mobileOnly: true,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
+    {
+      path: "mfa",
+      name: "MFA set-up",
+      mobileOnly: true,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
     {
       path: "profile",
       name: "Profile",
       mobileOnly: false,
-      showWithNoMfa: false
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.details.profile.enabled
     },
     {
       path: "ltft",
       name: "Changing hours (LTFT)",
       mobileOnly: false,
       showWithNoMfa: false,
-      showForLtftPilot: true
+      featureEnabled: userFeatures.forms.ltft.enabled
     }
   ];
 
@@ -154,9 +176,10 @@ function makeTSSHeaderLinks(preferredMfa: string, isLtftPilot: boolean) {
     name: string;
     mobileOnly: boolean;
     showWithNoMfa: boolean;
-    showForLtftPilot?: boolean;
+    featureEnabled: boolean;
   }) => (
     <div
+      data-cy="nav-link-wrapper"
       key={pathObj.name}
       className={`nhsuk-header__navigation-item ${
         pathObj.mobileOnly ? "mobile-only-nav" : ""
@@ -164,7 +187,7 @@ function makeTSSHeaderLinks(preferredMfa: string, isLtftPilot: boolean) {
       hidden={
         ((preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
           !pathObj.showWithNoMfa) ||
-        (pathObj?.showForLtftPilot && !isLtftPilot)
+        !pathObj?.featureEnabled
       }
     >
       <NavLink
