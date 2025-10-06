@@ -123,6 +123,25 @@ describe("ActionSummary", () => {
       const actualCount = screen.getAllByText(formattedDate).length;
       expect(actualCount).toBe(expectedCount);
     });
+
+    // Test Onboarding Tracker links
+    expect(screen.getAllByText("Onboarding Tracker").length).toBe(2);
+
+    const firstProgrammeLink = screen
+      .getByText("View Onboarding Tracker for First Programme")
+      .closest("a");
+    expect(firstProgrammeLink).toHaveAttribute(
+      "href",
+      "/programmes/1/onboarding-tracker"
+    );
+
+    const secondProgrammeLink = screen
+      .getByText("View Onboarding Tracker for Second Programme")
+      .closest("a");
+    expect(secondProgrammeLink).toHaveAttribute(
+      "href",
+      "/programmes/2/onboarding-tracker"
+    );
   });
 
   test("renders correct links for each action type", () => {
