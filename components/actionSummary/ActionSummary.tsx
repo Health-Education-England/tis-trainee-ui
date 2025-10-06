@@ -99,6 +99,18 @@ export default function ActionSummary() {
                   })}
                 </Table.Body>
               </Table>
+              <div style={{ marginTop: "2rem" }}>
+                <h3 className="nhsuk-heading-s">Onboarding Tracker</h3>
+                <Link
+                  to={`/programmes/${group["Programme ID"]}/onboarding-tracker`}
+                  className="nhsuk-link"
+                >
+                  <p>
+                    View Onboarding Tracker for{" "}
+                    {group["Programme Membership name"]}
+                  </p>
+                </Link>
+              </div>
             </Card.Content>
           </Card>
         ))
