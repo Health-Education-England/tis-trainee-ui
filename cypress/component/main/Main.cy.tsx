@@ -9,6 +9,8 @@ import history from "../../../components/navigation/history";
 import React from "react";
 import { updatedReferenceStatus } from "../../../redux/slices/referenceSlice";
 import { Authenticator } from "@aws-amplify/ui-react";
+import { updatedFeatureFlagsStatus } from "../../../redux/slices/featureFlagsSlice";
+import { updatedActionsStatus } from "../../../redux/slices/traineeActionsSlice";
 
 describe("Main", () => {
   const mountComponent = (
@@ -18,6 +20,9 @@ describe("Main", () => {
   ) => {
     const MockedMain = () => {
       const dispatch = useAppDispatch();
+
+      dispatch(updatedActionsStatus(status));
+      dispatch(updatedFeatureFlagsStatus(status));
       dispatch(updatedTraineeProfileStatus(status));
       if (referenceStatus) {
         dispatch(updatedReferenceStatus(referenceStatus));
@@ -44,8 +49,20 @@ describe("Main", () => {
 
   it("should show error page when there is a critical error", () => {
     mountComponent("failed", "failed", true);
-    cy.contains("There was an error loading the app data").should("be.visible");
-    cy.contains("Please try again by refreshing the page").should("be.visible");
+    cy.get('[data-cy="error-header-text"]')
+      .should("be.visible")
+      .contains("Oops! Something went wrong");
+    cy.get('[data-cy="error-message-text"]')
+      .should("be.visible")
+      .contains(
+        "There was an error loading the app data. Please try again by refreshing the page."
+      );
+  });
+
+  it("should not show error page when there is a critical success", () => {
+    mountComponent("succeeded", "succeeded");
+    cy.get('[data-cy="error-header-text"]').should("not.exist");
+    cy.get('[data-cy="error-message-text"]').should("not.exist");
   });
 
   it("should remove the redirected parameter from the URL", () => {

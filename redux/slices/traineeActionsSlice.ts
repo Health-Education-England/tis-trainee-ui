@@ -65,6 +65,9 @@ const traineeActionsSlice = createSlice({
         ...state,
         refreshNeeded: action.payload
       };
+    },
+    updatedActionsStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
     }
   },
   extraReducers(builder) {
@@ -109,7 +112,8 @@ export default traineeActionsSlice.reducer;
 export const {
   updatedActionsData,
   resetTraineeAction,
-  setActionsRefreshNeeded
+  setActionsRefreshNeeded,
+  updatedActionsStatus
 } = traineeActionsSlice.actions;
 
 export const selectTraineeActions = (state: { traineeActions: IAction }) =>

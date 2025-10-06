@@ -177,7 +177,9 @@ const userSlice = createSlice({
     builder
       .addCase(fetchUserSession.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.features = action?.payload?.features as UserFeaturesType;
+        state.features =
+          (action?.payload?.features as UserFeaturesType) ??
+          initialState.features;
       })
       .addCase(fetchUserSession.rejected, (state, action) => {
         state.status = "failed";
