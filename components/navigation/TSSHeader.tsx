@@ -4,28 +4,25 @@ import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
-import { getAllNotifications } from "../../redux/slices/notificationsSlice";
+import { getNotificationCount } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
 import { useIsLtftPilot } from "../../utilities/hooks/useIsLtftPilot";
 import { EmailsBtn } from "../notifications/EmailsBtn";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
-  const failedEmailCount = useAppSelector(
-    state => state.notifications.failedEmailCount
-  );
   const unreadNotificationCount = useAppSelector(
     state => state.notifications.unreadNotificationCount
   );
   const notificationsStatus = useAppSelector(
-    state => state.notifications.status
+    state => state.notifications.countStatus
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const isLtftPilot = useIsLtftPilot();
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
-      dispatch(getAllNotifications());
+      dispatch(getNotificationCount());
     }
   }, [notificationsStatus, dispatch]);
 
@@ -44,7 +41,6 @@ const TSSHeader = () => {
         <Header.Content>
           <div className="mobile-header">
             <EmailsBtn
-              failedEmailCount={failedEmailCount}
               data-cy="emailBtnHDR"
             />
             <NotificationsBtn
@@ -55,7 +51,6 @@ const TSSHeader = () => {
           </div>
           <div className="top-nav-container">
             <EmailsBtn
-              failedEmailCount={failedEmailCount}
               data-cy="emailBtnHDR"
             />
             <NotificationsBtn

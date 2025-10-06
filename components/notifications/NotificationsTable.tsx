@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,32 +10,51 @@ import {
   ColumnFiltersState,
   PaginationState
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../redux/hooks/hooks";
-import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { switchNotification, updateNotificationStatus } from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
 import { emailColumns, inAppColumns } from "./columns";
 import { Button, Label } from "nhsuk-react-components";
-import { NotificationType } from "../../redux/slices/notificationsSlice";
+import { getNotifications, NotificationType } from "../../redux/slices/notificationsSlice";
 import { AllFailedCheckbox } from "./AllFailedCheckbox";
 // import history from "../navigation/history";
 
 export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type }) => {
-  let notificationsData: NotificationType[]; //TODO: replace let
-  let columns = []; //TODO: replace let
-  if (type === "IN_APP") {
-    notificationsData = useAppSelector(
-      state => state.notifications.inAppNotificationsList
-    );
+    const dispatch = useAppDispatch();
+    const notificationsStatus = useAppSelector(
+      state => state.notifications.status
+    );      
+    const viewingType = useAppSelector(
+      state => state.notifications.viewingType
+    );      
+    switchNotification(type)
+    
+    useEffect(() => {
+      console.log("reload: "+ notificationsStatus);
+      if (notificationsStatus === "idle") {        
+      console.log("in idle");
+        dispatch(getNotifications({
+          "page": "0",
+          "size": "5",
+          "type": type
+        }));
+      }
+    }, [notificationsStatus, dispatch]);
+    
+  let notificationsData: NotificationType[];
+  let columns = [];
+  notificationsData = useAppSelector(
+    state => state.notifications.notificationsList
+  );
+  if (viewingType === "IN_APP") {
     columns = inAppColumns;
   }
   else {    
-    notificationsData = useAppSelector(
-      state => state.notifications.emailNotificationsList
-    );    
     columns = emailColumns;
   }
+  
   const memoData = useMemo(() => notificationsData, [notificationsData]);
 
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -72,14 +91,14 @@ export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type 
     <>
       <Button
         type="button"
-        className="notification-btn"
+        className={`notification-type-btn ${(viewingType==="EMAIL")? "active-type-btn":""}`}
         data-cy="emailBtn"
         // onClick={history.push("/notifications/email")}
       >Email
       </Button>
       <Button
         type="button"
-        className="notification-btn"
+        className={`notification-type-btn ${(viewingType==="IN_APP")? "active-type-btn":""}`}
         data-cy="inAppBtn"
         // onClick={history.push("/notifications/in-app")}
       >In App

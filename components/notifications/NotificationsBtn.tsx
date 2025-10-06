@@ -22,7 +22,7 @@ export const NotificationsBtn = ({
     >
       <span>
         <FontAwesomeIcon icon={faBell} size="xs" color="white" />
-        <Tooltip id="NotificationsCount" content="Read your notifications" />
+        <Tooltip id="NotificationsCount" content="In-app notifications" />
         {unreadNotificationCount > 0 && (
           <span className="notification-badge">{unreadNotificationCount}</span>
         )}

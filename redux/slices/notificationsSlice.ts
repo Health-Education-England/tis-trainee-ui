@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { TraineeNotificationsService } from "../../services/TraineeNotificationsService";
-import { switchNotificationType } from "../../utilities/NotificationsUtilities";
 
 export type NotificationStatus =
   | "READ"
@@ -13,6 +12,18 @@ export type NotificationStatus =
 
 export type NotificationMsgType = "IN_APP" | "EMAIL";
 
+export type NotificationPage = {
+  content: NotificationType[];
+  page: PageDetails;
+};
+
+export type PageDetails = {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages:number;
+};
+
 export type NotificationType = {
   id: string;
   tisReference: string | null;
@@ -20,7 +31,6 @@ export type NotificationType = {
   subject: string;
   subjectText: string | null;
   contact: string | null;
-  emailNotificationStatus: NotificationStatus | null;
   status: NotificationStatus;
   sentAt: Date | null;
   statusDetail: string | null;
@@ -29,45 +39,58 @@ export type NotificationType = {
 
 export type NotificationsState = {
   notificationsList: NotificationType[];
-  inAppNotificationsList: NotificationType[];
-  emailNotificationsList: NotificationType[];
-  emailNotificationStatus: string;
-  viewingType: NotificationType | null;
+  // inAppNotificationsList: NotificationType[];
+  // emailNotificationsList: NotificationType[];
+  notificationsTotalCount: number;
+  notificationsPage: number;
+  viewingType: NotificationMsgType | null;
   status: string;
+  countStatus: string;
   notificationUpdateStatus: string;
   notificationMsg: string;
   msgStatus: string;
   error: any;
   emailNotificationsError: any;
   activeNotification: NotificationType | null;
-  failedEmailCount: number;
   unreadNotificationCount: number;
   notificationUpdateInProgress: boolean; // to prevent multiple row/button clicks
 };
 
 export const initialState: NotificationsState = {
   notificationsList: [],
-  inAppNotificationsList: [],
-  emailNotificationsList: [],
-  emailNotificationStatus: "idle",
+  // inAppNotificationsList: [],
+  // emailNotificationsList: [],
+  notificationsTotalCount: 0,
+  notificationsPage: 0,
   viewingType: null,
   status: "idle",
+  countStatus: "idle",
   notificationUpdateStatus: "idle",
   notificationMsg: "",
   msgStatus: "idle",
   error: "",
   emailNotificationsError: "",
   activeNotification: null,
-  failedEmailCount: 0,
   unreadNotificationCount: 0,
   notificationUpdateInProgress: false
 };
 
-export const getAllNotifications = createAsyncThunk(
-  "notifications/getAllNotifications",
+export const getNotificationCount = createAsyncThunk(
+  "notifications/getNotificationCount",
   async () => {
     const notificationService = new TraineeNotificationsService();
-    const response = await notificationService.getAllNotifications();
+    const response = await notificationService.getNotifications({
+      page: "0",
+      size: "0"
+    });
+    return response.data;
+  }
+);
+export const getNotifications = createAsyncThunk(
+  "notifications/getNotifications",
+  async (params?: Record<string, string>) => {
+    const notificationService = new TraineeNotificationsService();
+    const response = await notificationService.getNotifications(params);
     return response.data;
   }
 );
@@ -138,22 +161,42 @@ const notificationsSlice = createSlice({
   },
   extraReducers(builder): void {
     builder      
-      .addCase(getAllNotifications.pending, (state) => {
+      .addCase(getNotificationCount.pending, (state) => {
+        state.countStatus = "loading";
+      })
+      .addCase(getNotificationCount.fulfilled, (state, action) => {
+        state.countStatus = "succeeded";
+        state.unreadNotificationCount = unreadNotificationsCount(
+          action.payload.content ?? 0
+        );
+      })
+      .addCase(getNotificationCount.rejected, (state, { error }) => {    
+        state.countStatus = "failed";
+        state.error = error.message;
+        showToast(
+          toastErrText.getNotificationsCount,
+          ToastType.ERROR,
+          `${error.code}-${error.message}`
+        );
+      })
+      .addCase(getNotifications.pending, (state) => {
+        console.log("loading");
         state.status = "loading";
       })
-      .addCase(getAllNotifications.fulfilled, (state, action) => {
+      .addCase(getNotifications.fulfilled, (state, action) => {
+        console.log("succeeded");
         state.status = "succeeded";
-        state.notificationsList = action.payload;
-        state.emailNotificationsList = action.payload.filter(n => n.type === "EMAIL");
-        state.inAppNotificationsList = action.payload.filter(n => n.type === "IN_APP");
-        state.failedEmailCount = failedEmailsCount(
-          action.payload ?? 0
-        );
-        state.unreadNotificationCount = unreadNotificationsCount(
-          action.payload ?? 0
-        );
+        state.notificationsTotalCount = action.payload.page.totalElements;
+        state.notificationsPage = action.payload.page.number;
+        state.notificationsList = action.payload.content;
+        if (state.viewingType === "IN_APP") {
+          state.unreadNotificationCount = unreadNotificationsCount(
+            action.payload.content ?? 0
+          );
+        }
       })
-      .addCase(getAllNotifications.rejected, (state, { error }) => {
+      .addCase(getNotifications.rejected, (state, { error }) => {        
+        console.log("failed");
         state.status = "failed";
         state.error = error.message;
         showToast(
@@ -234,16 +277,9 @@ export const {
   updatedNotificationsList,
   resetNotificationsStatus,
   loadedNotificationsList,
-  updatedNotificationUpdateInProgress
+  updatedNotificationUpdateInProgress,
+  switchNotificationType
 } = notificationsSlice.actions;
-
-export function failedEmailsCount(notificationsData: any[]) {
-  if (!Array.isArray(notificationsData)) return 0;
-  const failedEmails = notificationsData.filter(
-    notification => notification.status === "FAILED"
-  );
-  return failedEmails.length;
-}
 
 export function unreadNotificationsCount(notificationsData: any[]) {
   if (!Array.isArray(notificationsData)) return 0;

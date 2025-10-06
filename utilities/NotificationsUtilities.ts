@@ -5,16 +5,13 @@ import {
   markNotificationAsRead,
   markNotificationAsUnread,
   resetNotificationsStatus,
+  switchNotificationType,
   updatedActiveNotification,
   updatedNotificationUpdateInProgress,
   updatedNotificationsList
 } from "../redux/slices/notificationsSlice";
 import store from "../redux/store/store";
 import history from "../components/navigation/history";
-
-export function switchNotificationType(msgType: NotificationMsgType) {
-  store.dispatch(switchNotificationType(msgType));
-}
 
 export function updateNotificationStatusFE(
   row: NotificationType,
@@ -73,4 +70,8 @@ export async function updateNotificationStatus(
   }
   
   store.dispatch(updatedNotificationUpdateInProgress(false));
+}
+
+export async function switchNotification(msgType: NotificationMsgType) {
+  store.dispatch(switchNotificationType(msgType));
 }
