@@ -14,13 +14,17 @@ export class TraineeNotificationsService extends ApiService {
   
     if (params) {
       for (const [key, value] of Object.entries(params)) {
-        if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null && value !== "") {
           searchParams.append(key, String(value));
         }
       }
     }
   
-    return this.get<NotificationPage>(`/notifications?${searchParams.toString()}`);
+    if (!searchParams.toString()) {
+      return this.get<NotificationPage>(`/notifications`);
+    } else {
+      return this.get<NotificationPage>(`/notifications?${searchParams.toString()}`);
+    }
   }
 
   async markNotificationAsRead(

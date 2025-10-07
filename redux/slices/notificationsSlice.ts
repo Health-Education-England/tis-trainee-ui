@@ -227,7 +227,7 @@ export const {
   updatedNotificationUpdateInProgress
 } = notificationsSlice.actions;
 
-export function unreadNotificationsCount(notificationsData: any[]) {
+export function unreadNotificationsCount(notificationsData: NotificationType[]) {
   if (!Array.isArray(notificationsData)) return 0;
   const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
