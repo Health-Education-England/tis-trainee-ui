@@ -128,7 +128,7 @@ const notificationsSlice = createSlice({
         state.status = "succeeded";
         state.notificationsList = action.payload;
         state.unreadNotificationCount = unreadNotificationsCount(
-          action.payload ?? 0
+          action.payload.content ?? 0
         );
       })
       .addCase(getNotifications.rejected, (state, { error }) => {
