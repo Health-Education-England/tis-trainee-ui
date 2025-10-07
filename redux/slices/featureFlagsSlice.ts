@@ -33,6 +33,9 @@ const featureFlagsSlice = createSlice({
   reducers: {
     updatedFeatureFlags(state, action: PayloadAction<FeatureFlags>) {
       return { ...state, featureFlags: action.payload };
+    },
+    updatedFeatureFlagsStatus(state, action: PayloadAction<string>) {
+      return { ...state, status: action.payload };
     }
   },
   extraReducers(builder) {
@@ -58,4 +61,5 @@ const featureFlagsSlice = createSlice({
 
 export default featureFlagsSlice.reducer;
 
-export const { updatedFeatureFlags } = featureFlagsSlice.actions;
+export const { updatedFeatureFlags, updatedFeatureFlagsStatus } =
+  featureFlagsSlice.actions;
