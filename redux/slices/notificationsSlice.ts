@@ -140,7 +140,7 @@ const notificationsSlice = createSlice({
         state.status = "succeeded";
         state.notificationsList = action.payload.content;
         state.unreadNotificationCount = unreadNotificationsCount(
-          action.payload ?? 0
+          action.payload.content ?? 0
         );
       })
       .addCase(getNotifications.rejected, (state, { error }) => {
@@ -227,10 +227,9 @@ export const {
   updatedNotificationUpdateInProgress
 } = notificationsSlice.actions;
 
-export function unreadNotificationsCount(notificationsData: NotificationPage) {
-  let notifications = notificationsData.content;
-  if (!Array.isArray(notifications)) return 0;
-  const unreadNotifications = notifications.filter(
+export function unreadNotificationsCount(notificationsData: any[]) {
+  if (!Array.isArray(notificationsData)) return 0;
+  const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
   );
   return unreadNotifications.length;

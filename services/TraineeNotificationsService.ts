@@ -6,16 +6,21 @@ export class TraineeNotificationsService extends ApiService {
   constructor() {
     super("/api");
   }
+  
   async getAllNotifications(
     params?: Record<string, string | number>
-  ): Promise<AxiosResponse<NotificationPage>> {    
-    const page = params?.page ? params?.page : "";
-    const size = params?.size ? params?.size : "";
-    const sort = params?.sort ? params?.sort : "";
-    const type = params?.type ? params?.type : "";
-    const status = params?.status ? params?.status : "";
-    const keyword = params?.keyword ? params?.keyword : "";
-    return this.get<NotificationPage>(`/notifications?page=${page}&size=${size}&sort=${sort}&type=${type}&status=${status}&keyword=${keyword}`);
+  ): Promise<AxiosResponse<NotificationPage>> {
+    const searchParams = new URLSearchParams();
+  
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      }
+    }
+  
+    return this.get<NotificationPage>(`/notifications?${searchParams.toString()}`);
   }
 
   async markNotificationAsRead(
