@@ -64,7 +64,7 @@ describe("TraineeNotificationsService", () => {
     expect(result).toEqual(mockResponse);
   });
 
-  it("getAllNotifications should ignore empty or null param values", async () => {
+  it("getAllNotifications should ignore empty or null param field values", async () => {
     const params = { page: 1, type: "" };
     const mockResponse: AxiosResponse<NotificationPage> = {
       data: {
@@ -91,6 +91,36 @@ describe("TraineeNotificationsService", () => {
     const result = await mockService.getAllNotifications(params);
 
     expect(mockService.get).toHaveBeenCalledWith("/notifications?page=1");
+    expect(result).toEqual(mockResponse);
+  });
+
+  it("getAllNotifications should ignore empty or null param values", async () => {
+    const params = { page: "", type: "" };
+    const mockResponse: AxiosResponse<NotificationPage> = {
+      data: {
+        content: inAppNotifications,
+        page: {
+          size: 2000,
+          number: 0,
+          totalElements: 0,
+          totalPages: 1
+        }
+      },
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      config: {
+        headers: {} as AxiosRequestHeaders
+      },
+    };
+
+    jest
+      .spyOn(mockService, "get")
+      .mockResolvedValue(mockResponse);
+
+    const result = await mockService.getAllNotifications(params);
+
+    expect(mockService.get).toHaveBeenCalledWith("/notifications");
     expect(result).toEqual(mockResponse);
   });
 });

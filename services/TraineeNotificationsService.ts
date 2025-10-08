@@ -20,10 +20,10 @@ export class TraineeNotificationsService extends ApiService {
       }
     }
   
-    if (!searchParams.toString()) {
-      return this.get<NotificationPage>(`/notifications`);
-    } else {
+    if (searchParams.toString()) {
       return this.get<NotificationPage>(`/notifications?${searchParams.toString()}`);
+    } else {
+      return this.get<NotificationPage>(`/notifications`);
     }
   }
 
