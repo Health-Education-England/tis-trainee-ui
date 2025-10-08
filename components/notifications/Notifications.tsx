@@ -5,8 +5,10 @@ import { Fieldset } from "nhsuk-react-components";
 import PageNotFound from "../common/PageNotFound";
 import { NotificationsTable } from "./NotificationsTable";
 import { NotificationMessage } from "./NotificationMessage";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 export const Notifications = () => {
+  const viewingType = useAppSelector(state => state.notifications.viewingType);
   return (
     <>
       <PageTitle title="Notifications" />
@@ -17,7 +19,7 @@ export const Notifications = () => {
           className="fieldset-legend__header"
           data-cy="notificationsHeading"
         >
-          Notifications
+          {viewingType === "IN_APP" ? "In-app" : "Email"} Notifications
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
