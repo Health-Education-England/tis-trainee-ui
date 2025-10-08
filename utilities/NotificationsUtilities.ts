@@ -73,5 +73,6 @@ export async function updateNotificationStatus(
 }
 
 export async function switchNotification(msgType: NotificationMsgType) {
+  store.dispatch(resetNotificationsStatus());
   store.dispatch(switchNotificationType(msgType));
 }

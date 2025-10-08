@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import history from "../navigation/history";
+import { switchNotification } from "../../utilities/NotificationsUtilities";
 type NotificationsBtnType = {
   unreadNotificationCount: number;
 };
@@ -10,7 +11,8 @@ export const NotificationsBtn = ({
   unreadNotificationCount
 }: NotificationsBtnType) => {
   const handleBtnClick = () => {
-    history.push("/notifications/in-app");
+    switchNotification("IN_APP")
+    history.push("/notifications");
   };
   return (
     <Button

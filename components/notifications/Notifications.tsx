@@ -26,19 +26,11 @@ export const Notifications = () => {
       </Fieldset>
       <Switch>
         <Route
-          path="/notifications/email"
-          render={() => <NotificationsTable type="EMAIL" />}
-        />
-        <Route
-          path="/notifications/in-app"
-          render={() => <NotificationsTable type="IN_APP" />}
-        />
-        <Route
           exact
           path="/notifications/:id"
           component={NotificationMessage}
         />
-        <Route exact path="/notifications/:type" component={NotificationsTable} />
+        <Route exact path="/notifications" component={NotificationsTable} />
         <Route path="/notifications/*" component={PageNotFound} />
       </Switch>
     </>

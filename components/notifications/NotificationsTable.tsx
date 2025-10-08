@@ -19,26 +19,23 @@ import { emailColumns, inAppColumns } from "./columns";
 import { Button, Label } from "nhsuk-react-components";
 import { getNotifications, NotificationType } from "../../redux/slices/notificationsSlice";
 import { AllFailedCheckbox } from "./AllFailedCheckbox";
-// import history from "../navigation/history";
 
-export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type }) => {
+  export const NotificationsTable: React.FC = () => {
     const dispatch = useAppDispatch();
     const notificationsStatus = useAppSelector(
       state => state.notifications.status
     );      
     const viewingType = useAppSelector(
       state => state.notifications.viewingType
-    );      
-    switchNotification(type)
+    );
     
     useEffect(() => {
-      console.log("reload: "+ notificationsStatus);
-      if (notificationsStatus === "idle") {        
-      console.log("in idle");
+      if (notificationsStatus === "idle") {
+      // to be refactored when BE pagination/filter is used
         dispatch(getNotifications({
           "page": "0",
-          "size": "5",
-          "type": type
+          "size": "0",
+          "type": viewingType
         }));
       }
     }, [notificationsStatus, dispatch]);
@@ -93,14 +90,14 @@ export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type 
         type="button"
         className={`notification-type-btn ${(viewingType==="EMAIL")? "active-type-btn":""}`}
         data-cy="emailBtn"
-        // onClick={history.push("/notifications/email")}
+        onClick={() => switchNotification("EMAIL")} 
       >Email
       </Button>
       <Button
         type="button"
         className={`notification-type-btn ${(viewingType==="IN_APP")? "active-type-btn":""}`}
         data-cy="inAppBtn"
-        // onClick={history.push("/notifications/in-app")}
+        onClick={() => switchNotification("IN_APP")} 
       >In App
       </Button>
       <br/>
@@ -117,7 +114,7 @@ export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type 
             {table.getHeaderGroups().map(headerGroup => {
               return (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => {
+                  {headerGroup.headers.map(header => {                    
                     return (
                       <th
                         key={header.id}
@@ -132,7 +129,7 @@ export const NotificationsTable: React.FC<{type: 'EMAIL' | 'IN_APP'}> = ({ type 
                           header.getContext()
                         )}
                         {header.column.columnDef.id === "status" && 
-                        ((type==="IN_APP") ? <AllUnreadCheckbox header={header} /> : <AllFailedCheckbox header={header} />)                        
+                        ((viewingType==="IN_APP") ? <AllUnreadCheckbox header={header} /> : <AllFailedCheckbox header={header} />)                        
                         }
                       </th>
                     );

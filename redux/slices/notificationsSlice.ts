@@ -88,7 +88,7 @@ export const getNotificationCount = createAsyncThunk(
 );
 export const getNotifications = createAsyncThunk(
   "notifications/getNotifications",
-  async (params?: Record<string, string>) => {
+  async (params?: Record<string, any>) => {
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getNotifications(params);
     return response.data;

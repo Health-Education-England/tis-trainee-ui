@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
 import history from "../navigation/history";
+import { switchNotification } from "../../utilities/NotificationsUtilities";
 export const EmailsBtn = () => {
   const handleBtnClick = () => {
-    history.push("/notifications/email");
+    switchNotification("EMAIL")
+    history.push("/notifications");
   };
   return (
     <Button
