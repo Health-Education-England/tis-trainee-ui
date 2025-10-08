@@ -21,7 +21,13 @@ const TSSHeader = () => {
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
-      dispatch(getNotifications());
+      dispatch(
+        getNotifications({
+          page: "0",
+          size: "0",
+          type: "IN_APP"
+        })
+      );
     }
   }, [notificationsStatus, dispatch]);
 

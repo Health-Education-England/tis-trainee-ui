@@ -10,6 +10,18 @@ export type NotificationStatus =
   | "SENT"
   | "ARCHIVED";
 
+export type NotificationPage = {
+  content: NotificationType[];
+  page: PageDetails;
+};
+
+export type PageDetails = {
+  size: number;
+  number: number;
+  totalElements: number;
+  totalPages:number;
+};
+
 export type NotificationMsgType = "IN_APP";
 
 export type NotificationType = {
@@ -51,10 +63,10 @@ export const initialState: NotificationsState = {
 
 export const getNotifications = createAsyncThunk(
   "notifications/getNotifications",
-  async () => {
+  async (params?: Record<string, string>) => {
     const notificationService = new TraineeNotificationsService();
-    const response = await notificationService.getAllNotifications();
-    return response.data.filter(n => n.type == "IN_APP");
+    const response = await notificationService.getAllNotifications(params);
+    return response.data;
   }
 );
 
@@ -126,9 +138,9 @@ const notificationsSlice = createSlice({
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.notificationsList = action.payload;
+        state.notificationsList = action.payload.content;
         state.unreadNotificationCount = unreadNotificationsCount(
-          action.payload ?? 0
+          action.payload.content ?? 0
         );
       })
       .addCase(getNotifications.rejected, (state, { error }) => {
@@ -215,7 +227,7 @@ export const {
   updatedNotificationUpdateInProgress
 } = notificationsSlice.actions;
 
-export function unreadNotificationsCount(notificationsData: any[]) {
+export function unreadNotificationsCount(notificationsData: NotificationType[]) {
   if (!Array.isArray(notificationsData)) return 0;
   const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
