@@ -7,7 +7,7 @@ export class TraineeNotificationsService extends ApiService {
     super("/api");
   }
   
-  async getAllNotifications(
+  async getNotifications(
     params?: Record<string, string | number>
   ): Promise<AxiosResponse<NotificationPage>> {
     const searchParams = new URLSearchParams();
