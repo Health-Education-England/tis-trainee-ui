@@ -72,8 +72,20 @@ export function LoSupport({
               Portal
             </ActionLink>
           )}
+          {localOfficeContacts[values.localOffice] ===
+            "Freshdesk support portal" && (
+            <ActionLink
+              data-cy="freshdeskLink"
+              href="https://nhs-help.freshdesk.com/support/home"
+            >
+              Click here to raise your support request via the Fresh Desk
+              Support Portal
+            </ActionLink>
+          )}
 
           {localOfficeContacts[values.localOffice] !== "PGMDE support portal" &&
+            localOfficeContacts[values.localOffice] !==
+              "Freshdesk support portal" &&
             localOfficeContacts[values.localOffice]?.length > 0 && (
               <>
                 <Label size="s" data-cy="loSupportCatPrompt">
