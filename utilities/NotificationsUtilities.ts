@@ -1,9 +1,13 @@
 import {
+  NotificationMsgType,
   NotificationStatus,
   NotificationType,
   markNotificationAsRead,
   markNotificationAsUnread,
   resetNotificationsStatus,
+  switchNotificationType,
+  updateNotificationStatusFilter,
+  updatedActiveNotification,
   updatedNotificationUpdateInProgress,
   updatedNotificationsList
 } from "../redux/slices/notificationsSlice";
@@ -56,7 +60,26 @@ export async function updateNotificationStatus(
   store.dispatch(updatedNotificationUpdateInProgress(true));
   // update FE first to see immediate change
   updateNotificationStatusFE(row, newStatus);
-  // then make BE call
-  await updateNotificationStatusBE(row, newStatus);
+
+  if (row.type === "IN_APP") {    
+    // then make BE call
+    await updateNotificationStatusBE(row, newStatus);
+  }
+  else {
+    store.dispatch(updatedActiveNotification(row));
+    history.push(`/notifications/${row.id}`);
+  }
+  
   store.dispatch(updatedNotificationUpdateInProgress(false));
+}
+
+export async function switchNotification(msgType: NotificationMsgType) {
+  store.dispatch(resetNotificationsStatus());
+  store.dispatch(updateNotificationStatusFilter(""));
+  store.dispatch(switchNotificationType(msgType));
+}
+
+export async function applyNotificationStatusFilter(filter: string) {
+  store.dispatch(resetNotificationsStatus());
+  store.dispatch(updateNotificationStatusFilter(filter));
 }

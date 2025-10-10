@@ -4,9 +4,10 @@ import { SignOutBtn } from "../common/SignOutBtn";
 import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
-import { getNotifications } from "../../redux/slices/notificationsSlice";
+import { getNotificationCount } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
 import { UserFeaturesType } from "../../models/FeatureFlags";
+import { EmailsBtn } from "../notifications/EmailsBtn";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -14,20 +15,14 @@ const TSSHeader = () => {
     state => state.notifications.unreadNotificationCount
   );
   const notificationsStatus = useAppSelector(
-    state => state.notifications.status
+    state => state.notifications.countStatus
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const userFeatures = useAppSelector(state => state.user.features);
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
-      dispatch(
-        getNotifications({
-          page: "0",
-          size: "0",
-          type: "IN_APP"
-        })
-      );
+      dispatch(getNotificationCount());
     }
   }, [notificationsStatus, dispatch]);
 
@@ -45,6 +40,7 @@ const TSSHeader = () => {
         </div>
         <Header.Content>
           <div className="mobile-header">
+            <EmailsBtn data-cy="emailBtnHDR" />
             <NotificationsBtn
               unreadNotificationCount={unreadNotificationCount}
               data-cy="notificationBtnHDR"
@@ -52,6 +48,7 @@ const TSSHeader = () => {
             <Header.MenuToggle data-cy="menuToggleBtn" />
           </div>
           <div className="top-nav-container">
+            <EmailsBtn data-cy="emailBtnHDR" />
             <NotificationsBtn
               unreadNotificationCount={unreadNotificationCount}
               data-cy="notificationBtnHDR"
