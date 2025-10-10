@@ -78,7 +78,7 @@ export function LoSupport({
               data-cy="freshdeskLink"
               href="https://nhs-help.freshdesk.com/support/home"
             >
-              Click here to raise your support request via the Fresh Desk
+              Click here to submit your support request via the Fresh Desk
               Support Portal
             </ActionLink>
           )}
