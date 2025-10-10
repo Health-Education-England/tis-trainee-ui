@@ -350,7 +350,7 @@ type localOfficeContactsProps = {
 };
 
 export const localOfficeContacts: localOfficeContactsProps = {
-  "East Midlands": "england.tis.em@nhs.net",
+  "East Midlands": "Freshdesk support portal",
   "East of England": "england.tis.eoe@nhs.net",
   "Kent, Surrey and Sussex": "PGMDE support portal",
   "North Central and East London": "PGMDE support portal",
@@ -361,7 +361,7 @@ export const localOfficeContacts: localOfficeContactsProps = {
   "South West": "england.tisqueries.sw@nhs.net",
   "Thames Valley": "england.formr.tv@nhs.net",
   Wessex: "england.formr.wx@nhs.net",
-  "West Midlands": "england.tis.wm@nhs.net",
+  "West Midlands": "Freshdesk support portal",
   "Yorkshire and the Humber": "england.tis.yh@nhs.net"
 };
 

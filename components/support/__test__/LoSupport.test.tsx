@@ -52,6 +52,25 @@ describe("LoSupport", () => {
     );
   });
 
+  it("should display the Fresh Desk support portal link when a Local Office that uses the Fresh Desk support portal is selected", async () => {
+    const { getAllByRole, getByRole } = renderLoSupport();
+    const user = userEvent.setup();
+
+    const loList = getAllByRole("combobox")[0];
+    await act(async () => {
+      await user.selectOptions(loList, "East Midlands");
+    });
+
+    const freshdeskLink = getByRole("link", {
+      name: /Click here to submit your support request via the Fresh Desk Support Portal/i
+    });
+
+    expect(freshdeskLink).toBeInTheDocument();
+    expect(freshdeskLink.getAttribute("href")).toBe(
+      "https://nhs-help.freshdesk.com/support/home"
+    );
+  });
+
   it("should display the support categories and LO support link when a Non-PGMDE local office is selected", async () => {
     const { getByRole, getAllByRole } = renderLoSupport();
     const user = userEvent.setup();
