@@ -5,6 +5,7 @@ import {
   faSortDown,
   faSortUp
 } from "@fortawesome/free-solid-svg-icons";
+import { applyNotificationSort } from "../../utilities/NotificationsUtilities";
 
 type TableColumnHeaderProps<TData, TValue> = {
   column: Column<TData, TValue>;
@@ -37,7 +38,8 @@ export function TableColumnHeader<TData, TValue>({
     <div>
       <button
         type="button"
-        onClick={column.getToggleSortingHandler()}
+        // onClick={column.getToggleSortingHandler()}
+        onClick={() => applyNotificationSort(title + "," + column.getIsSorted())}
         className="table-header-btn"
       >
         <span>{title}</span>

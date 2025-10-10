@@ -32,6 +32,7 @@ export const NotificationsTable: React.FC = () => {
     state => state.notifications.status
   );
   const viewingType = useAppSelector(state => state.notifications.viewingType);
+  const sortOrder = useAppSelector(state => state.notifications.notificationsSort);
   const notificationsStatusFilter = useAppSelector(
     state => state.notifications.notificationsStatusFilter
   );
@@ -42,7 +43,8 @@ export const NotificationsTable: React.FC = () => {
       dispatch(
         getNotifications({
           page: "0",
-          size: "0",
+          size: "2000",
+          sort: sortOrder,
           type: viewingType,
           status: notificationsStatusFilter
         })

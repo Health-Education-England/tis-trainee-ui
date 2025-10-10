@@ -160,8 +160,14 @@ const notificationsSlice = createSlice({
     switchNotificationType(state, action: PayloadAction<NotificationMsgType>) {
       return { ...state, viewingType: action.payload };
     },
+    updateNotificationSearch(state, action: PayloadAction<string>) {
+      return { ...state, notificationsSearch: action.payload };
+    },
     updateNotificationStatusFilter(state, action: PayloadAction<string>) {
       return { ...state, notificationsStatusFilter: action.payload };
+    },
+    updateNotificationSort(state, action: PayloadAction<string>) {
+      return { ...state, notificationsSort: action.payload };
     }
   },
   extraReducers(builder): void {
@@ -281,7 +287,9 @@ export const {
   loadedNotificationsList,
   updatedNotificationUpdateInProgress,
   switchNotificationType,
-  updateNotificationStatusFilter
+  updateNotificationSearch,
+  updateNotificationStatusFilter,
+  updateNotificationSort
 } = notificationsSlice.actions;
 
 export function unreadNotificationsCount(notificationsData: NotificationType[]) {

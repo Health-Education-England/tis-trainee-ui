@@ -6,6 +6,8 @@ import {
   markNotificationAsUnread,
   resetNotificationsStatus,
   switchNotificationType,
+  updateNotificationSearch,
+  updateNotificationSort,
   updateNotificationStatusFilter,
   updatedActiveNotification,
   updatedNotificationUpdateInProgress,
@@ -79,7 +81,17 @@ export async function switchNotification(msgType: NotificationMsgType) {
   store.dispatch(switchNotificationType(msgType));
 }
 
-export async function applyNotificationStatusFilter(filter: string) {
+export async function applyNotificationSearch(keyword: string) {
   store.dispatch(resetNotificationsStatus());
+  store.dispatch(updateNotificationSearch(keyword));
+}
+
+export async function applyNotificationStatusFilter(filter: string) {
+  // store.dispatch(resetNotificationsStatus());
   store.dispatch(updateNotificationStatusFilter(filter));
+}
+
+export async function applyNotificationSort(sortOrder: string) {
+  store.dispatch(resetNotificationsStatus());
+  store.dispatch(updateNotificationSort(sortOrder));
 }
