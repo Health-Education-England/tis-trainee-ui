@@ -43,6 +43,11 @@ export const mockedCombinedReference: CombinedReferenceData = {
       internal: false
     },
     {
+      id: "5e7c8ddb2523bc1545f1ce7e",
+      tisId: "18",
+      label: "East Midlands"
+    },
+    {
       id: "5e7c8ddb2523bc1554f1ce7e",
       tisId: "2",
       label: "East of England",
@@ -86,6 +91,11 @@ export const mockedCombinedReference: CombinedReferenceData = {
     }
   ],
   localOffice: [
+    {
+      id: "5e7c8ddb2523bc1545f1ce7e",
+      tisId: "18",
+      label: "East Midlands"
+    },
     {
       id: "5e7c8ddb2523bc1554f1ce7e",
       tisId: "2",
@@ -273,6 +283,10 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
       value: "Cheshire and Wirral Partnership NHS Foundation Trust"
     },
     {
+      label: "East Midlands",
+      value: "East Midlands"
+    },
+    {
       label: "East of England",
       value: "East of England"
     },
@@ -364,6 +378,10 @@ export const mockTransformedCombinedReferenceData: CombinedReferenceData = {
     }
   ],
   localOffice: [
+    {
+      label: "East Midlands",
+      value: "East Midlands"
+    },
     {
       label: "East of England",
       value: "East of England"
