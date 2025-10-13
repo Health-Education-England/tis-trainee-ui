@@ -56,7 +56,8 @@ export function LoSupport({
               (e.target.value === "" ||
                 localOfficeContacts[e.target.value] ===
                   "PGMDE support portal" ||
-                "Freshdesk support portal") &&
+                localOfficeContacts[e.target.value] ===
+                  "Freshdesk support portal") &&
                 setFieldValue("supportCats", "", true);
             }}
             options={filteredLocalOfficeOptions}
