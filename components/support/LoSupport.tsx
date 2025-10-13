@@ -27,12 +27,12 @@ export function LoSupport({
   const localOfficeOptions =
     transformReferenceData(combinedRefData).localOffice;
 
-  const labelsToFilter = [
+  const labelsToFilter = new Set([
     "London LETBs",
     "Defence Postgraduate Medical Deanery"
-  ];
+  ]);
   const filteredLocalOfficeOptions = localOfficeOptions.filter(
-    office => !labelsToFilter.includes(office.label)
+    office => !labelsToFilter.has(office.label)
   );
 
   return (
@@ -55,7 +55,9 @@ export function LoSupport({
               setFieldValue("localOffice", e.target.value, true);
               (e.target.value === "" ||
                 localOfficeContacts[e.target.value] ===
-                  "PGMDE support portal") &&
+                  "PGMDE support portal" ||
+                localOfficeContacts[e.target.value] ===
+                  "Freshdesk support portal") &&
                 setFieldValue("supportCats", "", true);
             }}
             options={filteredLocalOfficeOptions}
@@ -72,8 +74,20 @@ export function LoSupport({
               Portal
             </ActionLink>
           )}
+          {localOfficeContacts[values.localOffice] ===
+            "Freshdesk support portal" && (
+            <ActionLink
+              data-cy="freshdeskLink"
+              href="https://nhs-help.freshdesk.com/support/home"
+            >
+              Click here to submit your support request via the Fresh Desk
+              Support Portal
+            </ActionLink>
+          )}
 
           {localOfficeContacts[values.localOffice] !== "PGMDE support portal" &&
+            localOfficeContacts[values.localOffice] !==
+              "Freshdesk support portal" &&
             localOfficeContacts[values.localOffice]?.length > 0 && (
               <>
                 <Label size="s" data-cy="loSupportCatPrompt">

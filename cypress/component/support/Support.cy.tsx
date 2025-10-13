@@ -70,6 +70,11 @@ describe("Support", () => {
       "include.text",
       "Click here to email your support request via the PGMDE Support Portal"
     );
+    cy.get("[data-cy=localOffice]").select("East Midlands");
+    cy.contains(
+      '[data-cy="freshdeskLink"] > .nhsuk-action-link__text',
+      "Click here to submit your support request via the Fresh Desk Support Portal"
+    );
     cy.get("[data-cy=localOffice]").select("Thames Valley");
     cy.get('[data-cy="pgdmeLink"] > .nhsuk-action-link__text').should(
       "not.exist"
