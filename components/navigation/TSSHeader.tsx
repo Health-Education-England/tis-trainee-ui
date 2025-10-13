@@ -26,6 +26,16 @@ const TSSHeader = () => {
     }
   }, [notificationsStatus, dispatch]);
 
+  const notificationBtns = userFeatures.notifications.enabled && (
+    <>
+      <EmailsBtn data-cy="emailBtnHDR" />
+      <NotificationsBtn
+        unreadNotificationCount={unreadNotificationCount}
+        data-cy="notificationBtnHDR"
+      />
+    </>
+  );
+
   return (
     <Header>
       <Header.Container>
@@ -40,19 +50,11 @@ const TSSHeader = () => {
         </div>
         <Header.Content>
           <div className="mobile-header">
-            <EmailsBtn data-cy="emailBtnHDR" />
-            <NotificationsBtn
-              unreadNotificationCount={unreadNotificationCount}
-              data-cy="notificationBtnHDR"
-            />
+            {notificationBtns}
             <Header.MenuToggle data-cy="menuToggleBtn" />
           </div>
           <div className="top-nav-container">
-            <EmailsBtn data-cy="emailBtnHDR" />
-            <NotificationsBtn
-              unreadNotificationCount={unreadNotificationCount}
-              data-cy="notificationBtnHDR"
-            />
+            {notificationBtns}
             <div className="top-nav-container">
               <NavLink
                 className="nhsuk-header__navigation-link"

@@ -87,6 +87,11 @@ describe("Header with MFA set up", () => {
       mount(comp);
     });
 
+    it("should not contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`).should("not.exist");
+      cy.get("[data-cy=notificationBtn]").should("not.exist");
+    });
+
     navLinksBase.forEach(link => {
       it(`should show the ${link.name} link in the nav menu`, () => {
         cy.get(`[data-cy="${link.name}"]`)
@@ -107,6 +112,11 @@ describe("Header with MFA set up", () => {
     beforeEach(() => {
       store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));
       mount(comp);
+    });
+
+    it("should not contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`).should("not.exist");
+      cy.get("[data-cy=notificationBtn]").should("not.exist");
     });
 
     navLinksNonSpecialty.forEach(link => {
@@ -131,6 +141,17 @@ describe("Header with MFA set up", () => {
       mount(comp);
     });
 
+    it("should contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`)
+        .should("exist")
+        .find("svg.fa-envelope")
+        .should("exist");
+      cy.get("[data-cy=notificationBtn]")
+        .should("exist")
+        .find("svg.fa-bell")
+        .should("exist");
+    });
+
     navLinksSpecialty.forEach(link => {
       it(`should show the ${link.name} link in the nav menu`, () => {
         cy.get(`[data-cy="${link.name}"]`)
@@ -151,6 +172,17 @@ describe("Header with MFA set up", () => {
     beforeEach(() => {
       store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
       mount(comp);
+    });
+
+    it("should contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`)
+        .should("exist")
+        .find("svg.fa-envelope")
+        .should("exist");
+      cy.get("[data-cy=notificationBtn]")
+        .should("exist")
+        .find("svg.fa-bell")
+        .should("exist");
     });
 
     navLinksLtftPilot.forEach(link => {
@@ -203,6 +235,11 @@ describe("Desktop Header with MFA set up", () => {
       mount(comp);
     });
 
+    it("should not contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`).should("not.exist");
+      cy.get("[data-cy=notificationBtn]").should("not.exist");
+    });
+
     it("should not display any unexpected links", () => {
       cy.get('[data-cy="nav-link-wrapper"]:visible').should("not.exist");
     });
@@ -212,6 +249,11 @@ describe("Desktop Header with MFA set up", () => {
     beforeEach(() => {
       store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));
       mount(comp);
+    });
+
+    it("should not contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`).should("not.exist");
+      cy.get("[data-cy=notificationBtn]").should("not.exist");
     });
 
     navLinksNonSpecialty.slice(2).forEach(link => {
@@ -236,6 +278,17 @@ describe("Desktop Header with MFA set up", () => {
       mount(comp);
     });
 
+    it("should contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`)
+        .should("exist")
+        .find("svg.fa-envelope")
+        .should("exist");
+      cy.get("[data-cy=notificationBtn]")
+        .should("exist")
+        .find("svg.fa-bell")
+        .should("exist");
+    });
+
     navLinksSpecialty.slice(2).forEach(link => {
       it(`should show the ${link.name} link in the nav menu`, () => {
         cy.get(`[data-cy="${link.name}"]`)
@@ -256,6 +309,17 @@ describe("Desktop Header with MFA set up", () => {
     beforeEach(() => {
       store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
       mount(comp);
+    });
+
+    it("should contain notification buttons", () => {
+      cy.get(`[data-cy=emailBtn]`)
+        .should("exist")
+        .find("svg.fa-envelope")
+        .should("exist");
+      cy.get("[data-cy=notificationBtn]")
+        .should("exist")
+        .find("svg.fa-bell")
+        .should("exist");
     });
 
     navLinksLtftPilot.slice(2).forEach(link => {
