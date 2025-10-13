@@ -15,7 +15,7 @@ import {
   mockProgrammeMembershipNoTrainingNumber,
   mockProgrammeMembershipNoResponsibleOfficer,
   mockProgrammeMembershipsForGrouping,
-  mockUserFeaturesLtftPilot
+  mockUserFeaturesSpecialty
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
@@ -38,10 +38,12 @@ import { TraineeAction } from "../../../models/TraineeAction";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
 import dayjs from "dayjs";
+import { UserFeaturesType } from "../../../models/FeatureFlags";
 
 const mountProgrammesWithMockData = (
   prefMfa: MFAType = "NOMFA",
   profileStatus: string = "idle",
+  userFeatures: UserFeaturesType = mockUserFeaturesSpecialty,
   programmeMemberships: ProgrammeMembership[] = mockProgrammeMemberships,
   actionsData: TraineeAction[] = [],
   formAList: FormRPartA[] = mockFormList as FormRPartA[],
@@ -61,7 +63,7 @@ const mountProgrammesWithMockData = (
     );
     dispatch(updatedTraineeProfileStatus(profileStatus));
     dispatch(updatedActionsData(actionsData));
-    dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
+    dispatch(updatedUserFeatures(userFeatures));
     dispatch(updatedFormAList(formAList));
     dispatch(updatedFormBList(formBList));
     return <Programmes />;
@@ -103,6 +105,7 @@ describe("Programmes with MFA set up", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       updatedProgrammeMemberships
     );
     cy.get('[data-cy="currentExpand"]').click();
@@ -134,6 +137,7 @@ describe("Programmes with MFA set up", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       updatedProgrammeMemberships
     );
     cy.get('[data-cy="currentExpand"]').click();
@@ -151,7 +155,7 @@ describe("Programmes with MFA set up", () => {
   });
 
   it("should show alternative text when no Programme/ panel data available", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", []);
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, []);
     cy.get("[data-cy=notAssignedprogrammeMemberships]")
       .should("exist")
       .should("contain.text", "You are not assigned to any programmes");
@@ -162,7 +166,7 @@ describe("Programmes with MFA set up", () => {
   });
 
   it("should show alternative text when no Curricula", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipNoCurricula
     ]);
     cy.get("[data-cy=curricula0Val]")
@@ -174,6 +178,7 @@ describe("Programmes with MFA set up", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       mockProgrammeMembershipNoTrainingNumber
     );
     cy.get("[data-cy=trainingNumber0Val]")
@@ -185,6 +190,7 @@ describe("Programmes with MFA set up", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       mockProgrammeMembershipNoResponsibleOfficer
     );
     cy.get("[data-cy=responsibleOfficer0Val]")
@@ -193,7 +199,7 @@ describe("Programmes with MFA set up", () => {
   });
 
   it("should not show non-templated programme membership properties", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipNonTemplatedField
     ]);
     cy.get("[data-cy=nonTemplatedField6Val]").should("not.exist");
@@ -201,8 +207,32 @@ describe("Programmes with MFA set up", () => {
 });
 
 describe("Programme summary panel", () => {
+  it("should not show COJ when COJ feature disabled", () => {
+    const userFeaturesNoCoj = {
+      ...mockUserFeaturesSpecialty,
+      details: {
+        ...mockUserFeaturesSpecialty.details,
+        programmes: {
+          ...mockUserFeaturesSpecialty.details.programmes,
+          conditionsOfJoining: {
+            enabled: false
+          }
+        }
+      }
+    };
+
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      userFeaturesNoCoj,
+      mockProgrammeMembershipCojNotSigned
+    );
+    cy.get('[data-cy="pastExpand"]').invoke("show").click({ force: true });
+    cy.get('[data-cy="conditionsOfJoining0Key"]').should("not.exist");
+  });
+
   it("should show COJ status", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipCojNotSigned[0],
       mockProgrammeMembershipCojSigned
     ]);
@@ -234,7 +264,7 @@ describe("Programme summary panel", () => {
   });
 
   it("should display the view COJ button for placements with signed COJ forms", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipCojNotSigned[0],
       mockProgrammeMembershipCojSigned
     ]);
@@ -249,6 +279,7 @@ describe("Programme review action", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       [
         mockProgrammeMembershipCojNotSigned[0],
         mockProgrammeMembershipCojSigned
@@ -268,6 +299,7 @@ describe("Programme review action", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       [
         mockProgrammeMembershipCojNotSigned[0],
         mockProgrammeMembershipCojSigned
@@ -286,6 +318,7 @@ describe("Programme review action", () => {
     mountProgrammesWithMockData(
       "SMS",
       "succeeded",
+      undefined,
       [
         mockProgrammeMembershipCojNotSigned[0],
         mockProgrammeMembershipCojSigned
@@ -303,7 +336,7 @@ describe("Programme review action", () => {
 
 describe("Programme confirmation", () => {
   it("should not display the programme confirmation button for past programme", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipsForGrouping[0]
     ]);
 
@@ -313,7 +346,7 @@ describe("Programme confirmation", () => {
   });
 
   it("should not display the programme confirmation button for future programme", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipsForGrouping[3]
     ]);
     cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-4']").should(
@@ -321,8 +354,34 @@ describe("Programme confirmation", () => {
     );
   });
 
+  it("should not display the programme confirmation button when feature disabled", () => {
+    const userFeaturesNoConfirmation = {
+      ...mockUserFeaturesSpecialty,
+      details: {
+        ...mockUserFeaturesSpecialty.details,
+        programmes: {
+          ...mockUserFeaturesSpecialty.details.programmes,
+          confirmation: {
+            enabled: false
+          }
+        }
+      }
+    };
+
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      userFeaturesNoConfirmation,
+      [mockProgrammeMembershipsForGrouping[1]]
+    );
+
+    cy.get("[data-cy='downloadPmConfirmBtn-programmeMemberships-2']").should(
+      "not.exist"
+    );
+  });
+
   it("should display the programme confirmation button for current programme", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipsForGrouping[1]
     ]);
 
@@ -334,7 +393,7 @@ describe("Programme confirmation", () => {
   });
 
   it("should display the programme confirmation button for upcoming programme", () => {
-    mountProgrammesWithMockData("SMS", "succeeded", [
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
       mockProgrammeMembershipsForGrouping[2]
     ]);
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");

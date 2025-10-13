@@ -11,16 +11,21 @@ import {
   updatedTraineeProfileData,
   updatedTraineeProfileStatus
 } from "../../../redux/slices/traineeProfileSlice";
-import { mockPersonalDetails } from "../../../mock-data/trainee-profile";
+import {
+  mockPersonalDetails,
+  mockUserFeaturesSpecialty
+} from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import React from "react";
-import { updatedPreferredMfa } from "../../../redux/slices/userSlice";
+import {
+  updatedPreferredMfa,
+  updatedUserFeatures
+} from "../../../redux/slices/userSlice";
 
 describe("Profile with MFA set up", () => {
   beforeEach(() => {
     store.dispatch(updatedPreferredMfa("SMS"));
-  });
-  it("should display Profile (user details) when MFA set up.", () => {
+
     const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
@@ -28,10 +33,12 @@ describe("Profile with MFA set up", () => {
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
           programmeMemberships: [],
-          placements: []
+          placements: [],
+          qualifications: []
         })
       );
       dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
       return <Profile />;
     };
     mount(
@@ -41,6 +48,9 @@ describe("Profile with MFA set up", () => {
         </Router>
       </Provider>
     );
+  });
+
+  it("should display Profile (user details) when MFA set up.", () => {
     cy.testDataSourceLink();
     cy.get("[data-cy=profileHeading]")
       .should("exist")
@@ -68,27 +78,47 @@ describe("Profile with MFA set up", () => {
       .should("not.be.visible");
   });
 
-  it("should open GMC modal form when change button clicked.", () => {
-    const MockedProfile = () => {
+  it("should not allow GMC update when feature disabled.", () => {
+    const MockedProfileSuccess = () => {
       const dispatch = useAppDispatch();
       dispatch(
         updatedTraineeProfileData({
           traineeTisId: "12345",
           personalDetails: mockPersonalDetails,
           programmeMemberships: [],
-          placements: []
+          placements: [],
+          qualifications: []
         })
       );
       dispatch(updatedTraineeProfileStatus("succeeded"));
+
+      const userFeaturesNoGmcUpdate = {
+        ...mockUserFeaturesSpecialty,
+        details: {
+          ...mockUserFeaturesSpecialty.details,
+          profile: {
+            ...mockUserFeaturesSpecialty.details.profile,
+            gmcUpdate: {
+              enabled: false
+            }
+          }
+        }
+      };
+      dispatch(updatedUserFeatures(userFeaturesNoGmcUpdate));
       return <Profile />;
     };
     mount(
       <Provider store={store}>
         <Router history={history}>
-          <MockedProfile />
+          <MockedProfileSuccess />
         </Router>
       </Provider>
     );
+    cy.testDataSourceLink();
+    cy.get("[data-cy=updateGmcLink]").should("not.exist");
+  });
+
+  it("should open GMC modal form when change button clicked.", () => {
     cy.testDataSourceLink();
     cy.get("[data-cy=updateGmcLink]").click();
 
@@ -117,26 +147,6 @@ describe("Profile with MFA set up", () => {
   });
 
   it("GMC modal form should retain value after Cancel.", () => {
-    const MockedProfile = () => {
-      const dispatch = useAppDispatch();
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetails,
-          programmeMemberships: [],
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      return <Profile />;
-    };
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProfile />
-        </Router>
-      </Provider>
-    );
     cy.testDataSourceLink();
     cy.get("[data-cy=updateGmcLink]").should("exist").click();
     cy.get("#gmcNumber").clear().type("abc");
@@ -156,10 +166,12 @@ describe("Profile with MFA set up", () => {
             ...{ gmcNumber: "UNKNOWN" }
           },
           programmeMemberships: [],
-          placements: []
+          placements: [],
+          qualifications: []
         })
       );
       dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
       return <Profile />;
     };
     mount(
