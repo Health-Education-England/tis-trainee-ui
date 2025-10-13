@@ -31,7 +31,7 @@ export class ApiService {
     this.axiosInstance.interceptors.response.use(onFulfilled, onRejected);
   }
 
-  get<T = any>(endpoint: string, p0?: { params: Record<string, string | number> | undefined; }): Promise<AxiosResponse<T>> {
+  get<T = any>(endpoint: string): Promise<AxiosResponse<T>> {
     return this.axiosInstance.get(endpoint);
   }
 

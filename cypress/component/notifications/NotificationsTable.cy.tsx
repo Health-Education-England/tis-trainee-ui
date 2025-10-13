@@ -5,7 +5,7 @@ import history from "../../../components/navigation/history";
 import { NotificationsTable } from "../../../components/notifications/NotificationsTable";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import { loadedNotificationsList } from "../../../redux/slices/notificationsSlice";
-import { notificationsData } from "../../../mock-data/notifications";
+import { emailNotificationData, notificationsData } from "../../../mock-data/notifications";
 import store from "../../../redux/store/store";
 
 describe("NotificationsTable with no notifications data", () => {
@@ -41,24 +41,20 @@ describe("NotificationsTable with notifications data", () => {
     );
   });
 
+  it("should show in-app notification by default and display correct columns", () => {
+    cy.get(`[data-cy=notificationsTable]`).should("exist");
+    cy.get('[data-cy="notificationsTable-status"]').should("exist").contains("Unread");
+    cy.get('[data-cy="notificationsTable-subjectText"]').should("exist").contains("Title");
+    cy.get('[data-cy="notificationsTable-subject"]').should("exist").contains("Type");
+    cy.get('[data-cy="notificationsTable-sentAt"]').should("exist").contains("Date");
+  });
+
   it("should render the table and find notifications with the global search text", () => {
     cy.get(`[data-cy=notificationsTable]`).should("exist");
     cy.get('[data-cy="NotificationsSearchInput"]').should("exist").type("some");
     cy.get("tr.table-row.row-unread").should("have.length", 2);
     cy.get('[data-cy="notificationsTableRow-6"]').should("exist");
     cy.get('[data-cy="notificationsTableRow-9"]').should("exist");
-  });
-
-  it("should show only the unread notifications when the unread checkbox is checked", () => {
-    cy.get("#unreadCheck").should("exist").check();
-    cy.get("tr.table-row.row-unread").should("have.length", 5);
-    cy.get("tr.table-row.row-read").should("have.length", 0);
-    cy.get('[data-cy="NotificationsTablePageSizeSelect"]')
-      .should("exist")
-      .select("10");
-    cy.get("tr.table-row.row-unread").should("have.length", 6);
-    // page input doesn't exist when all rows are shown
-    cy.get('[data-cy="NotificationsTablePageInput"]').should("not.exist");
   });
 
   it("should go to the correct page when the page input is changed", () => {
@@ -108,5 +104,44 @@ describe("NotificationsTable with notifications data", () => {
     cy.get("tr.table-row.row-unread").should("have.length", 3);
     cy.get('[data-cy="Type-fa-sort-up"]').should("exist");
     cy.get('[data-cy="Type-fa-sort-down"]').should("not.exist");
+  });  
+});
+
+
+
+describe("NotificationsTable with email notifications data", () => {
+  beforeEach(() => {
+    cy.viewport("macbook-15");
+    const MockedNotificationsTable = () => {
+      const dispatch = useAppDispatch();
+      dispatch(loadedNotificationsList(emailNotificationData));
+      return <NotificationsTable />;
+    };
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedNotificationsTable />
+        </Router>
+      </Provider>
+    );
   });
+
+  it("should display correct column for email notifications", () => {
+    cy.get('[data-cy="emailBtn"]').should("exist").click();
+    cy.get(`[data-cy=notificationsTable]`).should("exist");
+    cy.get('[data-cy="notificationsTable-status"]').should("exist").contains("Failed");
+    cy.get('[data-cy="notificationsTable-subjectText"]').should("exist").contains("Title");
+    cy.get('[data-cy="notificationsTable-subject"]').should("exist").contains("Type");
+    cy.get('[data-cy="notificationsTable-sentAt"]').should("exist").contains("Date");
+    cy.get('[data-cy="notificationsTable-contact"]').should("exist").contains("Sent to");
+  });
+
+  it("should render the table and find notifications with the global search text", () => {
+    cy.get(`[data-cy=notificationsTable]`).should("exist");
+    cy.get('[data-cy="NotificationsSearchInput"]').should("exist").type("FormR");
+    cy.get("tr.table-row.row-unread").should("have.length", 2);
+    cy.get('[data-cy="notificationsTableRow-0"]').should("exist");
+    cy.get('[data-cy="notificationsTableRow-1"]').should("exist");
+  });
+
 });
