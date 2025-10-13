@@ -27,12 +27,12 @@ export function LoSupport({
   const localOfficeOptions =
     transformReferenceData(combinedRefData).localOffice;
 
-  const labelsToFilter = [
+  const labelsToFilter = new Set([
     "London LETBs",
     "Defence Postgraduate Medical Deanery"
-  ];
+  ]);
   const filteredLocalOfficeOptions = localOfficeOptions.filter(
-    office => !labelsToFilter.includes(office.label)
+    office => !labelsToFilter.has(office.label)
   );
 
   return (
@@ -55,7 +55,8 @@ export function LoSupport({
               setFieldValue("localOffice", e.target.value, true);
               (e.target.value === "" ||
                 localOfficeContacts[e.target.value] ===
-                  "PGMDE support portal") &&
+                  "PGMDE support portal" ||
+                "Freshdesk support portal") &&
                 setFieldValue("supportCats", "", true);
             }}
             options={filteredLocalOfficeOptions}
