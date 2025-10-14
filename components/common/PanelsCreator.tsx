@@ -32,7 +32,6 @@ import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerL
 import InfoTooltip from "./InfoTooltip";
 import { FileUtilities } from "../../utilities/FileUtilities";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks/hooks";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -53,7 +52,7 @@ export function PanelsCreator({
     .traineeActions.traineeActionsData.filter(
       action => today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
     );
-  const userFeatures = useAppSelector(state => state.user.features);
+  const userFeatures = store.getState().user.features;
 
   return (
     <Card.Group>
@@ -279,7 +278,7 @@ function filterAndOrderProfilePanelData<T>(
     } = reorderedPr;
 
     // Filter programme features.
-    const userFeatures = useAppSelector(state => state.user.features);
+    const userFeatures = store.getState().user.features;
     return Object.fromEntries(
       Object.entries(filteredProgrammePanel).filter(([key]) => {
         if (key === "conditionsOfJoining") {
