@@ -208,6 +208,10 @@ button:disabled {
   color: $nhsBlue;
 }
 
+.nhsuk-header__navigation-list {
+  justify-content: flex-start;
+}
+
 .nhsuk-header__navigation-link {
   transition: all 200ms ease-in-out;
   &.active,
