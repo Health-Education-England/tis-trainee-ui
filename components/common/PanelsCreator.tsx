@@ -32,6 +32,7 @@ import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerL
 import InfoTooltip from "./InfoTooltip";
 import { FileUtilities } from "../../utilities/FileUtilities";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
@@ -52,6 +53,8 @@ export function PanelsCreator({
     .traineeActions.traineeActionsData.filter(
       action => today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
     );
+  const userFeatures = useAppSelector(state => state.user.features);
+
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
@@ -189,6 +192,7 @@ export function PanelsCreator({
                   ) : null}
                 </SummaryList>
                 {panelsName === TraineeProfileName.Programmes &&
+                userFeatures.details.programmes.confirmation.enabled &&
                 (isCurrentDateBoxed(panel) || isUpcomingDateBoxed(panel)) ? (
                   <Button
                     className="btn_full-width"
@@ -266,13 +270,24 @@ function filterAndOrderProfilePanelData<T>(
     const reorderedPr = populateTemplateProperties(programmePanelTemplate, {
       ...pObj
     });
+
     const {
       programmeMembershipType,
       status,
       programmeCompletionDate,
       ...filteredProgrammePanel
     } = reorderedPr;
-    return filteredProgrammePanel;
+
+    // Filter programme features.
+    const userFeatures = useAppSelector(state => state.user.features);
+    return Object.fromEntries(
+      Object.entries(filteredProgrammePanel).filter(([key]) => {
+        if (key === "conditionsOfJoining") {
+          return userFeatures.details.programmes.conditionsOfJoining.enabled;
+        }
+        return true;
+      })
+    );
   }
 }
 

@@ -30,7 +30,6 @@ export const Main = () => {
   // Refresh trainee actions data only if user completes an action
   useTraineeActionsRefresh();
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
-  const userFeatures = useAppSelector(state => state.user.features);
 
   // Fetch user auth data if not already dispatched
   useEffect(() => {

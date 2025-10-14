@@ -18,7 +18,7 @@ export const NotificationsBtn = ({
     <Button
       type="button"
       className="notification-btn"
-      data-cy="signOutBtn"
+      data-cy="notificationBtn"
       data-tooltip-id="NotificationsCount"
       onClick={handleBtnClick}
     >

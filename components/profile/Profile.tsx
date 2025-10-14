@@ -15,7 +15,7 @@ import { GmcDataType } from "./GmcEditForm";
 import { GmcEditModal } from "./GmcEditModal";
 import Loading from "../common/Loading";
 
-const editableFieldLabel = "General Medical Council (GMC)";
+const gmcFieldLabel = "General Medical Council (GMC)";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +27,8 @@ const Profile = () => {
   const pd = useAppSelector(
     state => state.traineeProfile.traineeProfileData.personalDetails
   );
+
+  const userFeatures = useAppSelector(state => state.user.features);
 
   const handleModalFormSubmit = (data: GmcDataType) => {
     setShowModal(false);
@@ -76,31 +78,47 @@ const Profile = () => {
     { label: "Mobile", value: mobileNumber }
   ];
 
-  const registrationDetails: KeyValue[] = [
+  enum FieldType {
+    ReadOnly,
+    Editable
+  }
+
+  interface FieldKeyValue extends KeyValue {
+    type: FieldType;
+  }
+
+  const registrationDetails: FieldKeyValue[] = [
     {
-      label: editableFieldLabel,
-      value: gmcNumber
+      label: gmcFieldLabel,
+      value: gmcNumber,
+      type: userFeatures.details.profile.gmcUpdate.enabled
+        ? FieldType.Editable
+        : FieldType.ReadOnly
     },
     {
       label: "General Dental Council (GDC)",
-      value: gdcNumber
+      value: gdcNumber,
+      type: FieldType.ReadOnly
     },
     {
       label: "Public Health Number",
-      value: publicHealthNumber
+      value: publicHealthNumber,
+      type: FieldType.ReadOnly
     },
     {
       label: "GMC status",
-      value: gmcStatus
+      value: gmcStatus,
+      type: FieldType.ReadOnly
     },
     {
       label: "GDC status",
-      value: gdcStatus
+      value: gdcStatus,
+      type: FieldType.ReadOnly
     },
-    { label: "Permit to Work", value: permitToWork },
-    { label: "Settled", value: settled },
-    { label: "Visa Issued", value: visaIssued },
-    { label: "Details/Number", value: detailsNumber }
+    { label: "Permit to Work", value: permitToWork, type: FieldType.ReadOnly },
+    { label: "Settled", value: settled, type: FieldType.ReadOnly },
+    { label: "Visa Issued", value: visaIssued, type: FieldType.ReadOnly },
+    { label: "Details/Number", value: detailsNumber, type: FieldType.ReadOnly }
   ];
 
   useEffect(() => {
@@ -167,16 +185,17 @@ const Profile = () => {
                 <SummaryList.Key>{rd.label}</SummaryList.Key>
                 <SummaryList.Value>{rd.value}</SummaryList.Value>
                 <SummaryList.Actions>
-                  {rd.label === editableFieldLabel && (
-                    <Button
-                      className="internal-link"
-                      data-cy={`updateGmcLink`}
-                      onClick={handleChangeLinkClick}
-                      variation="link"
-                    >
-                      change
-                    </Button>
-                  )}
+                  {rd.type === FieldType.Editable &&
+                    rd.label === gmcFieldLabel && (
+                      <Button
+                        className="internal-link"
+                        data-cy={`updateGmcLink`}
+                        onClick={handleChangeLinkClick}
+                        variation="link"
+                      >
+                        change
+                      </Button>
+                    )}
                 </SummaryList.Actions>
               </SummaryList.Row>
             )
