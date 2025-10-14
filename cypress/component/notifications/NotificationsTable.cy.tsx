@@ -107,8 +107,6 @@ describe("NotificationsTable with notifications data", () => {
   });  
 });
 
-
-
 describe("NotificationsTable with email notifications data", () => {
   beforeEach(() => {
     cy.viewport("macbook-15");

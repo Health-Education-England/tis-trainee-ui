@@ -32,17 +32,13 @@ export type NotificationType = {
   subjectText: string | null;
   contact: string | null;
   status: NotificationStatus;
-  sentAt: Date | null;
+  sentAt: Date;
   statusDetail: string | null;
-  readAt?: Date | null;
+  readAt?: Date;
 };
 
 export type NotificationsState = {
   notificationsList: NotificationType[];
-  notificationsTotalCount: number;
-  notificationsPage: number;  
-  notificationsSort: string;
-  notificationsSearch: string | null;
   notificationsStatusFilter: string | null;
   viewingType: NotificationMsgType | null;
   status: string;
@@ -51,7 +47,6 @@ export type NotificationsState = {
   notificationMsg: string;
   msgStatus: string;
   error: any;
-  emailNotificationsError: any;
   activeNotification: NotificationType | null;
   unreadNotificationCount: number;
   notificationUpdateInProgress: boolean; // to prevent multiple row/button clicks
@@ -59,10 +54,6 @@ export type NotificationsState = {
 
 export const initialState: NotificationsState = {
   notificationsList: [],
-  notificationsTotalCount: 0,
-  notificationsPage: 0,
-  notificationsSort: "sentAt,desc",
-  notificationsSearch: "",
   notificationsStatusFilter: "",
   viewingType: "IN_APP",
   status: "idle",
@@ -71,7 +62,6 @@ export const initialState: NotificationsState = {
   notificationMsg: "",
   msgStatus: "idle",
   error: "",
-  emailNotificationsError: "",
   activeNotification: null,
   unreadNotificationCount: 0,
   notificationUpdateInProgress: false
@@ -190,8 +180,6 @@ const notificationsSlice = createSlice({
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.notificationsTotalCount = action.payload.page.totalElements;
-        state.notificationsPage = action.payload.page.number;
         state.notificationsList = action.payload.content;
         if (state.viewingType === "IN_APP") {
           state.unreadNotificationCount = unreadNotificationsCount(
