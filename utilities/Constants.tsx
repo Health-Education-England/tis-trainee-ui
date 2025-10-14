@@ -283,6 +283,7 @@ export const toastErrText = {
   signCoj: "Couldn't sign your Conditions of Joining.",
   fetchTraineeActionsData: "Couldn't load your task checklist (to-do actions).",
   completeTraineeAction: "Couldn't update trainee actions.",
+  getNotificationsCount: "Couldn't get your notifications count.",
   fetchAllNotifications: "Couldn't load your notifications.",
   markNotificationAsRead: `Couldn't open this message and mark as read. ${dodgyConnection}`,
   markNotificationAsUnread: `Couldn't mark this message as unread. ${dodgyConnection}`,

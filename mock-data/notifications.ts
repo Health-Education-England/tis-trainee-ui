@@ -123,6 +123,43 @@ export const notificationsData: NotificationType[] = [
   }
 ];
 
+export const emailNotificationData: any[] = [
+  {
+    id: "65f1d6bd3f7898e099514196",
+    tisReference: null,
+    type: "EMAIL",
+    subject: "FORM_UPDATED",
+    subjectText: "Your FormR has been updated",
+    contact: "testing@emailNotificationData.com",
+    sentAt: new Date("2024-09-15T15:21:02.939Z"),
+    status: "SENT",
+    statusDetail: null
+  },
+  {
+    id: "65f1d6bd3f7898e099514197",
+    tisReference: null,
+    type: "EMAIL",
+    subject: "FORM_UPDATED",
+    subjectText: "Your FormR has been updated",
+    contact: "testing@email.com",
+    sentAt: new Date("2024-08-15T15:21:02.939Z"),
+    status: "FAILED",
+    statusDetail: null
+  },
+  {
+    id: "65f1d6bd3f7898e099514196",
+    tisReference: null,
+    type: "EMAIL",
+    subject: "PLACEMENT_UPDATED_WEEK_12",
+    subjectText: "NHS England Notification of Placement",
+    contact: "testing@email.com",
+    sentAt: new Date("2024-07-15T15:21:02.939Z"),
+    status: "SENT",
+    statusDetail: null
+  },
+];
+
+
 export const notificationsMixedTypeData: any[] = [
   {
     id: "65f1d6bd3f7898e099514196",

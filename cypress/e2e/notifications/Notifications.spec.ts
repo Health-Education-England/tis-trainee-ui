@@ -24,6 +24,13 @@ describe("Notifications", () => {
   it("should load the notifications page", () => {
     cy.get('[data-cy="notificationsHeading"]')
       .should("exist")
-      .should("contain.text", "Notifications");
+      .should("contain.text", "In-app Notifications");
+  });
+
+  it("should load the notifications page", () => {    
+    cy.get(':nth-child(2) > [data-cy="emailBtn"]').click();
+    cy.get('[data-cy="notificationsHeading"]')
+      .should("exist")
+      .should("contain.text", "Email Notifications");
   });
 });

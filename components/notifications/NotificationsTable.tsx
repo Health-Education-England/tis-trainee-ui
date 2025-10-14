@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,18 +10,57 @@ import {
   ColumnFiltersState,
   PaginationState
 } from "@tanstack/react-table";
-import { useAppSelector } from "../../redux/hooks/hooks";
-import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import {
+  switchNotification,
+  updateNotificationStatus
+} from "../../utilities/NotificationsUtilities";
 import { DebouncedInput } from "./DebouncedInput";
 import { TablePagination } from "./TablePagination";
 import { AllUnreadCheckbox } from "./AllUnreadCheckbox";
-import { columns } from "./columns";
-import { Label } from "nhsuk-react-components";
+import { emailColumns, inAppColumns } from "./columns";
+import { Button, Label } from "nhsuk-react-components";
+import {
+  getNotifications,
+  NotificationType
+} from "../../redux/slices/notificationsSlice";
+import { AllFailedCheckbox } from "./AllFailedCheckbox";
 
 export const NotificationsTable: React.FC = () => {
-  const notificationsData = useAppSelector(
+  const dispatch = useAppDispatch();
+  const notificationsStatus = useAppSelector(
+    state => state.notifications.status
+  );
+  const viewingType = useAppSelector(state => state.notifications.viewingType);
+  const notificationsStatusFilter = useAppSelector(
+    state => state.notifications.notificationsStatusFilter
+  );
+
+  useEffect(() => {
+    if (notificationsStatus === "idle") {
+      // to be refactored when BE pagination/filter is used
+      dispatch(
+        getNotifications({
+          page: "0",
+          size: "0",
+          type: viewingType,
+          status: notificationsStatusFilter
+        })
+      );
+    }
+  }, [notificationsStatus, dispatch]);
+
+  let notificationsData: NotificationType[];
+  let columns = [];
+  notificationsData = useAppSelector(
     state => state.notifications.notificationsList
   );
+  if (viewingType === "IN_APP") {
+    columns = inAppColumns;
+  } else {
+    columns = emailColumns;
+  }
+
   const memoData = useMemo(() => notificationsData, [notificationsData]);
 
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -56,6 +95,27 @@ export const NotificationsTable: React.FC = () => {
 
   return notificationsData.length > 0 ? (
     <>
+      <Button
+        type="button"
+        className={`notification-type-btn ${
+          viewingType === "EMAIL" ? "active-type-btn" : ""
+        }`}
+        data-cy="emailBtn"
+        onClick={() => switchNotification("EMAIL")}
+      >
+        Email
+      </Button>
+      <Button
+        type="button"
+        className={`notification-type-btn ${
+          viewingType === "IN_APP" ? "active-type-btn" : ""
+        }`}
+        data-cy="inAppBtn"
+        onClick={() => switchNotification("IN_APP")}
+      >
+        In App
+      </Button>
+      <br />
       <DebouncedInput
         value={globalFilter}
         onChange={value => setGlobalFilter(String(value))}
@@ -83,9 +143,12 @@ export const NotificationsTable: React.FC = () => {
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {header.column.columnDef.id === "status" && (
-                          <AllUnreadCheckbox header={header} />
-                        )}
+                        {header.column.columnDef.id === "status" &&
+                          (viewingType === "IN_APP" ? (
+                            <AllUnreadCheckbox />
+                          ) : (
+                            <AllFailedCheckbox />
+                          ))}
                       </th>
                     );
                   })}

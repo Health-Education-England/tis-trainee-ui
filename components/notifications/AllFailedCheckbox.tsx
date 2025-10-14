@@ -1,24 +1,24 @@
-import { useAppSelector } from "../../redux/hooks/hooks";
 import { applyNotificationStatusFilter } from "../../utilities/NotificationsUtilities";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
-export function AllUnreadCheckbox() {
+export function AllFailedCheckbox() {
   const notificationsStatusFilter = useAppSelector(
     state => state.notifications.notificationsStatusFilter
   );
   return (
     <div>
-      <label htmlFor="unreadCheck" className="nhsuk-u-font-size-14">
-        Unread
+      <label htmlFor="failedCheck" className="nhsuk-u-font-size-14">
+        Failed
       </label>
       <input
         type="checkbox"
-        id="unreadCheck"
+        id="failedCheck"
         value={notificationsStatusFilter || ""}
         defaultChecked={false}
-        checked={notificationsStatusFilter === "UNREAD"}
+        checked={notificationsStatusFilter === "FAILED"}
         onChange={() =>
           applyNotificationStatusFilter(
-            notificationsStatusFilter === "" ? "UNREAD" : ""
+            notificationsStatusFilter === "" ? "FAILED" : ""
           )
         }
       ></input>
