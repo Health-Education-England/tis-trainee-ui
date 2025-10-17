@@ -44,6 +44,7 @@ import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 import { ProfilePanels } from "../../profile/ProfilePanels";
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
+import InfoTooltip from "../../common/InfoTooltip";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -260,12 +261,23 @@ export function CctCalcCreate() {
                               </Table>
                             </Col>
                           </Row>
-                          <h3
-                            className={style.panelSubHeader}
-                            data-cy="currentWte-header"
+                          <div
+                            className="wte-percentage-header"
+                            data-cy="wte-percentage-header"
                           >
-                            Current WTE percentage
-                          </h3>
+                            <h3
+                              className={style.panelSubHeader}
+                              data-cy="currentWte-header"
+                            >
+                              Current WTE percentage
+                            </h3>
+                          </div>
+                          <div className="wte-tool-tip" data-cy="wte-tool-tip">
+                            <InfoTooltip
+                              tooltipId="WteInfo"
+                              content="Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
+                            />
+                          </div>
                           <Row>
                             <Col width="one-half">
                               <AutocompleteSelect

@@ -14,9 +14,11 @@ export default function InfoTooltip({
   return (
     <>
       <FontAwesomeIcon
+        className="information-icon"
         icon={faInfoCircle}
         color="#005EB8"
         data-tooltip-id={tooltipId}
+        size="lg"
         data-cy={`${tooltipId}-icon`}
       />
       <Tooltip

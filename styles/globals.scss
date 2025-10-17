@@ -161,9 +161,26 @@ body {
   margin: 0;
 }
 
+.wte-percentage-header {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wte-tool-tip {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
 .survey-alert {
   display: flex;
   align-items: flex-start;
+}
+
+.information-icon {
+  position: relative;
+  top: 5px;
+  float: right;
 }
 
 .survey-alert-close {
@@ -688,7 +705,6 @@ ol[type="a"] {
   justify-content: center;
 }
 
-
 .notification-type-btn {
   margin: 0.3rem 0 0 1rem;
   position: "relative";
@@ -819,7 +835,8 @@ ol[type="a"] {
   border-top: solid 1px #bfc3c6;
 }
 
-.status-read, .status-sent {
+.status-read,
+.status-sent {
   color: #006400;
 }
 
@@ -828,7 +845,7 @@ ol[type="a"] {
 }
 
 .status-failed {
-  color: #DA291C;
+  color: #da291c;
 }
 
 .back-link {
