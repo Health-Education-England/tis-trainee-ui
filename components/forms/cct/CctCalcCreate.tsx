@@ -44,6 +44,7 @@ import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 import { ProfilePanels } from "../../profile/ProfilePanels";
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
+import InfoTooltip from "../../common/InfoTooltip";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -268,40 +269,51 @@ export function CctCalcCreate() {
                           </h3>
                           <Row>
                             <Col width="one-half">
-                              <AutocompleteSelect
-                                value={values.programmeMembership.wte}
-                                onChange={(field, value) => {
-                                  const parsedValue =
-                                    typeof value === "string" &&
-                                    value.endsWith("%")
-                                      ? Number(value.slice(0, -1))
-                                      : value;
-                                  if (parsedValue) {
-                                    setFieldValue(field, parsedValue / 100);
-                                  } else {
-                                    setFieldValue(field, null);
+                              <div
+                                className="WtePercentage"
+                                data-cy="WtePercentage"
+                              >
+                                <AutocompleteSelect
+                                  value={values.programmeMembership.wte}
+                                  onChange={(field, value) => {
+                                    const parsedValue =
+                                      typeof value === "string" &&
+                                      value.endsWith("%")
+                                        ? Number(value.slice(0, -1))
+                                        : value;
+                                    if (parsedValue) {
+                                      setFieldValue(field, parsedValue / 100);
+                                    } else {
+                                      setFieldValue(field, null);
+                                    }
+                                  }}
+                                  error={
+                                    (
+                                      errors.programmeMembership as CctCalculationErrors["programmeMembership"]
+                                    )?.wte
                                   }
-                                }}
-                                error={
-                                  (
-                                    errors.programmeMembership as CctCalculationErrors["programmeMembership"]
-                                  )?.wte
-                                }
-                                options={fteOptions}
-                                name="programmeMembership.wte"
-                                label=""
-                                isMulti={false}
-                                closeMenuOnSelect={true}
-                                isCreatable={true}
-                                defaultOption={
-                                  values.programmeMembership.wte && {
-                                    value: values.programmeMembership.wte,
-                                    label: `${
-                                      values.programmeMembership.wte * 100
-                                    }%`
+                                  options={fteOptions}
+                                  name="programmeMembership.wte"
+                                  label=""
+                                  isMulti={false}
+                                  closeMenuOnSelect={true}
+                                  isCreatable={true}
+                                  defaultOption={
+                                    values.programmeMembership.wte && {
+                                      value: values.programmeMembership.wte,
+                                      label: `${
+                                        values.programmeMembership.wte * 100
+                                      }%`
+                                    }
                                   }
-                                }
-                              />
+                                />
+                              </div>
+                              <div className="WteToolTip" data-cy="WteToolTip">
+                                <InfoTooltip
+                                  tooltipId="WteInfo"
+                                  content="‘Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
+                                />
+                              </div>
                             </Col>
                           </Row>
                         </>

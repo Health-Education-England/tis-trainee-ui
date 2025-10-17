@@ -161,9 +161,20 @@ body {
   margin: 0;
 }
 
+.WtePercentage {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 2000px;
+}
+
+.WteToolTip {
+  display: inline-flex;
+  align-items: center;
+}
+
 .survey-alert {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .survey-alert-close {
@@ -688,7 +699,6 @@ ol[type="a"] {
   justify-content: center;
 }
 
-
 .notification-type-btn {
   margin: 0.3rem 0 0 1rem;
   position: "relative";
@@ -819,7 +829,8 @@ ol[type="a"] {
   border-top: solid 1px #bfc3c6;
 }
 
-.status-read, .status-sent {
+.status-read,
+.status-sent {
   color: #006400;
 }
 
@@ -828,7 +839,7 @@ ol[type="a"] {
 }
 
 .status-failed {
-  color: #DA291C;
+  color: #da291c;
 }
 
 .back-link {
