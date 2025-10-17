@@ -262,12 +262,27 @@ export function CctCalcCreate() {
                               </Table>
                             </Col>
                           </Row>
-                          <h3
-                            className={style.panelSubHeader}
-                            data-cy="currentWte-header"
-                          >
-                            Current WTE percentage
-                          </h3>
+                          <Row>
+                            <Col width="one-third">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center"
+                                }}
+                              >
+                                <h3
+                                  className={style.panelSubHeader}
+                                  data-cy="currentWte-header"
+                                >
+                                  Current WTE percentage
+                                </h3>
+                                <InfoTooltip
+                                  tooltipId="WteInfo"
+                                  content="'Whole time equivalent (WTE)' e.g. a full week of 40 hours has an WTE value of 100%."
+                                />
+                              </div>
+                            </Col>
+                          </Row>
                           <Row>
                             <Col width="one-half">
                               <div
@@ -308,14 +323,6 @@ export function CctCalcCreate() {
                                     }
                                   }
                                 />
-                              </div>
-                              <div className="WteToolTip" data-cy="WteToolTip">
-                                <Label size="s">
-                                  <InfoTooltip
-                                    tooltipId="WteInfo"
-                                    content="‘Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
-                                  />
-                                </Label>
                               </div>
                             </Col>
                           </Row>

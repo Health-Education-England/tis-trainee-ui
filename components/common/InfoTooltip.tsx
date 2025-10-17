@@ -18,6 +18,8 @@ export default function InfoTooltip({
         color="#005EB8"
         data-tooltip-id={tooltipId}
         data-cy={`${tooltipId}-icon`}
+        style={{ float: "right" }}
+        size="lg"
       />
       <Tooltip
         id={tooltipId}
