@@ -69,6 +69,7 @@ describe("CctCalcCreate - edit", () => {
     cy.get('[data-cy="saved-cct-details"] > div')
       .last()
       .contains("Mon, 09 Dec 2024 15:11:04 GMT");
+    cy.get('[data-cy="WteInfo-icon"]').should("be.visible");
     cy.get('[data-cy="cct-calc-btn"]').should("not.exist");
     cy.clickSelect('[data-cy="changes[0].wte"]', "60%");
     cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
