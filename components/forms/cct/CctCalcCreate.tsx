@@ -5,6 +5,7 @@ import {
   Card,
   Col,
   Container,
+  Label,
   Row,
   Table,
   WarningCallout
@@ -309,10 +310,12 @@ export function CctCalcCreate() {
                                 />
                               </div>
                               <div className="WteToolTip" data-cy="WteToolTip">
-                                <InfoTooltip
-                                  tooltipId="WteInfo"
-                                  content="‘Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
-                                />
+                                <Label size="s">
+                                  <InfoTooltip
+                                    tooltipId="WteInfo"
+                                    content="‘Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
+                                  />
+                                </Label>
                               </div>
                             </Col>
                           </Row>
