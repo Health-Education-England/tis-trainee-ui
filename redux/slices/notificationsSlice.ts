@@ -88,9 +88,9 @@ export const getNotifications = createAsyncThunk(
     // modify content to make it more human readable
     const modifiedContent = response.data.content.map((notification) => ({
       ...notification,       
-      subject: notification.subject.replace(/_/g, " "), // replace "_" with space in subject
+      subject: notification.subject.replaceAll("_", " "), // replace "_" with space in subject
       contact: notification.contact // add line breaks before "@" in contact email
-        ? notification.contact.replace(/@/g, "\n@")
+        ? notification.contact.replaceAll("@", "\n@")
         : null,
     }));
     
