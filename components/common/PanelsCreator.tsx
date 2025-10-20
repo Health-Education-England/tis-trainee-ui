@@ -148,14 +148,16 @@ export function PanelsCreator({
                     <SummaryList.Row key={_index}>
                       <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
                         {panelProp === "conditionsOfJoining" ? (
-                          <Label size="s" style={{ float: "right" }}>
+                          <>
                             <InfoTooltip
                               tooltipId={`${panelProp}${index}CojInfo`}
                               content="The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
                             />
-                          </Label>
-                        ) : null}
-                        {panelKeys[panelProp as keyof PanelKeys]}
+                            {panelKeys[panelProp as keyof PanelKeys]}
+                          </>
+                        ) : (
+                          <span>{panelKeys[panelProp as keyof PanelKeys]}</span>
+                        )}
                       </SummaryList.Key>
                       <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
                         {displayTheCorrectListItem(panelProp, panel, index)}
