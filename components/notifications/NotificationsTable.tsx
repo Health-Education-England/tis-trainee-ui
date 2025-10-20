@@ -93,7 +93,7 @@ export const NotificationsTable: React.FC = () => {
     autoResetPageIndex: false
   });
 
-  return notificationsData.length > 0 ? (
+  return notificationsData.length > 0 || notificationsStatusFilter !== "" ? (
     <>
       <Button
         type="button"

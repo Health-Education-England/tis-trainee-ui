@@ -84,7 +84,20 @@ export const getNotifications = createAsyncThunk(
   async (params?: Record<string, any>) => {
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getNotifications(params);
-    return response.data;
+
+    // modify content to make it more human readable
+    const modifiedContent = response.data.content.map((notification) => ({
+      ...notification,       
+      subject: notification.subject.replace(/_/g, " "), // replace "_" with space in subject
+      contact: notification.contact // add line breaks before "@" in contact email
+        ? notification.contact.replace(/@/g, "\n@")
+        : null,
+    }));
+    
+    return {
+      ...response.data,
+      content: modifiedContent,
+    };
   }
 );
 
