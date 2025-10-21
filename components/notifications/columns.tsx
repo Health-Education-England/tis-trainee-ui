@@ -17,6 +17,7 @@ const columnHelper = createColumnHelper<NotificationType>();
 const commonColumns = [
   columnHelper.accessor("subjectText", {
     id: "subjectText",
+    size: 400,
     header: ({ column }) => <TableColumnHeader column={column} title="Title" />,
     cell: props => (
       <span>
@@ -102,7 +103,9 @@ export const emailColumns = [
     header: ({ column }) => (
       <TableColumnHeader column={column} title="Sent to" />
     ),
-    cell: props => <span>{props.renderValue()}</span>,
+    cell: props => (
+      <span style={{ whiteSpace: "pre-wrap" }}>{props.renderValue()}</span>
+    ),
     enableColumnFilter: false
   })
 ];
