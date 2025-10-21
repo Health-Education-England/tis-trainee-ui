@@ -4,7 +4,7 @@ import { notificationsMixedTypeData } from "../../../mock-data/notifications";
 
 describe("No notification", () => {
   beforeEach(() => {
-    cy.signInToTss(300, "/notifications");
+    cy.signInToTss(30000, "/notifications");
     cy.intercept(
       {
         method: "GET",
@@ -28,7 +28,7 @@ describe("No notification", () => {
 
 describe("Notifications", () => {
   beforeEach(() => {
-    cy.signInToTss(300, "/notifications");
+    cy.signInToTss(30000, "/notifications");
     cy.intercept(
       {
         method: "GET",
