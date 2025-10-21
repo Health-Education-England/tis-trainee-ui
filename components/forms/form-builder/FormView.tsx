@@ -23,7 +23,7 @@ import {
 } from "../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../StartOverButton";
 import { Form, FormData, FormErrors } from "./FormBuilder";
-import Declarations from "./Declarations";
+import Declarations from "../Declarations";
 import { FormLinkerModal } from "../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
 import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
@@ -160,7 +160,7 @@ export const FormView = ({
           <Declarations
             setCanSubmit={setCanSubmit}
             canEdit={canEditStatus}
-            formJson={formJson}
+            formDeclarations={formJson.declarations}
           />
           {canEditStatus && (
             <Button

@@ -1,24 +1,24 @@
 import { Checkboxes } from "nhsuk-react-components";
-import { Form } from "./FormBuilder";
 import { useEffect, useMemo, useState } from "react";
+import { FormDeclaration } from "./form-builder/FormBuilder";
 
 type DeclarationsProps = {
   setCanSubmit: (canSubmit: boolean) => void;
   canEdit: boolean;
-  formJson: Form;
+  formDeclarations: FormDeclaration[];
 };
 
 export default function Declarations({
   setCanSubmit,
   canEdit,
-  formJson
+  formDeclarations
 }: Readonly<DeclarationsProps>) {
   const initialDecValues = useMemo(() => {
-    return formJson.declarations.reduce((values, declaration) => {
+    return formDeclarations.reduce((values, declaration) => {
       values[declaration.name] = false;
       return values;
     }, {} as Record<string, boolean>);
-  }, [formJson.declarations]);
+  }, [formDeclarations]);
 
   const [decValues, setDecValues] =
     useState<Record<string, boolean>>(initialDecValues);
@@ -36,7 +36,7 @@ export default function Declarations({
 
   return (
     <Checkboxes>
-      {formJson.declarations.map(declaration => (
+      {formDeclarations.map(declaration => (
         <Checkboxes.Box
           key={declaration.name}
           data-cy={declaration.name}

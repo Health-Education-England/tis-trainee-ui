@@ -17,7 +17,7 @@ import {
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import Declarations from "../form-builder/Declarations";
+import Declarations from "../Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummaryDetails";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
@@ -152,7 +152,7 @@ export const LtftFormView = () => {
           <Declarations
             setCanSubmit={setCanSubmit}
             canEdit={canEditStatus}
-            formJson={formJson}
+            formDeclarations={formJson.declarations}
           />
           {canEditStatus && (
             <Formik

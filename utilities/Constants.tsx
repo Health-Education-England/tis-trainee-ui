@@ -47,37 +47,37 @@ export const COJ_EPOCH = new Date(
 
 export const COJ_DECLARATIONS_9 = [
   {
-    id: "isDeclareProvisional",
+    name: "isDeclareProvisional",
     label:
       "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE/NES/HEIW/NIMDTA and/or my employing organisation."
   },
   {
-    id: "isDeclareSatisfy",
+    name: "isDeclareSatisfy",
     label:
       "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
   },
   {
-    id: "isDeclareProvide",
+    name: "isDeclareProvide",
     label:
       "I will obtain and provide my training programme and HEE/NES/HEIW/NIMDTA with a professional email address."
   },
   {
-    id: "isDeclareInform",
+    name: "isDeclareInform",
     label:
       "I will inform my training programme and HEE/NES/HEIW/NIMDTA of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
-    id: "isDeclareUpToDate",
+    name: "isDeclareUpToDate",
     label:
       "I will keep myself up to date with the latest information available via HEE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
   },
   {
-    id: "isDeclareAttend",
+    name: "isDeclareAttend",
     label:
       "I will attend the minimum number of formal teaching days as required by my training programme."
   },
   {
-    id: "isDeclareEngage",
+    name: "isDeclareEngage",
     label:
       "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
@@ -85,42 +85,42 @@ export const COJ_DECLARATIONS_9 = [
 
 export const COJ_DECLARATIONS_10 = [
   {
-    id: "isDeclareProvisional",
+    name: "isDeclareProvisional",
     label:
       "I understand that programme and post allocations are provisional, and are subject to change until confirmed by NHSE WTE/NES/HEIW/NIMDTA and/or my employing organisation."
   },
   {
-    id: "isDeclareSatisfy",
+    name: "isDeclareSatisfy",
     label:
       "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
   },
   {
-    id: "isDeclareProvide",
+    name: "isDeclareProvide",
     label:
       "I will obtain a professional email address, and will provide this to my training programme and NHSE WTE/NES/HEIW/NIMDTA."
   },
   {
-    id: "isDeclareInform",
+    name: "isDeclareInform",
     label:
       "I will inform my training programme and NHSE WTE/NES/HEIW/NIMDTA of any change to my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
-    id: "isDeclareUpToDate",
+    name: "isDeclareUpToDate",
     label:
       "I will keep myself up to date with the latest information available via NHSE WTE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
   },
   {
-    id: "isDeclareAttend",
+    name: "isDeclareAttend",
     label:
       "I will attend the minimum number of formal teaching days as required by my training programme."
   },
   {
-    id: "isDeclareContacted",
+    name: "isDeclareContacted",
     label:
       "I understand that I will be contacted by NHSE WTE/NES/HEIW/NIMDTA about matters that are relevant to my teaching, training or personal development."
   },
   {
-    id: "isDeclareEngage",
+    name: "isDeclareEngage",
     label:
       "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
