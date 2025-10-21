@@ -9,8 +9,6 @@ import history from "../../navigation/history";
 import MultiChoiceInputField from "../MultiChoiceInputField";
 import ScrollTo from "../ScrollTo";
 import * as Yup from "yup";
-import { Redirect } from "react-router-dom";
-import { updatedsigningCoj } from "../../../redux/slices/userSlice";
 import {
   COJ_DECLARATIONS_10,
   COJ_DECLARATIONS_9
@@ -19,6 +17,8 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import FormSavePDF from "../FormSavePDF";
 import CojGg10 from "./CojGg10";
 import CojGg9 from "./CojGg9";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import ErrorPage from "../../common/ErrorPage";
 
 // set intiial values
 const initialValuesDefault = {
@@ -55,46 +55,49 @@ const validationSchema10 = Yup.object({
 });
 
 export default function CojView() {
-  const {
-    signingCojPmId: pmId,
-    signingCojProgName: progName,
-    signingCojSignedDate: signedDate,
-    signingCoj,
-    signingCojVersion
-  } = store.getState().user;
+  const pmId = window.location.pathname.split("/")[2];
+  const matchedPm = useAppSelector(state =>
+    state.traineeProfile.traineeProfileData.programmeMemberships.find(
+      pm => pm.tisId === pmId
+    )
+  );
 
-  if (!signingCoj) return <Redirect to="/programmes" />;
+  if (!matchedPm) {
+    return (
+      <ErrorPage message="There was a problem displaying the Conditions of Joining information for this Programme Membership." />
+    );
+  } else {
+    const progName = matchedPm.programmeName;
+    const progId = matchedPm.tisId as string;
+    const isVerson10 = matchedPm.conditionsOfJoining.version === "GG10";
+    const CojFormVersion = isVerson10 ? (
+      <CojGg10 progName={progName} />
+    ) : (
+      <CojGg9 progName={progName} />
+    );
+    const signedDate = matchedPm.conditionsOfJoining.signedAt
+      ? new Date(matchedPm.conditionsOfJoining.signedAt)
+      : null;
 
-  return progName ? (
-    <>
-      {signedDate && (
-        <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
-      )}
-      <ScrollTo />
-      {signingCojVersion === "GG9" && (
-        <>
-          <CojGg9 progName={progName} />
-          <CojDeclarationSection
-            signedDate={signedDate}
-            initialValues={initialValuesDefault}
-            validationSchema={validationSchemaDefault}
-            declarations={COJ_DECLARATIONS_9}
-          />
-        </>
-      )}
-      {signingCojVersion === "GG10" && (
-        <>
-          <CojGg10 progName={progName} />
-          <CojDeclarationSection
-            signedDate={signedDate}
-            initialValues={initialValues10}
-            validationSchema={validationSchema10}
-            declarations={COJ_DECLARATIONS_10}
-          />
-        </>
-      )}
-    </>
-  ) : null;
+    return (
+      <>
+        {signedDate && (
+          <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
+        )}
+        <ScrollTo />
+        {CojFormVersion}
+        <CojDeclarationSection
+          signedDate={signedDate}
+          initialValues={isVerson10 ? initialValues10 : initialValuesDefault}
+          validationSchema={
+            isVerson10 ? validationSchema10 : validationSchemaDefault
+          }
+          declarations={isVerson10 ? COJ_DECLARATIONS_10 : COJ_DECLARATIONS_9}
+          matchedPmId={progId}
+        />
+      </>
+    );
+  }
 }
 
 type CojDeclarationSectionProps = {
@@ -102,21 +105,21 @@ type CojDeclarationSectionProps = {
   initialValues: Record<string, string>;
   validationSchema: Yup.ObjectSchema<any>;
   declarations: { id: string; label: string }[];
+  matchedPmId: string;
 };
 function CojDeclarationSection({
   signedDate,
   initialValues,
   validationSchema,
-  declarations
+  declarations,
+  matchedPmId
 }: Readonly<CojDeclarationSectionProps>) {
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async _values => {
-        const signingCojPmId = store.getState().user.signingCojPmId;
-        await store.dispatch(signCoj(signingCojPmId));
-        store.dispatch(updatedsigningCoj(false));
+        await store.dispatch(signCoj(matchedPmId));
         store.dispatch(updatedTraineeProfileStatus("idle"));
         history.push("/programmes");
       }}

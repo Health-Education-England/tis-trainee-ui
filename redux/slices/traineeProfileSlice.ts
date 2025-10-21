@@ -76,9 +76,6 @@ const traineeProfileSlice = createSlice({
     },
     updatedTraineeProfileStatus(state, action: PayloadAction<string>) {
       return { ...state, status: action.payload };
-    },
-    updatedUnsignedCojs(state, action: PayloadAction<ProgrammeMembership[]>) {
-      return { ...state, unsignedCojs: action.payload };
     }
   },
   extraReducers(builder) {
@@ -150,8 +147,7 @@ export default traineeProfileSlice.reducer;
 export const {
   resetToInit,
   updatedTraineeProfileData,
-  updatedTraineeProfileStatus,
-  updatedUnsignedCojs
+  updatedTraineeProfileStatus
 } = traineeProfileSlice.actions;
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>

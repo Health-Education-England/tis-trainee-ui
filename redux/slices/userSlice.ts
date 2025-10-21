@@ -18,11 +18,6 @@ export interface IUser {
   enabledMfa?: MFAType[];
   username: string;
   features: UserFeaturesType;
-  signingCojProgName: string | null;
-  signingCojPmId: string;
-  signingCoj: boolean;
-  signingCojSignedDate: Date | null;
-  signingCojVersion: CojVersionType;
   redirected: boolean;
 }
 
@@ -77,11 +72,6 @@ const initialState: IUser = {
       enabled: false
     }
   },
-  signingCojProgName: null,
-  signingCojPmId: "",
-  signingCoj: false,
-  signingCojSignedDate: null,
-  signingCojVersion: "GG10",
   redirected: false
 };
 
@@ -154,21 +144,6 @@ const userSlice = createSlice({
         }
       };
     },
-    updatedsigningCojProgName(state, action: PayloadAction<null | string>) {
-      return { ...state, signingCojProgName: action.payload };
-    },
-    updatedsigningCojPmId(state, action: PayloadAction<string>) {
-      return { ...state, signingCojPmId: action.payload };
-    },
-    updatedsigningCoj(state, action: PayloadAction<boolean>) {
-      return { ...state, signingCoj: action.payload };
-    },
-    updatedsigningCojSignedDate(state, action: PayloadAction<Date | null>) {
-      return { ...state, signingCojSignedDate: action.payload };
-    },
-    updatedsigningCojVersion(state, action: PayloadAction<CojVersionType>) {
-      return { ...state, signingCojVersion: action.payload };
-    },
     updatedRedirected(state, action: PayloadAction<boolean>) {
       return { ...state, redirected: action.payload };
     }
@@ -213,10 +188,5 @@ export const {
   updatedSmsSection,
   updatedPreferredMfa,
   updatedUserFeatures,
-  updatedsigningCojProgName,
-  updatedsigningCojPmId,
-  updatedsigningCoj,
-  updatedsigningCojSignedDate,
-  updatedsigningCojVersion,
   updatedRedirected
 } = userSlice.actions;
