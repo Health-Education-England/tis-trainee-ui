@@ -126,6 +126,12 @@ export const COJ_DECLARATIONS_10 = [
   }
 ];
 
+export const NO_MATCHING_PM_ERROR_MESSAGE =
+  "There was a problem displaying the Conditions of Joining information for this Programme.";
+
+export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
+  "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
+
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
   "I will be seeking specialist registration by application for a CESR",

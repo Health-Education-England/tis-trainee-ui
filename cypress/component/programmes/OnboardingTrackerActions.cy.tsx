@@ -13,7 +13,6 @@ const mockProgramme = {
   ...mockProgrammeMemberships[0],
   startDate: dayjs().subtract(16, "weeks").format("YYYY-MM-DD")
 };
-console.log("mock prog start date", mockProgramme.startDate);
 
 const mountOnboardingTrackerActionsWithMockData = (
   panel: ProgrammeMembership = mockProgramme

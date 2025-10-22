@@ -2,7 +2,10 @@ import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
 import {
   COJ_DECLARATIONS_10,
-  COJ_DECLARATIONS_9
+  COJ_DECLARATIONS_9,
+  COJ_EPOCH,
+  COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE,
+  NO_MATCHING_PM_ERROR_MESSAGE
 } from "../../../utilities/Constants";
 import FormSavePDF from "../FormSavePDF";
 import CojGg10 from "./CojGg10";
@@ -19,11 +22,11 @@ export default function CojView() {
       pm => pm.tisId === pmId
     )
   );
-
   if (!matchedPm) {
-    return (
-      <ErrorPage message="There was a problem displaying the Conditions of Joining information for this Programme Membership." />
-    );
+    return <ErrorPage message={NO_MATCHING_PM_ERROR_MESSAGE} />;
+  }
+  if (new Date(matchedPm.startDate) < COJ_EPOCH) {
+    return <ErrorPage message={COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE} />;
   } else {
     const progName = matchedPm.programmeName;
     const progId = matchedPm.tisId as string;
