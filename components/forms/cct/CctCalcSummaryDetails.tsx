@@ -194,7 +194,7 @@ export function CctCalcSummaryDetails({
                         </SummaryList.Value>
                       </SummaryList.Row>
                       <SummaryList.Row>
-                        <SummaryList.Key>Change date</SummaryList.Key>
+                        <SummaryList.Key>LTFT start date</SummaryList.Key>
                         <SummaryList.Value>
                           {editableFields.changeDate ? (
                             <TextInputField
