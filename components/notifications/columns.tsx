@@ -11,6 +11,7 @@ import { TableColumnHeader } from "./TableColumnHeader";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { RowActions } from "./RowActions";
+import InfoTooltip from "../common/InfoTooltip";
 
 const columnHelper = createColumnHelper<NotificationType>();
 
@@ -75,6 +76,7 @@ export const emailColumns = [
   columnHelper.accessor("status", {
     id: "status",
     header: "",
+    size: 220,
     cell: props => {
       const statusClass =
         props.row.original.status === "FAILED"
@@ -82,10 +84,20 @@ export const emailColumns = [
           : "status-sent";
       return (
         <span className={`${statusClass} nhsuk-margin-left-1`}>
+          {props.row.original.status}
           {props.row.original.status === "FAILED" ? (
-            <>
+            <div data-tooltip-id="statusDetails">
               <FontAwesomeIcon icon={faTriangleExclamation} size="lg" /> FAILED
-            </>
+              {props.row.original.statusDetail && (
+                <>&nbsp;
+                  <InfoTooltip
+                    tooltipId={`${props.row.original.id}-statusDetail`}
+                    content={props.row.original.statusDetail}
+                    size="sm"
+                  />
+                </>
+              )}
+            </div>
           ) : (
             <>
               <FontAwesomeIcon icon={faCheck} size="lg" /> SENT

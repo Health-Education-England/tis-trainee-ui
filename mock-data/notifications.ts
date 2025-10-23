@@ -144,7 +144,7 @@ export const emailNotificationData: any[] = [
     contact: "testing@email.com",
     sentAt: new Date("2024-08-15T15:21:02.939Z"),
     status: "FAILED",
-    statusDetail: null
+    statusDetail: "email bounce"
   },
   {
     id: "65f1d6bd3f7898e099514196",

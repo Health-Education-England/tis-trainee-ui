@@ -142,4 +142,13 @@ describe("NotificationsTable with email notifications data", () => {
     cy.get('[data-cy="notificationsTableRow-1"]').should("exist");
   });
 
+  it("should show status details on FAILED notifications", () => {
+    cy.get('[data-cy="notificationsTableRow-1"] > :nth-child(1)')
+        .should("contain.text", "FAILED")
+        .find('[data-cy$="-icon"]')
+        .click();
+    cy.get(".tooltipContent")
+      .should("be.visible")
+      .and("contain.text", "email bounce");
+  });
 });
