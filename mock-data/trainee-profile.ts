@@ -405,13 +405,13 @@ export const mockProgrammeMembershipCojSigned: ProgrammeMembership = {
   programmeName: "",
   programmeNumber: "",
   trainingNumber: null,
-  startDate: new Date("2010-10-14"),
-  endDate: new Date("2011-10-14"),
+  startDate: dayjs().subtract(1, "year").toDate(),
+  endDate: dayjs().add(4, "year").toDate(),
   managingDeanery: "",
   responsibleOfficer: mockResponsibleOfficer,
   curricula: [],
   conditionsOfJoining: {
-    signedAt: new Date("2010-10-14"),
+    signedAt: dayjs().subtract(6, "month").toDate(),
     version: "GG9" as CojVersionType
   }
 };
@@ -422,8 +422,8 @@ export const mockProgrammeMembershipCojNotSigned: ProgrammeMembership[] = [
     programmeName: "",
     programmeNumber: "",
     trainingNumber: null,
-    startDate: new Date("2010-10-14"),
-    endDate: new Date("2011-10-14"),
+    startDate: dayjs().subtract(6, "year").toDate(),
+    endDate: dayjs().add(1, "year").toDate(),
     managingDeanery: "",
     responsibleOfficer: mockResponsibleOfficer,
     curricula: [],

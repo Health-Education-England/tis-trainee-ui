@@ -17,18 +17,24 @@ export const FormBackLink = ({
   dataCy = "backLink",
   text
 }: FormBackLinkProps) => {
-  const linkText = path.slice(1);
-  const capitalizedPathText =
-    linkText.charAt(0).toUpperCase() + linkText.slice(1);
+  const linkText = mapPathToText(path, text);
   return (
     <BackLink
       className={className}
       data-cy={dataCy}
       onClick={() => FormRUtilities.historyPush(history, path)}
     >
-      {text ? text : `Go to ${capitalizedPathText} page`}
+      {linkText}
     </BackLink>
   );
 };
 
 export default FormBackLink;
+
+function mapPathToText(path: string, text: string | undefined): string {
+  if (text) return text;
+  const linkText = path.slice(1);
+  if (linkText === "formr-a" || linkText === "formr-b")
+    return "Back to forms list";
+  return `Go to ${linkText.charAt(0).toUpperCase() + linkText.slice(1)} page`;
+}

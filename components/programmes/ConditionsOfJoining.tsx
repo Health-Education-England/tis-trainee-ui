@@ -16,10 +16,10 @@ export function ConditionsOfJoining({
   startDate,
   programmeMembershipId
 }: ConditionsOfJoiningProps) {
-  if (!startDate) return <p>Unknown status</p>;
+  if (!startDate) return <p data-cy="cojStatusText_Unknown">Unknown status</p>;
 
   if (new Date(startDate) < COJ_EPOCH) {
-    return <p>Follow Local Office process</p>;
+    return <p data-cy="cojStatusText_LoProcess">Follow Local Office process</p>;
   }
 
   const { signedAt, version } = conditionsOfJoining;

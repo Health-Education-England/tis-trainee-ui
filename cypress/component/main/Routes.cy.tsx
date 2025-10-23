@@ -4,11 +4,7 @@ import { Provider } from "react-redux";
 import { mount } from "cypress/react";
 
 import Routes from "../../../components/main/Routes";
-import {
-  updatedsigningCoj,
-  updatedsigningCojProgName,
-  updatedUserFeatures
-} from "../../../redux/slices/userSlice";
+import { updatedUserFeatures } from "../../../redux/slices/userSlice";
 import { UserFeaturesType } from "../../../models/FeatureFlags";
 import store from "../../../redux/store/store";
 import {
@@ -127,9 +123,7 @@ describe("Routes", () => {
       cy.get('[data-cy="onboardingTrackerHeading"]').should("exist");
     });
 
-    it("should render CojView when navigating to /programmes/1/sign-coj", () => {
-      store.dispatch(updatedsigningCoj(true));
-      store.dispatch(updatedsigningCojProgName("Test Programme"));
+    it("should render CojView error page when navigating to /programmes/1/sign-coj", () => {
       const features = {
         ...mockUserFeaturesSpecialty,
         details: {
@@ -141,7 +135,8 @@ describe("Routes", () => {
         }
       };
       mountComponent("/programmes/1/sign-coj", features);
-      cy.get('[data-cy="cojHeading"]').should("exist");
+      cy.get('[data-cy="error-header-text"]').should("exist");
+      cy.get('[data-cy="error-message-text"]').should("exist");
     });
 
     it("should render Profile when navigating to /profile", () => {

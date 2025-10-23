@@ -39,6 +39,7 @@ import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
 import dayjs from "dayjs";
 import { UserFeaturesType } from "../../../models/FeatureFlags";
+import { DateUtilities } from "../../../utilities/DateUtilities";
 
 const mountProgrammesWithMockData = (
   prefMfa: MFAType = "NOMFA",
@@ -251,7 +252,7 @@ describe("Programme summary panel", () => {
         "The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
       );
     cy.get('[data-cy="conditionsOfJoining0Val"]')
-      .children('[data-cy="cojStatusText"]')
+      .children('[data-cy="cojStatusText_LoProcess"]')
       .should("exist")
       .and("have.text", "Follow Local Office process");
     cy.get('[data-cy="conditionsOfJoining1Key"]')
@@ -260,7 +261,23 @@ describe("Programme summary panel", () => {
     cy.get('[data-cy="conditionsOfJoining1Val"]')
       .children('[data-cy="cojSignedDate"]')
       .should("exist")
-      .and("have.text", "Signed: 14/10/2010 01:00 (BST)");
+      .and(
+        "have.text",
+        `Signed: ${DateUtilities.ConvertToLondonTime(
+          dayjs(
+            mockProgrammeMembershipCojSigned.conditionsOfJoining.signedAt
+          ).toDate()
+        )}`
+      );
+    cy.get('[data-cy="conditionsOfJoining1Val"]')
+      .children('[data-cy="cojSignedVersion"]')
+      .should("exist")
+      .and(
+        "have.text",
+        `Version: Gold Guide ${mockProgrammeMembershipCojSigned.conditionsOfJoining.version.substring(
+          2
+        )}`
+      );
   });
 
   it("should display the view COJ button for placements with signed COJ forms", () => {
