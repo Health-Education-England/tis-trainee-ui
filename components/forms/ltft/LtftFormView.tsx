@@ -10,7 +10,6 @@ import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useEffect, useState } from "react";
 import {
-  BackLink,
   Button,
   Col,
   Container,
@@ -36,6 +35,7 @@ import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObj } from "../../../models/LtftTypes";
+import FormBackLink from "../../common/FormBackLink";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -240,13 +240,12 @@ function LtftViewWrapper({
   return (
     <>
       <ScrollToTop />
-      <BackLink
-        className="back-link"
-        data-cy="backLink-to-ltft-home"
-        onClick={() => history.push("/ltft")}
-      >
-        Back to Changing hours (LTFT) Home
-      </BackLink>
+      <FormBackLink
+        history={history}
+        path="/ltft"
+        dataCy="backLink-to-ltft-home"
+        text="Back to Changing hours (LTFT) Home"
+      />
       {children}
     </>
   );

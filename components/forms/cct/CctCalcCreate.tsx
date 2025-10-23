@@ -1,6 +1,5 @@
 import { Fragment, useState } from "react";
 import {
-  BackLink,
   Button,
   Card,
   Col,
@@ -45,6 +44,7 @@ import { ProfilePanels } from "../../profile/ProfilePanels";
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import InfoTooltip from "../../common/InfoTooltip";
+import FormBackLink from "../../common/FormBackLink";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -81,14 +81,12 @@ export function CctCalcCreate() {
   return (
     <>
       <ScrollToTop />
-      <BackLink
-        className="back-link"
-        data-cy="backLink-to-cct-home"
-        onClick={() => history.push("/cct")}
-      >
-        Back to CCT Home
-      </BackLink>
-
+      <FormBackLink
+        history={history}
+        path="/cct"
+        dataCy="backLink-to-cct-home"
+        text="Back to CCT Home"
+      />
       <Card>
         <Card.Content>
           <Card.Heading data-cy="cct-calc-header">

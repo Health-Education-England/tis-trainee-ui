@@ -1,11 +1,12 @@
 import React from "react";
-import { BackLink, Fieldset } from "nhsuk-react-components";
+import { Fieldset } from "nhsuk-react-components";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { OnboardingTrackerActions } from "./OnboardingTrackerActions";
 import history from "../../navigation/history";
 import ScrollToTop from "../../common/ScrollToTop";
 import ErrorPage from "../../common/ErrorPage";
+import FormBackLink from "../../common/FormBackLink";
 
 export function OnboardingTracker() {
   const { id } = useParams<{ id: string }>();
@@ -19,14 +20,12 @@ export function OnboardingTracker() {
   return panel ? (
     <>
       <ScrollToTop errors={[]} page={0} isPageDirty={false} />
-      <BackLink
-        data-testid="backLink-to-programmes"
-        className="back-link"
-        data-cy="backLink"
-        onClick={() => history.push("/programmes")}
-      >
-        Back to Programmes list
-      </BackLink>
+      <FormBackLink
+        history={history}
+        path="/programmes"
+        dataCy="backLink-to-programmes"
+        text="Back to Programmes list"
+      />
       <Fieldset>
         <Fieldset.Legend
           isPageHeading
