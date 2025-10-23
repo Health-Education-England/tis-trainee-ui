@@ -5,12 +5,16 @@ import {
   faCheck,
   faEnvelope,
   faEnvelopeOpen,
+  faInfoCircle,
   faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
 import { TableColumnHeader } from "./TableColumnHeader";
 import { StringUtilities } from "../../utilities/StringUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { RowActions } from "./RowActions";
+import { Modal } from "../common/Modal";
+import { useState } from "react";
+import { failedEmailInfoText } from "../../utilities/Constants";
 
 const columnHelper = createColumnHelper<NotificationType>();
 
@@ -44,6 +48,73 @@ const commonColumns = [
   })
 ];
 
+const EmailStatusCell = ({ row }: { row: any }) => {
+  const [showModal, setShowModal] = useState(false);
+  const { status, statusDetail, id } = row.original;
+
+  const statusClass = status === "FAILED" ? "status-failed" : "status-sent";
+
+  return (
+    <span className={`${statusClass} nhsuk-margin-left-1`}>
+      {status === "FAILED" ? (
+        <>
+          <FontAwesomeIcon icon={faTriangleExclamation} size="lg" /> FAILED
+          {statusDetail && (
+            <>
+              &nbsp;
+              <button
+                type="button"
+                onClick={e => {
+                  e.stopPropagation();
+                  setShowModal(true);
+                }}
+                data-cy={`${id}-icon`}
+                aria-label="Show information"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer"
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faInfoCircle}
+                  color="#005eb8"
+                  size="sm"
+                />
+              </button>
+              {showModal && (
+                <button
+                  data-cy={`${id}-modal`}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <Modal
+                    isOpen={showModal}
+                    onClose={() => setShowModal(false)}
+                    cancelBtnText="Close"
+                  >
+                    <div
+                      className="modal-content"
+                      style={{ textAlign: "left" }}
+                    >
+                      <h2>{statusDetail}</h2>
+                      {failedEmailInfoText[statusDetail]}
+                    </div>
+                  </Modal>
+                </button>
+              )}
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <FontAwesomeIcon icon={faCheck} size="lg" /> SENT
+        </>
+      )}
+    </span>
+  );
+};
+
 export const inAppColumns = [
   columnHelper.accessor("status", {
     id: "status",
@@ -75,25 +146,8 @@ export const emailColumns = [
   columnHelper.accessor("status", {
     id: "status",
     header: "",
-    cell: props => {
-      const statusClass =
-        props.row.original.status === "FAILED"
-          ? "status-failed"
-          : "status-sent";
-      return (
-        <span className={`${statusClass} nhsuk-margin-left-1`}>
-          {props.row.original.status === "FAILED" ? (
-            <>
-              <FontAwesomeIcon icon={faTriangleExclamation} size="lg" /> FAILED
-            </>
-          ) : (
-            <>
-              <FontAwesomeIcon icon={faCheck} size="lg" /> SENT
-            </>
-          )}
-        </span>
-      );
-    }
+    size: 200,
+    cell: props => <EmailStatusCell row={props.row} />
   }),
 
   ...commonColumns,
