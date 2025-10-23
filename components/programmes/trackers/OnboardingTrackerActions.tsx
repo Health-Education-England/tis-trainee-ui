@@ -16,7 +16,6 @@ import {
   ProgOnboardingTagType
 } from "../../../utilities/Constants";
 import dayjs from "dayjs";
-import { Link } from "react-router-dom";
 import { Modal } from "../../common/Modal";
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";

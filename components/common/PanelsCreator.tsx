@@ -314,7 +314,6 @@ function displayTheCorrectListItem(
           conditionsOfJoining={panel[panelProp]}
           startDate={panel["startDate"]}
           programmeMembershipId={panel.tisId}
-          programmeName={panel.programmeName}
         />
       );
     case "trainingNumber":

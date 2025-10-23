@@ -31,7 +31,7 @@ export default function Declarations({
   };
 
   useEffect(() => {
-    setCanSubmit(Object.values(decValues).every(v => v));
+    setCanSubmit(Object.values(decValues).every(Boolean));
   }, [decValues, setCanSubmit]);
 
   return (

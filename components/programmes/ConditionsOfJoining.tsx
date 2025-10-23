@@ -8,14 +8,13 @@ type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
   startDate: string | null;
   programmeMembershipId: string;
-  programmeName: string;
 };
 
 export function ConditionsOfJoining({
   conditionsOfJoining,
   startDate,
   programmeMembershipId
-}: ConditionsOfJoiningProps) {
+}: Readonly<ConditionsOfJoiningProps>) {
   if (!startDate) return <p data-cy="cojStatusText_Unknown">Unknown status</p>;
 
   if (new Date(startDate) < COJ_EPOCH) {
