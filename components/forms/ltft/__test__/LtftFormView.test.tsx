@@ -28,7 +28,7 @@ jest.mock("../../form-builder/FormViewBuilder", () => ({
 }));
 
 // Note: Mock the Declarations via factory to avoid the need to interact with the form to set canSubmit to true
-jest.mock("../../form-builder/Declarations", () => {
+jest.mock("../../../forms/Declarations", () => {
   const React = require("react"); // Import React within the factory
   const { useEffect } = React;
 

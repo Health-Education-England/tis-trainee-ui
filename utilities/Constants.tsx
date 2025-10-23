@@ -394,7 +394,21 @@ const dayOneEmailText = "Receive 'Day One' email when your post begins";
 const connectRoText =
   "Connect with your Responsible Officer (RO)/ Designated Body (DB)";
 
-export const onboardingTrackerActionText = {
+export type LinkType = {
+  text: string;
+  isInternal: boolean;
+};
+
+export type OnboardingTrackerActionType = {
+  actionText: string;
+  textLink: LinkType | null;
+  faIcon: any;
+};
+
+export const onboardingTrackerAction: Record<
+  string,
+  OnboardingTrackerActionType
+> = {
   WELCOME_EMAIL: {
     actionText: welcomeEmailText,
     textLink: null,
@@ -403,44 +417,68 @@ export const onboardingTrackerActionText = {
   ROYAL_SOCIETY_REGISTRATION: {
     actionText: royalSocietyText,
     faIcon: faUserFriends,
-    textLink:
-      "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
+    textLink: {
+      text: "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/",
+      isInternal: false
+    }
   },
   REVIEW_PROGRAMME: {
     actionText: reviewProgrammeText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_COJ: {
     actionText: signCojText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes/:id/sign-coj",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_FORM_R_PART_A: {
     actionText: formRPartAText,
-    textLink: "/formr-a",
+    textLink: {
+      text: "/formr-a",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_FORM_R_PART_B: {
     actionText: formRPartBText,
-    textLink: "/formr-b",
+    textLink: {
+      text: "/formr-b",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   TRAINING_NUMBER: {
     actionText: trainingNumberText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes",
+      isInternal: true
+    },
     faIcon: faShare
   },
   LTFT: {
     actionText: ltftText,
-    textLink: "/notifications",
+    textLink: {
+      text: "/notifications",
+      isInternal: true
+    },
     faIcon: faCircleQuestion
   },
   DEFER: {
     actionText: deferText,
-    textLink: "/notifications",
+    textLink: {
+      text: "/notifications",
+      isInternal: true
+    },
     faIcon: faCircleQuestion
   },
+
   PLACEMENT_CONFIRMATION: {
     actionText: placementConfirmationText,
     textLink: null,
@@ -448,7 +486,10 @@ export const onboardingTrackerActionText = {
   },
   REVIEW_PLACEMENT: {
     actionText: reviewPlacementText,
-    textLink: "/placements",
+    textLink: {
+      text: "/placements",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   DAY_ONE_EMAIL: {
