@@ -58,10 +58,10 @@ export async function updateNotificationStatus(
     store.getState().notifications.notificationUpdateInProgress;
   if (inProgressUpdate) return;
   store.dispatch(updatedNotificationUpdateInProgress(true));
-  // update FE first to see immediate change
-  updateNotificationStatusFE(row, newStatus);
 
   if (row.type === "IN_APP") {    
+    // update FE first to see immediate change
+    updateNotificationStatusFE(row, newStatus);
     // then make BE call
     await updateNotificationStatusBE(row, newStatus);
   }
