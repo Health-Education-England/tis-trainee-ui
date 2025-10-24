@@ -134,6 +134,11 @@ describe("NotificationsTable with email notifications data", () => {
     cy.get('[data-cy="notificationsTable-contact"]').should("exist").contains("Sent to");
   });
 
+  it("should not change status after read", () => {
+    cy.get('[data-cy="notificationsTableRow-1"] > :nth-child(1)').should("exist").contains("FAILED").click();    
+    cy.get('[data-cy="notificationsTableRow-1"] > :nth-child(1)').should("exist").contains("FAILED");
+  });
+
   it("should render the table and find notifications with the global search text", () => {
     cy.get(`[data-cy=notificationsTable]`).should("exist");
     cy.get('[data-cy="NotificationsSearchInput"]').should("exist").type("FormR");
