@@ -1,9 +1,8 @@
-import { ActionLink, BackLink, Button, Col, Row } from "nhsuk-react-components";
-import { FormRUtilities } from "../../utilities/FormRUtilities";
-import style from "../Common.module.scss";
+import { ActionLink, Button, Col, Row } from "nhsuk-react-components";
 import { downloadCojPdf } from "../../utilities/FileUtilities";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { useState } from "react";
+import FormBackLink from "../common/FormBackLink";
 
 type IFormSave = {
   history: any;
@@ -22,13 +21,7 @@ const FormSavePDF = ({ history, path, pmId }: IFormSave) => {
     <div className="hide-from-print">
       <Row>
         <Col width="full">
-          <BackLink
-            className={style.backLink}
-            data-cy="backLink"
-            onClick={() => FormRUtilities.historyPush(history, path)}
-          >
-            Back
-          </BackLink>
+          <FormBackLink history={history} path={path} />
         </Col>
       </Row>
       <Row>

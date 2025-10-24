@@ -49,7 +49,7 @@ jest.mock("../form-builder/FormViewBuilder", () => ({
   default: () => <div>FormViewBuilder</div>
 }));
 
-jest.mock("../form-builder/Declarations", () => {
+jest.mock("../../forms/Declarations", () => {
   const React = require("react");
   const { useEffect } = React;
 

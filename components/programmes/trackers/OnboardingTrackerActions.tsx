@@ -11,16 +11,16 @@ import {
   IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  onboardingTrackerActionText,
+  onboardingTrackerAction,
   onboardingTrackerInfoText,
   ProgOnboardingTagType
 } from "../../../utilities/Constants";
 import dayjs from "dayjs";
-import { Link } from "react-router-dom";
 import { Modal } from "../../common/Modal";
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import { getActionStatus } from "../../../utilities/OnboardingTrackerUtilities";
+import { TrackerLink } from "./TrackerLink";
 
 // Define the tracker sections with their associated actions
 const TRACKER_SECTIONS = [
@@ -102,7 +102,7 @@ type OnboardingTrackerActionsProps = {
 export function OnboardingTrackerActions({
   panel
 }: Readonly<OnboardingTrackerActionsProps>) {
-  const progId = panel.tisId;
+  const progId = panel.tisId as string;
   const { filteredActionsBelongingToThisProg } = useTraineeActions(progId);
 
   return (
@@ -124,6 +124,7 @@ export function OnboardingTrackerActions({
                 <TssTraineeAction
                   key={actionTag}
                   tag={actionTag}
+                  pmId={progId}
                   status={
                     sectionIsActive
                       ? getActionStatus(
@@ -145,11 +146,16 @@ export function OnboardingTrackerActions({
 type TssTraineeActionProps = {
   tag: ProgOnboardingTagType;
   status: OnboardingActionStatus;
+  pmId: string;
 };
 
-function TssTraineeAction({ tag, status }: Readonly<TssTraineeActionProps>) {
+function TssTraineeAction({
+  tag,
+  status,
+  pmId
+}: Readonly<TssTraineeActionProps>) {
   const [showModal, setShowModal] = useState(false);
-  const statusAction = onboardingTrackerActionText[tag];
+  const statusAction = onboardingTrackerAction[tag];
   const actionIcon = statusAction.faIcon;
   const actionText = statusAction.actionText;
   const textLink = statusAction.textLink;
@@ -185,13 +191,11 @@ function TssTraineeAction({ tag, status }: Readonly<TssTraineeActionProps>) {
           </div>
           {textLink && status !== "not available" ? (
             <p>
-              {textLink.startsWith("http") ? (
-                <a href={textLink} target="_blank" rel="noopener noreferrer">
-                  {actionText}
-                </a>
-              ) : (
-                <Link to={textLink}>{actionText}</Link>
-              )}
+              <TrackerLink
+                textLink={textLink}
+                actionText={actionText}
+                pmId={pmId}
+              />
             </p>
           ) : (
             <p>{actionText}</p>

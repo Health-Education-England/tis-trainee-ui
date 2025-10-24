@@ -2,90 +2,191 @@
 /// <reference path="../../../../cypress/support/index.d.ts" />
 
 import { mount } from "cypress/react";
-import { MemoryRouter } from "react-router-dom";
+import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
+import {
+  COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE,
+  NO_MATCHING_PM_ERROR_MESSAGE
+} from "../../../../utilities/Constants";
+import { CojVersionType } from "../../../../redux/slices/userSlice";
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
-import {
-  updatedsigningCoj,
-  updatedsigningCojPmId,
-  updatedsigningCojProgName,
-  updatedsigningCojSignedDate,
-  updatedsigningCojVersion
-} from "../../../../redux/slices/userSlice";
-import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
+import { MemoryRouter } from "react-router-dom";
 import CojView from "../../../../components/forms/conditionOfJoining/CojView";
+import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
+import { TraineeProfile } from "../../../../models/TraineeProfile";
+import { FormsService } from "../../../../services/FormsService";
 
-describe("Conditions of Joining (/programmes/:id/sign-coj)", () => {
-  const pmId = mockTraineeProfile.programmeMemberships[0].tisId;
+const pmId = mockTraineeProfile.programmeMemberships[0].tisId as string;
 
+const mockProps = {
+  mockTraineeProfileData: mockTraineeProfile,
+  tisId: pmId,
+  startDate: "2024-01-01",
+  conditionsOfJoiningSignedAtDate: new Date("2025-01-01"),
+  conditionsOfJoiningVersion: "GG9" as CojVersionType
+};
+
+const commonCheckboxes = [
+  "isDeclareProvisional",
+  "isDeclareSatisfy",
+  "isDeclareProvide",
+  "isDeclareInform",
+  "isDeclareUpToDate",
+  "isDeclareAttend",
+  "isDeclareEngage"
+];
+
+const gg10Checkboxes = [...commonCheckboxes, "isDeclareContacted"];
+
+const testCheckboxes = (
+  checkboxes: string[],
+  readonlyForm: boolean = false
+) => {
+  checkboxes.forEach(checkbox => {
+    const element = cy.get(`[data-cy="${checkbox}"]`).should("exist");
+    if (readonlyForm) {
+      element.should("be.checked");
+      element.should("have.attr", "readonly");
+    } else {
+      element.should("not.be.checked");
+      element.check();
+      element.should("be.checked");
+    }
+  });
+};
+
+const testUnsignedForm = (version: CojVersionType) => {
+  const checkboxes = version === "GG10" ? gg10Checkboxes : commonCheckboxes;
+
+  cy.get('[data-cy="cojSignedOn"]').should("not.exist");
+  cy.get('[data-cy="cojSignBtn"]').should("exist").should("be.disabled");
+  cy.get(`[data-cy="cojHeading-${version.toLowerCase()}"]`).should("exist");
+  testCheckboxes(checkboxes);
+  cy.get('[data-cy="cojSignBtn"]').should("not.be.disabled").click();
+};
+
+const testSignedForm = (version: CojVersionType) => {
+  const checkboxes = version === "GG10" ? gg10Checkboxes : commonCheckboxes;
+
+  cy.get(`[data-cy="cojHeading-${version.toLowerCase()}"]`).should("exist");
+  cy.get('[data-cy="cojSignedOn"]').should(
+    "contain.text",
+    "Signed On: 01/01/2025"
+  );
+  cy.get("[data-cy=cogSignBtn]").should("not.exist");
+  testCheckboxes(checkboxes, true);
+};
+
+const testPDFSaveButton = () => {
+  cy.get("[data-cy=savePdfBtn]").click();
+  cy.get("@downloadCojPdf").should("have.been.calledOnce");
+};
+
+type MockCojViewProps = {
+  mockTraineeProfileData: TraineeProfile;
+  tisId: string;
+  startDate: string;
+  conditionsOfJoiningSignedAtDate: Date | null;
+  conditionsOfJoiningVersion: CojVersionType;
+  urlTisId?: string;
+};
+
+const MockCojView: React.FC<MockCojViewProps> = ({
+  mockTraineeProfileData,
+  tisId,
+  startDate,
+  conditionsOfJoiningSignedAtDate,
+  conditionsOfJoiningVersion,
+  urlTisId
+}) => {
+  store.dispatch(
+    updatedTraineeProfileData({
+      ...mockTraineeProfileData,
+      programmeMemberships: [
+        {
+          ...mockTraineeProfileData.programmeMemberships[0],
+          tisId: tisId,
+          startDate: startDate,
+          conditionsOfJoining: {
+            signedAt: conditionsOfJoiningSignedAtDate,
+            version: conditionsOfJoiningVersion
+          }
+        }
+      ]
+    })
+  );
+
+  return (
+    <Provider store={store}>
+      <MemoryRouter
+        initialEntries={[`/programmes/${urlTisId ? urlTisId : tisId}/sign-coj`]}
+      >
+        <CojView />
+      </MemoryRouter>
+    </Provider>
+  );
+};
+
+describe("Conditions of Joining View - errors", () => {
+  it("renders the error message if no matching PM", () => {
+    mount(<MockCojView {...mockProps} urlTisId="nonsense" />);
+
+    cy.get('[data-cy="error-message-text"]').should(
+      "have.text",
+      NO_MATCHING_PM_ERROR_MESSAGE
+    );
+  });
+
+  it("renders the 'please follow existing process' if PM start date before COJ epoch", () => {
+    mount(<MockCojView {...mockProps} startDate="2000-01-01" />);
+
+    cy.get('[data-cy="error-message-text"]').should(
+      "have.text",
+      COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE
+    );
+  });
+});
+
+describe("Conditions of Joining View - signed", () => {
   beforeEach(() => {
-    store.dispatch(updatedsigningCoj(true));
-    store.dispatch(updatedsigningCojVersion("GG10"));
-    store.dispatch(updatedsigningCojPmId(pmId!));
-    store.dispatch(updatedsigningCojProgName("Test Programme"));
+    cy.stub(FormsService.prototype, "downloadTraineeCojPdf").as(
+      "downloadCojPdf"
+    );
+  });
+  it("renders the readonly GG9 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
+    mount(<MockCojView {...mockProps} />);
+    testPDFSaveButton();
+    testSignedForm("GG9");
   });
 
-  it("renders the editable FormView component when not signed", () => {
-    store.dispatch(updatedsigningCojSignedDate(null));
-
+  it("renders the readonly GG10 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
     mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/programmes/${pmId}/sign-coj`]}>
-          <CojView />
-        </MemoryRouter>
-      </Provider>
+      <MockCojView
+        {...mockProps}
+        conditionsOfJoiningVersion={"GG10" as CojVersionType}
+      />
     );
+    testPDFSaveButton();
+    testSignedForm("GG10");
+  });
+});
 
-    cy.get('[data-cy="cojHeading"]').contains(
-      "Conditions of Joining Agreement"
+describe("Conditions of Joining View - unsigned", () => {
+  it("renders the GG9 to sign if matching PM, start date is after COJ epoch, and it has not been signed", () => {
+    mount(
+      <MockCojView {...mockProps} conditionsOfJoiningSignedAtDate={null} />
     );
-    cy.get("h3").contains("Test Programme Specialty Training Programme");
-    cy.get('[data-cy="cojSignBtn"]').contains(
-      "Click to sign Conditions of Joining agreement"
-    );
-
-    cy.get('[data-cy="isDeclareProvisional0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareSatisfy0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareProvide0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareInform0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareUpToDate0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareAttend0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareContacted0"]').should("not.be.checked");
-    cy.get('[data-cy="isDeclareEngage0"]').should("not.be.checked");
-
-    cy.get(`[data-cy="savePdfBtn"]`).should("not.exist");
-    cy.get(`[data-cy="cojSignedOn"]`).should("not.exist");
+    testUnsignedForm("GG9");
   });
 
-  it("renders the readonly FormView component when signed", () => {
-    store.dispatch(updatedsigningCojSignedDate(new Date("2024-03-02T01:00Z")));
-
+  it("renders the GG10 to sign if matching PM, start date is after COJ epoch, and it has not been signed", () => {
     mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={[`/programmes/${pmId}/sign-coj`]}>
-          <CojView />
-        </MemoryRouter>
-      </Provider>
+      <MockCojView
+        {...mockProps}
+        conditionsOfJoiningSignedAtDate={null}
+        conditionsOfJoiningVersion={"GG10" as CojVersionType}
+      />
     );
-
-    cy.get('[data-cy="cojHeading"]').contains(
-      "Conditions of Joining Agreement"
-    );
-    cy.get("h3").contains("Test Programme Specialty Training Programme");
-    cy.get('[data-cy="savePdfBtn"]').contains("Save a copy as a PDF");
-    cy.get('[data-cy="cojSignedOn"]').contains(
-      "Signed On: 02/03/2024 01:00 (GMT)"
-    );
-
-    cy.get('[data-cy="isDeclareProvisional0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareSatisfy0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareProvide0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareInform0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareUpToDate0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareAttend0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareContacted0"]').should("be.checked");
-    cy.get('[data-cy="isDeclareEngage0"]').should("be.checked");
-
-    cy.get(`[data-cy="cojSignBtn"]`).should("not.exist");
+    testUnsignedForm("GG10");
   });
 });

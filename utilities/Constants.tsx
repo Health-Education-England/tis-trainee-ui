@@ -47,37 +47,37 @@ export const COJ_EPOCH = new Date(
 
 export const COJ_DECLARATIONS_9 = [
   {
-    id: "isDeclareProvisional",
+    name: "isDeclareProvisional",
     label:
       "I understand that programme and post allocations are provisional and subject to change until confirmed by HEE/NES/HEIW/NIMDTA and/or my employing organisation."
   },
   {
-    id: "isDeclareSatisfy",
+    name: "isDeclareSatisfy",
     label:
       "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
   },
   {
-    id: "isDeclareProvide",
+    name: "isDeclareProvide",
     label:
       "I will obtain and provide my training programme and HEE/NES/HEIW/NIMDTA with a professional email address."
   },
   {
-    id: "isDeclareInform",
+    name: "isDeclareInform",
     label:
       "I will inform my training programme and HEE/NES/HEIW/NIMDTA of any change of my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
-    id: "isDeclareUpToDate",
+    name: "isDeclareUpToDate",
     label:
       "I will keep myself up to date with the latest information available via HEE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
   },
   {
-    id: "isDeclareAttend",
+    name: "isDeclareAttend",
     label:
       "I will attend the minimum number of formal teaching days as required by my training programme."
   },
   {
-    id: "isDeclareEngage",
+    name: "isDeclareEngage",
     label:
       "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
@@ -85,46 +85,52 @@ export const COJ_DECLARATIONS_9 = [
 
 export const COJ_DECLARATIONS_10 = [
   {
-    id: "isDeclareProvisional",
+    name: "isDeclareProvisional",
     label:
       "I understand that programme and post allocations are provisional, and are subject to change until confirmed by NHSE WTE/NES/HEIW/NIMDTA and/or my employing organisation."
   },
   {
-    id: "isDeclareSatisfy",
+    name: "isDeclareSatisfy",
     label:
       "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
   },
   {
-    id: "isDeclareProvide",
+    name: "isDeclareProvide",
     label:
       "I will obtain a professional email address, and will provide this to my training programme and NHSE WTE/NES/HEIW/NIMDTA."
   },
   {
-    id: "isDeclareInform",
+    name: "isDeclareInform",
     label:
       "I will inform my training programme and NHSE WTE/NES/HEIW/NIMDTA of any change to my personal contact details and/or personal circumstances that may affect my training programme arrangements."
   },
   {
-    id: "isDeclareUpToDate",
+    name: "isDeclareUpToDate",
     label:
       "I will keep myself up to date with the latest information available via NHSE WTE/NES/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
   },
   {
-    id: "isDeclareAttend",
+    name: "isDeclareAttend",
     label:
       "I will attend the minimum number of formal teaching days as required by my training programme."
   },
   {
-    id: "isDeclareContacted",
+    name: "isDeclareContacted",
     label:
       "I understand that I will be contacted by NHSE WTE/NES/HEIW/NIMDTA about matters that are relevant to my teaching, training or personal development."
   },
   {
-    id: "isDeclareEngage",
+    name: "isDeclareEngage",
     label:
       "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
   }
 ];
+
+export const NO_MATCHING_PM_ERROR_MESSAGE =
+  "There was a problem displaying the Conditions of Joining information for this Programme.";
+
+export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
+  "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
 
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
@@ -388,7 +394,21 @@ const dayOneEmailText = "Receive 'Day One' email when your post begins";
 const connectRoText =
   "Connect with your Responsible Officer (RO)/ Designated Body (DB)";
 
-export const onboardingTrackerActionText = {
+export type LinkType = {
+  text: string;
+  isInternal: boolean;
+};
+
+export type OnboardingTrackerActionType = {
+  actionText: string;
+  textLink: LinkType | null;
+  faIcon: any;
+};
+
+export const onboardingTrackerAction: Record<
+  string,
+  OnboardingTrackerActionType
+> = {
   WELCOME_EMAIL: {
     actionText: welcomeEmailText,
     textLink: null,
@@ -397,44 +417,68 @@ export const onboardingTrackerActionText = {
   ROYAL_SOCIETY_REGISTRATION: {
     actionText: royalSocietyText,
     faIcon: faUserFriends,
-    textLink:
-      "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
+    textLink: {
+      text: "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/",
+      isInternal: false
+    }
   },
   REVIEW_PROGRAMME: {
     actionText: reviewProgrammeText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_COJ: {
     actionText: signCojText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes/:id/sign-coj",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_FORM_R_PART_A: {
     actionText: formRPartAText,
-    textLink: "/formr-a",
+    textLink: {
+      text: "/formr-a",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   SIGN_FORM_R_PART_B: {
     actionText: formRPartBText,
-    textLink: "/formr-b",
+    textLink: {
+      text: "/formr-b",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   TRAINING_NUMBER: {
     actionText: trainingNumberText,
-    textLink: "/programmes",
+    textLink: {
+      text: "/programmes",
+      isInternal: true
+    },
     faIcon: faShare
   },
   LTFT: {
     actionText: ltftText,
-    textLink: "/notifications",
+    textLink: {
+      text: "/notifications",
+      isInternal: true
+    },
     faIcon: faCircleQuestion
   },
   DEFER: {
     actionText: deferText,
-    textLink: "/notifications",
+    textLink: {
+      text: "/notifications",
+      isInternal: true
+    },
     faIcon: faCircleQuestion
   },
+
   PLACEMENT_CONFIRMATION: {
     actionText: placementConfirmationText,
     textLink: null,
@@ -442,7 +486,10 @@ export const onboardingTrackerActionText = {
   },
   REVIEW_PLACEMENT: {
     actionText: reviewPlacementText,
-    textLink: "/placements",
+    textLink: {
+      text: "/placements",
+      isInternal: true
+    },
     faIcon: faCircle
   },
   DAY_ONE_EMAIL: {

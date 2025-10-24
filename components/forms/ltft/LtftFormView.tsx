@@ -10,14 +10,13 @@ import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useEffect, useState } from "react";
 import {
-  BackLink,
   Button,
   Col,
   Container,
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import Declarations from "../form-builder/Declarations";
+import Declarations from "../Declarations";
 import { CctCalcSummaryDetails } from "../cct/CctCalcSummaryDetails";
 import { StartOverButton } from "../StartOverButton";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
@@ -36,6 +35,7 @@ import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObj } from "../../../models/LtftTypes";
+import FormBackLink from "../../common/FormBackLink";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -152,7 +152,7 @@ export const LtftFormView = () => {
           <Declarations
             setCanSubmit={setCanSubmit}
             canEdit={canEditStatus}
-            formJson={formJson}
+            formDeclarations={formJson.declarations}
           />
           {canEditStatus && (
             <Formik
@@ -240,13 +240,12 @@ function LtftViewWrapper({
   return (
     <>
       <ScrollToTop />
-      <BackLink
-        className="back-link"
-        data-cy="backLink-to-ltft-home"
-        onClick={() => history.push("/ltft")}
-      >
-        Back to Changing hours (LTFT) Home
-      </BackLink>
+      <FormBackLink
+        history={history}
+        path="/ltft"
+        dataCy="backLink-to-ltft-home"
+        text="Back to Changing hours (LTFT) Home"
+      />
       {children}
     </>
   );

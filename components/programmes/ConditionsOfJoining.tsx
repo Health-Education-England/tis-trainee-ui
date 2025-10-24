@@ -1,92 +1,48 @@
 import { Link } from "react-router-dom";
 import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../models/ProgrammeMembership";
-import {
-  CojVersionType,
-  updatedsigningCoj,
-  updatedsigningCojPmId,
-  updatedsigningCojProgName,
-  updatedsigningCojSignedDate,
-  updatedsigningCojVersion
-} from "../../redux/slices/userSlice";
-import store from "../../redux/store/store";
-import { CojUtilities } from "../../utilities/CojUtilities";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import React from "react";
-import { Button } from "nhsuk-react-components";
-import history from "../navigation/history";
+import { COJ_EPOCH } from "../../utilities/Constants";
 
 type ConditionsOfJoiningProps = {
   conditionsOfJoining: ConditionsOfJoiningModel;
   startDate: string | null;
   programmeMembershipId: string;
-  programmeName: string;
 };
 
 export function ConditionsOfJoining({
   conditionsOfJoining,
   startDate,
-  programmeMembershipId,
-  programmeName
-}: ConditionsOfJoiningProps) {
-  const handleClick = () => {
-    setCojState(
-      programmeMembershipId,
-      programmeName,
-      conditionsOfJoining.signedAt,
-      conditionsOfJoining.version as CojVersionType
-    );
-    history.push(`/programmes/${programmeMembershipId}/sign-coj`);
-  };
-  return conditionsOfJoining.signedAt ? (
-    <React.Fragment>
-      <p data-cy="cojSignedDate">
-        {`Signed: ${DateUtilities.ConvertToLondonTime(
-          conditionsOfJoining.signedAt
-        )}`}
-      </p>
-      <p data-cy="cojSignedVersion">
-        {`Version: ${CojUtilities.getVersionText(conditionsOfJoining.version)}`}
-      </p>
+  programmeMembershipId
+}: Readonly<ConditionsOfJoiningProps>) {
+  if (!startDate) return <p data-cy="cojStatusText_Unknown">Unknown status</p>;
+
+  if (new Date(startDate) < COJ_EPOCH) {
+    return <p data-cy="cojStatusText_LoProcess">Follow Local Office process</p>;
+  }
+
+  const { signedAt, version } = conditionsOfJoining;
+
+  return (
+    <>
+      {signedAt && (
+        <>
+          <p data-cy="cojSignedDate">
+            {`Signed: ${DateUtilities.ConvertToLondonTime(signedAt)}`}
+          </p>
+          <p data-cy="cojSignedVersion">
+            {`Version: Gold Guide ${version.substring(2)}`}
+          </p>
+        </>
+      )}
+
       <Link
         to={`/programmes/${programmeMembershipId}/sign-coj`}
-        onClick={() =>
-          setCojState(
-            programmeMembershipId,
-            programmeName,
-            conditionsOfJoining.signedAt,
-            conditionsOfJoining.version as CojVersionType
-          )
-        }
+        className="btn_full-width"
         data-cy={`cojViewBtn-${programmeMembershipId}`}
       >
-        View
+        {signedAt ? "View" : "Sign"}
       </Link>
-    </React.Fragment>
-  ) : (
-    <React.Fragment>
-      <p data-cy="cojStatusText">{CojUtilities.getStatusText(startDate)}</p>
-      {startDate && CojUtilities.canBeSigned(new Date(startDate)) && (
-        <Button
-          className="btn_full-width"
-          onClick={handleClick}
-          data-cy={`cojSignBtn-${programmeMembershipId}`}
-        >
-          Sign
-        </Button>
-      )}
-    </React.Fragment>
+    </>
   );
-}
-
-function setCojState(
-  programmeMembershipId: string,
-  programmeName: string,
-  signedDate: Date | null,
-  version: CojVersionType
-) {
-  store.dispatch(updatedsigningCojProgName(programmeName));
-  store.dispatch(updatedsigningCojPmId(programmeMembershipId));
-  store.dispatch(updatedsigningCoj(true));
-  store.dispatch(updatedsigningCojSignedDate(signedDate));
-  store.dispatch(updatedsigningCojVersion(version));
 }

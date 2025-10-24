@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import ErrorPage from "../common/ErrorPage";
-import { BackLink, Col, Container, Label, Row } from "nhsuk-react-components";
+import { Col, Container, Label, Row } from "nhsuk-react-components";
 import history from "../navigation/history";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { useEffect } from "react";
@@ -9,6 +9,7 @@ import store from "../../redux/store/store";
 import { getNotificationMessage } from "../../redux/slices/notificationsSlice";
 import { NotificationMessageText } from "./NotificationMessageText";
 import { toastErrText } from "../../utilities/Constants";
+import FormBackLink from "../common/FormBackLink";
 
 export const NotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,14 +32,12 @@ export const NotificationMessage = () => {
     <div>
       <Row>
         <Col width="three-quarters">
-          <BackLink
-            data-testid="backLink-to-notifications"
-            className="back-link"
-            data-cy="backLink"
-            onClick={() => history.push("/notifications")}
-          >
-            Back to list
-          </BackLink>
+          <FormBackLink
+            history={history}
+            path="/notifications"
+            dataCy="backLink-to-notifications"
+            text="Back to list"
+          />
         </Col>
       </Row>
       {id && id === activeNotification?.id ? (

@@ -18,7 +18,7 @@ describe("NotificationMessage", () => {
   });
 
   it("should display the error page when no matched active notification to display", () => {
-    cy.get('[data-cy="backLink"]')
+    cy.get('[data-cy="backLink-to-notifications"]')
       .should("exist")
       .should("include.text", "Back to list");
     cy.url().should("include", "/notifications");

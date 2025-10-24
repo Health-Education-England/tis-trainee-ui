@@ -8,7 +8,7 @@ const CojGg10: React.FC<CojGg10Props> = ({ progName }) => {
   return (
     <Card feature>
       <Card.Content>
-        <Card.Heading data-cy="cojHeading">
+        <Card.Heading data-cy="cojHeading-gg10">
           Conditions of Joining Agreement
         </Card.Heading>
         <h3 className="card-heading-spaced-top">{`${progName} Specialty Training Programme `}</h3>

@@ -1,154 +1,90 @@
+/// <reference types="cypress" />
+/// <reference path="../../../cypress/support/index.d.ts" />
+
 import { mount } from "cypress/react";
-import React from "react";
-import { COJ_EPOCH } from "../../../utilities/Constants";
+import { MemoryRouter } from "react-router-dom";
 import { ConditionsOfJoining } from "../../../components/programmes/ConditionsOfJoining";
-import { ConditionsOfJoining as ConditionsOfJoiningModel } from "../../../models/ProgrammeMembership";
+import { COJ_EPOCH } from "../../../utilities/Constants";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { BrowserRouter } from "react-router-dom";
 
 describe("ConditionsOfJoining", () => {
   beforeEach(() => {
     cy.clock(COJ_EPOCH);
   });
+  const programmeMembershipId = "123";
+  const programmeName = "Test Programme";
 
-  describe("when COJ signed", () => {
-    const conditionsOfJoining = {
-      signedAt: COJ_EPOCH,
-      version: "GG9"
-    } as ConditionsOfJoiningModel;
+  const epochStartDateString = COJ_EPOCH.toISOString();
+  const beforeEpochDate = new Date(COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000);
+  const beforeEpochDateString = beforeEpochDate.toISOString();
 
-    it("should only display signed COJ fields", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={"1"}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
+  it("displays 'Unknown status' when startDate is null", () => {
+    mount(
+      <MemoryRouter>
+        <ConditionsOfJoining
+          conditionsOfJoining={{ signedAt: null, version: "GG10" }}
+          startDate={null}
+          programmeMembershipId={programmeMembershipId}
+          programmeName={programmeName}
+        />
+      </MemoryRouter>
+    );
 
-      cy.get("[data-cy=cojSignedDate]")
-        .should("exist")
-        .and(
-          "have.text",
-          `Signed: ${DateUtilities.ConvertToLondonTime(COJ_EPOCH)}`
-        );
-      cy.get("[data-cy=cojSignedVersion]").should("exist");
-      cy.get("[data-cy=cojViewBtn-1]").should("exist");
-      cy.get("[data-cy=cojStatusText]").should("not.exist");
-      cy.get("[data-cy=cojSignBtn-1]").should("not.exist");
-    });
-
-    it("should display signed gold guide version when GGxx format", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=cojSignedVersion]")
-        .should("exist")
-        .and("have.text", "Version: Gold Guide 9");
-    });
+    cy.contains("Unknown status");
   });
 
-  describe("when COJ not signed", () => {
-    const conditionsOfJoining = {
-      signedAt: null,
-      version: "GG10"
-    } as ConditionsOfJoiningModel;
+  it("displays 'Follow Local Office process' when startDate is before COJ_EPOCH", () => {
+    mount(
+      <MemoryRouter>
+        <ConditionsOfJoining
+          conditionsOfJoining={{ signedAt: null, version: "GG10" }}
+          startDate={beforeEpochDateString}
+          programmeMembershipId={programmeMembershipId}
+          programmeName={programmeName}
+        />
+      </MemoryRouter>
+    );
 
-    it("should display unsigned COJ fields", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={"1"}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-      cy.get("[data-cy=cojStatusText]").should("exist");
-      cy.get("[data-cy=cojSignBtn-1]").should("exist");
-      cy.get("[data-cy=cojSignedDate]").should("not.exist");
-      cy.get("[data-cy=cojSignedVersion]").should("not.exist");
-      cy.get("[data-cy=cojViewBtn-1]").should("not.exist");
-    });
+    cy.contains("Follow Local Office process");
+  });
 
-    it("should show unknown status when no start date", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={null}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
+  it("displays 'Sign' link when not signed and startDate is on or after COJ_EPOCH", () => {
+    mount(
+      <MemoryRouter>
+        <ConditionsOfJoining
+          conditionsOfJoining={{ signedAt: null, version: "GG10" }}
+          startDate={epochStartDateString}
+          programmeMembershipId={programmeMembershipId}
+          programmeName={programmeName}
+        />
+      </MemoryRouter>
+    );
 
-      cy.get("[data-cy=cojStatusText]")
-        .should("exist")
-        .and("have.text", "Unknown status");
-    });
+    cy.get(`[data-cy="cojViewBtn-${programmeMembershipId}"]`).contains("Sign");
+    cy.get(`[data-cy="cojSignedDate"]`).should("not.exist");
+    cy.get(`[data-cy="cojSignedVersion"]`).should("not.exist");
+  });
 
-    it("should show submitted to LO when start date before COJ epoch", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={new Date(
-              COJ_EPOCH.getTime() - 24 * 60 * 60 * 1000
-            ).toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
+  it("displays signed information and 'View' link when signed and startDate is on or after COJ_EPOCH", () => {
+    const signedDate = "2023-03-02T01:00:00Z";
+    mount(
+      <MemoryRouter>
+        <ConditionsOfJoining
+          conditionsOfJoining={{
+            signedAt: new Date(signedDate),
+            version: "GG10"
+          }}
+          startDate={epochStartDateString}
+          programmeMembershipId={programmeMembershipId}
+          programmeName={programmeName}
+        />
+      </MemoryRouter>
+    );
 
-      cy.get("[data-cy=cojStatusText]")
-        .should("exist")
-        .and("have.text", "Follow Local Office process");
-    });
-
-    it("should show not signed when start date after COJ epoch", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={""}
-            programmeName={""}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=cojStatusText]")
-        .should("exist")
-        .and("have.text", "Not signed");
-    });
-
-    it("should allow signing when start date after COJ epoch", () => {
-      mount(
-        <BrowserRouter>
-          <ConditionsOfJoining
-            conditionsOfJoining={conditionsOfJoining}
-            startDate={COJ_EPOCH.toISOString()}
-            programmeMembershipId={"1"}
-            programmeName={"pmName"}
-          />
-        </BrowserRouter>
-      );
-
-      cy.get("[data-cy=cojSignBtn-1]").should("exist");
-    });
+    cy.get(`[data-cy="cojSignedDate"]`).contains(
+      `Signed: ${DateUtilities.ConvertToLondonTime(signedDate)}`
+    );
+    cy.get(`[data-cy="cojSignedVersion"]`).contains("Version: Gold Guide 10");
+    cy.get(`[data-cy="cojViewBtn-${programmeMembershipId}"]`).contains("View");
   });
 });

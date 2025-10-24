@@ -169,7 +169,7 @@ describe("Form A View (/form-a/confirm)", () => {
           '[data-cy="formraInfo"]',
           "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
         ],
-        ['[data-cy="backLink"]', "Back"],
+        ['[data-cy="backLink"]', "Back to forms list"],
         ['[data-cy="savePdfBtn"]', "Save a copy as a PDF"],
         [
           '[data-cy="submissionDateTop"]',
