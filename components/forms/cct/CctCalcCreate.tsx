@@ -351,7 +351,7 @@ export function CctCalcCreate() {
                                         <Col width="one-quarter">
                                           <TextInputField
                                             name={`changes[${index}].startDate`}
-                                            label="Start date"
+                                            label="LTFT start date"
                                             type="date"
                                             data-cy="change-start-date"
                                           />
