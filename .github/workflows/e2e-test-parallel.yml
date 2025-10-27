@@ -1,0 +1,120 @@
+name: Run end-to-end tests
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - TIS21-7949-create-cypress-parallel-e-2-e-gha-pipeline
+
+
+jobs:
+  cypress-e2e:
+    name: Run Cypress tests
+    runs-on: ubuntu-latest
+    container: cypress/browsers:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4] 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Run Cypress tests in parallel
+        uses: cypress-io/github-action@v6
+        continue-on-error: true
+        env:
+          CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+            # Cypress Split configuration
+          SPLIT: true
+          # SPLIT_FILE: cypress-split.json
+          CI_NODE_TOTAL: ${{ strategy.job-total }}
+          CI_NODE_INDEX: ${{ strategy.job-index }}
+        with:
+          browser: chrome
+          parallel: true
+          record: false
+
+      - name: Upload test results for merging
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-results-${{ strategy.job-index }}
+          path: |
+            cypress/results
+            cypress/screenshots
+            cypress/videos
+          retention-days: 1
+
+  merge-results:
+    name: Merge and generate reports
+    needs: cypress-e2e
+    runs-on: ubuntu-latest
+    container: cypress/browsers:latest
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded-results
+
+      - name: Merge test results from all containers
+        run: |
+          mkdir -p cypress/reports/combined
+          find downloaded-results -name "*.json" -exec cp {} cypress/reports/combined/ \;
+          npm run report:merge
+
+      - name: Generate HTML report
+        run: npm run report:generate
+
+      - name: Create final report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports-final
+          path: cypress/reports
+          retention-days: 30
+
+      - name: Create screenshot artifact
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-final
+          path: downloaded-results/*/cypress/screenshots
+          retention-days: 7
+
+      - name: Create video artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos-final
+          path: downloaded-results/*/cypress/videos
+          retention-days: 7
+
+  backup-artifacts:
+    name: Backup build artifacts
+    needs: merge-results
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: build-artifacts
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-2
+          role-to-assume: arn:aws:iam::430723991443:role/github-actions-deployer-role
+
+      - name: Backup build artifacts
+        run: |
+          workflow=$(echo ${{ github.workflow }} | sed -e 's/\W/-/g' -e 's/\(.*\)/\L\1/')
+          aws s3 sync build-artifacts s3://tis-build-artifacts/${{ github.event.repository.name }}/$workflow/${{ github.run_number }}
