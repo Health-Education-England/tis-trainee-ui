@@ -25,6 +25,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: install plugin
+        run: npm i cypress-split
       - name: Run Cypress tests in parallel
         uses: cypress-io/github-action@v6
         continue-on-error: true
@@ -36,7 +38,7 @@ jobs:
         with:
           browser: chrome
           parallel: true
-          record: false
+          command: npx cypress-split run
 
       - name: Upload test results for merging
         uses: actions/upload-artifact@v4
