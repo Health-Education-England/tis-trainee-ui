@@ -33,11 +33,6 @@ jobs:
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-            # Cypress Split configuration
-          SPLIT: true
-          # SPLIT_FILE: cypress-split.json
-          CI_NODE_TOTAL: ${{ strategy.job-total }}
-          CI_NODE_INDEX: ${{ strategy.job-index }}
         with:
           browser: chrome
           parallel: true
