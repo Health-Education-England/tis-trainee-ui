@@ -32,7 +32,6 @@ jobs:
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
-          SPLIT: true
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
         with:
