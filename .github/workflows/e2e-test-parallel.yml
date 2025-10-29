@@ -19,14 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: [1, 2, 3, 4] 
+        containers: [1, 2] 
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-
-      - name: install plugin
-        run: npm i cypress-split
       - name: Run Cypress tests in parallel
         uses: cypress-io/github-action@v6
         continue-on-error: true
@@ -35,6 +32,9 @@ jobs:
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
           CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
           CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+
         with:
           browser: chrome
           parallel: true

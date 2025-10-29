@@ -1,6 +1,7 @@
 import { defineConfig } from "cypress";
 import cypressOtp from "cypress-otp";
 import codeCoverageTask from "@cypress/code-coverage/task";
+import cypressSplit from 'cypress-split';
 
 export default defineConfig({
   reporter: "cypress-mochawesome-reporter",
@@ -35,6 +36,7 @@ export default defineConfig({
       codeCoverageTask(on, config);
       require("cypress-mochawesome-reporter/plugin")(on);
       require("cypress-localstorage-commands/plugin")(on, config);
+      cypressSplit(on, config);
       return config;
     }
   },
