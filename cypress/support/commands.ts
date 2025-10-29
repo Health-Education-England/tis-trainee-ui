@@ -69,16 +69,24 @@ Cypress.Commands.add(
     visitUrl?: string,
     viewport?: Cypress.ViewportPreset
   ) => {
-    if (waitTimeMs && waitTimeMs === 30000) {
-      cy.log(
-        "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous test) ***"
-      );
-      cy.wait(waitTimeMs);
-    }
-    const urlString = visitUrl ?? "/";
-    cy.visit(urlString, { failOnStatusCode: false, timeout: 60000 });
-    if (viewport) cy.viewport(viewport);
-    cy.signIn();
+    cy.session(Cypress.env("username"), () => {
+      if (waitTimeMs && waitTimeMs === 30000) {
+        cy.log(
+          "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous spec) ***"
+        );
+        cy.wait(waitTimeMs);
+      }
+
+      cy.visit("/", { failOnStatusCode: false, timeout: 60000 });
+      if (viewport) cy.viewport(viewport);
+      cy.signIn();
+      cy.get('[data-cy="signOutBtn"]').should("exist");
+    });
+
+    cy.then(() => {
+      const urlString = visitUrl ?? "/";
+      cy.visit(urlString, { failOnStatusCode: false, timeout: 60000 });
+    });
   }
 );
 
