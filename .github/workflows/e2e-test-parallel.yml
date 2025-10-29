@@ -30,9 +30,9 @@ jobs:
         continue-on-error: true
         env:
           CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
-          CYPRESS_username: ${{ secrets.E2E_TEST_USER_GT }}
-          CYPRESS_password: ${{ secrets.E2E_TEST_PASS_GT }}
-          # CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
+          CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
+          CYPRESS_password: ${{ secrets.E2E_TEST_PASS }}
+          CYPRESS_secret: ${{ secrets.E2E_TEST_SECRET }}
           SPLIT: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
         with:
