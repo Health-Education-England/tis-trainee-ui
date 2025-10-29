@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+      - name: install plugin
+        run: npm install --save-dev cypress-split
       - name: Run Cypress tests in parallel
         uses: cypress-io/github-action@v6
         continue-on-error: true
