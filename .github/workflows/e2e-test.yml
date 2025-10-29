@@ -34,13 +34,13 @@ jobs:
         run: npm run report:generate
 
       - name: Create report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cypress-reports
           path: cypress/reports
 
       - name: Create screenshot artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         # No screenshots generated if tests pass.
         if: failure()
         with:
@@ -48,7 +48,7 @@ jobs:
           path: cypress/screenshots
 
       - name: Create video artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         # Test run video was always captured, so this action uses "always()" condition
         if: always()
         with:
@@ -62,12 +62,12 @@ jobs:
 
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: build-artifacts
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: eu-west-2
           role-to-assume: arn:aws:iam::430723991443:role/github-actions-deployer-role
