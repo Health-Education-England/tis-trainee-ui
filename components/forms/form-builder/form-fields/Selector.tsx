@@ -19,6 +19,7 @@ type SelectorProps = {
   dtoName?: string;
   isMultiSelect?: boolean;
   hint?: string;
+  placeholder?: string;
 };
 
 export const Selector = ({
@@ -31,7 +32,8 @@ export const Selector = ({
   arrayName,
   dtoName,
   isMultiSelect,
-  hint
+  hint,
+  placeholder
 }: SelectorProps) => {
   const { handleChange } = useFormContext();
   return (
@@ -65,6 +67,7 @@ export const Selector = ({
           borderRadius: 0
         })}
         styles={colourStyles}
+        placeholder={placeholder}
         value={
           isMultiSelect
             ? options?.filter((option: any) => value.includes(option.value))

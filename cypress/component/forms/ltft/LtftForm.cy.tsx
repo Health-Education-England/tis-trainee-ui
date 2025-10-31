@@ -95,7 +95,7 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="reasonsSelected-label"]').should("exist");
     cy.get('[data-cy="reasonsSelected-hint"]').should(
       "include.text",
-      "You can choose more than one reason and/or 'other reason' if your reason is not listed"
+      "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
     );
     cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
     cy.get('[data-cy="supportingInformation-text-area-input"]').should("exist");
