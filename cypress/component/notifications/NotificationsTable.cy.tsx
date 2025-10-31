@@ -142,9 +142,31 @@ describe("NotificationsTable with email notifications data", () => {
   it("should render the table and find notifications with the global search text", () => {
     cy.get(`[data-cy=notificationsTable]`).should("exist");
     cy.get('[data-cy="NotificationsSearchInput"]').should("exist").type("FormR");
-    cy.get("tr.table-row.row-unread").should("have.length", 2);
+    cy.get("tr.table-row.row-unread").should("have.length", 4);
     cy.get('[data-cy="notificationsTableRow-0"]').should("exist");
     cy.get('[data-cy="notificationsTableRow-1"]').should("exist");
   });
 
+  it("should show status details on FAILED notifications", () => {
+    // should show the correct description if matched
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-icon"]').should('be.visible').click();
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-modal"]').should('exist');
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-modal"] .modal-content h2')
+      .should('contain.text', 'Bounce: Transient - General');
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-modal"] .modal-content')
+      .should('contain.text', 'There was a temporary issue delivering the email to you. No action needed. We will try sending again automatically.');
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-modal"]').contains('Close').click();
+    cy.get('[data-cy="65f1d6bd3f7898e099514197-modal"]').should('not.exist');
+    
+    // should show status details without description if not match
+    cy.get('[data-cy="65f1d6bd3f7898e099514199-icon"]').should('be.visible').click();
+    cy.get('[data-cy="65f1d6bd3f7898e099514199-modal"]').should('exist');
+    cy.get('[data-cy="65f1d6bd3f7898e099514199-modal"] .modal-content h2')
+      .should('contain.text', 'Email Bounce');
+    cy.get('[data-cy="65f1d6bd3f7898e099514199-modal"]').contains('Close').click();
+    cy.get('[data-cy="65f1d6bd3f7898e099514199-modal"]').should('not.exist');
+    
+    // should not show icon if no status details
+    cy.get('[data-cy="65f1d6bd3f7898e099514190-icon"]').should('not.exist');
+  });
 });

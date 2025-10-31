@@ -59,7 +59,7 @@ export async function updateNotificationStatus(
   if (inProgressUpdate) return;
   store.dispatch(updatedNotificationUpdateInProgress(true));
 
-  if (row.type === "IN_APP") {    
+  if (row.type === "IN_APP") {
     // update FE first to see immediate change
     updateNotificationStatusFE(row, newStatus);
     // then make BE call

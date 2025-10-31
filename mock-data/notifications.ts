@@ -144,10 +144,10 @@ export const emailNotificationData: any[] = [
     contact: "testing@email.com",
     sentAt: new Date("2024-08-15T15:21:02.939Z"),
     status: "FAILED",
-    statusDetail: null
+    statusDetail: "Bounce: Transient - General"
   },
   {
-    id: "65f1d6bd3f7898e099514196",
+    id: "65f1d6bd3f7898e099514198",
     tisReference: null,
     type: "EMAIL",
     subject: "PLACEMENT_UPDATED_WEEK_12",
@@ -157,6 +157,28 @@ export const emailNotificationData: any[] = [
     status: "SENT",
     statusDetail: null
   },
+  {
+    id: "65f1d6bd3f7898e099514199",
+    tisReference: null,
+    type: "EMAIL",
+    subject: "FORM_UPDATED",
+    subjectText: "Your FormR has been updated",
+    contact: "testing@email.com",
+    sentAt: new Date("2024-08-15T15:21:02.939Z"),
+    status: "FAILED",
+    statusDetail: "Email Bounce"
+  },
+  {
+    id: "65f1d6bd3f7898e099514190",
+    tisReference: null,
+    type: "EMAIL",
+    subject: "FORM_UPDATED",
+    subjectText: "Your FormR has been updated",
+    contact: "testing@email.com",
+    sentAt: new Date("2024-08-15T15:21:02.939Z"),
+    status: "FAILED",
+    statusDetail: ""
+  }
 ];
 
 
