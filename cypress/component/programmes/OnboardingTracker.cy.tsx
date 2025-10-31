@@ -113,10 +113,10 @@ describe("OnboardingTracker", () => {
 
     // Check the status of a few tracker items
     cy.get(
-      '[data-cy="status-section-ROYAL_SOCIETY_REGISTRATION"] > :nth-child(2) > [data-cy="status-text"]'
+      '[data-cy="status-section-WELCOME"] > :nth-child(2) > [data-cy="status-text"]'
     ).contains("not tracked");
     cy.get(
-      '[data-cy="status-section-ROYAL_SOCIETY_REGISTRATION"] > [data-cy="status-icon"] > .svg-inline--fa'
+      '[data-cy="status-section-WELCOME"] > [data-cy="status-icon"] > .svg-inline--fa'
     ).should("have.css", "color", "rgb(66, 85, 99)");
     cy.get(
       '[data-cy="status-section-REVIEW_PROGRAMME"] > :nth-child(2) > [data-cy="status-text"]'

@@ -97,6 +97,8 @@ describe("TrackerLink", () => {
           textLink={textLink}
           actionText="View Programmes"
           pmId="12345"
+          tag="DAY_ONE"
+          notificationsMap={new Map()}
         />
       </MemoryRouter>
     );
@@ -113,7 +115,13 @@ describe("TrackerLink", () => {
 
     mount(
       <MemoryRouter>
-        <TrackerLink textLink={textLink} actionText="Sign CoJ" pmId="12345" />
+        <TrackerLink
+          textLink={textLink}
+          actionText="Sign CoJ"
+          pmId="12345"
+          tag="SIGN_COJ"
+          notificationsMap={new Map()}
+        />
       </MemoryRouter>
     );
 
@@ -132,6 +140,8 @@ describe("TrackerLink", () => {
         textLink={textLink}
         actionText="External Link"
         pmId="12345"
+        tag="DAY_ONE"
+        notificationsMap={new Map()}
       />
     );
 

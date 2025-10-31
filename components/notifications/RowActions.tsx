@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { NotificationType } from "../../redux/slices/notificationsSlice";
-import { updateNotificationStatus } from "../../utilities/NotificationsUtilities";
-import { useAppSelector } from "../../redux/hooks/hooks";
+import {
+  markAsUnreadBE,
+  markAsUnreadFE
+} from "../../utilities/NotificationsUtilities";
 import { Button } from "@aws-amplify/ui-react";
 
 type RowActionsProps = {
@@ -10,18 +13,18 @@ type RowActionsProps = {
 };
 
 export function RowActions({ row }: Readonly<RowActionsProps>) {
-  const inProgressUpdate = useAppSelector(
-    state => state.notifications.notificationUpdateInProgress
-  );
-
-  if (row.status === "READ") {
+  const [inProgressUpdate, setInProgressUpdate] = useState(false);
+  if (row.status === "READ" && row.type === "IN_APP") {
     return (
       <Button
         size="small"
         type="reset"
         onClick={async e => {
           e.stopPropagation();
-          updateNotificationStatus(row, "UNREAD");
+          setInProgressUpdate(true);
+          markAsUnreadFE(row);
+          await markAsUnreadBE(row);
+          setInProgressUpdate(false);
         }}
         disabled={inProgressUpdate}
         style={{ cursor: "pointer" }}

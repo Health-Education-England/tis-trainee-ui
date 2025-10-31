@@ -6,12 +6,10 @@ export class TraineeNotificationsService extends ApiService {
   constructor() {
     super("/api");
   }
-  
   async getNotifications(
     params?: Record<string, string | number>
   ): Promise<AxiosResponse<NotificationPage>> {
     const searchParams = new URLSearchParams();
-  
     if (params) {
       for (const [key, value] of Object.entries(params)) {
         if (value !== undefined && value !== null && value !== "") {
@@ -19,9 +17,10 @@ export class TraineeNotificationsService extends ApiService {
         }
       }
     }
-  
     if (searchParams.toString()) {
-      return this.get<NotificationPage>(`/notifications?${searchParams.toString()}`);
+      return this.get<NotificationPage>(
+        `/notifications?${searchParams.toString()}`
+      );
     } else {
       return this.get<NotificationPage>(`/notifications`);
     }

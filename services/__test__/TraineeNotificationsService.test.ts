@@ -1,14 +1,14 @@
 import { AxiosRequestHeaders, AxiosResponse } from "axios";
 import { TraineeNotificationsService } from "../TraineeNotificationsService";
 import { NotificationPage } from "../../redux/slices/notificationsSlice";
-import { inAppNotifications } from "../../mock-data/mock-notifications-data";
+import { mockInAppNotificationsData } from "../../mock-data/mock-notifications-data";
 
 const mockService = new TraineeNotificationsService();
 describe("TraineeNotificationsService", () => {
   it("getNotifications should call /notifications when no params provided", async () => {
     const mockResponse: AxiosResponse<NotificationPage> = {
       data: {
-        content: inAppNotifications,
+        content: mockInAppNotificationsData,
         page: {
           size: 2000,
           number: 0,
@@ -21,12 +21,10 @@ describe("TraineeNotificationsService", () => {
       headers: {},
       config: {
         headers: {} as AxiosRequestHeaders
-      },
+      }
     };
 
-    jest
-      .spyOn(mockService, "get")
-      .mockResolvedValue(mockResponse);
+    jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
 
     const result = await mockService.getNotifications();
 
@@ -35,10 +33,17 @@ describe("TraineeNotificationsService", () => {
   });
 
   it("getNotifications should call /notifications with query string when params are provided", async () => {
-    const params = { page: 1, size: 10, sort:"sentAt,desc", type:"IN_APP", status:"UNREAD", keyword:"Placement" };
+    const params = {
+      page: 1,
+      size: 10,
+      sort: "sentAt,desc",
+      type: "IN_APP",
+      status: "UNREAD",
+      keyword: "Placement"
+    };
     const mockResponse: AxiosResponse<NotificationPage> = {
       data: {
-        content: inAppNotifications,
+        content: mockInAppNotificationsData,
         page: {
           size: 2000,
           number: 0,
@@ -51,16 +56,16 @@ describe("TraineeNotificationsService", () => {
       headers: {},
       config: {
         headers: {} as AxiosRequestHeaders
-      },
+      }
     };
 
-    jest
-      .spyOn(mockService, "get")
-      .mockResolvedValue(mockResponse);
+    jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
 
     const result = await mockService.getNotifications(params);
 
-    expect(mockService.get).toHaveBeenCalledWith("/notifications?page=1&size=10&sort=sentAt%2Cdesc&type=IN_APP&status=UNREAD&keyword=Placement");
+    expect(mockService.get).toHaveBeenCalledWith(
+      "/notifications?page=1&size=10&sort=sentAt%2Cdesc&type=IN_APP&status=UNREAD&keyword=Placement"
+    );
     expect(result).toEqual(mockResponse);
   });
 
@@ -68,7 +73,7 @@ describe("TraineeNotificationsService", () => {
     const params = { page: 1, type: "" };
     const mockResponse: AxiosResponse<NotificationPage> = {
       data: {
-        content: inAppNotifications,
+        content: mockInAppNotificationsData,
         page: {
           size: 2000,
           number: 0,
@@ -81,12 +86,10 @@ describe("TraineeNotificationsService", () => {
       headers: {},
       config: {
         headers: {} as AxiosRequestHeaders
-      },
+      }
     };
 
-    jest
-      .spyOn(mockService, "get")
-      .mockResolvedValue(mockResponse);
+    jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
 
     const result = await mockService.getNotifications(params);
 
@@ -98,7 +101,7 @@ describe("TraineeNotificationsService", () => {
     const params = { page: "", type: "" };
     const mockResponse: AxiosResponse<NotificationPage> = {
       data: {
-        content: inAppNotifications,
+        content: mockInAppNotificationsData,
         page: {
           size: 2000,
           number: 0,
@@ -111,12 +114,10 @@ describe("TraineeNotificationsService", () => {
       headers: {},
       config: {
         headers: {} as AxiosRequestHeaders
-      },
+      }
     };
 
-    jest
-      .spyOn(mockService, "get")
-      .mockResolvedValue(mockResponse);
+    jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
 
     const result = await mockService.getNotifications(params);
 

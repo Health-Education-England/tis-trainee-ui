@@ -30,7 +30,7 @@ const commonColumns = [
   columnHelper.accessor("subject", {
     id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
-    cell: props => <span>{props.renderValue()}</span>,
+    cell: props => <span>{props.renderValue()?.replace("_", " ")}</span>,
     enableColumnFilter: false
   }),
 
@@ -104,7 +104,9 @@ export const emailColumns = [
       <TableColumnHeader column={column} title="Sent to" />
     ),
     cell: props => (
-      <span style={{ whiteSpace: "pre-wrap" }}>{props.renderValue()}</span>
+      <span style={{ whiteSpace: "pre-wrap" }}>
+        {props.renderValue()?.replace("@", "\n@")}
+      </span>
     ),
     enableColumnFilter: false
   })

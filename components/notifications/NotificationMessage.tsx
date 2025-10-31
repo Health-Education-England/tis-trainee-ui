@@ -1,23 +1,20 @@
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import ErrorPage from "../common/ErrorPage";
-import { Col, Container, Label, Row } from "nhsuk-react-components";
+import { Col, Container, Row } from "nhsuk-react-components";
 import history from "../navigation/history";
-import { DateUtilities } from "../../utilities/DateUtilities";
 import { useEffect } from "react";
 import store from "../../redux/store/store";
 import { getNotificationMessage } from "../../redux/slices/notificationsSlice";
-import { NotificationMessageText } from "./NotificationMessageText";
 import { toastErrText } from "../../utilities/Constants";
 import FormBackLink from "../common/FormBackLink";
+import Loading from "../common/Loading";
+import DOMPurify from "dompurify";
 
 export const NotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
-  //active notification (from previous page row click)
-  const activeNotification = useAppSelector(
-    state => state.notifications.activeNotification
-  );
-  const notificationMessage = useAppSelector(
+
+  const notificationMessageHTML = useAppSelector(
     state => state.notifications.notificationMsg
   );
   const notificationMessageStatus = useAppSelector(
@@ -27,6 +24,19 @@ export const NotificationMessage = () => {
   useEffect(() => {
     store.dispatch(getNotificationMessage(id));
   }, [id]);
+
+  if (notificationMessageStatus === "loading") {
+    return <Loading />;
+  }
+
+  if (notificationMessageStatus === "failed") {
+    return (
+      <ErrorPage
+        message={toastErrText.fetchNotificationMessage}
+        header="Notification message error"
+      />
+    );
+  }
 
   return (
     <div>
@@ -40,33 +50,27 @@ export const NotificationMessage = () => {
           />
         </Col>
       </Row>
-      {id && id === activeNotification?.id ? (
-        <Container className="nhsuk-u-margin-bottom-5 nhsuk-u-padding-3 container">
-          <Row>
-            <Col width="three-quarters">
-              <Label size="m">
-                <b>{activeNotification?.subjectText}</b>
-              </Label>
-            </Col>
-            <Col width="one-quarter">
-              <Label>
-                {DateUtilities.ToLocalDateTime(activeNotification?.sentAt)}
-              </Label>
-              <span>{activeNotification?.subject}</span>
-            </Col>
-          </Row>
-          <Row>
-            <Col width="full">
-              <NotificationMessageText
-                notificationMessageStatus={notificationMessageStatus}
-                notificationMessageText={notificationMessage}
+      <Container className="nhsuk-u-margin-bottom-5 nhsuk-u-padding-3 container">
+        <Row>
+          <Col width="full">
+            {notificationMessageStatus === "succeeded" ? (
+              <div
+                className="nhsuk-u-margin-top-2"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(notificationMessageHTML, {
+                    ADD_ATTR: ["target"]
+                  })
+                }}
               />
-            </Col>
-          </Row>
-        </Container>
-      ) : (
-        <ErrorPage message={toastErrText.fetchNotificationMessage} />
-      )}
+            ) : (
+              <ErrorPage
+                message={toastErrText.fetchNotificationMessage}
+                header="Notification message error"
+              />
+            )}
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };
