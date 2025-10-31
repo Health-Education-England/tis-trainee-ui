@@ -115,6 +115,7 @@ export function FormFieldBuilder({
           dtoName={dtoName}
           isMultiSelect={isMultiSelect}
           hint={hint}
+          placeholder={placeholder}
         />
       );
 

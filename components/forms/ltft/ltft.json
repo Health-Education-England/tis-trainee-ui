@@ -73,13 +73,13 @@
             {
               "name": "reasonsSelected",
               "label": "Why are you applying for Changing hours (LTFT)?",
-              "placeholder": "choose one or more...",
+              "placeholder": "Select all reasons that apply",
               "type": "select",
               "isMultiSelect": true,
               "optionsKey": "ltftReasons",
               "dependencies": ["reasonsOtherDetail"],
               "visible": true,
-              "hint": "You can choose more than one reason and/or 'other reason' if your reason is not listed."
+              "hint": "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
             },
             {
               "name": "reasonsOtherDetail",
