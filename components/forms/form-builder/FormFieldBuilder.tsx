@@ -78,6 +78,7 @@ export function FormFieldBuilder({
         <TextArea
           name={name}
           label={label}
+          hint={hint}
           fieldError={error}
           placeholder={placeholder}
           value={value}
