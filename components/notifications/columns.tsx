@@ -84,9 +84,16 @@ const EmailStatusCell = ({ row }: { row: any }) => {
                 />
               </button>
               {showModal && (
-                <button
+                <div
                   data-cy={`${id}-modal`}
                   onClick={e => e.stopPropagation()}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.stopPropagation();
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
                 >
                   <Modal
                     isOpen={showModal}
@@ -101,7 +108,7 @@ const EmailStatusCell = ({ row }: { row: any }) => {
                       {failedEmailInfoText[statusDetail]}
                     </div>
                   </Modal>
-                </button>
+                </div>
               )}
             </>
           )}
