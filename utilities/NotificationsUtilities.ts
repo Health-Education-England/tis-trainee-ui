@@ -1,76 +1,38 @@
 import {
   NotificationMsgType,
-  NotificationStatus,
+  NotificationStatusFilterType,
   NotificationType,
-  markNotificationAsRead,
   markNotificationAsUnread,
   resetNotificationsStatus,
   switchNotificationType,
   updateNotificationStatusFilter,
-  updatedActiveNotification,
-  updatedNotificationUpdateInProgress,
   updatedNotificationsList
 } from "../redux/slices/notificationsSlice";
 import store from "../redux/store/store";
-import history from "../components/navigation/history";
+import { NotificationSubjectType } from "../models/Notifications";
+import { TrackerActionType } from "../models/Tracker";
 
-export function updateNotificationStatusFE(
-  row: NotificationType,
-  newStatus: NotificationStatus
-) {
+export function markAsUnreadFE(row: NotificationType) {
   const activeNotification: NotificationType = {
     ...row,
-    status: newStatus
+    status: "UNREAD"
   };
   store.dispatch(updatedNotificationsList(activeNotification));
 }
 
-export async function updateNotificationStatusBE(
-  row: NotificationType,
-  newStatus: NotificationStatus
-) {
-  const action =
-    newStatus === "READ" ? markNotificationAsRead : markNotificationAsUnread;
-  await store.dispatch(action(row.id));
+export async function markAsUnreadBE(row: NotificationType) {
+  await store.dispatch(markNotificationAsUnread(row.id));
 
-  // success, navigate to notification msg
-  if (store.getState().notifications.notificationUpdateStatus === "succeeded") {
-    // trigger fetch to update notifications list/ icon badge
+  const updateStatus = store.getState().notifications.notificationUpdateStatus;
+  if (updateStatus === "succeeded") {
     store.dispatch(resetNotificationsStatus());
-    // navigate to notification msg if row click (i.e. new status is READ)
-    if (newStatus === "READ") {
-      history.push(`/notifications/${row.id}`);
-    }
-    // failed to update, revert previous FE change
-  } else if (
-    store.getState().notifications.notificationUpdateStatus === "failed"
-  ) {
-    const newStatus = row.status === "READ" ? "UNREAD" : "READ";
-    updateNotificationStatusFE(row, newStatus);
+  } else if (updateStatus === "failed") {
+    const revertedNotification: NotificationType = {
+      ...row,
+      status: "READ"
+    };
+    store.dispatch(updatedNotificationsList(revertedNotification));
   }
-}
-
-export async function updateNotificationStatus(
-  row: NotificationType,
-  newStatus: NotificationStatus
-) {
-  const inProgressUpdate =
-    store.getState().notifications.notificationUpdateInProgress;
-  if (inProgressUpdate) return;
-  store.dispatch(updatedNotificationUpdateInProgress(true));
-
-  if (row.type === "IN_APP") {
-    // update FE first to see immediate change
-    updateNotificationStatusFE(row, newStatus);
-    // then make BE call
-    await updateNotificationStatusBE(row, newStatus);
-  }
-  else {
-    store.dispatch(updatedActiveNotification(row));
-    history.push(`/notifications/${row.id}`);
-  }
-  
-  store.dispatch(updatedNotificationUpdateInProgress(false));
 }
 
 export async function switchNotification(msgType: NotificationMsgType) {
@@ -79,7 +41,40 @@ export async function switchNotification(msgType: NotificationMsgType) {
   store.dispatch(switchNotificationType(msgType));
 }
 
-export async function applyNotificationStatusFilter(filter: string) {
+export async function applyNotificationStatusFilter(
+  filter: NotificationStatusFilterType
+) {
   store.dispatch(resetNotificationsStatus());
   store.dispatch(updateNotificationStatusFilter(filter));
+}
+
+// Note: we will need to refactor this later to make more generic when we need to account for placement/:placementId linkages etc.
+export function createPmRelatedNotificationMap(
+  notifications: NotificationType[],
+  pmId: string
+): Map<NotificationSubjectType, string> {
+  return notifications.reduce((map, notification) => {
+    if (notification.tisReference?.id === pmId) {
+      map.set(notification.subject, notification.id);
+    }
+    return map;
+  }, new Map<NotificationSubjectType, string>());
+}
+
+export function resolveInternalTrackerLink(
+  linkText: string,
+  pmId: string,
+  tag: TrackerActionType,
+  notificationMap: Map<NotificationSubjectType, string>
+): string {
+  const notificationId = notificationMap.get(tag as NotificationSubjectType); // fudged Type cast here for now
+  if (linkText.includes(":notificationId")) {
+    return linkText.replace(":notificationId", notificationId ?? "");
+  }
+
+  if (linkText.includes(":id")) {
+    return linkText.replace(":id", pmId);
+  }
+
+  return linkText;
 }

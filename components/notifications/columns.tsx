@@ -34,7 +34,7 @@ const commonColumns = [
   columnHelper.accessor("subject", {
     id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
-    cell: props => <span>{props.renderValue()}</span>,
+    cell: props => <span>{props.renderValue()?.replace("_", " ")}</span>,
     enableColumnFilter: false
   }),
 
@@ -125,16 +125,20 @@ const EmailStatusCell = ({ row }: { row: any }) => {
 export const inAppColumns = [
   columnHelper.accessor("status", {
     id: "status",
-    header: "",
+    header: "Status",
     cell: props => {
       const statusClass =
         props.row.original.status === "READ" ? "status-read" : "status-unread";
       return (
         <span className={`${statusClass} nhsuk-margin-left-1`}>
           {props.row.original.status === "READ" ? (
-            <FontAwesomeIcon icon={faEnvelopeOpen} size="lg" />
+            <>
+              <FontAwesomeIcon icon={faEnvelopeOpen} size="lg" /> READ
+            </>
           ) : (
-            <FontAwesomeIcon icon={faEnvelope} size="lg" />
+            <>
+              <FontAwesomeIcon icon={faEnvelope} size="lg" /> UNREAD
+            </>
           )}
         </span>
       );
@@ -152,7 +156,7 @@ export const inAppColumns = [
 export const emailColumns = [
   columnHelper.accessor("status", {
     id: "status",
-    header: "",
+    header: "Status",
     size: 200,
     cell: props => <EmailStatusCell row={props.row} />
   }),
@@ -165,7 +169,9 @@ export const emailColumns = [
       <TableColumnHeader column={column} title="Sent to" />
     ),
     cell: props => (
-      <span style={{ whiteSpace: "pre-wrap" }}>{props.renderValue()}</span>
+      <span style={{ whiteSpace: "pre-wrap" }}>
+        {props.renderValue()?.replace("@", "\n@")}
+      </span>
     ),
     enableColumnFilter: false
   })

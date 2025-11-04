@@ -1,17 +1,17 @@
-export type OnboardingActionType =
+export type TrackerActionType =
   | "WELCOME_EMAIL"
-  | "ROYAL_SOCIETY_REGISTRATION"
+  | "WELCOME" // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
   | "REVIEW_PROGRAMME"
   | "SIGN_COJ"
-  | "FORMR_PARTA"
-  | "FORMR_PARTB"
+  | "SIGN_FORM_R_PART_A"
+  | "SIGN_FORM_R_PART_B"
   | "TRAINING_NUMBER"
   | "LTFT"
-  | "DEFER"
+  | "DEFERRAL"
   | "PLACEMENT_CONFIRMATION"
   | "REVIEW_PLACEMENT"
   | "DAY_ONE_EMAIL"
-  | "CONNECT_RO";
+  | "DAY_ONE";
 
 export type OnboardingActionStatus =
   | "outstanding"

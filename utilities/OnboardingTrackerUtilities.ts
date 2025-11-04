@@ -1,12 +1,9 @@
-import { OnboardingActionStatus } from "../models/Tracker";
+import { OnboardingActionStatus, TrackerActionType } from "../models/Tracker";
 import { GroupedTraineeActionsForProgramme } from "../models/TraineeAction";
-import {
-  ProgOnboardingTagType,
-  traineeActionsCompletedWhenNotOutstanding
-} from "./Constants";
+import { traineeActionsCompletedWhenNotOutstanding } from "./Constants";
 
 export function getActionStatus(
-  actionTag: ProgOnboardingTagType,
+  actionTag: TrackerActionType,
   filteredActionsBelongingToThisProg: GroupedTraineeActionsForProgramme
 ): OnboardingActionStatus {
   if (actionTag === "TRAINING_NUMBER") {
@@ -44,16 +41,16 @@ export function calcTrainingNumStatus(
   filteredActionsBelongingToThisProg: GroupedTraineeActionsForProgramme
 ): {
   overallStatus: OnboardingActionStatus;
-  details: Record<ProgOnboardingTagType, OnboardingActionStatus>;
+  details: Record<TrackerActionType, OnboardingActionStatus>;
 } {
-  const dependentActions: ProgOnboardingTagType[] = [
+  const dependentActions: TrackerActionType[] = [
     "SIGN_COJ",
     "SIGN_FORM_R_PART_A",
     "SIGN_FORM_R_PART_B"
   ];
 
-  const details: Record<ProgOnboardingTagType, OnboardingActionStatus> =
-    {} as Record<ProgOnboardingTagType, OnboardingActionStatus>;
+  const details: Record<TrackerActionType, OnboardingActionStatus> =
+    {} as Record<TrackerActionType, OnboardingActionStatus>;
 
   for (const depTag of dependentActions) {
     const isOutstanding = filteredActionsBelongingToThisProg[

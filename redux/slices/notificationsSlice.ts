@@ -2,15 +2,19 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { TraineeNotificationsService } from "../../services/TraineeNotificationsService";
+import { NotificationSubjectType } from "../../models/Notifications";
 
 export type NotificationStatus =
-  | "READ"
-  | "UNREAD"
+  | "ARCHIVED"
   | "FAILED"
+  | "PENDING"
+  | "READ"
+  | "SCHEDULED"
   | "SENT"
-  | "ARCHIVED";
+  | "UNREAD"
+  | "DELETED";
 
-export type NotificationMsgType = "IN_APP" | "EMAIL";
+export type NotificationMsgType = "IN_APP" | "EMAIL" | null;
 
 export type NotificationPage = {
   content: NotificationType[];
@@ -21,35 +25,40 @@ export type PageDetails = {
   size: number;
   number: number;
   totalElements: number;
-  totalPages:number;
+  totalPages: number;
+};
+
+export type TisReferenceType = {
+  type: string; //TODO strongly type this
+  id: string;
 };
 
 export type NotificationType = {
   id: string;
-  tisReference: string | null;
+  tisReference: TisReferenceType | null;
   type: NotificationMsgType;
-  subject: string;
+  subject: NotificationSubjectType;
   subjectText: string | null;
   contact: string | null;
   status: NotificationStatus;
   sentAt: Date;
   statusDetail: string | null;
-  readAt?: Date;
+  readAt: Date | null;
 };
+
+export type NotificationStatusFilterType = "FAILED" | "UNREAD" | "";
 
 export type NotificationsState = {
   notificationsList: NotificationType[];
-  notificationsStatusFilter: string | null;
-  viewingType: NotificationMsgType | null;
+  notificationsStatusFilter: NotificationStatusFilterType;
+  viewingType: NotificationMsgType;
   status: string;
   countStatus: string;
   notificationUpdateStatus: string;
   notificationMsg: string;
   msgStatus: string;
   error: any;
-  activeNotification: NotificationType | null;
   unreadNotificationCount: number;
-  notificationUpdateInProgress: boolean; // to prevent multiple row/button clicks
 };
 
 export const initialState: NotificationsState = {
@@ -62,9 +71,7 @@ export const initialState: NotificationsState = {
   notificationMsg: "",
   msgStatus: "idle",
   error: "",
-  activeNotification: null,
-  unreadNotificationCount: 0,
-  notificationUpdateInProgress: false
+  unreadNotificationCount: 0
 };
 
 export const getNotificationCount = createAsyncThunk(
@@ -84,20 +91,7 @@ export const getNotifications = createAsyncThunk(
   async (params?: Record<string, any>) => {
     const notificationService = new TraineeNotificationsService();
     const response = await notificationService.getNotifications(params);
-
-    // modify content to make it more human readable
-    const modifiedContent = response.data.content.map((notification) => ({
-      ...notification,       
-      subject: notification.subject.replaceAll("_", " "), // replace "_" with space in subject
-      contact: notification.contact // add line breaks before "@" in contact email
-        ? notification.contact.replaceAll("@", "\n@")
-        : null
-    }));
-    
-    return {
-      ...response.data,
-      content: modifiedContent,
-    };
+    return response.data;
   }
 );
 
@@ -139,9 +133,6 @@ const notificationsSlice = createSlice({
   name: "notifications",
   initialState,
   reducers: {
-    updatedActiveNotification(state, action: PayloadAction<NotificationType>) {
-      return { ...state, activeNotification: action.payload };
-    },
     updatedNotificationsList(state, action: PayloadAction<NotificationType>) {
       const updatedNotification = action.payload;
       const updatedNotificationsList = state.notificationsList.map(
@@ -158,19 +149,19 @@ const notificationsSlice = createSlice({
     loadedNotificationsList(state, action: PayloadAction<NotificationType[]>) {
       return { ...state, notificationsList: action.payload };
     },
-    updatedNotificationUpdateInProgress(state, action: PayloadAction<boolean>) {
-      return { ...state, notificationUpdateInProgress: action.payload };
-    },
     switchNotificationType(state, action: PayloadAction<NotificationMsgType>) {
       return { ...state, viewingType: action.payload };
     },
-    updateNotificationStatusFilter(state, action: PayloadAction<string>) {
+    updateNotificationStatusFilter(
+      state,
+      action: PayloadAction<NotificationStatusFilterType>
+    ) {
       return { ...state, notificationsStatusFilter: action.payload };
     }
   },
   extraReducers(builder): void {
-    builder      
-      .addCase(getNotificationCount.pending, (state) => {
+    builder
+      .addCase(getNotificationCount.pending, state => {
         state.countStatus = "loading";
       })
       .addCase(getNotificationCount.fulfilled, (state, action) => {
@@ -179,7 +170,7 @@ const notificationsSlice = createSlice({
           action.payload.content ?? 0
         );
       })
-      .addCase(getNotificationCount.rejected, (state, { error }) => {    
+      .addCase(getNotificationCount.rejected, (state, { error }) => {
         state.countStatus = "failed";
         state.error = error.message;
         showToast(
@@ -188,7 +179,7 @@ const notificationsSlice = createSlice({
           `${error.code}-${error.message}`
         );
       })
-      .addCase(getNotifications.pending, (state) => {
+      .addCase(getNotifications.pending, state => {
         state.status = "loading";
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
@@ -214,7 +205,6 @@ const notificationsSlice = createSlice({
       })
       .addCase(markNotificationAsRead.fulfilled, (state, action) => {
         state.notificationUpdateStatus = "succeeded";
-        state.activeNotification = action.payload;
       })
       .addCase(markNotificationAsRead.rejected, (state, { error }) => {
         state.notificationUpdateStatus = "failed";
@@ -277,16 +267,16 @@ const notificationsSlice = createSlice({
 export default notificationsSlice.reducer;
 
 export const {
-  updatedActiveNotification,
   updatedNotificationsList,
   resetNotificationsStatus,
   loadedNotificationsList,
-  updatedNotificationUpdateInProgress,
   switchNotificationType,
   updateNotificationStatusFilter
 } = notificationsSlice.actions;
 
-export function unreadNotificationsCount(notificationsData: NotificationType[]) {
+export function unreadNotificationsCount(
+  notificationsData: NotificationType[]
+) {
   if (!Array.isArray(notificationsData)) return 0;
   const unreadNotifications = notificationsData.filter(
     notification => notification.status === "UNREAD"
