@@ -91,7 +91,7 @@ export const getNotifications = createAsyncThunk(
       subject: notification.subject.replaceAll("_", " "), // replace "_" with space in subject
       contact: notification.contact // add line breaks before "@" in contact email
         ? notification.contact.replaceAll("@", "\n@")
-        : null,
+        : null
     }));
     
     return {
