@@ -4,7 +4,6 @@ import {
   TisReferenceType,
   TraineeAction
 } from "../../models/TraineeAction";
-import { ProgOnboardingTagType } from "../Constants";
 import {
   calcTrainingNumStatus,
   getActionStatus
@@ -36,7 +35,7 @@ const createMockGroupedActions = (
 
 describe("getActionStatus", () => {
   it("should return 'not tracked' for an action that is not tracked", () => {
-    const actionTag = "CONNECT_RO" as ProgOnboardingTagType;
+    const actionTag = "DAY_ONE";
     const mockGroupedActions = createMockGroupedActions([]);
 
     const result = getActionStatus(actionTag, mockGroupedActions);
@@ -103,7 +102,7 @@ describe("getActionStatus", () => {
   });
 
   it("should return outstanding when a regular action (e.g. CoJ) is outstanding", () => {
-    const actionTag = "SIGN_COJ" as ProgOnboardingTagType;
+    const actionTag = "SIGN_COJ";
     const mockActions = [createMockTraineeAction("SIGN_COJ")];
     const mockGroupedActions = createMockGroupedActions(mockActions);
 

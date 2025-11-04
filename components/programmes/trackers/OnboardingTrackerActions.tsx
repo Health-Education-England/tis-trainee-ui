@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "nhsuk-react-components";
-import { CSSProperties, useState } from "react";
-import { OnboardingActionStatus } from "../../../models/Tracker";
+import { CSSProperties, useMemo, useState } from "react";
+import { NotificationSubjectType } from "../../../models/Notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
@@ -12,8 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
   onboardingTrackerAction,
-  onboardingTrackerInfoText,
-  ProgOnboardingTagType
+  onboardingTrackerInfoText
 } from "../../../utilities/Constants";
 import dayjs from "dayjs";
 import { Modal } from "../../common/Modal";
@@ -21,8 +20,13 @@ import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import { getActionStatus } from "../../../utilities/OnboardingTrackerUtilities";
 import { TrackerLink } from "./TrackerLink";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { createPmRelatedNotificationMap } from "../../../utilities/NotificationsUtilities";
+import {
+  OnboardingActionStatus,
+  TrackerActionType
+} from "../../../models/Tracker";
 
-// Define the tracker sections with their associated actions
 const TRACKER_SECTIONS = [
   {
     digit: 1,
@@ -34,15 +38,15 @@ const TRACKER_SECTIONS = [
         .isSameOrBefore(dayjs().add(16, "weeks").startOf("day")),
     actions: [
       "WELCOME_EMAIL",
-      "ROYAL_SOCIETY_REGISTRATION",
+      "WELCOME", // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
       "REVIEW_PROGRAMME",
       "SIGN_COJ",
       "SIGN_FORM_R_PART_A",
       "SIGN_FORM_R_PART_B",
       "TRAINING_NUMBER",
       "LTFT",
-      "DEFER"
-    ] as ProgOnboardingTagType[]
+      "DEFERRAL"
+    ] as TrackerActionType[]
   },
   {
     digit: 2,
@@ -55,7 +59,7 @@ const TRACKER_SECTIONS = [
     actions: [
       "PLACEMENT_CONFIRMATION",
       "REVIEW_PLACEMENT"
-    ] as ProgOnboardingTagType[]
+    ] as TrackerActionType[]
   },
   {
     digit: 3,
@@ -63,7 +67,7 @@ const TRACKER_SECTIONS = [
     color: "#002D88",
     isActive: (startDate: string) =>
       dayjs(startDate).startOf("day").isSameOrBefore(dayjs().startOf("day")),
-    actions: ["DAY_ONE_EMAIL", "CONNECT_RO"] as ProgOnboardingTagType[]
+    actions: ["DAY_ONE_EMAIL", "DAY_ONE"] as TrackerActionType[]
   }
 ];
 
@@ -104,6 +108,14 @@ export function OnboardingTrackerActions({
 }: Readonly<OnboardingTrackerActionsProps>) {
   const progId = panel.tisId as string;
   const { filteredActionsBelongingToThisProg } = useTraineeActions(progId);
+  const notificationsList = useAppSelector(
+    state => state.notifications.notificationsList
+  );
+
+  const notificationsMap = useMemo(
+    () => createPmRelatedNotificationMap(notificationsList, progId),
+    [notificationsList, progId]
+  );
 
   return (
     <Container className="tracker-container">
@@ -125,6 +137,7 @@ export function OnboardingTrackerActions({
                   key={actionTag}
                   tag={actionTag}
                   pmId={progId}
+                  notificationsMap={notificationsMap}
                   status={
                     sectionIsActive
                       ? getActionStatus(
@@ -144,15 +157,17 @@ export function OnboardingTrackerActions({
 }
 
 type TssTraineeActionProps = {
-  tag: ProgOnboardingTagType;
+  tag: TrackerActionType;
   status: OnboardingActionStatus;
   pmId: string;
+  notificationsMap: Map<NotificationSubjectType, string>;
 };
 
 function TssTraineeAction({
   tag,
   status,
-  pmId
+  pmId,
+  notificationsMap
 }: Readonly<TssTraineeActionProps>) {
   const [showModal, setShowModal] = useState(false);
   const statusAction = onboardingTrackerAction[tag];
@@ -195,6 +210,8 @@ function TssTraineeAction({
                 textLink={textLink}
                 actionText={actionText}
                 pmId={pmId}
+                tag={tag}
+                notificationsMap={notificationsMap}
               />
             </p>
           ) : (

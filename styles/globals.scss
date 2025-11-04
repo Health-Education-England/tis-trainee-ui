@@ -706,18 +706,17 @@ ol[type="a"] {
 }
 
 .notification-type-btn {
-  margin: 0.3rem 0 0 1rem;
-  position: "relative";
+  margin: 0.3rem 1rem 1rem 0;
   padding: 0 1rem;
   box-shadow: 0 1px 0 transparent;
-  background-color: #005eb8;
+  background-color: #005eb8 !important;
+}
+
+.active-type-btn {
   &:hover,
   &:focus {
     background-color: darken(#005eb8, 7%) !important;
   }
-}
-.active-type-btn {
-  background-color: #bed8f0;
 }
 
 // mobile notifications
@@ -1191,6 +1190,29 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .checkbox-hint {
   margin-left: 3rem;
   padding-left: 0.25rem;
+}
+
+.nhsuk-checkboxes--small {
+  .nhsuk-checkboxes__input {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nhsuk-checkboxes__label {
+    padding: 0;
+
+    &::before {
+      width: 28px;
+      height: 28px;
+    }
+
+    &::after {
+      width: 16px;
+      height: 9px;
+      top: 8px;
+      left: 6px;
+    }
+  }
 }
 
 time {
