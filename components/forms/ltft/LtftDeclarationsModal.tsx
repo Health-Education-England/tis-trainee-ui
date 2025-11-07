@@ -1,4 +1,4 @@
-import { Button, Checkboxes, Hint } from "nhsuk-react-components";
+import { Button, Checkboxes, Details, Hint } from "nhsuk-react-components";
 import { Modal } from "../../common/Modal";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -41,13 +41,53 @@ export const LtftDeclarationsModal = ({
             {`I have discussed the proposal outlined in the CCT calculation with my pre-approver.`}
           </Checkboxes.Box>
           <Hint className="checkbox-hint">
-            Your pre-approver will usually be your Training Programme Director
-            (TPD), but for GP programmes may be your GP Programme Manager. If
-            you are unsure who your pre-approver is, please{" "}
-            <Link to="/support" target="_blank">
-              contact your Local Office support
-            </Link>
-            .
+            <p>
+              Your pre-approver will usually be your Training Programme Director
+              (TPD), but for GP programmes may be your GP Programme Manager. If
+              you are unsure who your pre-approver is, please{" "}
+              <Link to="/support" target="_blank">
+                contact your Local Office support
+              </Link>
+              .
+            </p>
+            <Details>
+              <Details.Summary data-cy="dataSourceSummary">
+                What should I discuss with my pre-approver?
+              </Details.Summary>
+              <Details.Text data-cy="dataSourceText">
+                <p>
+                  Before submitting your LTFT application, you must have a
+                  discussion with your Training Programme Director (TPD) or
+                  Primary Approver. This conversation ensures your request
+                  supports both your personal circumstances and your training
+                  progression.
+                </p>
+                <p>During this discussion, you should cover:</p>
+                <ul>
+                  <ul>
+                    <li>
+                      Your reason(s) for requesting LTFT (e.g. caring
+                      responsibilities, health, professional development,
+                      wellbeing).
+                    </li>
+                    <li>
+                      The proposed working pattern (e.g. 60%, 80% WTE, expected
+                      days per week).
+                    </li>
+                    <li>
+                      Impact on training progression, pay changes and completion
+                      dates.
+                    </li>
+                    <li>Planned start date and notice period.</li>
+                    <li>Any support or adjustments you may need.</li>
+                  </ul>
+                  <p>
+                    The purpose of this discussion is to ensure understanding
+                    and support within your training programme.
+                  </p>
+                </ul>
+              </Details.Text>
+            </Details>
           </Hint>
           <Checkboxes.Box
             name="understandStartover"

@@ -106,6 +106,9 @@ const ltftOtherDiscussionsText =
 const ltftDiscussionText3 =
   "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
 
+const ltftDiscussionText4 =
+  "Before submitting your LTFT application, you must have a discussion with your Training Programme Director (TPD) or Primary Approver. This conversation ensures your request supports both your personal circumstances and your training progression.<br/><br/>During this discussion, you should cover:<br/><ul><li>Your reason(s) for requesting LTFT (e.g. caring responsibilities, health, professional development, wellbeing).</li><li>The proposed working pattern (e.g. 60%, 80% WTE, expected days per week).</li><li>Impact on training progression, pay changes and completion dates.</li><li>Planned start date and notice period.</li><li>Any support or adjustments you may need.</li></ul>The purpose of this discussion is to ensure understanding and support within your training programme.";
+
 export const ltftReasonsText1 =
   "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
@@ -183,7 +186,8 @@ const displayText: DisplayText = {
     ltftDiscussionText1,
     ltftDiscussionText2,
     ltftOtherDiscussionsText,
-    ltftDiscussionText3
+    ltftDiscussionText3,
+    ltftDiscussionText4
   ]),
   ltftReasonsInstructions: generateTextElement([
     ltftReasonsText1,
