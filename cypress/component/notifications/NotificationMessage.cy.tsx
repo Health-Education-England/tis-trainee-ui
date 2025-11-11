@@ -1,11 +1,13 @@
 import { mount } from "cypress/react";
 import { NotificationMessageView } from "../../../components/notifications/NotificationMessageView";
+import dayjs from "dayjs";
+import { mockNotificationMsg } from "../../../mock-data/mock-notifications-data";
 
 describe("NotificationMessageView", () => {
   it("renders loading state", () => {
     mount(
       <NotificationMessageView
-        notificationMessageHTML=""
+        notificationMessageContent={null}
         notificationMessageStatus="loading"
       />
     );
@@ -13,10 +15,9 @@ describe("NotificationMessageView", () => {
   });
 
   it("renders succeeded state with HTML content", () => {
-    const html = "<p>Test notification message</p>";
     mount(
       <NotificationMessageView
-        notificationMessageHTML={html}
+        notificationMessageContent={mockNotificationMsg}
         notificationMessageStatus="succeeded"
       />
     );
@@ -24,16 +25,21 @@ describe("NotificationMessageView", () => {
       "contain",
       "Back to list"
     );
-    cy.get(".nhsuk-u-margin-top-2").should(
-      "contain.html",
-      "<p>Test notification message</p>"
+    cy.get('[data-cy="notification-message-header"]').contains(
+      "Test Notification"
+    );
+    cy.get('[data-cy="notification-message-sent-at"]').contains(
+      `Sent ${dayjs().format("DD/MM/YYYY")}`
+    );
+    cy.get('[data-cy="notification-message-content"]').contains(
+      "Test notification message"
     );
   });
 
   it("renders error state", () => {
     mount(
       <NotificationMessageView
-        notificationMessageHTML=""
+        notificationMessageContent={null}
         notificationMessageStatus="failed"
       />
     );

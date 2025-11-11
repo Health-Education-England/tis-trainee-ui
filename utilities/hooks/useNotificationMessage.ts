@@ -7,7 +7,7 @@ import store from "../../redux/store/store";
 export const useNotificationMessage = () => {
   const { id } = useParams<{ id: string }>();
 
-  const notificationMessageHTML = useAppSelector(
+  const notificationMessageContent = useAppSelector(
     state => state.notifications.notificationMsg
   );
   const notificationMessageStatus = useAppSelector(
@@ -19,7 +19,7 @@ export const useNotificationMessage = () => {
   }, [id]);
 
   return {
-    notificationMessageHTML,
+    notificationMessageContent,
     notificationMessageStatus
   };
 };

@@ -27,7 +27,7 @@ export function RowActions({ row }: Readonly<RowActionsProps>) {
           setInProgressUpdate(false);
         }}
         disabled={inProgressUpdate}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", marginRight: "1rem" }}
       >
         <FontAwesomeIcon icon={faEnvelope} size="sm" className="unread-icon" />
         <span>Mark as unread</span>

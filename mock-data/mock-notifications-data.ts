@@ -1,4 +1,7 @@
-import { NotificationType } from "../redux/slices/notificationsSlice";
+import {
+  NotificationMsgContentType,
+  NotificationType
+} from "../redux/slices/notificationsSlice";
 
 export const mockInAppNotificationsData: NotificationType[] = [
   {
@@ -394,3 +397,9 @@ export const notificationsMixedTypeData: NotificationType[] = [
     statusDetail: null
   }
 ];
+
+export const mockNotificationMsg: NotificationMsgContentType = {
+  subject: "Test Notification",
+  content: "<p>Test notification message</p>",
+  sentAt: new Date()
+};

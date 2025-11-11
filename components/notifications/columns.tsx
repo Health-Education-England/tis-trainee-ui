@@ -55,7 +55,7 @@ const EmailStatusCell = ({ row }: { row: any }) => {
   const statusClass = status === "FAILED" ? "status-failed" : "status-sent";
 
   return (
-    <span className={`${statusClass} nhsuk-margin-left-1`}>
+    <span className={`${statusClass} nhsuk-margin-left-1 no-wrap`}>
       {status === "FAILED" ? (
         <>
           <FontAwesomeIcon icon={faTriangleExclamation} size="lg" /> FAILED
@@ -130,7 +130,7 @@ export const inAppColumns = [
       const statusClass =
         props.row.original.status === "READ" ? "status-read" : "status-unread";
       return (
-        <span className={`${statusClass} nhsuk-margin-left-1`}>
+        <span className={`${statusClass} nhsuk-margin-left-1 no-wrap`}>
           {props.row.original.status === "READ" ? (
             <>
               <FontAwesomeIcon icon={faEnvelopeOpen} size="lg" /> READ

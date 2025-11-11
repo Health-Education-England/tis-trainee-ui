@@ -2,12 +2,12 @@ import { useNotificationMessage } from "../../utilities/hooks/useNotificationMes
 import { NotificationMessageView } from "./NotificationMessageView";
 
 export const NotificationMessage: React.FC = () => {
-  const { notificationMessageHTML, notificationMessageStatus } =
+  const { notificationMessageContent, notificationMessageStatus } =
     useNotificationMessage();
 
   return (
     <NotificationMessageView
-      notificationMessageHTML={notificationMessageHTML}
+      notificationMessageContent={notificationMessageContent}
       notificationMessageStatus={notificationMessageStatus}
     />
   );

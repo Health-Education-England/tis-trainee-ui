@@ -16,6 +16,12 @@ export type NotificationStatus =
 
 export type NotificationMsgType = "IN_APP" | "EMAIL" | null;
 
+export type NotificationMsgContentType = {
+  subject: string;
+  content: string;
+  sentAt: Date;
+} | null;
+
 export type NotificationPage = {
   content: NotificationType[];
   page: PageDetails;
@@ -55,7 +61,7 @@ export type NotificationsState = {
   status: string;
   countStatus: string;
   notificationUpdateStatus: string;
-  notificationMsg: string;
+  notificationMsg: NotificationMsgContentType;
   msgStatus: string;
   error: any;
   unreadNotificationCount: number;
@@ -68,7 +74,7 @@ export const initialState: NotificationsState = {
   status: "idle",
   countStatus: "idle",
   notificationUpdateStatus: "idle",
-  notificationMsg: "",
+  notificationMsg: null,
   msgStatus: "idle",
   error: "",
   unreadNotificationCount: 0

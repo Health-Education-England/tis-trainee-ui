@@ -4,6 +4,7 @@ import { getNotificationMessage } from "../../../redux/slices/notificationsSlice
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import store from "../../../redux/store/store";
 import { useParams } from "react-router-dom";
+import { mockNotificationMsg } from "../../../mock-data/mock-notifications-data";
 
 jest.mock("react-router-dom", () => ({
   useParams: jest.fn()
@@ -41,7 +42,7 @@ describe("useNotificationMessage", () => {
     mockedUseAppSelector.mockImplementation(selector =>
       selector({
         notifications: {
-          notificationMsg: "<p>ignored</p>",
+          notificationMsg: mockNotificationMsg,
           msgStatus: "idle"
         }
       })
@@ -54,12 +55,12 @@ describe("useNotificationMessage", () => {
     expect(mockedDispatch).toHaveBeenCalledWith(mockAction);
   });
 
-  it("returns the notification message html and status from the store", () => {
+  it("returns the notification message and status from the store", () => {
     mockedUseParams.mockReturnValue({ id: "456" });
     mockedUseAppSelector.mockImplementation(selector =>
       selector({
         notifications: {
-          notificationMsg: "<p>Hello</p>",
+          notificationMsg: mockNotificationMsg,
           msgStatus: "succeeded"
         }
       })
@@ -67,7 +68,9 @@ describe("useNotificationMessage", () => {
 
     const { result } = renderHook(() => useNotificationMessage());
 
-    expect(result.current.notificationMessageHTML).toBe("<p>Hello</p>");
+    expect(result.current.notificationMessageContent?.content).toBe(
+      "<p>Test notification message</p>"
+    );
     expect(result.current.notificationMessageStatus).toBe("succeeded");
   });
 });
