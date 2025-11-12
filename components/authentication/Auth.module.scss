@@ -29,6 +29,14 @@
   .authFooterText.authFooterText {
     color: whitesmoke;
   }
+
+  .authNotice {
+    padding: 1rem;
+    background-color: #3b83ff;
+    border: 4px solid whitesmoke;
+    border-radius: 4px;
+    color: whitesmoke;
+  }
 }
 
 @media (max-width: 767px) {
