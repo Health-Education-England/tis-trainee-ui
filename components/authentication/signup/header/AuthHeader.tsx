@@ -15,13 +15,19 @@ export const AuthHeader = (): JSX.Element => {
           <h1 data-cy="authTitle">TIS Self-Service</h1>
           <div className={styles.authNotice} data-cy="authNotice">
             <p className="nhsuk-body nhsuk-u-margin-bottom-2">
-              <strong>Issues with Google email addresses</strong> have been
-              reported with users unable to sign in or create an account using
-              their Google email.
+              <strong>The issue affecting Google email addresses</strong> and
+              not being able to sign in or create an account has now been
+              resolved.
+            </p>
+            <p className="nhsuk-body nhsuk-u-margin-bottom-2">
+              We are aware of ongoing issues affecting users who recently
+              attempted to create an account with a Google email address. We
+              will identify those affected and contact you directly to resolve
+              any remaining issues.
             </p>
             <p className="nhsuk-body nhsuk-u-margin-bottom-0">
-              We are working to resolve this issue as soon as possible and will
-              update this notice when it is fixed.
+              Thank you for your patience during this time and our apologies for
+              any inconvenience caused.
             </p>
           </div>
         </View>
