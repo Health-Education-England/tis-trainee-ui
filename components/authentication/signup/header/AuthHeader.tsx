@@ -21,9 +21,9 @@ export const AuthHeader = (): JSX.Element => {
             </p>
             <p className="nhsuk-body nhsuk-u-margin-bottom-2">
               We are aware of ongoing issues affecting users who recently
-              attempted to create an account with a Google email address.
-              We will identify those affected and contact you directly to
-              resolve any remaining issues.
+              attempted to create an account with a Google email address. We
+              will identify those affected and contact you directly to resolve
+              any remaining issues.
             </p>
             <p className="nhsuk-body nhsuk-u-margin-bottom-0">
               Thank you for your patience during this time and our apologies for
