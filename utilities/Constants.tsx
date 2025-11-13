@@ -545,10 +545,7 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
       <p>
         If you do notice any discrepancies when reviewing the{" "}
         <Link to="/programmes">Programme</Link> data, please contact{" "}
-        <Link to="/support" target="_blank">
-          Local Office support
-        </Link>
-        .
+        <Link to="/support">Local Office support</Link>.
       </p>
     ),
     SIGN_COJ: (
@@ -615,10 +612,7 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
         <p>
           If you do notice any discrepancies when reviewing the Placement
           details, please contact{" "}
-          <Link to="/support" target="_blank">
-            Local Office support
-          </Link>
-          .
+          <Link to="/support">Local Office support</Link>.
         </p>
       </>
     ),
@@ -644,20 +638,15 @@ export const failedEmailInfoText: Record<string, any> = {
     <p>
       Your email address may be incorrect, your local office can update it or
       reactivate if it was flagged incorrectly. Please contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>
-      .
+      <Link to="/support">Local Office support</Link>.
     </p>
   ),
   "Bounce: Permanent - General": (
     <p>
       The email couldn't be delivered to your address due to a permanent issue.
       Please check that your email address is correct or contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>{" "}
-      if you want to update your email.
+      <Link to="/support">Local Office support</Link> if you want to update your
+      email.
     </p>
   ),
   "Complaint: OnAccountSuppressionList": (
@@ -665,20 +654,15 @@ export const failedEmailInfoText: Record<string, any> = {
       Your email address is on a suppression list as one of our emails is marked
       as spam by your email system. If this was unintentional and you want to
       receive our emails in the future, please contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>{" "}
-      to have your address reactivated.
+      <Link to="/support">Local Office support</Link> to have your address
+      reactivated.
     </p>
   ),
   "Bounce: Transient - MessageTooLarge": (
     <p>
       The email was too large for your mail system. We're working to optimize
       email sizes. Please contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>{" "}
-      if this issue persists.
+      <Link to="/support">Local Office support</Link> if this issue persists.
     </p>
   ),
   "Bounce: Transient - MailboxFull": (
@@ -698,19 +682,14 @@ export const failedEmailInfoText: Record<string, any> = {
     <p>
       We couldn't send an email because there was no valid address found. Please
       check that your email address is correct or contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>{" "}
-      if you want to update your email.
+      <Link to="/support">Local Office support</Link> if you want to update your
+      email.
     </p>
   ),
   "Complaint: Undetermined": (
     <p>
       An undetermined complaint was received about the email. Please contact{" "}
-      <Link to="/support" target="_blank">
-        Local Office support
-      </Link>
-      .
+      <Link to="/support">Local Office support</Link>.
     </p>
   ),
   "Missed Schedule: Programme already started": (

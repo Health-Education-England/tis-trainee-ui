@@ -100,12 +100,9 @@ const EmailStatusCell = ({ row }: { row: any }) => {
                     onClose={() => setShowModal(false)}
                     cancelBtnText="Close"
                   >
-                    <div
-                      className="modal-content"
-                      style={{ textAlign: "left" }}
-                    >
+                    <div className="modal-content">
                       <h2>{statusDetail}</h2>
-                      {failedEmailInfoText[statusDetail]}
+                      <p>{failedEmailInfoText[statusDetail]}</p>
                     </div>
                   </Modal>
                 </div>
