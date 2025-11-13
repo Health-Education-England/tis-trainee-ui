@@ -1049,6 +1049,9 @@ export const mockUserFeaturesNone: UserFeaturesType = {
   },
   notifications: {
     enabled: false
+  },
+  news: {
+    enabled: false
   }
 };
 
@@ -1092,6 +1095,9 @@ export const mockUserFeaturesNonSpecialty: UserFeaturesType = {
   },
   notifications: {
     enabled: false
+  },
+  news: {
+    enabled: false
   }
 };
 
@@ -1134,6 +1140,9 @@ export const mockUserFeaturesSpecialty: UserFeaturesType = {
     }
   },
   notifications: {
+    enabled: true
+  },
+  news: {
     enabled: true
   }
 };

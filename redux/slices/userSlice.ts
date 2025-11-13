@@ -70,6 +70,9 @@ const initialState: IUser = {
     },
     notifications: {
       enabled: false
+    },
+    news: {
+      enabled: false
     }
   },
   redirected: false

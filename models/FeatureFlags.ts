@@ -10,6 +10,7 @@ export type UserFeaturesType = {
   details: DetailsFeatures;
   forms: FormFeatures;
   notifications: Feature;
+  news: Feature;
 }
 
 export type FeatureFlag =
