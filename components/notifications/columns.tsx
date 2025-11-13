@@ -34,7 +34,7 @@ const commonColumns = [
   columnHelper.accessor("subject", {
     id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
-    cell: props => <span>{props.renderValue()?.replace("_", " ")}</span>,
+    cell: props => <span>{props.renderValue()?.replaceAll("_", " ")}</span>,
     enableColumnFilter: false
   }),
 

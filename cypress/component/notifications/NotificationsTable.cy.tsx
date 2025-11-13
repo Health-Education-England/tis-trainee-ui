@@ -229,6 +229,9 @@ describe("NotificationsTable with Email notifications data", () => {
     cy.get('[data-cy="notificationsTable-contact"]')
       .should("exist")
       .contains("Sent to");
+    cy.get(
+      '[data-cy="notificationsTableRow-2"] > :nth-child(3) > span'
+    ).contains("PLACEMENT UPDATED WEEK 12");
     // no change after row click
     cy.get('[data-cy="notificationsTableRow-1"] > :nth-child(1)')
       .should("exist")
