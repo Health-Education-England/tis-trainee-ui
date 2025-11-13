@@ -64,6 +64,9 @@ describe("LtftForm - draft", () => {
     cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
       "For information on Professional support contact"
     );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(5)").contains(
+      "Before submitting your LTFT application, you must have a discussion with your Training Programme Director"
+    );
     cy.get(
       ":nth-child(4) > .nhsuk-card__content > .nhsuk-card__heading"
     ).contains("Your pre-approver details");

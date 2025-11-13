@@ -85,6 +85,7 @@ describe("CctSavedDrafts", () => {
       .click();
     // Check modal
     cy.get('[data-cy="dialogModal"]').should("be.visible");
+    cy.get("summary").should("exist");
     cy.get('[data-cy="ltft-declarations-modal-heading"]').contains(
       "Before proceeding to the main Changing hours (LTFT) application..."
     );
