@@ -1,34 +1,52 @@
 import { mount } from "cypress/react";
-import { Router } from "react-router-dom";
-import { Provider } from "react-redux";
-import history from "../../../components/navigation/history";
-import { NotificationMessage } from "../../../components/notifications/NotificationMessage";
-import store from "../../../redux/store/store";
+import { NotificationMessageView } from "../../../components/notifications/NotificationMessageView";
+import dayjs from "dayjs";
+import { mockNotificationMsg } from "../../../mock-data/mock-notifications-data";
 
-describe("NotificationMessage", () => {
-  beforeEach(() => {
-    cy.viewport("macbook-15");
+describe("NotificationMessageView", () => {
+  it("renders loading state", () => {
     mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <NotificationMessage />
-        </Router>
-      </Provider>
+      <NotificationMessageView
+        notificationMessageContent={null}
+        notificationMessageStatus="loading"
+      />
+    );
+    cy.get('[data-cy="loading"]').should("exist");
+  });
+
+  it("renders succeeded state with HTML content", () => {
+    mount(
+      <NotificationMessageView
+        notificationMessageContent={mockNotificationMsg}
+        notificationMessageStatus="succeeded"
+      />
+    );
+    cy.get('[data-cy="backLink-to-notifications"]').should(
+      "contain",
+      "Back to list"
+    );
+    cy.get('[data-cy="notification-message-header"]').contains(
+      "Test Notification"
+    );
+    cy.get('[data-cy="notification-message-sent-at"]').contains(
+      `Sent ${dayjs().format("DD/MM/YYYY")}`
+    );
+    cy.get('[data-cy="notification-message-content"]').contains(
+      "Test notification message"
     );
   });
 
-  it("should display the error page when no matched active notification to display", () => {
-    cy.get('[data-cy="backLink-to-notifications"]')
-      .should("exist")
-      .should("include.text", "Back to list");
-    cy.url().should("include", "/notifications");
-    cy.get('[data-cy="error-header-text"]')
-      .should("exist")
-      .contains("Oops! Something went wrong");
-    cy.get('[data-cy="error-message-text"]')
-      .should("exist")
-      .contains(
-        "Couldn't load this message. Please check your internet connection and try again."
-      );
+  it("renders error state", () => {
+    mount(
+      <NotificationMessageView
+        notificationMessageContent={null}
+        notificationMessageStatus="failed"
+      />
+    );
+    cy.contains("Notification message error");
+    cy.get('[data-cy="backLink-to-notifications"]').should(
+      "contain",
+      "Back to list"
+    );
   });
 });

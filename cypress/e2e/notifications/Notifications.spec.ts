@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
-import { notificationsMixedTypeData } from "../../../mock-data/notifications";
+import { notificationsMixedTypeData } from "../../../mock-data/mock-notifications-data";
 
 describe("No notification", () => {
   beforeEach(() => {
@@ -21,8 +21,8 @@ describe("No notification", () => {
     });
   });
 
-  it("should show no notification message when notification is empty", () => {  
-      cy.get('[data-cy="notificationsTableNoNotifs"]').should("exist");
+  it("should show no notification message when notification is empty", () => {
+    cy.get('[data-cy="notificationsTableNoNotifs"]').should("exist");
   });
 });
 
@@ -36,7 +36,7 @@ describe("Notifications", () => {
       },
       {
         statusCode: 200,
-        body: {content: notificationsMixedTypeData}
+        body: { content: notificationsMixedTypeData }
       }
     ).as("getNotifications");
     cy.wait("@getNotifications", {
@@ -50,37 +50,45 @@ describe("Notifications", () => {
       .should("exist")
       .should("contain.text", "In-app Notifications");
 
-      cy.intercept("GET", "api/notifications?page=0&size=0&type=IN_APP&status=UNREAD", {
+    cy.intercept(
+      "GET",
+      "api/notifications?page=0&size=0&type=IN_APP&status=UNREAD",
+      {
         statusCode: 200,
         body: [] // No returned notifications
-      }).as("getUnreadNotificationsEmpty");
-          
-      cy.get('#unreadCheck').check({ force: true });
-      cy.wait("@getUnreadNotificationsEmpty", {
-        requestTimeout: 30000,
-        responseTimeout: 30000
-      });
-  
-      cy.get('[data-cy="notificationsTable"]').should("exist");
+      }
+    ).as("getUnreadNotificationsEmpty");
+
+    cy.get("#unreadCheck").check({ force: true });
+    cy.wait("@getUnreadNotificationsEmpty", {
+      requestTimeout: 30000,
+      responseTimeout: 30000
+    });
+
+    cy.get('[data-cy="notificationsTable"]').should("exist");
   });
 
-  it("should load EMAIL notifications table if filter is on even when notification is empty", () => {    
+  it("should load EMAIL notifications table if filter is on even when notification is empty", () => {
     cy.get(':nth-child(2) > [data-cy="emailBtn"]').click();
     cy.get('[data-cy="notificationsHeading"]')
       .should("exist")
       .should("contain.text", "Email Notifications");
 
-      cy.intercept("GET", "api/notifications?page=0&size=0&type=EMAIL&status=FAILED", {
+    cy.intercept(
+      "GET",
+      "api/notifications?page=0&size=0&type=EMAIL&status=FAILED",
+      {
         statusCode: 200,
         body: [] // No returned notifications
-      }).as("getUnreadNotificationsEmpty");
-          
-      cy.get('#failedCheck').check({ force: true });
-      cy.wait("@getUnreadNotificationsEmpty", {
-        requestTimeout: 30000,
-        responseTimeout: 30000
-      });
-  
-      cy.get('[data-cy="notificationsTable"]').should("exist");
+      }
+    ).as("getUnreadNotificationsEmpty");
+
+    cy.get("#failedCheck").check({ force: true });
+    cy.wait("@getUnreadNotificationsEmpty", {
+      requestTimeout: 30000,
+      responseTimeout: 30000
+    });
+
+    cy.get('[data-cy="notificationsTable"]').should("exist");
   });
 });

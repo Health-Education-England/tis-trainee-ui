@@ -19,7 +19,10 @@ export class ApiService {
   constructor(baseUrl: string) {
     this.axiosInstance = axios.create({
       baseURL: baseUrl,
-      headers: {}
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
     });
 
     this.axiosInstance.interceptors.request.use(async function (config: any) {

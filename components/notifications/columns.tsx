@@ -34,7 +34,7 @@ const commonColumns = [
   columnHelper.accessor("subject", {
     id: "subject",
     header: ({ column }) => <TableColumnHeader column={column} title="Type" />,
-    cell: props => <span>{props.renderValue()}</span>,
+    cell: props => <span>{props.renderValue()?.replaceAll("_", " ")}</span>,
     enableColumnFilter: false
   }),
 
@@ -55,7 +55,7 @@ const EmailStatusCell = ({ row }: { row: any }) => {
   const statusClass = status === "FAILED" ? "status-failed" : "status-sent";
 
   return (
-    <span className={`${statusClass} nhsuk-margin-left-1`}>
+    <span className={`${statusClass} nhsuk-margin-left-1 no-wrap`}>
       {status === "FAILED" ? (
         <>
           <FontAwesomeIcon icon={faTriangleExclamation} size="lg" /> FAILED
@@ -100,12 +100,9 @@ const EmailStatusCell = ({ row }: { row: any }) => {
                     onClose={() => setShowModal(false)}
                     cancelBtnText="Close"
                   >
-                    <div
-                      className="modal-content"
-                      style={{ textAlign: "left" }}
-                    >
+                    <div className="modal-content">
                       <h2>{statusDetail}</h2>
-                      {failedEmailInfoText[statusDetail]}
+                      <p>{failedEmailInfoText[statusDetail]}</p>
                     </div>
                   </Modal>
                 </div>
@@ -125,16 +122,20 @@ const EmailStatusCell = ({ row }: { row: any }) => {
 export const inAppColumns = [
   columnHelper.accessor("status", {
     id: "status",
-    header: "",
+    header: "Status",
     cell: props => {
       const statusClass =
         props.row.original.status === "READ" ? "status-read" : "status-unread";
       return (
-        <span className={`${statusClass} nhsuk-margin-left-1`}>
+        <span className={`${statusClass} nhsuk-margin-left-1 no-wrap`}>
           {props.row.original.status === "READ" ? (
-            <FontAwesomeIcon icon={faEnvelopeOpen} size="lg" />
+            <>
+              <FontAwesomeIcon icon={faEnvelopeOpen} size="lg" /> READ
+            </>
           ) : (
-            <FontAwesomeIcon icon={faEnvelope} size="lg" />
+            <>
+              <FontAwesomeIcon icon={faEnvelope} size="lg" /> UNREAD
+            </>
           )}
         </span>
       );
@@ -152,7 +153,7 @@ export const inAppColumns = [
 export const emailColumns = [
   columnHelper.accessor("status", {
     id: "status",
-    header: "",
+    header: "Status",
     size: 200,
     cell: props => <EmailStatusCell row={props.row} />
   }),
@@ -165,7 +166,9 @@ export const emailColumns = [
       <TableColumnHeader column={column} title="Sent to" />
     ),
     cell: props => (
-      <span style={{ whiteSpace: "pre-wrap" }}>{props.renderValue()}</span>
+      <span style={{ whiteSpace: "pre-wrap" }}>
+        {props.renderValue()?.replace("@", "\n@")}
+      </span>
     ),
     enableColumnFilter: false
   })
