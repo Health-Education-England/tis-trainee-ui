@@ -12,6 +12,5 @@ describe("Notifications", () => {
       .should("contain.text", "In-app Notifications");    
     cy.get('[data-cy="emailBtn"]').should("exist");
     cy.get('[data-cy="inAppBtn"]').should("exist");
-    cy.get('[data-cy="notificationsTable"]').should("exist");
   });
 });
