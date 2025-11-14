@@ -228,6 +228,7 @@ export const LtftFormView = () => {
           warningText={currentAction.warningText}
           submittingBtnText={currentAction.submittingText}
           isSubmitting={isSubmitting}
+          additionalInfo="Your application will be sent to your Local Office. You will receive an update on your application progress in the next two weeks. A notification will also be sent to the pre-approver you listed in your application."
         />
       </LtftViewWrapper>
     );

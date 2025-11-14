@@ -41,4 +41,23 @@ describe("ActionModal", () => {
       .should("be.disabled")
       .should("contain", "Deleting...");
   });
+
+  it("displays additional info when provided", () => {
+    const additionalInfoText =
+      "Your application will be sent to your Local Office. You will receive an update on your application progress in the next two weeks. A notification will also be sent to the pre-approver you listed in your application.";
+
+    mountActionModal({
+      additionalInfo: additionalInfoText
+    });
+
+    cy.get('[data-cy="additionalInfo"]')
+      .should("be.visible")
+      .should("contain", additionalInfoText);
+  });
+
+  it("does not display additional info when not provided", () => {
+    mountActionModal();
+
+    cy.get('[data-cy="additionalInfo"]').should("not.exist");
+  });
 });
