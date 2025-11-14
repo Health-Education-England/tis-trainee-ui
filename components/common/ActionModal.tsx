@@ -22,6 +22,7 @@ type ActionModalProps = {
   submittingBtnText: string;
   actionType?: ActionType;
   isSubmitting: boolean;
+  additionalInfo?: string;
 };
 
 export function ActionModal({
@@ -33,7 +34,8 @@ export function ActionModal({
   warningText,
   submittingBtnText,
   actionType,
-  isSubmitting = false
+  isSubmitting = false,
+  additionalInfo
 }: Readonly<ActionModalProps>) {
   const hasReason = actionType === "Unsubmit" || actionType === "Withdraw";
 
@@ -47,6 +49,7 @@ export function ActionModal({
           {warningLabel}
         </WarningCallout.Label>
         <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
+        {additionalInfo && <p data-cy="additionalInfo">{additionalInfo}</p>}
       </WarningCallout>
       <Formik initialValues={{ reason: "", message: "" }} onSubmit={onSubmit}>
         {({ values }) => (
