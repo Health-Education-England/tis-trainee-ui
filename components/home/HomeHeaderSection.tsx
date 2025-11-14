@@ -3,13 +3,15 @@ import { TssUpdates, WhatsNewHeader } from "./TssUpdates";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { fetchWhatsNew } from "../../redux/slices/tssUpdatesSlice";
 import { useIsMobile } from "../../utilities/hooks/useIsMobile";
+import { useIsShowNews } from "../../utilities/hooks/useIsShowNews";
 
 export const HomeHeaderSection = () => {
   const dispatch = useAppDispatch();
   const isMobile = useIsMobile();
+  const isShowNews = useIsShowNews();
 
   useEffect(() => {
-    if (!isMobile) dispatch(fetchWhatsNew());
+    if (!isMobile && isShowNews) dispatch(fetchWhatsNew());
   }, [dispatch, isMobile]);
 
   return (
@@ -35,7 +37,7 @@ export const HomeHeaderSection = () => {
               {isMobile ? (
                 <>
                   <br />
-                  <WhatsNewHeader />
+                  {isShowNews && <WhatsNewHeader />}
                 </>
               ) : (
                 <HomeWelcomeBodyText />
@@ -44,7 +46,7 @@ export const HomeHeaderSection = () => {
           </div>
           {!isMobile && (
             <div className="nhsuk-grid-column-one-third tss-update-column">
-              <TssUpdates />
+              {isShowNews && <TssUpdates />}
             </div>
           )}
         </div>
