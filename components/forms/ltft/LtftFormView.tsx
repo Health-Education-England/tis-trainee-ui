@@ -228,6 +228,7 @@ export const LtftFormView = () => {
           warningText={currentAction.warningText}
           submittingBtnText={currentAction.submittingText}
           isSubmitting={isSubmitting}
+          additionalInfo={currentAction.additionalInfo}
         />
       </LtftViewWrapper>
     );

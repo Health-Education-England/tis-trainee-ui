@@ -7,6 +7,7 @@ export type ActionState = {
   type: ActionType | null;
   warningText: string;
   submittingText: string;
+  additionalInfo?: string;
   id: string;
   formName: FormName | null;
 };
@@ -15,6 +16,7 @@ const defaultActionState: ActionState = {
   type: null,
   warningText: "",
   submittingText: "",
+  additionalInfo: undefined,
   id: "",
   formName: null
 };
@@ -34,6 +36,7 @@ export function useActionState() {
       type: label,
       warningText: actionConfig.warning,
       submittingText: actionConfig.submitting,
+      additionalInfo: actionConfig.additionalInfo,
       id,
       formName
     });

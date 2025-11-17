@@ -1,6 +1,6 @@
 import { mount } from "cypress/react";
 import { ActionModal } from "../../../components/common/ActionModal";
-import { sureText } from "../../../utilities/Constants";
+import { sureText, ACTION_CONFIG } from "../../../utilities/Constants";
 
 const baseProps = {
   isOpen: true,
@@ -40,5 +40,21 @@ describe("ActionModal", () => {
       .should("be.visible")
       .should("be.disabled")
       .should("contain", "Deleting...");
+  });
+
+  it("displays additional info when provided", () => {
+    mountActionModal({
+      additionalInfo: ACTION_CONFIG.submit.additionalInfo
+    });
+
+    cy.get('[data-cy="additionalInfo"]')
+      .should("be.visible")
+      .should("contain", ACTION_CONFIG.submit.additionalInfo);
+  });
+
+  it("does not display additional info when not provided", () => {
+    mountActionModal();
+
+    cy.get('[data-cy="additionalInfo"]').should("not.exist");
   });
 });
