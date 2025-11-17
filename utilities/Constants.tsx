@@ -721,11 +721,13 @@ export const sureText = "Are you sure? This action cannot be undone.";
 
 export const ACTION_CONFIG: Record<
   string,
-  { warning: string; submitting: string }
+  { warning: string; submitting: string; additionalInfo?: string }
 > = {
   submit: {
     warning: "Have you checked the details carefully before submitting?",
-    submitting: "Submitting"
+    submitting: "Submitting",
+    additionalInfo:
+      "Your application will be sent to your Local Office. You will receive an update on your application progress in the next two weeks. A notification will also be sent to the pre-approver you listed in your application."
   },
   delete: {
     warning: `${sureText}`,

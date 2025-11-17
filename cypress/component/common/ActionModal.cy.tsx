@@ -1,6 +1,6 @@
 import { mount } from "cypress/react";
 import { ActionModal } from "../../../components/common/ActionModal";
-import { sureText } from "../../../utilities/Constants";
+import { sureText, ACTION_CONFIG } from "../../../utilities/Constants";
 
 const baseProps = {
   isOpen: true,
@@ -43,16 +43,13 @@ describe("ActionModal", () => {
   });
 
   it("displays additional info when provided", () => {
-    const additionalInfoText =
-      "Your application will be sent to your Local Office. You will receive an update on your application progress in the next two weeks. A notification will also be sent to the pre-approver you listed in your application.";
-
     mountActionModal({
-      additionalInfo: additionalInfoText
+      additionalInfo: ACTION_CONFIG.submit.additionalInfo
     });
 
     cy.get('[data-cy="additionalInfo"]')
       .should("be.visible")
-      .should("contain", additionalInfoText);
+      .should("contain", ACTION_CONFIG.submit.additionalInfo);
   });
 
   it("does not display additional info when not provided", () => {
