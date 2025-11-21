@@ -54,7 +54,7 @@ function VisibleField({
           {field.label}
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
-          {displayListValue(formData[field.name], field.type)}
+          {displayListValue(formData, field)}
         </SummaryList.Value>
       </SummaryList.Row>
     );
@@ -115,7 +115,21 @@ export default function FormViewBuilder({
   );
 }
 
-function displayListValue(fieldVal: any, fieldType?: string) {
+function formatEntryValue(value: any, fieldType: string) {
+  if (value === null || value === "") return "Not provided";
+  if (fieldType === "date" || strDateRegex.test(value)) {
+    return DateUtilities.ToLocalDate(value);
+  }
+  if (typeof value === "boolean") {
+    return value ? "Yes" : "No";
+  }
+  return value?.toString();
+}
+
+function displayListValue(formData: FormData, field: Field) {
+  const fieldVal = formData[field.name];
+  const fieldType = field.type;
+  const isDisplayAltVal = field.isDisplayAltVal ?? false;
   if (fieldVal === null || fieldVal === "") return "Not provided";
   if (fieldType === "array") {
     if (fieldVal.length === 0) return "Not provided";
@@ -130,7 +144,9 @@ function displayListValue(fieldVal: any, fieldType?: string) {
                     <b>{formatFieldName(entry[0])}</b>
                   </Label>
                 </Col>
-                <Col width="one-half">{displayListValue(entry[1])}</Col>
+                <Col width="one-half">
+                  {formatEntryValue(entry[1], fieldType)}
+                </Col>
               </Row>
             </Container>
           ))}
@@ -143,6 +159,10 @@ function displayListValue(fieldVal: any, fieldType?: string) {
   }
   if (typeof fieldVal === "boolean") {
     return fieldVal ? "Yes" : "No";
+  }
+  // TODO needs proper mapping for other fields with alt values
+  if (isDisplayAltVal && field.name === "pmId") {
+    return formData["pmName"];
   }
   return fieldVal?.toString();
 }

@@ -5,20 +5,10 @@ import history from "../../navigation/history";
 import { resetCctCalc } from "../../../redux/slices/cctSlice";
 import { Link } from "react-router-dom";
 import { CctSavedDrafts } from "./CctSavedDrafts";
-import { useEffect } from "react";
-import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
-import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
-  const isLtftPilot = useIsLtftPilot();
-
-  useEffect(() => {
-    dispatch(loadCctList());
-    if (isLtftPilot) dispatch(fetchLtftSummaryList());
-  }, [dispatch, isLtftPilot]);
 
   return (
     <>

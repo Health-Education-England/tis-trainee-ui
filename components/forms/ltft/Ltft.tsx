@@ -4,8 +4,25 @@ import PageNotFound from "../../common/PageNotFound";
 import { LtftHome } from "./LtftHome";
 import { LtftForm } from "./LtftForm";
 import { LtftFormView } from "./LtftFormView";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { isPastIt } from "../../../utilities/DateUtilities";
+import { makeValidProgrammeOptions } from "../../../utilities/ltftUtilities";
 
 export function Ltft() {
+  const pmsNotPast = useAppSelector(state =>
+    state.traineeProfile.traineeProfileData.programmeMemberships.filter(
+      pm => !isPastIt(pm.endDate)
+    )
+  );
+  const pmIdsFromFeatFlags =
+    useAppSelector(
+      state => state.user.features.forms.ltft.qualifyingProgrammes
+    ) ?? [];
+  const pmOptionsForLtft = makeValidProgrammeOptions(
+    pmsNotPast,
+    pmIdsFromFeatFlags
+  );
+
   return (
     <>
       <Fieldset>
@@ -14,12 +31,20 @@ export function Ltft() {
           data-cy="ltftHeading"
           style={{ color: "#005eb8" }}
         >
-          Changing hours (LTFT)
+          Less Than Full Time (LTFT)
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
-        <Route exact path="/ltft" render={() => <LtftHome />} />
-        <Route exact path="/ltft/create" render={() => <LtftForm />} />
+        <Route
+          exact
+          path="/ltft"
+          render={() => <LtftHome pmOptions={pmOptionsForLtft} />}
+        />
+        <Route
+          exact
+          path="/ltft/create"
+          render={() => <LtftForm pmOptions={pmOptionsForLtft} />}
+        />
         <Route exact path="/ltft/confirm" render={() => <LtftFormView />} />
         <Route exact path="/ltft/:id" render={() => <LtftFormView />} />
         <Route path="/ltft/*" component={PageNotFound} />

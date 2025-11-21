@@ -101,19 +101,25 @@ export const ltftDiscussionText2 =
   "Your pre-approver will usually be your Training Programme Director (TPD) but for a GP programme it may be your GP Programme Manager. If you are unsure who your pre-approver is, please <a href='/support' target='_new'>contact your Local Office support</a>.";
 
 const ltftOtherDiscussionsText =
-  "If applicable, please provide details of any other discussions you have had concerning your Changing hours (LTFT) proposal.";
+  "If applicable, please provide details of any other discussions you have had concerning your Less Than Full Time application.";
 
 const ltftDiscussionText3 =
   "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
 
-const ltftDiscussionText4 =
-  "Before submitting your LTFT application, you must have a discussion with your Training Programme Director (TPD) or Primary Approver. This conversation ensures your request supports both your personal circumstances and your training progression.<br/><br/>During this discussion, you should cover:<br/><ul><li>Your reason(s) for requesting LTFT (e.g. caring responsibilities, health, professional development, wellbeing).</li><li>The proposed working pattern (e.g. 60%, 80% WTE, expected days per week).</li><li>Impact on training progression, pay changes and completion dates.</li><li>Planned start date and notice period.</li><li>Any support or adjustments you may need.</li></ul>The purpose of this discussion is to ensure understanding and support within your training programme.";
-
 export const ltftReasonsText1 =
   "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
-export const ltftReasonsText2 =
+export const ltftStartDateImportantText1 =
   "Changing hours (LTFT) requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
+
+export const ltftTier2VisaImportantText1 =
+  "If you are on a Tier 2 or Skilled Worker visa, please make sure the proposed change to your working hours 'full time' percentage (Part 3 of this application) complies with the requirements of your visa.";
+
+export const personalDetailsCheckText1 =
+  "Please check that the personal details we hold for you are correct and let us know of any changes.";
+
+export const personalDetailsCheckText2 =
+  "Any changes made here will NOT automatically update other systems that you may have access to.";
 
 const generateTextElement = (texts: string[]) => (
   <span>
@@ -185,12 +191,21 @@ const displayText: DisplayText = {
   ltftDiscussionInstructions: generateTextElement([
     ltftDiscussionText1,
     ltftDiscussionText2,
-    ltftOtherDiscussionsText,
-    ltftDiscussionText3,
-    ltftDiscussionText4
+    ltftDiscussionText3
   ]),
-  ltftReasonsInstructions: generateTextElement([
-    ltftReasonsText1,
-    ltftReasonsText2
+  ltftOtherDiscussionsInstructions: generateTextElement([
+    ltftOtherDiscussionsText,
+    ltftDiscussionText3
+  ]),
+  ltftReasonsInstructions: generateTextElement([ltftReasonsText1]),
+  ltftStartDateImportantText: generateTextElement([
+    ltftStartDateImportantText1
+  ]),
+  ltftTier2VisaImportantText: generateTextElement([
+    ltftTier2VisaImportantText1
+  ]),
+  personalDetailsCheckText: generateTextElement([
+    personalDetailsCheckText1,
+    personalDetailsCheckText2
   ])
 };

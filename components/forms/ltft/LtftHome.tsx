@@ -1,13 +1,30 @@
-import { Card, Col, Container, Row } from "nhsuk-react-components";
+import { useState } from "react";
+import { Button, Card, Col, Container, Row } from "nhsuk-react-components";
 import LtftSummary from "./LtftSummary";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
-import { Link } from "react-router-dom";
+import history from "../../navigation/history";
+import { LtftDeclarationsModal } from "./LtftDeclarationsModal";
+import { populateLtftDraftNew } from "../../../utilities/ltftUtilities";
+import { updatedLtft } from "../../../redux/slices/ltftSlice";
 
-export function LtftHome() {
+import { ExpanderMsg } from "../../common/ExpanderMsg";
+
+type LtftHomeProps = {
+  pmOptions: { value: string; label: string }[];
+};
+
+export function LtftHome({ pmOptions }: LtftHomeProps) {
+  const dispatch = useAppDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const tpData = useAppSelector(
+    state => state.traineeProfile.traineeProfileData
+  );
+
   const ltftSummary = useAppSelector(
     state => state.ltftSummaryList?.ltftList || []
   );
@@ -43,6 +60,7 @@ export function LtftHome() {
 
   return (
     <>
+      <ExpanderMsg expanderName="whatIsLtft" />
       <Card>
         <Card.Content>
           <>
@@ -57,11 +75,17 @@ export function LtftHome() {
             <Container>
               <Row style={{ fontSize: "19px" }}>
                 <Col width="full">
-                  To begin a new application{" "}
-                  <Link to="/cct" data-cy="cct-link">
-                    please go to your list of saved CCT calculations
-                  </Link>{" "}
-                  and click the button to apply for Changing hours (LTFT).
+                  {pmOptions.length ? (
+                    <Button onClick={() => setIsModalOpen(true)}>
+                      Make a new application
+                    </Button>
+                  ) : (
+                    <p>
+                      You are not eligible to make a Less Than Full Time
+                      application at this time as you have no active current or
+                      upcoming Programmes.
+                    </p>
+                  )}
                 </Col>
               </Row>
             </Container>
@@ -80,6 +104,19 @@ export function LtftHome() {
           />
         </Card.Content>
       </Card>
+      <LtftDeclarationsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          const draftLtft = populateLtftDraftNew(
+            tpData.personalDetails,
+            tpData.traineeTisId
+          );
+          dispatch(updatedLtft(draftLtft));
+          setIsModalOpen(false);
+          history.push("/ltft/create");
+        }}
+      />
     </>
   );
 }

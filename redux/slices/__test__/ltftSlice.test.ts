@@ -6,26 +6,26 @@ import {
 } from "@reduxjs/toolkit";
 import ltftReducer, {
   saveLtft,
-  LtftObj,
   updateLtft,
   deleteLtft,
   loadSavedLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
   resetToInitLtft,
-  setLtftCctSnapshot,
   updatedLtft,
   updatedLtftSaveStatus,
-  initialState,
-  LtftState
+  initialState
 } from "../ltftSlice";
 import { FormsService } from "../../../services/FormsService";
 import * as ltftUtilities from "../../../utilities/ltftUtilities";
 import * as ToastMessage from "../../../components/common/ToastMessage";
 import { mockLtftDraft1 } from "../../../mock-data/mock-ltft-data";
 import { CctCalculation } from "../cctSlice";
-import { LtftDto, mapLtftObjToDto } from "../../../utilities/ltftUtilities";
+import { mapLtftObjToDto } from "../../../utilities/ltftUtilities";
 import { AxiosResponse, AxiosRequestHeaders } from "axios";
+import { LtftDto, LtftObjNew, LtftState } from "../../../models/LtftTypes";
+
+// TODO fix test data
 
 jest.mock("../../../services/FormsService");
 jest.mock("../../../utilities/ltftUtilities");
@@ -45,7 +45,7 @@ const createLtftThunkTests = (
 ): void => {
   describe(`ltftSlice - ${thunkName} thunk`, () => {
     let store: TestStore;
-    const mockFormData: LtftObj = mockLtftDraft1;
+    const mockFormData: LtftObjNew = mockLtftDraft1;
     const mockResponse: AxiosResponse<LtftDto, any> = {
       status: 200,
       statusText: "OK",
@@ -59,7 +59,7 @@ const createLtftThunkTests = (
         lastModified: "2023-01-01T12:30:00"
       }
     };
-    const mockMappedResponse: LtftObj = {
+    const mockMappedResponse: LtftObjNew = {
       ...mockFormData,
       id: "123updated",
       lastModified: "2023-01-01T12:30:00"
@@ -416,17 +416,6 @@ describe("ltftSlice - reducers", () => {
 
     // Verify state was reset
     expect(store.getState().ltft).toEqual(initialState);
-  });
-
-  test("setLtftCctSnapshot should update LtftCctSnapshot", () => {
-    const mockCctSnapshot = {
-      id: "cct-123",
-      created: "2024-01-01"
-    } as unknown as CctCalculation;
-
-    store.dispatch(setLtftCctSnapshot(mockCctSnapshot));
-
-    expect(store.getState().ltft.LtftCctSnapshot).toEqual(mockCctSnapshot);
   });
 
   test("updatedLtft should update formData", () => {

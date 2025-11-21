@@ -64,6 +64,7 @@ export type Field = {
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
+  isDisplayAltVal?: boolean;
 };
 export type FormData = {
   [key: string]: any;
@@ -202,7 +203,6 @@ export default function FormBuilder({
               }
             />
           )}
-          <AutosaveNote />
           {pages[currentPage]?.sections.map((section: Section) => (
             <React.Fragment key={section.sectionHeader}>
               <Card feature>
@@ -230,6 +230,7 @@ export default function FormBuilder({
         </div>
       )}
       <AutosaveMessage formName={jsonFormName} />
+      <AutosaveNote />
       {Object.keys(formErrors).length > 0 && (
         <FormErrors formErrors={formErrors} />
       )}

@@ -1243,3 +1243,19 @@ time:hover::after {
   font-size: 16px;
   z-index: 99;
 }
+
+.react-select__single-value,
+.react-select__option {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.react-select__value-container {
+  height: auto !important;
+}
+
+.react-select__control {
+  min-height: 38px !important;
+  height: auto !important;
+}

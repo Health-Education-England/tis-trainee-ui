@@ -44,12 +44,12 @@ import {
   saveLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
-  updatedLtft,
   updateLtft
 } from "../redux/slices/ltftSlice";
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
-import { LtftObj } from "../models/LtftTypes";
+import { LtftObjNew } from "../models/LtftTypes";
+import { setPmDetailsInLtftFormData } from "./ltftUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -133,7 +133,7 @@ export function continueToConfirm(formName: FormName, formData: FormData) {
     store.dispatch(updatedFormB(formData as FormRPartB));
     store.dispatch(updatedCanEditB(true));
   } else if (formName === "ltft") {
-    store.dispatch(updatedLtft(formData as LtftObj));
+    setPmDetailsInLtftFormData(formData as LtftObjNew);
     store.dispatch(updatedCanEditLtft(true));
   }
   history.push(redirectPath);
@@ -391,7 +391,7 @@ async function updateForm(
   } else if (formName === "ltft") {
     await store.dispatch(
       updateLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -419,15 +419,16 @@ async function saveForm(
     await store.dispatch(
       saveFormB({ formData: formData as FormRPartB, isAutoSave, isSubmit })
     );
-  } else if (formName === "ltft")
+  } else if (formName === "ltft") {
     await store.dispatch(
       saveLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
       })
     );
+  }
 }
 
 export const getDraftFormId = (
@@ -452,7 +453,7 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export type FormDataType = FormRPartA | FormRPartB | LtftObj;
+export type FormDataType = FormRPartA | FormRPartB | LtftObjNew;
 
 export async function saveDraftForm(
   jsonForm: Form,

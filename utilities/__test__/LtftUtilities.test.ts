@@ -8,9 +8,11 @@ import { mockPersonalDetails } from "../../mock-data/trainee-profile";
 import {
   mapLtftDtoToObj,
   mapLtftObjToDto,
-  populateLtftDraft
+  populateLtftDraftNew
 } from "../ltftUtilities";
 import { StatusInfo } from "../../redux/slices/ltftSlice";
+
+// TODO: fix tests
 const otherDiscussions = [
   {
     name: "My other discussion 1",
@@ -50,7 +52,7 @@ describe("populateLtftDraft", () => {
   const personalDetails = mockPersonalDetails;
   const traineeTisId = "4";
   it("should populate the ltft draft correctly", () => {
-    const ltftDraft = populateLtftDraft(
+    const ltftDraft = populateLtftDraftNew(
       cctSnapshot,
       personalDetails,
       traineeTisId

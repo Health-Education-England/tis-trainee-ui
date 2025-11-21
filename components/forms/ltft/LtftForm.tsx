@@ -1,4 +1,8 @@
-import { LtftObj } from "../../../models/LtftTypes";
+import { LtftObj, LtftObjNew } from "../../../models/LtftTypes";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice";
+import { makeProgrammeOptions } from "../../../utilities/CctUtilities";
+import { isPastIt } from "../../../utilities/DateUtilities";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
@@ -7,8 +11,12 @@ import ltftJson from "./ltft.json";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
-export function LtftForm() {
-  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
+type LtftFormProps = {
+  pmOptions: { value: string; label: string }[];
+};
+
+export function LtftForm({ pmOptions }: LtftFormProps) {
+  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObjNew;
   const formJson = ltftJson as Form;
   const initialPageFields = formJson.pages[0].sections.flatMap(
     section => section.fields
@@ -48,17 +56,17 @@ export function LtftForm() {
     { value: "Trust Administrator", label: "Trust Administrator" }
   ];
 
-  return formData?.declarations?.discussedWithTpd ? (
+  return formData ? (
     <div>
-      <h2>Main application form</h2>
-      <LtftStatusDetails {...formData}></LtftStatusDetails>
+      <h2>Application form</h2>
+      {/* <LtftStatusDetails {...formData}></LtftStatusDetails> */}
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}
         jsonForm={ltftJson as Form}
       >
         <FormBuilder
-          options={{ yesNo, ltftReasons, ltftRoles }}
+          options={{ yesNo, ltftReasons, ltftRoles, pmOptions }}
           validationSchema={ltftValidationSchema}
         />
       </FormProvider>

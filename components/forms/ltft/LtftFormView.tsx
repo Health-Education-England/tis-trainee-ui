@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useParams } from "react-router-dom";
 import {
   loadSavedLtft,
+  updatedLtft,
   updatedLtftSaveStatus
 } from "../../../redux/slices/ltftSlice";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
@@ -11,15 +12,14 @@ import FormViewBuilder from "../form-builder/FormViewBuilder";
 import { useEffect, useState } from "react";
 import {
   Button,
+  Card,
   Col,
   Container,
   Row,
   WarningCallout
 } from "nhsuk-react-components";
 import Declarations from "../Declarations";
-import { CctCalcSummaryDetails } from "../cct/CctCalcSummaryDetails";
 import { StartOverButton } from "../StartOverButton";
-import { CctCalculation } from "../../../redux/slices/cctSlice";
 import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import store from "../../../redux/store/store";
@@ -34,61 +34,86 @@ import ScrollToTop from "../../common/ScrollToTop";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
-import { LtftObj } from "../../../models/LtftTypes";
+import { LtftObj, LtftObjNew } from "../../../models/LtftTypes";
 import FormBackLink from "../../common/FormBackLink";
+import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice";
+import { isPastIt } from "../../../utilities/DateUtilities";
+import { findLinkedProgramme } from "../../../utilities/CctUtilities";
+import dayjs from "dayjs";
+
+//TODO rework this view
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const { currentAction, setAction, resetAction } = useActionState();
 
-  useEffect(() => {
-    if (id) {
-      dispatch(loadSavedLtft(id));
-    }
-  }, [id, dispatch]);
-
   const ltftStatus = useAppSelector(state => state.ltft.status);
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
-  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
+  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObjNew;
   const canEditStatus = useAppSelector(state => state.ltft.canEdit);
-  const cctSnapshot: CctCalculation = {
-    cctDate: formData?.change?.cctDate,
-    programmeMembership: formData?.programmeMembership,
-    changes: [formData?.change]
-  };
+  // const cctSnapshot: CctCalculation = {
+  //   cctDate: formData?.change?.cctDate,
+  //   programmeMembership: formData?.programmeMembership,
+  //   changes: [formData?.change]
+  // };
   const formJson = ltftJson as FormType;
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const ltftFormStatus = formData?.status?.current?.state;
 
-  const handleSubClick = async (values: { name: string }) => {
-    setAction("Submit", "", formJson.name);
-    const updatedDeclarations = {
-      ...formData.declarations,
-      informationIsCorrect: true,
-      notGuaranteed: true
-    };
-    store.dispatch(updatedLtftSaveStatus("idle"));
-    startSubmitting();
-    await saveDraftForm(
-      formJson,
-      {
-        ...formData,
-        name: values.name,
-        declarations: updatedDeclarations
-      } as LtftObj,
-      false,
-      false,
-      true,
-      false
-    );
-    stopSubmitting();
-    const newSaveStatus = store.getState().ltft.saveStatus;
-    if (newSaveStatus === "succeeded") {
-      setShowModal(true);
+  const progsArrNotPast = useAppSelector(
+    selectTraineeProfile
+  ).programmeMemberships.filter(prog => !isPastIt(prog.endDate));
+
+  useEffect(() => {
+    if (id) {
+      dispatch(loadSavedLtft(id));
     }
-  };
+    // some temp code to test the programme data
+    // TODO this should go when the user clicks to go to review their data
+    // maybe we need a check here too to make sure we haven't got out-of-date programme data
+    // else {
+    //   const linkedProgramme = findLinkedProgramme(
+    //     formData.pmId,
+    //     progsArrNotPast
+    //   );
+    //   if (linkedProgramme) {
+    //     console.log("linkedProgramme", linkedProgramme);
+    //     dispatch(
+    //       updatedLtft({ ...formData, pmName: linkedProgramme.programmeName })
+    //     );
+    //   }
+    // }
+  }, [id, dispatch]);
+
+  // const handleSubClick = async (values: { name: string }) => {
+  //   setAction("Submit", "", formJson.name);
+  //   const updatedDeclarations = {
+  //     ...formData.declarations,
+  //     informationIsCorrect: true,
+  //     notGuaranteed: true
+  //   };
+  //   store.dispatch(updatedLtftSaveStatus("idle"));
+  //   startSubmitting();
+  //   await saveDraftForm(
+  //     formJson,
+  //     {
+  //       ...formData,
+  //       name: values.name,
+  //       declarations: updatedDeclarations
+  //     } as LtftObj,
+  //     false,
+  //     false,
+  //     true,
+  //     false
+  //   );
+  //   stopSubmitting();
+  //   const newSaveStatus = store.getState().ltft.saveStatus;
+  //   if (newSaveStatus === "succeeded") {
+  //     setShowModal(true);
+  //   }
+  // };
 
   const handleModalFormClose = () => {
     setShowModal(false);
@@ -96,13 +121,13 @@ export const LtftFormView = () => {
     stopSubmitting();
   };
 
-  const handleModalFormSubmit = async () => {
-    startSubmitting();
-    await saveDraftForm(formJson, formData, false, true);
-    stopSubmitting();
-    setShowModal(false);
-    resetAction();
-  };
+  // const handleModalFormSubmit = async () => {
+  //   startSubmitting();
+  //   await saveDraftForm(formJson, formData, false, true);
+  //   stopSubmitting();
+  //   setShowModal(false);
+  //   resetAction();
+  // };
 
   if (ltftStatus === "loading") return <Loading />;
 
@@ -117,35 +142,67 @@ export const LtftFormView = () => {
   if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
-        <Button
-          data-cy="savePdfBtn"
-          disabled={!formData.id}
-          onClick={() => {
-            downloadLtftPdf(formData.id ?? "");
-          }}
-        >
-          Save a copy as a PDF
-        </Button>
-        {!formData.id ? (
-          <>
-            &nbsp;
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+          <Button
+            data-cy="savePdfBtn"
+            disabled={!formData.id}
+            onClick={() => {
+              downloadLtftPdf(formData.id ?? "");
+            }}
+          >
+            Save a copy as a PDF
+          </Button>
+          {!formData.id && (
             <InfoTooltip
               tooltipId={"pdfButtonInfo"}
               content="Please save before downloading the PDF."
             />
-          </>
-        ) : null}
-        <LtftStatusDetails {...formData}></LtftStatusDetails>
-        <CctCalcSummaryDetails
+          )}
+        </div>
+        {/* <LtftStatusDetails {...formData}></LtftStatusDetails> */}
+        {/* <CctCalcSummaryDetails
           viewedCalc={cctSnapshot}
           ltftFormStatus={ltftFormStatus}
-        />
+        /> */}
+        <h2>Review & submit your LTFT application</h2>
+
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
           canEdit={canEditStatus}
           formErrors={{}}
         />
+
+        <Card style={{ border: "4px #005eb8 solid" }}>
+          <Card.Content>
+            <Card.Heading>
+              Change to your completion date for {formData.pmName}
+            </Card.Heading>
+            <p>
+              {`Changing your 'full time' working hours percentage from ${
+                formData.wteBeforeChange
+              }% to ${formData.wte}% starting from ${dayjs(
+                formData.startDate
+              ).format("DD/MM/YYYY")} will mean a change
+                to your completion date.`}
+            </p>
+            <p>
+              {`As a rough estimate, your ${
+                formData.pmName
+              } programme completion date will change from ${dayjs(
+                formData.pmEndDate
+              ).format("DD/MM/YYYY")} to ${dayjs(formData.cctDate).format(
+                "DD/MM/YYYY"
+              )}.`}
+            </p>
+            <p>
+              Please note this new completion date is an estimate as it does not
+              take into account your full circumstances (e.g. Out of Programme,
+              Parental Leave).
+            </p>
+            <p>Your formal completion date will be agreed at ARCP.</p>
+          </Card.Content>
+        </Card>
         <WarningCallout>
           <WarningCallout.Label>Declarations</WarningCallout.Label>
 
@@ -157,7 +214,8 @@ export const LtftFormView = () => {
           {canEditStatus && (
             <Formik
               initialValues={{ name: formData.name ?? "" }}
-              onSubmit={handleSubClick}
+              // onSubmit={handleSubClick}
+              onSubmit={() => {}}
             >
               {({ values }) => {
                 return (
@@ -220,7 +278,8 @@ export const LtftFormView = () => {
           </Container>
         )}
         <ActionModal
-          onSubmit={handleModalFormSubmit}
+          // onSubmit={handleModalFormSubmit}
+          onSubmit={() => {}}
           isOpen={showModal}
           onClose={handleModalFormClose}
           cancelBtnText="Cancel"
@@ -245,7 +304,7 @@ function LtftViewWrapper({
         history={history}
         path="/ltft"
         dataCy="backLink-to-ltft-home"
-        text="Back to Changing hours (LTFT) Home"
+        text="Back to LTFT Home"
       />
       {children}
     </>

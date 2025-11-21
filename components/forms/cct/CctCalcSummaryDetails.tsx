@@ -16,7 +16,6 @@ import {
   getStartDateValidationSchema,
   getWteValidationSchema
 } from "./cctCalcValidationSchema";
-import { recalculateCctDate } from "../../../utilities/ltftUtilities";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../TextInputField";
@@ -64,12 +63,6 @@ export function CctCalcSummaryDetails({
     values: { changeDate: string; wte: string },
     { setSubmitting }: FormikHelpers<{ changeDate: string; wte: string }>
   ) => {
-    recalculateCctDate(
-      programmeMembership.endDate,
-      programmeMembership.wte as number,
-      values.changeDate,
-      values.wte
-    );
     setDisplayValues({
       changeDate: dayjs(values.changeDate).format("DD/MM/YYYY"),
       wte: `${values.wte}%`

@@ -82,6 +82,7 @@ export const fetchUserSession = createAsyncThunk(
   "user/fetchUserSession",
   async () => {
     const session = await fetchAuthSession();
+    console.log("User session fetched:", session);
     return session.tokens?.idToken?.payload;
   }
 );

@@ -10,7 +10,7 @@ import {
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
-import { LtftObj } from "../../../models/LtftTypes";
+import { LtftObj, LtftObjNew } from "../../../models/LtftTypes";
 
 type FormContextType = {
   formData: FormData;
@@ -83,7 +83,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
   useFormAutosave(
     jsonForm,
-    formData as FormRPartA | FormRPartB | LtftObj,
+    formData as FormRPartA | FormRPartB | LtftObjNew,
     setIsAutosaving
   );
 
