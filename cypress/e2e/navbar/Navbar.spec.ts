@@ -27,7 +27,6 @@ describe("Desktop/ tablet header", () => {
         .should("exist")
         .contains(/Sign out/);
       if (size === mobileView) {
-        cy.get(".nhsuk-header__menu-toggle").should("exist").click();
         cy.get('[data-cy="signOutBtn"]');
       } else {
         cy.get(

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { OnboardingTrackerActions } from "./OnboardingTrackerActions";
@@ -39,14 +39,15 @@ export function OnboardingTracker() {
         text="Back to Programmes list"
       />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           data-cy="onboardingTrackerHeading"
           tabIndex={0}
           style={{ color: "#005eb8" }}
+          size="xl"
         >
           {`Onboarding Tracker for ${panel?.programmeName}`}
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <OnboardingTrackerActions panel={panel} />
     </>

@@ -42,12 +42,12 @@ export function ActionModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText={cancelBtnText}>
       <WarningCallout data-cy="actionModalWarning">
-        <WarningCallout.Label
+        <WarningCallout.Heading
           visuallyHiddenText={false}
           data-cy={`warningLabel-${warningLabel}`}
         >
           {warningLabel}
-        </WarningCallout.Label>
+        </WarningCallout.Heading>
         <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
         {additionalInfo && <p data-cy="additionalInfo">{additionalInfo}</p>}
       </WarningCallout>
@@ -78,7 +78,7 @@ export function ActionModal({
               </>
             )}
             <Button
-              type="submit"
+              as="button"
               disabled={isSubmitting || (hasReason && !values.reason)}
               data-cy={`submitBtn-${warningLabel}`}
             >

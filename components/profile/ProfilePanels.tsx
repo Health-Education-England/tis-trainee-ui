@@ -69,9 +69,9 @@ export function ProfilePanels({
           </Details.Summary>
           <Details.Text>
             <WarningCallout>
-              <WarningCallout.Label visuallyHiddenText={false}>
+              <WarningCallout.Heading visuallyHiddenText={false}>
                 Please note
-              </WarningCallout.Label>
+              </WarningCallout.Heading>
               <p data-cy="futureWarningText">{warningText}</p>
             </WarningCallout>
             <PanelsCreator

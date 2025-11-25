@@ -21,7 +21,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
   const [field, { error }, helpers] = useField(props);
   const FormElement = props.type === "radios" ? Radios : Checkboxes;
   const FormChildElement =
-    props.type === "radios" ? Radios.Radio : Checkboxes.Box;
+    props.type === "radios" ? Radios.Item : Checkboxes.Item;
   return (
     <div
       data-jest={props.name}
@@ -30,7 +30,9 @@ const MultiChoiceInputField: React.FC<Props> = props => {
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label htmlFor={props.id}>{props.label}</Label>
+      <Label htmlFor={props.id} size="m">
+        {props.label}
+      </Label>
 
       <FormElement
         name={props.name}
@@ -42,6 +44,9 @@ const MultiChoiceInputField: React.FC<Props> = props => {
       >
         {props?.items?.map((item, index) => (
           <FormChildElement
+            labelProps={""}
+            hint={""}
+            hintProps={""}
             key={item.value}
             value={item.value}
             id={item.id}

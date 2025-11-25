@@ -5,7 +5,8 @@ import {
   Details,
   Fieldset,
   Form,
-  Input,
+  Legend,
+  TextInput,
   WarningCallout
 } from "nhsuk-react-components";
 import { useEffect, useRef, useState } from "react";
@@ -100,15 +101,15 @@ const VerifyTotp = () => {
   return (
     <>
       <WarningCallout>
-        <WarningCallout.Label visuallyHiddenText={false}>
+        <WarningCallout.Heading visuallyHiddenText={false}>
           Remember
-        </WarningCallout.Label>
+        </WarningCallout.Heading>
         <p data-cy="threeMinReminderText">
           You have <strong>3 minutes</strong> to scan the QR code below using
           your Authenticator App on your phone before it expires.
         </p>
       </WarningCallout>
-      <Card feature data-cy="addTssTotpHeader">
+      <Card cardType="feature" data-cy="addTssTotpHeader">
         <Card.Content>
           <Card.Heading>
             Add &#39;NHS TIS-Self-Service&#39; to your Authenticator App
@@ -130,13 +131,15 @@ const VerifyTotp = () => {
               </ActionLink>
             </Details.Text>
           </Details>
-          <Card feature className={styles.panelBack}>
+          <Card cardType="feature" className={styles.panelBack}>
             <Card.Content>
               <Card.Heading>using your phone</Card.Heading>
-              <Fieldset.Legend size="m">
-                Open your Authenticator App, click &#39;add a new account&#39;
-                button then scan the QR Code below.
-              </Fieldset.Legend>
+              <Fieldset>
+                <Legend size="m">
+                  Open your Authenticator App, click &#39;add a new account&#39;
+                  button then scan the QR Code below.
+                </Legend>
+              </Fieldset>
               <div className={styles.qrTss}>
                 <RenderQRCodeContent
                   qrCode={qrCode}
@@ -158,9 +161,11 @@ const VerifyTotp = () => {
                         unable to see the QR code, you can enter the following
                         code instead.
                       </p>
-                      <Input
+                      <TextInput
                         data-cy="tssQrCodeStr"
-                        onFocus={event => event.target.select()}
+                        onFocus={(event: React.FocusEvent<HTMLInputElement>) =>
+                          event.target.select()
+                        }
                         defaultValue={totpStr}
                         label=""
                         readOnly

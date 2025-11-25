@@ -1,6 +1,6 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import PageTitle from "../../common/PageTitle";
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import ChooseMfa from "./ChooseMfa";
 import CreateTotp from "./totp/CreateTotp";
 import PageNotFound from "../../common/PageNotFound";
@@ -12,13 +12,14 @@ const MFA = () => {
     <>
       <PageTitle title="MFA" />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className={style.fieldLegHeader}
           data-cy="mfaHeading"
+          size="xl"
         >
           MFA (Multi-Factor Authentication) set-up
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <Switch>
         <Route exact path="/mfa/email" component={ConfirmEmail} />

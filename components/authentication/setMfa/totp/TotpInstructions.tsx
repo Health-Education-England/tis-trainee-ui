@@ -5,6 +5,7 @@ import {
   Container,
   Details,
   Fieldset,
+  Legend,
   Row
 } from "nhsuk-react-components";
 import MultiChoiceInputField from "../../../forms/MultiChoiceInputField";
@@ -12,7 +13,7 @@ import styles from "../../../authentication/Auth.module.scss";
 
 const TotpInstructions = () => {
   return (
-    <Card feature data-cy="installTotpPanel">
+    <Card cardType="feature" data-cy="installTotpPanel">
       <Card.Content>
         <Card.Heading>
           Installing the Microsoft Authenticator App on your phone
@@ -30,13 +31,19 @@ const TotpInstructions = () => {
             <p>You can use any other Authenticator app if you prefer.</p>
           </Details.Text>
         </Details>
-        <Card feature data-cy="scanQrPanel" className={styles.panelBack}>
+        <Card
+          cardType="feature"
+          data-cy="scanQrPanel"
+          className={styles.panelBack}
+        >
           <Card.Content>
             <Card.Heading>Scan the QR Code with your phone</Card.Heading>
-            <Fieldset.Legend size="m" data-cy="scanQrHeader">
-              Using the camera on your phone, scan a QR Code below to download
-              the Microsoft Authenticator App.
-            </Fieldset.Legend>
+            <Fieldset>
+              <Legend size="m" data-cy="scanQrHeader">
+                Using the camera on your phone, scan a QR Code below to download
+                the Microsoft Authenticator App.
+              </Legend>
+            </Fieldset>
             <Container>
               <Row>
                 <Col width="one-half">

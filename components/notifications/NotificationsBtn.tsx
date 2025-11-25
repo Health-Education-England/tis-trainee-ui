@@ -15,20 +15,44 @@ export const NotificationsBtn = ({
     history.push("/notifications");
   };
   return (
-    <Button
-      type="button"
-      className="notification-btn"
+    <button
       data-cy="notificationBtn"
       data-tooltip-id="NotificationsCount"
       onClick={handleBtnClick}
+      className="notification-btn"
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer"
+      }}
     >
       <span>
-        <FontAwesomeIcon icon={faBell} size="xs" color="white" />
-        <Tooltip id="NotificationsCount" content="In-app notifications" />
+        <FontAwesomeIcon icon={faBell} size="xl" color="white" style={{}} />
+        <Tooltip
+          id="NotificationsCount"
+          content="In-app notifications"
+          positionStrategy="fixed"
+        />
         {unreadNotificationCount > 0 && (
-          <span className="notification-badge">{unreadNotificationCount}</span>
+          <span
+            style={{
+              position: "relative",
+              top: "-6px",
+              right: "6px",
+              backgroundColor: "#FF5733",
+              color: "white",
+              borderRadius: "50%",
+              padding: "2px 6px",
+              fontSize: "12px",
+              fontWeight: "bold",
+              minWidth: "20px",
+              textAlign: "center"
+            }}
+          >
+            {unreadNotificationCount}
+          </span>
         )}
       </span>
-    </Button>
+    </button>
   );
 };

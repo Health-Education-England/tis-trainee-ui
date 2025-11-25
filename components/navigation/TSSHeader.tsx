@@ -1,13 +1,14 @@
 import { Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
 import { SignOutBtn } from "../common/SignOutBtn";
-import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
+import { useEffect, type ComponentProps } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
-import { useEffect } from "react";
 import { getNotificationCount } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
-import { UserFeaturesType } from "../../models/FeatureFlags";
 import { EmailsBtn } from "../notifications/EmailsBtn";
+import { UserFeaturesType } from "../../models/FeatureFlags";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const TSSHeader = () => {
   const dispatch = useAppDispatch();
@@ -19,6 +20,10 @@ const TSSHeader = () => {
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const userFeatures = useAppSelector(state => state.user.features);
+  const traineeProfileDetails = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.personalDetails
+  );
+  const concatName = `${traineeProfileDetails.forenames} ${traineeProfileDetails.surname}`;
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
@@ -26,77 +31,45 @@ const TSSHeader = () => {
     }
   }, [notificationsStatus, dispatch]);
 
-  const notificationBtns = userFeatures.notifications.enabled && (
-    <>
-      <EmailsBtn data-cy="emailBtnHDR" />
-      <NotificationsBtn
-        unreadNotificationCount={unreadNotificationCount}
-        data-cy="notificationBtnHDR"
-      />
-    </>
-  );
-
   return (
-    <Header>
-      <Header.Container>
-        <div className="nhsuk-header__logo" data-cy="headerLogo">
-          <a
-            href="/"
-            aria-label="TSS home page"
-            className="nhsuk-header__navigation-link header-logo-link"
-          >
-            <NHSEnglandLogoWhite />
-          </a>
-        </div>
-        <Header.Content>
-          <div className="mobile-header">
-            {notificationBtns}
-            <Header.MenuToggle data-cy="menuToggleBtn" />
-          </div>
-          <div className="top-nav-container">
-            {notificationBtns}
-            <div className="top-nav-container">
-              <NavLink
-                className="nhsuk-header__navigation-link"
-                data-cy="topNavSupport"
-                to="/support"
-              >
-                Support
-              </NavLink>
-              <NavLink
-                className="nhsuk-header__navigation-link"
-                data-cy="topNavMfaSetup"
-                to="/mfa"
-              >
-                MFA set-up
-              </NavLink>
-              <SignOutBtn />
-            </div>
-          </div>
-        </Header.Content>
-      </Header.Container>
-      <div className="nhsuk-width-container">
-        <span className="tss-name" data-cy="tssName">
-          TIS Self-Service{" "}
-          <a
-            className="tss-beta-link"
-            href="https://architecture.digital.nhs.uk/information/glossary"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i>(Private Beta)</i>
-          </a>
-        </span>
-      </div>
-      <Header.Nav style={{ maxWidth: "100%" }}>
-        {makeTSSHeaderLinks(preferredMfa, userFeatures)}
-        <div className="nhsuk-header__navigation-item mobile-only-nav">
+    <Header
+      service={{
+        href: "/",
+        text: "TIS Self-Service"
+      }}
+    >
+      <Header.Account>
+        {userFeatures.notifications.enabled && (
+          <>
+            <Header.AccountItem>
+              <NotificationsBtn
+                unreadNotificationCount={unreadNotificationCount}
+                data-cy="notificationBtnHDR"
+              />
+            </Header.AccountItem>
+            <Header.AccountItem>
+              <EmailsBtn data-cy="emailBtnHDR" />
+            </Header.AccountItem>
+          </>
+        )}
+
+        <Header.AccountItem href="/profile">
+          <span style={{ marginTop: "0.25rem" }}>
+            <FontAwesomeIcon icon={faUser} style={{ marginRight: "0.5rem" }} />
+            {concatName}
+          </span>
+        </Header.AccountItem>
+        <Header.AccountItem>
           <SignOutBtn />
-        </div>
-      </Header.Nav>
+        </Header.AccountItem>
+      </Header.Account>
+      <Header.Navigation>
+        {makeTSSHeaderLinks(preferredMfa, userFeatures)}
+      </Header.Navigation>
     </Header>
   );
 };
+
 export default TSSHeader;
 
 function makeTSSHeaderLinks(

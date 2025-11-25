@@ -93,9 +93,9 @@ export function CctCalcCreate() {
             CCT Calculator - Changing hours (LTFT)
           </Card.Heading>
           <WarningCallout data-cy="cct-calc-warning">
-            <WarningCallout.Label visuallyHiddenText={false}>
+            <WarningCallout.Heading visuallyHiddenText={false}>
               Please note
-            </WarningCallout.Label>
+            </WarningCallout.Heading>
             <p>
               This calculator is designed to show you the effect a change of
               working hours (e.g. going Less Than Full Time) would have on your
@@ -152,7 +152,7 @@ export function CctCalcCreate() {
                     <Row>
                       <Col width="two-thirds">
                         <Button
-                          type="button"
+                          as="button"
                           reverse
                           onClick={() => setShowProgModal(true)}
                           data-cy="show-prog-modal-btn"

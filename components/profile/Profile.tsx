@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Fieldset, SummaryList } from "nhsuk-react-components";
+import { Fieldset, Legend, SummaryList } from "nhsuk-react-components";
 import { Button } from "@aws-amplify/ui-react";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
@@ -138,13 +138,14 @@ const Profile = () => {
       <PageTitle title="Profile" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className={style.fieldLegHeader}
           data-cy="profileHeading"
+          size="xl"
         >
           Profile
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <DataSourceMsg />
       <SummaryList>

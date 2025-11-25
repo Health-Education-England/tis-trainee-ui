@@ -1,5 +1,6 @@
-@import "~nhsuk-frontend/packages/nhsuk";
-@import "~nhsuk-frontend/packages/core/all";
+@import "~nhsuk-frontend/dist/nhsuk";
+
+@import "~nhsuk-frontend/dist/nhsuk/core/all";
 @import "react-phone-number-input/style.css";
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
@@ -233,34 +234,8 @@ button:disabled {
   justify-content: flex-start;
 }
 
-.nhsuk-header__navigation-link {
-  transition: all 200ms ease-in-out;
-  &.active,
-  &:hover,
-  &:focus,
-  &:focus:visited,
-  &:active,
-  &:active:visited {
-    background-color: darken(#005eb8, 7%) !important;
-    color: #fff;
-  }
-}
-
 .header-logo-link {
   padding: 0 !important;
-}
-
-.nhsuk-header__menu-toggle {
-  &.closeMenu {
-    text-indent: -9999px;
-    line-height: 0; /* Collapse the original line */
-    &::after {
-      content: "Hide";
-      text-indent: 0;
-      display: block;
-      line-height: 24px; /* New content takes up original line height */
-    }
-  }
 }
 
 .hide-label {
@@ -605,18 +580,19 @@ ol[type="a"] {
 }
 
 .sign-out-btn {
-  margin: 0 0 0 1rem;
-  padding: 0 1rem;
-  box-shadow: 0 1px 0 #00401e;
+  margin: 0px;
+  padding: 0 4px;
+  // box-shadow: 0 1px 0 #00401e;
+  // font-size: 0.8rem;
 }
 
-@media (max-width: 989px) {
-  .sign-out-btn {
-    margin: 1rem 0 1rem 1rem;
-    color: white;
-    padding: 0.75rem 1rem;
-  }
-}
+// @media (max-width: 989px) {
+//   .sign-out-btn {
+//     margin: 1rem 0 1rem 1rem;
+//     color: white;
+//     padding: 0.75rem 1rem;
+//   }
+// }
 
 .tss-name {
   color: white;
@@ -675,40 +651,9 @@ ol[type="a"] {
   padding-top: 0.5em;
 }
 
-// ---- Notifications Icon ----
+// ---- Notifications nav icons ----
 
-.notification-btn {
-  margin: 0.3rem 0 0 1rem;
-  position: "relative";
-  padding: 0 1rem;
-  box-shadow: 0 1px 0 transparent;
-  background-color: transparent;
-  &:hover,
-  &:focus {
-    background-color: darken(#005eb8, 7%) !important;
-  }
-}
-
-.notification-btn:hover .notification-badge {
-  background-color: darken(#ed8b00, 7%);
-}
-
-.notification-badge {
-  position: absolute;
-  bottom: 45%;
-  left: 50%;
-  background-color: #ed8b00;
-  color: white;
-  min-height: 30%;
-  min-width: 30%;
-  border-radius: 16px;
-  padding: 2% 10%;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+// Notifications table
 .notification-type-btn {
   margin: 0.3rem 1rem 1rem 0;
   padding: 0 1rem;

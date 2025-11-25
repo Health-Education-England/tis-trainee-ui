@@ -1,4 +1,4 @@
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import { Route, Switch } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
 import { LtftHome } from "./LtftHome";
@@ -9,13 +9,14 @@ export function Ltft() {
   return (
     <>
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           data-cy="ltftHeading"
           style={{ color: "#005eb8" }}
+          size="xl"
         >
           Changing hours (LTFT)
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <Switch>
         <Route exact path="/ltft" render={() => <LtftHome />} />

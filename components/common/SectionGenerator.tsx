@@ -1,4 +1,4 @@
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import React, { FunctionComponent } from "react";
 import ScrollTo from "../../components/forms/ScrollTo";
 import Loading from "./Loading";
@@ -29,9 +29,9 @@ const SectionGenerator = <U,>({
       <ScrollTo />
       <FormBackLink history={history} path={path} text="Start over" />
       <main>
-        <Fieldset.Legend size="l">
-          {sectionsArr[section - 1].title}
-        </Fieldset.Legend>
+        <Fieldset>
+          <Legend size="l">{sectionsArr[section - 1].title}</Legend>
+        </Fieldset>
         <div className="form-wrapper">
           <section>
             <div className="page-wrapper">

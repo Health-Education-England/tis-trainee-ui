@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import ScrollTo from "../../../ScrollTo";
 import PageTitle from "../../../../common/PageTitle";
-import { Fieldset, Label } from "nhsuk-react-components";
+import { Fieldset, Label, Legend } from "nhsuk-react-components";
 import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
@@ -75,13 +75,14 @@ export default function FormB() {
       <PageTitle title="Form R Part-B" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className="fieldset-legend__header"
           data-cy="formRBHeading"
+          size="xl"
         >
           Form R (Part B)
-        </Fieldset.Legend>
+        </Legend>
         <Label data-cy="formrbLabel" size="s">
           Trainee registration for Postgraduate Speciality Training
         </Label>

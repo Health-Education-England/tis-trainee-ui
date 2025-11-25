@@ -1,4 +1,4 @@
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import style from "../../Common.module.scss";
 import { Route, Switch } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
@@ -10,13 +10,14 @@ export function Cct() {
   return (
     <>
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className={style.fieldLegHeader}
           data-cy="cct-header"
+          size="xl"
         >
           Certificate of Completion of Training (CCT)
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <Switch>
         <Route exact path="/cct/create" component={CctCalcCreate} />

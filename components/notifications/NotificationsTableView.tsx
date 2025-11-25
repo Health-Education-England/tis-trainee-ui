@@ -145,7 +145,7 @@ function NotificationTypeButton({
 
   return (
     <Button
-      type="button"
+      as="button"
       className={`notification-type-btn ${isActive ? "active-type-btn" : ""}`}
       data-cy={dataCy}
       onClick={() => switchNotification(type)}

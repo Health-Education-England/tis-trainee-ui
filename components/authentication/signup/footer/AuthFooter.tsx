@@ -1,28 +1,17 @@
-import { Flex, Text } from "@aws-amplify/ui-react";
-import dayjs from "dayjs";
-import styles from "../../Auth.module.scss";
-
-const footerLinks = [
-  { name: "About", href: "https://tis-support.hee.nhs.uk/about-tis/" },
-  {
-    name: "Privacy & Cookies",
-    href: "https://www.hee.nhs.uk/about/privacy-notice"
-  }
-];
+import { Footer } from "nhsuk-react-components";
 
 export const AuthFooter = (): JSX.Element => {
   return (
-    <Flex className={styles.authFooterLinks}>
-      {footerLinks.map(link => (
-        <Text key={link.name}>
-          <a href={link.href} target="_blank" rel="noopener noreferrer">
-            {link.name}
-          </a>
-        </Text>
-      ))}
-      <Text className={styles.authFooterText} data-cy="footerCopy">
-        &copy; NHS England {dayjs().year()}
-      </Text>
-    </Flex>
+    <Footer>
+      <Footer.Meta>
+        <Footer.ListItem href="https://tis-support.hee.nhs.uk/about-tis/">
+          About
+        </Footer.ListItem>
+        <Footer.ListItem href="https://www.hee.nhs.uk/about/privacy-notice">
+          Privacy & Cookies
+        </Footer.ListItem>
+        <Footer.Copyright />
+      </Footer.Meta>
+    </Footer>
   );
 };

@@ -23,9 +23,7 @@ export function CctHome() {
   return (
     <>
       <WarningCallout data-cy="cct-home-warning">
-        <WarningCallout.Label visuallyHiddenText={false}>
-          Important
-        </WarningCallout.Label>
+        <WarningCallout.Heading>Important</WarningCallout.Heading>
         <p>
           If your programme is not listed or any of the details are incorrect,
           please{" "}
@@ -44,7 +42,7 @@ export function CctHome() {
       </p>
       <CctSavedDrafts />
       <Button
-        type="button"
+        as="button"
         onClick={() => {
           dispatch(resetCctCalc());
           history.push("/cct/create");

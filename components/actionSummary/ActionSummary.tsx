@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Button, Card, Fieldset, Table } from "nhsuk-react-components";
+import { Button, Card, Fieldset, Legend, Table } from "nhsuk-react-components";
 import { useAppDispatch } from "../../redux/hooks/hooks";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,21 +32,23 @@ export default function ActionSummary() {
       <Fieldset>
         <div className="nhsuk-grid-row">
           <div className="nhsuk-grid-column-two-thirds">
-            <Fieldset.Legend
+            <Legend
               isPageHeading
               className={style.fieldLegHeader}
               data-cy="actionSummaryHeading"
+              size="xl"
             >
               Action Summary
-            </Fieldset.Legend>
+            </Legend>
           </div>
           <div
             className="nhsuk-grid-column-one-third"
             style={{ textAlign: "right" }}
           >
             <Button
-              onClick={handleRefresh}
+              as="button"
               secondary
+              onClick={handleRefresh}
               data-cy="refreshActionsButton"
             >
               <FontAwesomeIcon icon={faSyncAlt} /> Refresh data

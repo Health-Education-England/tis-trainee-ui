@@ -1,4 +1,4 @@
-import { ActionLink, Card, Fieldset } from "nhsuk-react-components";
+import { ActionLink, Card, Fieldset, Legend } from "nhsuk-react-components";
 import PageTitle from "../common/PageTitle";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
@@ -22,26 +22,31 @@ const Support = () => {
       <PageTitle title="Support" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className={style.fieldLegHeader}
           data-cy="supportHeading"
+          size="xl"
         >
           Support
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
-      <Card feature data-cy="supportFaqs">
+      <Card cardType="feature" data-cy="supportFaqs">
         <Card.Content>
           <Card.Heading data-cy="supportFaqsHeading">FAQ&apos;s</Card.Heading>
-          <Fieldset.Legend
-            data-cy="supportFaqsLegend"
-            size="m"
-            className="fieldset-legend__header"
-          >
-            Please read our FAQ&apos;s to see if your query can be answered
-            there.
-            <p>Click the link below to view FAQ&apos;s (opens a new window)</p>
-          </Fieldset.Legend>
+          <Fieldset>
+            <Legend
+              data-cy="supportFaqsLegend"
+              size="m"
+              className="fieldset-legend__header"
+            >
+              Please read our FAQ&apos;s to see if your query can be answered
+              there.
+              <p>
+                Click the link below to view FAQ&apos;s (opens a new window)
+              </p>
+            </Legend>
+          </Fieldset>
           <ActionLink
             data-cy="supportCreateAccFaqsLink"
             target="_blank"
@@ -76,39 +81,43 @@ const Support = () => {
           </ActionLink>
         </Card.Content>
       </Card>
-      <Card feature data-cy="loSupportLabel">
+      <Card cardType="feature" data-cy="loSupportLabel">
         <Card.Content>
           <Card.Heading data-cy="loSupportHeading">
             Local Office support
           </Card.Heading>
-          <Fieldset.Legend
-            data-cy="loSupportLegend"
-            size="m"
-            className="fieldset-legend__header"
-          >
-            Form R process & data quality issues
-            <p data-cy="loSupportDesc">
-              (e.g. Editing a submitted form, incorrect data.)
-            </p>
-          </Fieldset.Legend>
+          <Fieldset>
+            <Legend
+              data-cy="loSupportLegend"
+              size="m"
+              className="fieldset-legend__header"
+            >
+              Form R process & data quality issues
+              <p data-cy="loSupportDesc">
+                (e.g. Editing a submitted form, incorrect data.)
+              </p>
+            </Legend>
+          </Fieldset>
           <LoSupport emailIds={emailIds} userAgentData={userAgentData} />
         </Card.Content>
       </Card>
-      <Card feature data-cy="techSupportLabel">
+      <Card cardType="feature" data-cy="techSupportLabel">
         <Card.Content>
           <Card.Heading data-cy="techSupportHeading">
             Technical support
           </Card.Heading>
-          <Fieldset.Legend
-            data-cy="techSupportLegend"
-            size="m"
-            className="fieldset-legend__header"
-          >
-            App-related technical issues
-            <p data-cy="techSupportDesc">
-              (e.g. Error messages, Form R not saving.)
-            </p>
-          </Fieldset.Legend>
+          <Fieldset>
+            <Legend
+              data-cy="techSupportLegend"
+              size="m"
+              className="fieldset-legend__header"
+            >
+              App-related technical issues
+              <p data-cy="techSupportDesc">
+                (e.g. Error messages, Form R not saving.)
+              </p>
+            </Legend>
+          </Fieldset>
           <TechSupport emailIds={emailIds} userAgentData={userAgentData} />
         </Card.Content>
       </Card>

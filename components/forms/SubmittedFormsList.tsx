@@ -1,4 +1,4 @@
-import { Card, Hint, WarningCallout } from "nhsuk-react-components";
+import { Card, HintText, WarningCallout } from "nhsuk-react-components";
 import { IFormR } from "../../models/IFormR";
 import {
   DateUtilities,
@@ -200,15 +200,13 @@ const SubmittedFormsList = ({
     <>
       {formRList.length ? (
         <>
-          <Hint data-cy="formsTrueHint">
+          <HintText data-cy="formsTrueHint">
             To save a PDF copy of your submitted form, please click on a form
             below and then click the <b>Save a copy as a PDF</b> button at the
             top of that page.
-          </Hint>
+          </HintText>
           <WarningCallout data-cy="formsListWarning">
-            <WarningCallout.Label visuallyHiddenText={false}>
-              Important
-            </WarningCallout.Label>
+            <WarningCallout.Heading>Important</WarningCallout.Heading>
             {isWithinRange(latestSubDate, 31, "d") && (
               <p>
                 {`Your previous form was submitted recently on ${DateUtilities.ConvertToLondonTime(
@@ -227,10 +225,10 @@ const SubmittedFormsList = ({
           </WarningCallout>
         </>
       ) : (
-        <Hint data-cy="formsFalseHint">
+        <HintText data-cy="formsFalseHint">
           After you submit your completed form, instructions on how to{" "}
           <b>save a copy as a PDF</b> will appear here.
-        </Hint>
+        </HintText>
       )}
       <Card>
         <Card.Content>

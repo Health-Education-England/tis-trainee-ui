@@ -1,7 +1,8 @@
-import { Button, Checkboxes, Details, Hint } from "nhsuk-react-components";
+import { Button, Checkboxes, Details, HintText } from "nhsuk-react-components";
 import { Modal } from "../../common/Modal";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Checkbox } from "@aws-amplify/ui-react";
 
 type LtftDeclarationsModalProps = {
   isOpen: boolean;
@@ -31,16 +32,32 @@ export const LtftDeclarationsModal = ({
         {`Before proceeding to the main Changing hours (LTFT) application...`}
       </h2>
       <div>
-        <Checkboxes>
-          <Checkboxes.Box
+        <Checkboxes
+          data-cy="ltft-declarations-checkboxes"
+          className="ltft-declarations-checkboxes"
+          onChange={handleCheckboxChange}
+        >
+          <Checkboxes.Item
+            labelProps={""}
+            hint="your pre-approver will..."
+            hintProps={""}
+            name="discussedWithTpd"
+            data-cy="discussedWithTpd"
+            checked={decValues.discussedWithTpd}
+          >
+            I have discussed the proposal outlined in the CCT calculation with
+            my pre-approver.
+          </Checkboxes.Item>
+
+          {/* <Checkboxes.Box
             name="discussedWithTpd"
             data-cy="discussedWithTpd"
             checked={decValues.discussedWithTpd}
             onChange={handleCheckboxChange}
           >
             {`I have discussed the proposal outlined in the CCT calculation with my pre-approver.`}
-          </Checkboxes.Box>
-          <Hint className="checkbox-hint">
+          </Checkboxes.Box> */}
+          {/* <HintText className="checkbox-hint">
             <p>
               Your pre-approver will usually be your Training Programme Director
               (TPD), but for GP programmes may be your GP Programme Manager. If
@@ -88,8 +105,8 @@ export const LtftDeclarationsModal = ({
                 </ul>
               </Details.Text>
             </Details>
-          </Hint>
-          <Checkboxes.Box
+          </HintText> */}
+          {/* <Checkboxes.Box
             name="understandStartover"
             data-cy="understandStartover"
             checked={decValues.understandStartover}
@@ -97,16 +114,16 @@ export const LtftDeclarationsModal = ({
           >
             {`I understand that if I proceed to the main Changing hours (LTFT)
             application, a copy of these CCT Calculation details will be used for this application.`}
-          </Checkboxes.Box>
-          <Hint className="checkbox-hint">
+          </Checkboxes.Box> */}
+          {/* <HintText className="checkbox-hint">
             {`If you do proceed but later want to use different CCT Calculation
             details for your LTFT application, you will be able to discard your
             current application. You can then restart the process by choosing CCT Calculation details for your new LTFT application from your list of saved calculations via the 'Apply for Changing hours
             (LTFT)' button.`}
-          </Hint>
+          </HintText> */}
         </Checkboxes>
         <Button
-          type="button"
+          as="button"
           disabled={
             !decValues.discussedWithTpd || !decValues.understandStartover
           }

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { useField, connect } from "formik";
-import { Input, Textarea } from "nhsuk-react-components";
+import { TextInput, Textarea } from "nhsuk-react-components";
 import InputFooterLabel from "./InputFooterLabel";
 import { handleKeyDown } from "../../utilities/FormBuilderUtilities";
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
 
 const TextInputField: FunctionComponent<Props> = props => {
   const [field, { error }] = useField(props);
-  const FormElement = props.rows ? Textarea : Input;
+  const FormElement = Textarea as React.ComponentType<any>;
   const setFieldWidth = (valueLength: number | undefined) => {
     return valueLength && valueLength < 20 ? 20 : Math.floor(width / 10) * 10;
   };
@@ -66,7 +66,7 @@ const TextInputField: FunctionComponent<Props> = props => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <FormElement
           onKeyDown={handleKeyDown}
-          onInput={e => handleNumberInput(isNumberField, e)}
+          onInput={(e: any) => handleNumberInput(isNumberField, e)}
           width={width ?? setFieldWidth(field.value?.length)}
           disabled={props.disabled}
           error={error ?? ""}
