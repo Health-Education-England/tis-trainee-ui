@@ -10,6 +10,7 @@ import { Phone } from "./form-fields/Phone";
 import { Checkboxes } from "./form-fields/Checkboxes";
 import { Radios } from "./form-fields/Radios";
 import { FormArrayPanelBuilder } from "./FormArrayPanelBuilder";
+import { useScrollToField } from "../../../utilities/hooks/useScrollToField";
 
 type FormFieldBuilderProps = {
   field: Field;
@@ -42,6 +43,8 @@ export function FormFieldBuilder({
     hint
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
+
+  useScrollToField(name);
 
   switch (type) {
     case "array":

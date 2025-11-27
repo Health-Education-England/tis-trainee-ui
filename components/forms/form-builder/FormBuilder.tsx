@@ -218,7 +218,11 @@ export default function FormBuilder({
                       />
                     );
                     return (
-                      <div key={field.name} className="nhsuk-form-group">
+                      <div
+                        key={field.name}
+                        id={field.name}
+                        className="nhsuk-form-group"
+                      >
                         {showFormField(field, formData) ? fieldComponent : null}
                       </div>
                     );
@@ -296,7 +300,7 @@ export default function FormBuilder({
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
-                {"Shortcut to Confirm"}
+                {"Return to Review & submit"}
               </Button>
             </Col>
           )}

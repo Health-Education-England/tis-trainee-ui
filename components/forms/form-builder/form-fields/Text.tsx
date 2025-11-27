@@ -41,11 +41,17 @@ export const Text: React.FC<TextProps> = ({
     useFormContext();
   return (
     <>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={name}
+        id={`${name}--label`}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <input
+        id={name}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
         onInput={e => handleNumberInput(isNumberField, e)}
