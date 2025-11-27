@@ -27,8 +27,20 @@ const changeStartDateValidation = yup
   .typeError("Start Date is not a valid date")
   .required("Start Date is required")
   .test(
-    "is-on-or-after-today-and-is-before-programme-end",
-    "Change must start today or later and cannot begin after the programme end date",
+    "is-on-or-after-today",
+    "Change cannot begin before today",
+    function (value) {
+      if (!value) {
+        return true;
+      }
+      const changeStartDate = dayjs(value).startOf("day");
+      const today = dayjs().startOf("day");
+      return changeStartDate.isSame(today) || changeStartDate.isAfter(today);
+    }
+  )
+  .test(
+    "is-before-programme-end",
+    "Change cannot begin after the programme end date",
     function (value) {
       const { pmId } = this.parent;
       if (!value || !pmId) {
@@ -40,19 +52,16 @@ const changeStartDateValidation = yup
           prog => !isPastIt(prog.endDate)
         );
       const linkedProgramme = findLinkedProgramme(pmId, progsArrNotPast);
-      const changeStartDate = dayjs(value).startOf("day");
-      const today = dayjs().startOf("day");
-      const onOrAfterToday =
-        changeStartDate.isSame(today) || changeStartDate.isAfter(today);
 
       if (linkedProgramme) {
+        const changeStartDate = dayjs(value).startOf("day");
         const programmeEndDate = dayjs(linkedProgramme.endDate).startOf("day");
-        const beforeProgrammeEnd =
+        return (
           changeStartDate.isBefore(programmeEndDate) ||
-          changeStartDate.isSame(programmeEndDate);
-        return onOrAfterToday && beforeProgrammeEnd;
+          changeStartDate.isSame(programmeEndDate)
+        );
       }
-      return onOrAfterToday;
+      return true;
     }
   );
 

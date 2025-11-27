@@ -40,6 +40,7 @@ import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice"
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
 import dayjs from "dayjs";
+import { SummaryList } from "nhsuk-react-components";
 
 //TODO rework this view
 
@@ -165,42 +166,60 @@ export const LtftFormView = () => {
           ltftFormStatus={ltftFormStatus}
         /> */}
         <h2>Review & submit your LTFT application</h2>
-
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
           canEdit={canEditStatus}
           formErrors={{}}
         />
-
         <Card style={{ border: "4px #005eb8 solid" }}>
           <Card.Content>
             <Card.Heading>
               Change to your completion date for {formData.pmName}
             </Card.Heading>
-            <p>
-              {`Changing your 'full time' working hours percentage from ${
-                formData.wteBeforeChange
-              }% to ${formData.wte}% starting from ${dayjs(
-                formData.startDate
-              ).format("DD/MM/YYYY")} will mean a change
-                to your completion date.`}
+            <SummaryList>
+              <SummaryList.Row>
+                <SummaryList.Key>Programme</SummaryList.Key>
+                <SummaryList.Value>{formData.pmName}</SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>
+                  Working hours percentage change
+                </SummaryList.Key>
+                <SummaryList.Value>
+                  {formData.wteBeforeChange}% → {formData.wte}%
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Start date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(formData.startDate).format("DD/MM/YYYY")}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Current completion date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme
+                  end date on TIS)
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>
+                  <strong>Estimated completion date after these changes</strong>
+                </SummaryList.Key>
+                <SummaryList.Value>
+                  <strong style={{ color: "#007f3b" }}>
+                    {dayjs(formData.cctDate).format("DD/MM/YYYY")}
+                  </strong>
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
+            <p style={{ marginTop: "1rem" }}>
+              <strong>Please note:</strong> This new completion date is an
+              estimate as it does not take into account your full circumstances
+              (e.g. Out of Programme, Parental Leave). Your formal completion
+              date will be agreed at ARCP.
             </p>
-            <p>
-              {`As a rough estimate, your ${
-                formData.pmName
-              } programme completion date will change from ${dayjs(
-                formData.pmEndDate
-              ).format("DD/MM/YYYY")} to ${dayjs(formData.cctDate).format(
-                "DD/MM/YYYY"
-              )}.`}
-            </p>
-            <p>
-              Please note this new completion date is an estimate as it does not
-              take into account your full circumstances (e.g. Out of Programme,
-              Parental Leave).
-            </p>
-            <p>Your formal completion date will be agreed at ARCP.</p>
           </Card.Content>
         </Card>
         <WarningCallout>
@@ -223,7 +242,7 @@ export const LtftFormView = () => {
                     <TextInputField
                       name="name"
                       id="ltftName"
-                      label="Please give your Changing hours (LTFT) application a name"
+                      label="Please give your Less Than Full Time application a name"
                       placeholder="Type name here..."
                       width="300px"
                       readOnly={!canEditStatus}

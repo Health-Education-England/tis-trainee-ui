@@ -94,7 +94,7 @@ type FormBuilderProps = {
   options: any;
   validationSchema: any;
 };
-export type MatcherName = "prevDateTest" | "postcodeTest";
+export type MatcherName = "prevDateTest" | "postcodeTest" | "ltft16WeeksTest";
 export type Warning = {
   matcher: MatcherName;
   msgText: string;
@@ -297,7 +297,7 @@ export default function FormBuilder({
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
-                {"Shortcut to Confirm"}
+                {"Shortcut back to Review & submit"}
               </Button>
             </Col>
           )}

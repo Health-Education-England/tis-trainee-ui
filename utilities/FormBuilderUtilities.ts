@@ -224,9 +224,17 @@ export function showFieldMatchWarning(
     if (inputDate.isBefore(testDate)) {
       return { fieldName, warningMsg };
     } else return null;
-  } else if (matcher === "postcodeTest")
+  } else if (matcher === "postcodeTest") {
     if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
       return { fieldName, warningMsg };
+  } else if (matcher === "ltft16WeeksTest") {
+    const today = dayjs().startOf("day");
+    const inputDate = dayjs(inputValue).startOf("day");
+    const weeks16FromToday = today.add(16, "week");
+    if (inputDate.isBefore(weeks16FromToday)) {
+      return { fieldName, warningMsg };
+    } else return null;
+  }
   return null;
 }
 

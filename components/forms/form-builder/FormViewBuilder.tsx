@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { Field, Form, FormData } from "./FormBuilder";
+import { Field, Form, FormData, FormName } from "./FormBuilder";
 import {
   Button,
   Card,
@@ -22,12 +22,20 @@ type VisibleFieldProps = {
   field: Field;
   formData: FormData;
   formErrors: { [key: string]: string };
+  pageIndex?: number;
+  jsonFormName?: string;
+  history?: any;
+  canEdit?: boolean;
 };
 
 function VisibleField({
   field,
   formData,
-  formErrors
+  formErrors,
+  pageIndex,
+  jsonFormName,
+  history,
+  canEdit
 }: Readonly<VisibleFieldProps>) {
   const isVisible = showFormField(field, formData);
   if (isVisible) {
@@ -40,6 +48,10 @@ function VisibleField({
               field={nestedField}
               formData={formData[field.name]}
               formErrors={formErrors}
+              pageIndex={pageIndex}
+              jsonFormName={jsonFormName}
+              history={history}
+              canEdit={canEdit}
             />
           ))}
         </Fragment>
@@ -56,6 +68,22 @@ function VisibleField({
         <SummaryList.Value data-cy={`${field.name}-value`}>
           {displayListValue(formData, field)}
         </SummaryList.Value>
+        <SummaryList.Actions>
+          <a
+            style={{ cursor: "pointer", textDecorationLine: "underline" }}
+            data-cy={`edit-${field.name}`}
+            onClick={() =>
+              handleEditSection(
+                pageIndex as number,
+                jsonFormName as FormName,
+                history
+              )
+            }
+          >
+            Change
+          </a>
+          <span className="nhsuk-u-visually-hidden">{`Change: ${field.label}`}</span>
+        </SummaryList.Actions>
       </SummaryList.Row>
     );
   }
@@ -79,22 +107,13 @@ export default function FormViewBuilder({
     <div>
       {jsonForm.pages.map((page, pageIndex) => (
         <div key={page.pageName}>
-          <Card feature>
+          <Card>
             <Card.Content>
-              <Card.Heading>{page.pageName}</Card.Heading>
+              <Card.Heading style={{ color: "#005eb8" }}>
+                {page.pageName}
+              </Card.Heading>
               {page.sections.map((section, _sectionIndex) => (
                 <div key={section.sectionHeader}>
-                  {canEdit && (
-                    <Button
-                      data-cy={`edit-${section.sectionHeader}`}
-                      secondary
-                      onClick={() =>
-                        handleEditSection(pageIndex, jsonForm.name, history)
-                      }
-                    >
-                      Edit Section
-                    </Button>
-                  )}
                   <SummaryList>
                     {section.fields.map(field => (
                       <VisibleField
@@ -102,6 +121,9 @@ export default function FormViewBuilder({
                         field={field}
                         formData={formData}
                         formErrors={formErrors}
+                        pageIndex={pageIndex}
+                        jsonFormName={jsonForm.name}
+                        history={history}
                       />
                     ))}
                   </SummaryList>
