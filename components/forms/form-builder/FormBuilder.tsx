@@ -20,7 +20,7 @@ import {
   saveDraftForm,
   FormDataType
 } from "../../../utilities/FormBuilderUtilities";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
@@ -119,6 +119,8 @@ export default function FormBuilder({
     isAutosaving
   } = useFormContext();
 
+  const location = useLocation<{ fieldName: string }>();
+
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
@@ -127,6 +129,15 @@ export default function FormBuilder({
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
+
+  useEffect(() => {
+    if (location.state?.fieldName) {
+      const fieldElement = document.getElementById(location.state.fieldName);
+      if (fieldElement) {
+        fieldElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [currentPage, location.state]);
 
   useEffect(() => {
     setCurrentPageFields(
@@ -218,7 +229,11 @@ export default function FormBuilder({
                       />
                     );
                     return (
-                      <div key={field.name} className="nhsuk-form-group">
+                      <div
+                        key={field.name}
+                        id={field.name}
+                        className="nhsuk-form-group"
+                      >
                         {showFormField(field, formData) ? fieldComponent : null}
                       </div>
                     );

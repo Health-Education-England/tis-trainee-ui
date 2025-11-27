@@ -142,7 +142,8 @@ export function continueToConfirm(formName: FormName, formData: FormData) {
 export function handleEditSection(
   pageNum: number,
   formName: FormName,
-  history: any
+  history: any,
+  fieldName: string
 ) {
   const redirectPath = chooseRedirectPath(formName, "/create");
   if (formName === "formA") {
@@ -152,7 +153,10 @@ export function handleEditSection(
   } else if (formName === "ltft") {
     store.dispatch(updatedEditPageNumberLtft(pageNum));
   }
-  history.push(redirectPath);
+  history.push({
+    pathname: redirectPath,
+    state: { fieldName }
+  });
 }
 
 export async function isFormDeleted(

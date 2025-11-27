@@ -76,7 +76,8 @@ function VisibleField({
               handleEditSection(
                 pageIndex as number,
                 jsonFormName as FormName,
-                history
+                history,
+                field.name
               )
             }
           >
