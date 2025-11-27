@@ -1,7 +1,6 @@
 import { Fragment } from "react";
-import { Field, Form, FormData } from "./FormBuilder";
+import { Field, Form, FormData, FormName } from "./FormBuilder";
 import {
-  Button,
   Card,
   Col,
   Container,
@@ -22,12 +21,20 @@ type VisibleFieldProps = {
   field: Field;
   formData: FormData;
   formErrors: { [key: string]: string };
+  pageIndex?: number;
+  jsonFormName?: string;
+  history?: any;
+  canEdit?: boolean;
 };
 
 function VisibleField({
   field,
   formData,
-  formErrors
+  formErrors,
+  pageIndex,
+  jsonFormName,
+  history,
+  canEdit
 }: Readonly<VisibleFieldProps>) {
   const isVisible = showFormField(field, formData);
   if (isVisible) {
@@ -40,6 +47,10 @@ function VisibleField({
               field={nestedField}
               formData={formData[field.name]}
               formErrors={formErrors}
+              pageIndex={pageIndex}
+              jsonFormName={jsonFormName}
+              history={history}
+              canEdit={canEdit}
             />
           ))}
         </Fragment>
@@ -54,8 +65,25 @@ function VisibleField({
           {field.label}
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
-          {displayListValue(formData[field.name], field.type)}
+          {displayListValue(formData, field)}
         </SummaryList.Value>
+        {canEdit && (
+          <SummaryList.Actions>
+            <a
+              data-cy={`edit-${field.name}`}
+              onClick={() =>
+                handleEditSection(
+                  pageIndex as number,
+                  jsonFormName as FormName,
+                  history
+                )
+              }
+            >
+              Change
+            </a>
+            <span className="nhsuk-u-visually-hidden">{`Change: ${field.label}`}</span>
+          </SummaryList.Actions>
+        )}
       </SummaryList.Row>
     );
   }
@@ -79,22 +107,13 @@ export default function FormViewBuilder({
     <div>
       {jsonForm.pages.map((page, pageIndex) => (
         <div key={page.pageName}>
-          <Card feature>
+          <Card>
             <Card.Content>
-              <Card.Heading>{page.pageName}</Card.Heading>
+              <Card.Heading style={{ color: "#005eb8" }}>
+                {page.pageName}
+              </Card.Heading>
               {page.sections.map((section, _sectionIndex) => (
                 <div key={section.sectionHeader}>
-                  {canEdit && (
-                    <Button
-                      data-cy={`edit-${section.sectionHeader}`}
-                      secondary
-                      onClick={() =>
-                        handleEditSection(pageIndex, jsonForm.name, history)
-                      }
-                    >
-                      Edit Section
-                    </Button>
-                  )}
                   <SummaryList>
                     {section.fields.map(field => (
                       <VisibleField
@@ -102,6 +121,10 @@ export default function FormViewBuilder({
                         field={field}
                         formData={formData}
                         formErrors={formErrors}
+                        pageIndex={pageIndex}
+                        jsonFormName={jsonForm.name}
+                        history={history}
+                        canEdit={canEdit}
                       />
                     ))}
                   </SummaryList>
@@ -115,7 +138,20 @@ export default function FormViewBuilder({
   );
 }
 
-function displayListValue(fieldVal: any, fieldType?: string) {
+function formatEntryValue(value: any, fieldType: string) {
+  if (value === null || value === "") return "Not provided";
+  if (fieldType === "date" || strDateRegex.test(value)) {
+    return DateUtilities.ToLocalDate(value);
+  }
+  if (typeof value === "boolean") {
+    return value ? "Yes" : "No";
+  }
+  return value?.toString();
+}
+
+function displayListValue(formData: FormData, field: Field) {
+  const fieldVal = formData[field.name];
+  const fieldType = field.type;
   if (fieldVal === null || fieldVal === "") return "Not provided";
   if (fieldType === "array") {
     if (fieldVal.length === 0) return "Not provided";
@@ -130,7 +166,9 @@ function displayListValue(fieldVal: any, fieldType?: string) {
                     <b>{formatFieldName(entry[0])}</b>
                   </Label>
                 </Col>
-                <Col width="one-half">{displayListValue(entry[1])}</Col>
+                <Col width="one-half">
+                  {formatEntryValue(entry[1], fieldType)}
+                </Col>
               </Row>
             </Container>
           ))}

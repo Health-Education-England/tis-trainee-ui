@@ -383,6 +383,14 @@ button:disabled {
   }
 }
 
+.nhsuk-summary-list > div > dd > a {
+  cursor: pointer;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 // print preview css for PDF
 @media print {
   header,

@@ -128,18 +128,7 @@ export const FormView = ({
       {!canEditStatus && (
         <FormSavePDF history={history} path={redirectPath} pmId="" />
       )}
-      {canEditStatus && (
-        <WarningCallout data-cy="warningConfirmation">
-          <WarningCallout.Label visuallyHiddenText={false}>
-            Confirmation
-          </WarningCallout.Label>
-          <p>
-            {`Please check the information entered below is correct, agree to the
-            Declarations at the bottom of the page, and then click 'Submit
-            Form'.`}
-          </p>
-        </WarningCallout>
-      )}
+      {canEditStatus && <h2>Review & submit</h2>}
       {!canEditStatus &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
