@@ -25,10 +25,18 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   dtoName
 }: CheckboxesProps) => {
   const { handleChange } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
     <div className="nhsuk-checkboxes">
       <div className="nhsuk-checkboxes__item">
         <input
+          id={inputId}
           className={`nhsuk-checkboxes__input ${
             fieldError ? "nhsuk-input--error" : ""
           }`}
@@ -48,6 +56,7 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
             );
           }}
           placeholder={placeholder}
+          aria-labelledby={labelId}
         />
         <label
           className="nhsuk-label nhsuk-checkboxes__label"

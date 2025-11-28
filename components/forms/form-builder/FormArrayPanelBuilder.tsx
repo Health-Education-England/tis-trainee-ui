@@ -47,7 +47,7 @@ export function FormArrayPanelBuilder({
   const formattedFieldName = formatFieldName(field.name);
 
   return (
-    <>
+    <div id={field.name} data-cy={`${field.name}-panel`}>
       {formData[field.name]?.map((_arrObj: any, index: number) => (
         <Card key={index} className="container">
           <Card.Content>
@@ -91,6 +91,6 @@ export function FormArrayPanelBuilder({
       >
         {`Add a ${formattedFieldName} panel`}
       </Button>
-    </>
+    </div>
   );
 }

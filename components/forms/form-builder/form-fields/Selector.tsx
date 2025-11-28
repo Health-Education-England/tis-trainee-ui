@@ -36,19 +36,27 @@ export const Selector = ({
   placeholder
 }: SelectorProps) => {
   const { handleChange } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
     <div data-cy={name}>
       <label
         className="nhsuk-label"
-        htmlFor={`${name}--input`}
-        id={`${name}--label`}
+        htmlFor={inputId}
+        id={labelId}
         data-cy={`${name}-label`}
       >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <Select
-        inputId={`${name}--input`}
+        inputId={inputId}
+        aria-labelledby={labelId}
         onKeyDown={handleKeyDown}
         options={options}
         onChange={selectedOption =>
