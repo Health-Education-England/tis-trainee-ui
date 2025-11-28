@@ -1,13 +1,5 @@
-import { Fragment } from "react";
 import { Field, Form, FormData, FormName } from "./FormBuilder";
-import {
-  Card,
-  Col,
-  Container,
-  Label,
-  Row,
-  SummaryList
-} from "nhsuk-react-components";
+import { Card, SummaryList } from "nhsuk-react-components";
 import {
   formatFieldName,
   handleEditSection,
@@ -40,7 +32,7 @@ function VisibleField({
   if (isVisible) {
     if (field.type === "dto") {
       return (
-        <Fragment>
+        <>
           {field.objectFields?.map(nestedField => (
             <VisibleField
               key={nestedField.name}
@@ -53,7 +45,24 @@ function VisibleField({
               canEdit={canEdit}
             />
           ))}
-        </Fragment>
+        </>
+      );
+    }
+    if (field.type === "array") {
+      return (
+        <SummaryList.Row key={field.name}>
+          <h3 className="nhsuk-heading-s nhsuk-u-margin-bottom-4">
+            {field.label}
+          </h3>
+          {displayListValue(
+            formData,
+            field,
+            canEdit as boolean,
+            pageIndex,
+            jsonFormName,
+            history
+          )}
+        </SummaryList.Row>
       );
     }
     return (
@@ -74,7 +83,7 @@ function VisibleField({
             history
           )}
         </SummaryList.Value>
-        {canEdit && field.type !== "array" && (
+        {canEdit && (
           <SummaryList.Actions>
             <a
               data-cy={`edit-${field.name}`}
@@ -171,18 +180,19 @@ function displayListValue(
   if (fieldType === "array") {
     if (fieldVal.length === 0) return "Not provided";
     return fieldVal.map((item: any, index: number) => (
-      <Card key={index} className="container-form-view">
-        <Card.Content>
-          {canEdit && (
+      <div key={index} className="nhsuk-u-padding-0 nhsuk-u-margin-bottom-5">
+        {canEdit && (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: "10px"
-              }}
+              className="nhsuk-u-text-align-left nhsuk-u-margin-bottom-2"
+              style={{ color: "#005eb8", fontSize: "20px" }}
             >
+              <strong>{index + 1}.</strong>
+            </div>
+            <div className="nhsuk-u-text-align-right nhsuk-u-margin-bottom-2">
               <a
                 href="#"
+                className="nhsuk-link--no-visited-state"
                 data-cy={`edit-${field.name}-${index}`}
                 onClick={e => {
                   e.preventDefault();
@@ -190,30 +200,29 @@ function displayListValue(
                     pageIndex as number,
                     jsonFormName as FormName,
                     history,
-                    `${field.name}-${index}`
+                    `${field.name}-${index}` // Target panel ID
                   );
                 }}
               >
                 Change
+                <span className="nhsuk-u-visually-hidden">
+                  {` item ${index + 1}`}
+                </span>
               </a>
             </div>
-          )}
-          {Object.entries(item).map((entry: any, index: number) => (
-            <Container key={index}>
-              <Row style={{ marginBottom: "0.5em" }}>
-                <Col width="one-half">
-                  <p className="nhsuk-body-m">
-                    <b>{formatFieldName(entry[0])}</b>
-                  </p>
-                </Col>
-                <Col width="one-half">
-                  {formatEntryValue(entry[1], fieldType)}
-                </Col>
-              </Row>
-            </Container>
+          </div>
+        )}
+        <SummaryList className="nhsuk-u-margin-bottom-0">
+          {Object.entries(item).map((entry: any, i: number) => (
+            <SummaryList.Row key={i}>
+              <SummaryList.Key>{formatFieldName(entry[0])}</SummaryList.Key>
+              <SummaryList.Value>
+                {formatEntryValue(entry[1], fieldType)}
+              </SummaryList.Value>
+            </SummaryList.Row>
           ))}
-        </Card.Content>
-      </Card>
+        </SummaryList>
+      </div>
     ));
   }
   if (fieldVal && (fieldType === "date" || strDateRegex.test(fieldVal))) {
