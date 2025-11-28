@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import ScrollTo from "../../../ScrollTo";
 import PageTitle from "../../../../common/PageTitle";
-import { Fieldset, Label } from "nhsuk-react-components";
+import { Fieldset } from "nhsuk-react-components";
 import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
@@ -49,7 +49,7 @@ export default function FormA() {
         >
           Form R (Part A)
         </Fieldset.Legend>
-        <p className="nhsuk-heading-s" data-cy="formraLabel">
+        <p className="nhsuk-heading-s" data-cy="formraSubheading">
           Trainee registration for Postgraduate Speciality Training
         </p>
         <p className="nhsuk-body-m" data-cy="formraInfo">
