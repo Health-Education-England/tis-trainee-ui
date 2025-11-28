@@ -163,9 +163,9 @@ function displayListValue(formData: FormData, field: Field) {
             <Container key={index}>
               <Row style={{ marginBottom: "0.5em" }}>
                 <Col width="one-half">
-                  <Label>
+                  <p className="nhsuk-body-m">
                     <b>{formatFieldName(entry[0])}</b>
-                  </Label>
+                  </p>
                 </Col>
                 <Col width="one-half">
                   {formatEntryValue(entry[1], fieldType)}

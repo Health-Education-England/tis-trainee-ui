@@ -30,12 +30,18 @@ export const TextArea: React.FC<TextAreaProps> = ({
 }: TextAreaProps) => {
   const { handleBlur, handleChange } = useFormContext();
   return (
-    <>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+    <div data-cy={name} id={name}>
+      <label
+        className="nhsuk-label"
+        htmlFor={`${name}--input`}
+        id={`${name}--label`}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <Textarea
+        id={`${name}--input`}
         data-cy={`${name}-text-area-input`}
         onKeyDown={handleKeyDown}
         name={name}
@@ -58,6 +64,6 @@ export const TextArea: React.FC<TextAreaProps> = ({
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </>
+    </div>
   );
 };

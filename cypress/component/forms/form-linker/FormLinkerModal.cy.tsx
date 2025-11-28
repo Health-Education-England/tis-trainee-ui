@@ -54,10 +54,7 @@ describe("FormLinkerModal", () => {
     cy.get('[data-cy="programmeMembershipId"]').should("not.exist");
     cy.get('[data-cy="isArcp"]')
       .should("exist")
-      .should(
-        "contain.text",
-        "Please select why you are submitting your Form R"
-      );
+      .should("contain.text", "Why are submitting your Form R?");
     cy.contains("ARCP/Annual Submission").should("exist");
     cy.contains("New Starter").should("exist");
   });

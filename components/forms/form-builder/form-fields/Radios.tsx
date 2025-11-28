@@ -26,13 +26,14 @@ export const Radios: React.FC<RadiosProps> = ({
 }: RadiosProps) => {
   const { handleChange } = useFormContext();
   return (
-    <div className="nhsuk-radios">
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+    <div className="nhsuk-radios" id={name} data-cy={`${name}-radios`}>
+      <p className="nhsuk-body-m" data-cy={`${name}-group-header`}>
         {label}
-      </label>
+      </p>
       {options?.map((option: any) => (
         <div className="nhsuk-radios__item" key={option.value}>
           <input
+            id={`${name}-${option.value}`}
             data-cy={`${name}-${option.label}-input`}
             onKeyDown={handleKeyDown}
             className="nhsuk-radios__input"
@@ -52,11 +53,14 @@ export const Radios: React.FC<RadiosProps> = ({
               )
             }
             placeholder={option.value}
-            aria-labelledby={`${option.value}--label`}
           />
-          <label className="nhsuk-label nhsuk-radios__label">
+          <label
+            className="nhsuk-label nhsuk-radios__label"
+            htmlFor={`${name}-${option.value}`}
+            id={`${name}-${option.value}--label`}
+          >
             {option.label}
-          </label>
+          </label>{" "}
         </div>
       ))}
       {fieldError && (

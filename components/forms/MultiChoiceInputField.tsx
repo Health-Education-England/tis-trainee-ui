@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, FieldHelperProps, FieldInputProps, useField } from "formik";
-import { Checkboxes, Radios, Label } from "nhsuk-react-components";
+import { Checkboxes, Radios } from "nhsuk-react-components";
 import InputFooterLabel from "./InputFooterLabel";
 
 interface Props {
@@ -30,7 +30,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label htmlFor={props.id}>{props.label}</Label>
+      <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">{props.label}</p>
 
       <FormElement
         name={props.name}

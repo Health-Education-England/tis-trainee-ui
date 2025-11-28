@@ -38,11 +38,17 @@ export const Selector = ({
   const { handleChange } = useFormContext();
   return (
     <div data-cy={name}>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={`${name}--input`}
+        id={`${name}--label`}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <Select
+        inputId={`${name}--input`}
         onKeyDown={handleKeyDown}
         options={options}
         onChange={selectedOption =>

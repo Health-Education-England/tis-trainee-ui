@@ -27,10 +27,16 @@ export const Dates = ({
   const { handleBlur, handleChange, fieldWarning } = useFormContext();
   return (
     <div data-cy={name}>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={name}
+        id={`${name}--label`}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       <input
+        id={name}
         onKeyDown={handleKeyDown}
         type="date"
         data-cy={`${name}-input`}

@@ -51,6 +51,7 @@ export const Text: React.FC<TextProps> = ({
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <input
+        autoComplete="off"
         id={name}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}

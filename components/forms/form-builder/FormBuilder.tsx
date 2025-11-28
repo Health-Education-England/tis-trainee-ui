@@ -218,11 +218,7 @@ export default function FormBuilder({
                       />
                     );
                     return (
-                      <div
-                        key={field.name}
-                        id={field.name}
-                        className="nhsuk-form-group"
-                      >
+                      <div key={field.name} className="nhsuk-form-group">
                         {showFormField(field, formData) ? fieldComponent : null}
                       </div>
                     );
