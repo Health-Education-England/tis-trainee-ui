@@ -44,7 +44,12 @@ export function FormFieldBuilder({
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
 
-  useScrollToField(name);
+  const shouldAttachScroll = arrayIndex === undefined && !arrayName;
+
+  useScrollToField(target => {
+    if (!shouldAttachScroll) return false;
+    return target === name;
+  });
 
   switch (type) {
     case "array":

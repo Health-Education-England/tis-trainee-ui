@@ -65,9 +65,16 @@ function VisibleField({
           {field.label}
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
-          {displayListValue(formData, field)}
+          {displayListValue(
+            formData,
+            field,
+            canEdit as boolean,
+            pageIndex,
+            jsonFormName,
+            history
+          )}
         </SummaryList.Value>
-        {canEdit && (
+        {canEdit && field.type !== "array" && (
           <SummaryList.Actions>
             <a
               data-cy={`edit-${field.name}`}
@@ -150,7 +157,14 @@ function formatEntryValue(value: any, fieldType: string) {
   return value?.toString();
 }
 
-function displayListValue(formData: FormData, field: Field) {
+function displayListValue(
+  formData: FormData,
+  field: Field,
+  canEdit: boolean,
+  pageIndex?: number,
+  jsonFormName?: string,
+  history?: any
+) {
   const fieldVal = formData[field.name];
   const fieldType = field.type;
   if (fieldVal === null || fieldVal === "") return "Not provided";
@@ -159,6 +173,31 @@ function displayListValue(formData: FormData, field: Field) {
     return fieldVal.map((item: any, index: number) => (
       <Card key={index} className="container-form-view">
         <Card.Content>
+          {canEdit && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "10px"
+              }}
+            >
+              <a
+                href="#"
+                data-cy={`edit-${field.name}-${index}`}
+                onClick={e => {
+                  e.preventDefault();
+                  handleEditSection(
+                    pageIndex as number,
+                    jsonFormName as FormName,
+                    history,
+                    `${field.name}-${index}`
+                  );
+                }}
+              >
+                Change
+              </a>
+            </div>
+          )}
           {Object.entries(item).map((entry: any, index: number) => (
             <Container key={index}>
               <Row style={{ marginBottom: "0.5em" }}>
