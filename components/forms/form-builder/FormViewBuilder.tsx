@@ -2,12 +2,14 @@ import { Field, Form, FormData, FormName } from "./FormBuilder";
 import { Card, SummaryList } from "nhsuk-react-components";
 import {
   formatFieldName,
-  handleEditSection,
+  getEditPageLocation,
+  setEditPageNumber,
   showFormField
 } from "../../../utilities/FormBuilderUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
 import { strDateRegex } from "../../../utilities/Constants";
+import { Link } from "react-router-dom";
 
 type VisibleFieldProps = {
   field: Field;
@@ -85,19 +87,15 @@ function VisibleField({
         </SummaryList.Value>
         {canEdit && (
           <SummaryList.Actions>
-            <a
+            <Link
+              to={getEditPageLocation(jsonFormName as FormName, field.name)}
               data-cy={`edit-${field.name}`}
               onClick={() =>
-                handleEditSection(
-                  pageIndex as number,
-                  jsonFormName as FormName,
-                  history,
-                  field.name
-                )
+                setEditPageNumber(jsonFormName as FormName, pageIndex as number)
               }
             >
               Change
-            </a>
+            </Link>
             <span className="nhsuk-u-visually-hidden">{`Change: ${field.label}`}</span>
           </SummaryList.Actions>
         )}
@@ -185,22 +183,22 @@ function displayListValue(
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div
               className="nhsuk-u-text-align-left nhsuk-u-margin-bottom-2"
-              style={{ color: "#005eb8", fontSize: "20px" }}
+              style={{ color: "#005eb8", fontSize: "1.5rem" }}
             >
               <strong>{index + 1}.</strong>
             </div>
             <div className="nhsuk-u-text-align-right nhsuk-u-margin-bottom-2">
-              <a
-                href="#"
+              <Link
                 className="nhsuk-link--no-visited-state"
                 data-cy={`edit-${field.name}-${index}`}
-                onClick={e => {
-                  e.preventDefault();
-                  handleEditSection(
-                    pageIndex as number,
+                to={getEditPageLocation(
+                  jsonFormName as FormName,
+                  `${field.name}-${index}`
+                )}
+                onClick={() => {
+                  setEditPageNumber(
                     jsonFormName as FormName,
-                    history,
-                    `${field.name}-${index}` // Target panel ID
+                    pageIndex as number
                   );
                 }}
               >
@@ -208,7 +206,7 @@ function displayListValue(
                 <span className="nhsuk-u-visually-hidden">
                   {` item ${index + 1}`}
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
         )}
