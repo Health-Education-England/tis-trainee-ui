@@ -11,6 +11,7 @@ import {
   updatedCctStatus,
   updatedNewCalcMade
 } from "../../../../redux/slices/cctSlice";
+import dayjs from "dayjs";
 
 const mountCctViewWithMockData = (
   cctCalcData: CctCalculation = mockCctList[0],
@@ -113,5 +114,43 @@ describe("CctCalcView", () => {
     cy.get('[data-cy="cct-edit-btn"]').click();
     // But error msg resets after btn click
     cy.get(".nhsuk-error-summary").should("not.exist");
+  });  
+
+  it("show warning if LTFT start date less than 16 weeks in the future", () => {
+    store.dispatch(updatedCctStatus("idle"));
+    mountCctViewWithMockData(
+      {
+        ...mockCctList[0],
+        changes: [
+          {
+            type: "LTFT",
+            startDate: dayjs().add(15, "week").format("YYYY-MM-DD"),
+            wte: 0.7
+          }
+        ],
+      },
+      true
+    );
+    cy.get('.field-warning-msg')
+      .should("exist");
+  });
+
+  it("hide warning if LTFT start date longer than 16 weeks in the future", () => {
+    store.dispatch(updatedCctStatus("idle"));
+    mountCctViewWithMockData(
+      {
+        ...mockCctList[0],
+        changes: [
+          {
+            type: "LTFT",
+            startDate: dayjs().add(17, "week").format("YYYY-MM-DD"),
+            wte: 0.7
+          }
+        ],
+      },
+      true
+    );
+    cy.get('.field-warning-msg')
+      .should("not.exist");
   });
 });

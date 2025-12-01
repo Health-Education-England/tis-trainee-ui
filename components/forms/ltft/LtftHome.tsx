@@ -1,4 +1,10 @@
-import { Card, Col, Container, Row } from "nhsuk-react-components";
+import {
+  Card,
+  Col,
+  Container,
+  Row,
+  WarningCallout
+} from "nhsuk-react-components";
 import LtftSummary from "./LtftSummary";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppSelector } from "../../../redux/hooks/hooks";
@@ -43,6 +49,20 @@ export function LtftHome() {
 
   return (
     <>
+      <WarningCallout data-cy="cct-home-warning">
+        <WarningCallout.Label visuallyHiddenText={false}>
+          Important
+        </WarningCallout.Label>
+        <p>
+          To meet national guidance, all Changing hours (LTFT) applications must
+          be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
+        </p>
+        <p>
+          This allows Trusts the required <b>12 weeks' notice</b> under the Code
+          of Practice, giving them time to make rota changes, update work
+          schedules, and ensure your placement is appropriately planned.
+        </p>
+      </WarningCallout>
       <Card>
         <Card.Content>
           <>

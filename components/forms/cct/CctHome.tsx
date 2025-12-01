@@ -27,6 +27,15 @@ export function CctHome() {
           Important
         </WarningCallout.Label>
         <p>
+          To meet national guidance, all Changing hours (LTFT) applications must
+          be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
+        </p>
+        <p>
+          This allows Trusts the required <b>12 weeks' notice</b> under the Code
+          of Practice, giving them time to make rota changes, update work
+          schedules, and ensure your placement is appropriately planned.
+        </p>
+        <p>
           If your programme is not listed or any of the details are incorrect,
           please{" "}
           <Link to="/support" target="_blank">
