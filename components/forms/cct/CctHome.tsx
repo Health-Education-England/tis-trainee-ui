@@ -31,9 +31,9 @@ export function CctHome() {
           be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
         </p>
         <p>
-          This allows Trusts the required <b>12 weeks' notice</b> under the Code
-          of Practice, giving them time to make rota changes, update work
-          schedules, and ensure your placement is appropriately planned.
+          This allows Trusts the required <b>12 weeks&lsquo; notice</b> under
+          the Code of Practice, giving them time to make rota changes, update
+          work schedules, and ensure your placement is appropriately planned.
         </p>
         <p>
           If your programme is not listed or any of the details are incorrect,
