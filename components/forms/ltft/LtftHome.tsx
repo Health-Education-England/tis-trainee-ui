@@ -12,6 +12,7 @@ import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
 import { Link } from "react-router-dom";
+import { ltft16WeeksNotice } from "../../../utilities/Constants";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -53,15 +54,7 @@ export function LtftHome() {
         <WarningCallout.Label visuallyHiddenText={false}>
           Important
         </WarningCallout.Label>
-        <p>
-          To meet national guidance, all Changing hours (LTFT) applications must
-          be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
-        </p>
-        <p>
-          This allows Trusts the required <b>12 weeks&lsquo; notice</b> under
-          the Code of Practice, giving them time to make rota changes, update
-          work schedules, and ensure your placement is appropriately planned.
-        </p>
+        {ltft16WeeksNotice}
       </WarningCallout>
       <Card>
         <Card.Content>
