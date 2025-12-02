@@ -128,7 +128,7 @@ export const FormView = ({
       {!canEditStatus && (
         <FormSavePDF history={history} path={redirectPath} pmId="" />
       )}
-      {canEditStatus && <h2>Review & submit</h2>}
+      {canEditStatus && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
       {!canEditStatus &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,

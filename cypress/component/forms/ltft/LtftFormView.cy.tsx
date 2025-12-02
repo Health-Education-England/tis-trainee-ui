@@ -4,7 +4,6 @@ import { Router } from "react-router-dom";
 import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
 import {
-  LtftObj,
   updatedCanEditLtft,
   updatedLtft,
   updatedLtftStatus
@@ -17,6 +16,7 @@ import {
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
 import { FileUtilities } from "../../../../utilities/FileUtilities";
+import { LtftObj } from "../../../../models/LtftTypes";
 
 const mountLtftViewWithMockData = (mockLtftObj: LtftObj) => {
   store.dispatch(updatedLtft(mockLtftObj));
@@ -81,12 +81,8 @@ describe("LTFT Form View - editable & no name", () => {
     cy.get('[data-cy="cct-calc-summary-header"]')
       .should("exist")
       .contains("CCT Calculation Summary");
-    cy.get('[data-cy="edit-Your pre-approver details"]').should("exist");
-    cy.get('[data-cy="edit-Other discussions (if applicable)"]').should(
-      "exist"
-    );
-    cy.get('[data-cy="edit-Reason(s) for applying"]').should("exist");
-    cy.get('[data-cy="edit-Personal Details"]').should("exist");
+    cy.get('[data-cy="edit-tpdName"]').should("exist");
+    cy.get('[data-cy="edit-reasonsSelected"]').should("exist");
     cy.get('[data-cy="informationIsCorrect"]').should("exist");
     cy.get('[data-cy="notGuaranteed"]').should("exist");
     cy.get('[data-cy="BtnSubmit"]').should("be.disabled");
@@ -269,5 +265,33 @@ describe("Download Ltft PDF", () => {
     cy.get("[data-cy=savePdfBtn]").click();
     cy.get("@DownloadPDF").should("have.been.called");
     cy.get('[data-cy="pdfButtonInfo-icon"]').should("not.exist");
+  });
+});
+
+describe("LTFT Form View - empty array field logic", () => {
+  const mockLtftEmptyArray = {
+    ...mockLtftDraft0,
+    reasonsSelected: []
+  };
+
+  it("should display 'Not provided' and NO change link when read-only", () => {
+    store.dispatch(updatedCanEditLtft(false));
+    store.dispatch(updatedLtftStatus("succeeded"));
+    mountLtftViewWithMockData(mockLtftEmptyArray);
+
+    cy.get('[data-cy="empty-array-panel-val"]').should("exist");
+
+    cy.get('[data-cy="edit-otherDiscussions"]').should("not.exist");
+  });
+
+  it("should display 'Not provided' AND a change link when editable", () => {
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData(mockLtftEmptyArray);
+
+    cy.get('[data-cy="empty-array-panel-val"]').should("exist");
+
+    cy.get('[data-cy="edit-otherDiscussions"]')
+      .should("exist")
+      .should("contain.text", "Change");
   });
 });

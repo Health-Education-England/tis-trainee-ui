@@ -170,33 +170,20 @@ describe("FormB /confirm (without Covid)", () => {
     );
     cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
     cy.checkElement(
-      "formrbLabel",
+      "formrbSubheading",
       "Trainee registration for Postgraduate Speciality Training"
     );
     cy.checkElement(
       "formrbInfo",
       "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
     );
-    cy.get(
-      '[data-cy="warningConfirmation"] > .nhsuk-warning-callout__label > span'
-    )
+    cy.get('[data-cy="reviewSubmitHeader"]')
       .should("exist")
-      .should("include.text", "Confirmation");
-    cy.get('[data-cy="warningConfirmation"] > p')
+      .contains("Review & submit");
+    cy.get('[data-cy="forename-label"]').contains("Forename");
+    cy.get('[data-cy="forename-value"]')
       .should("exist")
-      .should(
-        "include.text",
-        "Please check the information entered below is correct, agree to the\n            Declarations at the bottom of the page, and then click 'Submit\n            Form'."
-      );
-    cy.get('[data-cy="edit-Personal Details"]').should("exist");
-    cy.get(
-      ":nth-child(2) > .nhsuk-card--feature > .nhsuk-card__content--feature > .nhsuk-card__heading"
-    )
-      .should("exist")
-      .contains("Whole Scope of Practice: Work");
-    cy.get(
-      '[data-cy="work-value"] > :nth-child(1) > .nhsuk-card__content > :nth-child(2) > .nhsuk-grid-row > :nth-child(2)'
-    ).should("have.text", "01/01/2020");
+      .should("have.text", "Anthony Mara");
   });
 });
 
@@ -309,101 +296,96 @@ describe("FormB /confirm (with Covid)", () => {
       </Provider>
     );
     cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
-    cy.get('[data-cy="formrbLabel"]').contains(
+    cy.get('[data-cy="formrbSubheading"]').contains(
       "Trainee registration for Postgraduate Speciality Training"
     );
     cy.get('[data-cy="formrbInfo"]').contains(
       "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
     );
-    cy.get(
-      '[data-cy="warningConfirmation"] > .nhsuk-warning-callout__label > span'
-    )
-      .should("exist")
-      .should("include.text", "Confirmation");
-    cy.get('[data-cy="warningConfirmation"] > p')
-      .should("exist")
-      .should(
-        "include.text",
-        "Please check the information entered below is correct, agree to the\n            Declarations at the bottom of the page, and then click 'Submit\n            Form'."
-      );
 
     // check some default sections
-    cy.get(
-      ":nth-child(1) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Personal Details");
-    cy.checkElement("edit-Personal Details");
+    cy.get('[data-cy="pageHeader-Personal Details"]').should("exist");
 
     cy.get('[data-cy="forename-label"]').contains("Forename");
     cy.get('[data-cy="forename-value"]')
       .should("exist")
       .should("have.text", "Anthony Mara");
+    cy.get('[data-cy="edit-forename"]').should("exist");
+
+    cy.get('[data-cy="pageHeader-Whole Scope of Practice: Work"]').should(
+      "exist"
+    );
+    cy.get('[data-cy="work-array-panel-header"]').should("exist");
+    cy.get('[data-cy="edit-work-0"]').should("exist");
+    cy.get('[data-cy="edit-work-1"]').should("exist");
+    cy.get('[data-cy="typeOfWork-key"]')
+      .first()
+      .should("have.text", "Type Of Work");
+    cy.get('[data-cy="startDate-value"]')
+      .first()
+      .should("have.text", "01/01/2020");
+    cy.get('[data-cy="endDate-value"]')
+      .first()
+      .should("have.text", "31/12/2020");
 
     cy.get(
-      ":nth-child(2) > .nhsuk-card--feature > .nhsuk-card__content--feature > .nhsuk-card__heading"
-    ).contains("Whole Scope of Practice: Work");
-    cy.get('[data-cy="edit-Type of Work"]').should("exist");
-    cy.get('[data-cy="work-label"]').contains("Type of Work");
-    cy.get(
-      '[data-cy="work-value"] > :nth-child(1) > .nhsuk-card__content > :nth-child(3) > .nhsuk-grid-row > :nth-child(2)'
-    ).should("have.text", "31/12/2020");
-    cy.get(
-      ":nth-child(2) > .nhsuk-card__content > :nth-child(2) > .nhsuk-grid-row > :nth-child(2)"
-    ).should("have.text", "12/01/2019");
-
-    cy.get(
-      ":nth-child(3) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Whole Scope of Practice: Time Out Of Training (TOOT)");
+      '[data-cy="pageHeader-Whole Scope of Practice: Time Out Of Training (TOOT)"]'
+    ).should("exist");
     cy.get('[data-cy="unauthorisedLeave-value"]').should("have.text", "10");
     cy.get('[data-cy="totalLeave-value"]').should("have.text", "10");
 
-    cy.get(
-      ":nth-child(4) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Good Medical Practice: Declarations");
+    cy.get('[data-cy="pageHeader-Good Medical Practice: Declarations"]').should(
+      "exist"
+    );
     cy.get('[data-cy="isHonest-value"]').should("have.text", "Yes");
-    cy.get('[data-cy="edit-Declarations"]').should("exist");
+    cy.get('[data-cy="edit-isHonest"]').should("exist");
 
     cy.get(
-      ":nth-child(5) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Good Medical Practice: Health Statement");
+      '[data-cy="pageHeader-Good Medical Practice: Health Statement"]'
+    ).should("exist");
     cy.get('[data-cy="healthStatement-value"]').should(
       "have.text",
       "I feel great etc."
     );
 
     cy.get(
-      ":nth-child(6) > .nhsuk-card--feature > .nhsuk-card__content--feature > .nhsuk-card__heading"
-    ).contains("Summary of previous resolved Form R Declarations");
-    cy.get('[data-cy="previousDeclarations-label"]').contains(
-      "Previous Resolved Declarations"
+      '[data-cy="pageHeader-Summary of previous resolved Form R Declarations"]'
+    ).should("exist");
+    cy.get('[data-cy="previousDeclarations-array-panel-header"]').should(
+      "exist"
     );
+    cy.get('[data-cy="declarationType-value"]')
+      .first()
+      .should("have.text", "Significant Event");
     cy.get(
-      '[data-cy="previousDeclarations-value"] > .nhsuk-card > .nhsuk-card__content > :nth-child(1) > .nhsuk-grid-row > :nth-child(2)'
-    ).should("have.text", "Significant Event");
-    cy.get(
-      ":nth-child(7) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Summary of previous unresolved Form R Declarations");
+      '[data-cy="pageHeader-Summary of previous unresolved Form R Declarations"]'
+    ).should("exist");
     cy.get('[data-cy="havePreviousUnresolvedDeclarations-value"]').should(
       "have.text",
       "No"
     );
 
-    cy.get('[data-cy="currentDeclarations-label"]').contains(
-      "Current Resolved Declarations"
-    );
     cy.get(
-      '[data-cy="currentDeclarations-value"] > .nhsuk-card > .nhsuk-card__content > :nth-child(1) > .nhsuk-grid-row > :nth-child(2)'
-    ).should("have.text", "Complaint");
+      '[data-cy="pageHeader-Summary of new resolved Form R Declarations"]'
+    ).should("exist");
+    cy.get('[data-cy="currentDeclarations-array-panel-header"]').should(
+      "exist"
+    );
+    cy.get('[data-cy="declarationType-value"]')
+      .last()
+      .should("have.text", "Complaint");
 
-    cy.get('[data-cy="edit-Unresolved Declarations (new)"]').should("exist");
+    cy.get(
+      '[data-cy="pageHeader-Summary of new unresolved Form R Declarations"]'
+    ).should("exist");
     cy.get('[data-cy="haveCurrentUnresolvedDeclarations-value"]').should(
       "have.text",
       "No"
     );
 
-    cy.get(
-      ":nth-child(11) > .nhsuk-card > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Compliments");
+    cy.get('[data-cy="pageHeader-Compliments"]').should("exist");
     cy.get('[data-cy="compliments-value"]').should("have.text", "Not provided");
+    cy.get('[data-cy="edit-compliments"]').should("exist");
 
     // check for Covid section
     cy.checkViewFields([

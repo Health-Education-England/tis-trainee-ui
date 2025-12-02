@@ -102,7 +102,7 @@ export function FormLinkerForm({
                 id="isArcp"
                 type="radios"
                 items={ARCP_OPTIONS}
-                label="Why you are submitting your Form R?"
+                label="Why are you submitting your Form R?"
                 data-cy="is-arcp-radio"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const updatedOptions = makeLinkedProgOptions(

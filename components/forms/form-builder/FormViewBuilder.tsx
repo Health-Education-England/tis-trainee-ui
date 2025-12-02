@@ -181,7 +181,11 @@ function ArrayFieldRenderer({
   if (!fieldVal || fieldVal.length === 0) {
     return (
       <ArrayPanel
-        title={<p style={{ fontSize: "19px" }}>Not provided</p>}
+        title={
+          <p data-cy="empty-array-panel-val" style={{ fontSize: "19px" }}>
+            Not provided
+          </p>
+        }
         action={
           canEdit ? (
             <ChangeLink
@@ -215,7 +219,6 @@ function ArrayFieldRenderer({
                 label={`item ${index + 1}`}
                 jsonFormName={jsonFormName}
                 pageIndex={pageIndex}
-                testIdSuffix={index}
               />
             ) : null
           }
@@ -273,20 +276,18 @@ type ChangeLinkProps = {
   label: string;
   jsonFormName: FormName;
   pageIndex: number;
-  testIdSuffix?: string | number;
 };
 
 const ChangeLink = ({
   targetField,
   label,
   jsonFormName,
-  pageIndex,
-  testIdSuffix = ""
+  pageIndex
 }: ChangeLinkProps) => (
   <>
     <Link
       to={getEditPageLocation(jsonFormName, targetField)}
-      data-cy={`edit-${targetField}${testIdSuffix ? `-${testIdSuffix}` : ""}`}
+      data-cy={`edit-${targetField}`}
       onClick={() => setEditPageNumber(jsonFormName, pageIndex)}
       className="nhsuk-link--no-visited-state"
       style={{ fontSize: "19px" }}

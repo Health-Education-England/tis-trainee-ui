@@ -109,16 +109,15 @@ describe("Form R (Part B) - Submit a new form", () => {
       "################ check Confirm page, edit, and submit ###################"
     );
     cy.checkElement(
-      "formrbLabel",
+      "formrbSubheading",
       "Trainee registration for Postgraduate Speciality Training"
     );
     cy.checkElement(
       "formrbInfo",
       "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
     );
-    cy.checkElement("warningConfirmation");
     cy.checkElement("forename-value", `Bob-${today.format("YYYY-MM-DD")}`);
-    cy.checkElement("edit-Personal Details").click();
+    cy.checkElement("edit-forename").click();
     cy.get('[data-cy="progress-header"] > h3').should(
       "include.text",
       "Personal Details"
@@ -129,7 +128,6 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.clearAndType('[data-cy="forename-input"]', "Bob-edited");
     cy.get(".error-summary").should("not.exist");
     cy.checkElement("BtnShortcutToConfirm").click();
-    cy.checkElement("warningConfirmation");
     cy.checkElement("forename-value", "Bob-edited");
 
     cy.get('[data-cy="isDeclarationAccepted"]').click();
