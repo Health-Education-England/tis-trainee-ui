@@ -169,7 +169,7 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   const containedEls = [
     [".nhsuk-fieldset__heading", "Form R (Part A)"],
     [
-      '[data-cy="formraLabel"]',
+      '[data-cy="formraSubheading"]',
       "Trainee registration for Postgraduate Speciality Training"
     ],
     [

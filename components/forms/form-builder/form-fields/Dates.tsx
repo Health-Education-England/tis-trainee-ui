@@ -25,12 +25,25 @@ export const Dates = ({
   dtoName
 }: DatesProps) => {
   const { handleBlur, handleChange, fieldWarning } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
     <div data-cy={name}>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       <input
+        id={inputId}
         onKeyDown={handleKeyDown}
         type="date"
         data-cy={`${name}-input`}
@@ -62,6 +75,7 @@ export const Dates = ({
         placeholder={placeholder}
         min="1920-01-01"
         max="2119-12-31"
+        aria-labelledby={labelId}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

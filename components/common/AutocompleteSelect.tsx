@@ -37,6 +37,8 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
   };
   const handleMultiChange = (val: any) => onChange(name, val);
   const selectProps = {
+    inputId: `${name}--input`,
+    "aria-labelledby": `${name}--label`,
     options: options,
     onChange: isMulti ? handleMultiChange : handleChange,
     value: value?.label,
@@ -60,7 +62,11 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"
       }
     >
-      <Label id={`${name}--label`} htmlFor="name">
+      <Label
+        id={`${name}--label`}
+        htmlFor={`${name}--input`}
+        data-cy={`${name}-label`}
+      >
         {label}
       </Label>
       {error ? (

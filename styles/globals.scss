@@ -31,6 +31,11 @@ body {
   white-space: nowrap;
 }
 
+.react-select__single-value,
+.react-select__option {
+  white-space: normal !important;
+}
+
 [data-amplify-authenticator] {
   font-family: "Frutiger W01", Arial, sans-serif;
   background-color: #005eb8;
@@ -375,6 +380,14 @@ button:disabled {
   }
   @media (min-width: 40.0625em) {
     font-size: 1.1875rem;
+  }
+}
+
+.nhsuk-summary-list > div > dd > a {
+  cursor: pointer;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
   }
 }
 

@@ -95,15 +95,6 @@ export function getEditPageNumber(formName: string) {
   return 0;
 }
 
-// This will be used when reviewing a multi-page form to send the user to the correct page to edit
-export function setEditPageNumber(formName: string, pageNumber: number) {
-  if (formName === "formA") {
-    store.dispatch(updatedEditPageNumber(pageNumber));
-  } else {
-    store.dispatch(updatedEditPageNumberB(pageNumber));
-  }
-}
-
 export function resetForm(formName: string) {
   if (formName === "formA") {
     store.dispatch(resetToInitFormA());
@@ -139,20 +130,23 @@ export function continueToConfirm(formName: FormName, formData: FormData) {
   history.push(redirectPath);
 }
 
-export function handleEditSection(
-  pageNum: number,
-  formName: FormName,
-  history: any
-) {
-  const redirectPath = chooseRedirectPath(formName, "/create");
+// review & submit
+export function setEditPageNumber(formName: string, pageNumber: number) {
   if (formName === "formA") {
-    store.dispatch(updatedEditPageNumber(pageNum));
+    store.dispatch(updatedEditPageNumber(pageNumber));
   } else if (formName === "formB") {
-    store.dispatch(updatedEditPageNumberB(pageNum));
+    store.dispatch(updatedEditPageNumberB(pageNumber));
   } else if (formName === "ltft") {
-    store.dispatch(updatedEditPageNumberLtft(pageNum));
+    store.dispatch(updatedEditPageNumberLtft(pageNumber));
   }
-  history.push(redirectPath);
+}
+
+export function getEditPageLocation(formName: FormName, fieldName: string) {
+  const redirectPath = chooseRedirectPath(formName, "/create");
+  return {
+    pathname: redirectPath,
+    state: { fieldName }
+  };
 }
 
 export async function isFormDeleted(

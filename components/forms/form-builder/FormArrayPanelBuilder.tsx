@@ -7,6 +7,7 @@ import {
 } from "../../../utilities/FormBuilderUtilities";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
+import { useScrollToField } from "../../../utilities/hooks/useScrollToField";
 
 type FormArrayPanelBuilderProps = {
   field: Field;
@@ -20,6 +21,11 @@ export function FormArrayPanelBuilder({
   options
 }: Readonly<FormArrayPanelBuilderProps>) {
   const { formData, setFormData, setIsFormDirty } = useFormContext();
+
+  useScrollToField(
+    (target: string) =>
+      target === field.name || target.startsWith(`${field.name}-`)
+  );
 
   const newPanel = () => {
     const arrPanel = field.objectFields?.reduce((panel, objField) => {
@@ -47,9 +53,9 @@ export function FormArrayPanelBuilder({
   const formattedFieldName = formatFieldName(field.name);
 
   return (
-    <>
+    <div id={field.name} data-cy={`${field.name}-panel`}>
       {formData[field.name]?.map((_arrObj: any, index: number) => (
-        <Card key={index} className="container">
+        <Card key={index} id={`${field.name}-${index}`} className="container">
           <Card.Content>
             <p>
               <b>{`${formattedFieldName} ${index + 1}`}</b>
@@ -91,6 +97,6 @@ export function FormArrayPanelBuilder({
       >
         {`Add a ${formattedFieldName} panel`}
       </Button>
-    </>
+    </div>
   );
 }

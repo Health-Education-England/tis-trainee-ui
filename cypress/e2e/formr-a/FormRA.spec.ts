@@ -62,7 +62,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 
     // make edit and return to confirm/submit
     cy.get('[data-cy="surname-value"]').should("have.text", "John Terry");
-    cy.get('[data-cy="edit-Personal Details"]').click();
+    cy.get('[data-cy="edit-surname"]').click();
     cy.clearAndType('[data-cy="surname-input"]', "Terry");
     cy.wait(2000);
     cy.get('[data-cy="autosaveStatusMsg"]')
@@ -84,7 +84,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="form-linker-submit-btn"]').click();
 
     cy.get('[data-cy="Submit new form"]').should("exist");
-    cy.contains("Submitted forms").should("exist"); 
+    cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="formr-row-0"]').click();
     cy.get('[data-cy="email-value"]').should(
       "have.text",

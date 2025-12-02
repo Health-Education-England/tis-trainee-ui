@@ -24,12 +24,25 @@ export const Phone = ({
   dtoName
 }: PhoneProps) => {
   const { handleChange } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
     <div data-cy={name}>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       <PhoneInput
+        id={inputId}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
         placeholder={`Enter ${label}...`}
@@ -47,6 +60,7 @@ export const Phone = ({
         }}
         value={value}
         initialValueFormat="national"
+        aria-labelledby={labelId}
       />
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />

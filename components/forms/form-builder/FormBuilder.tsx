@@ -296,7 +296,7 @@ export default function FormBuilder({
                 data-cy="BtnShortcutToConfirm"
                 disabled={Object.keys(formErrors).length > 0}
               >
-                {"Shortcut to Confirm"}
+                {"Return to Review & submit"}
               </Button>
             </Col>
           )}

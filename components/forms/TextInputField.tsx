@@ -65,6 +65,7 @@ const TextInputField: FunctionComponent<Props> = props => {
     <div className={setCorrectLabelClass()}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <FormElement
+          autoComplete="off"
           onKeyDown={handleKeyDown}
           onInput={e => handleNumberInput(isNumberField, e)}
           width={width ?? setFieldWidth(field.value?.length)}

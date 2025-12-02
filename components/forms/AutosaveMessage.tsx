@@ -35,7 +35,10 @@ export const AutosaveMessage: React.FC<AutoSaveMessageProps> = ({
   const message = statusMessages[autoSaveStatus];
   return (
     <div>
-      <p data-cy="autosaveStatusMsg">{`Autosave status: ${message}`}</p>
+      <p
+        className="nhsuk-body-s"
+        data-cy="autosaveStatusMsg"
+      >{`Autosave status: ${message}`}</p>
     </div>
   );
 };

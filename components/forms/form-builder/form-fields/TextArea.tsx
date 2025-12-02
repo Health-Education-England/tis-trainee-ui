@@ -29,13 +29,26 @@ export const TextArea: React.FC<TextAreaProps> = ({
   dtoName
 }: TextAreaProps) => {
   const { handleBlur, handleChange } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
-    <>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+    <div data-cy={name}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <Textarea
+        id={inputId}
         data-cy={`${name}-text-area-input`}
         onKeyDown={handleKeyDown}
         name={name}
@@ -58,6 +71,6 @@ export const TextArea: React.FC<TextAreaProps> = ({
       {fieldError && (
         <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </>
+    </div>
   );
 };

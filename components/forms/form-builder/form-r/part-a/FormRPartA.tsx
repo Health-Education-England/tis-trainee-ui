@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from "react-router-dom";
 import ScrollTo from "../../../ScrollTo";
 import PageTitle from "../../../../common/PageTitle";
-import { Fieldset, Label } from "nhsuk-react-components";
+import { Fieldset } from "nhsuk-react-components";
 import CreateList from "../../../CreateList";
 import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
@@ -49,14 +49,14 @@ export default function FormA() {
         >
           Form R (Part A)
         </Fieldset.Legend>
-        <Label data-cy="formraLabel" size="s">
+        <p className="nhsuk-heading-s" data-cy="formraSubheading">
           Trainee registration for Postgraduate Speciality Training
-        </Label>
-        <Label data-cy="formraInfo" size="s">
+        </p>
+        <p className="nhsuk-body-m" data-cy="formraInfo">
           The Form R is a vital aspect of Revalidation (this applies to those
           holding GMC registration) and you are expected to complete one at the
           start of a new training programme and ahead of each ARCP.
-        </Label>
+        </p>
       </Fieldset>
       <Switch>
         <Route

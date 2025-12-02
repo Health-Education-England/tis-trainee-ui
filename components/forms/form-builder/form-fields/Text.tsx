@@ -39,13 +39,26 @@ export const Text: React.FC<TextProps> = ({
 }: TextProps) => {
   const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
     useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
   return (
     <>
-      <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
       <input
+        autoComplete="off"
+        id={inputId}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
         onInput={e => handleNumberInput(isNumberField, e)}
@@ -68,7 +81,7 @@ export const Text: React.FC<TextProps> = ({
           readOnly ? "readonly-field" : ""
         }`}
         placeholder={placeholder}
-        aria-labelledby={`${name}--label`}
+        aria-labelledby={labelId}
         onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
           handleBlur(
             event,

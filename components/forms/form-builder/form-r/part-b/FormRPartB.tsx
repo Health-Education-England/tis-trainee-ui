@@ -82,14 +82,14 @@ export default function FormB() {
         >
           Form R (Part B)
         </Fieldset.Legend>
-        <Label data-cy="formrbLabel" size="s">
+        <p className="nhsuk-heading-s" data-cy="formrbSubheading">
           Trainee registration for Postgraduate Speciality Training
-        </Label>
-        <Label data-cy="formrbInfo" size="s">
+        </p>
+        <p className="nhsuk-body-m" data-cy="formrbInfo">
           The Form R is a vital aspect of Revalidation (this applies to those
           holding GMC registration) and you are expected to complete one at the
           start of a new training programme and ahead of each ARCP.
-        </Label>
+        </p>
       </Fieldset>
       <Switch>
         <Route

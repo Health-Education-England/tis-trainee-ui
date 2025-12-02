@@ -101,7 +101,7 @@ describe("Form A View (/form-a/confirm)", () => {
     const containedEls = [
       [".nhsuk-fieldset__heading", "Form R (Part A)"],
       [
-        '[data-cy="formraLabel"]',
+        '[data-cy="formraSubheading"]',
         "Trainee registration for Postgraduate Speciality Training"
       ],
       [
@@ -162,7 +162,7 @@ describe("Form A View (/form-a/confirm)", () => {
       const containedEls = [
         [".nhsuk-fieldset__heading", "Form R (Part A)"],
         [
-          '[data-cy="formraLabel"]',
+          '[data-cy="formraSubheading"]',
           "Trainee registration for Postgraduate Speciality Training"
         ],
         [
@@ -184,11 +184,9 @@ describe("Form A View (/form-a/confirm)", () => {
         cy.get('[data-cy="willKeepInformed"]').should("be.checked");
 
         const nonExistEls = [
-          "warningConfirmation",
           "BtnSubmit",
           "BtnSaveExit-formA",
-          "startOverButton",
-          "edit-Personal Details"
+          "startOverButton"
         ];
         nonExistEls.forEach(element => {
           cy.get(`[data-cy="${element}"]`).should("not.exist");
@@ -217,7 +215,7 @@ describe("Form A View (/form-a/confirm)", () => {
         const containedEls = [
           [".nhsuk-fieldset__heading", "Form R (Part A)"],
           [
-            '[data-cy="formraLabel"]',
+            '[data-cy="formraSubheading"]',
             "Trainee registration for Postgraduate Speciality Training"
           ],
           [

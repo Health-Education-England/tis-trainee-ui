@@ -23,7 +23,8 @@ describe("FormLinkerModal", () => {
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
         programmeMemberships: mockProgrammesForLinkerTest,
-        placements: []
+        placements: [],
+        qualifications: []
       })
     );
   });
@@ -52,12 +53,9 @@ describe("FormLinkerModal", () => {
     mountComponent();
     cy.get("dialog").should("be.visible");
     cy.get('[data-cy="programmeMembershipId"]').should("not.exist");
-    cy.get('[data-cy="isArcp"]')
+    cy.get('[data-cy="isArcp"] > p')
       .should("exist")
-      .should(
-        "contain.text",
-        "Please select why you are submitting your Form R"
-      );
+      .should("have.text", "Why are you submitting your Form R?");
     cy.contains("ARCP/Annual Submission").should("exist");
     cy.contains("New Starter").should("exist");
   });
@@ -155,7 +153,8 @@ describe("FormLinkerModal", () => {
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
         programmeMemberships: [],
-        placements: []
+        placements: [],
+        qualifications: []
       })
     );
     mountComponent();
@@ -172,7 +171,8 @@ describe("FormLinkerModal", () => {
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
         programmeMemberships: mockProgrammesForLinkerTestOutsideArcp,
-        placements: []
+        placements: [],
+        qualifications: []
       })
     );
     mountComponent();
@@ -203,7 +203,8 @@ describe("FormLinkerModal", () => {
         traineeTisId: "12345",
         personalDetails: mockPersonalDetails,
         programmeMemberships: mockProgrammesForLinkerTestOutsideNewStarter,
-        placements: []
+        placements: [],
+        qualifications: []
       })
     );
     mountComponent({ warningText: "This is a warning message" });
