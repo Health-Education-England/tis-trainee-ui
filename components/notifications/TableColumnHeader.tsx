@@ -1,10 +1,5 @@
 import { Column } from "@tanstack/react-table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSort,
-  faSortDown,
-  faSortUp
-} from "@fortawesome/free-solid-svg-icons";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
 type TableColumnHeaderProps<TData, TValue> = {
   column: Column<TData, TValue>;
@@ -17,33 +12,30 @@ export function TableColumnHeader<TData, TValue>({
 }: Readonly<TableColumnHeaderProps<TData, TValue>>) {
   const renderSortIcon = () => {
     const sort = column.getIsSorted();
-    if (!sort) return <FontAwesomeIcon icon={faSort} size="sm" />;
+    if (!sort) return <ArrowUpDown size={16} />;
     return sort === "asc" ? (
-      <FontAwesomeIcon
-        icon={faSortUp}
-        size="sm"
-        data-cy={`${title}-fa-sort-up`}
-      />
+      <ArrowUp size={16} className="table-sort-icon" />
     ) : (
-      <FontAwesomeIcon
-        icon={faSortDown}
-        size="sm"
-        data-cy={`${title}-fa-sort-down`}
-      />
+      <ArrowDown size={16} className="table-sort-icon" />
     );
   };
-  if (!column.getCanSort()) return <div>{title}</div>;
+  if (!column.getCanSort()) return <div className="no-wrap">{title}</div>;
   return (
-    <div>
+    <div className="table-column-header">
+      <span className="no-wrap">{title}</span>
       <button
         type="button"
         onClick={column.getToggleSortingHandler()}
-        className="table-header-btn"
+        aria-label={
+          column.getIsSorted() === "desc"
+            ? `Sorted descending. Click to sort ascending.`
+            : column.getIsSorted() === "asc"
+            ? `Sorted ascending. Click to cancel sorting.`
+            : `Not sorted. Click to sort ascending.`
+        }
+        className="table-sort-button"
       >
-        <span>{title}</span>
-        <span className="nhsuk-u-padding-left-2 table-header-btn-icon">
-          {renderSortIcon()}
-        </span>
+        <span>{renderSortIcon()}</span>
       </button>
     </div>
   );

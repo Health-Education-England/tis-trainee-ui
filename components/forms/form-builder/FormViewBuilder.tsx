@@ -206,11 +206,9 @@ function ArrayFieldRenderer({
         <ArrayPanel
           key={index}
           title={
-            canEdit ? (
-              <strong style={{ color: "#005eb8", fontSize: "19px" }}>
-                {index + 1}.
-              </strong>
-            ) : null
+            <strong style={{ color: "#005eb8", fontSize: "19px" }}>
+              {index + 1}.
+            </strong>
           }
           action={
             canEdit ? (
@@ -258,7 +256,10 @@ function ArrayPanel({ children, title, action }: ArrayPanelProps) {
     <div className="nhsuk-u-padding-0 nhsuk-u-margin-bottom-5">
       {(title || action) && (
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div className="nhsuk-u-text-align-left nhsuk-u-margin-bottom-2">
+          <div
+            data-cy="array-panel-title"
+            className="nhsuk-u-text-align-left nhsuk-u-margin-bottom-2"
+          >
             {title}
           </div>
           <div className="nhsuk-u-text-align-right nhsuk-u-margin-bottom-2">

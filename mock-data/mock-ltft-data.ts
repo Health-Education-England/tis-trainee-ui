@@ -215,7 +215,18 @@ export const mockLtftUnsubmitted0: LtftObj = {
   },
   tpdName: "",
   tpdEmail: "",
-  otherDiscussions: null,
+  otherDiscussions: [
+    {
+      name: "Discussion Name1",
+      email: "discussion@email.com",
+      role: "Role1"
+    },
+    {
+      name: "Discussion Name2",
+      email: "discussion2@email.com",
+      role: "Role2"
+    }
+  ],
   personalDetails: {
     title: "Mr",
     surname: "Gilliam",
