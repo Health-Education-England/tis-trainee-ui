@@ -12,11 +12,20 @@ export function TableColumnHeader<TData, TValue>({
 }: Readonly<TableColumnHeaderProps<TData, TValue>>) {
   const renderSortIcon = () => {
     const sort = column.getIsSorted();
-    if (!sort) return <ArrowUpDown size={16} />;
+    if (!sort)
+      return <ArrowUpDown size={16} data-cy={`${title}-table-sort-none`} />;
     return sort === "asc" ? (
-      <ArrowUp size={16} className="table-sort-icon" />
+      <ArrowUp
+        size={16}
+        className="table-sort-icon"
+        data-cy={`${title}-table-sort-asc`}
+      />
     ) : (
-      <ArrowDown size={16} className="table-sort-icon" />
+      <ArrowDown
+        size={16}
+        className="table-sort-icon"
+        data-cy={`${title}-table-sort-desc`}
+      />
     );
   };
   if (!column.getCanSort()) return <div className="no-wrap">{title}</div>;
