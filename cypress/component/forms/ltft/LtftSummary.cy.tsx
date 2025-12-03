@@ -8,6 +8,7 @@ import {
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
 import { MemoryRouter } from "react-router-dom";
+import { LtftSummaryObj } from "../../../../models/LtftTypes";
 
 describe("LtftSummary Component", () => {
   describe("CURRENT type filtering", () => {
@@ -18,7 +19,7 @@ describe("LtftSummary Component", () => {
             <LtftSummary
               ltftSummaryType="CURRENT"
               ltftSummaryStatus="succeeded"
-              ltftSummaryList={mockLtftDraftList}
+              ltftSummaryList={mockLtftDraftList as LtftSummaryObj[]}
             />
           </MemoryRouter>
         </Provider>
@@ -26,23 +27,18 @@ describe("LtftSummary Component", () => {
     });
 
     it("should sort by lastModified descending by default", () => {
-      cy.get('[data-cy^="ltft-row-"]')
-        .eq(0)
-        .should("include.text", "15 Jan 2025");
-      cy.get('[data-cy^="ltft-row-"]')
-        .eq(3)
-        .should("include.text", "15 Aug 2024");
+      cy.get('[data-cy="Last Updated-table-sort-desc"]').should("exist");
+      cy.get("time").eq(0).should("include.text", "15 Jan 2025");
+      cy.get("time").eq(3).should("include.text", "15 Aug 2024");
     });
 
     it("should change sort order when clicking column headers", () => {
-      const nameSortToggler =
-        '[data-cy="ltft-summary-table-name"] > div > .table-header-btn > .nhsuk-u-padding-left-2';
-      cy.get(nameSortToggler).click();
-      cy.get('[data-cy^="ltft-row-"]').first().should("include.text", "");
-      cy.get(nameSortToggler).click();
-      cy.get('[data-cy^="ltft-row-"]')
-        .first()
-        .contains("Programme hours reduction 5");
+      cy.get('[data-cy="Last Updated-table-sort-desc"]').click();
+      cy.get("time").eq(0).should("include.text", "15 Aug 2024");
+      cy.get("time").eq(3).should("include.text", "15 Jan 2025");
+      cy.get('[data-cy="Last Updated-table-sort-asc"]').should("exist");
+      cy.get('[data-cy="Last Updated-table-sort-asc"]').click();
+      cy.get('[data-cy="Last Updated-table-sort-none"]').should("exist");
     });
 
     it("should display DRAFT and UNSUBMITTED filters", () => {
