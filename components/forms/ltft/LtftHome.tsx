@@ -1,4 +1,10 @@
-import { Card, Col, Container, Row } from "nhsuk-react-components";
+import {
+  Card,
+  Col,
+  Container,
+  Row,
+  WarningCallout
+} from "nhsuk-react-components";
 import LtftSummary from "./LtftSummary";
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import { useAppSelector } from "../../../redux/hooks/hooks";
@@ -6,6 +12,7 @@ import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import { useLtftHomeStartover } from "../../../utilities/hooks/useLtftHomeStartover";
 import { Link } from "react-router-dom";
+import { ltft16WeeksNotice } from "../../../utilities/Constants";
 
 export function LtftHome() {
   const ltftSummary = useAppSelector(
@@ -43,6 +50,12 @@ export function LtftHome() {
 
   return (
     <>
+      <WarningCallout data-cy="cct-home-warning">
+        <WarningCallout.Label visuallyHiddenText={false}>
+          Important
+        </WarningCallout.Label>
+        {ltft16WeeksNotice}
+      </WarningCallout>
       <Card>
         <Card.Content>
           <>

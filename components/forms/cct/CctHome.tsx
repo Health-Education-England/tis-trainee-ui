@@ -10,6 +10,7 @@ import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
 import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
 import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
+import { ltft16WeeksNotice } from "../../../utilities/Constants";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ export function CctHome() {
         <WarningCallout.Label visuallyHiddenText={false}>
           Important
         </WarningCallout.Label>
+        {ltft16WeeksNotice}
         <p>
           If your programme is not listed or any of the details are incorrect,
           please{" "}

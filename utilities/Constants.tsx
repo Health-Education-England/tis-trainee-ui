@@ -764,3 +764,17 @@ export const traineeActionsCompletedWhenNotOutstanding: TrackerActionType[] = [
   "SIGN_FORM_R_PART_B",
   "REVIEW_PLACEMENT"
 ];
+
+export const ltft16WeeksNotice  = (
+  <>
+    <p>
+      To meet national guidance, all Changing hours (LTFT) applications must
+      be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
+    </p>
+    <p>
+      This allows Trusts the required <b>12 weeks&rsquo; notice</b> under
+      the Code of Practice, giving them time to make rota changes, update
+      work schedules, and ensure your placement is appropriately planned.
+    </p>
+  </>
+);

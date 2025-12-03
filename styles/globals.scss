@@ -363,6 +363,8 @@ button:disabled {
 .field-warning-msg {
   margin-left: 0.5rem;
   font-weight: 500;
+  white-space: pre-line;
+  text-align: justify;
 }
 
 .field-warning-icon {
