@@ -176,18 +176,19 @@ describe("NotificationsTable with In-app notifications data", () => {
     cy.get("tr.table-row").should("have.length", 5);
 
     // table column sorting
-    cy.get('[data-cy="Date-fa-sort-down"]').should("exist").scrollIntoView();
-    cy.get('[data-cy="Date-fa-sort-up"]').should("not.exist");
     cy.get(
-      '[data-cy="notificationsTable-subject"] > div > .table-header-btn'
-    ).click();
-    cy.get('[data-cy="notificationsTableRow-3"] > :nth-child(2) > span')
+      '[data-cy="notificationsTableRow-0"] > :nth-child(2) > span'
+    ).contains("Placement Information");
+    cy.get('[data-cy="Date-table-sort-asc"]').should("not.exist");
+    cy.get('[data-cy="Date-table-sort-none"]').should("not.exist");
+    cy.get('[data-cy="Date-table-sort-desc"]')
       .should("exist")
-      .contains("Day One");
-
-    cy.get("tr.table-row.row-unread").should("have.length", 0);
-    cy.get('[data-cy="Type-fa-sort-up"]').should("exist");
-    cy.get('[data-cy="Type-fa-sort-down"]').should("not.exist");
+      .scrollIntoView()
+      .click();
+    cy.get('[data-cy="Date-table-sort-none"]').click(); // double click for asc
+    cy.get(
+      '[data-cy="notificationsTableRow-12"] > :nth-child(2) > span'
+    ).contains("ePortfolio");
   });
 });
 

@@ -27,10 +27,13 @@ export function RowActions({ row }: Readonly<RowActionsProps>) {
           setInProgressUpdate(false);
         }}
         disabled={inProgressUpdate}
-        style={{ cursor: "pointer", marginRight: "1rem" }}
+        style={{
+          cursor: "pointer",
+          marginRight: "1rem"
+        }}
       >
         <FontAwesomeIcon icon={faEnvelope} size="sm" className="unread-icon" />
-        <span>Mark as unread</span>
+        <span className="no-wrap">Mark as unread</span>
       </Button>
     );
   } else return null;

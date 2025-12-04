@@ -295,3 +295,15 @@ describe("LTFT Form View - empty array field logic", () => {
       .should("contain.text", "Change");
   });
 });
+
+describe("LTFT Form View submitted status - still shows panel numbers", () => {
+  before(() => {
+    mountLtftViewWithMockData(mockLtftUnsubmitted0);
+  });
+  it("should still show panel numbers in submitted status", () => {
+    store.dispatch(updatedCanEditLtft(false));
+    store.dispatch(updatedLtftStatus("succeeded"));
+    cy.get('[data-cy="empty-array-panel-val"]').should("not.exist");
+    cy.get('[data-cy="array-panel-title"]').last().should("contain.text", "2.");
+  });
+});
