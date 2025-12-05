@@ -44,7 +44,7 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
-  panelsName: string;
+  panelsName: TraineeProfileName;
 };
 
 export function PanelsCreator({
@@ -59,17 +59,17 @@ export function PanelsCreator({
     );
   const userFeatures = useAppSelector(state => state.user.features);
 
-  const isProgramme = panelsName === TraineeProfileName.Programmes;
-  const keysToDisplay = getKeysToDisplay(isProgramme, userFeatures);
+  const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
   const panelsTitle = PANEL_KEYS[panelsName];
 
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: ProfileType, index: number) => {
-          const panelTitle = isProgramme
-            ? (panel as ProgrammeMembership).programmeName
-            : (panel as Placement).site;
+          const panelTitle =
+            panelsName === TraineeProfileName.Programmes
+              ? (panel as ProgrammeMembership).programmeName
+              : (panel as Placement).site;
 
           const currentAction = unreviewedActions.filter(
             action =>
@@ -87,7 +87,7 @@ export function PanelsCreator({
               >
                 <p className={style.panelHeader}>{panelTitle}</p>
                 <SummaryList>
-                  {isProgramme &&
+                  {panelsName === TraineeProfileName.Programmes &&
                     dayjs(panel.startDate).isAfter(
                       dayjs().subtract(1, "year")
                     ) && (
@@ -226,10 +226,10 @@ export function PanelsCreator({
 }
 
 function getKeysToDisplay(
-  isProgramme: boolean,
+  panelsName: TraineeProfileName,
   userFeatures: UserFeaturesType
 ) {
-  if (isProgramme) {
+  if (panelsName === TraineeProfileName.Programmes) {
     const { tisId, ...rest } = programmePanelTemplate;
     const keys = Object.keys(rest);
     return keys.filter(
