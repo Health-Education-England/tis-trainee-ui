@@ -35,7 +35,6 @@ export function ProfilePage({
       <DataSourceMsg />
       <ProfilePanels
         profileName={profileName}
-        dataSelector={selectTraineeProfile}
         title={title}
         warningText={warningText}
         showTitle={false}

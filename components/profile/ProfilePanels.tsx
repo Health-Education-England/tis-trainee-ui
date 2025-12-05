@@ -2,16 +2,12 @@ import { useMemo } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { ProfileUtilities } from "../../utilities/ProfileUtilities";
 import { Details, WarningCallout } from "nhsuk-react-components";
-import {
-  PanelsCreator,
-  prepareProfilePanelsData
-} from "../common/PanelsCreator";
+import { PanelsCreator } from "../common/PanelsCreator";
 import { TraineeProfileName } from "../../models/TraineeProfile";
-import { PANEL_KEYS } from "../../utilities/Constants";
+import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 
 interface ProfilePanelsProps {
   profileName: TraineeProfileName;
-  dataSelector: (state: any) => any;
   title: string;
   warningText: string;
   showTitle?: boolean;
@@ -19,12 +15,11 @@ interface ProfilePanelsProps {
 
 export function ProfilePanels({
   profileName,
-  dataSelector,
   title,
   warningText,
   showTitle = true
 }: Readonly<ProfilePanelsProps>) {
-  const dataArr = useAppSelector(dataSelector)[profileName];
+  const dataArr = useAppSelector(selectTraineeProfile)[profileName];
   const groupedData = useMemo(() => {
     return ProfileUtilities.groupDateBoxedByDate(dataArr);
   }, [dataArr]);
@@ -37,13 +32,8 @@ export function ProfilePanels({
           <Details.Summary>Your current {title.toLowerCase()}</Details.Summary>
           <Details.Text>
             <PanelsCreator
-              panelsArr={prepareProfilePanelsData(
-                groupedData.current,
-                profileName
-              )}
+              panelsArr={groupedData.current}
               panelsName={profileName}
-              panelsTitle={PANEL_KEYS[profileName.toLowerCase()]}
-              panelKeys={PANEL_KEYS}
             />
           </Details.Text>
         </Details>
@@ -53,13 +43,8 @@ export function ProfilePanels({
           </Details.Summary>
           <Details.Text>
             <PanelsCreator
-              panelsArr={prepareProfilePanelsData(
-                groupedData.upcoming,
-                profileName
-              )}
+              panelsArr={groupedData.upcoming}
               panelsName={profileName}
-              panelsTitle={PANEL_KEYS[profileName.toLowerCase()]}
-              panelKeys={PANEL_KEYS}
             />
           </Details.Text>
         </Details>
@@ -75,13 +60,8 @@ export function ProfilePanels({
               <p data-cy="futureWarningText">{warningText}</p>
             </WarningCallout>
             <PanelsCreator
-              panelsArr={prepareProfilePanelsData(
-                groupedData.future,
-                profileName
-              )}
+              panelsArr={groupedData.future}
               panelsName={profileName}
-              panelsTitle={PANEL_KEYS[profileName.toLowerCase()]}
-              panelKeys={PANEL_KEYS}
             />
           </Details.Text>
         </Details>
@@ -89,13 +69,8 @@ export function ProfilePanels({
           <Details.Summary>Past {title.toLowerCase()}</Details.Summary>
           <Details.Text>
             <PanelsCreator
-              panelsArr={prepareProfilePanelsData(
-                groupedData.past,
-                profileName
-              )}
+              panelsArr={groupedData.past}
               panelsName={profileName}
-              panelsTitle={PANEL_KEYS[profileName.toLowerCase()]}
-              panelKeys={PANEL_KEYS}
             />
           </Details.Text>
         </Details>
