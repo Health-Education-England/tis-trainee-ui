@@ -769,7 +769,7 @@ export const ltft16WeeksNotice  = (
   <>
     <p>
       To meet national guidance, all Changing hours (LTFT) applications must
-      be submitted <b>a minimum of 16 weeks before your LTFT start date</b>.
+      be submitted <b>a minimum of 16 weeks before your LTFT start date or before the next rotation change dependent on local NHS England office processes</b>.
     </p>
     <p>
       This allows Trusts the required <b>12 weeks&rsquo; notice</b> under

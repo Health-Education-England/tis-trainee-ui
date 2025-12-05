@@ -9,5 +9,5 @@ export const cctCalcWarningsMsgs = {
   wteCustomMsg:
     "A custom WTE change may not be possible; it will require Dean approval.",
     lessThan16Weeks:
-    "To meet national guidance, all Changing hours (LTFT) applications must be submitted a minimum of 16 weeks before your LTFT start date.\nThis allows Trusts the required 12 weeks’ notice under the Code of Practice, giving them time to make rota changes, update work schedules, and ensure your placement is appropriately planned."
+    "To meet national guidance, all Changing hours (LTFT) applications must be submitted a minimum of 16 weeks before your LTFT start date or before the next rotation change dependent on local NHS England office processes.\nThis allows Trusts the required 12 weeks’ notice under the Code of Practice, giving them time to make rota changes, update work schedules, and ensure your placement is appropriately planned."
 };
