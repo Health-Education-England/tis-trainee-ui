@@ -515,13 +515,11 @@ function ProgrammesModal({ isOpen, onClose }: Readonly<ProgrammesModalProps>) {
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText="Close">
       <ProfilePanels
         profileName={TraineeProfileName.Programmes}
-        dataSelector={selectTraineeProfile}
         title="Programmes"
         warningText={getProfilePanelFutureWarningText("programmes")}
       />
       <ProfilePanels
         profileName={TraineeProfileName.Placements}
-        dataSelector={selectTraineeProfile}
         title="Placements"
         warningText={getProfilePanelFutureWarningText("placements")}
       />

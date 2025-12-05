@@ -1,7 +1,6 @@
 import { Status } from "./Status";
-import { IDateBoxed } from "./IDateBoxed";
 import { CojVersionType } from "../redux/slices/userSlice";
-import { Signature } from "./TraineeProfile";
+import { ProfilePanelDefaults, Signature } from "./TraineeProfile";
 
 export const mockResponsibleOfficer = {
   emailAddress: null,
@@ -10,7 +9,7 @@ export const mockResponsibleOfficer = {
   gmcId: null,
   phoneNumber: null
 };
-export interface ProgrammeMembership extends IDateBoxed {
+export type ProgrammeMembership = ProfilePanelDefaults & {
   programmeTisId?: string;
   programmeName: string;
   programmeNumber: string;
@@ -26,7 +25,7 @@ export interface ProgrammeMembership extends IDateBoxed {
   designatedBodyCode?: string;
   trainingPathway?: string;
   signature?: Signature;
-}
+};
 
 export interface ConditionsOfJoining {
   signedAt: Date | null;

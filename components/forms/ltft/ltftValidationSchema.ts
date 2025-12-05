@@ -10,7 +10,8 @@ const emailValidation = yup
   .string()
   .email("Email address is invalid")
   .max(255, "Email must be shorter than 255 characters")
-  .required("Email address is required");
+  .required("Email address is required")
+  .nullable();
 
 const phoneValidation = (fieldName: string) =>
   StringValidationSchema(fieldName).matches(

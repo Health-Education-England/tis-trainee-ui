@@ -8,8 +8,11 @@ import {
   isUpcomingDateBoxed,
   today
 } from "./DateUtilities";
-import { IDateBoxed, IDateBoxedGroup } from "../models/IDateBoxed";
-import { TraineeProfile } from "../models/TraineeProfile";
+import {
+  ProfileType,
+  ProfileDateBoxedGroup,
+  TraineeProfile
+} from "../models/TraineeProfile";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {
@@ -113,9 +116,9 @@ export class ProfileUtilities {
   }
 
   public static readonly groupDateBoxedByDate = (
-    dateBoxed: IDateBoxed[]
-  ): IDateBoxedGroup => {
-    const groupedDateBoxed: IDateBoxedGroup = {
+    dateBoxed: ProfileType[]
+  ): ProfileDateBoxedGroup => {
+    const groupedDateBoxed: ProfileDateBoxedGroup = {
       future: [],
       upcoming: [],
       current: [],
@@ -123,7 +126,7 @@ export class ProfileUtilities {
     };
 
     return dateBoxed.reduce(
-      (grouped: IDateBoxedGroup, dateBoxedItem: IDateBoxed) => {
+      (grouped: ProfileDateBoxedGroup, dateBoxedItem: ProfileType) => {
         const { future, upcoming, current, past } = grouped;
         if (isPastIt(dateBoxedItem.endDate)) {
           past.push(dateBoxedItem);

@@ -177,7 +177,7 @@ function ArrayFieldRenderer({
   canEdit,
   pageIndex,
   jsonFormName
-}: ArrayFieldRendererProps) {
+}: Readonly<ArrayFieldRendererProps>) {
   if (!fieldVal || fieldVal.length === 0) {
     return (
       <ArrayPanel
@@ -251,7 +251,7 @@ type ArrayPanelProps = {
   action?: React.ReactNode;
 };
 
-function ArrayPanel({ children, title, action }: ArrayPanelProps) {
+function ArrayPanel({ children, title, action }: Readonly<ArrayPanelProps>) {
   return (
     <div className="nhsuk-u-padding-0 nhsuk-u-margin-bottom-5">
       {(title || action) && (
