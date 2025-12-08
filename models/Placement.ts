@@ -1,8 +1,7 @@
 import { Status } from "./Status";
-import { IDateBoxed } from "./IDateBoxed";
-import { Signature } from "./TraineeProfile";
+import { ProfilePanelDefaults, Signature } from "./TraineeProfile";
 
-export interface Placement extends IDateBoxed {
+export type Placement = ProfilePanelDefaults & {
   site: string;
   siteLocation: string;
   siteKnownAs: string;
@@ -18,7 +17,7 @@ export interface Placement extends IDateBoxed {
   trainingBody: string;
   status?: Status;
   signature?: Signature;
-}
+};
 
 export const placementPanelTemplate: Placement = {
   tisId: "",

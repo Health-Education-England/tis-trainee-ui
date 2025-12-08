@@ -5,11 +5,18 @@ import {
   Label,
   SummaryList
 } from "nhsuk-react-components";
-import { placementPanelTemplate, SpecialtyType } from "../../models/Placement";
-import { programmePanelTemplate } from "../../models/ProgrammeMembership";
+import {
+  Placement,
+  placementPanelTemplate,
+  SpecialtyType
+} from "../../models/Placement";
+import {
+  ProgrammeMembership,
+  programmePanelTemplate
+} from "../../models/ProgrammeMembership";
 import { ProfileType, TraineeProfileName } from "../../models/TraineeProfile";
 import store from "../../redux/store/store";
-import { PanelKeys } from "../../utilities/Constants";
+import { PANEL_KEYS } from "../../utilities/Constants";
 import {
   DateUtilities,
   isCurrentDateBoxed,
@@ -32,19 +39,17 @@ import { OnboardingTrackerLink } from "../programmes/trackers/OnboardingTrackerL
 import InfoTooltip from "./InfoTooltip";
 import { FileUtilities } from "../../utilities/FileUtilities";
 import { Link } from "react-router-dom";
+import { UserFeaturesType } from "../../models/FeatureFlags";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 type PanelsCreatorProps = {
   panelsArr: ProfileType[];
-  panelsName: string;
-  panelsTitle: string;
-  panelKeys: PanelKeys;
+  panelsName: TraineeProfileName;
 };
 
 export function PanelsCreator({
   panelsArr,
-  panelsName,
-  panelsTitle,
-  panelKeys
+  panelsName
 }: Readonly<PanelsCreatorProps>) {
   const today = dayjs().format("YYYY-MM-DD");
   const unreviewedActions = store
@@ -52,18 +57,20 @@ export function PanelsCreator({
     .traineeActions.traineeActionsData.filter(
       action => today >= dayjs(action.availableFrom).format("YYYY-MM-DD")
     );
-  const userFeatures = store.getState().user.features;
+  const userFeatures = useAppSelector(state => state.user.features);
+
+  const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
+  const panelsTitle = PANEL_KEYS[panelsName];
 
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
-        panelsArr.map((panel: any, index: number) => {
-          const {
-            tisId,
-            subSpecialty,
-            postAllowsSubspecialty,
-            ...filteredPanel
-          } = panel;
+        panelsArr.map((panel: ProfileType, index: number) => {
+          const panelTitle =
+            panelsName === TraineeProfileName.Programmes
+              ? (panel as ProgrammeMembership).programmeName
+              : (panel as Placement).site;
+
           const currentAction = unreviewedActions.filter(
             action =>
               action.tisReferenceInfo.id === panel.tisId &&
@@ -78,12 +85,7 @@ export function PanelsCreator({
                     : style.panelDiv
                 }
               >
-                {panelsName === TraineeProfileName.Placements && (
-                  <p className={style.panelHeader}>{panel.site}</p>
-                )}
-                {panelsName === TraineeProfileName.Programmes && (
-                  <p className={style.panelHeader}>{panel.programmeName}</p>
-                )}
+                <p className={style.panelHeader}>{panelTitle}</p>
                 <SummaryList>
                   {panelsName === TraineeProfileName.Programmes &&
                     dayjs(panel.startDate).isAfter(
@@ -107,7 +109,9 @@ export function PanelsCreator({
                             </Label>
                           </SummaryList.Key>
                           <SummaryList.Value>
-                            <OnboardingTrackerLink progPanelId={panel.tisId} />
+                            <OnboardingTrackerLink
+                              progPanelId={panel.tisId as string}
+                            />
                           </SummaryList.Value>
                         </SummaryList.Row>
                       </>
@@ -144,7 +148,7 @@ export function PanelsCreator({
                   >
                     Details
                   </p>
-                  {Object.keys(filteredPanel).map((panelProp, _index) => (
+                  {keysToDisplay.map((panelProp, _index) => (
                     <SummaryList.Row key={_index}>
                       <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
                         {panelProp === "conditionsOfJoining" ? (
@@ -153,10 +157,10 @@ export function PanelsCreator({
                               tooltipId={`${panelProp}${index}CojInfo`}
                               content="The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."
                             />
-                            {panelKeys[panelProp as keyof PanelKeys]}
+                            {PANEL_KEYS[panelProp]}
                           </>
                         ) : (
-                          <span>{panelKeys[panelProp as keyof PanelKeys]}</span>
+                          <span>{PANEL_KEYS[panelProp]}</span>
                         )}
                       </SummaryList.Key>
                       <SummaryList.Value data-cy={`${panelProp}${index}Val`}>
@@ -199,7 +203,7 @@ export function PanelsCreator({
                     className="btn_full-width"
                     onClick={(e: { preventDefault: () => void }) => {
                       e.preventDefault();
-                      downloadPmConfirmation(panel.tisId);
+                      downloadPmConfirmation(panel.tisId as string);
                     }}
                     data-cy={`downloadPmConfirmBtn-${panelsName}-${panel.tisId}`}
                   >
@@ -219,6 +223,25 @@ export function PanelsCreator({
       )}
     </Card.Group>
   );
+}
+
+function getKeysToDisplay(
+  panelsName: TraineeProfileName,
+  userFeatures: UserFeaturesType
+) {
+  if (panelsName === TraineeProfileName.Programmes) {
+    const { tisId, ...rest } = programmePanelTemplate;
+    const keys = Object.keys(rest);
+    return keys.filter(
+      k =>
+        userFeatures.details.programmes.conditionsOfJoining.enabled ||
+        k !== "conditionsOfJoining"
+    );
+  } else {
+    const { tisId, subSpecialty, postAllowsSubspecialty, ...rest } =
+      placementPanelTemplate;
+    return Object.keys(rest);
+  }
 }
 
 export async function handleReview(actionId: string) {
@@ -250,56 +273,6 @@ export function displayListVal<T extends Date | string>(val: T, k: string) {
   } else return val;
 }
 
-export function prepareProfilePanelsData(
-  arr: ProfileType[],
-  arrName: TraineeProfileName
-) {
-  return arr.map((obj, _index) => filterAndOrderProfilePanelData(arrName, obj));
-}
-
-function filterAndOrderProfilePanelData<T>(
-  pName: TraineeProfileName,
-  pObj: any
-) {
-  if (pName === TraineeProfileName.Placements) {
-    const reorderedPl = populateTemplateProperties(placementPanelTemplate, {
-      ...pObj
-    });
-    const { status, ...filteredPlacementPanel } = reorderedPl;
-    return filteredPlacementPanel;
-  } else {
-    const reorderedPr = populateTemplateProperties(programmePanelTemplate, {
-      ...pObj
-    });
-
-    const {
-      programmeMembershipType,
-      status,
-      programmeCompletionDate,
-      ...filteredProgrammePanel
-    } = reorderedPr;
-
-    // Filter programme features.
-    const userFeatures = store.getState().user.features;
-    return Object.fromEntries(
-      Object.entries(filteredProgrammePanel).filter(([key]) => {
-        if (key === "conditionsOfJoining") {
-          return userFeatures.details.programmes.conditionsOfJoining.enabled;
-        }
-        return true;
-      })
-    );
-  }
-}
-
-function populateTemplateProperties(template: any, values: any) {
-  const populatedTemplate: any = {};
-  Object.keys(template).forEach(
-    key => (populatedTemplate[key] = (key in values ? values : template)[key])
-  );
-  return populatedTemplate;
-}
-
 function displayTheCorrectListItem(
   panelProp: string,
   panel: any,
@@ -312,7 +285,7 @@ function displayTheCorrectListItem(
       return (
         <ConditionsOfJoining
           conditionsOfJoining={panel[panelProp]}
-          startDate={panel["startDate"]}
+          startDate={panel.startDate}
           programmeMembershipId={panel.tisId}
         />
       );
@@ -337,8 +310,8 @@ function displayTheCorrectListItem(
       return (
         <Specialty
           specialty={panel[panelProp]}
-          subSpecialty={panel["subSpecialty"]}
-          postAllowsSubspecialty={panel["postAllowsSubspecialty"]}
+          subSpecialty={panel.subSpecialty}
+          postAllowsSubspecialty={panel.postAllowsSubspecialty}
           index={index}
         />
       );

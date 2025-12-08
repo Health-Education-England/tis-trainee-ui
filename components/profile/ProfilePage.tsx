@@ -5,7 +5,6 @@ import DataSourceMsg from "../common/DataSourceMsg";
 import style from "../Common.module.scss";
 import { Fieldset } from "nhsuk-react-components";
 import { ProfilePanels } from "../profile/ProfilePanels";
-import { selectTraineeProfile } from "../../redux/slices/traineeProfileSlice";
 import { TraineeProfileName } from "../../models/TraineeProfile";
 
 type ProfilePageProps = {
@@ -35,7 +34,6 @@ export function ProfilePage({
       <DataSourceMsg />
       <ProfilePanels
         profileName={profileName}
-        dataSelector={selectTraineeProfile}
         title={title}
         warningText={warningText}
         showTitle={false}

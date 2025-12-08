@@ -4,7 +4,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { IDateBoxed } from "../models/IDateBoxed";
+import { ProfilePanelDefaults } from "../models/TraineeProfile";
 
 day.extend(utc);
 day.extend(timezone);
@@ -202,7 +202,7 @@ export function isPastIt(date: DateType): boolean {
   return day(date).format("YYYY-MM-DD") < today;
 }
 
-export function isCurrentDateBoxed(dateBoxed: IDateBoxed): boolean {
+export function isCurrentDateBoxed(dateBoxed: ProfilePanelDefaults): boolean {
   const { startDate, endDate } = dateBoxed;
   return (
     day(endDate).format("YYYY-MM-DD") >= today &&
@@ -210,7 +210,7 @@ export function isCurrentDateBoxed(dateBoxed: IDateBoxed): boolean {
   );
 }
 
-export function isUpcomingDateBoxed(dateBoxed: IDateBoxed): boolean {
+export function isUpcomingDateBoxed(dateBoxed: ProfilePanelDefaults): boolean {
   const { startDate } = dateBoxed;
   return (
     day(startDate).format("YYYY-MM-DD") > today &&
@@ -218,9 +218,7 @@ export function isUpcomingDateBoxed(dateBoxed: IDateBoxed): boolean {
   );
 }
 
-export function isFutureDateBoxed(
-  dateBoxed: IDateBoxed
-): boolean {
+export function isFutureDateBoxed(dateBoxed: ProfilePanelDefaults): boolean {
   const { startDate } = dateBoxed;
   return day(startDate).format("YYYY-MM-DD") > twelveWeeksAhead;
 }

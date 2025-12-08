@@ -1,7 +1,12 @@
 import { ProgrammeMembership } from "./ProgrammeMembership";
 import { Placement } from "./Placement";
 import { PersonalDetails } from "./PersonalDetails";
-import { IDateBoxed } from "./IDateBoxed";
+
+export type ProfilePanelDefaults = {
+  tisId?: string;
+  startDate: Date | string;
+  endDate: Date | string;
+};
 
 export type Qualification = {
   tisId: string;
@@ -9,15 +14,22 @@ export type Qualification = {
   dateAttained: string; // ISO date
   medicalSchool: string;
 };
-export interface TraineeProfile {
+export type TraineeProfile = {
   traineeTisId: string;
   personalDetails: PersonalDetails;
   qualifications: Qualification[];
   programmeMemberships: ProgrammeMembership[];
   placements: Placement[];
-}
+};
 
-export type ProfileType = IDateBoxed;
+export type ProfileType = Placement | ProgrammeMembership;
+
+export type ProfileDateBoxedGroup = {
+  future: ProfileType[];
+  upcoming: ProfileType[];
+  current: ProfileType[];
+  past: ProfileType[];
+};
 
 export enum TraineeProfileName {
   Placements = "placements",
