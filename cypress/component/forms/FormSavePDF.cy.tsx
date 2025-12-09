@@ -24,7 +24,7 @@ describe("FormSavePDF", () => {
     cy.stub(FormRUtilities, "historyPush").as("Back");
     cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
 
-    mountWithProviders(<FormSavePDF history={[]} path="/formr-b" pmId="1" />);
+    mountWithProviders(<FormSavePDF pmId="1" />);
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
     cy.get("[data-cy=savePdfBtn]").click();
     cy.get("@PrintPDF").should("have.been.called");
@@ -38,7 +38,7 @@ describe("FormSavePDF", () => {
     const MockedFormsListBtnNoDraftForms = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileData(mockTraineeProfile));
-      return <FormSavePDF history={[]} path="/formr-b" pmId="1" />;
+      return <FormSavePDF pmId="1" />;
     };
     mountWithProviders(<MockedFormsListBtnNoDraftForms />);
     cy.get("[data-cy=savePdfBtn]").click();

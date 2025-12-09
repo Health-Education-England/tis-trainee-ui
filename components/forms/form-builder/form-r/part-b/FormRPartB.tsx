@@ -118,9 +118,7 @@ export default function FormB() {
           render={() => (
             <FormView
               formData={formDataWithSortedWork}
-              canEditStatus={canEditStatus}
               formJson={finalFormJson}
-              redirectPath={redirectPath}
               validationSchemaForView={formValidationSchema}
             />
           )}
@@ -131,9 +129,7 @@ export default function FormB() {
           render={() => (
             <FormView
               formData={formDataWithSortedWork}
-              canEditStatus={canEditStatus}
               formJson={finalFormJson}
-              redirectPath={redirectPath}
             />
           )}
         />

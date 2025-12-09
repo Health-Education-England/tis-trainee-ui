@@ -15,7 +15,6 @@ import {
   makeWarningText,
   processLinkedFormData
 } from "../../../utilities/FormRUtilities";
-import history from "../../navigation/history";
 import {
   saveDraftForm,
   createErrorObject,
@@ -35,15 +34,13 @@ import { StringUtilities } from "../../../utilities/StringUtilities";
 type FormViewProps = {
   formData: FormData;
   formJson: Form;
-  redirectPath: string;
   validationSchemaForView?: any;
 };
 
 export const FormView = ({
   formData,
   formJson,
-  validationSchemaForView,
-  redirectPath
+  validationSchemaForView
 }: FormViewProps) => {
   const canEdit =
     formData.status.current.state === "UNSUBMITTED" ||
@@ -120,9 +117,7 @@ export const FormView = ({
   return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEdit && (
-        <FormSavePDF history={history} path={redirectPath} pmId="" />
-      )}
+      {!canEdit && <FormSavePDF pmId={formData.programmeMembershipId} />}
       {canEdit && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
       {!canEdit &&
         FormRUtilities.displaySubmissionDate(
@@ -207,6 +202,6 @@ export const FormView = ({
       />
     </>
   ) : (
-    <Redirect to={redirectPath} />
+    <Redirect to="/" /> // TODO to refactor
   );
 };

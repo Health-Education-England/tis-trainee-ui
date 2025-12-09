@@ -30,7 +30,6 @@ export default function FormA() {
     programmeDeclarationOptions
   };
 
-  const canEditStatus = useAppSelector(state => state.formA.canEdit);
   const formJson = formAJson as Form;
   const initialPageFields = formJson.pages[0].sections.flatMap(
     section => section.fields
@@ -85,9 +84,7 @@ export default function FormA() {
           render={() => (
             <FormView
               formData={formData}
-              canEditStatus={canEditStatus}
               formJson={formJson}
-              redirectPath={redirectPath}
               validationSchemaForView={formAValidationSchema}
             />
           )}
@@ -95,14 +92,7 @@ export default function FormA() {
         <Route
           exact
           path="/formr-a/:id"
-          render={() => (
-            <FormView
-              formData={formData}
-              canEditStatus={canEditStatus}
-              formJson={formJson}
-              redirectPath={redirectPath}
-            />
-          )}
+          render={() => <FormView formData={formData} formJson={formJson} />}
         />
         <Route exact path="/formr-a" component={CreateList} />
         <Route path="/formr-a/*" component={PageNotFound} />

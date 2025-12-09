@@ -20,12 +20,7 @@ export function Ltft() {
           Changing hours (LTFT)
         </Fieldset.Legend>
         {location.pathname !== "/ltft" && (
-          <FormBackLink
-            history={history}
-            path="/ltft"
-            dataCy="back-to-ltft-home"
-            text="Back to LTFT home"
-          />
+          <FormBackLink text="Back to LTFT home" />
         )}
       </Fieldset>
       <Switch>

@@ -182,12 +182,7 @@ describe("FormView", () => {
     render(
       <Provider store={testStore}>
         <BrowserRouter>
-          <FormView
-            formData={mockFormData}
-            canEditStatus={true}
-            formJson={mockFormJson}
-            redirectPath="/test"
-          />
+          <FormView formData={mockFormData} formJson={mockFormJson} />
         </BrowserRouter>
       </Provider>
     );

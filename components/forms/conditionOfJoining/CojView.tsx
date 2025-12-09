@@ -42,9 +42,7 @@ export default function CojView() {
 
     return (
       <>
-        {signedDate && (
-          <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
-        )}
+        {signedDate && <FormSavePDF pmId={pmId} />}
         <ScrollTo />
         {CojFormVersion}
         <CojDeclarationForm
