@@ -34,7 +34,6 @@ import { StringUtilities } from "../../../utilities/StringUtilities";
 
 type FormViewProps = {
   formData: FormData;
-  canEditStatus: boolean;
   formJson: Form;
   redirectPath: string;
   validationSchemaForView?: any;
@@ -42,11 +41,13 @@ type FormViewProps = {
 
 export const FormView = ({
   formData,
-  canEditStatus,
   formJson,
   validationSchemaForView,
   redirectPath
 }: FormViewProps) => {
+  const canEdit =
+    formData.status.current.state === "UNSUBMITTED" ||
+    formData.status.current.state === "DRAFT";
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,7 +66,7 @@ export const FormView = ({
 
   // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
-    if (canEditStatus && !isSubmitting) {
+    if (canEdit && !isSubmitting) {
       validateFields(allPagesFields, formData, validationSchemaForView)
         .then(() => {
           setErrors({});
@@ -77,13 +78,7 @@ export const FormView = ({
           });
         });
     }
-  }, [
-    canEditStatus,
-    formData,
-    validationSchemaForView,
-    allPagesFields,
-    isSubmitting
-  ]);
+  }, [formData, validationSchemaForView, allPagesFields, isSubmitting]);
 
   const linkedFormData: LinkedFormRDataType = {
     isArcp: StringUtilities.convertToBool(formData.isArcp),
@@ -125,20 +120,20 @@ export const FormView = ({
   return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEditStatus && (
+      {!canEdit && (
         <FormSavePDF history={history} path={redirectPath} pmId="" />
       )}
-      {canEditStatus && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
-      {!canEditStatus &&
+      {canEdit && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
+      {!canEdit &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
           "submissionDateTop"
         )}
-      {!canEditStatus && <FormLinkerSummary {...linkedFormData} />}
+      {!canEdit && <FormLinkerSummary {...linkedFormData} />}
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
-        canEdit={canEditStatus}
+        canEdit={canEdit}
         formErrors={errors}
       />
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
@@ -148,10 +143,10 @@ export const FormView = ({
         <form>
           <Declarations
             setCanSubmit={setCanSubmit}
-            canEdit={canEditStatus}
+            canEdit={canEdit}
             formDeclarations={formJson.declarations}
           />
-          {canEditStatus && (
+          {canEdit && (
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
@@ -168,7 +163,7 @@ export const FormView = ({
           )}
         </form>
       </WarningCallout>
-      {canEditStatus && (
+      {canEdit && (
         <Container>
           <Row>
             <Col width="one-quarter">
@@ -197,7 +192,7 @@ export const FormView = ({
           </Row>
         </Container>
       )}
-      {!canEditStatus &&
+      {!canEdit &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
           "submissionDate"

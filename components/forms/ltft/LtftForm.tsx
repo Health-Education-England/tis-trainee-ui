@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { LtftObj } from "../../../models/LtftTypes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
@@ -6,9 +7,23 @@ import { FormProvider } from "../form-builder/FormContext";
 import ltftJson from "./ltft.json";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { ltftValidationSchema } from "./ltftValidationSchema";
+import { useEffect } from "react";
+import { loadSavedLtft } from "../../../redux/slices/ltftSlice";
+import store from "../../../redux/store/store";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import Loading from "../../common/Loading";
 
 export function LtftForm() {
+  const { id } = useParams<{ id: string }>();
+  useEffect(() => {
+    if (id) {
+      store.dispatch(loadSavedLtft(id));
+    }
+  }, [id]);
+
+  const formLoadStatus = useAppSelector(state => state.ltft.status);
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
+  const ltftStatus = formData?.status?.current?.state;
   const formJson = ltftJson as Form;
   const initialPageFields = formJson.pages[0].sections.flatMap(
     section => section.fields
@@ -48,7 +63,17 @@ export function LtftForm() {
     { value: "Trust Administrator", label: "Trust Administrator" }
   ];
 
-  return formData?.declarations?.discussedWithTpd ? (
+  if (formLoadStatus === "loading") return <Loading />;
+
+  if (
+    formLoadStatus === "failed" ||
+    (ltftStatus !== "DRAFT" && ltftStatus !== "UNSUBMITTED")
+  )
+    return (
+      <ErrorPage message="Failed to load LTFT form data. Please try again." />
+    );
+
+  return (
     <div>
       <h2>Main application form</h2>
       <LtftStatusDetails {...formData}></LtftStatusDetails>
@@ -63,7 +88,5 @@ export function LtftForm() {
         />
       </FormProvider>
     </div>
-  ) : (
-    <ErrorPage message="Please try again" />
   );
 }

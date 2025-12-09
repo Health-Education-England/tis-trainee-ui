@@ -201,7 +201,7 @@ export function CctSavedDraftsTable() {
           );
           dispatch(updatedLtft(draftLtft));
           setIsModalOpen(false);
-          history.push("/ltft/create");
+          history.push("/ltft/new/create");
         }}
       />
       <ActionModal

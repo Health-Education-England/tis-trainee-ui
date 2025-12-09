@@ -80,15 +80,15 @@ const LtftSummary = ({
     }));
   };
 
-  const handleClick = (rowOb: LtftSummaryObj) => {
+  const handleRowClick = (rowOb: LtftSummaryObj) => {
     if (ltftSummaryType === "CURRENT") {
-      loadTheSavedForm(
-        rowOb.status === "UNSUBMITTED" ? "/ltft/confirm" : "/ltft",
-        rowOb.id ?? "",
-        history
+      history.push(
+        `/ltft/${rowOb.id}/${
+          rowOb.status === "UNSUBMITTED" ? "view" : "create"
+        }`
       );
     } else if (ltftSummaryType === "PREVIOUS") {
-      history.push(`/ltft/${rowOb.id}`);
+      history.push(`/ltft/${rowOb.id}/view`);
     }
   };
 
@@ -360,7 +360,7 @@ const LtftSummary = ({
                     return (
                       <tr
                         className="table-row"
-                        onClick={() => handleClick(row.original)}
+                        onClick={() => handleRowClick(row.original)}
                         key={row.id}
                         data-cy={`ltft-row-${row.id}`}
                       >

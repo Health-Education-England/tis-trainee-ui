@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
   loadSavedLtft,
   updatedLtftSaveStatus
@@ -35,23 +35,25 @@ import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObj } from "../../../models/LtftTypes";
-import FormBackLink from "../../common/FormBackLink";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
+  const location = useLocation<{ fromFormCreate?: boolean }>();
   const { currentAction, setAction, resetAction } = useActionState();
 
   useEffect(() => {
-    if (id) {
+    if (id && !location.state?.fromFormCreate) {
       dispatch(loadSavedLtft(id));
     }
-  }, [id, dispatch]);
+  }, [id, dispatch, location.state]);
 
   const ltftStatus = useAppSelector(state => state.ltft.status);
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
-  const canEditStatus = useAppSelector(state => state.ltft.canEdit);
+  const canEdit =
+    formData?.status?.current?.state === "DRAFT" ||
+    formData?.status?.current?.state === "UNSUBMITTED";
   const cctSnapshot: CctCalculation = {
     cctDate: formData?.change?.cctDate,
     programmeMembership: formData?.programmeMembership,
@@ -108,15 +110,14 @@ export const LtftFormView = () => {
 
   if (ltftStatus === "failed") {
     return (
-      <LtftViewWrapper>
-        <ErrorPage message="There was a problem loading your application." />
-      </LtftViewWrapper>
+      <ErrorPage message="There was a problem loading your application." />
     );
   }
 
-  if (ltftStatus === "succeeded" || canEditStatus)
+  if (ltftStatus === "succeeded" || canEdit)
     return (
-      <LtftViewWrapper>
+      <>
+        <ScrollToTop />
         <Button
           data-cy="savePdfBtn"
           disabled={!formData.id}
@@ -144,7 +145,7 @@ export const LtftFormView = () => {
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
-          canEdit={canEditStatus}
+          canEdit={canEdit}
           formErrors={{}}
         />
         <WarningCallout>
@@ -152,10 +153,10 @@ export const LtftFormView = () => {
 
           <Declarations
             setCanSubmit={setCanSubmit}
-            canEdit={canEditStatus}
+            canEdit={canEdit}
             formDeclarations={formJson.declarations}
           />
-          {canEditStatus && (
+          {canEdit && (
             <Formik
               initialValues={{ name: formData.name ?? "" }}
               onSubmit={handleSubClick}
@@ -169,7 +170,7 @@ export const LtftFormView = () => {
                       label="Please give your Changing hours (LTFT) application a name"
                       placeholder="Type name here..."
                       width="300px"
-                      readOnly={!canEditStatus}
+                      readOnly={!canEdit}
                     />
 
                     <Button
@@ -192,7 +193,7 @@ export const LtftFormView = () => {
             </Formik>
           )}
         </WarningCallout>
-        {canEditStatus && (
+        {canEdit && (
           <Container>
             <Row>
               <Col width="one-quarter">
@@ -231,24 +232,7 @@ export const LtftFormView = () => {
           isSubmitting={isSubmitting}
           additionalInfo={currentAction.additionalInfo}
         />
-      </LtftViewWrapper>
+      </>
     );
   return null;
 };
-
-function LtftViewWrapper({
-  children
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <>
-      <ScrollToTop />
-      <FormBackLink
-        history={history}
-        path="/ltft"
-        dataCy="backLink-to-ltft-home"
-        text="Back to Changing hours (LTFT) Home"
-      />
-      {children}
-    </>
-  );
-}
