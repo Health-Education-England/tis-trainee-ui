@@ -2,8 +2,6 @@ import { ActionLink, Button, Col, Row } from "nhsuk-react-components";
 import { downloadCojPdf } from "../../utilities/FileUtilities";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { useState } from "react";
-import FormBackLink from "../common/FormBackLink";
-import { FormName } from "./form-builder/FormBuilder";
 
 type IFormSave = {
   pmId: string;
@@ -18,11 +16,6 @@ const FormSavePDF = ({ pmId }: IFormSave) => {
   );
   return (
     <div className="hide-from-print">
-      <Row>
-        <Col width="full">
-          <FormBackLink text="Back to forms list" />
-        </Col>
-      </Row>
       <Row>
         <Col width="one-third">
           <Button

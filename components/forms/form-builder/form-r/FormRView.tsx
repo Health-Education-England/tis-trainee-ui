@@ -30,6 +30,7 @@ import { FormRPartA } from "../../../../models/FormRPartA";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { StringUtilities } from "../../../../utilities/StringUtilities";
+import { LifeCycleState } from "../../../../models/LifeCycleState";
 
 type FormViewProps = {
   formData: FormData;
@@ -43,8 +44,9 @@ export const FormRView = ({
   validationSchemaForView
 }: FormViewProps) => {
   const canEdit =
-    formData.status.current.state === "UNSUBMITTED" ||
-    formData.status.current.state === "DRAFT";
+    formData?.lifecycleState === LifeCycleState.Draft ||
+    formData?.lifecycleState === LifeCycleState.New ||
+    formData?.lifecycleState === LifeCycleState.Unsubmitted;
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

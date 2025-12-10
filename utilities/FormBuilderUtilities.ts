@@ -111,16 +111,21 @@ type LtftParams = {
 };
 
 function handleFormrToConfirm(formName: FormName, formData: FormData) {
-  const redirectPath =
-    formName === "formA" ? "/formr-a/confirm" : "/formr-b/confirm";
+  const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
+  let id: string | undefined;
+
   if (formName === "formA") {
+    id = formData.id ?? store.getState().formA.newFormId;
     store.dispatch(updatedFormA(formData as FormRPartA));
     store.dispatch(updatedCanEdit(true));
   } else if (formName === "formB") {
+    id = formData.id ?? store.getState().formB.newFormId;
     store.dispatch(updatedFormB(formData as FormRPartB));
     store.dispatch(updatedCanEditB(true));
   }
-  history.push(redirectPath, { fromFormCreate: true });
+  const suffix = id ? `/${id}/view` : "/new/view";
+  const fullPath = `${redirectPath}${suffix}`;
+  history.push(fullPath, { fromFormCreate: true });
 }
 
 function handleLtftToConfirm(formData: FormData) {
@@ -159,18 +164,30 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
 }
 
 export function getEditPageLocation(formName: FormName, fieldName: string) {
-  const pathnameMap: Record<FormName, string | (() => string)> = {
-    formA: "/formr-a/create",
-    formB: "/formr-b/create",
+  const getPath = (name: FormName, id?: string) => {
+    const urlName = mapFormNameToUrl(name as FormName);
+    return id ? `/${urlName}/${id}/create` : `/${urlName}/new/create`;
+  };
+
+  const pathnameMap: Record<FormName, () => string> = {
+    formA: () => {
+      const id =
+        store.getState().formA.formData?.id ?? store.getState().formA.newFormId;
+      return getPath("formA", id);
+    },
+    formB: () => {
+      const id =
+        store.getState().formB.formData?.id ?? store.getState().formB.newFormId;
+      return getPath("formB", id);
+    },
     ltft: () => {
-      const id = store.getState().ltft.formData?.id;
-      return id ? `/ltft/${id}/create` : "/ltft/new/create";
+      const id =
+        store.getState().ltft.formData?.id ?? store.getState().ltft.newFormId;
+      return getPath("ltft", id);
     }
   };
-  const pathname =
-    typeof pathnameMap[formName] === "function"
-      ? pathnameMap[formName]()
-      : pathnameMap[formName];
+
+  const pathname = pathnameMap[formName]();
 
   return {
     pathname,
