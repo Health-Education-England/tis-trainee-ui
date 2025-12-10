@@ -66,6 +66,8 @@ export function FormRPartAForm() {
   }, [isNewForm, newFormId]);
 
   useEffect(() => {
+    // don't trigger loadSavedFormA if change from new to id was triggered by first successful autosave/URL update
+    if (id && id === newFormId) return;
     if (isNewForm) {
       resetForm(formName);
     } else if (id) {

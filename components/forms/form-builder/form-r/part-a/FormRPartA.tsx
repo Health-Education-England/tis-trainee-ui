@@ -17,7 +17,7 @@ export default function FormA() {
   return (
     <>
       <PageTitle title="Form R Part-A" />
-      <ScrollTo />
+      {/* <ScrollTo /> */}
       <Fieldset>
         <Fieldset.Legend
           isPageHeading
@@ -42,8 +42,11 @@ export default function FormA() {
       </Fieldset>
       <Switch>
         <Route exact path="/formr-a" component={FormRHome} />
-        <Route exact path="/formr-a/new/create" component={FormRPartAForm} />
-        <Route exact path="/formr-a/:id/create" component={FormRPartAForm} />
+        <Route
+          exact
+          path={["/formr-a/new/create", "/formr-a/:id/create"]}
+          component={FormRPartAForm}
+        />
         <Route exact path="/formr-a/new/view" component={FormRPartAView} />
         <Route exact path="/formr-a/:id/view" component={FormRPartAView} />
         <Route path="/formr-a/*" component={PageNotFound} />

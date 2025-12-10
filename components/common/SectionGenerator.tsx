@@ -27,7 +27,7 @@ const SectionGenerator = <U,>({
   return (
     <>
       <ScrollTo />
-      <FormBackLink history={history} path={path} text="Start over" />
+      <FormBackLink text="Start over" />
       <main>
         <Fieldset.Legend size="l">
           {sectionsArr[section - 1].title}
