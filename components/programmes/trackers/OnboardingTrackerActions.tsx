@@ -17,7 +17,10 @@ import dayjs from "dayjs";
 import { Modal } from "../../common/Modal";
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
-import { getActionStatus } from "../../../utilities/OnboardingTrackerUtilities";
+import {
+  getActionStatus,
+  getTrackerSections
+} from "../../../utilities/OnboardingTrackerUtilities";
 import { TrackerLink } from "./TrackerLink";
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { createPmRelatedNotificationMap } from "../../../utilities/NotificationsUtilities";
@@ -26,50 +29,6 @@ import {
   TrackerActionType
 } from "../../../models/Tracker";
 import { NotificationSubjectType } from "../../../models/Notifications";
-
-const TRACKER_SECTIONS = [
-  {
-    digit: 1,
-    headerName: "Welcome (16 weeks)",
-    color: "#002D88",
-    isActive: (startDate: string) =>
-      dayjs(startDate)
-        .startOf("day")
-        .isSameOrBefore(dayjs().add(16, "weeks").startOf("day")),
-    actions: [
-      "WELCOME_EMAIL",
-      "WELCOME", // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
-      "REVIEW_PROGRAMME",
-      "SIGN_COJ",
-      "SIGN_FORM_R_PART_A",
-      "SIGN_FORM_R_PART_B",
-      "TRAINING_NUMBER",
-      "LTFT",
-      "DEFERRAL"
-    ] as TrackerActionType[]
-  },
-  {
-    digit: 2,
-    headerName: "Placement (12 weeks)",
-    color: "#002D88",
-    isActive: (startDate: string) =>
-      dayjs(startDate)
-        .startOf("day")
-        .isSameOrBefore(dayjs().add(12, "weeks").startOf("day")),
-    actions: [
-      "PLACEMENT_CONFIRMATION",
-      "REVIEW_PLACEMENT"
-    ] as TrackerActionType[]
-  },
-  {
-    digit: 3,
-    headerName: "In post (Day One)",
-    color: "#002D88",
-    isActive: (startDate: string) =>
-      dayjs(startDate).startOf("day").isSameOrBefore(dayjs().startOf("day")),
-    actions: ["DAY_ONE_EMAIL", "DAY_ONE"] as TrackerActionType[]
-  }
-];
 
 type TrackerSectionHeaderProps = {
   digit: number;
@@ -111,16 +70,27 @@ export function OnboardingTrackerActions({
   const notificationsList = useAppSelector(
     state => state.notifications.notificationsList
   );
+  const userFeatures = useAppSelector(state => state.user.features);
+
+  // const notificationsMap = createPmRelatedNotificationMap(
+  //   notificationsList,
+  //   progId
+  // );
+  // const trackerSections = getTrackerSections(userFeatures);
 
   const notificationsMap = useMemo(
     () => createPmRelatedNotificationMap(notificationsList, progId),
     [notificationsList, progId]
   );
+  const trackerSections = useMemo(
+    () => getTrackerSections(userFeatures),
+    [userFeatures]
+  );
 
   return (
     <Container className="tracker-container">
       <Row>
-        {TRACKER_SECTIONS.map(section => {
+        {trackerSections.map(section => {
           const sectionIsActive = section.isActive(panel.startDate as string);
           const sectionColor = sectionIsActive ? section.color : "#768692";
 
