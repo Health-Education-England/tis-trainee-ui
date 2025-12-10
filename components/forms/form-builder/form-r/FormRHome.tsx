@@ -50,7 +50,7 @@ export function FormRHome() {
         <Container>
           <Row>
             <Col width="one-third">
-              <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
+              <FormsListBtn pathName={pathname} />
             </Col>
           </Row>
           <Row>
