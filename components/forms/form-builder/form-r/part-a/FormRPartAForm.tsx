@@ -56,6 +56,15 @@ export function FormRPartAForm() {
   // Show modal if new and no pre-pop data
   const showLinkerModal = isNewForm && !formData?.traineeTisId;
 
+  // handle URL replacement on autosave success
+  // TODO - This is not great UX i.e. flicker when remounting comp on URL change
+  const newFormId = useAppSelector(state => state.formA.newFormId);
+  useEffect(() => {
+    if (isNewForm && newFormId) {
+      history.replace(`/formr-a/${newFormId}/create`);
+    }
+  }, [isNewForm, newFormId]);
+
   useEffect(() => {
     if (isNewForm) {
       resetForm(formName);
