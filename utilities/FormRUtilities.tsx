@@ -59,7 +59,6 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    history: any,
     traineeProfileData: TraineeProfile,
     linkedFormRData: LinkedFormRDataType
   ) {
@@ -76,7 +75,6 @@ export class FormRUtilities {
       );
       store.dispatch(updatedFormB(formBInitialValues));
     }
-    history.push(`${pathName}/create`);
   }
 }
 

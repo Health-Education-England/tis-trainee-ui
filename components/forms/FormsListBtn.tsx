@@ -48,16 +48,21 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
     } else {
       dispatch(updatedSaveStatusB("idle"));
     }
-    setIsSubmitting(true);
-    if (draftFormProps?.id && draftFormProps?.programmeMembershipId) {
-      await loadTheSavedForm(pathName, draftFormProps.id, history);
+    if (
+      draftFormProps?.id &&
+      draftFormProps?.lifecycleState === LifeCycleState.Draft
+    ) {
+      history.push(`${pathName}/${draftFormProps.id}/create`);
     } else {
+      // Show modal for NEW and UNSUBMITTED
       setShowModal(true);
     }
-    setIsSubmitting(false);
   };
 
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
+    // TODO NEXT: refactor this.
+    // 1. Existing form (with id): The idea is to have the linkedFormData in state for when the formData is fetched and then populate.
+    // 2. New form: probably keep the same (although may rename the loadNewForm for clarity).
     const processedFormRData = processLinkedFormData(
       data,
       traineeProfileData.programmeMemberships
@@ -65,19 +70,14 @@ const FormsListBtn = ({ pathName, latestSubDate }: IFormsListBtn) => {
 
     setShowModal(false);
     if (draftFormProps?.id) {
-      loadTheSavedForm(
-        pathName,
-        draftFormProps?.id,
-        history,
-        processedFormRData
-      ); // UNSUBMITTED
+      history.push(`${pathName}/${draftFormProps.id}/create`);
     } else {
-      FormRUtilities.loadNewForm(
-        pathName,
-        history,
-        traineeProfileData,
-        processedFormRData
-      );
+      // FormRUtilities.loadNewForm(
+      //   pathName,
+      //   traineeProfileData,
+      //   processedFormRData
+      // );
+      history.push(`${pathName}/new/create`);
     }
   };
 

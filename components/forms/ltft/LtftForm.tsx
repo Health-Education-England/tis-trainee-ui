@@ -16,7 +16,7 @@ import Loading from "../../common/Loading";
 export function LtftForm() {
   const { id } = useParams<{ id: string }>();
   useEffect(() => {
-    if (id) {
+    if (id && id !== "new") {
       store.dispatch(loadSavedLtft(id));
     }
   }, [id]);

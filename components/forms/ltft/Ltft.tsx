@@ -5,7 +5,6 @@ import { LtftHome } from "./LtftHome";
 import { LtftForm } from "./LtftForm";
 import { LtftFormView } from "./LtftFormView";
 import FormBackLink from "../../common/FormBackLink";
-import history from "../../navigation/history";
 
 export function Ltft() {
   const location = useLocation();

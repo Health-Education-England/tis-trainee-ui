@@ -1,41 +1,19 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import ScrollTo from "../../../ScrollTo";
 import PageTitle from "../../../../common/PageTitle";
 import { Fieldset } from "nhsuk-react-components";
-import CreateList from "../../../CreateList";
-import { useAppSelector } from "../../../../../redux/hooks/hooks";
 import PageNotFound from "../../../../common/PageNotFound";
-import formAJson from "./formA.json";
-import FormBuilder, { Form, FormName } from "../../FormBuilder";
-import { formAValidationSchema } from "./formAValidationSchema";
-import { FormView } from "../../FormView";
-import { useSelectFormData } from "../../../../../utilities/hooks/useSelectFormData";
-import { transformReferenceData } from "../../../../../utilities/FormBuilderUtilities";
-import { selectAllReference } from "../../../../../redux/slices/referenceSlice";
-import { FORMR_PARTA_DECLARATIONS } from "../../../../../utilities/Constants";
-import { FormRPartA } from "../../../../../models/FormRPartA";
-import { FormProvider } from "../../FormContext";
+import {
+  FORMR_HEADING_TEXT,
+  FORMR_SUBHEADING_TEXT
+} from "../../../../../utilities/Constants";
+import { FormBackLink } from "../../../../common/FormBackLink";
+import { FormRPartAForm } from "./FormRPartAForm";
+import { FormRPartAView } from "./FormRPartAView";
+import { FormRHome } from "../FormRHome";
 
 export default function FormA() {
-  const formData = useSelectFormData(formAJson.name as FormName) as FormRPartA;
-  const referenceData = transformReferenceData(
-    useAppSelector(selectAllReference)
-  );
-
-  const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
-    (declaration: string) => ({ label: declaration, value: declaration })
-  );
-  const formOptions = {
-    ...referenceData,
-    programmeDeclarationOptions
-  };
-
-  const formJson = formAJson as Form;
-  const initialPageFields = formJson.pages[0].sections.flatMap(
-    section => section.fields
-  );
-  const redirectPath = "/formr-a";
-
+  const location = useLocation();
   return (
     <>
       <PageTitle title="Form R Part-A" />
@@ -48,53 +26,26 @@ export default function FormA() {
         >
           Form R (Part A)
         </Fieldset.Legend>
-        <p className="nhsuk-heading-s" data-cy="formraSubheading">
-          Trainee registration for Postgraduate Speciality Training
-        </p>
-        <p className="nhsuk-body-m" data-cy="formraInfo">
-          The Form R is a vital aspect of Revalidation (this applies to those
-          holding GMC registration) and you are expected to complete one at the
-          start of a new training programme and ahead of each ARCP.
-        </p>
+        {location.pathname === "/formr-a" && (
+          <>
+            <p className="nhsuk-heading-s" data-cy="formraSubheading">
+              {FORMR_HEADING_TEXT}
+            </p>
+            <p className="nhsuk-body-m" data-cy="formraInfo">
+              {FORMR_SUBHEADING_TEXT}
+            </p>
+          </>
+        )}
+        {location.pathname !== "/formr-a" && (
+          <FormBackLink text="Back to Form R Part A home" />
+        )}
       </Fieldset>
       <Switch>
-        <Route
-          exact
-          path="/formr-a/create"
-          render={() => {
-            return formData.traineeTisId ? (
-              <FormProvider
-                initialData={formData}
-                initialPageFields={initialPageFields}
-                jsonForm={formJson}
-              >
-                <FormBuilder
-                  options={formOptions}
-                  validationSchema={formAValidationSchema}
-                />
-              </FormProvider>
-            ) : (
-              <Redirect to={redirectPath} />
-            );
-          }}
-        />
-        <Route
-          exact
-          path="/formr-a/confirm"
-          render={() => (
-            <FormView
-              formData={formData}
-              formJson={formJson}
-              validationSchemaForView={formAValidationSchema}
-            />
-          )}
-        />
-        <Route
-          exact
-          path="/formr-a/:id"
-          render={() => <FormView formData={formData} formJson={formJson} />}
-        />
-        <Route exact path="/formr-a" component={CreateList} />
+        <Route exact path="/formr-a" component={FormRHome} />
+        <Route exact path="/formr-a/new/create" component={FormRPartAForm} />
+        <Route exact path="/formr-a/:id/create" component={FormRPartAForm} />
+        <Route exact path="/formr-a/new/view" component={FormRPartAView} />
+        <Route exact path="/formr-a/:id/view" component={FormRPartAView} />
         <Route path="/formr-a/*" component={PageNotFound} />
       </Switch>
     </>

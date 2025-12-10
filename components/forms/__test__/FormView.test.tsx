@@ -1,13 +1,13 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { FormView } from "../form-builder/FormView";
 import { FormName, FieldType } from "../form-builder/FormBuilder";
 import * as FormRUtilities from "../../../utilities/FormRUtilities";
 import * as FormBuilderUtilities from "../../../utilities/FormBuilderUtilities";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
+import { FormRView } from "../form-builder/form-r/FormRView";
 
 // Mock the hell out of everything rather than using requireActual which was causing circular dependency issues
 jest.mock("../../../utilities/FormRUtilities", () => ({
@@ -182,7 +182,7 @@ describe("FormView", () => {
     render(
       <Provider store={testStore}>
         <BrowserRouter>
-          <FormView formData={mockFormData} formJson={mockFormJson} />
+          <FormRView formData={mockFormData} formJson={mockFormJson} />
         </BrowserRouter>
       </Provider>
     );
