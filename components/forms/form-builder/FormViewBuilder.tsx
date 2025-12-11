@@ -10,10 +10,14 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import { strDateRegex } from "../../../utilities/Constants";
 import { Link } from "react-router-dom";
 
+type FieldError = string | { [key: string]: FieldError } | FieldError[];
+
+type FormErrors = { [key: string]: FieldError };
+
 type VisibleFieldProps = {
   field: Field;
   formData: FormData;
-  formErrors: { [key: string]: any }; // TODO: 'any' to allow nested error objects for now
+  formErrors: FormErrors;
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
@@ -99,7 +103,7 @@ type FormViewBuilder = {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
-  formErrors: { [key: string]: string };
+  formErrors: FormErrors;
 };
 
 export default function FormViewBuilder({
@@ -170,7 +174,7 @@ type ArrayFieldRendererProps = {
   canEdit: boolean;
   pageIndex: number;
   jsonFormName: FormName;
-  formErrors: { [key: string]: any };
+  formErrors: FormErrors;
 };
 
 function ArrayFieldRenderer({
@@ -235,7 +239,14 @@ function ArrayFieldRenderer({
               const itemErrors = Array.isArray(arrayErrors)
                 ? arrayErrors[index]
                 : null;
-              const hasError = itemErrors && itemErrors[key];
+              let hasError = false;
+              if (
+                itemErrors &&
+                typeof itemErrors === "object" &&
+                !Array.isArray(itemErrors)
+              ) {
+                hasError = !!itemErrors[key];
+              }
               return (
                 <SummaryList.Row key={i}>
                   <SummaryList.Key
