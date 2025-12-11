@@ -125,9 +125,7 @@ export const FormView = ({
   return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEditStatus && (
-        <FormSavePDF history={history} path={redirectPath} pmId="" />
-      )}
+      {!canEditStatus && <FormSavePDF pmId="" />}
       {canEditStatus && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
       {!canEditStatus &&
         FormRUtilities.displaySubmissionDate(
