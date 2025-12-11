@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 type VisibleFieldProps = {
   field: Field;
   formData: FormData;
-  formErrors: { [key: string]: string };
+  formErrors: { [key: string]: any }; // TODO: 'any' to allow nested error objects for now
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
@@ -61,6 +61,7 @@ function VisibleField({
             canEdit={canEdit}
             pageIndex={pageIndex}
             jsonFormName={jsonFormName}
+            formErrors={formErrors}
           />
         </div>
       );
@@ -169,6 +170,7 @@ type ArrayFieldRendererProps = {
   canEdit: boolean;
   pageIndex: number;
   jsonFormName: FormName;
+  formErrors: { [key: string]: any };
 };
 
 function ArrayFieldRenderer({
@@ -176,7 +178,8 @@ function ArrayFieldRenderer({
   field,
   canEdit,
   pageIndex,
-  jsonFormName
+  jsonFormName,
+  formErrors
 }: Readonly<ArrayFieldRendererProps>) {
   if (!fieldVal || fieldVal.length === 0) {
     return (
@@ -227,9 +230,18 @@ function ArrayFieldRenderer({
               const [key, value] = entry;
               const subField = field.objectFields?.find(f => f.name === key);
               const valueType = subField?.type;
+              // nested error lookup for array items
+              const arrayErrors = formErrors[field.name];
+              const itemErrors = Array.isArray(arrayErrors)
+                ? arrayErrors[index]
+                : null;
+              const hasError = itemErrors && itemErrors[key];
               return (
                 <SummaryList.Row key={i}>
-                  <SummaryList.Key data-cy={`${key}-key`}>
+                  <SummaryList.Key
+                    data-cy={`${key}-key`}
+                    className={hasError ? "nhsuk-error-message" : ""}
+                  >
                     {formatFieldName(key)}
                   </SummaryList.Key>
                   <SummaryList.Value data-cy={`${key}-value`}>
