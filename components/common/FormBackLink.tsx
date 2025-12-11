@@ -24,7 +24,7 @@ export const FormBackLink = ({
           ? `backLink-to-${text.replace(/\s+/g, "-").toLowerCase()}`
           : "backLink"
       }
-      onClick={() => FormRUtilities.historyPush(history, path)}
+      onClick={() => history.push(path)}
     >
       {text ?? "Back"}
     </BackLink>

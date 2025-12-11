@@ -21,7 +21,7 @@ const mountWithProviders = (children: ReactNode) => {
 
 describe("FormSavePDF", () => {
   it("should show the 'PDF help' link when 'save Pdf' button clicked and no matched PM", () => {
-    cy.stub(FormRUtilities, "historyPush").as("Back");
+    // cy.stub(FormRUtilities, "historyPush").as("Back"); //TODO refactor to use history directly
     cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
 
     mountWithProviders(<FormSavePDF pmId="1" />);

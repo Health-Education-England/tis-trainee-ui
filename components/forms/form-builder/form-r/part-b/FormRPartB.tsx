@@ -27,22 +27,32 @@ export default function FormB() {
         >
           Form R (Part B)
         </Fieldset.Legend>
-        <p className="nhsuk-heading-s" data-cy="formrbSubheading">
-          {FORMR_HEADING_TEXT}
-        </p>
-        <p className="nhsuk-body-m" data-cy="formrbInfo">
-          {FORMR_SUBHEADING_TEXT}
-        </p>
+        {location.pathname === "/formr-b" && (
+          <>
+            <p className="nhsuk-heading-s" data-cy="formrbSubheading">
+              {FORMR_HEADING_TEXT}
+            </p>
+            <p className="nhsuk-body-m" data-cy="formrbInfo">
+              {FORMR_SUBHEADING_TEXT}
+            </p>
+          </>
+        )}
         {location.pathname !== "/formr-b" && (
           <FormBackLink text="Back to Form R Part B home" />
         )}
       </Fieldset>
       <Switch>
         <Route exact path="/formr-b" component={FormRHome} />
-        <Route exact path="/formr-b/new/create" component={FormRPartBForm} />
-        <Route exact path="/formr-b/:id/create" component={FormRPartBForm} />
-        <Route exact path="/formr-b/new/view" component={FormRPartBView} />
-        <Route exact path="/formr-b/:id/view" component={FormRPartBView} />
+        <Route
+          exact
+          path={["/formr-b/new/create", "/formr-b/:id/create"]}
+          component={FormRPartBForm}
+        />
+        <Route
+          exact
+          path={["/formr-b/new/view", "/formr-b/:id/view"]}
+          component={FormRPartBView}
+        />
         <Route path="/formr-b/*" component={PageNotFound} />
       </Switch>
     </>

@@ -170,11 +170,7 @@ const SubmittedFormsList = ({
                 <tr
                   className="table-row"
                   onClick={() =>
-                    FormRUtilities.handleRowClick(
-                      row.original.id!,
-                      path,
-                      history
-                    )
+                    history.push(`${path}/${row.original.id}/view`)
                   }
                   key={row.id}
                   data-cy={`formr-row-${row.id}`}

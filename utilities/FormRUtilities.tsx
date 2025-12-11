@@ -19,25 +19,6 @@ import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerF
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
 export class FormRUtilities {
-  public static async handleRowClick(
-    id: string,
-    path: string,
-    history: string[]
-  ): Promise<void> {
-    if (path === "/formr-a") {
-      store.dispatch(updatedCanEdit(false));
-      await store.dispatch(loadSavedFormA({ id }));
-    } else if (path === "/formr-b") {
-      store.dispatch(updatedCanEditB(false));
-      await store.dispatch(loadSavedFormB({ id }));
-    }
-    FormRUtilities.historyPush(history, path, id);
-  }
-
-  public static historyPush(history: any, path: string, id?: string): void {
-    id ? history.push(`${path}/${id}`) : history.push(path);
-  }
-
   public static windowPrint(): void {
     window.print();
   }
