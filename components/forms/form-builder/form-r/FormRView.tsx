@@ -127,13 +127,13 @@ export const FormRView = ({
           "submissionDateTop"
         )}
       {!canEdit && <FormLinkerSummary {...linkedFormData} />}
+      {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
         canEdit={canEdit}
         formErrors={errors}
       />
-      {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
 
       <WarningCallout>
         <WarningCallout.Label>Declarations</WarningCallout.Label>

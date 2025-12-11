@@ -338,11 +338,9 @@ export function FormErrors(formErrors: any) {
       tabIndex={-1}
     >
       <div className="error-summary" data-cy="errorSummary">
-        <p>
-          <b>
-            Before proceeding to the next section please address the following:
-          </b>
-        </p>
+        <h2 id="errorSummaryTitle" className="nhsuk-error-summary__title">
+          There is a problem
+        </h2>
         <FormErrorsList formErrors={formErrors} />
       </div>
     </ErrorSummary>
