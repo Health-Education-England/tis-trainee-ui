@@ -81,12 +81,7 @@ export function CctCalcCreate() {
   return (
     <>
       <ScrollToTop />
-      <FormBackLink
-        history={history}
-        path="/cct"
-        dataCy="backLink-to-cct-home"
-        text="Back to CCT Home"
-      />
+      <FormBackLink text="Back to CCT Home" />
       <Card>
         <Card.Content>
           <Card.Heading data-cy="cct-calc-header">

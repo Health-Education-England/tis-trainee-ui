@@ -1,5 +1,4 @@
 import { Col, Container, Row } from "nhsuk-react-components";
-import history from "../navigation/history";
 import FormBackLink from "../common/FormBackLink";
 import Loading from "../common/Loading";
 import ErrorPage from "../common/ErrorPage";
@@ -24,12 +23,7 @@ export const NotificationMessageView: React.FC<
     <div>
       <Row>
         <Col width="three-quarters">
-          <FormBackLink
-            history={history}
-            path="/notifications"
-            dataCy="backLink-to-notifications"
-            text="Back to list"
-          />
+          <FormBackLink text="Back to notifications list" />
         </Col>
       </Row>
       <Container className="nhsuk-u-margin-bottom-5 nhsuk-u-padding-3 container">

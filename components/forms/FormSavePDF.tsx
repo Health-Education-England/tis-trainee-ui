@@ -5,12 +5,10 @@ import { useState } from "react";
 import FormBackLink from "../common/FormBackLink";
 
 type IFormSave = {
-  history: any;
-  path: string;
   pmId: string;
 };
 
-const FormSavePDF = ({ history, path, pmId }: IFormSave) => {
+const FormSavePDF = ({ pmId }: IFormSave) => {
   const [showPdfHelp, setShowPdfHelp] = useState<boolean>(false);
   const matchedPm = useAppSelector(state =>
     state.traineeProfile.traineeProfileData.programmeMemberships.find(
@@ -19,11 +17,6 @@ const FormSavePDF = ({ history, path, pmId }: IFormSave) => {
   );
   return (
     <div className="hide-from-print">
-      <Row>
-        <Col width="full">
-          <FormBackLink history={history} path={path} />
-        </Col>
-      </Row>
       <Row>
         <Col width="one-third">
           <Button

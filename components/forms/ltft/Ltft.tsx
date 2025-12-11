@@ -1,11 +1,13 @@
 import { Fieldset } from "nhsuk-react-components";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
 import { LtftHome } from "./LtftHome";
 import { LtftForm } from "./LtftForm";
 import { LtftFormView } from "./LtftFormView";
+import FormBackLink from "../../common/FormBackLink";
 
 export function Ltft() {
+  const location = useLocation();
   return (
     <>
       <Fieldset>
@@ -16,6 +18,9 @@ export function Ltft() {
         >
           Changing hours (LTFT)
         </Fieldset.Legend>
+        {location.pathname !== "/ltft" && (
+          <FormBackLink text="Back to LTFT home" />
+        )}
       </Fieldset>
       <Switch>
         <Route exact path="/ltft" render={() => <LtftHome />} />

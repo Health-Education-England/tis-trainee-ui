@@ -77,7 +77,7 @@ describe("OnboardingTracker", () => {
   });
   it("renders tracker when matching PM found", () => {
     mountOnboardingTrackerWithMockData("SMS", "succeeded");
-    cy.get('[data-cy="backLink-to-programmes"]')
+    cy.get('[data-cy="backLink-to-back-to-programmes-list"]')
       .should("be.visible")
       .should("have.text", "Back to Programmes list");
     cy.get("[data-cy=onboardingTrackerHeading]").should("be.visible");

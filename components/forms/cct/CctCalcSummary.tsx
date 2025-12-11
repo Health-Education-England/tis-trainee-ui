@@ -70,9 +70,7 @@ export function CctCalcSummary() {
           <Button
             reverse
             type="button"
-            onClick={() => {
-              FormRUtilities.windowPrint();
-            }}
+            onClick={() => window.print()}
             data-cy="cct-save-pdf-btn"
           >
             Save PDF

@@ -2,7 +2,6 @@ import { AxiosResponse } from "axios";
 import { showToast, ToastType } from "../components/common/ToastMessage";
 import { FormsService } from "../services/FormsService";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-import { FormRUtilities } from "./FormRUtilities";
 
 type PdfFunction = () => Promise<AxiosResponse<Blob>>;
 
@@ -47,15 +46,13 @@ export function downloadCojPdf(
       formsService.downloadTraineeCojPdf(matchedPm)
     );
   } else {
-    FormRUtilities.windowPrint();
+    window.print();
     return setShowPdfHelp(true);
   }
 }
 
-export function downloadLtftPdf(
-  id: string
-) {
-    FileUtilities.downloadPdf(`ltft_${id}.pdf`, () =>
-      formsService.downloadTraineeLtftPdf(id)
-    );
+export function downloadLtftPdf(id: string) {
+  FileUtilities.downloadPdf(`ltft_${id}.pdf`, () =>
+    formsService.downloadTraineeLtftPdf(id)
+  );
 }

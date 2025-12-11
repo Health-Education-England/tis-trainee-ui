@@ -5,7 +5,6 @@ import { loadSavedCctCalc } from "../../../redux/slices/cctSlice";
 import ErrorPage from "../../common/ErrorPage";
 import { CctCalcSummary } from "./CctCalcSummary";
 import Loading from "../../common/Loading";
-import history from "../../navigation/history";
 import FormBackLink from "../../common/FormBackLink";
 
 export function CctCalcView() {
@@ -44,12 +43,7 @@ export function CctCalcView() {
 function ContentWrapper({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <FormBackLink
-        history={history}
-        path="/cct"
-        dataCy="backLink-to-cct-home"
-        text="Back to CCT Home"
-      />
+      <FormBackLink text="Back to CCT Home" />
       {children}
     </>
   );
