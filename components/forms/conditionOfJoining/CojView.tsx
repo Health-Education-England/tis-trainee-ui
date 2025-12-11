@@ -1,4 +1,3 @@
-import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
 import {
   COJ_DECLARATIONS_10,

@@ -46,7 +46,7 @@ export function downloadCojPdf(
       formsService.downloadTraineeCojPdf(matchedPm)
     );
   } else {
-    window.print();
+    globalThis.print();
     return setShowPdfHelp(true);
   }
 }

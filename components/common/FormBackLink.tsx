@@ -20,7 +20,7 @@ export const FormBackLink = ({
       className={className}
       data-cy={
         text
-          ? `backLink-to-${text.replace(/\s+/g, "-").toLowerCase()}`
+          ? `backLink-to-${text.replaceAll(/\s+/g, "-").toLowerCase()}`
           : "backLink"
       }
       onClick={() => history.push(path)}
