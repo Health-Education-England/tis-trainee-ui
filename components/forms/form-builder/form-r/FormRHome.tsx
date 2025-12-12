@@ -7,9 +7,9 @@ import {
   selectAllSubmittedforms,
   updatedFormsRefreshNeeded
 } from "../../../../redux/slices/formsSlice";
-import FormsListBtn from "../../FormsListBtn";
+import FormRListBtn from "./FormRListBtn";
 import { useLocation } from "react-router-dom";
-import SubmittedFormsList from "../../SubmittedFormsList";
+import SubmittedFormRList from "./SubmittedFormRList";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "../../StartOverButton";
 import { FormName } from "../FormBuilder";
@@ -50,7 +50,7 @@ export function FormRHome() {
         <Container>
           <Row>
             <Col width="one-third">
-              <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
+              <FormRListBtn pathName={pathname} />
             </Col>
           </Row>
           <Row>
@@ -63,7 +63,7 @@ export function FormRHome() {
             </Col>
           </Row>
         </Container>
-        <SubmittedFormsList
+        <SubmittedFormRList
           formRList={submittedListDesc}
           path={pathname}
           latestSubDate={latestSubDate}
