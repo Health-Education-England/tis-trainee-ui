@@ -5,7 +5,6 @@ import { CctNameModal } from "./CctNameModal";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import { handleCctSubmit } from "../../../utilities/CctUtilities";
-import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import ErrorPage from "../../common/ErrorPage";
 import { updatedFormSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctCalcSummaryDetails } from "./CctCalcSummaryDetails";
@@ -70,9 +69,7 @@ export function CctCalcSummary() {
           <Button
             reverse
             type="button"
-            onClick={() => {
-              FormRUtilities.windowPrint();
-            }}
+            onClick={() => globalThis.print()}
             data-cy="cct-save-pdf-btn"
           >
             Save PDF

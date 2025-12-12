@@ -242,12 +242,7 @@ function LtftViewWrapper({
   return (
     <>
       <ScrollToTop />
-      <FormBackLink
-        history={history}
-        path="/ltft"
-        dataCy="backLink-to-ltft-home"
-        text="Back to Changing hours (LTFT) Home"
-      />
+      <FormBackLink text="Back to Changing hours (LTFT) Home" />
       {children}
     </>
   );

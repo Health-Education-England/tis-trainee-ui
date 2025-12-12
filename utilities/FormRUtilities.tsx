@@ -31,15 +31,7 @@ export class FormRUtilities {
       store.dispatch(updatedCanEditB(false));
       await store.dispatch(loadSavedFormB({ id }));
     }
-    FormRUtilities.historyPush(history, path, id);
-  }
-
-  public static historyPush(history: any, path: string, id?: string): void {
-    id ? history.push(`${path}/${id}`) : history.push(path);
-  }
-
-  public static windowPrint(): void {
-    window.print();
+    history.push(`${path}/${id}`);
   }
 
   public static showMsgIfEmpty(

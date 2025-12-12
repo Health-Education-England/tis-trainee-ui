@@ -169,14 +169,8 @@ describe("FormB /confirm (without Covid)", () => {
       </Provider>
     );
     cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
-    cy.checkElement(
-      "formrbSubheading",
-      "Trainee registration for Postgraduate Speciality Training"
-    );
-    cy.checkElement(
-      "formrbInfo",
-      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
-    );
+    cy.get('[data-cy="formrbSubheading"]').should("not.exist");
+    cy.get('[data-cy="formrbInfo"]').should("not.exist");
     cy.get('[data-cy="reviewSubmitHeader"]')
       .should("exist")
       .contains("Review & submit");
@@ -296,12 +290,6 @@ describe("FormB /confirm (with Covid)", () => {
       </Provider>
     );
     cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
-    cy.get('[data-cy="formrbSubheading"]').contains(
-      "Trainee registration for Postgraduate Speciality Training"
-    );
-    cy.get('[data-cy="formrbInfo"]').contains(
-      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
-    );
 
     // check some default sections
     cy.get('[data-cy="pageHeader-Personal Details"]').should("exist");

@@ -7,8 +7,56 @@ import {
   filterProgrammesForLinker,
   makeWarningText,
   processLinkedFormData,
-  sortProgrammesForLinker
+  sortProgrammesForLinker,
+  FormRUtilities
 } from "../FormRUtilities";
+import store from "../../redux/store/store";
+import { updatedCanEdit, loadSavedFormA } from "../../redux/slices/formASlice";
+import { updatedCanEditB, loadSavedFormB } from "../../redux/slices/formBSlice";
+
+jest.mock("../../redux/store/store", () => ({
+  dispatch: jest.fn()
+}));
+
+jest.mock("../../redux/slices/formASlice", () => ({
+  updatedCanEdit: jest.fn(),
+  loadSavedFormA: jest.fn()
+}));
+
+jest.mock("../../redux/slices/formBSlice", () => ({
+  updatedCanEditB: jest.fn(),
+  loadSavedFormB: jest.fn()
+}));
+
+describe("FormRUtilities - handleRowClick", () => {
+  const mockHistory: string[] = [];
+  const mockId = "123";
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockHistory.length = 0;
+  });
+
+  it("should dispatch actions and navigate for Form A", async () => {
+    const path = "/formr-a";
+    await FormRUtilities.handleRowClick(mockId, path, mockHistory);
+
+    expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(updatedCanEdit).toHaveBeenCalledWith(false);
+    expect(loadSavedFormA).toHaveBeenCalledWith({ id: mockId });
+    expect(mockHistory).toContain(`${path}/${mockId}`);
+  });
+
+  it("should dispatch actions and navigate for Form B", async () => {
+    const path = "/formr-b";
+    await FormRUtilities.handleRowClick(mockId, path, mockHistory);
+
+    expect(store.dispatch).toHaveBeenCalledTimes(2);
+    expect(updatedCanEditB).toHaveBeenCalledWith(false);
+    expect(loadSavedFormB).toHaveBeenCalledWith({ id: mockId });
+    expect(mockHistory).toContain(`${path}/${mockId}`);
+  });
+});
 
 describe("FormRUtilities - filterProgrammesForLinker", () => {
   it("should return 'ARCP' programmes", () => {

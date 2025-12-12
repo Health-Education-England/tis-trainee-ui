@@ -1,4 +1,3 @@
-import history from "../../navigation/history";
 import ScrollTo from "../ScrollTo";
 import {
   COJ_DECLARATIONS_10,
@@ -42,9 +41,7 @@ export default function CojView() {
 
     return (
       <>
-        {signedDate && (
-          <FormSavePDF history={history} path={"/programmes"} pmId={pmId} />
-        )}
+        {signedDate && <FormSavePDF pmId={pmId} />}
         <ScrollTo />
         {CojFormVersion}
         <CojDeclarationForm

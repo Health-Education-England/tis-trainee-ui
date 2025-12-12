@@ -169,14 +169,6 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   const containedEls = [
     [".nhsuk-fieldset__heading", "Form R (Part A)"],
     [
-      '[data-cy="formraSubheading"]',
-      "Trainee registration for Postgraduate Speciality Training"
-    ],
-    [
-      '[data-cy="formraInfo"]',
-      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
-    ],
-    [
       '[data-cy="WarningCallout-formAImportantNotice-label"] > span',
       "Important"
     ],
@@ -1056,7 +1048,7 @@ Cypress.Commands.add("checkFlags", (name: string) => {
 
 Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   const { shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } = cctCalcWarningsMsgs;
-  cy.get('[data-cy="backLink-to-cct-home"]').should("exist");
+  cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
   cy.url().should("include", "/cct");
   cy.get('[data-cy="cct-calc-warning"]')
     .should("exist")

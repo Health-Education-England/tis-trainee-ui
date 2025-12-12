@@ -1,40 +1,33 @@
+import { useLocation } from "react-router-dom";
 import { BackLink } from "nhsuk-react-components";
-import { FormRUtilities } from "../../utilities/FormRUtilities";
 import style from "../Common.module.scss";
+import history from "../navigation/history";
 
 type FormBackLinkProps = {
-  history: any;
-  path: string;
   className?: string;
-  dataCy?: string;
   text?: string;
 };
 
 export const FormBackLink = ({
-  history,
-  path,
   className = style.backLink,
-  dataCy = "backLink",
   text
 }: FormBackLinkProps) => {
-  const linkText = mapPathToText(path, text);
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(0, 2).join("/");
+
   return (
     <BackLink
       className={className}
-      data-cy={dataCy}
-      onClick={() => FormRUtilities.historyPush(history, path)}
+      data-cy={
+        text
+          ? `backLink-to-${text.replaceAll(/\s+/g, "-").toLowerCase()}`
+          : "backLink"
+      }
+      onClick={() => history.push(path)}
     >
-      {linkText}
+      {text ?? "Back"}
     </BackLink>
   );
 };
 
 export default FormBackLink;
-
-function mapPathToText(path: string, text: string | undefined): string {
-  if (text) return text;
-  const linkText = path.slice(1);
-  if (linkText === "formr-a" || linkText === "formr-b")
-    return "Back to forms list";
-  return `Go to ${linkText.charAt(0).toUpperCase() + linkText.slice(1)} page`;
-}

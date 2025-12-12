@@ -133,6 +133,12 @@ export const NO_MATCHING_PM_ERROR_MESSAGE =
 export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
   "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
 
+export const FORMR_HEADING_TEXT =
+  "Trainee registration for Postgraduate Speciality Training";
+
+export const FORMR_SUBHEADING_TEXT =
+  "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP.";
+
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
   "I will be seeking specialist registration by application for a CESR",
@@ -765,16 +771,22 @@ export const traineeActionsCompletedWhenNotOutstanding: TrackerActionType[] = [
   "REVIEW_PLACEMENT"
 ];
 
-export const ltft16WeeksNotice  = (
+export const ltft16WeeksNotice = (
   <>
     <p>
-      To meet national guidance, all Changing hours (LTFT) applications must
-      be submitted <b>a minimum of 16 weeks before your LTFT start date or before the next rotation change dependent on local NHS England office processes</b>.
+      To meet national guidance, all Changing hours (LTFT) applications must be
+      submitted
+      <b>
+        {" "}
+        a minimum of 16 weeks before your LTFT start date or before the next
+        rotation change dependent on local NHS England office processes
+      </b>
+      {"."}
     </p>
     <p>
-      This allows Trusts the required <b>12 weeks&rsquo; notice</b> under
-      the Code of Practice, giving them time to make rota changes, update
-      work schedules, and ensure your placement is appropriately planned.
+      This allows Trusts the required <b>12 weeks&rsquo; notice</b> under the
+      Code of Practice, giving them time to make rota changes, update work
+      schedules, and ensure your placement is appropriately planned.
     </p>
   </>
 );

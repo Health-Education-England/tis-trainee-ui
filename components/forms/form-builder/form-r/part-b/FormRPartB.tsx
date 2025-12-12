@@ -14,9 +14,14 @@ import { DesignatedBodyKeyValue } from "../../../../../models/DesignatedBodyKeyV
 import { transformReferenceData } from "../../../../../utilities/FormBuilderUtilities";
 import { FormView } from "../../FormView";
 import { FormRPartB } from "../../../../../models/FormRPartB";
-import { COVID_RESULT_DECLARATIONS } from "../../../../../utilities/Constants";
+import {
+  COVID_RESULT_DECLARATIONS,
+  FORMR_HEADING_TEXT,
+  FORMR_SUBHEADING_TEXT
+} from "../../../../../utilities/Constants";
 import { ProfileUtilities } from "../../../../../utilities/ProfileUtilities";
 import { FormProvider } from "../../FormContext";
+import FormBackLink from "../../../../common/FormBackLink";
 
 export default function FormB() {
   const canEditStatus = useAppSelector(state => state.formB.canEdit);
@@ -82,14 +87,19 @@ export default function FormB() {
         >
           Form R (Part B)
         </Fieldset.Legend>
-        <p className="nhsuk-heading-s" data-cy="formrbSubheading">
-          Trainee registration for Postgraduate Speciality Training
-        </p>
-        <p className="nhsuk-body-m" data-cy="formrbInfo">
-          The Form R is a vital aspect of Revalidation (this applies to those
-          holding GMC registration) and you are expected to complete one at the
-          start of a new training programme and ahead of each ARCP.
-        </p>
+        {location.pathname === "/formr-b" && (
+          <>
+            <p className="nhsuk-heading-s" data-cy="formraSubheading">
+              {FORMR_HEADING_TEXT}
+            </p>
+            <p className="nhsuk-body-m" data-cy="formraInfo">
+              {FORMR_SUBHEADING_TEXT}
+            </p>
+          </>
+        )}
+        {location.pathname !== "/formr-b" && (
+          <FormBackLink text="Back to Form R Part B home" />
+        )}
       </Fieldset>
       <Switch>
         <Route
