@@ -1,21 +1,21 @@
 import { useEffect } from "react";
-import Loading from "../common/Loading";
-import ScrollTo from "../../components/forms/ScrollTo";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
+import Loading from "../../../common/Loading";
+import ScrollTo from "../../ScrollTo";
+import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   fetchForms,
   selectAllSubmittedforms,
   updatedFormsRefreshNeeded
-} from "../../redux/slices/formsSlice";
-import FormsListBtn from "../../components/forms/FormsListBtn";
+} from "../../../../redux/slices/formsSlice";
+import FormsListBtn from "../../FormsListBtn";
 import { useLocation } from "react-router-dom";
-import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
+import SubmittedFormsList from "../../SubmittedFormsList";
 import { Col, Container, Row } from "nhsuk-react-components";
-import { StartOverButton } from "./StartOverButton";
-import { FormName } from "./form-builder/FormBuilder";
-import ErrorPage from "../common/ErrorPage";
+import { StartOverButton } from "../../StartOverButton";
+import { FormName } from "../FormBuilder";
+import ErrorPage from "../../../common/ErrorPage";
 
-const CreateList = () => {
+export function FormRHome() {
   const dispatch = useAppDispatch();
   const pathname = useLocation().pathname;
   const formName: FormName = pathname === "/formr-a" ? "formA" : "formB";
@@ -71,6 +71,4 @@ const CreateList = () => {
       </>
     );
   return null;
-};
-
-export default CreateList;
+}

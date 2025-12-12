@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Redirect } from "react-router-dom";
-import FormViewBuilder from "./FormViewBuilder";
-import ScrollTo from "../ScrollTo";
-import FormSavePDF from "../FormSavePDF";
+import FormViewBuilder from "../FormViewBuilder";
+import ScrollTo from "../../ScrollTo";
+import FormSavePDF from "../../FormSavePDF";
 import {
   Button,
   Col,
@@ -14,38 +14,37 @@ import {
   FormRUtilities,
   makeWarningText,
   processLinkedFormData
-} from "../../../utilities/FormRUtilities";
+} from "../../../../utilities/FormRUtilities";
 import {
   saveDraftForm,
   createErrorObject,
   validateFields
-} from "../../../utilities/FormBuilderUtilities";
-import { StartOverButton } from "../StartOverButton";
-import { Form, FormData, FormErrors } from "./FormBuilder";
-import Declarations from "../Declarations";
-import { FormLinkerModal } from "../form-linker/FormLinkerModal";
-import { LinkedFormRDataType } from "../form-linker/FormLinkerForm";
-import { FormLinkerSummary } from "../form-linker/FormLinkerSummary";
-import { FormRPartA } from "../../../models/FormRPartA";
-import { FormRPartB } from "../../../models/FormRPartB";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import { StringUtilities } from "../../../utilities/StringUtilities";
+} from "../../../../utilities/FormBuilderUtilities";
+import { StartOverButton } from "../../StartOverButton";
+import { Form, FormData, FormErrors } from "../FormBuilder";
+import Declarations from "../../Declarations";
+import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
+import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
+import { FormLinkerSummary } from "../../form-linker/FormLinkerSummary";
+import { FormRPartA } from "../../../../models/FormRPartA";
+import { FormRPartB } from "../../../../models/FormRPartB";
+import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { StringUtilities } from "../../../../utilities/StringUtilities";
 
 type FormViewProps = {
   formData: FormData;
-  canEditStatus: boolean;
   formJson: Form;
-  redirectPath: string;
   validationSchemaForView?: any;
 };
 
-export const FormView = ({
+export const FormRView = ({
   formData,
-  canEditStatus,
   formJson,
-  validationSchemaForView,
-  redirectPath
+  validationSchemaForView
 }: FormViewProps) => {
+  const canEdit =
+    formData.status.current.state === "UNSUBMITTED" ||
+    formData.status.current.state === "DRAFT";
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +63,7 @@ export const FormView = ({
 
   // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
-    if (canEditStatus && !isSubmitting) {
+    if (canEdit && !isSubmitting) {
       validateFields(allPagesFields, formData, validationSchemaForView)
         .then(() => {
           setErrors({});
@@ -76,13 +75,7 @@ export const FormView = ({
           });
         });
     }
-  }, [
-    canEditStatus,
-    formData,
-    validationSchemaForView,
-    allPagesFields,
-    isSubmitting
-  ]);
+  }, [formData, validationSchemaForView, allPagesFields, isSubmitting]);
 
   const linkedFormData: LinkedFormRDataType = {
     isArcp: StringUtilities.convertToBool(formData.isArcp),
@@ -124,18 +117,18 @@ export const FormView = ({
   return formData?.traineeTisId ? (
     <>
       <ScrollTo />
-      {!canEditStatus && <FormSavePDF pmId="" />}
-      {canEditStatus && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
-      {!canEditStatus &&
+      {!canEdit && <FormSavePDF pmId={formData.programmeMembershipId} />}
+      {canEdit && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
+      {!canEdit &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
           "submissionDateTop"
         )}
-      {!canEditStatus && <FormLinkerSummary {...linkedFormData} />}
+      {!canEdit && <FormLinkerSummary {...linkedFormData} />}
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
-        canEdit={canEditStatus}
+        canEdit={canEdit}
         formErrors={errors}
       />
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
@@ -145,10 +138,10 @@ export const FormView = ({
         <form>
           <Declarations
             setCanSubmit={setCanSubmit}
-            canEdit={canEditStatus}
+            canEdit={canEdit}
             formDeclarations={formJson.declarations}
           />
-          {canEditStatus && (
+          {canEdit && (
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
@@ -165,7 +158,7 @@ export const FormView = ({
           )}
         </form>
       </WarningCallout>
-      {canEditStatus && (
+      {canEdit && (
         <Container>
           <Row>
             <Col width="one-quarter">
@@ -194,7 +187,7 @@ export const FormView = ({
           </Row>
         </Container>
       )}
-      {!canEditStatus &&
+      {!canEdit &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
           "submissionDate"
@@ -209,6 +202,6 @@ export const FormView = ({
       />
     </>
   ) : (
-    <Redirect to={redirectPath} />
+    <Redirect to="/" /> // TODO to refactor
   );
 };
