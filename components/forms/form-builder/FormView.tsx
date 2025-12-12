@@ -15,7 +15,6 @@ import {
   makeWarningText,
   processLinkedFormData
 } from "../../../utilities/FormRUtilities";
-import history from "../../navigation/history";
 import {
   saveDraftForm,
   createErrorObject,

@@ -25,7 +25,6 @@ import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import store from "../../../redux/store/store";
 import TextInputField from "../TextInputField";
 import { Form, Formik } from "formik";
-import history from "../../navigation/history";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import { ActionModal } from "../../common/ActionModal";
