@@ -20,7 +20,7 @@ import {
   saveDraftForm,
   FormDataType
 } from "../../../utilities/FormBuilderUtilities";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
@@ -104,6 +104,10 @@ export type ReturnedWidthData = {
   width: number;
 };
 
+type LocationState = {
+  fieldName?: string;
+};
+
 export default function FormBuilder({
   options,
   validationSchema
@@ -126,6 +130,7 @@ export default function FormBuilder({
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
+  const location = useLocation<LocationState>();
 
   useEffect(() => {
     setCurrentPageFields(
@@ -157,6 +162,14 @@ export default function FormBuilder({
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage || isShortcut) {
+          saveDraftForm(
+            jsonForm,
+            formData as FormDataType,
+            true,
+            false,
+            false,
+            false
+          );
           continueToConfirm(jsonFormName, formData);
         } else {
           setCurrentPage(currentPage + 1);
@@ -287,7 +300,8 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {canEditStatus && (
+          {/* TODO: remove canEditStatus after LTFT is refactored */}
+          {(canEditStatus || location.state?.fieldName) && (
             <Col width="one-half">
               <Button
                 onClick={(e: { preventDefault: () => void }) =>

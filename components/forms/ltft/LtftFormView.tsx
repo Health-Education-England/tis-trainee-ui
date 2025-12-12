@@ -34,7 +34,6 @@ import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObj } from "../../../models/LtftTypes";
-import FormBackLink from "../../common/FormBackLink";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -241,7 +240,6 @@ function LtftViewWrapper({
   return (
     <>
       <ScrollToTop />
-      <FormBackLink text="Back to Changing hours (LTFT) Home" />
       {children}
     </>
   );
