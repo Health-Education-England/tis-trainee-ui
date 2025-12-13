@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import store from "../../../../../redux/store/store";
 import { useLocation, useParams } from "react-router-dom";
 import { loadSavedFormA } from "../../../../../redux/slices/formASlice";
@@ -34,6 +34,7 @@ type FormRParams = {
 
 type LocationState = {
   fieldName?: boolean;
+  newFormSaved?: boolean;
 };
 
 export function FormRPartAForm() {
@@ -41,7 +42,6 @@ export function FormRPartAForm() {
   const { id } = useParams<FormRParams>();
   const formName = "formA";
 
-  // Selectors
   const formLoadStatus = useAppSelector(state => state.formA.status);
   const formData = useSelectFormData(formAJson.name as FormName) as FormRPartA;
   const referenceData = transformReferenceData(
@@ -52,22 +52,20 @@ export function FormRPartAForm() {
   );
   const submittedForms = useAppSelector(selectAllSubmittedforms);
 
-  // Derived State
   const latestSubDate = submittedForms?.length
     ? submittedForms[0].submissionDate
     : null;
   const isNewForm = id === undefined;
-
-  // Show modal if new and no pre-pop data
   const showLinkerModal = isNewForm && !formData?.traineeTisId;
 
-  // handle URL replacement on autosave success
-  // TODO: fix page reload issue after replace
+  const loadedFormIdRef = useRef(formData?.id);
+  loadedFormIdRef.current = formData?.id;
   const newFormId = useAppSelector(state => state.formA.newFormId);
+
   useEffect(() => {
     if (isNewForm && newFormId) {
       history.replace(`/formr-a/${newFormId}/create`, {
-        state: { newFormSaved: true }
+        newFormSaved: true
       });
     }
   }, [isNewForm, newFormId]);
@@ -75,11 +73,12 @@ export function FormRPartAForm() {
   useEffect(() => {
     if (isNewForm) {
       resetForm(formName);
-      // Don't reload form if coming from View to edit
     } else if (id && !location.state?.fieldName) {
-      store.dispatch(loadSavedFormA({ id }));
+      const isFormAlreadyLoaded = loadedFormIdRef.current === id;
+      if (!location.state?.newFormSaved || !isFormAlreadyLoaded)
+        store.dispatch(loadSavedFormA({ id }));
     }
-  }, [id, isNewForm, location.state?.fieldName]);
+  }, [id, isNewForm, location.state?.fieldName, location.state?.newFormSaved]);
 
   const handleModalSubmit = (data: LinkedFormRDataType) => {
     const processedFormRData = processLinkedFormData(
