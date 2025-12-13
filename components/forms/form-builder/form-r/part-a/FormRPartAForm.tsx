@@ -73,12 +73,10 @@ export function FormRPartAForm() {
   useEffect(() => {
     if (isNewForm) {
       resetForm(formName);
-    } else if (id && !location.state?.fieldName) {
-      const isFormAlreadyLoaded = loadedFormIdRef.current === id;
-      if (!location.state?.newFormSaved || !isFormAlreadyLoaded)
-        store.dispatch(loadSavedFormA({ id }));
+    } else if (id && loadedFormIdRef.current !== id) {
+      store.dispatch(loadSavedFormA({ id }));
     }
-  }, [id, isNewForm, location.state?.fieldName, location.state?.newFormSaved]);
+  }, [id, isNewForm]);
 
   const handleModalSubmit = (data: LinkedFormRDataType) => {
     const processedFormRData = processLinkedFormData(
@@ -97,14 +95,19 @@ export function FormRPartAForm() {
     history.push("/formr-a");
   };
 
-  if (!isNewForm && formLoadStatus === "loading") {
-    return <Loading />;
-  }
+  if (!isNewForm) {
+    if (
+      formLoadStatus === "loading" ||
+      (formLoadStatus === "idle" && !formData?.traineeTisId)
+    ) {
+      return <Loading />;
+    }
 
-  if (!isNewForm && formLoadStatus === "failed") {
-    return (
-      <ErrorPage message="Failed to load your Form R Part A. Please try again." />
-    );
+    if (formLoadStatus === "failed") {
+      return (
+        <ErrorPage message="Failed to load your Form R Part A. Please try again." />
+      );
+    }
   }
 
   if (formData?.lifecycleState === LifeCycleState.Submitted) {
