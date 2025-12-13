@@ -1,7 +1,6 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import PhoneInput from "react-phone-number-input";
-import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 
 type PhoneProps = {
@@ -30,9 +29,15 @@ export const Phone = ({
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
+  const errorId = `${inputId}-error`;
 
   return (
-    <div data-cy={name}>
+    <div
+      className={`nhsuk-form-group${
+        fieldError ? " nhsuk-form-group--error" : ""
+      }`}
+      data-cy={name}
+    >
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -41,6 +46,11 @@ export const Phone = ({
       >
         {label}
       </label>
+      {fieldError && (
+        <span id={errorId} className="nhsuk-error-message">
+          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
+        </span>
+      )}
       <PhoneInput
         id={inputId}
         data-cy={`${name}-input`}
@@ -61,10 +71,9 @@ export const Phone = ({
         value={value}
         initialValueFormat="national"
         aria-labelledby={labelId}
+        aria-describedby={fieldError ? errorId : undefined}
+        className={fieldError ? "nhsuk-input--error" : ""}
       />
-      {fieldError && (
-        <FieldErrorInline fieldError={fieldError} fieldName={name} />
-      )}
     </div>
   );
 };

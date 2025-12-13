@@ -1,6 +1,6 @@
+import React from "react";
 import { Hint, Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
-import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 
 type TextAreaProps = {
@@ -35,9 +35,15 @@ export const TextArea: React.FC<TextAreaProps> = ({
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
+  const errorId = `${inputId}-error`;
 
   return (
-    <div data-cy={name}>
+    <div
+      className={`nhsuk-form-group${
+        fieldError ? " nhsuk-form-group--error" : ""
+      }`}
+      data-cy={name}
+    >
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -47,6 +53,11 @@ export const TextArea: React.FC<TextAreaProps> = ({
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {fieldError && (
+        <span id={errorId} className="nhsuk-error-message">
+          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
+        </span>
+      )}
       <Textarea
         id={inputId}
         data-cy={`${name}-text-area-input`}
@@ -67,10 +78,9 @@ export const TextArea: React.FC<TextAreaProps> = ({
         placeholder={placeholder}
         rows={rows ?? 10}
         spellCheck={true}
+        aria-describedby={fieldError ? errorId : undefined}
+        className={fieldError ? "nhsuk-textarea--error" : ""}
       />
-      {fieldError && (
-        <FieldErrorInline fieldError={fieldError} fieldName={name} />
-      )}
     </div>
   );
 };

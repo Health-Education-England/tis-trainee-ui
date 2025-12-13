@@ -75,7 +75,10 @@ function VisibleField({
           <SummaryList.Key data-cy={`${field.name}-label`} id={field.name}>
             <span>{field.label}</span>
             {errorMessage && (
-              <span className="nhsuk-error-message">{errorMessage}</span>
+              <span className="nhsuk-error-message">
+                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
+                {errorMessage}
+              </span>
             )}
           </SummaryList.Key>
           <SummaryList.Value data-cy={`${field.name}-value`}>
@@ -258,6 +261,7 @@ function ArrayFieldRenderer({
                     <span>{formatFieldName(key)}</span>
                     {errorMessage && (
                       <span className="nhsuk-error-message">
+                        <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
                         {errorMessage}
                       </span>
                     )}
