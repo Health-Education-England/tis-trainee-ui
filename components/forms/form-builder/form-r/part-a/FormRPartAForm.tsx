@@ -86,7 +86,6 @@ export function FormRPartAForm() {
       traineeProfileData.programmeMemberships
     );
 
-    // Populate new form
     FormRUtilities.loadNewForm(
       "/formr-a",
       traineeProfileData,
@@ -126,14 +125,12 @@ export function FormRPartAForm() {
     );
   }
 
-  // 5. Missing Data Error (edge case)
   if (!formData.traineeTisId) {
     return (
       <ErrorPage message="Could not load the draft form. Please return to the Form R Part A home page and try again." />
     );
   }
 
-  // Main Form Render
   const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
     (declaration: string) => ({ label: declaration, value: declaration })
   );

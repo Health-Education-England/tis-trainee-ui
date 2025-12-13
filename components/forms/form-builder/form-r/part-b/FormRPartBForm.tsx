@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import store from "../../../../../redux/store/store";
 import { useLocation, useParams } from "react-router-dom";
 import { loadSavedFormB } from "../../../../../redux/slices/formBSlice";
@@ -34,6 +34,7 @@ type FormRParams = {
 
 type LocationState = {
   fieldName?: boolean;
+  newFormSaved?: boolean;
 };
 
 export function FormRPartBForm() {
@@ -42,7 +43,6 @@ export function FormRPartBForm() {
   const { id } = useParams<FormRParams>();
   const formName = "formB";
 
-  // Selectors
   const formLoadStatus = useAppSelector(state => state.formB.status);
   const formData = useSelectFormData(formBJson.name as FormName) as FormRPartB;
   const referenceData = transformReferenceData(
@@ -54,23 +54,35 @@ export function FormRPartBForm() {
   const submittedForms = useAppSelector(selectAllSubmittedforms);
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
 
-  // Derived State
   const latestSubDate = submittedForms?.length
     ? submittedForms[0].submissionDate
     : null;
   const isNewForm = id === undefined;
 
-  // Show modal if new and no pre-pop data
   const showLinkerModal = isNewForm && !formData?.traineeTisId;
+
+  const loadedFormIdRef = useRef(formData?.id);
+  loadedFormIdRef.current = formData?.id;
+  const newFormId = useAppSelector(state => state.formB.newFormId);
+
+  useEffect(() => {
+    if (isNewForm && newFormId) {
+      history.replace(`/formr-b/${newFormId}/create`, {
+        newFormSaved: true
+      });
+    }
+  }, [isNewForm, newFormId]);
 
   useEffect(() => {
     if (isNewForm) {
       resetForm(formName);
-      // Don't reload form if coming from View to edit
     } else if (id && !location.state?.fieldName) {
-      store.dispatch(loadSavedFormB({ id }));
+      const isFormAlreadyLoaded = loadedFormIdRef.current === id;
+      if (!location.state?.newFormSaved || !isFormAlreadyLoaded) {
+        store.dispatch(loadSavedFormB({ id }));
+      }
     }
-  }, [id, isNewForm, location.state?.fieldName]);
+  }, [id, isNewForm, location.state?.fieldName, location.state?.newFormSaved]);
 
   const handleModalSubmit = (data: LinkedFormRDataType) => {
     const processedFormRData = processLinkedFormData(
@@ -78,7 +90,6 @@ export function FormRPartBForm() {
       traineeProfileData.programmeMemberships
     );
 
-    // Populate new form
     FormRUtilities.loadNewForm(
       "/formr-b",
       traineeProfileData,
@@ -118,14 +129,12 @@ export function FormRPartBForm() {
     );
   }
 
-  // 5. Missing Data Error (edge case)
   if (!formData.traineeTisId) {
     return (
       <ErrorPage message="Could not load the draft form. Please return to the Form R Part B home page and try again." />
     );
   }
 
-  // Main Form Render
   const formOptions = {
     ...referenceData,
     yesNo: YES_NO_OPTIONS
