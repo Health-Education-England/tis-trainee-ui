@@ -15,8 +15,12 @@ const complyingValidationString =
   "Please confirm you are complying with these conditions, warnings or undertakings";
 const havePreviousDeclarationsString =
   "Please select Yes or No for previous declarations";
+const havePreviousUnresolvedDeclarationsString =
+  "Please select Yes or No for previous unresolved declarations";
 const haveCurrentDeclarationsString =
   "Please select Yes or No for new declarations";
+const haveCurrentUnresolvedDeclarationsString =
+  "Please select Yes or No for current unresolved declarations";
 const hasCovidDeclarationString =
   "Please select Yes or No for if Covid has affected your training";
 
@@ -205,8 +209,8 @@ const formBValidationSchemaDefault = yup.object({
     .required(havePreviousDeclarationsString),
   havePreviousUnresolvedDeclarations: yup
     .boolean()
-    .typeError(havePreviousDeclarationsString)
-    .required(havePreviousDeclarationsString),
+    .typeError(havePreviousUnresolvedDeclarationsString)
+    .required(havePreviousUnresolvedDeclarationsString),
   previousDeclarations: yup
     .array()
     .typeError("At least one Previous Declaration is required")
@@ -224,8 +228,8 @@ const formBValidationSchemaDefault = yup.object({
     .required(haveCurrentDeclarationsString),
   haveCurrentUnresolvedDeclarations: yup
     .boolean()
-    .typeError(haveCurrentDeclarationsString)
-    .required(haveCurrentDeclarationsString),
+    .typeError(haveCurrentUnresolvedDeclarationsString)
+    .required(haveCurrentUnresolvedDeclarationsString),
   currentDeclarations: yup
     .array()
     .typeError("At least one Current Declaration is required")
