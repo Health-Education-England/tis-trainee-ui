@@ -8,9 +8,9 @@ import {
   FORMR_SUBHEADING_TEXT
 } from "../../../../../utilities/Constants";
 import { FormBackLink } from "../../../../common/FormBackLink";
-import { FormRPartAForm } from "./FormRPartAForm";
 import { FormRHome } from "../FormRHome";
 import { FormRView } from "../FormRView";
+import { FormRForm } from "../FormRForm";
 
 export default function FormA() {
   const location = useLocation();
@@ -45,7 +45,7 @@ export default function FormA() {
         <Route
           exact
           path={["/formr-a/new/create", "/formr-a/:id/create"]}
-          component={FormRPartAForm}
+          render={() => <FormRForm formType="A" />}
         />
         <Route
           exact
