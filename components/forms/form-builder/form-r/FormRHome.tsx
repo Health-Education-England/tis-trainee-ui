@@ -14,6 +14,7 @@ import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "../../StartOverButton";
 import { FormName } from "../FormBuilder";
 import ErrorPage from "../../../common/ErrorPage";
+import { resetForm } from "../../../../utilities/FormBuilderUtilities";
 
 export function FormRHome() {
   const dispatch = useAppDispatch();
@@ -33,6 +34,7 @@ export function FormRHome() {
   );
 
   useEffect(() => {
+    resetForm(formName);
     dispatch(fetchForms(pathname));
     dispatch(updatedFormsRefreshNeeded(false));
   }, [dispatch, pathname, needFormsRefresh]);

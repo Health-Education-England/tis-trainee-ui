@@ -9,7 +9,6 @@ import ErrorPage from "../../../common/ErrorPage";
 import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import { resetForm } from "../../../../utilities/FormBuilderUtilities";
 import {
   FormRUtilities,
   makeWarningText,
@@ -70,10 +69,6 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
   }, [isNewForm, newFormId, basePath]);
 
   useEffect(() => {
-    if (isNewForm) {
-      resetForm(formName);
-      return;
-    }
     if (id && loadedFormIdRef.current !== id) {
       if (formType === "A") {
         store.dispatch(loadSavedFormA({ id }));
