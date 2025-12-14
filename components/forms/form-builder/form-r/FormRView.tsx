@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import FormViewBuilder from "../FormViewBuilder";
 import ScrollTo from "../../ScrollTo";
 import FormSavePDF from "../../FormSavePDF";
@@ -20,32 +21,112 @@ import {
   validateFields
 } from "../../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../../StartOverButton";
-import { Form, FormData, FormErrors } from "../FormBuilder";
+import { Form, FormData, FormErrors, FormName } from "../FormBuilder";
 import Declarations from "../../Declarations";
 import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
 import { FormLinkerSummary } from "../../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../../models/FormRPartA";
 import { FormRPartB } from "../../../../models/FormRPartB";
-import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import { StringUtilities } from "../../../../utilities/StringUtilities";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
+import Loading from "../../../common/Loading";
+import ErrorPage from "../../../common/ErrorPage";
+import { loadSavedFormA } from "../../../../redux/slices/formASlice";
+import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
+import { useSelectFormData } from "../../../../utilities/hooks/useSelectFormData";
 
-type FormViewProps = {
+import formAJson from "./part-a/formA.json";
+import formBJson from "./part-b/formB.json";
+import { formAValidationSchema } from "./part-a/formAValidationSchema";
+import { getFormBValidationSchema } from "./part-b/formBValidationSchema";
+import { useFormRViewConfig } from "../../../../utilities/hooks/useFormRViewConfig";
+
+type FormRParams = {
+  id: string | undefined;
+};
+
+type LocationState = {
+  fromFormCreate?: boolean;
+};
+
+type UnifiedFormRViewProps = {
+  formType: "A" | "B";
+};
+
+export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
+  const { id } = useParams<FormRParams>();
+  const location = useLocation<LocationState>();
+  const dispatch = useAppDispatch();
+
+  const isNewForm = id === undefined;
+  const fromCreate = location.state?.fromFormCreate;
+
+  const { formData, formJson, validationSchemaForView } =
+    useFormRViewConfig(formType);
+
+  const formLoadStatus = useAppSelector(state =>
+    formType === "A" ? state.formA.status : state.formB.status
+  );
+
+  useEffect(() => {
+    if (id) {
+      if (!fromCreate || !formData?.traineeTisId) {
+        if (formType === "A") {
+          dispatch(loadSavedFormA({ id }));
+        } else {
+          dispatch(loadSavedFormB({ id }));
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, dispatch, fromCreate, formType]);
+
+  if (formLoadStatus === "loading") {
+    return <Loading />;
+  }
+
+  if (!isNewForm && !formData?.traineeTisId) {
+    if (formLoadStatus === "failed") {
+      return (
+        <ErrorPage
+          message={`Failed to load your Form R Part ${formType}. Please try again.`}
+        />
+      );
+    }
+    return <Loading />;
+  }
+
+  if (isNewForm && !formData?.traineeTisId) {
+    return <ErrorPage message="No form data found. Please start a new form." />;
+  }
+
+  return (
+    <FormRReviewView
+      formData={formData}
+      formJson={formJson}
+      validationSchemaForView={validationSchemaForView}
+    />
+  );
+}
+
+type FormReviewViewProps = {
   formData: FormData;
   formJson: Form;
   validationSchemaForView?: any;
 };
 
-export const FormRView = ({
+const FormRReviewView = ({
   formData,
   formJson,
   validationSchemaForView
-}: FormViewProps) => {
+}: FormReviewViewProps) => {
   const canEdit =
     formData?.lifecycleState === LifeCycleState.Draft ||
     formData?.lifecycleState === LifeCycleState.New ||
     formData?.lifecycleState === LifeCycleState.Unsubmitted;
+
   const [formKey, setFormKey] = useState(Date.now());
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,25 +139,25 @@ export const FormRView = ({
     );
   }, [formJson.pages]);
 
-  const ProgMems = useAppSelector(
+  const progMems = useAppSelector(
     state => state.traineeProfile.traineeProfileData.programmeMemberships
   );
 
-  // Note: need to check for isSubmitting too so the error obj is not created when the formData is being manipulated for submission
   useEffect(() => {
     if (canEdit && !isSubmitting) {
       validateFields(allPagesFields, formData, validationSchemaForView)
-        .then(() => {
-          setErrors({});
-        })
+        .then(() => setErrors({}))
         .catch((err: { inner: { path: string; message: string }[] }) => {
-          setErrors(() => {
-            const newErrors = createErrorObject(err);
-            return newErrors;
-          });
+          setErrors(() => createErrorObject(err));
         });
     }
-  }, [formData, validationSchemaForView, allPagesFields, isSubmitting]);
+  }, [
+    formData,
+    validationSchemaForView,
+    allPagesFields,
+    isSubmitting,
+    canEdit
+  ]);
 
   const linkedFormData: LinkedFormRDataType = {
     isArcp: StringUtilities.convertToBool(formData.isArcp),
@@ -84,24 +165,19 @@ export const FormRView = ({
     localOfficeName: formData.localOfficeName
   };
 
-  const handleSubClick = () => {
-    setShowModal(true);
-  };
-
   const handleModalFormSubmit = (data: LinkedFormRDataType) => {
     setIsSubmitting(true);
-    const processedFormData = processLinkedFormData(data, ProgMems);
-    const { isArcp, programmeMembershipId, localOfficeName } =
-      processedFormData;
+    const processedFormData = processLinkedFormData(data, progMems);
 
     const updatedFormData = {
       ...formData,
-      isArcp,
-      programmeMembershipId,
-      localOfficeName,
+      isArcp: processedFormData.isArcp,
+      programmeMembershipId: processedFormData.programmeMembershipId,
+      localOfficeName: processedFormData.localOfficeName,
       programmeSpecialty: processedFormData.linkedProgramme?.programmeName,
       programmeName: processedFormData.linkedProgramme?.programmeName
     } as FormRPartA | FormRPartB;
+
     setShowModal(false);
     saveDraftForm(formJson, updatedFormData, false, true);
     setIsSubmitting(false);
@@ -120,19 +196,23 @@ export const FormRView = ({
       <ScrollTo />
       {!canEdit && <FormSavePDF pmId={formData.programmeMembershipId} />}
       {canEdit && <h2 data-cy="reviewSubmitHeader">Review & submit</h2>}
+
       {!canEdit &&
         FormRUtilities.displaySubmissionDate(
           formData.submissionDate,
           "submissionDateTop"
         )}
+
       {!canEdit && <FormLinkerSummary {...linkedFormData} />}
+
+      {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
+
       <FormViewBuilder
         jsonForm={formJson}
         formData={formData}
         canEdit={canEdit}
         formErrors={errors}
       />
-      {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
 
       <WarningCallout>
         <WarningCallout.Label>Declarations</WarningCallout.Label>
@@ -147,7 +227,7 @@ export const FormRView = ({
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
-                handleSubClick();
+                setShowModal(true);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0

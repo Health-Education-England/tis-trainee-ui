@@ -9,8 +9,8 @@ import {
 } from "../../../../../utilities/Constants";
 import { FormBackLink } from "../../../../common/FormBackLink";
 import { FormRHome } from "../FormRHome";
-import { FormRPartBForm } from "./FormRPartBForm";
-import { FormRPartBView } from "./FormRPartBView";
+import { FormRView } from "../FormRView";
+import { FormRForm } from "../FormRForm";
 
 export default function FormB() {
   const location = useLocation();
@@ -46,12 +46,12 @@ export default function FormB() {
         <Route
           exact
           path={["/formr-b/new/create", "/formr-b/:id/create"]}
-          component={FormRPartBForm}
+          render={() => <FormRForm formType="B" />}
         />
         <Route
           exact
           path={["/formr-b/new/view", "/formr-b/:id/view"]}
-          component={FormRPartBView}
+          render={() => <FormRView formType="B" />}
         />
         <Route path="/formr-b/*" component={PageNotFound} />
       </Switch>
