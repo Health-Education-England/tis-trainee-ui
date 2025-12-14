@@ -1,4 +1,4 @@
-import { Field, Form, FormData, FormName } from "./FormBuilder";
+import { Field, Form, FormData, FormErrorsType, FormName } from "./FormBuilder";
 import { Card, SummaryList } from "nhsuk-react-components";
 import {
   formatFieldName,
@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 type VisibleFieldProps = {
   field: Field;
   formData: FormData;
-  formErrors: { [key: string]: string };
+  formErrors: FormErrorsType;
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
@@ -61,18 +61,25 @@ function VisibleField({
             canEdit={canEdit}
             pageIndex={pageIndex}
             jsonFormName={jsonFormName}
+            formErrors={formErrors}
           />
         </div>
       );
     }
+    const error = formErrors[field.name];
+    const errorMessage = typeof error === "string" ? error : null;
+
     return (
       <SummaryList className="nhsuk-u-margin-bottom-4">
         <SummaryList.Row key={field.name}>
-          <SummaryList.Key
-            data-cy={`${field.name}-label`}
-            className={formErrors[field.name] ? "nhsuk-error-message" : ""}
-          >
-            {field.label}
+          <SummaryList.Key data-cy={`${field.name}-label`} id={field.name}>
+            <span>{field.label}</span>
+            {errorMessage && (
+              <span className="nhsuk-error-message">
+                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
+                {errorMessage}
+              </span>
+            )}
           </SummaryList.Key>
           <SummaryList.Value data-cy={`${field.name}-value`}>
             {formatEntryValue(formData[field.name], field.type)}
@@ -98,7 +105,7 @@ type FormViewBuilder = {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
-  formErrors: { [key: string]: string };
+  formErrors: FormErrorsType;
 };
 
 export default function FormViewBuilder({
@@ -169,6 +176,7 @@ type ArrayFieldRendererProps = {
   canEdit: boolean;
   pageIndex: number;
   jsonFormName: FormName;
+  formErrors: FormErrorsType;
 };
 
 function ArrayFieldRenderer({
@@ -176,7 +184,8 @@ function ArrayFieldRenderer({
   field,
   canEdit,
   pageIndex,
-  jsonFormName
+  jsonFormName,
+  formErrors
 }: Readonly<ArrayFieldRendererProps>) {
   if (!fieldVal || fieldVal.length === 0) {
     return (
@@ -227,10 +236,35 @@ function ArrayFieldRenderer({
               const [key, value] = entry;
               const subField = field.objectFields?.find(f => f.name === key);
               const valueType = subField?.type;
+              // nested error lookup for array items
+              const arrayErrors = formErrors[field.name];
+              const itemErrors = Array.isArray(arrayErrors)
+                ? arrayErrors[index]
+                : null;
+              let errorMessage: string | null = null;
+              if (
+                itemErrors &&
+                typeof itemErrors === "object" &&
+                !Array.isArray(itemErrors)
+              ) {
+                const err = itemErrors[key];
+                if (typeof err === "string") {
+                  errorMessage = err;
+                }
+              }
               return (
                 <SummaryList.Row key={i}>
-                  <SummaryList.Key data-cy={`${key}-key`}>
-                    {formatFieldName(key)}
+                  <SummaryList.Key
+                    data-cy={`${key}-key`}
+                    id={`${field.name}-${index}-${key}`}
+                  >
+                    <span>{formatFieldName(key)}</span>
+                    {errorMessage && (
+                      <span className="nhsuk-error-message">
+                        <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
+                        {errorMessage}
+                      </span>
+                    )}
                   </SummaryList.Key>
                   <SummaryList.Value data-cy={`${key}-value`}>
                     {formatEntryValue(value, valueType)}

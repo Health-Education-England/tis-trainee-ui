@@ -1,7 +1,7 @@
+import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { useFormContext } from "../FormContext";
-import FieldErrorInline from "./FieldErrorInline";
 
 type DatesProps = {
   name: string;
@@ -31,9 +31,15 @@ export const Dates = ({
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
+  const errorId = `${inputId}-error`;
 
   return (
-    <div data-cy={name}>
+    <div
+      className={`nhsuk-form-group${
+        fieldError ? " nhsuk-form-group--error" : ""
+      }`}
+      data-cy={name}
+    >
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -42,6 +48,11 @@ export const Dates = ({
       >
         {label}
       </label>
+      {fieldError && (
+        <span id={errorId} className="nhsuk-error-message">
+          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
+        </span>
+      )}
       <input
         id={inputId}
         onKeyDown={handleKeyDown}
@@ -76,10 +87,8 @@ export const Dates = ({
         min="1920-01-01"
         max="2119-12-31"
         aria-labelledby={labelId}
+        aria-describedby={fieldError ? errorId : undefined}
       />
-      {fieldError && (
-        <FieldErrorInline fieldError={fieldError} fieldName={name} />
-      )}
       {fieldWarning?.fieldName === name && !fieldError ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}

@@ -4,7 +4,6 @@ import {
   handleNumberInput
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
-import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 import { Hint } from "nhsuk-react-components";
 
@@ -45,8 +44,13 @@ export const Text: React.FC<TextProps> = ({
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
+  const errorId = `${inputId}-error`;
   return (
-    <>
+    <div
+      className={`nhsuk-form-group${
+        fieldError ? " nhsuk-form-group--error" : ""
+      }`}
+    >
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -56,6 +60,11 @@ export const Text: React.FC<TextProps> = ({
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {fieldError && (
+        <span id={errorId} className="nhsuk-error-message">
+          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
+        </span>
+      )}
       <input
         autoComplete="off"
         id={inputId}
@@ -82,6 +91,7 @@ export const Text: React.FC<TextProps> = ({
         }`}
         placeholder={placeholder}
         aria-labelledby={labelId}
+        aria-describedby={fieldError ? errorId : undefined}
         onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
           handleBlur(
             event,
@@ -95,12 +105,9 @@ export const Text: React.FC<TextProps> = ({
         maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}
       />
-      {fieldError && (
-        <FieldErrorInline fieldError={fieldError} fieldName={name} />
-      )}
       {fieldWarning?.fieldName === name && !fieldError ? (
         <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
       ) : null}
-    </>
+    </div>
   );
 };

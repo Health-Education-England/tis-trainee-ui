@@ -4,7 +4,6 @@ import {
   colourStyles,
   handleKeyDown
 } from "../../../../utilities/FormBuilderUtilities";
-import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 import { Hint } from "nhsuk-react-components";
 
@@ -42,9 +41,15 @@ export const Selector = ({
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
+  const errorId = `${inputId}-error`;
 
   return (
-    <div data-cy={name}>
+    <div
+      className={`nhsuk-form-group${
+        fieldError ? " nhsuk-form-group--error" : ""
+      }`}
+      data-cy={name}
+    >
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -54,9 +59,15 @@ export const Selector = ({
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {fieldError && (
+        <span id={errorId} className="nhsuk-error-message">
+          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
+        </span>
+      )}
       <Select
         inputId={inputId}
         aria-labelledby={labelId}
+        aria-describedby={fieldError ? errorId : undefined}
         onKeyDown={handleKeyDown}
         options={options}
         onChange={selectedOption =>
@@ -91,9 +102,6 @@ export const Selector = ({
         isMulti={isMultiSelect}
         // closeMenuOnSelect={!isMultiSelect}
       />
-      {fieldError && (
-        <FieldErrorInline fieldError={fieldError} fieldName={name} />
-      )}
     </div>
   );
 };
