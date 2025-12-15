@@ -62,9 +62,7 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
 
   useEffect(() => {
     if (isNewForm && newFormId) {
-      history.replace(`${basePath}/${newFormId}/create`, {
-        newFormSaved: true
-      });
+      history.replace(`${basePath}/${newFormId}/create`);
     }
   }, [isNewForm, newFormId, basePath]);
 

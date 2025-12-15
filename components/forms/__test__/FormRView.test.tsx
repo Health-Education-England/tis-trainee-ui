@@ -1,13 +1,14 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { FormView } from "../form-builder/FormView";
+import { FormRView } from "../form-builder/form-r/FormRView";
 import { FormName, FieldType } from "../form-builder/FormBuilder";
 import * as FormRUtilities from "../../../utilities/FormRUtilities";
 import * as FormBuilderUtilities from "../../../utilities/FormBuilderUtilities";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
+import formAJson from "../form-builder/form-r/part-a/formA.json";
 
 // Mock the hell out of everything rather than using requireActual which was causing circular dependency issues
 jest.mock("../../../utilities/FormRUtilities", () => ({
@@ -109,45 +110,37 @@ jest.mock("../../../utilities/StringUtilities", () => ({
   }
 }));
 
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useParams: jest.fn(() => ({ id: undefined })),
+  useLocation: jest.fn(() => ({ state: {} }))
+}));
+
+jest.mock("../../../redux/hooks/hooks", () => ({
+  useAppDispatch: jest.fn(() => jest.fn()),
+  useAppSelector: jest.fn()
+}));
+
 const testStore = configureStore({
   reducer: (
     state = {
-      traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
+      traineeProfile: { traineeProfileData: { programmeMemberships: [] } },
+      formA: { status: "succeeded" },
+      formB: { status: "succeeded", displayCovid: false }
     }
   ) => state
 });
 
-describe("FormView", () => {
+describe("FormRView", () => {
   const formName: FormName = "formA";
   const fieldType: FieldType = "text";
-  const mockFormJson = {
-    name: formName,
-    pages: [
-      {
-        pageName: "Test Page",
-        sections: [
-          {
-            sectionHeader: "Test Section",
-            fields: [
-              {
-                name: "programmeName",
-                label: "Programme Name",
-                type: fieldType,
-                visible: true
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    declarations: []
-  };
 
   const mockFormData = {
     traineeTisId: "123",
     isArcp: false,
     programmeMembershipId: "pm1",
-    localOfficeName: "London"
+    localOfficeName: "London",
+    lifecycleState: "DRAFT"
   };
 
   const mockLinkedFormData = {
@@ -170,6 +163,20 @@ describe("FormView", () => {
     (FormRUtilities.processLinkedFormData as jest.Mock).mockReturnValue(
       mockProcessedData
     );
+    const mockUseAppSelector =
+      require("../../../redux/hooks/hooks").useAppSelector;
+    mockUseAppSelector.mockImplementation((selector: any) => {
+      if (selector.toString().includes("formB.displayCovid")) return false;
+      if (selector.toString().includes("formA.status")) return "succeeded";
+      if (selector.toString().includes("formB.status")) return "succeeded";
+      if (
+        selector
+          .toString()
+          .includes("traineeProfile.traineeProfileData.programmeMemberships")
+      )
+        return [];
+      return mockFormData;
+    });
   });
 
   afterEach(() => {
@@ -182,41 +189,30 @@ describe("FormView", () => {
     render(
       <Provider store={testStore}>
         <BrowserRouter>
-          <FormView
-            formData={mockFormData}
-            canEditStatus={true}
-            formJson={mockFormJson}
-            redirectPath="/test"
-          />
+          <FormRView formType="A" />
         </BrowserRouter>
       </Provider>
     );
 
-    // Click the submit button to open the modal
     const submitButton = screen.getByText("Submit Form");
     await act(async () => {
       await user.click(submitButton);
     });
 
-    // Verify modal is open
     expect(screen.getByTestId("form-linker-modal")).toBeInTheDocument();
 
-    // Click the modal submit button
     const modalSubmitButton = screen.getByText("Submit Modal");
     await act(async () => {
-      // imported act directly from react because testing-library's act uses deprecated DOM test utils version
       await user.click(modalSubmitButton);
     });
 
-    // Check if processLinkedFormData was called with correct params
     expect(FormRUtilities.processLinkedFormData).toHaveBeenCalledWith(
       mockLinkedFormData,
       []
     );
 
-    // Check if saveDraftForm was called with correct updated form data
     expect(FormBuilderUtilities.saveDraftForm).toHaveBeenCalledWith(
-      mockFormJson,
+      formAJson,
       {
         ...mockFormData,
         isArcp: mockProcessedData.isArcp,
