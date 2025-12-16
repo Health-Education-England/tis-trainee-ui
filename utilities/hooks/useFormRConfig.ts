@@ -85,7 +85,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
   }
 
   return {
-    formData,
     formJson,
     validationSchema,
     formOptions,

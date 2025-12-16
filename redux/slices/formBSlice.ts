@@ -12,6 +12,7 @@ import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { RootState } from "../store/store";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
+import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormB {
   formBList: IFormR[];
   formData: FormRPartB;
@@ -206,6 +207,12 @@ const formBSlice = createSlice({
     },
     updatedDisplayCovid(state, action: PayloadAction<boolean>) {
       return { ...state, displayCovid: action.payload };
+    },
+    updatedFormBLifecycleState(state, action: PayloadAction<LifeCycleState>) {
+      return {
+        ...state,
+        formData: { ...state.formData, lifecycleState: action.payload }
+      };
     }
   },
   extraReducers(builder): void {
@@ -397,7 +404,8 @@ export const {
   updatedIsDirty,
   updatedFormBStatus,
   updatedFormBList,
-  updatedDisplayCovid
+  updatedDisplayCovid,
+  updatedFormBLifecycleState
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>

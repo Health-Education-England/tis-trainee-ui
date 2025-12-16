@@ -2,7 +2,7 @@
 /// <reference path="../../../../cypress/support/index.d.ts" />
 
 import { mount } from "cypress/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
 import { FormRForm } from "../../../../components/forms/form-builder/form-r/FormRForm";
@@ -15,9 +15,11 @@ import { updatedReference } from "../../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../mock-data/combinedReferenceData";
 import {
   resetToInitFormA,
-  updatedFormA
+  updatedFormA,
+  updatedFormALifecycleState
 } from "../../../../redux/slices/formASlice";
 import { formASavedDraft } from "../../../../mock-data/draft-formr-parta";
+import { LifeCycleState } from "../../../../models/LifeCycleState";
 
 const defaultProfileTestData = {
   traineeTisId: "testid",
@@ -35,6 +37,7 @@ describe("FormRForm (Part A) - new form /new/create", () => {
   });
 
   it("first renders the FormLinkerModal before the main form", () => {
+    store.dispatch(updatedFormALifecycleState(LifeCycleState.Draft));
     mount(
       <Provider store={store}>
         <MemoryRouter initialEntries={["/formr-a/new/create"]}>
@@ -74,7 +77,9 @@ describe("FormRForm (Part A) - new form /new/create", () => {
         <MemoryRouter
           initialEntries={["/formr-a/5e972ec9b9b5781b94eb1270/create"]}
         >
-          <FormRForm formType="A" />
+          <Route path="/formr-a/:id/create">
+            <FormRForm formType="A" />
+          </Route>
         </MemoryRouter>
       </Provider>
     );

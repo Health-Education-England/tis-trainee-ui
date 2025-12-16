@@ -3,7 +3,7 @@ import store from "../../../../redux/store/store";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { FormProvider } from "../FormContext";
-import FormBuilder, { FormName } from "../FormBuilder";
+import FormBuilder from "../FormBuilder";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
 import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
@@ -32,9 +32,8 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
   const { id } = useParams<FormRParams>();
   const isNewForm = id === undefined;
   const basePath = formType === "A" ? "/formr-a" : "/formr-b";
-  const formName: FormName = formType === "A" ? "formA" : "formB";
 
-  const { formData, formJson, validationSchema, formOptions, initialData } =
+  const { formJson, validationSchema, formOptions, initialData } =
     useFormRConfig(formType);
 
   const formLoadStatus = useAppSelector(state =>
@@ -55,10 +54,10 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     ? submittedForms[0].submissionDate
     : null;
 
-  const showLinkerModal = isNewForm && !formData?.traineeTisId;
+  const showLinkerModal = isNewForm && initialData?.isArcp === undefined;
 
-  const loadedFormIdRef = useRef(formData?.id);
-  loadedFormIdRef.current = formData?.id;
+  const loadedFormIdRef = useRef(initialData?.id);
+  loadedFormIdRef.current = initialData?.id;
 
   useEffect(() => {
     if (isNewForm && newFormId) {
@@ -74,7 +73,8 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
         store.dispatch(loadSavedFormB({ id }));
       }
     }
-  }, [id, isNewForm, formName, formType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, formType]);
 
   const handleModalSubmit = (data: LinkedFormRDataType) => {
     const processedFormRData = processLinkedFormData(
@@ -93,27 +93,28 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     history.push(basePath);
   };
 
-  if (!isNewForm) {
-    if (
-      formLoadStatus === "loading" ||
-      (formLoadStatus === "idle" && !formData?.traineeTisId)
-    ) {
-      return <Loading />;
-    }
+  if (formLoadStatus === "loading") return <Loading />;
 
-    if (formLoadStatus === "failed") {
-      return (
-        <ErrorPage
-          message={`Failed to load your Form R Part ${formType}. Please try again.`}
-        />
-      );
-    }
+  if (formLoadStatus === "failed") {
+    return (
+      <ErrorPage
+        message={`Failed to load your Form R Part ${formType}. Please try again.`}
+      />
+    );
   }
 
-  if (formData?.lifecycleState === LifeCycleState.Submitted) {
+  if (initialData?.lifecycleState === LifeCycleState.Submitted) {
     return (
       <ErrorPage
         message={`This Form R Part ${formType} has already been submitted and cannot be edited.`}
+      />
+    );
+  }
+
+  if (initialData?.lifecycleState === LifeCycleState.New) {
+    return (
+      <ErrorPage
+        message={`Please return to the Form R Part ${formType} home page and try again.`}
       />
     );
   }
@@ -126,14 +127,6 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
         onSubmit={handleModalSubmit}
         warningText={makeWarningText("new", latestSubDate)}
         linkedFormData={{ isArcp: null, programmeMembershipId: null }}
-      />
-    );
-  }
-
-  if (!formData?.traineeTisId) {
-    return (
-      <ErrorPage
-        message={`Could not load the draft form. Please return to the Form R Part ${formType} home page and try again.`}
       />
     );
   }

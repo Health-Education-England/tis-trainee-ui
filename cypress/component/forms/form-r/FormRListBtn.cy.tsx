@@ -5,7 +5,10 @@ import store from "../../../../redux/store/store";
 import history from "../../../../components/navigation/history";
 import FormRListBtn from "../../../../components/forms/form-builder/form-r/FormRListBtn";
 import { updatedDraftFormProps } from "../../../../redux/slices/formsSlice";
-import { updatedFormAStatus } from "../../../../redux/slices/formASlice";
+import {
+  updatedFormALifecycleState,
+  updatedFormAStatus
+} from "../../../../redux/slices/formASlice";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 
 describe("FormRListBtn", () => {
@@ -28,6 +31,7 @@ describe("FormRListBtn", () => {
   });
 
   it("should navigate to new form creation when 'Submit new form' is clicked", () => {
+    cy.spy(store, "dispatch").as("dispatchSpy");
     history.push("/formr-a");
     mount(
       <Provider store={store}>
@@ -45,6 +49,10 @@ describe("FormRListBtn", () => {
       </Provider>
     );
     cy.get("button").click();
+    cy.get("@dispatchSpy").should(
+      "have.been.calledWith",
+      updatedFormALifecycleState(LifeCycleState.Draft)
+    );
     cy.get('[data-cy="new-form-page"]').should("exist");
     cy.url().should("include", "/formr-a/new/create");
   });

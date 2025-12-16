@@ -51,7 +51,7 @@ export function ProfileToFormRPartAInitialValues(
     declarationType: "",
     otherImmigrationStatus: "",
     traineeTisId: traineeProfileData.traineeTisId,
-    lifecycleState: LifeCycleState.New,
+    lifecycleState: LifeCycleState.Draft,
     submissionDate: null,
     lastModifiedDate: null,
     isArcp: linkedFormRData?.isArcp,

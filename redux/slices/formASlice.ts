@@ -11,6 +11,7 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
+import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormA {
   formAList: IFormR[];
   formData: FormRPartA;
@@ -156,6 +157,12 @@ const formASlice = createSlice({
     },
     updatedNewFormId(state, action: PayloadAction<string>) {
       return { ...state, newFormId: action.payload };
+    },
+    updatedFormALifecycleState(state, action: PayloadAction<LifeCycleState>) {
+      return {
+        ...state,
+        formData: { ...state.formData, lifecycleState: action.payload }
+      };
     }
   },
   extraReducers(builder): void {
@@ -331,7 +338,8 @@ export const {
   updatedSaveLatestTimeStamp,
   updatedFormAStatus,
   updatedFormAList,
-  updatedNewFormId
+  updatedNewFormId,
+  updatedFormALifecycleState
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
