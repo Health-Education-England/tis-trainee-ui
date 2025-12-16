@@ -167,7 +167,6 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   // Header section
 
   const containedEls = [
-    [".nhsuk-fieldset__heading", "Form R (Part A)"],
     [
       '[data-cy="WarningCallout-formAImportantNotice-label"] > span',
       "Important"
@@ -230,28 +229,32 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
 
   // test inline error
   cy.clearAndType('[data-cy="dateOfBirth-input"]', "1000-05-01");
-  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should(
+  cy.get("#dateOfBirth-error").should(
     "have.text",
-    "Date of Birth is before the minimum date allowed"
+    "Error: Date of Birth is before the minimum date allowed"
   );
 
-  cy.get('[data-cy="error-txt-Email address is required"]').should(
+  cy.get("#email-error").should(
     "have.text",
-    "Email address is required"
+    "Error: Email address is required"
   );
 
   // test error summary
-  cy.get('[data-cy="errorSummary"] > p').should(
-    "have.text",
-    "Before proceeding to the next section please address the following:"
-  );
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get("#errorSummaryTitle").should("have.text", "There is a problem");
+  cy.get(
+    '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
+  ).should("exist");
+  cy.get('[data-cy="error-txt-Email address is required"]')
+    .should("exist")
+    .click();
   cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
   cy.clearAndType('[data-cy="dateOfBirth-input"]', "2000-05-01");
-  cy.get('[data-cy="errorSummary"] > p').should("not.exist");
+  cy.get(".nhsuk-error-summary").should("not.exist");
   cy.get(
     '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
   ).should("not.exist");
-  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
+  cy.get('[data-cy="error-txt-Email address is required"]').should("not.exist");
 
   // test soft validation
   cy.clearAndType('[data-cy="postCode-input"]', "123456");
@@ -261,10 +264,10 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   );
   cy.get('[data-cy="postCode-input"]').clear();
   cy.get(".field-warning-msg").should("not.exist");
-  cy.get('[data-cy="postCode-inline-error-msg"]').should("exist");
+  cy.get("#postCode-error").should("exist");
   cy.clearAndType('[data-cy="postCode-input"]', "123456");
   cy.get(".field-warning-msg").should("exist");
-  cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
+  cy.get("#postCode-error").should("not.exist");
 
   // check disabled next button
   cy.clearAndType('[data-cy="email-input"]', "x@x");
@@ -322,13 +325,13 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.clickRadioCheck(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
   );
-  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("exist");
+  cy.get("#cctSpecialty1-error").should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clickRadioCheck(
     '[data-cy="declarationType-I will be seeking specialist registration by application for a CESR-input"]'
   );
   cy.get('[data-cy="cctSpecialty1]').should("not.exist");
-  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
+  cy.get("#cctSpecialty1-error").should("not.exist");
   cy.clearAndType('[data-cy="completionDate-input"]', "2032-12-30");
   cy.get('[data-cy="programmeSpecialty-hint"]').should(
     "have.text",
@@ -339,7 +342,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
     "readonly"
   );
 
-  cy.get('[data-cy="college-inline-error-msg"]').should("exist");
+  cy.get("#college-error").should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clickSelect('[data-cy="college"]', "dent", true);
   cy.get(".nhsuk-error-summary").should("not.exist");
@@ -377,9 +380,7 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
     );
   cy.navNext();
   cy.get(".nhsuk-error-summary").should("exist");
-  cy.get("b").contains(
-    "Before proceeding to the next section please address the following:"
-  );
+  cy.get("#errorSummaryTitle").should("have.text", "There is a problem");
   cy.get(
     '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
   ).should("exist");
@@ -422,7 +423,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // header stuff
   const pdContainsEls1 = [
-    ['[data-cy="formRBHeading"]', "Form R (Part B)"],
     [
       '[data-cy="autosaveNote"]',
       "Note: This form will autosave 2 seconds after you pause making changes."
@@ -445,18 +445,13 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-input"]').clear();
   cy.get('[data-cy="gmcNumber-input"]').clear();
   cy.get('[data-cy="email-input"]').clear();
-  cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
 
   // check the 'save & exit' button is disabled when form dirty and and autosave is triggered
   cy.get('[data-cy="BtnSaveExit-formB"]')
     .should("be.disabled")
     .should("have.text", "Saving...");
 
-  cy.get(
-    '[data-cy="prevRevalBody"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
   cy.get('[data-cy="currRevalDate-input"]').clear();
-  cy.get('[data-cy="prevRevalDate-input"]').clear();
   cy.get('[data-cy="programmeSpecialty-input"]').should(
     "have.attr",
     "readonly"
@@ -467,18 +462,18 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   ).click();
 
   // check error summary (required fields)
-  cy.get(".nhsuk-error-summary").contains(
-    "Before proceeding to the next section please address the following:"
-  );
+  cy.get(".nhsuk-error-summary").contains("There is a problem");
   cy.get('[data-cy="error-txt-Forename is required"]').should("exist");
   cy.get('[data-cy="error-txt-GMC-Registered Surname is required"]').should(
     "exist"
   );
-  cy.get('[data-cy="error-txt-GMC number is required"]').should("exist");
+  cy.get('[data-cy="error-txt-GMC-Registered Surname is required"]').should(
+    "exist"
+  );
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
-  ).should("exist");
+  );
 
   // (non-required fields)
   cy.get('[data-cy="error-txt-Previous Revalidation date is required"]').should(
@@ -489,15 +484,24 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   );
 
   // check inline errors (required fields)
-  cy.get('[data-cy="forename-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="surname-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="gmcNumber-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="email-inline-error-msg"]').should("exist");
-  cy.get('[data-cy="currRevalDate-inline-error-msg"]').should("exist");
+  cy.get("#forename-error").should("have.text", "Error: Forename is required");
+  cy.get("#surname-error").should(
+    "have.text",
+    "Error: GMC-Registered Surname is required"
+  );
+  cy.get("#gmcNumber-error").should(
+    "have.text",
+    "Error: GMC number is required"
+  );
+  cy.get("#email-error").should("have.text", "Error: Email is required");
+  cy.get("#currRevalDate-error").should(
+    "have.text",
+    "Error: Current Revalidation date must be a valid date"
+  );
 
   // (non-required fields)
-  cy.get('[data-cy="prevRevalDate-inline-error-msg"]').should("not.exist");
-  cy.get('[data-cy="dualSpecialty-inline-error-msg"]').should("not.exist");
+  cy.get("#prevRevalDate-error").should("not.exist");
+  cy.get("#dualSpecialty-error").should("not.exist");
 
   // check disabled navNext
   cy.get('[data-cy="navNext"]').should(
@@ -507,12 +511,10 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // more email validation
   cy.clearAndType('[data-cy="email-input"]', "bo");
-  cy.get('[data-cy="email-inline-error-msg"]')
-    .should("exist")
-    .contains("Email address is invalid");
+  cy.get("#email-error").should("exist").contains("Email address is invalid");
   cy.get(".nhsuk-error-summary").contains("Email address is invalid");
   cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
-  cy.get('[data-cy="email-inline-error-msg"]').should("not.exist");
+  cy.get("#email-error").should("not.exist");
   cy.get(".nhsuk-error-summary").should("not.contain", "Email is required");
 
   // check 'other' option conditional rendering
