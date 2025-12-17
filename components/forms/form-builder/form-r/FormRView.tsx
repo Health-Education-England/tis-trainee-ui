@@ -21,7 +21,7 @@ import {
   validateFields
 } from "../../../../utilities/FormBuilderUtilities";
 import { StartOverButton } from "../../StartOverButton";
-import { Form, FormData, FormErrors, FormName } from "../FormBuilder";
+import { Form, FormData, FormErrors } from "../FormBuilder";
 import Declarations from "../../Declarations";
 import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
 import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
@@ -35,12 +35,6 @@ import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
 import { loadSavedFormA } from "../../../../redux/slices/formASlice";
 import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
-import { useSelectFormData } from "../../../../utilities/hooks/useSelectFormData";
-
-import formAJson from "./part-a/formA.json";
-import formBJson from "./part-b/formB.json";
-import { formAValidationSchema } from "./part-a/formAValidationSchema";
-import { getFormBValidationSchema } from "./part-b/formBValidationSchema";
 import { useFormRViewConfig } from "../../../../utilities/hooks/useFormRViewConfig";
 
 type FormRParams = {
@@ -59,8 +53,6 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   const { id } = useParams<FormRParams>();
   const location = useLocation<LocationState>();
   const dispatch = useAppDispatch();
-
-  const isNewForm = id === undefined;
   const fromCreate = location.state?.fromFormCreate;
 
   const { formData, formJson, validationSchemaForView } =
@@ -71,8 +63,8 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   );
 
   useEffect(() => {
-    if (id) {
-      if (!fromCreate || !formData?.traineeTisId) {
+    if (id && !fromCreate) {
+      if (!fromCreate) {
         if (formType === "A") {
           dispatch(loadSavedFormA({ id }));
         } else {
@@ -81,25 +73,26 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, dispatch, fromCreate, formType]);
+  }, [id, formType, fromCreate]);
 
   if (formLoadStatus === "loading") {
     return <Loading />;
   }
 
-  if (!isNewForm && !formData?.traineeTisId) {
-    if (formLoadStatus === "failed") {
-      return (
-        <ErrorPage
-          message={`Failed to load your Form R Part ${formType}. Please try again.`}
-        />
-      );
-    }
-    return <Loading />;
+  if (formLoadStatus === "failed") {
+    return (
+      <ErrorPage
+        message={`Failed to load your Form R Part ${formType}. Please try again.`}
+      />
+    );
   }
 
-  if (isNewForm && !formData?.traineeTisId) {
-    return <ErrorPage message="No form data found. Please start a new form." />;
+  if (formData?.lifecycleState === LifeCycleState.New) {
+    return (
+      <ErrorPage
+        message={`Please return to Form R Part ${formType} home and try again.`}
+      />
+    );
   }
 
   return (
