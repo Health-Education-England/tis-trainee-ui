@@ -216,9 +216,11 @@ export default function FormBuilder({
           )}
           {pages[currentPage]?.sections.map((section: Section) => (
             <React.Fragment key={section.sectionHeader}>
-              <Card feature>
+              <Card>
                 <Card.Content>
-                  <Card.Heading>{section.sectionHeader}</Card.Heading>
+                  <Card.Heading style={{ color: "#005eb8" }}>
+                    {section.sectionHeader}
+                  </Card.Heading>
                   {section.fields.map((field: Field) => {
                     const fieldComponent = (
                       <FormFieldBuilder
