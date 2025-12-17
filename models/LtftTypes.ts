@@ -86,6 +86,7 @@ export type LtftObj = {
   programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
+  reasonsExceptional: string[] | null;
   supportingInformation: string | null;
   status: StatusLtft;
   created?: Date | string;
@@ -131,6 +132,7 @@ export type LtftObjNew = {
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
   supportingInformation: string | null;
+  reasonsExceptionalCircs: string[] | null;
 
   // Personal details
   personalDetails: Omit<LtftPd, "skilledWorkerVisaHolder">;

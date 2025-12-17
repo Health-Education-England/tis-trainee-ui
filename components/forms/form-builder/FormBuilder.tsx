@@ -43,6 +43,10 @@ export type FieldType =
   | "array"
   | "dto";
 
+export type VisibleIfMatcher = {
+  matcher: string;
+};
+
 export type Field = {
   name: string;
   label?: string;
@@ -50,7 +54,7 @@ export type Field = {
   visible: boolean;
   optionsKey?: string;
   dependencies?: string[];
-  visibleIf?: unknown[];
+  visibleIf?: unknown[] | VisibleIfMatcher;
   placeholder?: string;
   warning?: Warning;
   canGrow?: boolean;

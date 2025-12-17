@@ -18,7 +18,8 @@ import {
   Form,
   FormData,
   FormName,
-  MatcherName
+  MatcherName,
+  VisibleIfMatcher
 } from "../components/forms/form-builder/FormBuilder";
 import {
   saveFormB,
@@ -338,11 +339,7 @@ export function setFormRDataForSubmit(
   const newFormData = jsonForm.pages.reduce((fd, page) => {
     page.sections.forEach(section => {
       section.fields.forEach(field => {
-        if (
-          field.visible ||
-          (field.parent &&
-            field?.visibleIf?.includes((fd as FormData)[field.parent]))
-        ) {
+        if (showFormField(field, fd as FormData)) {
           (fd as FormData)[field.name] = (formData as FormData)[field.name];
         } else {
           (fd as FormData)[field.name] = null;
@@ -568,19 +565,18 @@ export function validateFields(
         });
       } else if (field.type === "dto") {
         const dtoFields = field.objectFields ?? [];
-        const visibleDtoFields = dtoFields.filter(
-          dtoField =>
-            dtoField.visible ||
-            dtoField.visibleIf?.includes(
-              values[field.name][dtoField.parent as string]
-            )
+        const visibleDtoFields = dtoFields.filter((dtoField: Field) =>
+          showFormField(dtoField, values[field.name])
         );
-        const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
-          const dtoFieldSchema = fieldSchema.fields[dtoField.name];
-          return dtoSchema.shape({
-            [dtoField.name]: dtoFieldSchema
-          });
-        }, Yup.object().shape({}));
+        const dtoSchema = visibleDtoFields.reduce(
+          (dtoSchema: any, dtoField: Field) => {
+            const dtoFieldSchema = fieldSchema.fields[dtoField.name];
+            return dtoSchema.shape({
+              [dtoField.name]: dtoFieldSchema
+            });
+          },
+          Yup.object().shape({})
+        );
         schema = schema.shape({
           [field.name]: dtoSchema
         });
@@ -607,13 +603,34 @@ export function formatFieldName(fieldName: string) {
   return words.join(" ");
 }
 
+function runVisibilityMatcher(matcher: string, value: any): boolean {
+  if (matcher === "isWithin16WeeksFromToday") {
+    const today = dayjs().startOf("day");
+    const inputDate = dayjs(value).startOf("day");
+    const weeks16FromToday = today.add(16, "week");
+    return inputDate.isBefore(weeks16FromToday);
+  }
+  return false;
+}
+
 export function showFormField(field: Field, formData: FormData) {
   if (field.visible) return true;
   if (field.visibleIf) {
-    if (Array.isArray(formData[field.parent as string])) {
-      return formData[field.parent as string].includes(field.visibleIf[0]);
+    if (
+      !Array.isArray(field.visibleIf) &&
+      typeof field.visibleIf === "object" &&
+      field.visibleIf !== null &&
+      "matcher" in field.visibleIf
+    ) {
+      const matcher = (field.visibleIf as VisibleIfMatcher).matcher;
+      const parentValue = formData[field.parent as string];
+      return runVisibilityMatcher(matcher, parentValue);
     }
-    return field.visibleIf.includes(formData[field.parent as string]);
+    const visibleIfArray = field.visibleIf as unknown[];
+    if (Array.isArray(formData[field.parent as string])) {
+      return formData[field.parent as string].includes(visibleIfArray[0]);
+    }
+    return visibleIfArray.includes(formData[field.parent as string]);
   }
   return false;
 }

@@ -39,6 +39,45 @@ export function LtftForm({ pmOptions }: LtftFormProps) {
     { value: "other", label: "other reason" }
   ];
 
+  const ltftReasonsExceptional = [
+    {
+      value: "Disability",
+      label: "I have a disability and receive ongoing treatment at short notice"
+    },
+    {
+      value: "Primary carer",
+      label:
+        "I am a primary carer and an unforeseen change in circumstances has occurred with serious consequences without my support"
+    },
+    {
+      value: "Parental responsibilities",
+      label:
+        "I have parental responsibilities and an unforeseen change in circumstances has occurred with serious consequences without my support"
+    },
+    {
+      value: "Personal safety issue",
+      label: "I have a personal safety issue"
+    },
+    {
+      value: "Armed forces partner",
+      label:
+        "I am the partner of a serving armed forces member who has been deployed at short notice"
+    },
+    {
+      value: "Harassment or bullying",
+      label: "I am facing issues of harassment or bullying"
+    },
+    {
+      value: "Lack of suitable supervision",
+      label:
+        "There is a lack of suitable supervision in place in my current placement"
+    },
+    {
+      value: "Newly appointed",
+      label: "I am newly appointed to post within the last 16 weeks"
+    }
+  ];
+
   const ltftRoles = [
     { value: "Associate Dean", label: "Associate Dean" },
     { value: "Clinical Supervisor", label: "Clinical Supervisor" },
@@ -66,7 +105,13 @@ export function LtftForm({ pmOptions }: LtftFormProps) {
         jsonForm={ltftJson as Form}
       >
         <FormBuilder
-          options={{ yesNo, ltftReasons, ltftRoles, pmOptions }}
+          options={{
+            yesNo,
+            ltftReasons,
+            ltftRoles,
+            pmOptions,
+            ltftReasonsExceptional
+          }}
           validationSchema={ltftValidationSchema}
         />
       </FormProvider>

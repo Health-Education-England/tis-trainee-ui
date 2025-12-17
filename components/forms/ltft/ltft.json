@@ -67,7 +67,7 @@
     {
       "pageName": "Start date",
       "importantTxtName": "ltftStartDateImportantText",
-      "expanderLinkName": "",
+      "expanderLinkName": "lateLtftInfo",
       "sections": [
         {
           "sectionHeader": "Start date for change to your working hours",
@@ -77,10 +77,25 @@
               "label": "When should this change to your working hours begin?",
               "type": "date",
               "visible": true,
+              "dependencies": ["reasonsExceptional"],
               "warning": {
                 "matcher": "ltft16WeeksTest",
-                "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+                "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered in exceptional circumstances."
               }
+            },
+            {
+              "name": "reasonsExceptional",
+              "label": "Please give the reason for your late application",
+              "hint": "You can choose more than one reason if applicable.",
+              "placeholder": "Select all reasons that apply",
+              "type": "select",
+              "isMultiSelect": true,
+              "optionsKey": "ltftReasonsExceptional",
+              "visibleIf": {
+                "matcher": "isWithin16WeeksFromToday"
+              },
+              "parent": "startDate",
+              "visible": false
             }
           ]
         }

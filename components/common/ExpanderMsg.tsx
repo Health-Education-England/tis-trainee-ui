@@ -7,7 +7,8 @@ export type ExpanderNameType =
   | "cctInfo"
   | "skilledVisaWorker"
   | "whatIsLtft"
-  | "preApproverInfo";
+  | "preApproverInfo"
+  | "lateLtftInfo";
 
 export const ExpanderMsg = ({
   expanderName
@@ -220,6 +221,50 @@ export const ExpanderMsg = ({
               </p>
             </ul>
           </p>
+        </>
+      )
+    },
+    lateLtftInfo: {
+      summary:
+        "What are classed as exceptional circumstances for a late LTFT application?",
+      text: (
+        <>
+          <p>The following are considered exceptional circumstances:</p>
+          <>
+            <li>
+              You are{" "}
+              <strong>newly appointed to post within the last 16 weeks</strong>
+            </li>
+            <li>
+              You have a <strong>disability</strong> and receive ongoing
+              treatment at short notice
+            </li>
+            <li>
+              You are a <strong>primary carer</strong> and an unforeseen change
+              in circumstances has occurred with serious consequences without
+              your support
+            </li>
+            <li>
+              You have <strong>parental responsibilities</strong> and an
+              unforeseen change in circumstances has occurred with serious
+              consequences without your support
+            </li>
+            <li>
+              You have a <strong>personal safety issue</strong>
+            </li>
+            <li>
+              You are a{" "}
+              <strong>partner of a serving armed forces member </strong>who has
+              been deployed at short notice
+            </li>
+            <li>
+              You are facing issues of <strong>harassment or bullying</strong>
+            </li>
+            <li>
+              There is a <strong>lack of suitable supervision</strong> in place
+              in your current placement
+            </li>
+          </>
         </>
       )
     }
