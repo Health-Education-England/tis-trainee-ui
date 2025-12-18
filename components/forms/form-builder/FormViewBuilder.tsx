@@ -17,6 +17,7 @@ import {
 import { DateUtilities } from "../../../utilities/DateUtilities";
 import history from "../../navigation/history";
 import { strDateRegex } from "../../../utilities/Constants";
+import FieldWarningMsg from "../FieldWarningMsg";
 
 type VisibleFieldProps = {
   field: Field;
@@ -67,6 +68,10 @@ function VisibleField({
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
           {displayListValue(formData, field)}
+          {/* Just for mock-up, TODO proper logic */}
+          {field.name === "startDate" && formData.startDate && (
+            <FieldWarningMsg warningMsg="Late application (less than 16 weeks from today)" />
+          )}
         </SummaryList.Value>
         <SummaryList.Actions>
           <a
@@ -187,5 +192,13 @@ function displayListValue(formData: FormData, field: Field) {
   if (isDisplayAltVal && field.name === "pmId") {
     return formData["pmName"];
   }
+
+  if (Array.isArray(fieldVal)) {
+    if (fieldVal.length === 0) return "Not provided";
+    return fieldVal
+      .map((val: any) => formatEntryValue(val, fieldType))
+      .join(", ");
+  }
+
   return fieldVal?.toString();
 }

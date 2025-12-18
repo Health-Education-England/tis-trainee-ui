@@ -24,7 +24,7 @@ import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import store from "../../../redux/store/store";
 import TextInputField from "../TextInputField";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import history from "../../navigation/history";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
@@ -41,6 +41,7 @@ import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
 import dayjs from "dayjs";
 import { SummaryList } from "nhsuk-react-components";
+import FieldWarningMsg from "../FieldWarningMsg";
 
 //TODO rework this view
 
@@ -166,6 +167,14 @@ export const LtftFormView = () => {
           ltftFormStatus={ltftFormStatus}
         /> */}
         <h2>Review & submit your LTFT application</h2>
+        {/* Just for mock-up, TODO proper logic */}
+        {formData.startDate && (
+          <FieldWarningMsg
+            warningMsg="Warning: This is a late application because your proposed LTFT Start date is less than 16 weeks from today and will only be considered in exceptional circumstances."
+            iconSize="xl"
+            fontSize="1.25rem"
+          />
+        )}
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
@@ -193,7 +202,9 @@ export const LtftFormView = () => {
               <SummaryList.Row>
                 <SummaryList.Key>Start date</SummaryList.Key>
                 <SummaryList.Value>
-                  {dayjs(formData.startDate).format("DD/MM/YYYY")}
+                  {/* Just for mock-up, TODO proper logic */}
+                  {dayjs(formData.startDate).format("DD/MM/YYYY")}{" "}
+                  <FieldWarningMsg warningMsg="This is a late application (less than 16 weeks from today) and will only be considered in exceptional circumstances." />
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
