@@ -1,13 +1,14 @@
 import React from "react";
-import { Hint, Textarea } from "nhsuk-react-components";
+import { Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import { useFormContext } from "../FormContext";
+import { FieldWrapper } from "./FieldWrapper";
 
 type TextAreaProps = {
   name: string;
-  label: string | undefined;
+  label?: string;
   hint?: string;
-  fieldError: string;
+  fieldError?: string;
   placeholder?: string;
   value: string;
   arrayIndex?: number;
@@ -27,60 +28,43 @@ export const TextArea: React.FC<TextAreaProps> = ({
   arrayName,
   rows,
   dtoName
-}: TextAreaProps) => {
+}) => {
   const { handleBlur, handleChange } = useFormContext();
 
-  const inputId =
-    arrayIndex !== undefined && arrayName
-      ? `${arrayName}-${arrayIndex}-${name}--input`
-      : name;
-  const labelId = `${inputId}--label`;
-  const errorId = `${inputId}-error`;
-
   return (
-    <div
-      className={`nhsuk-form-group${
-        fieldError ? " nhsuk-form-group--error" : ""
-      }`}
-      data-cy={name}
+    <FieldWrapper
+      name={name}
+      label={label}
+      hint={hint}
+      fieldError={fieldError}
+      arrayIndex={arrayIndex}
+      arrayName={arrayName}
     >
-      <label
-        className="nhsuk-label"
-        htmlFor={inputId}
-        id={labelId}
-        data-cy={`${name}-label`}
-      >
-        {label}
-      </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
-      {fieldError && (
-        <span id={errorId} className="nhsuk-error-message">
-          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
-        </span>
+      {({ inputId, errorId }) => (
+        <Textarea
+          id={inputId}
+          data-cy={`${name}-text-area-input`}
+          onKeyDown={handleKeyDown}
+          name={name}
+          value={value ?? ""}
+          onChange={event =>
+            handleChange(
+              event as any,
+              undefined,
+              undefined,
+              arrayIndex,
+              arrayName,
+              dtoName
+            )
+          }
+          onBlur={handleBlur as any}
+          placeholder={placeholder}
+          rows={rows ?? 10}
+          spellCheck
+          aria-describedby={fieldError ? errorId : undefined}
+          className={fieldError ? "nhsuk-textarea--error" : ""}
+        />
       )}
-      <Textarea
-        id={inputId}
-        data-cy={`${name}-text-area-input`}
-        onKeyDown={handleKeyDown}
-        name={name}
-        value={value ?? ""}
-        onChange={event =>
-          handleChange(
-            event as any,
-            undefined,
-            undefined,
-            arrayIndex,
-            arrayName,
-            dtoName
-          )
-        }
-        onBlur={handleBlur as any}
-        placeholder={placeholder}
-        rows={rows ?? 10}
-        spellCheck={true}
-        aria-describedby={fieldError ? errorId : undefined}
-        className={fieldError ? "nhsuk-textarea--error" : ""}
-      />
-    </div>
+    </FieldWrapper>
   );
 };
