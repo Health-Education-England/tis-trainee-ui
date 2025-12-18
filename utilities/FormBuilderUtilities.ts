@@ -8,7 +8,6 @@ import {
   deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
-  updatedCanEdit,
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
@@ -26,7 +25,6 @@ import {
   deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
-  updatedCanEditB,
   updatedEditPageNumberB,
   updatedFormB
 } from "../redux/slices/formBSlice";
@@ -194,10 +192,7 @@ export function getEditPageLocation(formName: FormName, fieldName: string) {
       state: { fieldName }
     };
   } else {
-    return getFormREditPageLocation(
-      formName as Extract<FormName, "formA" | "formB">,
-      fieldName
-    );
+    return getFormREditPageLocation(formName, fieldName);
   }
 }
 

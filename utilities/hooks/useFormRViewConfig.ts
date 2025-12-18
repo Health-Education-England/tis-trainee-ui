@@ -34,9 +34,7 @@ export const useFormRViewConfig = (formType: "A" | "B") => {
         };
   }
 
-  const formData = useSelectFormData(formJson.name as FormName) as
-    | FormRPartA
-    | FormRPartB;
+  const formData = useSelectFormData(formJson.name) as FormRPartA | FormRPartB;
 
   return {
     formData,

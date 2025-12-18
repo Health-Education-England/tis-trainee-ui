@@ -1,14 +1,6 @@
 import store from "../redux/store/store";
-import {
-  loadSavedFormA,
-  updatedFormA,
-  updatedCanEdit
-} from "../redux/slices/formASlice";
-import {
-  loadSavedFormB,
-  updatedCanEditB,
-  updatedFormB
-} from "../redux/slices/formBSlice";
+import { updatedFormA } from "../redux/slices/formASlice";
+import { updatedFormB } from "../redux/slices/formBSlice";
 import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAInitialValues";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";

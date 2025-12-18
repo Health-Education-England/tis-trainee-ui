@@ -18,7 +18,6 @@ interface IFormA {
   status: string;
   error: any;
   editPageNumber: number;
-  canEdit: boolean;
   saveStatus: SaveStatusProps;
   saveLatestTimeStamp: string;
   newFormId: string | undefined;
@@ -30,7 +29,6 @@ export const initialState: IFormA = {
   status: "idle",
   error: "",
   editPageNumber: 0,
-  canEdit: false,
   saveStatus: "idle",
   saveLatestTimeStamp: "none this session",
   newFormId: undefined
@@ -139,9 +137,6 @@ const formASlice = createSlice({
     },
     updatedEditPageNumber(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
-    },
-    updatedCanEdit(state, action: PayloadAction<boolean>) {
-      return { ...state, canEdit: action.payload };
     },
     updatedSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
       return { ...state, saveStatus: action.payload };
@@ -333,7 +328,6 @@ export const {
   resetToInitFormA,
   updatedFormA,
   updatedEditPageNumber,
-  updatedCanEdit,
   updatedSaveStatus,
   updatedSaveLatestTimeStamp,
   updatedFormAStatus,
@@ -344,6 +338,3 @@ export const {
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
   state.formA.formData;
-
-export const selectCanEditStatus = (state: { formA: IFormA }) =>
-  state.formA.canEdit;

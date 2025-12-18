@@ -37,7 +37,7 @@ export function FormRHome() {
     resetForm(formName);
     dispatch(fetchForms(pathname));
     dispatch(updatedFormsRefreshNeeded(false));
-  }, [dispatch, pathname, needFormsRefresh]);
+  }, [dispatch, pathname, needFormsRefresh, formName]);
 
   if (formRListStatus === "loading") return <Loading />;
   if (formRListStatus === "failed")

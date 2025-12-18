@@ -134,7 +134,7 @@ export default function FormBuilder({
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
+  const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
   const location = useLocation<LocationState>();
 
   useEffect(() => {
@@ -305,8 +305,8 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {/* TODO: remove canEditStatus after LTFT is refactored */}
-          {(canEditStatus || location.state?.fieldName) && (
+          {/* TODO: remove canEditStatusLtft after LTFT routes are refactored */}
+          {(canEditStatusLtft || location.state?.fieldName) && (
             <Col width="one-half">
               <Button
                 onClick={(e: { preventDefault: () => void }) =>
@@ -338,7 +338,9 @@ export default function FormBuilder({
   );
 }
 
-export function FormErrors({ formErrors }: { formErrors: FormErrorsType }) {
+export function FormErrors({
+  formErrors
+}: Readonly<{ formErrors: FormErrorsType }>) {
   return (
     <ErrorSummary
       aria-labelledby="errorSummaryTitle"

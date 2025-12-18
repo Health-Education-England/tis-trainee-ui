@@ -22,7 +22,6 @@ interface IFormB {
   error: any;
   saveBtnActive: boolean;
   editPageNumber: number;
-  canEdit: boolean;
   saveStatus: SaveStatusProps;
   saveLatestTimeStamp: string;
   isDirty: boolean;
@@ -53,7 +52,6 @@ export const initialState: IFormB = {
   error: "",
   saveBtnActive: false,
   editPageNumber: 0,
-  canEdit: false,
   saveStatus: "idle",
   saveLatestTimeStamp: "none this session",
   isDirty: false,
@@ -186,9 +184,6 @@ const formBSlice = createSlice({
     },
     updatedEditPageNumberB(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
-    },
-    updatedCanEditB(state, action: PayloadAction<boolean>) {
-      return { ...state, canEdit: action.payload };
     },
     updatedSaveStatusB(state, action: PayloadAction<SaveStatusProps>) {
       return { ...state, saveStatus: action.payload };
@@ -398,7 +393,6 @@ export const {
   updateFormBPreviousSection,
   updatesaveBtnActive,
   updatedEditPageNumberB,
-  updatedCanEditB,
   updatedSaveStatusB,
   updatedSaveLatestTimeStamp,
   updatedIsDirty,
@@ -413,6 +407,3 @@ export const selectSavedFormB = (state: { formB: IFormB }) =>
 
 export const selectSaveBtnActive = (state: { formB: IFormB }) =>
   state.formB.saveBtnActive;
-
-export const selectCanEditStatusB = (state: { formB: IFormB }) =>
-  state.formB.canEdit;
