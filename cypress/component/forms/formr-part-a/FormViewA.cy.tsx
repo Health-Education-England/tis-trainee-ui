@@ -137,6 +137,38 @@ describe("FormRView (Part A)", () => {
     cy.contains(draftForm.surname).should("exist");
   });
 
+  it("should fetch data and show loading when refreshing page (fromCreate=true persisted on first refresh, but store yet to be populated with fetched formData)", () => {
+    const draftForm = formASavedDraft;
+    const formId = draftForm.id;
+
+    cy.intercept("GET", `/api/forms/formr-parta/${formId}`, draftForm).as(
+      "getDraftForm"
+    );
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter
+          initialEntries={[
+            {
+              pathname: `/formr-a/${formId}/view`,
+              state: { fromFormCreate: true }
+            }
+          ]}
+        >
+          <Route path="/formr-a/:id/view">
+            <FormRView formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+    cy.get('[data-cy="loading"]').should("exist");
+
+    // should still fetch formData because store yet to be populated with DRAFT/UNSUBMITTED form status
+    cy.wait("@getDraftForm");
+
+    cy.contains(draftForm.forename).should("exist");
+  });
+
   it("should render error page when fetch fails", () => {
     const formId = "error-id";
 

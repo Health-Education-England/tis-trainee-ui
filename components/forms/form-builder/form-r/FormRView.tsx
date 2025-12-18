@@ -63,8 +63,8 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   );
 
   useEffect(() => {
-    if (id && !fromCreate) {
-      if (!fromCreate) {
+    if (id) {
+      if (!fromCreate || formData?.lifecycleState === LifeCycleState.New) {
         if (formType === "A") {
           dispatch(loadSavedFormA({ id }));
         } else {
@@ -75,7 +75,12 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, formType, fromCreate]);
 
-  if (formLoadStatus === "loading") {
+  if (
+    formLoadStatus === "loading" ||
+    (id &&
+      formLoadStatus === "idle" &&
+      formData?.lifecycleState === LifeCycleState.New)
+  ) {
     return <Loading />;
   }
 
