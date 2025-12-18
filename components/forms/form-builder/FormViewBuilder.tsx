@@ -188,12 +188,26 @@ function ArrayFieldRenderer({
   formErrors
 }: Readonly<ArrayFieldRendererProps>) {
   if (!fieldVal || fieldVal.length === 0) {
+    const errorMessage = formErrors[field.name] as string;
     return (
       <ArrayPanel
         title={
-          <p data-cy="empty-array-panel-val" style={{ fontSize: "19px" }}>
-            Not provided
-          </p>
+          <>
+            <p
+              data-cy="empty-array-panel-val"
+              style={{ fontSize: "19px" }}
+              id={field.name}
+              tabIndex={-1}
+            >
+              Not provided
+            </p>
+            {errorMessage && (
+              <span className="nhsuk-error-message">
+                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
+                {errorMessage}
+              </span>
+            )}
+          </>
         }
         action={
           canEdit ? (
@@ -257,6 +271,7 @@ function ArrayFieldRenderer({
                   <SummaryList.Key
                     data-cy={`${key}-key`}
                     id={`${field.name}-${index}-${key}`}
+                    tabIndex={-1}
                   >
                     <span>{formatFieldName(key)}</span>
                     {errorMessage && (
