@@ -774,7 +774,7 @@ export const traineeActionsCompletedWhenNotOutstanding: TrackerActionType[] = [
 export const ltft16WeeksNotice = (
   <>
     <p>
-      To meet national guidance, allChanging hours (LTFT) applications must be
+      To meet national guidance, all Changing hours (LTFT) applications must be
       submitted{" "}
       <b>
         a minimum of 16 weeks before your LTFT start date or before the next
