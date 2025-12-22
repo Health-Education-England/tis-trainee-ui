@@ -45,6 +45,27 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="autosaveStatusMsg"]')
       .should("exist")
       .should("include.text", "Autosave status: Success");
+
+    // refresh page and check it reloads the form page with saved data
+    cy.reload();
+    cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
+
+    // Change URL to view for partially completed form and check data is present
+    cy.url()
+      .should("include", "/create")
+      .then(url => {
+        const urlParts = url.split("/");
+        const idIndex = urlParts.indexOf("create") - 1;
+        const id = urlParts[idIndex];
+        cy.visit(`/formr-a/${id}/view`);
+        cy.get('[data-cy="immigrationStatus-value"]').contains(immigrationTxt);
+        // test 'change' (edit field) link in View to return to edit
+        cy.get('[data-cy="edit-immigrationStatus"]').click();
+        cy.get(".nhsuk-fieldset__heading").contains("Form R (Part A)");
+        cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
+      });
+
+    // then delete draft
     cy.startOver();
 
     cy.log("################ Complete & submit ###################");
@@ -83,9 +104,8 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     // final submit via linker modal
     cy.get('[data-cy="form-linker-submit-btn"]').click();
 
-    cy.get('[data-cy="Submit new form"]').should("exist");
-    cy.contains("Submitted forms").should("exist");
-    cy.get('[data-cy="formr-row-0"]').click();
+    // reload to verify readonly view via direct navigation
+    cy.reload();
     cy.get('[data-cy="email-value"]').should(
       "have.text",
       "traineeui.tester@hee.nhs.uk"
@@ -95,8 +115,11 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
 
     // Navigate back to the list
-    cy.get('[data-cy="backLink"]').should("exist").click();
+    cy.get('[data-cy="backLink-to-back-to-form-r-part-a-home"]')
+      .should("exist")
+      .click();
     cy.contains("Submitted forms").should("exist");
+    cy.get('[data-cy="Submit new form"]').should("exist");
   });
 });
 

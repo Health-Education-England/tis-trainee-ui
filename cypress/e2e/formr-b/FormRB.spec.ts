@@ -34,7 +34,7 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
       .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
     cy.get('[data-cy="forename-input"]').clear();
-    cy.checkElement("forename-inline-error-msg");
+    cy.get("#forename-error").should("exist");
     cy.clearAndType('[data-cy="email-input"]', "test.reset@hee.nhs.uk");
     cy.log("save still works with errors");
     cy.get('[data-cy="autosaveStatusMsg"]').should(
@@ -50,14 +50,13 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
     cy.log(
       "No error message should be displayed until new changes or navigation"
     );
-    cy.checkElement("forename-inline-error-msg", null, false);
+    cy.get("#forename-error").should("not.exist");
     cy.get('[data-cy="email-input"]').should(
       "have.value",
       "test.reset@hee.nhs.uk"
     );
     cy.navNext();
-    cy.checkElement("forename-inline-error-msg");
-    cy.checkElement("error-txt-Forename is required");
+    cy.get("#forename-error").should("exist");
 
     cy.log("Delete draft form");
     cy.startOver();
@@ -135,11 +134,11 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkElement("BtnSubmit", "Submit Form").click();
     // final submit via linker modal
     cy.get('[data-cy="form-linker-submit-btn"]').click();
-    cy.checkElement("Submit new form");
   });
 
   it("Should show the submitted form in the list", () => {
     cy.signInToTss(30000, "/formr-b");
+    cy.checkElement("Submit new form");
     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
     cy.contains("Submitted forms").should("exist");
     cy.get('[data-cy="formr-row-0"]').click();
@@ -154,7 +153,7 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
     //check linkage
     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
-    cy.get('[data-cy="backLink"]').click();
+    cy.get('[data-cy="backLink-to-back-to-form-r-part-b-home"]').click();
     cy.contains("Submitted forms").should("exist");
   });
 });

@@ -368,7 +368,7 @@ function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
       document.getElementById(id) || document.getElementById(`${id}--input`);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center" });
-      (element as HTMLElement).focus({ preventScroll: true });
+      element.focus({ preventScroll: true });
     }
   };
   const renderErrors = (errors: FormErrorsType, parentKey: string = "") => {
