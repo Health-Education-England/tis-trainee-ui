@@ -63,7 +63,7 @@ export function ProfileToFormRPartBInitialValues(
     compliments: "",
     haveCovidDeclarations: null,
     covidDeclarationDto: null,
-    lifecycleState: LifeCycleState.New,
+    lifecycleState: LifeCycleState.Draft,
     submissionDate: null,
     lastModifiedDate: null,
     isDeclarationAccepted: false,

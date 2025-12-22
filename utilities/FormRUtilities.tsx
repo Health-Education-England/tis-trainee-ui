@@ -1,14 +1,6 @@
 import store from "../redux/store/store";
-import {
-  loadSavedFormA,
-  updatedFormA,
-  updatedCanEdit
-} from "../redux/slices/formASlice";
-import {
-  loadSavedFormB,
-  updatedCanEditB,
-  updatedFormB
-} from "../redux/slices/formBSlice";
+import { updatedFormA } from "../redux/slices/formASlice";
+import { updatedFormB } from "../redux/slices/formBSlice";
 import { ProfileToFormRPartAInitialValues } from "../models/ProfileToFormRPartAInitialValues";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBInitialValues";
@@ -19,21 +11,6 @@ import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerF
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
 export class FormRUtilities {
-  public static async handleRowClick(
-    id: string,
-    path: string,
-    history: string[]
-  ): Promise<void> {
-    if (path === "/formr-a") {
-      store.dispatch(updatedCanEdit(false));
-      await store.dispatch(loadSavedFormA({ id }));
-    } else if (path === "/formr-b") {
-      store.dispatch(updatedCanEditB(false));
-      await store.dispatch(loadSavedFormB({ id }));
-    }
-    history.push(`${path}/${id}`);
-  }
-
   public static showMsgIfEmpty(
     value: string,
     message: string = "None recorded"
@@ -51,7 +28,6 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    history: any,
     traineeProfileData: TraineeProfile,
     linkedFormRData: LinkedFormRDataType
   ) {
@@ -68,7 +44,6 @@ export class FormRUtilities {
       );
       store.dispatch(updatedFormB(formBInitialValues));
     }
-    history.push(`${pathName}/create`);
   }
 }
 

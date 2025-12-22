@@ -11,7 +11,6 @@ import store from "../../redux/store/store";
 import {
   BtnLocation,
   checkPush,
-  chooseRedirectPath,
   getDraftFormId,
   handleSaveRedirect,
   setDraftFormRProps,
@@ -200,26 +199,6 @@ describe("handleSaveRedirect", () => {
     mockState.ltft.saveStatus = "failed";
     handleSaveRedirect("ltft", true);
     expect(history.push).not.toHaveBeenCalled();
-  });
-});
-
-describe("chooseRedirectPath", () => {
-  const testCases = [
-    { formName: "formA", suffix: "", expected: "/formr-a" },
-    { formName: "formB", suffix: "", expected: "/formr-b" },
-    { formName: "ltft", suffix: "", expected: "/ltft" },
-    { formName: "formA", suffix: "/confirm", expected: "/formr-a/confirm" },
-    { formName: "formB", suffix: "/create", expected: "/formr-b/create" },
-    { formName: "ltft", suffix: "/confirm", expected: "/ltft/confirm" }
-  ];
-
-  testCases.forEach(({ formName, suffix, expected }) => {
-    it(`should return "${expected}" for form "${formName}" with suffix "${
-      suffix || "none"
-    }"`, () => {
-      const result = chooseRedirectPath(formName as any, suffix as any);
-      expect(result).toBe(expected);
-    });
   });
 });
 

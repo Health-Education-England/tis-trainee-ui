@@ -7,7 +7,7 @@ import {
   mockLtftUnsubmitted0
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
-import { LtftObj, updatedLtft } from "../../../../redux/slices/ltftSlice";
+import { updatedLtft } from "../../../../redux/slices/ltftSlice";
 import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
 import ltftJson from "../../../../components/forms/ltft/ltft.json";
 import {
@@ -19,6 +19,7 @@ import {
   ltftReasonsText1,
   ltftReasonsText2
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
+import { LtftObj } from "../../../../models/LtftTypes";
 
 const mountLtftWithMockData = (mockLtftObj: LtftObj) => {
   store.dispatch(updatedLtft(mockLtftObj));
@@ -72,9 +73,11 @@ describe("LtftForm - draft", () => {
     ).contains("Your pre-approver details");
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
-    cy.get('[data-cy="tpdEmail-inline-error-msg"]')
+    cy.get("#tpdEmail-error")
       .should("exist")
       .contains("Email address is required");
+    cy.get(".nhsuk-error-summary").should("exist");
+    cy.get('[data-cy="error-txt-Email address is required"]').should("exist");
     cy.navNext(true);
     cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
     cy.get('[data-cy="tpdEmail-label"]').contains("Pre-approver email");
@@ -112,7 +115,7 @@ describe("LtftForm - draft", () => {
     );
     cy.navNext(true);
     cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
-    cy.get('[data-cy="skilledWorkerVisaHolder-inline-error-msg"]').contains(
+    cy.get("#skilledWorkerVisaHolder-error").contains(
       "Please select Yes or No for: Are you a Tier 2 / Skilled Worker Visa holder?"
     );
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();

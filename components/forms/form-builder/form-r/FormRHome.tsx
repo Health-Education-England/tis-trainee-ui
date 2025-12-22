@@ -1,21 +1,22 @@
 import { useEffect } from "react";
-import Loading from "../common/Loading";
-import ScrollTo from "../../components/forms/ScrollTo";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks/hooks";
+import Loading from "../../../common/Loading";
+import ScrollTo from "../../ScrollTo";
+import { useAppSelector, useAppDispatch } from "../../../../redux/hooks/hooks";
 import {
   fetchForms,
   selectAllSubmittedforms,
   updatedFormsRefreshNeeded
-} from "../../redux/slices/formsSlice";
-import FormsListBtn from "../../components/forms/FormsListBtn";
+} from "../../../../redux/slices/formsSlice";
+import FormRListBtn from "./FormRListBtn";
 import { useLocation } from "react-router-dom";
-import SubmittedFormsList from "../../components/forms/SubmittedFormsList";
+import SubmittedFormRList from "./SubmittedFormRList";
 import { Col, Container, Row } from "nhsuk-react-components";
-import { StartOverButton } from "./StartOverButton";
-import { FormName } from "./form-builder/FormBuilder";
-import ErrorPage from "../common/ErrorPage";
+import { StartOverButton } from "../../StartOverButton";
+import { FormName } from "../FormBuilder";
+import ErrorPage from "../../../common/ErrorPage";
+import { resetForm } from "../../../../utilities/FormBuilderUtilities";
 
-const CreateList = () => {
+export function FormRHome() {
   const dispatch = useAppDispatch();
   const pathname = useLocation().pathname;
   const formName: FormName = pathname === "/formr-a" ? "formA" : "formB";
@@ -33,9 +34,10 @@ const CreateList = () => {
   );
 
   useEffect(() => {
+    resetForm(formName);
     dispatch(fetchForms(pathname));
     dispatch(updatedFormsRefreshNeeded(false));
-  }, [dispatch, pathname, needFormsRefresh]);
+  }, [dispatch, pathname, needFormsRefresh, formName]);
 
   if (formRListStatus === "loading") return <Loading />;
   if (formRListStatus === "failed")
@@ -50,7 +52,7 @@ const CreateList = () => {
         <Container>
           <Row>
             <Col width="one-third">
-              <FormsListBtn pathName={pathname} latestSubDate={latestSubDate} />
+              <FormRListBtn pathName={pathname} />
             </Col>
           </Row>
           <Row>
@@ -63,7 +65,7 @@ const CreateList = () => {
             </Col>
           </Row>
         </Container>
-        <SubmittedFormsList
+        <SubmittedFormRList
           formRList={submittedListDesc}
           path={pathname}
           latestSubDate={latestSubDate}
@@ -71,6 +73,4 @@ const CreateList = () => {
       </>
     );
   return null;
-};
-
-export default CreateList;
+}

@@ -11,13 +11,13 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
+import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormA {
   formAList: IFormR[];
   formData: FormRPartA;
   status: string;
   error: any;
   editPageNumber: number;
-  canEdit: boolean;
   saveStatus: SaveStatusProps;
   saveLatestTimeStamp: string;
   newFormId: string | undefined;
@@ -29,7 +29,6 @@ export const initialState: IFormA = {
   status: "idle",
   error: "",
   editPageNumber: 0,
-  canEdit: false,
   saveStatus: "idle",
   saveLatestTimeStamp: "none this session",
   newFormId: undefined
@@ -139,9 +138,6 @@ const formASlice = createSlice({
     updatedEditPageNumber(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
     },
-    updatedCanEdit(state, action: PayloadAction<boolean>) {
-      return { ...state, canEdit: action.payload };
-    },
     updatedSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
       return { ...state, saveStatus: action.payload };
     },
@@ -156,6 +152,12 @@ const formASlice = createSlice({
     },
     updatedNewFormId(state, action: PayloadAction<string>) {
       return { ...state, newFormId: action.payload };
+    },
+    updatedFormALifecycleState(state, action: PayloadAction<LifeCycleState>) {
+      return {
+        ...state,
+        formData: { ...state.formData, lifecycleState: action.payload }
+      };
     }
   },
   extraReducers(builder): void {
@@ -326,16 +328,13 @@ export const {
   resetToInitFormA,
   updatedFormA,
   updatedEditPageNumber,
-  updatedCanEdit,
   updatedSaveStatus,
   updatedSaveLatestTimeStamp,
   updatedFormAStatus,
   updatedFormAList,
-  updatedNewFormId
+  updatedNewFormId,
+  updatedFormALifecycleState
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
   state.formA.formData;
-
-export const selectCanEditStatus = (state: { formA: IFormA }) =>
-  state.formA.canEdit;

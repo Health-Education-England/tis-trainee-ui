@@ -25,7 +25,6 @@ import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import store from "../../../redux/store/store";
 import TextInputField from "../TextInputField";
 import { Form, Formik } from "formik";
-import history from "../../navigation/history";
 import Loading from "../../common/Loading";
 import ErrorPage from "../../common/ErrorPage";
 import { ActionModal } from "../../common/ActionModal";
@@ -35,7 +34,6 @@ import { LtftStatusDetails } from "./LtftStatusDetails";
 import { downloadLtftPdf } from "../../../utilities/FileUtilities";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObj } from "../../../models/LtftTypes";
-import FormBackLink from "../../common/FormBackLink";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -242,7 +240,6 @@ function LtftViewWrapper({
   return (
     <>
       <ScrollToTop />
-      <FormBackLink text="Back to Changing hours (LTFT) Home" />
       {children}
     </>
   );

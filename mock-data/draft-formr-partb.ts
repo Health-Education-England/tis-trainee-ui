@@ -237,3 +237,18 @@ export const draftFormRPartBWithNoLeaveTotal = {
   submissionDate: "2020-04-01",
   lastModifiedDate: "2020-04-16"
 };
+
+export const mockCovidDto = {
+  selfRateForCovid:
+    "Satisfactory progress for stage of training and required competencies met",
+  reasonOfSelfRate: null,
+  otherInformationForPanel: "Some other info",
+  discussWithSupervisorChecked: "Yes",
+  discussWithSomeoneChecked: "No",
+  haveChangesToPlacement: "Yes",
+  changeCircumstances: "Other",
+  changeCircumstanceOther: "Other circumstance details",
+  howPlacementAdjusted: "Adjusted placement details",
+  educationSupervisorName: "Dr. Supervisor",
+  educationSupervisorEmail: "supervisor@example.com"
+};

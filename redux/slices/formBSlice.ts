@@ -12,6 +12,7 @@ import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { RootState } from "../store/store";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
+import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormB {
   formBList: IFormR[];
   formData: FormRPartB;
@@ -21,7 +22,6 @@ interface IFormB {
   error: any;
   saveBtnActive: boolean;
   editPageNumber: number;
-  canEdit: boolean;
   saveStatus: SaveStatusProps;
   saveLatestTimeStamp: string;
   isDirty: boolean;
@@ -52,7 +52,6 @@ export const initialState: IFormB = {
   error: "",
   saveBtnActive: false,
   editPageNumber: 0,
-  canEdit: false,
   saveStatus: "idle",
   saveLatestTimeStamp: "none this session",
   isDirty: false,
@@ -186,9 +185,6 @@ const formBSlice = createSlice({
     updatedEditPageNumberB(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
     },
-    updatedCanEditB(state, action: PayloadAction<boolean>) {
-      return { ...state, canEdit: action.payload };
-    },
     updatedSaveStatusB(state, action: PayloadAction<SaveStatusProps>) {
       return { ...state, saveStatus: action.payload };
     },
@@ -206,6 +202,12 @@ const formBSlice = createSlice({
     },
     updatedDisplayCovid(state, action: PayloadAction<boolean>) {
       return { ...state, displayCovid: action.payload };
+    },
+    updatedFormBLifecycleState(state, action: PayloadAction<LifeCycleState>) {
+      return {
+        ...state,
+        formData: { ...state.formData, lifecycleState: action.payload }
+      };
     }
   },
   extraReducers(builder): void {
@@ -391,13 +393,13 @@ export const {
   updateFormBPreviousSection,
   updatesaveBtnActive,
   updatedEditPageNumberB,
-  updatedCanEditB,
   updatedSaveStatusB,
   updatedSaveLatestTimeStamp,
   updatedIsDirty,
   updatedFormBStatus,
   updatedFormBList,
-  updatedDisplayCovid
+  updatedDisplayCovid,
+  updatedFormBLifecycleState
 } = formBSlice.actions;
 
 export const selectSavedFormB = (state: { formB: IFormB }) =>
@@ -405,6 +407,3 @@ export const selectSavedFormB = (state: { formB: IFormB }) =>
 
 export const selectSaveBtnActive = (state: { formB: IFormB }) =>
   state.formB.saveBtnActive;
-
-export const selectCanEditStatusB = (state: { formB: IFormB }) =>
-  state.formB.canEdit;

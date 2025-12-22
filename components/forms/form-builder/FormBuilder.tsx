@@ -20,7 +20,7 @@ import {
   saveDraftForm,
   FormDataType
 } from "../../../utilities/FormBuilderUtilities";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
@@ -103,6 +103,15 @@ export type ReturnedWidthData = {
   fieldName: string;
   width: number;
 };
+export type FieldErrorType =
+  | string
+  | { [key: string]: FieldErrorType }
+  | FieldErrorType[];
+export type FormErrorsType = { [key: string]: FieldErrorType };
+
+type LocationState = {
+  fieldName?: string;
+};
 
 export default function FormBuilder({
   options,
@@ -125,7 +134,8 @@ export default function FormBuilder({
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const canEditStatus = useAppSelector(state => state[jsonFormName].canEdit);
+  const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
+  const location = useLocation<LocationState>();
 
   useEffect(() => {
     setCurrentPageFields(
@@ -157,6 +167,14 @@ export default function FormBuilder({
     validateFields(currentPageFields, formData, validationSchema)
       .then(() => {
         if (currentPage === lastPage || isShortcut) {
+          saveDraftForm(
+            jsonForm,
+            formData as FormDataType,
+            true,
+            false,
+            false,
+            false
+          );
           continueToConfirm(jsonFormName, formData);
         } else {
           setCurrentPage(currentPage + 1);
@@ -287,7 +305,8 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {canEditStatus && (
+          {/* TODO: remove canEditStatusLtft after LTFT routes are refactored */}
+          {(canEditStatusLtft || location.state?.fieldName) && (
             <Col width="one-half">
               <Button
                 onClick={(e: { preventDefault: () => void }) =>
@@ -319,7 +338,9 @@ export default function FormBuilder({
   );
 }
 
-export function FormErrors(formErrors: any) {
+export function FormErrors({
+  formErrors
+}: Readonly<{ formErrors: FormErrorsType }>) {
   return (
     <ErrorSummary
       aria-labelledby="errorSummaryTitle"
@@ -327,11 +348,9 @@ export function FormErrors(formErrors: any) {
       tabIndex={-1}
     >
       <div className="error-summary" data-cy="errorSummary">
-        <p>
-          <b>
-            Before proceeding to the next section please address the following:
-          </b>
-        </p>
+        <h2 id="errorSummaryTitle" className="nhsuk-error-summary__title">
+          There is a problem
+        </h2>
         <FormErrorsList formErrors={formErrors} />
       </div>
     </ErrorSummary>
@@ -339,49 +358,61 @@ export function FormErrors(formErrors: any) {
 }
 
 type FormErrorsListProps = {
-  formErrors: any;
+  formErrors: FormErrorsType;
 };
 
 function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
-  const renderErrors = (formErrors: any) => {
+  const scrollToField = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    const element =
+      document.getElementById(id) || document.getElementById(`${id}--input`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      element.focus({ preventScroll: true });
+    }
+  };
+  const renderErrors = (errors: FormErrorsType, parentKey: string = "") => {
     return (
-      <ul>
-        {Object.keys(formErrors).map(key => {
-          if (typeof formErrors[key] === "string") {
+      <ul className="nhsuk-list nhsuk-error-summary__list">
+        {Object.keys(errors).map(key => {
+          const error = errors[key];
+          const uniqueId = parentKey ? `${parentKey}-${key}` : key;
+          if (typeof error === "string") {
             return (
-              <div
-                key={key}
-                className="error-spacing_div"
-                data-cy={`error-txt-${formErrors[key]}`}
-              >
-                {formErrors[key]}
-              </div>
-            );
-          } else if (Array.isArray(formErrors[key])) {
-            return formErrors[key].map((error: any, index: number) => {
-              return (
-                <li
-                  key={`${key}[${index}]`}
-                  className="error-summary_li_nested"
+              <li key={uniqueId}>
+                <a
+                  href={`#${uniqueId}-error`}
+                  data-cy={`error-txt-${error}`}
+                  onClick={e => {
+                    e.preventDefault();
+                    scrollToField(e, uniqueId);
+                  }}
                 >
-                  <span>
-                    <b>{`${formatFieldName(key)} ${index + 1}`}</b>
+                  {error}
+                </a>
+              </li>
+            );
+          } else if (Array.isArray(error)) {
+            return error.map((itemError: any, index: number) => {
+              if (!itemError || Object.keys(itemError).length === 0)
+                return null;
+              const itemParentKey = `${uniqueId}-${index}`;
+              return (
+                <li key={`${key}[${index}]`}>
+                  <span className="nhsuk-u-font-weight-bold">
+                    {`${formatFieldName(key)} ${index + 1}`}
                   </span>
-                  <span>{renderErrors(error)}</span>
+                  {renderErrors(itemError, itemParentKey)}
                 </li>
               );
             });
           } else {
-            return (
-              <li key={key} className="error-summary_li">
-                {renderErrors(formErrors[key])}
-              </li>
-            );
+            return <li key={key}>{renderErrors(error, uniqueId)}</li>;
           }
         })}
       </ul>
     );
   };
 
-  return <div>{renderErrors(formErrors)}</div>;
+  return <>{renderErrors(formErrors)}</>;
 }

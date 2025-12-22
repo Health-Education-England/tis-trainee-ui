@@ -8,7 +8,6 @@ import {
   deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
-  updatedCanEdit,
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
@@ -26,7 +25,6 @@ import {
   deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
-  updatedCanEditB,
   updatedEditPageNumberB,
   updatedFormB
 } from "../redux/slices/formBSlice";
@@ -105,29 +103,34 @@ export function resetForm(formName: string) {
   }
 }
 
-type PathSuffix = "/confirm" | "/create" | "";
+function handleFormrToConfirm(formName: FormName, formData: FormData) {
+  const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
+  let id: string | undefined;
 
-export const chooseRedirectPath = (
-  formName: FormName,
-  pathSuffix: PathSuffix = ""
-): string => {
-  const urlPath = mapFormNameToUrl(formName);
-  return `/${urlPath}${pathSuffix}`;
-};
+  if (formName === "formA") {
+    id = formData.id ?? store.getState().formA.newFormId;
+    store.dispatch(updatedFormA(formData as FormRPartA));
+  } else if (formName === "formB") {
+    id = formData.id ?? store.getState().formB.newFormId;
+    store.dispatch(updatedFormB(formData as FormRPartB));
+  }
+  const suffix = id ? `/${id}/view` : "/new/view";
+  const fullPath = `${redirectPath}${suffix}`;
+  history.push(fullPath, { fromFormCreate: true });
+}
+
+function handleLtftToConfirm(formData: FormData) {
+  store.dispatch(updatedLtft(formData as LtftObj));
+  store.dispatch(updatedCanEditLtft(true));
+  history.push("/ltft/confirm");
+}
 
 export function continueToConfirm(formName: FormName, formData: FormData) {
-  const redirectPath = chooseRedirectPath(formName, "/confirm");
-  if (formName === "formA") {
-    store.dispatch(updatedFormA(formData as FormRPartA));
-    store.dispatch(updatedCanEdit(true));
-  } else if (formName === "formB") {
-    store.dispatch(updatedFormB(formData as FormRPartB));
-    store.dispatch(updatedCanEditB(true));
-  } else if (formName === "ltft") {
-    store.dispatch(updatedLtft(formData as LtftObj));
-    store.dispatch(updatedCanEditLtft(true));
+  if (formName === "ltft") {
+    handleLtftToConfirm(formData);
+  } else {
+    handleFormrToConfirm(formName, formData);
   }
-  history.push(redirectPath);
 }
 
 // review & submit
@@ -141,13 +144,59 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
   }
 }
 
-export function getEditPageLocation(formName: FormName, fieldName: string) {
-  const redirectPath = chooseRedirectPath(formName, "/create");
+// TODO: Rename function  and refactor these blocks when LTFT is added ----------------
+function getFormREditPageLocation(
+  formName: Extract<FormName, "formA" | "formB">,
+  fieldName: string
+) {
+  // TODO: change Type to FormName when LTFT is added
+  const getPath = (name: Extract<FormName, "formA" | "formB">, id?: string) => {
+    const urlName = mapFormNameToUrl(name);
+    return id ? `/${urlName}/${id}/create` : `/${urlName}/new/create`;
+  };
+
+  const pathnameMap: Record<
+    Extract<FormName, "formA" | "formB">,
+    () => string
+  > = {
+    formA: () => {
+      const id =
+        store.getState().formA.formData?.id ?? store.getState().formA.newFormId;
+      return getPath("formA", id);
+    },
+    formB: () => {
+      const id =
+        store.getState().formB.formData?.id ?? store.getState().formB.newFormId;
+      return getPath("formB", id);
+    }
+    // ,
+    // ltft: () => {
+    //   const id =
+    //     store.getState().ltft.formData?.id ?? store.getState().ltft.newFormId;
+    //   return getPath("ltft", id);
+    // }
+  };
+
+  const pathname = pathnameMap[formName]();
+
   return {
-    pathname: redirectPath,
+    pathname,
     state: { fieldName }
   };
 }
+
+export function getEditPageLocation(formName: FormName, fieldName: string) {
+  if (formName === "ltft") {
+    return {
+      pathname: "/ltft/create",
+      state: { fieldName }
+    };
+  } else {
+    return getFormREditPageLocation(formName, fieldName);
+  }
+}
+
+// ----------------------------------------------------------------------
 
 export async function isFormDeleted(
   formName: FormName,
@@ -487,13 +536,24 @@ export async function saveDraftForm(
   handleSaveRedirect(formName, shouldRedirect);
 }
 
+export function mapFormNameToUrl(formName: FormName): string {
+  switch (formName) {
+    case "formA":
+      return "formr-a";
+    case "formB":
+      return "formr-b";
+    default:
+      return formName;
+  }
+}
+
 export function handleSaveRedirect(
   formName: FormName,
   shouldRedirect: boolean
 ) {
   const saveStatus = getSaveStatus(formName);
   if (saveStatus === "succeeded" && shouldRedirect) {
-    history.push(chooseRedirectPath(formName));
+    history.push(`/${mapFormNameToUrl(formName)}`);
   }
 }
 
@@ -630,17 +690,6 @@ export const determineCurrentValue = (
     return checkedStatus;
   } else {
     return value;
-  }
-};
-
-export const mapFormNameToUrl = (formName: FormName): string => {
-  switch (formName) {
-    case "formA":
-      return "formr-a";
-    case "formB":
-      return "formr-b";
-    case "ltft":
-      return "ltft";
   }
 };
 
