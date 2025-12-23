@@ -9,23 +9,12 @@ const startDate = dayjs()
   .subtract(30, "day")
   .format("YYYY-MM-DD");
 
-describe("Form R Part A - Basic Form completion and submission", () => {
-  before(() => {
+describe("Form R Part A - Draft form", () => {
+  it("should create and delete draft form", () => {
     cy.signInToTss(30000, "/formr-a");
-  });
-  it("should complete a form and submit", () => {
-    cy.log(
-      "################ First delete any existing draft forms ###################"
-    );
-    cy.get("#btnOpenForm").should("exist").click();
-    cy.checkForFormLinkerAndComplete();
-    cy.get('[data-cy="forename-input"]').focus().clear().type("Temp");
-    cy.startOver();
-
     cy.log("################ Check autosave functionality ###################");
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
-
     cy.checkForFormLinkerAndComplete();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
@@ -45,12 +34,15 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="autosaveStatusMsg"]')
       .should("exist")
       .should("include.text", "Autosave status: Success");
-
-    // refresh page and check it reloads the form page with saved data
+    cy.log(
+      "################ Refresh page and check it reloads the form page with saved data ###################"
+    );
     cy.reload();
     cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
 
-    // Change URL to view for partially completed form and check data is present
+    cy.log(
+      "################ Change URL to View/edit partially completed form and check data is present ###################"
+    );
     cy.url()
       .should("include", "/create")
       .then(url => {
@@ -59,21 +51,23 @@ describe("Form R Part A - Basic Form completion and submission", () => {
         const id = urlParts[idIndex];
         cy.visit(`/formr-a/${id}/view`);
         cy.get('[data-cy="immigrationStatus-value"]').contains(immigrationTxt);
-        // test 'change' (edit field) link in View to return to edit
+        cy.log(
+          "################ test 'change' (edit field) link in View to return to edit ###################"
+        );
         cy.get('[data-cy="edit-immigrationStatus"]').click();
         cy.get(".nhsuk-fieldset__heading").contains("Form R (Part A)");
         cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
       });
-
-    // then delete draft
     cy.startOver();
+  });
+});
 
-    cy.log("################ Complete & submit ###################");
-    cy.wait(5000);
+describe("Form R Part A - Submit a new form", () => {
+  it("should complete and submit a form", () => {
+    cy.signInToTss(30000, "/formr-a");
     cy.get("#btnOpenForm").should("exist").click();
     cy.checkForFormLinkerAndComplete();
-
-    // complete form section 1-3
+    cy.log("################ complete form sections 1-3 ###################");
     cy.checkAndFillFormASection1();
     cy.navNext();
     cy.checkAndFillFormASection2();
@@ -81,7 +75,9 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.checkAndFillFormASection3();
     cy.navNext();
 
-    // make edit and return to confirm/submit
+    cy.log(
+      "################ make edit and return to confirm/submit ###################"
+    );
     cy.get('[data-cy="surname-value"]').should("have.text", "John Terry");
     cy.get('[data-cy="edit-surname"]').click();
     cy.clearAndType('[data-cy="surname-input"]', "Terry");
@@ -92,7 +88,7 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="BtnShortcutToConfirm"]').click();
     cy.get('[data-cy="surname-value"]').should("have.text", "Terry");
 
-    // Submit form
+    cy.log("################ submit main form ###################");
     cy.get("[data-cy=BtnSubmit]")
       .scrollIntoView()
       .should("exist")
@@ -100,21 +96,22 @@ describe("Form R Part A - Basic Form completion and submission", () => {
     cy.get('[data-cy="isCorrect"]').should("exist").click();
     cy.get('[data-cy="willKeepInformed"]').should("exist").click();
     cy.get('[data-cy="BtnSubmit"]').should("not.be.disabled").click();
-
-    // final submit via linker modal
+    cy.log("################ Confirm linkage/submit ###################");
     cy.get('[data-cy="form-linker-submit-btn"]').click();
+  });
+});
 
-    // reload to verify readonly view via direct navigation
-    cy.reload();
+describe("Form R Part A - check latest submitted form", () => {
+  it("should show the submitted form in the list", () => {
+    cy.signInToTss(30000, "/formr-a");
+    cy.get('[data-cy="0_id"]').click();
+    cy.wait(5000);
     cy.get('[data-cy="email-value"]').should(
       "have.text",
       "traineeui.tester@hee.nhs.uk"
     );
     cy.get('[data-cy="savePdfBtn"]').should("exist");
-    //check linkage
     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
-
-    // Navigate back to the list
     cy.get('[data-cy="backLink-to-back-to-form-r-part-a-home"]')
       .should("exist")
       .click();
@@ -124,10 +121,8 @@ describe("Form R Part A - Basic Form completion and submission", () => {
 });
 
 describe("Form R Part A - JSON form fields visibility status checks", () => {
-  before(() => {
-    cy.signInToTss(0, "/", "iphone-6");
-  });
   it("should persist the updated dependent field visibility status to trigger any expected validation when a draft form is re-opened.", () => {
+    cy.signInToTss(30000, "/", "iphone-6");
     cy.contains("Form R (Part A)").click({ force: true });
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
