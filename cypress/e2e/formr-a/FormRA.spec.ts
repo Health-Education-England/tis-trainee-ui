@@ -74,12 +74,14 @@ describe("Form R Part A - Submit a new form", () => {
     cy.navNext();
     cy.checkAndFillFormASection3();
     cy.navNext();
+    cy.wait(5000); // for form save to complete
 
     cy.log(
       "################ make edit and return to confirm/submit ###################"
     );
     cy.get('[data-cy="surname-value"]').should("have.text", "John Terry");
     cy.get('[data-cy="edit-surname"]').click();
+    cy.window().its("history.state.state.fieldName").should("eq", "surname"); // verify navigation state
     cy.clearAndType('[data-cy="surname-input"]', "Terry");
     cy.wait(2000);
     cy.get('[data-cy="autosaveStatusMsg"]')
