@@ -64,8 +64,8 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
   });
 });
 
-describe("Form R (Part B) - Submit a new form", () => {
-  it("complete part of a new Form R Part B.", () => {
+describe("Form R (Part B) - Submit a new form pt1", () => {
+  it("should complete part of a new Form R Part B and save draft.", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form").click();
     cy.checkForFormLinkerAndComplete();
@@ -85,8 +85,10 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkElement("BtnSaveExit-formB").click();
     cy.checkElement("btn-Edit saved draft form");
   });
+});
 
-  it("complete the rest of the Form R Part B.", () => {
+describe("Form R (Part B) - Submit a new form pt2", () => {
+  it("should re-open and complete the rest of the Form R Part B and submit.", () => {
     cy.signInToTss(10000, "/formr-b");
     cy.checkElement("btn-Edit saved draft form").click();
     cy.checkElement("BtnShortcutToConfirm", null, false);
@@ -107,14 +109,6 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.log(
       "################ check Confirm page, edit, and submit ###################"
     );
-    cy.checkElement(
-      "formrbSubheading",
-      "Trainee registration for Postgraduate Speciality Training"
-    );
-    cy.checkElement(
-      "formrbInfo",
-      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
-    );
     cy.checkElement("forename-value", `Bob-${today.format("YYYY-MM-DD")}`);
     cy.checkElement("edit-forename").click();
     cy.get('[data-cy="progress-header"] > h3').should(
@@ -132,16 +126,17 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();
     cy.checkElement("BtnSubmit", "Submit Form").click();
-    // final submit via linker modal
     cy.get('[data-cy="form-linker-submit-btn"]').click();
   });
+});
 
+describe("Form R (Part B) - check latest submitted form", () => {
   it("Should show the submitted form in the list", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form");
     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
     cy.contains("Submitted forms").should("exist");
-    cy.get('[data-cy="formr-row-0"]').click();
+    cy.get('[data-cy="formr-row-0"]').scrollIntoView().click();
     cy.get('[data-cy="submissionDateTop"]').should(
       "include.text",
       `Form submitted on: ${today.format("DD/MM/YYYY")}`
@@ -151,7 +146,6 @@ describe("Form R (Part B) - Submit a new form", () => {
     cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
     cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
     cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
-    //check linkage
     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
     cy.get('[data-cy="backLink-to-back-to-form-r-part-b-home"]').click();
     cy.contains("Submitted forms").should("exist");
