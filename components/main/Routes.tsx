@@ -17,10 +17,6 @@ import { OnboardingTracker } from "../programmes/trackers/OnboardingTracker";
 import Support from "../support/Support";
 import { useAppSelector } from "../../redux/hooks/hooks";
 
-interface RoutesProps {
-  userFeatures: UserFeaturesType;
-}
-
 const Routes = () => {
   const userFeatures = useAppSelector(state => state.user.features);
 
