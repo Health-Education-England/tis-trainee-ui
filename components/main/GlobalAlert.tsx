@@ -36,7 +36,7 @@ export const GlobalAlert = () => {
 
   return hasAlerts ? (
     <aside
-      className="app-global-alert"
+      className="app-global-alert hide-from-print"
       id="app-global-alert"
       data-cy="globalAlert"
     >
