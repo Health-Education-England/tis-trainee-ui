@@ -47,7 +47,7 @@ import {
 } from "../redux/slices/ltftSlice";
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
-import { LtftObj } from "../models/LtftTypes";
+import { LtftObjNew } from "../models/LtftTypes";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -120,7 +120,7 @@ function handleFormrToConfirm(formName: FormName, formData: FormData) {
 }
 
 function handleLtftToConfirm(formData: FormData) {
-  store.dispatch(updatedLtft(formData as LtftObj));
+  store.dispatch(updatedLtft(formData as LtftObjNew));
   store.dispatch(updatedCanEditLtft(true));
   history.push("/ltft/confirm");
 }
@@ -267,9 +267,17 @@ export function showFieldMatchWarning(
     if (inputDate.isBefore(testDate)) {
       return { fieldName, warningMsg };
     } else return null;
-  } else if (matcher === "postcodeTest")
+  } else if (matcher === "postcodeTest") {
     if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
       return { fieldName, warningMsg };
+  } else if (matcher === "ltft16WeeksTest") {
+    const today = dayjs().startOf("day");
+    const inputDate = dayjs(inputValue).startOf("day");
+    const weeks16FromToday = today.add(16, "week");
+    if (inputDate.isBefore(weeks16FromToday)) {
+      return { fieldName, warningMsg };
+    } else return null;
+  }
   return null;
 }
 
@@ -434,7 +442,7 @@ async function updateForm(
   } else if (formName === "ltft") {
     await store.dispatch(
       updateLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -465,7 +473,7 @@ async function saveForm(
   } else if (formName === "ltft")
     await store.dispatch(
       saveLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -495,7 +503,7 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export type FormDataType = FormRPartA | FormRPartB | LtftObj;
+export type FormDataType = FormRPartA | FormRPartB | LtftObjNew;
 
 export async function saveDraftForm(
   jsonForm: Form,

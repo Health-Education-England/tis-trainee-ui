@@ -84,9 +84,7 @@ export function CctCalcCreate() {
       <FormBackLink text="Back to CCT Home" />
       <Card>
         <Card.Content>
-          <Card.Heading data-cy="cct-calc-header">
-            CCT Calculator - Changing hours (LTFT)
-          </Card.Heading>
+          <Card.Heading data-cy="cct-calc-header">CCT Calculator</Card.Heading>
           <WarningCallout data-cy="cct-calc-warning">
             <WarningCallout.Label visuallyHiddenText={false}>
               Please note

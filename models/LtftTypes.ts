@@ -72,28 +72,55 @@ export type StatusInfo = {
   revision: number;
 };
 
-export type LtftObj = {
+export type LtftObjNew = {
+  // LTFT form identifiers
   traineeTisId?: string;
   id?: string;
   formRef?: string;
   name?: string;
-  change: LtftCctChange;
-  declarations: LtftDeclarations;
-  tpdName: string;
-  tpdEmail: string;
-  otherDiscussions: LtftDiscussion[] | null;
-  personalDetails: LtftPd;
-  programmeMembership: LtftPm;
-  reasonsSelected: string[] | null;
-  reasonsOtherDetail: string | null;
-  supportingInformation: string | null;
   status: StatusLtft;
   created?: Date | string;
   lastModified?: Date | string;
+
+  // PM stuff
+  pmId: string;
+  pmName: string;
+  pmStartDate: Date | string;
+  pmEndDate: Date | string;
+  designatedBodyCode: string;
+  managingDeanery: string;
+
+  // change: LtftCctChange
+  calculationId?: string; // not really needed in main form
+  cctDate: Date | string;
+  type: CctType;
+  startDate: Date | string;
+  wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
+  wte: number | null;
+  changeId?: string; // not really needed in main form
+
+  // declarations
+  declarations: LtftDeclarations;
+
+  // discussions
+  tpdName: string;
+  tpdEmail: string;
+  otherDiscussions: LtftDiscussion[] | null;
+
+  // reasons
+  reasonsSelected: string[] | null;
+  reasonsOtherDetail: string | null;
+  supportingInformation: string | null;
+
+  // Personal details
+  personalDetails: Omit<LtftPd, "skilledWorkerVisaHolder">;
+
+  // skilledWorkerVisaHolder moved to separate field
+  skilledWorkerVisaHolder: boolean | null;
 };
 
 export type LtftState = {
-  formData: LtftObj;
+  formData: LtftObjNew;
   LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;

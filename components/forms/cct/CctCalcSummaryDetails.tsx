@@ -16,13 +16,10 @@ import {
   getStartDateValidationSchema,
   getWteValidationSchema
 } from "./cctCalcValidationSchema";
-import { recalculateCctDate } from "../../../utilities/ltftUtilities";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../TextInputField";
 import { LtftFormStatus } from "../../../models/LtftTypes";
-import FieldWarningMsg from "../FieldWarningMsg";
-import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 
 export function CctCalcSummaryDetails({
   viewedCalc,
@@ -33,7 +30,6 @@ export function CctCalcSummaryDetails({
 }>) {
   const { programmeMembership, cctDate, changes, name, created, lastModified } =
     viewedCalc;
-  const { lessThan16Weeks } = cctCalcWarningsMsgs;
 
   const hasChanges = changes.length > 0;
   const initChangeDateValue = dayjs(changes[0].startDate);
@@ -45,7 +41,7 @@ export function CctCalcSummaryDetails({
   });
 
   const [displayValues, setDisplayValues] = useState({
-    changeDate: hasChanges ? initChangeDateValue.format("YYYY-MM-DD") : "",
+    changeDate: hasChanges ? initChangeDateValue.format("DD/MM/YYYY") : "",
     wte: hasChanges ? `${initWteValue}%` : ""
   });
 
@@ -67,12 +63,6 @@ export function CctCalcSummaryDetails({
     values: { changeDate: string; wte: string },
     { setSubmitting }: FormikHelpers<{ changeDate: string; wte: string }>
   ) => {
-    recalculateCctDate(
-      programmeMembership.endDate,
-      programmeMembership.wte as number,
-      values.changeDate,
-      values.wte
-    );
     setDisplayValues({
       changeDate: dayjs(values.changeDate).format("DD/MM/YYYY"),
       wte: `${values.wte}%`
@@ -208,21 +198,9 @@ export function CctCalcSummaryDetails({
                               hidelabel
                             />
                           ) : (
-                            <>
-                              <span data-cy="changeDate-readonly">
-                                {dayjs(displayValues.changeDate).format(
-                                  "DD/MM/YYYY"
-                                )}
-                              </span>
-                              {dayjs(displayValues.changeDate) <
-                                dayjs().add(16, "week").subtract(1, "day") && (
-                                <span data-cy="start-short-notice-warn">
-                                  <FieldWarningMsg
-                                    warningMsg={lessThan16Weeks}
-                                  />
-                                </span>
-                              )}
-                            </>
+                            <span data-cy="changeDate-readonly">
+                              {displayValues.changeDate}
+                            </span>
                           )}
                         </SummaryList.Value>
                         {ltftFormStatus === "UNSUBMITTED" && (

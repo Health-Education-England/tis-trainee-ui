@@ -1,4 +1,4 @@
-import { LtftObj } from "../../../models/LtftTypes";
+import { LtftObjNew } from "../../../models/LtftTypes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
@@ -7,8 +7,12 @@ import ltftJson from "./ltft.json";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
-export function LtftForm() {
-  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObj;
+type LtftFormProps = {
+  pmOptions: { value: string; label: string }[];
+};
+
+export function LtftForm({ pmOptions }: LtftFormProps) {
+  const formData = useSelectFormData(ltftJson.name as FormName) as LtftObjNew;
   const formJson = ltftJson as Form;
   const initialPageFields = formJson.pages[0].sections.flatMap(
     section => section.fields
@@ -50,7 +54,7 @@ export function LtftForm() {
 
   return formData?.declarations?.discussedWithTpd ? (
     <div>
-      <h2>Main application form</h2>
+      <h2>Application form</h2>
       <LtftStatusDetails {...formData}></LtftStatusDetails>
       <FormProvider
         initialData={formData}
@@ -58,7 +62,7 @@ export function LtftForm() {
         jsonForm={ltftJson as Form}
       >
         <FormBuilder
-          options={{ yesNo, ltftReasons, ltftRoles }}
+          options={{ yesNo, ltftReasons, ltftRoles, pmOptions }}
           validationSchema={ltftValidationSchema}
         />
       </FormProvider>

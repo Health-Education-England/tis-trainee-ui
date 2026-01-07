@@ -2,9 +2,94 @@
   "name": "ltft",
   "pages": [
     {
-      "pageName": "Discussing your proposals",
-      "importantTxtName": "ltftDiscussionInstructions",
+      "pageName": "Your Programme",
+      "importantTxtName": "",
       "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Your Programme",
+          "fields": [
+            {
+              "name": "pmId",
+              "type": "select",
+              "label": "Which programme will your proposed change in working hours affect?",
+              "optionsKey": "pmOptions",
+              "visible": true,
+              "isDisplayAltVal": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Working hours before change",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Working hours before change",
+          "fields": [
+            {
+              "name": "wteBeforeChange",
+              "type": "text",
+              "label": "What percentage of your 'full time' hours do you work before your proposed change?",
+              "hint": "e.g. 100 is full time, 80 is 80% of your 'full time' hours etc.",
+
+              "visible": true,
+              "width": 2,
+              "isNumberField": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Proposed change to your working hours",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Proposed change to your working hours",
+          "fields": [
+            {
+              "name": "wte",
+              "type": "text",
+              "label": "What percentage of your 'full time' hours do you want to work?",
+              "hint": "e.g. 100 is full time, 80 is 80% of your 'full time' hours etc.",
+              "visible": true,
+              "width": 2,
+              "isNumberField": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Start date",
+      "importantTxtName": "ltftStartDateImportantText",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Start date for change to your working hours",
+          "fields": [
+            {
+              "name": "startDate",
+              "label": "When should this change to your working hours begin?",
+              "type": "date",
+              "visible": true,
+              "warning": {
+                "matcher": "ltft16WeeksTest",
+                "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Pre-approver discussions",
+      "importantTxtName": "ltftDiscussionInstructions",
+      "expanderLinkName": "preApproverInfo",
       "sections": [
         {
           "sectionHeader": "Your pre-approver details",
@@ -24,14 +109,22 @@
               "visible": true
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "pageName": "Other discussions",
+      "importantTxtName": "ltftOtherDiscussionsInstructions",
+      "expanderLinkName": "",
+      "sections": [
         {
           "sectionHeader": "Other discussions (if applicable)",
           "fields": [
             {
               "name": "otherDiscussions",
               "type": "array",
-              "label": "Other Discussions",
+              "hint": "If you have discussed your proposals with anyone else then please add them here",
+              "label": "If you have discussed your proposals with anyone else then please add them here",
               "visible": true,
               "objectFields": [
                 {
@@ -72,7 +165,7 @@
           "fields": [
             {
               "name": "reasonsSelected",
-              "label": "Why are you applying for Changing hours (LTFT)?",
+              "label": "Why are you applying?",
               "placeholder": "Select all reasons that apply",
               "type": "select",
               "isMultiSelect": true,
@@ -90,7 +183,19 @@
               "parent": "reasonsSelected",
               "visible": false,
               "hint": "Please provide details for your 'other reason'."
-            },
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Supporting information",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Supporting information",
+          "fields": [
             {
               "name": "supportingInformation",
               "label": "Please provide brief supporting information for your application.",
@@ -104,9 +209,28 @@
       ]
     },
     {
-      "pageName": "Personal Details",
-      "importantTxtName": "",
+      "pageName": "Tier 2 / Skilled Worker status",
+      "importantTxtName": "ltftTier2VisaImportantText",
       "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Tier 2 / Skilled Worker status",
+          "fields": [
+            {
+              "name": "skilledWorkerVisaHolder",
+              "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "personalDetailsCheckText",
+      "expanderLinkName": "dataSource",
       "sections": [
         {
           "sectionHeader": "Personal Details",
@@ -172,13 +296,6 @@
                   "label": "Public Health Number (if applicable)",
                   "placeholder": "type here...",
                   "type": "text",
-                  "visible": true
-                },
-                {
-                  "name": "skilledWorkerVisaHolder",
-                  "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
-                  "type": "radio",
-                  "optionsKey": "yesNo",
                   "visible": true
                 }
               ]

@@ -5,7 +5,9 @@ export type ExpanderNameType =
   | "formRDeclarationsExplained"
   | "postTypes"
   | "cctInfo"
-  | "skilledVisaWorker";
+  | "skilledVisaWorker"
+  | "whatIsLtft"
+  | "preApproverInfo";
 
 export const ExpanderMsg = ({
   expanderName
@@ -175,6 +177,49 @@ export const ExpanderMsg = ({
             training and education | NHS England
           </a>{" "}
           for more information.
+        </>
+      )
+    },
+    whatIsLtft: {
+      summary: "What is Less Than Full Time (LTFT) and how do I apply?",
+      text: <p>Less Than Full Time (LTFT) is...</p>
+    },
+    preApproverInfo: {
+      summary: "What should I discuss with my pre-approver?",
+      text: (
+        <>
+          <p>
+            Before submitting your LTFT application, you must have a discussion
+            with your Training Programme Director (TPD) or Primary Approver.
+            This conversation ensures your request supports both your personal
+            circumstances and your training progression.
+          </p>
+          <p>
+            During this discussion, you should cover:
+            <ul>
+              <ul>
+                <li>
+                  Your reason(s) for requesting LTFT (e.g. caring
+                  responsibilities, health, professional development,
+                  wellbeing).
+                </li>
+                <li>
+                  The proposed working pattern (e.g. 60%, 80% WTE, expected days
+                  per week).
+                </li>
+                <li>
+                  Impact on training progression, pay changes and completion
+                  dates.
+                </li>
+                <li>Planned start date and notice period.</li>
+                <li>Any support or adjustments you may need.</li>
+              </ul>
+              <p>
+                The purpose of this discussion is to ensure understanding and
+                support within your training programme.
+              </p>
+            </ul>
+          </p>
         </>
       )
     }

@@ -1,33 +1,37 @@
+import dayjs from "dayjs";
 import { ReasonMsgObj } from "../components/common/ActionModal";
-import { LtftDto, LtftObj } from "../models/LtftTypes";
+import { LtftDto, LtftObjNew } from "../models/LtftTypes";
 import { PersonalDetails } from "../models/PersonalDetails";
-import { CctCalculation, CctChangeType } from "../redux/slices/cctSlice";
+import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import {
   unsubmitLtftForm,
   updatedLtft,
   withdrawLtftForm
 } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
-import { calcLtftChange } from "./CctUtilities";
+import { calcCctDate, findLinkedProgramme } from "./CctUtilities";
 import { ACTION_REASONS } from "./Constants";
+import { isPastIt } from "./DateUtilities";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 
-export function populateLtftDraft(
-  cctSnapshot: CctCalculation,
+export function populateLtftDraftNew(
   personalDetails: PersonalDetails,
   traineeTisId: string
-): LtftObj {
-  const draftLtftForm: LtftObj = {
+): LtftObjNew {
+  const draftLtftForm: LtftObjNew = {
     traineeTisId: traineeTisId,
-    change: {
-      calculationId: cctSnapshot?.id ?? "",
-      cctDate: cctSnapshot?.cctDate ?? "",
-      type: "LTFT",
-      startDate: cctSnapshot?.changes[0].startDate ?? "",
-      wte: cctSnapshot?.changes[0].wte ?? 0,
-      changeId: cctSnapshot?.changes[0].id ?? ""
-    },
+    pmId: "",
+    pmName: "",
+    pmStartDate: "",
+    pmEndDate: "",
+    designatedBodyCode: "",
+    managingDeanery: "",
+    cctDate: "",
+    type: "LTFT",
+    startDate: "",
+    wteBeforeChange: null,
+    wte: null,
     declarations: {
       discussedWithTpd: true,
       informationIsCorrect: null,
@@ -45,19 +49,9 @@ export function populateLtftDraft(
       email: personalDetails?.email,
       gmcNumber: personalDetails?.gmcNumber,
       gdcNumber: personalDetails?.gdcNumber,
-      publicHealthNumber: personalDetails?.publicHealthNumber,
-      skilledWorkerVisaHolder: null
+      publicHealthNumber: personalDetails?.publicHealthNumber
     },
-    programmeMembership: {
-      id: cctSnapshot?.programmeMembership.id ?? "",
-      name: cctSnapshot?.programmeMembership.name ?? "",
-      startDate: cctSnapshot?.programmeMembership.startDate ?? "",
-      endDate: cctSnapshot?.programmeMembership.endDate ?? "",
-      wte: cctSnapshot?.programmeMembership.wte ?? 0,
-      designatedBodyCode:
-        cctSnapshot?.programmeMembership.designatedBodyCode ?? "",
-      managingDeanery: cctSnapshot?.programmeMembership.managingDeanery ?? ""
-    },
+    skilledWorkerVisaHolder: null,
     reasonsSelected: null,
     reasonsOtherDetail: null,
     supportingInformation: null,
@@ -82,24 +76,24 @@ export function populateLtftDraft(
   return draftLtftForm;
 }
 
-export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
+export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
   return {
     traineeTisId: ltftObj.traineeTisId ?? "",
     id: ltftObj.id ?? null,
     formRef: ltftObj.formRef ?? null,
     name: ltftObj.name ?? null,
     change: {
-      calculationId: ltftObj.change.calculationId,
-      cctDate: ltftObj.change.cctDate,
-      type: ltftObj.change.type,
-      startDate: ltftObj.change.startDate,
-      wte: ltftObj.change.wte,
-      changeId: ltftObj.change.changeId
+      calculationId: "",
+      cctDate: ltftObj.cctDate ?? null,
+      type: "LTFT",
+      startDate: ltftObj.startDate,
+      wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
+      changeId: ""
     },
     declarations: {
       discussedWithTpd: ltftObj.declarations.discussedWithTpd ?? true,
-      informationIsCorrect: ltftObj.declarations.informationIsCorrect ?? false,
-      notGuaranteed: ltftObj.declarations.notGuaranteed ?? false
+      informationIsCorrect: ltftObj.declarations.informationIsCorrect ?? null,
+      notGuaranteed: ltftObj.declarations.notGuaranteed ?? null
     },
     discussions: {
       tpdName: ltftObj.tpdName,
@@ -121,18 +115,16 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
       gmcNumber: ltftObj.personalDetails.gmcNumber ?? "",
       gdcNumber: ltftObj.personalDetails.gdcNumber ?? "",
       publicHealthNumber: ltftObj.personalDetails.publicHealthNumber ?? "",
-      skilledWorkerVisaHolder:
-        ltftObj.personalDetails.skilledWorkerVisaHolder ?? null
+      skilledWorkerVisaHolder: ltftObj.skilledWorkerVisaHolder ?? null
     },
     programmeMembership: {
-      id: ltftObj.programmeMembership.id,
-      name: ltftObj.programmeMembership.name,
-      startDate: ltftObj.programmeMembership.startDate,
-      endDate: ltftObj.programmeMembership.endDate,
-      wte: ltftObj.programmeMembership.wte,
-      designatedBodyCode:
-        ltftObj.programmeMembership.designatedBodyCode ?? null,
-      managingDeanery: ltftObj.programmeMembership.managingDeanery ?? null
+      id: ltftObj.pmId ?? null,
+      name: ltftObj.pmName ?? null,
+      startDate: ltftObj.pmStartDate ?? null,
+      endDate: ltftObj.pmEndDate ?? null,
+      wte: ltftObj.wteBeforeChange ? ltftObj.wteBeforeChange / 100 : 0,
+      designatedBodyCode: ltftObj.designatedBodyCode ?? null,
+      managingDeanery: ltftObj.managingDeanery ?? null
     },
     reasons: {
       selected: ltftObj.reasonsSelected || [],
@@ -175,20 +167,25 @@ export const mapLtftObjToDto = (ltftObj: LtftObj): LtftDto => {
   };
 };
 
-export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
+export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
   return {
     traineeTisId: ltftDto.traineeTisId,
     id: ltftDto.id ?? "",
     formRef: ltftDto.formRef ?? "",
     name: ltftDto.name ?? "",
-    change: {
-      calculationId: ltftDto.change.calculationId,
-      cctDate: ltftDto.change.cctDate,
-      type: ltftDto.change.type,
-      startDate: ltftDto.change.startDate,
-      wte: ltftDto.change.wte,
-      changeId: ltftDto.change.changeId
-    },
+    pmId: ltftDto.programmeMembership.id ?? "",
+    pmName: ltftDto.programmeMembership.name ?? "",
+    pmStartDate: ltftDto.programmeMembership.startDate ?? "",
+    pmEndDate: ltftDto.programmeMembership.endDate ?? "",
+    designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
+    managingDeanery: ltftDto.programmeMembership.managingDeanery ?? "",
+    cctDate: ltftDto.change.cctDate ?? "",
+    type: ltftDto.change.type,
+    startDate: ltftDto.change.startDate,
+    wteBeforeChange: ltftDto.programmeMembership.wte
+      ? ltftDto.programmeMembership.wte * 100
+      : null,
+    wte: ltftDto.change.wte ? ltftDto.change.wte * 100 : null,
     declarations: {
       discussedWithTpd: ltftDto.declarations.discussedWithTpd,
       informationIsCorrect: ltftDto.declarations.informationIsCorrect,
@@ -210,18 +207,9 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObj => {
       email: ltftDto.personalDetails.email,
       gmcNumber: ltftDto.personalDetails.gmcNumber,
       gdcNumber: ltftDto.personalDetails.gdcNumber,
-      publicHealthNumber: ltftDto.personalDetails.publicHealthNumber,
-      skilledWorkerVisaHolder: ltftDto.personalDetails.skilledWorkerVisaHolder
+      publicHealthNumber: ltftDto.personalDetails.publicHealthNumber
     },
-    programmeMembership: {
-      id: ltftDto.programmeMembership.id,
-      name: ltftDto.programmeMembership.name,
-      startDate: ltftDto.programmeMembership.startDate,
-      endDate: ltftDto.programmeMembership.endDate ?? "",
-      wte: ltftDto.programmeMembership.wte,
-      designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
-      managingDeanery: ltftDto.programmeMembership.managingDeanery ?? ""
-    },
+    skilledWorkerVisaHolder: ltftDto.personalDetails.skilledWorkerVisaHolder,
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     supportingInformation: ltftDto.reasons.supportingInformation ?? null,
@@ -286,31 +274,33 @@ export async function handleLtftSummaryModalSub(
   return false;
 }
 
-export const recalculateCctDate = (
-  endDate: Date | string,
-  currentWte: number,
-  changeDateValue: string,
-  wteValue: string
-): void => {
-  const updatedCompletionDate = calcLtftChange(endDate, currentWte, {
-    type: "LTFT",
-    startDate: changeDateValue,
-    wte: Number(wteValue) / 100
-  } as CctChangeType);
+export function setPmDetailsInLtftFormData(formData: LtftObjNew) {
+  const progsArrNotPast = store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => !isPastIt(prog.endDate)
+    );
+  const linkedProgramme = findLinkedProgramme(formData.pmId, progsArrNotPast);
 
-  const currentLtftData = store.getState().ltft.formData;
-  const updatedLtftData = {
-    ...currentLtftData,
-    change: {
-      ...currentLtftData.change,
-      startDate: changeDateValue,
-      wte: Number(wteValue) / 100,
-      cctDate: updatedCompletionDate
-    }
-  };
+  const newCctDate = calcCctDate(
+    linkedProgramme?.endDate,
+    formData.wteBeforeChange,
+    formData.wte,
+    formData.startDate
+  );
 
-  store.dispatch(updatedLtft(updatedLtftData));
-};
+  store.dispatch(
+    updatedLtft({
+      ...formData,
+      pmName: linkedProgramme?.programmeName ?? "",
+      pmStartDate: linkedProgramme?.startDate ?? "",
+      pmEndDate: linkedProgramme?.endDate ?? "",
+      designatedBodyCode: linkedProgramme?.designatedBodyCode ?? "",
+      managingDeanery: linkedProgramme?.managingDeanery ?? "",
+      cctDate: newCctDate
+    })
+  );
+}
 
 export function getStatusReasonLabel(
   status: string,
@@ -333,11 +323,25 @@ export function getStatusReasonLabel(
   return statusReason || "";
 }
 
-export function isValidProgramme(progId: string): boolean {
-  if (!progId) return false;
-  const progIdsToCheckAgainst = store.getState().user.features.forms.ltft.qualifyingProgrammes;
-  if (progIdsToCheckAgainst.length < 1) {
-    return false;
+export function makeValidProgrammeOptions(
+  pmsNotPast: ProgrammeMembership[],
+  progIdsFromFeatFlags: string[]
+): { value: string; label: string }[] {
+  if (progIdsFromFeatFlags.length === 0 || pmsNotPast.length === 0) {
+    return [];
   }
-  return progIdsToCheckAgainst.some(id => id === progId);
+
+  const programmeOptions = pmsNotPast.reduce((progOptions, prog) => {
+    if (prog.tisId && progIdsFromFeatFlags.includes(prog.tisId)) {
+      progOptions.push({
+        value: prog.tisId,
+        label: `${prog.programmeName} (${dayjs(prog.startDate).format(
+          "DD/MM/YYYY"
+        )} to ${dayjs(prog.endDate).format("DD/MM/YYYY")})`
+      });
+    }
+    return progOptions;
+  }, [] as { value: string; label: string }[]);
+
+  return programmeOptions;
 }

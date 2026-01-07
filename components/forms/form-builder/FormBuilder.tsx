@@ -64,6 +64,7 @@ export type Field = {
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
+  isDisplayAltVal?: boolean;
 };
 export type FormData = {
   [key: string]: any;
@@ -93,7 +94,7 @@ type FormBuilderProps = {
   options: any;
   validationSchema: any;
 };
-export type MatcherName = "prevDateTest" | "postcodeTest";
+export type MatcherName = "prevDateTest" | "postcodeTest" | "ltft16WeeksTest";
 export type Warning = {
   matcher: MatcherName;
   msgText: string;

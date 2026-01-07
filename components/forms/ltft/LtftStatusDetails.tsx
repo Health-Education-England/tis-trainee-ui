@@ -2,9 +2,9 @@ import { SummaryList } from "nhsuk-react-components";
 import dayjs from "dayjs";
 import { getStatusReasonLabel } from "../../../utilities/ltftUtilities";
 import { StringUtilities } from "../../../utilities/StringUtilities";
-import { LtftObj } from "../../../models/LtftTypes";
+import { LtftObjNew } from "../../../models/LtftTypes";
 
-export const LtftStatusDetails = (formData: LtftObj) => {
+export const LtftStatusDetails = (formData: LtftObjNew) => {
   return (
     <>
       {formData.status?.current?.state !== "DRAFT" && (
