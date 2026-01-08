@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useParams } from "react-router-dom";
 import {
   loadSavedLtft,
-  updatedLtft,
   updatedLtftSaveStatus
 } from "../../../redux/slices/ltftSlice";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
@@ -106,6 +105,14 @@ export const LtftFormView = () => {
     return (
       <LtftViewWrapper>
         <ErrorPage message="There was a problem loading your application." />
+      </LtftViewWrapper>
+    );
+  }
+
+  if (!formData.cctDate) {
+    return (
+      <LtftViewWrapper>
+        <ErrorPage message="Please try again." />
       </LtftViewWrapper>
     );
   }

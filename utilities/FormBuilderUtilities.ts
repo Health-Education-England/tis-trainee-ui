@@ -48,6 +48,8 @@ import {
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 import { LtftObjNew } from "../models/LtftTypes";
+import { isPastIt } from "./DateUtilities";
+import { calcCctDate, findLinkedProgramme } from "./CctUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -119,8 +121,44 @@ function handleFormrToConfirm(formName: FormName, formData: FormData) {
   history.push(fullPath, { fromFormCreate: true });
 }
 
+export function prepLtftFormDataForView(formData: LtftObjNew) {
+  const pmArrayNotPast = store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => !isPastIt(prog.endDate)
+    );
+  const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
+  if (linkedProgramme) {
+    const newcCctDate = calcCctDate(
+      linkedProgramme.endDate,
+      formData.wteBeforeChange,
+      formData.wte,
+      formData.startDate
+    );
+    const {
+      programmeName,
+      startDate,
+      endDate,
+      designatedBodyCode,
+      managingDeanery
+    } = linkedProgramme;
+    store.dispatch(
+      updatedLtft({
+        ...formData,
+        pmName: programmeName ?? "",
+        pmStartDate: startDate ?? "",
+        pmEndDate: endDate ?? "",
+        designatedBodyCode: designatedBodyCode ?? "",
+        managingDeanery: managingDeanery ?? "",
+        cctDate: newcCctDate
+      })
+    );
+    return store.getState().ltft.formData;
+  }
+}
+
 function handleLtftToConfirm(formData: FormData) {
-  store.dispatch(updatedLtft(formData as LtftObjNew));
+  prepLtftFormDataForView(formData as LtftObjNew);
   store.dispatch(updatedCanEditLtft(true));
   history.push("/ltft/confirm");
 }
@@ -522,7 +560,7 @@ export async function saveDraftForm(
         isSubmit,
         jsonForm
       )
-    : formData;
+    : prepLtftFormDataForView(formData as LtftObjNew);
 
   if (draftFormId) {
     await updateForm(
@@ -535,7 +573,7 @@ export async function saveDraftForm(
   } else {
     await saveForm(
       formName,
-      preppedFormData,
+      preppedFormData as FormData,
       isAutoSave,
       isSubmit,
       showFailToastOnly

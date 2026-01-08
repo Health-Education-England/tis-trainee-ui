@@ -39,7 +39,8 @@ export const LtftDeclarationsModal = ({
             checked={decValues.madeCctCalc}
             onChange={handleCheckboxChange}
           >
-            {`I understand that a change to my 'full time' working hours percentage will affect my programme completion date.`}
+            I understand that a change to my full time working hours percentage
+            will affect my programme completion date.
           </Checkboxes.Box>
           <Hint className="checkbox-hint">
             You can make a CCT Calculation using this{" "}

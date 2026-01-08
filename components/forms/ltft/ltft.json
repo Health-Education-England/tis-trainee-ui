@@ -32,8 +32,8 @@
             {
               "name": "wteBeforeChange",
               "type": "text",
-              "label": "What percentage of your 'full time' hours do you work before your proposed change?",
-              "hint": "e.g. 100 is full time, 80 is 80% of your 'full time' hours etc.",
+              "label": "What percentage of your full time hours do you work before your proposed change?",
+              "hint": "e.g. 100 is full time, 80 is 80% of your full time hours, etc.",
 
               "visible": true,
               "width": 2,
@@ -54,8 +54,8 @@
             {
               "name": "wte",
               "type": "text",
-              "label": "What percentage of your 'full time' hours do you want to work?",
-              "hint": "e.g. 100 is full time, 80 is 80% of your 'full time' hours etc.",
+              "label": "What percentage of your full time hours do you want to work?",
+              "hint": "e.g. 100 is full time, 80 is 80% of your full time hours etc.",
               "visible": true,
               "width": 2,
               "isNumberField": true
