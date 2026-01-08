@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import style from "../../Common.module.scss";
@@ -6,9 +7,14 @@ import { resetCctCalc } from "../../../redux/slices/cctSlice";
 import { Link } from "react-router-dom";
 import { CctSavedDrafts } from "./CctSavedDrafts";
 import { CctProgrammesList } from "./CctProgrammesList";
+import { loadCctList } from "../../../redux/slices/cctListSlice";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(loadCctList());
+  }, [dispatch]);
 
   return (
     <>

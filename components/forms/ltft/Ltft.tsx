@@ -5,15 +5,11 @@ import { LtftHome } from "./LtftHome";
 import { LtftForm } from "./LtftForm";
 import { LtftFormView } from "./LtftFormView";
 import { useAppSelector } from "../../../redux/hooks/hooks";
-import { isPastIt } from "../../../utilities/DateUtilities";
 import { makeValidProgrammeOptions } from "../../../utilities/ltftUtilities";
+import { selectPmsNotPast } from "../../../redux/slices/traineeProfileSlice";
 
 export function Ltft() {
-  const pmsNotPast = useAppSelector(state =>
-    state.traineeProfile.traineeProfileData.programmeMemberships.filter(
-      pm => !isPastIt(pm.endDate)
-    )
-  );
+  const pmsNotPast = useAppSelector(selectPmsNotPast);
   const pmIdsFromFeatFlags =
     useAppSelector(
       state => state.user.features.forms.ltft.qualifyingProgrammes
