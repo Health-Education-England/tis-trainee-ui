@@ -117,7 +117,7 @@ export function PanelsCreator({
                       </>
                     )}
                   <p className={style.panelSubHeader} data-cy="subheaderLtft">
-                    Changing hours (LTFT)
+                    Less Than Full Time (LTFT)
                   </p>
                   <SummaryList.Row>
                     <SummaryList.Key>
@@ -132,13 +132,25 @@ export function PanelsCreator({
                   </SummaryList.Row>
                   <SummaryList.Row>
                     <SummaryList.Key>
+                      <Label size="s">
+                        Ready to apply for Less Than Full Time (LTFT)?
+                      </Label>
+                    </SummaryList.Key>
+                    <SummaryList.Value>
+                      <Link to="/ltft" data-cy="ltft-link">
+                        Go to the LTFT application page
+                      </Link>
+                    </SummaryList.Value>
+                  </SummaryList.Row>
+                  <SummaryList.Row>
+                    <SummaryList.Key>
                       <Label size="s" data-cy="cct-link-header">
-                        Need a Changing hours (LTFT) calculation?
+                        Need a CCT calculation?
                       </Label>
                     </SummaryList.Key>
                     <SummaryList.Value>
                       <Link to="/cct" data-cy="cct-link">
-                        Go to CCT page
+                        Go to the CCT calculator
                       </Link>
                     </SummaryList.Value>
                   </SummaryList.Row>

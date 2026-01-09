@@ -99,7 +99,7 @@ export const ltftValidationSchema = yup.object({
   ),
   wte: wteValidation("The proposed percentage of full time hours").test(
     "not-equal-to-before",
-    "Your proposed change must be different from the percentage you work before this change (see Part 2)",
+    "Your proposed change must be different from the percentage you gave in Part 2",
     function (value) {
       return value !== Number(this.parent.wteBeforeChange);
     }
