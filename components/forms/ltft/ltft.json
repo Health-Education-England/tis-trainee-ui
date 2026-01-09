@@ -37,7 +37,8 @@
 
               "visible": true,
               "width": 2,
-              "isNumberField": true
+              "isNumberField": true,
+              "maxDigits": 3
             }
           ]
         }
@@ -58,7 +59,8 @@
               "hint": "e.g. 100 is full time, 80 is 80% of your full time hours etc.",
               "visible": true,
               "width": 2,
-              "isNumberField": true
+              "isNumberField": true,
+              "maxDigits": 3
             }
           ]
         }

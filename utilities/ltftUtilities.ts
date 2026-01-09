@@ -183,9 +183,9 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     type: ltftDto.change.type,
     startDate: ltftDto.change.startDate,
     wteBeforeChange: ltftDto.programmeMembership.wte
-      ? ltftDto.programmeMembership.wte * 100
+      ? Math.round(ltftDto.programmeMembership.wte * 100)
       : null,
-    wte: ltftDto.change.wte ? ltftDto.change.wte * 100 : null,
+    wte: ltftDto.change.wte ? Math.round(ltftDto.change.wte * 100) : null,
     declarations: {
       discussedWithTpd: ltftDto.declarations.discussedWithTpd,
       informationIsCorrect: ltftDto.declarations.informationIsCorrect,

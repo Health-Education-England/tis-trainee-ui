@@ -20,6 +20,7 @@ type TextProps = {
   readOnly?: boolean;
   dtoName?: string;
   hint?: string;
+  maxDigits?: number;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -34,7 +35,8 @@ export const Text: React.FC<TextProps> = ({
   isNumberField,
   readOnly,
   dtoName,
-  hint
+  hint,
+  maxDigits
 }: TextProps) => {
   const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
     useFormContext();
@@ -70,8 +72,8 @@ export const Text: React.FC<TextProps> = ({
         id={inputId}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
-        onInput={e => handleNumberInput(isNumberField, e)}
-        type="text"
+        onInput={e => handleNumberInput(isNumberField, e, maxDigits)}
+        type={isNumberField ? "number" : "text"}
         name={name}
         value={value ?? ""}
         onChange={(event: any) =>
@@ -102,7 +104,7 @@ export const Text: React.FC<TextProps> = ({
             dtoName
           )
         }
-        maxLength={isNumberField ? 4 : 4096}
+        maxLength={isNumberField ? maxDigits : 4096}
         readOnly={readOnly}
       />
       {fieldWarning?.fieldName === name && !fieldError ? (

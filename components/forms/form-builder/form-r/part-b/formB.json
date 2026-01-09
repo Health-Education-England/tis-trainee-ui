@@ -173,7 +173,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "parentalLeave",
@@ -182,7 +183,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "careerBreaks",
@@ -191,7 +193,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "paidLeave",
@@ -200,7 +203,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "unauthorisedLeave",
@@ -209,7 +213,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "otherLeave",
@@ -218,7 +223,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "totalLeave",

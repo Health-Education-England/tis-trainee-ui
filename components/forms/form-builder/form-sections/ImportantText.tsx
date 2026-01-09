@@ -110,7 +110,7 @@ export const ltftReasonsText1 =
   "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
 export const ltftStartDateImportantText1 =
-  "Changing hours (LTFT) requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
+  "Less Than Full Time (LTFT) requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
 
 export const ltftTier2VisaImportantText1 =
   "If you are on a Tier 2 or Skilled Worker visa, please make sure the proposed change to your working hours 'full time' percentage (Part 3 of this application) complies with the requirements of your visa.";

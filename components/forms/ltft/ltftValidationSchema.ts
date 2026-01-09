@@ -84,8 +84,26 @@ const personalDetailsDtoValidationSchema = yup.object().shape({
     .required(yesNoError)
 });
 
+const wteValidation = (fieldName: string) =>
+  yup
+    .number()
+    .typeError(`${fieldName} must be a positive number`)
+    .min(1, `${fieldName} must be a positive number`)
+    .max(100, `${fieldName} cannot exceed 100`)
+    .required(`${fieldName} is required`);
+
 export const ltftValidationSchema = yup.object({
   pmId: StringValidationSchema("Programme"),
+  wteBeforeChange: wteValidation(
+    "The percentage of full time hours before your proposed change"
+  ),
+  wte: wteValidation("The proposed percentage of full time hours").test(
+    "not-equal-to-before",
+    "Your proposed change must be different from the percentage you work before this change (see Part 2)",
+    function (value) {
+      return value !== Number(this.parent.wteBeforeChange);
+    }
+  ),
   tpdName: StringValidationSchema("TPD Name"),
   tpdEmail: emailValidation,
   otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),

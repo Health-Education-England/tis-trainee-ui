@@ -65,6 +65,7 @@ export type Field = {
   isMultiSelect?: boolean;
   hint?: string;
   isDisplayAltVal?: boolean;
+  maxDigits?: number;
 };
 export type FormData = {
   [key: string]: any;

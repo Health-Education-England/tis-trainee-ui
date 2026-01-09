@@ -335,11 +335,15 @@ export function handleKeyDown(
 
 export function handleNumberInput(
   isNumberField: boolean | undefined,
-  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  maxDigits?: number
 ) {
   if (isNumberField) {
     const input = e.target as HTMLInputElement;
-    input.value = input.value.replace(/\D/g, "");
+    input.value = input.value.replaceAll(/\D/g, "");
+    if (maxDigits !== undefined && input.value.length > maxDigits) {
+      input.value = input.value.slice(0, maxDigits);
+    }
   }
 }
 
