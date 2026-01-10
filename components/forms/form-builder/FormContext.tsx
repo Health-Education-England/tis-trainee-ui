@@ -1,10 +1,15 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect
+} from "react";
 import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
-  ReturnedWarning,
+  getFieldWarningMsgs,
   setTextFieldWidth,
-  showFieldMatchWarning,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
@@ -36,8 +41,7 @@ type FormContextType = {
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
   jsonForm: Form;
-  fieldWarning: ReturnedWarning | null;
-  setFieldWarning: React.Dispatch<React.SetStateAction<ReturnedWarning | null>>;
+  fieldWarningMsgs: Record<string, string[]>;
   fieldWidthData: ReturnedWidthData | null;
   setFieldWidthData: React.Dispatch<
     React.SetStateAction<ReturnedWidthData | null>
@@ -74,9 +78,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
   const [currentPageFields, setCurrentPageFields] =
     useState<Field[]>(initialPageFields);
-  const [fieldWarning, setFieldWarning] = useState<ReturnedWarning | null>(
-    null
-  );
+  const [fieldWarningMsgs, setFieldWarningMsgs] = useState<
+    Record<string, string[]>
+  >({});
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
   const [isAutosaving, setIsAutosaving] = useState<boolean>(false);
@@ -134,6 +138,33 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     []
   );
 
+  useEffect(() => {
+    const newWarningMsgs: Record<string, string[]> = {};
+    currentPageFields.forEach(field => {
+      const fieldWarningsList = [];
+      if (field.warnings) {
+        fieldWarningsList.push(...field.warnings);
+      }
+      if (fieldWarningsList.length > 0) {
+        const val = formData[field.name];
+        if (val) {
+          const msgs = getFieldWarningMsgs(val, fieldWarningsList);
+          if (msgs.length > 0) {
+            newWarningMsgs[field.name] = msgs;
+          }
+        }
+      }
+    });
+
+    setFieldWarningMsgs(existingWarningMsgs => {
+      if (
+        JSON.stringify(existingWarningMsgs) === JSON.stringify(newWarningMsgs)
+      )
+        return existingWarningMsgs;
+      return newWarningMsgs;
+    });
+  }, [formData, currentPageFields]);
+
   const handleChange = useCallback(
     (
       event: React.ChangeEvent<HTMLInputElement>,
@@ -153,13 +184,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       );
 
       updateFormData(name, currentValue, arrayIndex, arrayName, dtoName);
-
-      if (primaryField?.warning) {
-        const matcher = primaryField.warning.matcher;
-        const msg = primaryField.warning.msgText;
-        const warning = showFieldMatchWarning(currentValue, matcher, msg, name);
-        setFieldWarning(warning);
-      }
 
       if (primaryField?.type === "text" && primaryField?.canGrow) {
         const newWidth = setTextFieldWidth(currentValue.length);
@@ -194,8 +218,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       currentPageFields,
       setCurrentPageFields,
       jsonForm,
-      fieldWarning,
-      setFieldWarning,
+      fieldWarningMsgs,
+      setFieldWarningMsgs,
       fieldWidthData,
       setFieldWidthData,
       isAutosaving
@@ -207,7 +231,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       jsonForm,
       handleBlur,
       handleChange,
-      fieldWarning,
+      fieldWarningMsgs,
       fieldWidthData,
       isAutosaving
     ]

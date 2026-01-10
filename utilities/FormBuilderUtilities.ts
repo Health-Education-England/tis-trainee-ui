@@ -12,12 +12,13 @@ import {
   updatedFormA
 } from "../redux/slices/formASlice";
 import store from "../redux/store/store";
-import {
+import type {
   Field,
   Form,
   FormData,
   FormName,
-  MatcherName
+  MatcherName,
+  Warning
 } from "../components/forms/form-builder/FormBuilder";
 import {
   saveFormB,
@@ -288,35 +289,51 @@ export function transformReferenceData(
   return transformedData;
 }
 
-export type ReturnedWarning = {
-  fieldName: string;
-  warningMsg: string;
-};
+export function getFieldWarningMsgs(
+  inputValue: string | number,
+  warnings: Warning[]
+): string[] {
+  const stringTypeChecks: Partial<
+    Record<MatcherName, (val: string) => boolean>
+  > = {
+    prevDateTest: (val: string) => {
+      const testDate = dayjs().subtract(1, "day");
+      return dayjs(val).isBefore(testDate);
+    },
+    postcodeTest: (val: string) =>
+      !/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(val),
+    ltft16WeeksTest: (val: string) => {
+      const today = dayjs().startOf("day");
+      const inputDate = dayjs(val).startOf("day");
+      return inputDate.isBefore(today.add(16, "week"));
+    }
+  };
 
-export function showFieldMatchWarning(
-  inputValue: string,
-  matcher: MatcherName,
-  warningMsg: string,
-  fieldName: string
-): ReturnedWarning | null {
-  if (matcher === "prevDateTest") {
-    const testDate = dayjs().subtract(1, "day");
-    const inputDate = dayjs(inputValue);
-    if (inputDate.isBefore(testDate)) {
-      return { fieldName, warningMsg };
-    } else return null;
-  } else if (matcher === "postcodeTest") {
-    if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
-      return { fieldName, warningMsg };
-  } else if (matcher === "ltft16WeeksTest") {
-    const today = dayjs().startOf("day");
-    const inputDate = dayjs(inputValue).startOf("day");
-    const weeks16FromToday = today.add(16, "week");
-    if (inputDate.isBefore(weeks16FromToday)) {
-      return { fieldName, warningMsg };
-    } else return null;
-  }
-  return null;
+  const numberTypeChecks: Partial<
+    Record<MatcherName, (val: number) => boolean>
+  > = {
+    ltftStandardWteTest: (val: number) => {
+      const standard = [100, 80, 70, 60, 50];
+      return !!val && !standard.includes(val);
+    }
+  };
+
+  return warnings.reduce((messages: string[], w) => {
+    const stringCheck = stringTypeChecks[w.matcher];
+    const numberCheck = numberTypeChecks[w.matcher];
+
+    if (stringCheck) {
+      if (stringCheck(String(inputValue))) {
+        messages.push(w.msgText);
+      }
+    } else if (numberCheck) {
+      const numVal = Number(inputValue);
+      if (!Number.isNaN(numVal) && numberCheck(numVal)) {
+        messages.push(w.msgText);
+      }
+    }
+    return messages;
+  }, []);
 }
 
 export function setTextFieldWidth(width: number) {

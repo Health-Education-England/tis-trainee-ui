@@ -60,7 +60,13 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "maxDigits": 3
+              "maxDigits": 3,
+              "warnings": [
+                {
+                  "matcher": "ltftStandardWteTest",
+                  "msgText": "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
+                }
+              ]
             }
           ]
         }
@@ -79,10 +85,12 @@
               "label": "When should this change to your working hours begin?",
               "type": "date",
               "visible": true,
-              "warning": {
-                "matcher": "ltft16WeeksTest",
-                "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
-              }
+              "warnings": [
+                {
+                  "matcher": "ltft16WeeksTest",
+                  "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+                }
+              ]
             }
           ]
         }

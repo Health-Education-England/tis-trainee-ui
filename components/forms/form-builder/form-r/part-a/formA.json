@@ -114,10 +114,12 @@
               "placeholder": "type...",
               "type": "text",
               "visible": true,
-              "warning": {
-                "matcher": "postcodeTest",
-                "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
-              }
+              "warnings": [
+                {
+                  "matcher": "postcodeTest",
+                  "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
+                }
+              ]
             },
             {
               "name": "telephoneNumber",

@@ -357,7 +357,7 @@ export function CctCalcCreate() {
                                                 .subtract(1, "day") && (
                                               <span data-cy="start-short-notice-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={shortNoticeMsg}
+                                                  warningMsgs={[shortNoticeMsg]}
                                                 />
                                               </span>
                                             )}
@@ -433,7 +433,7 @@ export function CctCalcCreate() {
                                                 .wte as number) && (
                                               <span data-cy="wte-increase-return-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={wteIncreaseMsg}
+                                                  warningMsgs={[wteIncreaseMsg]}
                                                 />
                                               </span>
                                             )}
@@ -450,7 +450,7 @@ export function CctCalcCreate() {
                                             ) && (
                                               <span data-cy="wte-custom-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={wteCustomMsg}
+                                                  warningMsgs={[wteCustomMsg]}
                                                 />
                                               </span>
                                             )}

@@ -38,15 +38,16 @@ export const Text: React.FC<TextProps> = ({
   hint,
   maxDigits
 }: TextProps) => {
-  const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
+  const { handleBlur, handleChange, fieldWarningMsgs, fieldWidthData } =
     useFormContext();
-
   const inputId =
     arrayIndex !== undefined && arrayName
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
   const errorId = `${inputId}-error`;
+  const warningMsgs = fieldWarningMsgs[name] ?? [];
+
   return (
     <div
       className={`nhsuk-form-group${
@@ -107,9 +108,9 @@ export const Text: React.FC<TextProps> = ({
         maxLength={isNumberField ? maxDigits : 4096}
         readOnly={readOnly}
       />
-      {fieldWarning?.fieldName === name && !fieldError ? (
-        <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
-      ) : null}
+      {warningMsgs.length > 0 && !fieldError && (
+        <FieldWarningMsg warningMsgs={warningMsgs} />
+      )}
     </div>
   );
 };
