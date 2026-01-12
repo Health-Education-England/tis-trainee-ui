@@ -64,7 +64,7 @@ export type Field = {
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
-  isDisplayAltVal?: boolean;
+  altDisplayVal?: string;
   maxDigits?: number;
 };
 export type FormData = {

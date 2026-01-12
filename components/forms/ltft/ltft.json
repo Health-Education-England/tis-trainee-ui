@@ -15,7 +15,7 @@
               "label": "Which programme will your proposed change in working hours affect?",
               "optionsKey": "pmOptions",
               "visible": true,
-              "isDisplayAltVal": true
+              "altDisplayVal": "pmName"
             }
           ]
         }
