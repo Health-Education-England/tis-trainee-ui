@@ -122,7 +122,10 @@ function handleFormrToConfirm(formName: FormName, formData: FormData) {
   history.push(fullPath, { fromFormCreate: true });
 }
 
-export function prepLtftFormDataForView(formData: LtftObjNew) {
+export function prepLtftFormData(
+  formData: LtftObjNew,
+  returnPreppedData: boolean = false
+) {
   const pmArrayNotPast = store
     .getState()
     .traineeProfile.traineeProfileData.programmeMemberships.filter(
@@ -154,12 +157,12 @@ export function prepLtftFormDataForView(formData: LtftObjNew) {
         cctDate: newcCctDate
       })
     );
-    return store.getState().ltft.formData;
+    if (returnPreppedData) return store.getState().ltft.formData;
   }
 }
 
 function handleLtftToConfirm(formData: FormData) {
-  prepLtftFormDataForView(formData as LtftObjNew);
+  prepLtftFormData(formData as LtftObjNew);
   store.dispatch(updatedCanEditLtft(true));
   history.push("/ltft/confirm");
 }
@@ -289,6 +292,12 @@ export function transformReferenceData(
   return transformedData;
 }
 
+export function isDateWithin16Weeks(dateVal: Date | string): boolean {
+  const today = dayjs().startOf("day");
+  const inputDate = dayjs(dateVal).startOf("day");
+  return inputDate.isBefore(today.add(16, "week"));
+}
+
 export function getFieldWarningMsgs(
   inputValue: string | number,
   warnings: Warning[]
@@ -302,11 +311,7 @@ export function getFieldWarningMsgs(
     },
     postcodeTest: (val: string) =>
       !/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(val),
-    ltft16WeeksTest: (val: string) => {
-      const today = dayjs().startOf("day");
-      const inputDate = dayjs(val).startOf("day");
-      return inputDate.isBefore(today.add(16, "week"));
-    }
+    ltft16WeeksTest: (val: string) => isDateWithin16Weeks(val)
   };
 
   const numberTypeChecks: Partial<
@@ -581,7 +586,7 @@ export async function saveDraftForm(
         isSubmit,
         jsonForm
       )
-    : prepLtftFormDataForView(formData as LtftObjNew);
+    : prepLtftFormData(formData as LtftObjNew, true);
 
   if (draftFormId) {
     await updateForm(

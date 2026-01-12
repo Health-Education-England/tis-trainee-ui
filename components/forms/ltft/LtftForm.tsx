@@ -55,7 +55,9 @@ export function LtftForm({ pmOptions }: LtftFormProps) {
   return formData?.declarations?.discussedWithTpd ? (
     <div>
       <h2>Application form</h2>
-      <LtftStatusDetails {...formData}></LtftStatusDetails>
+      {formData.status?.current?.state !== "DRAFT" && (
+        <LtftStatusDetails {...formData} />
+      )}
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}

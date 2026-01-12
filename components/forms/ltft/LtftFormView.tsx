@@ -20,7 +20,10 @@ import {
 } from "nhsuk-react-components";
 import Declarations from "../Declarations";
 import { StartOverButton } from "../StartOverButton";
-import { saveDraftForm } from "../../../utilities/FormBuilderUtilities";
+import {
+  isDateWithin16Weeks,
+  saveDraftForm
+} from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import TextInputField from "../TextInputField";
 import { Form, Formik } from "formik";
@@ -34,13 +37,15 @@ import InfoTooltip from "../../common/InfoTooltip";
 import { LtftObjNew } from "../../../models/LtftTypes";
 import FormBackLink from "../../common/FormBackLink";
 import dayjs from "dayjs";
-
-//TODO finish refactor
+import FieldWarningMsg from "../FieldWarningMsg";
+import { LtftStatusDetails } from "./LtftStatusDetails";
+import store from "../../../redux/store/store";
+import { ltft16WeeksWarningText } from "../../../utilities/Constants";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const { currentAction, resetAction } = useActionState();
+  const { currentAction, resetAction, setAction } = useActionState();
 
   const ltftStatus = useAppSelector(state => state.ltft.status);
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
@@ -57,33 +62,33 @@ export const LtftFormView = () => {
     }
   }, [id, dispatch]);
 
-  // const handleSubClick = async (values: { name: string }) => {
-  //   setAction("Submit", "", formJson.name);
-  //   const updatedDeclarations = {
-  //     ...formData.declarations,
-  //     informationIsCorrect: true,
-  //     notGuaranteed: true
-  //   };
-  //   store.dispatch(updatedLtftSaveStatus("idle"));
-  //   startSubmitting();
-  //   await saveDraftForm(
-  //     formJson,
-  //     {
-  //       ...formData,
-  //       name: values.name,
-  //       declarations: updatedDeclarations
-  //     } as LtftObj,
-  //     false,
-  //     false,
-  //     true,
-  //     false
-  //   );
-  //   stopSubmitting();
-  //   const newSaveStatus = store.getState().ltft.saveStatus;
-  //   if (newSaveStatus === "succeeded") {
-  //     setShowModal(true);
-  //   }
-  // };
+  const handleSubClick = async (values: { name: string }) => {
+    setAction("Submit", "", formJson.name);
+    const updatedDeclarations = {
+      ...formData.declarations,
+      informationIsCorrect: true,
+      notGuaranteed: true
+    };
+    store.dispatch(updatedLtftSaveStatus("idle"));
+    startSubmitting();
+    await saveDraftForm(
+      formJson,
+      {
+        ...formData,
+        name: values.name,
+        declarations: updatedDeclarations
+      },
+      false,
+      false,
+      true,
+      false
+    );
+    stopSubmitting();
+    const newSaveStatus = store.getState().ltft.saveStatus;
+    if (newSaveStatus === "succeeded") {
+      setShowModal(true);
+    }
+  };
 
   const handleModalFormClose = () => {
     setShowModal(false);
@@ -91,13 +96,13 @@ export const LtftFormView = () => {
     stopSubmitting();
   };
 
-  // const handleModalFormSubmit = async () => {
-  //   startSubmitting();
-  //   await saveDraftForm(formJson, formData, false, true);
-  //   stopSubmitting();
-  //   setShowModal(false);
-  //   resetAction();
-  // };
+  const handleModalFormSubmit = async () => {
+    startSubmitting();
+    await saveDraftForm(formJson, formData, false, true);
+    stopSubmitting();
+    setShowModal(false);
+    resetAction();
+  };
 
   if (ltftStatus === "loading") return <Loading />;
 
@@ -137,7 +142,9 @@ export const LtftFormView = () => {
             />
           )}
         </div>
-        {/* <LtftStatusDetails {...formData}></LtftStatusDetails> */}
+        {formData.status?.current?.state !== "DRAFT" && (
+          <LtftStatusDetails {...formData} />
+        )}
         <h2>Review & submit your LTFT application</h2>
         <FormViewBuilder
           jsonForm={formJson}
@@ -167,6 +174,9 @@ export const LtftFormView = () => {
                 <SummaryList.Key>Start date</SummaryList.Key>
                 <SummaryList.Value>
                   {dayjs(formData.startDate).format("DD/MM/YYYY")}
+                  {isDateWithin16Weeks(formData.startDate) && (
+                    <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
+                  )}
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
@@ -206,8 +216,7 @@ export const LtftFormView = () => {
           {canEditStatus && (
             <Formik
               initialValues={{ name: formData.name ?? "" }}
-              // onSubmit={handleSubClick}
-              onSubmit={() => {}}
+              onSubmit={handleSubClick}
             >
               {({ values }) => {
                 return (
@@ -270,8 +279,7 @@ export const LtftFormView = () => {
           </Container>
         )}
         <ActionModal
-          // onSubmit={handleModalFormSubmit}
-          onSubmit={() => {}}
+          onSubmit={handleModalFormSubmit}
           isOpen={showModal}
           onClose={handleModalFormClose}
           cancelBtnText="Cancel"
