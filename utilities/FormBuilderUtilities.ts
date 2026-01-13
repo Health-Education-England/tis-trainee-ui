@@ -133,7 +133,7 @@ export function prepLtftFormData(
     );
   const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
   if (linkedProgramme) {
-    let newCctDate = "";
+    let newCctDate = null;
     if (
       linkedProgramme.endDate &&
       formData.startDate &&

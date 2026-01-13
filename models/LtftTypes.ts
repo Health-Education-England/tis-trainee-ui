@@ -11,12 +11,13 @@ export type LtftFormStatus =
   | "REJECTED";
 
 export type LtftCctChange = {
-  calculationId: string;
-  cctDate: Date | string;
+  id?: string | null;
+  calculationId?: string | null;
+  cctDate: Date | string | null;
   type: CctType;
-  startDate: Date | string;
+  startDate: Date | string | null;
+  endDate?: Date | string | null;
   wte: number;
-  changeId: string;
 };
 
 export type LtftDeclarations = {
@@ -26,14 +27,14 @@ export type LtftDeclarations = {
 };
 
 export type LtftDiscussion = {
-  name: string;
-  email: string;
-  role: string;
+  name?: string | null;
+  email?: string | null;
+  role?: string | null;
 };
 
 export type LtftStatusDetails = {
-  reason: string;
-  message: string;
+  reason: string | null;
+  message: string | null;
 };
 
 export type LtftPd = {
@@ -91,13 +92,11 @@ export type LtftObjNew = {
   managingDeanery: string;
 
   // change: LtftCctChange
-  calculationId?: string; // not really needed in main form
-  cctDate: Date | string;
+  cctDate: Date | string | null;
   type: CctType;
-  startDate: Date | string;
+  startDate: Date | string | null;
   wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
   wte: number | null;
-  changeId?: string; // not really needed in main form
 
   // declarations
   declarations: LtftDeclarations;
@@ -135,6 +134,7 @@ export type LtftDto = {
   traineeTisId: string;
   id: string | null;
   formRef: string | null;
+  revision?: number;
   name: string | null;
   change: LtftCctChange;
   declarations: {
@@ -152,6 +152,7 @@ export type LtftDto = {
     }[];
   };
   personalDetails: {
+    id?: string;
     title?: ProfileSType;
     forenames: ProfileSType;
     surname: ProfileSType;
@@ -177,8 +178,10 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
+  tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;
+    submitted?: unknown;
     history: StatusInfo[];
   };
   created: Date | string;

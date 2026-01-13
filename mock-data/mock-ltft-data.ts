@@ -1,6 +1,7 @@
-import { LtftObj } from "../models/LtftTypes";
+import { LtftDto, LtftObjNew, LtftSummaryObj } from "../models/LtftTypes";
 
-export const mockLtftDraftList = [
+// Summary list
+export const mockLtftDraftList: LtftSummaryObj[] = [
   {
     id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
     name: "",
@@ -8,7 +9,10 @@ export const mockLtftDraftList = [
     status: "DRAFT",
     created: "2025-01-01T14:50:36.941Z",
     lastModified: "2025-01-15T15:50:36.941Z",
-    formRef: ""
+    formRef: "",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174000",
@@ -17,7 +21,10 @@ export const mockLtftDraftList = [
     status: "DRAFT",
     created: "2024-12-15T14:50:36.941Z",
     lastModified: "2024-12-15T15:50:36.941Z",
-    formRef: ""
+    formRef: "",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   },
   {
     id: "123e4567-e89b-12d3-a456-426614174001",
@@ -119,48 +126,36 @@ export const mockLtftsList1 = [
   }
 ];
 
-export const mockLtftDraft0: LtftObj = {
-  traineeTisId: "4",
-  change: {
-    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    cctDate: "2028-04-02",
-    type: "LTFT",
-    startDate: "2027-01-01",
-    wte: 0.8,
-    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
-  },
+// New form Obj
+export const mockLtftNewFormObj: LtftObjNew = {
+  cctDate: null,
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
     notGuaranteed: null
   },
-  tpdName: "",
-  tpdEmail: "",
+  designatedBodyCode: "",
+  managingDeanery: "",
   otherDiscussions: null,
   personalDetails: {
     title: "Mr",
     surname: "Gilliam",
     forenames: "Anthony Mara",
     telephoneNumber: "01632960363",
-    mobileNumber: "07465879348",
+    mobileNumber: "08465879348",
     email: "email@email.com",
     gmcNumber: "1111111",
-    gdcNumber: "",
-    publicHealthNumber: "",
-    skilledWorkerVisaHolder: null
+    gdcNumber: null,
+    publicHealthNumber: null
   },
-  programmeMembership: {
-    id: "a6de88b8-de41-48dd-9492-a518f5001176",
-    name: "Cardiology",
-    startDate: "2020-01-01",
-    endDate: "2028-01-01",
-    wte: 1,
-    designatedBodyCode: "WTF3",
-    managingDeanery: "North North West"
-  },
-  reasonsSelected: null,
+  pmEndDate: "",
+  pmId: "",
+  pmName: "",
+  pmStartDate: "",
   reasonsOtherDetail: null,
-  supportingInformation: null,
+  reasonsSelected: null,
+  skilledWorkerVisaHolder: null,
+  startDate: null,
   status: {
     current: {
       state: "DRAFT",
@@ -177,206 +172,218 @@ export const mockLtftDraft0: LtftObj = {
       revision: 0
     },
     history: []
-  }
+  },
+  supportingInformation: null,
+  tpdEmail: "",
+  tpdName: "",
+  traineeTisId: "47165",
+  type: "LTFT",
+  wte: null,
+  wteBeforeChange: null
 };
 
-export const mockLtftDraft1: LtftObj = {
-  ...mockLtftDraft0,
-  id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
-  formRef: "ltft_-1_001",
-  name: "My Programme - Hours Reduction",
+export const mockLtftDraftUpdatedPmFormObjNoSave: LtftObjNew = {
+  ...mockLtftNewFormObj,
+  managingDeanery: "East of England",
+  pmEndDate: "2028-01-01",
+  pmId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+  pmName: "Cardiology",
+  pmStartDate: "2025-07-01"
+};
+
+// DTO (first save payload)
+export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
+  traineeTisId: "47165",
+  id: null,
+  formRef: null,
+  name: null,
+  change: { cctDate: null, type: "LTFT", startDate: null, wte: 0, id: null },
   declarations: {
     discussedWithTpd: true,
-    informationIsCorrect: true,
-    notGuaranteed: true
+    informationIsCorrect: null,
+    notGuaranteed: null
   },
+  discussions: { tpdName: "", tpdEmail: "", other: [] },
   personalDetails: {
-    ...mockLtftDraft0.personalDetails,
-    skilledWorkerVisaHolder: false
-  }
+    title: "Mr",
+    surname: "Gilliam",
+    forenames: "Anthony Mara",
+    telephoneNumber: "01632960363",
+    mobileNumber: "08465879348",
+    email: "email@email.com",
+    gmcNumber: "1111111",
+    gdcNumber: null,
+    publicHealthNumber: null,
+    skilledWorkerVisaHolder: null
+  },
+  programmeMembership: {
+    id: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+    name: "Cardiology",
+    startDate: "2025-07-01",
+    endDate: "2028-01-01",
+    wte: 0,
+    designatedBodyCode: "",
+    managingDeanery: "East of England"
+  },
+  reasons: { selected: [], otherDetail: "", supportingInformation: null },
+  status: {
+    current: {
+      state: "DRAFT",
+      detail: { reason: "", message: "" },
+      modifiedBy: { name: "", email: "", role: "" },
+      timestamp: "",
+      revision: 0
+    },
+    history: []
+  },
+  created: "",
+  lastModified: ""
 };
 
-export const mockLtftUnsubmitted0: LtftObj = {
-  traineeTisId: "4",
-  name: "my Unsubmitted LTFT",
-  formRef: "ltft_4_001",
-  change: {
-    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    cctDate: "2028-04-02",
-    type: "LTFT",
-    startDate: "2027-01-01",
-    wte: 0.8,
-    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
+// DTO (first save response)
+export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
+  id: "68c4d30e-bc10-4556-a9f3-7effe265f466",
+  traineeTisId: "47165",
+  formRef: null,
+  revision: 0,
+  name: null,
+  personalDetails: {
+    id: "47165",
+    title: "Mr",
+    forenames: "Anthony Mara",
+    surname: "Gilliam",
+    email: "email@email.com",
+    telephoneNumber: "01632960363",
+    mobileNumber: "08465879348",
+    gmcNumber: "1111111",
+    gdcNumber: null,
+    skilledWorkerVisaHolder: null
+  },
+  programmeMembership: {
+    id: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+    name: "Cardiology",
+    designatedBodyCode: "",
+    managingDeanery: "East of England",
+    startDate: "2025-07-01",
+    endDate: "2028-01-01",
+    wte: 0.0
   },
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
     notGuaranteed: null
   },
-  tpdName: "",
-  tpdEmail: "",
-  otherDiscussions: [
-    {
-      name: "Discussion Name1",
-      email: "discussion@email.com",
-      role: "Role1"
-    },
-    {
-      name: "Discussion Name2",
-      email: "discussion2@email.com",
-      role: "Role2"
-    }
-  ],
-  personalDetails: {
-    title: "Mr",
-    surname: "Gilliam",
-    forenames: "Anthony Mara",
-    telephoneNumber: "01632960363",
-    mobileNumber: "07465879348",
-    email: "email@email.com",
-    gmcNumber: "1111111",
-    gdcNumber: "",
-    publicHealthNumber: "",
-    skilledWorkerVisaHolder: null
-  },
-  programmeMembership: {
-    id: "a6de88b8-de41-48dd-9492-a518f5001176",
-    name: "Cardiology",
-    startDate: "2020-01-01",
-    endDate: "2028-01-01",
-    wte: 1,
-    designatedBodyCode: "WTF3",
-    managingDeanery: "North North West"
-  },
-  reasonsSelected: null,
-  reasonsOtherDetail: null,
-  supportingInformation: null,
-  status: {
-    current: {
-      state: "UNSUBMITTED",
-      detail: {
-        reason: "changePercentage",
-        message: "status reason message"
-      },
-      modifiedBy: {
-        name: "Admin Name",
-        email: "admin@nhs.net",
-        role: "ADMIN"
-      },
-      timestamp: "",
-      revision: 0
-    },
-    history: []
-  }
-};
-
-export const mockLtftRejected0: LtftObj = {
-  traineeTisId: "4",
-  name: "my Rejected LTFT",
-  formRef: "ltft_5_001",
-  change: {
-    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    cctDate: "2028-04-02",
-    type: "LTFT",
-    startDate: "2027-01-01",
-    wte: 0.8,
-    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
-  },
-  declarations: {
-    discussedWithTpd: true,
-    informationIsCorrect: null,
-    notGuaranteed: null
-  },
-  tpdName: "",
-  tpdEmail: "",
-  otherDiscussions: null,
-  personalDetails: {
-    title: "Mr",
-    surname: "Gilliam",
-    forenames: "Anthony Mara",
-    telephoneNumber: "01632960363",
-    mobileNumber: "07465879348",
-    email: "email@email.com",
-    gmcNumber: "1111111",
-    gdcNumber: "",
-    publicHealthNumber: "",
-    skilledWorkerVisaHolder: null
-  },
-  programmeMembership: {
-    id: "a6de88b8-de41-48dd-9492-a518f5001176",
-    name: "Cardiology",
-    startDate: "2020-01-01",
-    endDate: "2028-01-01",
-    wte: 1,
-    designatedBodyCode: "WTF3",
-    managingDeanery: "North North West"
-  },
-  reasonsSelected: null,
-  reasonsOtherDetail: null,
-  supportingInformation: null,
-  status: {
-    current: {
-      state: "REJECTED",
-      detail: {
-        reason: "Rejected reason",
-        message: "Rejected message"
-      },
-      modifiedBy: {
-        name: "Admin Name",
-        email: "admin@nhs.net",
-        role: "ADMIN"
-      },
-      timestamp: "",
-      revision: 0
-    },
-    history: []
-  }
-};
-
-export const mockLtftDto1 = {
-  id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
-  name: "My Programme - Hours Reduction",
-  change: {
-    calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    cctDate: "2028-04-02",
-    type: "LTFT",
-    startDate: "2027-01-01",
-    wte: 0.8,
-    changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
-  },
-  declarations: mockLtftDraft1.declarations,
   discussions: {
-    tpdName: "My tpd name",
-    tpdEmail: "my@tpd.email",
+    tpdName: "",
+    tpdEmail: "",
     other: []
   },
-  personalDetails: {
-    ...mockLtftDraft1.personalDetails,
-    skilledWorkerVisaHolder: false
+  change: {
+    id: null,
+    calculationId: null,
+    type: "LTFT",
+    wte: 0.0,
+    startDate: null,
+    endDate: null,
+    cctDate: null
   },
-  programmeMembership: mockLtftDraft1.programmeMembership,
   reasons: {
-    selected: ["Caring responsibilities", "other"],
-    otherDetail: "my other reason",
-    supportingInformation: "My supporting information"
+    selected: [],
+    otherDetail: "",
+    supportingInformation: null
   },
+  tpdEmailStatus: null,
   status: {
     current: {
-      state: mockLtftDraft1.status.current,
+      state: "DRAFT",
       detail: {
-        reason: "",
-        message: ""
+        reason: null,
+        message: null
       },
       modifiedBy: {
-        name: "",
-        email: "",
-        role: ""
+        role: "TRAINEE"
       },
-      timestamp: "",
+      timestamp: "2026-01-13T18:15:08.374018506Z",
       revision: 0
     },
-    history: []
+    submitted: null,
+    history: [
+      {
+        state: "DRAFT",
+        detail: {
+          reason: null,
+          message: null
+        },
+        modifiedBy: {
+          role: "TRAINEE"
+        },
+        timestamp: "2026-01-13T18:15:08.374018506Z",
+        revision: 0
+      }
+    ]
   },
-  created: "2025-01-1T14:50:36.941Z",
-  lastModified: "2025-01-15T15:50:36.941Z"
+  created: "2026-01-13T18:15:08.376574339Z",
+  lastModified: "2026-01-13T18:15:08.376574339Z"
+};
+
+// Mapped Obj after first save
+export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
+  cctDate: null,
+  created: "2026-01-13T18:15:08.376574339Z",
+  declarations: {
+    discussedWithTpd: true,
+    informationIsCorrect: null,
+    notGuaranteed: null
+  },
+  designatedBodyCode: "",
+  formRef: "",
+  id: "68c4d30e-bc10-4556-a9f3-7effe265f466",
+  lastModified: "2026-01-13T18:15:08.376574339Z",
+  managingDeanery: "East of England",
+  name: "",
+  otherDiscussions: [],
+  personalDetails: {
+    email: "email@email.com",
+    forenames: "Anthony Mara",
+    gdcNumber: null,
+    gmcNumber: "1111111",
+    mobileNumber: "08465879348",
+    publicHealthNumber: null,
+    surname: "Gilliam",
+    telephoneNumber: "01632960363",
+    title: "Mr"
+  },
+  pmEndDate: "2028-01-01",
+  pmId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+  pmName: "Cardiology",
+  pmStartDate: "2025-07-01",
+  reasonsOtherDetail: "",
+  reasonsSelected: [],
+  skilledWorkerVisaHolder: null,
+  startDate: null,
+  status: {
+    current: {
+      detail: { message: null, reason: null },
+      modifiedBy: { email: null, name: null, role: "TRAINEE" },
+      revision: 0,
+      state: "DRAFT",
+      timestamp: "2026-01-13T18:15:08.374018506Z"
+    },
+    history: [
+      {
+        detail: { message: null, reason: null },
+        modifiedBy: { email: null, name: null, role: "TRAINEE" },
+        revision: 0,
+        state: "DRAFT",
+        timestamp: "2026-01-13T18:15:08.374018506Z"
+      }
+    ]
+  },
+  supportingInformation: null,
+  tpdEmail: "",
+  tpdName: "",
+  traineeTisId: "47165",
+  type: "LTFT",
+  wte: null,
+  wteBeforeChange: null
 };
