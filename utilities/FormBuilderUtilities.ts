@@ -133,12 +133,21 @@ export function prepLtftFormData(
     );
   const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
   if (linkedProgramme) {
-    const newcCctDate = calcCctDate(
-      linkedProgramme.endDate,
-      formData.wteBeforeChange,
-      formData.wte,
-      formData.startDate
-    );
+    let newCctDate = "";
+    if (
+      linkedProgramme.endDate &&
+      formData.startDate &&
+      formData.wte &&
+      formData.wteBeforeChange
+    ) {
+      newCctDate = calcCctDate(
+        linkedProgramme.endDate,
+        formData.wteBeforeChange,
+        formData.wte,
+        formData.startDate
+      );
+    }
+
     const {
       programmeName,
       startDate,
@@ -146,18 +155,22 @@ export function prepLtftFormData(
       designatedBodyCode,
       managingDeanery
     } = linkedProgramme;
-    store.dispatch(
-      updatedLtft({
-        ...formData,
-        pmName: programmeName ?? "",
-        pmStartDate: startDate ?? "",
-        pmEndDate: endDate ?? "",
-        designatedBodyCode: designatedBodyCode ?? "",
-        managingDeanery: managingDeanery ?? "",
-        cctDate: newcCctDate
-      })
-    );
-    if (returnPreppedData) return store.getState().ltft.formData;
+
+    const preppedData = {
+      ...formData,
+      pmName: programmeName ?? "",
+      pmStartDate: startDate ?? "",
+      pmEndDate: endDate ?? "",
+      designatedBodyCode: designatedBodyCode ?? "",
+      managingDeanery: managingDeanery ?? "",
+      cctDate: newCctDate
+    };
+
+    store.dispatch(updatedLtft(preppedData));
+
+    if (returnPreppedData) {
+      return preppedData;
+    }
   }
 }
 

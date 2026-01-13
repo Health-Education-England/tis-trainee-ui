@@ -55,20 +55,11 @@ export function calcLtftChange(
 }
 
 export function calcCctDate(
-  currentProgEndDate: Date | string | undefined,
-  currentWte: number | null,
-  newWte: number | null,
-  changeStartDate: Date | string | null
+  currentProgEndDate: Date | string,
+  currentWte: number,
+  newWte: number,
+  changeStartDate: Date | string
 ) {
-  if (
-    !currentProgEndDate ||
-    currentWte === null ||
-    newWte === null ||
-    changeStartDate === null
-  ) {
-    return "";
-  }
-
   const chunkDays = dayjs(currentProgEndDate).diff(changeStartDate, "days");
   const chunkDaysWTE = Math.ceil((chunkDays * currentWte) / newWte);
   return dayjs(currentProgEndDate)

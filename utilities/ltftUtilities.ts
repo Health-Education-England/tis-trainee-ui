@@ -3,15 +3,9 @@ import { ReasonMsgObj } from "../components/common/ActionModal";
 import { LtftDto, LtftObjNew } from "../models/LtftTypes";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
-import {
-  unsubmitLtftForm,
-  updatedLtft,
-  withdrawLtftForm
-} from "../redux/slices/ltftSlice";
+import { unsubmitLtftForm, withdrawLtftForm } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
-import { calcCctDate, findLinkedProgramme } from "./CctUtilities";
 import { ACTION_REASONS } from "./Constants";
-import { isPastIt } from "./DateUtilities";
 import { isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 
@@ -272,34 +266,6 @@ export async function handleLtftSummaryModalSub(
     );
   }
   return false;
-}
-
-export function setPmDetailsInLtftFormData(formData: LtftObjNew) {
-  const progsArrNotPast = store
-    .getState()
-    .traineeProfile.traineeProfileData.programmeMemberships.filter(
-      prog => !isPastIt(prog.endDate)
-    );
-  const linkedProgramme = findLinkedProgramme(formData.pmId, progsArrNotPast);
-
-  const newCctDate = calcCctDate(
-    linkedProgramme?.endDate,
-    formData.wteBeforeChange,
-    formData.wte,
-    formData.startDate
-  );
-
-  store.dispatch(
-    updatedLtft({
-      ...formData,
-      pmName: linkedProgramme?.programmeName ?? "",
-      pmStartDate: linkedProgramme?.startDate ?? "",
-      pmEndDate: linkedProgramme?.endDate ?? "",
-      designatedBodyCode: linkedProgramme?.designatedBodyCode ?? "",
-      managingDeanery: linkedProgramme?.managingDeanery ?? "",
-      cctDate: newCctDate
-    })
-  );
 }
 
 export function getStatusReasonLabel(
