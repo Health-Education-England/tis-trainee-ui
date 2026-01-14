@@ -387,3 +387,127 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   wte: null,
   wteBeforeChange: null
 };
+
+export const mockLtftSubmittedFormObj: LtftObjNew = {
+  traineeTisId: "47165",
+  id: "68c4d30e-bc10-4556-a9f3-7effe265f466",
+  formRef: "ltft_47165_001",
+  name: "my submitted ltft application",
+  pmId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+  pmName: "Cardiology",
+  pmStartDate: "2025-07-01",
+  pmEndDate: "2028-01-01",
+  designatedBodyCode: "",
+  managingDeanery: "East of England",
+  cctDate: "2028-06-29",
+  type: "LTFT",
+  startDate: "2026-01-14",
+  wteBeforeChange: 100,
+  wte: 80,
+  declarations: {
+    discussedWithTpd: true,
+    informationIsCorrect: true,
+    notGuaranteed: true
+  },
+  tpdName: "my pre-approver",
+  tpdEmail: "my@pre.approver",
+  otherDiscussions: [
+    {
+      name: "other discussion name1",
+      email: "other@discussion.name",
+      role: "Educational Supervisor (ES)"
+    }
+  ],
+  personalDetails: {
+    title: "Mr",
+    surname: "Gilliam",
+    forenames: "Anthony Mara",
+    telephoneNumber: "01632960363",
+    mobileNumber: "08465879348",
+    email: "email@email.com",
+    gmcNumber: "1111111",
+    gdcNumber: null,
+    publicHealthNumber: null
+  },
+  skilledWorkerVisaHolder: false,
+  reasonsSelected: ["Caring responsibilities", "Unique opportunities"],
+  reasonsOtherDetail: "",
+  supportingInformation: "My supporting info text.",
+  status: {
+    current: {
+      state: "SUBMITTED",
+      detail: {
+        reason: null,
+        message: null
+      },
+      modifiedBy: {
+        name: null,
+        email: null,
+        role: "TRAINEE"
+      },
+      timestamp: "2026-01-14T15:45:49.952Z",
+      revision: 0
+    },
+    history: [
+      {
+        state: "SUBMITTED",
+        timestamp: "2026-01-14T15:45:49.952Z",
+        detail: {
+          reason: null,
+          message: null
+        },
+        modifiedBy: {
+          name: null,
+          email: null,
+          role: "TRAINEE"
+        },
+        revision: 0
+      }
+    ]
+  },
+  created: "2026-01-13T18:15:08.376574339Z",
+  lastModified: "2026-01-14T15:48:51.988186250Z"
+};
+
+export const mockLtftUnsubmittedFormObj: LtftObjNew = {
+  ...mockLtftSubmittedFormObj,
+  name: "my Unsubmitted LTFT",
+  status: {
+    current: {
+      state: "UNSUBMITTED",
+      detail: {
+        reason: "changePercentage",
+        message: "status reason message"
+      },
+      modifiedBy: {
+        name: "TIS Admin",
+        email: "tisadmin@example.com",
+        role: "ADMIN"
+      },
+      timestamp: "2026-01-14T15:45:49.952Z",
+      revision: 1
+    },
+    history: []
+  }
+};
+
+export const mockLtftRejectedFormObj: LtftObjNew = {
+  ...mockLtftSubmittedFormObj,
+  status: {
+    current: {
+      state: "REJECTED",
+      detail: {
+        reason: "Rejected reason",
+        message: "Rejected message"
+      },
+      modifiedBy: {
+        name: "Admin Name",
+        email: "admin@nhs.net",
+        role: "ADMIN"
+      },
+      timestamp: "2026-01-14T15:45:49.952Z",
+      revision: 0
+    },
+    history: []
+  }
+};

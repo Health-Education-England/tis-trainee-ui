@@ -3,39 +3,46 @@ import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import {
-  mockLtftDraft0,
-  mockLtftUnsubmitted0
+  mockLtftNewFormObj,
+  mockLtftSubmittedFormObj,
+  mockLtftUnsubmittedFormObj
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
 import { updatedLtft } from "../../../../redux/slices/ltftSlice";
-import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
-import ltftJson from "../../../../components/forms/ltft/ltft.json";
-import {
-  Field,
-  Form
-} from "../../../../components/forms/form-builder/FormBuilder";
 import {
   ltftDiscussionText2,
   ltftReasonsText1,
-  ltftReasonsText2
+  ltftTier2VisaImportantText1
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
-import { LtftObj } from "../../../../models/LtftTypes";
+import { LtftObjNew } from "../../../../models/LtftTypes";
+import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
+import { mockProgrammeMemberships } from "../../../../mock-data/trainee-profile";
+import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
+import dayjs from "dayjs";
 
-const mountLtftWithMockData = (mockLtftObj: LtftObj) => {
+const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
-  const initialPageFields = ltftJson.pages[0].sections.flatMap(
-    section => section.fields as Field[]
+  const qualifyingProgrammes = ["1"];
+  store.dispatch(
+    updatedUserFeatures({
+      forms: {
+        ltft: {
+          qualifyingProgrammes: qualifyingProgrammes,
+          enabled: true
+        }
+      }
+    } as any)
   );
+
+  const pmOptions = makeValidProgrammeOptions(
+    mockProgrammeMemberships,
+    qualifyingProgrammes
+  );
+
   mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/ltft/create"]}>
-        <FormProvider
-          initialData={mockLtftObj}
-          initialPageFields={initialPageFields}
-          jsonForm={ltftJson as Form}
-        >
-          <LtftForm />
-        </FormProvider>
+        <LtftForm pmOptions={pmOptions} />
       </MemoryRouter>
     </Provider>
   );
@@ -43,7 +50,7 @@ const mountLtftWithMockData = (mockLtftObj: LtftObj) => {
 
 describe("LtftForm - draft", () => {
   it("renders the ltft form for completion", () => {
-    mountLtftWithMockData(mockLtftDraft0);
+    mountLtftWithMockData(mockLtftNewFormObj);
     // status details section should not exist in DRAFT
     cy.get('[data-cy="ltftName"]').should("not.exist");
     cy.get('[data-cy="ltftCreated"]').should("not.exist");
@@ -51,10 +58,78 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="ltftRef"]').should("not.exist");
 
     // page 1
-    cy.get("h2").contains("Main application form");
-    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
-      "Part 1 of 3 - Discussing your proposals"
+    cy.get("h2").contains("Application form");
+    cy.get("h3").contains("Part 1 of 10 - Your Programme");
+    cy.get('[data-cy="pmId-label"]').contains(
+      "Which programme will your proposed change in working hours affect?"
     );
+    cy.get("#pmId-error").should("not.exist");
+    cy.clickSelect('[data-cy="pmId"]');
+    cy.get("#pmId").clear();
+    cy.get("#pmId-error").should("exist").contains("Programme is required");
+    cy.get("#errorSummaryTitle").should("exist");
+    cy.get('[data-cy="error-txt-Programme is required"]').should("exist");
+    cy.clickSelect('[data-cy="pmId"]');
+    cy.get("#pmId-error").should("not.exist");
+    cy.navNext();
+
+    // page 2
+    cy.get("h3").contains("Part 2 of 10 - Working hours before change");
+    cy.get('[data-cy="wteBeforeChange-label"]').should("exist");
+    cy.get('[data-cy="wteBeforeChange-hint"]').should("exist");
+    cy.get('[data-cy="wteBeforeChange-input"]').type("1.a");
+    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "1");
+    cy.get('[data-cy="wteBeforeChange-input"]').clear().type("1000");
+    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "100");
+    cy.navNext();
+
+    // part 3
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+    cy.navNext();
+    cy.get("#wte-error").contains(
+      "The proposed percentage of full time hours must be a positive number"
+    );
+    cy.get('[data-cy="wte-input"]').type("1");
+    cy.get(".field-warning-container").should("exist");
+    cy.get(".field-warning-msg").contains(
+      "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
+    );
+    // check warning persists on nav
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.navNext();
+    cy.get(".field-warning-msg").should("exist");
+
+    cy.get('[data-cy="wte-input"]').type("0000");
+    cy.get('[data-cy="wte-input"]').should("have.value", "100");
+    cy.get(".field-warning-container").should("not.exist");
+    cy.get("#wte-error").contains(
+      "Your proposed change must be different from the percentage you gave in Part 2"
+    );
+    cy.get('[data-cy="wte-input"]').clear().type("80");
+    cy.get("#wte-error").should("not.exist");
+    cy.get(".field-warning-container").should("not.exist");
+    cy.navNext();
+
+    // part 4
+    cy.get("h3").contains("Part 4 of 10 - Start date");
+    const dateWithin16WeeksOfToday = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="startDate-input"]', "1000-05-01");
+    cy.get("#startDate-error").contains("Change cannot begin before today");
+    cy.clearAndType('[data-cy="startDate-input"]', dateWithin16WeeksOfToday);
+    cy.get(".field-warning-msg").contains(
+      "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+    );
+    cy.get("#startDate-error").should("not.exist");
+    cy.navNext();
+
+    // Part 5
+    cy.get("h3").contains("Part 5 of 10 - Pre-approver discussions");
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
@@ -62,15 +137,9 @@ describe("LtftForm - draft", () => {
       "include.text",
       ltftDiscussionText2.slice(0, 100)
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
       "For information on Professional support contact"
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(5)").contains(
-      "Before submitting your LTFT application, you must have a discussion with your Training Programme Director"
-    );
-    cy.get(
-      ":nth-child(4) > .nhsuk-card__content > .nhsuk-card__heading"
-    ).contains("Your pre-approver details");
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
     cy.get("#tpdEmail-error")
@@ -84,18 +153,21 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
-    // page 2
-    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
-      "Part 2 of 3 - Reason(s) for applying"
-    );
+    // part 6
+    cy.get("h3").contains("Part 6 of 10 - Other discussions");
+    cy.get('[data-cy="add-Other Discussions-button"]').should("exist").click();
+    cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
+    cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
+    cy.clickSelect('[data-cy="role"]');
+    cy.navNext();
+
+    // part 7
+    cy.get("h3").contains("Part 7 of 10 - Reason(s) for applying");
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
     cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
       ltftReasonsText1
-    );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").contains(
-      ltftReasonsText2
     );
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
     cy.get('[data-cy="reasonsSelected-label"]').should("exist");
@@ -104,29 +176,51 @@ describe("LtftForm - draft", () => {
       "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
     );
     cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
-    cy.get('[data-cy="supportingInformation-text-area-input"]').should("exist");
     cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
     cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
     cy.navNext();
 
-    // page 3
-    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
-      "Part 3 of 3 - Personal Details"
+    // part 8
+    cy.get("h3").contains("Part 8 of 10 - Supporting information");
+    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
+      "This is my supporting information"
     );
-    cy.navNext(true);
-    cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
-    cy.get("#skilledWorkerVisaHolder-error").contains(
-      "Please select Yes or No for: Are you a Tier 2 / Skilled Worker Visa holder?"
+    cy.navNext();
+
+    // part 9
+    cy.get("h3").contains("Part 9 of 10 - Tier 2 / Skilled Worker status");
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > p").contains(
+      ltftTier2VisaImportantText1
     );
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
+    cy.navNext();
+
+    // part 10
+    cy.get("h3").contains("Part 10 of 10 - Personal Details");
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
   });
 });
 
+describe("LtftForm - submitted", () => {
+  it("should render status details section", () => {
+    mountLtftWithMockData(mockLtftSubmittedFormObj);
+    cy.get('[data-cy="SUBMITTED-header"]')
+      .should("exist")
+      .contains("Submitted application");
+    cy.get('[data-cy="ltftName"]').contains("my submitted ltft application");
+    cy.get('[data-cy="ltftCreated"]').should("exist");
+    cy.get('[data-cy="ltftModified"]').should("exist");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
+    cy.get('[data-cy="progress-header"] > h3').contains(
+      "Part 1 of 10 - Your Programme"
+    );
+  });
+});
+
 describe("LtftForm - unsubmitted", () => {
   it("should render status details section", () => {
-    mountLtftWithMockData(mockLtftUnsubmitted0);
+    mountLtftWithMockData(mockLtftUnsubmittedFormObj);
     cy.get('[data-cy="UNSUBMITTED-header"]')
       .should("exist")
       .contains("Unsubmitted application");
@@ -136,6 +230,9 @@ describe("LtftForm - unsubmitted", () => {
     cy.get('[data-cy="ltftModifiedBy"]').contains("TIS Admin");
     cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
     cy.get('[data-cy="ltftMessage"]').contains("status reason message");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
+    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
+    cy.get('[data-cy="progress-header"] > h3').contains(
+      "Part 1 of 10 - Your Programme"
+    );
   });
 });
