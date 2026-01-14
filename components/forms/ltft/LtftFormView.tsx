@@ -174,9 +174,10 @@ export const LtftFormView = () => {
                 <SummaryList.Key>Start date</SummaryList.Key>
                 <SummaryList.Value>
                   {dayjs(formData.startDate).format("DD/MM/YYYY")}
-                  {isDateWithin16Weeks(formData.startDate) && (
-                    <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
-                  )}
+                  {formData.startDate &&
+                    isDateWithin16Weeks(formData.startDate) && (
+                      <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
+                    )}
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>

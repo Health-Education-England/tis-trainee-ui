@@ -10,7 +10,7 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { ReasonMsgObj } from "../../components/common/ActionModal";
-import { LtftObj, LtftObjNew, LtftState } from "../../models/LtftTypes";
+import { LtftObjNew, LtftState } from "../../models/LtftTypes";
 
 export const initialState: LtftState = {
   formData: {} as LtftObjNew,

@@ -4,25 +4,43 @@ import history from "../../components/navigation/history";
 import { FormRPartA } from "../../models/FormRPartA";
 import { FormRPartB } from "../../models/FormRPartB";
 import { Form } from "../../components/forms/form-builder/FormBuilder";
-import { LtftObj } from "../../redux/slices/ltftSlice";
 import { LifeCycleState } from "../../models/LifeCycleState";
 
-// Mock Redux store
 jest.mock("../../redux/store/store", () => ({
   dispatch: jest.fn().mockResolvedValue(undefined),
   getState: jest.fn().mockReturnValue({
     formA: { saveStatus: "succeeded", newFormId: "new-formA-id" },
     formB: { saveStatus: "succeeded", newFormId: "new-formB-id" },
-    ltft: { saveStatus: "succeeded", newFormId: "new-ltft-id" }
+    ltft: { saveStatus: "succeeded", newFormId: "new-ltft-id" },
+    traineeProfile: {
+      traineeProfileData: {
+        programmeMemberships: []
+      }
+    }
   })
 }));
 
-// Mock history
+jest.mock("../CctUtilities", () => ({
+  findLinkedProgramme: jest.fn().mockImplementation(id => {
+    if (id === "pm-123") {
+      return {
+        programmeMembershipId: "pm-123",
+        programmeName: "Test Programme",
+        startDate: "2020-01-01",
+        endDate: "2025-01-01",
+        designatedBodyCode: "DBC",
+        managingDeanery: "Deanery"
+      };
+    }
+    return null;
+  }),
+  calcCctDate: jest.fn()
+}));
+
 jest.mock("../../components/navigation/history", () => ({
   push: jest.fn()
 }));
 
-// Mock Redux actions
 jest.mock("../../redux/slices/formASlice", () => ({
   updateFormA: jest.fn(),
   saveFormA: jest.fn()
@@ -35,20 +53,20 @@ jest.mock("../../redux/slices/formBSlice", () => ({
 
 jest.mock("../../redux/slices/ltftSlice", () => ({
   updateLtft: jest.fn(),
-  saveLtft: jest.fn()
+  saveLtft: jest.fn(),
+  updatedLtft: jest.fn()
 }));
 
-// Import Redux actions after mocking
 import { updateFormA, saveFormA } from "../../redux/slices/formASlice";
 import { updateFormB, saveFormB } from "../../redux/slices/formBSlice";
 import { updateLtft, saveLtft } from "../../redux/slices/ltftSlice";
+import { LtftObjNew } from "../../models/LtftTypes";
 
 describe("saveDraftForm integration tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // Mock form JSON definitions
   const formAJson: Form = {
     name: "formA",
     pages: [],
@@ -63,17 +81,14 @@ describe("saveDraftForm integration tests", () => {
 
   describe("Form A tests", () => {
     it("should call updateFormA when form has an existing ID", async () => {
-      // Setup
       const formData: Partial<FormRPartA> = {
         id: "existing-formA-id",
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Draft
       };
 
-      // Execute
       await saveDraftForm(formAJson, formData as FormRPartA);
 
-      // Assert
       expect(updateFormA).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           id: "existing-formA-id",
@@ -89,20 +104,18 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should call saveFormA when form has no existing ID", async () => {
-      // Setup
       const formData: Partial<FormRPartA> = {
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Draft
       };
 
       (store.getState as jest.Mock).mockReturnValueOnce({
-        formA: { saveStatus: "succeeded", newFormId: null }
+        formA: { saveStatus: "succeeded", newFormId: null },
+        traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
       });
 
-      // Execute
       await saveDraftForm(formAJson, formData as FormRPartA);
 
-      // Assert
       expect(saveFormA).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           traineeTisId: "trainee123",
@@ -117,17 +130,14 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should prep FormA data differently when isSubmit=true", async () => {
-      // Setup
       const formData: Partial<FormRPartA> = {
         id: "existing-formA-id",
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Draft
       };
 
-      // Execute
       await saveDraftForm(formAJson, formData as FormRPartA, false, true);
 
-      // Assert
       expect(updateFormA).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           id: "existing-formA-id",
@@ -142,17 +152,14 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should maintain Unsubmitted state when current state is Unsubmitted", async () => {
-      // Setup
       const formData: Partial<FormRPartA> = {
         id: "existing-formA-id",
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Unsubmitted
       };
 
-      // Execute
       await saveDraftForm(formAJson, formData as FormRPartA);
 
-      // Assert
       expect(updateFormA).toHaveBeenCalledWith(
         expect.objectContaining({
           formData: expect.objectContaining({
@@ -165,17 +172,14 @@ describe("saveDraftForm integration tests", () => {
 
   describe("Form B tests", () => {
     it("should call updateFormB when form has an existing ID", async () => {
-      // Setup
       const formData: Partial<FormRPartB> = {
         id: "existing-formB-id",
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Draft
       };
 
-      // Execute
       await saveDraftForm(formBJson, formData as FormRPartB);
 
-      // Assert
       expect(updateFormB).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           id: "existing-formB-id",
@@ -191,20 +195,18 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should call saveFormB when form has no existing ID", async () => {
-      // Setup
       const formData: Partial<FormRPartB> = {
         traineeTisId: "trainee123",
         lifecycleState: LifeCycleState.Draft
       };
 
       (store.getState as jest.Mock).mockReturnValueOnce({
-        formB: { saveStatus: "succeeded", newFormId: null }
+        formB: { saveStatus: "succeeded", newFormId: null },
+        traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
       });
 
-      // Execute
       await saveDraftForm(formBJson, formData as FormRPartB);
 
-      // Assert
       expect(saveFormB).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           traineeTisId: "trainee123",
@@ -221,20 +223,19 @@ describe("saveDraftForm integration tests", () => {
 
   describe("LTFT tests", () => {
     it("should call updateLtft when form has an existing ID", async () => {
-      // Setup
-      const formData: Partial<LtftObj> = {
+      const formData: Partial<LtftObjNew> = {
         id: "existing-ltft-id",
-        traineeTisId: "trainee123"
+        traineeTisId: "trainee123",
+        pmId: "pm-123"
       };
 
-      // Execute
-      await saveDraftForm(ltftJson, formData as LtftObj);
+      await saveDraftForm(ltftJson, formData as LtftObjNew);
 
-      // Assert
       expect(updateLtft).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           id: "existing-ltft-id",
-          traineeTisId: "trainee123"
+          traineeTisId: "trainee123",
+          pmName: "Test Programme"
         }),
         isAutoSave: false,
         isSubmit: false,
@@ -245,19 +246,18 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should call saveLtft when form has no existing ID", async () => {
-      // Setup
-      const formData: Partial<LtftObj> = {
-        traineeTisId: "trainee123"
+      const formData: Partial<LtftObjNew> = {
+        traineeTisId: "trainee123",
+        pmId: "pm-123"
       };
 
       (store.getState as jest.Mock).mockReturnValueOnce({
-        ltft: { saveStatus: "succeeded", newFormId: null }
+        ltft: { saveStatus: "succeeded", newFormId: null },
+        traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
       });
 
-      // Execute
-      await saveDraftForm(ltftJson, formData as LtftObj);
+      await saveDraftForm(ltftJson, formData as LtftObjNew);
 
-      // Assert
       expect(saveLtft).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           traineeTisId: "trainee123"
@@ -271,16 +271,14 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should NOT prep LTFT forms (no FormR-specific processing)", async () => {
-      // Setup
-      const formData: Partial<LtftObj> = {
+      const formData: Partial<LtftObjNew> = {
         id: "existing-ltft-id",
-        traineeTisId: "trainee123"
+        traineeTisId: "trainee123",
+        pmId: "pm-123"
       };
 
-      // Execute
-      await saveDraftForm(ltftJson, formData as LtftObj, false, true);
+      await saveDraftForm(ltftJson, formData as LtftObjNew, false, true);
 
-      // Assert
       expect(updateLtft).toHaveBeenCalledWith({
         formData: expect.objectContaining({
           id: "existing-ltft-id",
@@ -314,8 +312,8 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should pass showFailToastOnly flag to update function", async () => {
-      const formData: Partial<LtftObj> = { id: "test-id" };
-      await saveDraftForm(ltftJson, formData as LtftObj, false, false, true);
+      const formData: Partial<LtftObjNew> = { id: "test-id", pmId: "pm-123" };
+      await saveDraftForm(ltftJson, formData as LtftObjNew, false, false, true);
 
       expect(updateLtft).toHaveBeenCalledWith(
         expect.objectContaining({ showFailToastOnly: true })
@@ -339,11 +337,11 @@ describe("saveDraftForm integration tests", () => {
     it("should not redirect when save status is not 'succeeded'", async () => {
       const formData: Partial<FormRPartA> = { id: "test-id" };
 
-      // Mock unsuccessful save status
       (store.getState as jest.Mock).mockReturnValueOnce({
         formA: { saveStatus: "failed" },
         formB: { saveStatus: "succeeded" },
-        ltft: { saveStatus: "succeeded" }
+        ltft: { saveStatus: "succeeded" },
+        traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
       });
 
       await saveDraftForm(formAJson, formData as FormRPartA);
@@ -382,9 +380,12 @@ describe("saveDraftForm integration tests", () => {
     });
 
     it("should get ltft ID from store when not in formData", async () => {
-      const formData: Partial<LtftObj> = { traineeTisId: "trainee123" };
+      const formData: Partial<LtftObjNew> = {
+        traineeTisId: "trainee123",
+        pmId: "pm-123"
+      };
 
-      await saveDraftForm(ltftJson, formData as LtftObj);
+      await saveDraftForm(ltftJson, formData as LtftObjNew);
 
       expect(updateLtft).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -398,11 +399,11 @@ describe("saveDraftForm integration tests", () => {
     it("should call saveForm when no ID is available", async () => {
       const formData: Partial<FormRPartA> = { traineeTisId: "trainee123" };
 
-      // Mock store to return null for newFormId
       (store.getState as jest.Mock).mockReturnValueOnce({
         formA: { saveStatus: "succeeded", newFormId: null },
         formB: { saveStatus: "succeeded" },
-        ltft: { saveStatus: "succeeded" }
+        ltft: { saveStatus: "succeeded" },
+        traineeProfile: { traineeProfileData: { programmeMemberships: [] } }
       });
 
       await saveDraftForm(formAJson, formData as FormRPartA);
