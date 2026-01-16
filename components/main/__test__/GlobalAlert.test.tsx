@@ -125,24 +125,6 @@ describe("GlobalAlert", () => {
     expect(screen.getByText(/We have moved/i)).toBeInTheDocument();
   });
 
-  test("renders survey alert by default and can dismiss it", async () => {
-    const { container } = renderWithProviders(<GlobalAlert />);
-
-    const surveyAlert = queryByAttribute("data-cy", container, "surveyAlert");
-    expect(surveyAlert).toBeInTheDocument();
-    expect(screen.getByText(/Help us improve TSS/i)).toBeInTheDocument();
-
-    const dismissButton = surveyAlert?.querySelector("button");
-    expect(dismissButton).toBeInTheDocument();
-    dismissButton && dismissButton.click();
-
-    renderWithProviders(<GlobalAlert />);
-
-    expect(
-      queryByAttribute("data-cy", container, "surveyAlert")
-    ).not.toBeInTheDocument();
-  });
-
   test("renders all alerts when conditions for them are met", () => {
     mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
 
@@ -166,9 +148,6 @@ describe("GlobalAlert", () => {
     ).toBeInTheDocument();
     expect(
       queryByAttribute("data-cy", container, "bookmarkAlert")
-    ).toBeInTheDocument();
-    expect(
-      queryByAttribute("data-cy", container, "surveyAlert")
     ).toBeInTheDocument();
   });
 

@@ -181,26 +181,10 @@ body {
   padding-left: 8px;
 }
 
-.survey-alert {
-  display: flex;
-  align-items: flex-start;
-}
-
 .information-icon {
   position: relative;
   top: 5px;
   float: right;
-}
-
-.survey-alert-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.survey-link {
-  display: inline-flex;
-  align-items: center;
 }
 
 .nhsuk-pagination__link {
