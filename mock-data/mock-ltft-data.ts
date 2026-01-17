@@ -1,4 +1,13 @@
 import { LtftDto, LtftObjNew, LtftSummaryObj } from "../models/LtftTypes";
+import dayjs from "dayjs";
+import { calcCctDate } from "../utilities/CctUtilities";
+
+export const pmStartDate = dayjs().subtract(3, "year").format("YYYY-MM-DD");
+export const pmEndDate = dayjs(pmStartDate).add(6, "year").format("YYYY-MM-DD");
+export const wteBeforeChange = 100;
+export const wte = 80;
+export const startDate = dayjs().add(15, "week").format("YYYY-MM-DD");
+export const cctDate = calcCctDate(pmEndDate, wteBeforeChange, wte, startDate);
 
 // Summary list
 export const mockLtftDraftList: LtftSummaryObj[] = [
@@ -395,15 +404,15 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   name: "my submitted ltft application",
   pmId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
   pmName: "Cardiology",
-  pmStartDate: "2025-07-01",
-  pmEndDate: "2028-01-01",
+  pmStartDate: pmStartDate,
+  pmEndDate: pmEndDate,
   designatedBodyCode: "",
   managingDeanery: "East of England",
-  cctDate: "2028-06-29",
+  cctDate: cctDate,
   type: "LTFT",
-  startDate: "2026-01-14",
-  wteBeforeChange: 100,
-  wte: 80,
+  startDate: startDate,
+  wteBeforeChange: wteBeforeChange,
+  wte: wte,
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: true,

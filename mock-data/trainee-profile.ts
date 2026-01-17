@@ -62,7 +62,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     startDate: new Date("2020-01-01"),
     endDate: dayjs().add(3, "year").toDate(),
     programmeCompletionDate: new Date("2019-12-31"),
-    tisId: "1",
+    tisId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
     trainingNumber: "EOE/ABC-123/1111111/C",

@@ -27,13 +27,15 @@ describe("FormSavePDF", () => {
     cy.get("@PrintPDF").should("have.been.called");
     cy.get("[data-cy=pdfHelpLink]").should("exist");
   });
+});
 
+describe("Save PDF matched PM", () => {
   it("should not show the 'PDF help' link when 'save Pdf' button clicked and matched PM", () => {
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
     const MockedFormsListBtnNoDraftForms = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileData(mockTraineeProfile));
-      return <FormSavePDF pmId="1" />;
+      return <FormSavePDF pmId="7ab1aae3-83c2-4bb6-b1f3-99146e79b362" />;
     };
     mountWithProviders(<MockedFormsListBtnNoDraftForms />);
     cy.get("[data-cy=savePdfBtn]").click();

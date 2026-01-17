@@ -258,7 +258,7 @@ const cct = "CCT calculation";
 const dodgyConnection = "Please check your internet connection and try again.";
 const formA = "Form R (Part A)";
 const formB = "Form R (Part B)";
-const ltft = "Changing hours (LTFT) form";
+const ltft = "Less than full-time (LTFT) form";
 const noDel = "Couldn't delete your draft ";
 const noLoad = "Couldn't load your saved ";
 const noSave = "Couldn't save your ";
@@ -306,7 +306,7 @@ export const toastErrText = {
   loadSavedCctCalcMessage: `Couldn't load your saved calculation. ${dodgyConnection}`,
   saveCctCalcMessage: `Couldn't save your CCT calculation. ${dodgyConnection}`,
   updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`,
-  loadLtftSummaryListMessage: `Couldn't load your list of saved Changing hours (LTFT) forms. ${dodgyConnection}`
+  loadLtftSummaryListMessage: `Couldn't load your list of saved Less than full-time (LTFT) forms. ${dodgyConnection}`
 };
 
 const isDel = "has been deleted.";
@@ -347,10 +347,10 @@ export const toastSuccessText = {
 
 export const supportCatOptions = [
   { value: "Authenticator", label: "Authenticator" },
-  { value: "Changing Hours - LTFT", label: "Changing Hours - LTFT" },
   { value: "Conditions of Joining", label: "Conditions of Joining" },
   { value: "Data Quality", label: "Data Quality" },
   { value: "FormR", label: "FormR" },
+  { value: "LTFT", label: "Less than full-time (LTFT)" },
   { value: "Login", label: "Login" },
   { value: "Personal data", label: "Personal data" },
   { value: "Placement data", label: "Placement data" },
@@ -774,11 +774,11 @@ export const traineeActionsCompletedWhenNotOutstanding: TrackerActionType[] = [
 export const ltft16WeeksNotice = (
   <>
     <p>
-      To meet national guidance, all Changing hours (LTFT) applications must be
-      submitted{" "}
+      To meet national guidance, all Less than full-time (LTFT) training
+      applications must be submitted{" "}
       <b>
-        a minimum of 16 weeks before your LTFT start date or before the next
-        rotation change dependent on local NHS England office processes
+        a minimum of 16 weeks before your proposed LTFT start date or before the
+        next rotation change dependent on local NHS England office processes
       </b>
       {"."}
     </p>

@@ -32,7 +32,10 @@ const specialtyCards = [
   "CCT (Certificate of Completion of Training)"
 ];
 
-const ltftPilotCards = [...specialtyCards, "Changing hours (LTFT)"];
+const ltftPilotCards = [
+  ...specialtyCards,
+  "Less than full-time (LTFT) training"
+];
 
 describe("Home with MFA set up", () => {
   describe("When all features disabled", () => {

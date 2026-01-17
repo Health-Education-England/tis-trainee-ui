@@ -10,14 +10,13 @@ import history from "../../navigation/history";
 import { LtftDeclarationsModal } from "./LtftDeclarationsModal";
 import { populateLtftDraftNew } from "../../../utilities/ltftUtilities";
 import { updatedLtft } from "../../../redux/slices/ltftSlice";
-
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 
 type LtftHomeProps = {
   pmOptions: { value: string; label: string }[];
 };
 
-export function LtftHome({ pmOptions }: LtftHomeProps) {
+export function LtftHome({ pmOptions }: Readonly<LtftHomeProps>) {
   const dispatch = useAppDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +60,7 @@ export function LtftHome({ pmOptions }: LtftHomeProps) {
   return (
     <>
       <ExpanderMsg expanderName="whatIsLtft" />
+      <ExpanderMsg expanderName="ltft16WeeksNotice" />
       <ExpanderMsg expanderName="skilledVisaWorker" />
       <Card>
         <Card.Content>
@@ -77,11 +77,14 @@ export function LtftHome({ pmOptions }: LtftHomeProps) {
               <Row style={{ fontSize: "19px" }}>
                 <Col width="full">
                   {pmOptions.length ? (
-                    <Button onClick={() => setIsModalOpen(true)}>
+                    <Button
+                      data-cy="make-new-ltft-btn"
+                      onClick={() => setIsModalOpen(true)}
+                    >
                       Make a new application
                     </Button>
                   ) : (
-                    <p>
+                    <p data-cy="no-eligable-pms-message">
                       You are not eligible to make a Less Than Full Time
                       application at this time as you have no active current or
                       upcoming Programmes.

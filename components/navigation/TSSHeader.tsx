@@ -169,7 +169,7 @@ function makeTSSHeaderLinks(
     },
     {
       path: "ltft",
-      name: "Less Than Full Time (LTFT)",
+      name: "Less than full-time (LTFT)",
       mobileOnly: false,
       showWithNoMfa: false,
       featureEnabled: userFeatures.forms.ltft.enabled

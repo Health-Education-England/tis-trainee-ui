@@ -95,13 +95,13 @@ const unresolvedDecsText =
   "If you know of any UNRESOLVED Significant Events, Complaints, Other investigations since your last ARCP/Appraisal, please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.";
 
 const ltftDiscussionText1 =
-  "Please provide the contact details of the pre-approver you have discussed your Changing hours (LTFT) proposal with prior to completing this form. ";
+  "Please provide the contact details of the pre-approver you have discussed your Less than full-time (LTFT) training proposal with prior to completing this form. ";
 
 export const ltftDiscussionText2 =
   "Your pre-approver will usually be your Training Programme Director (TPD) but for a GP programme it may be your GP Programme Manager. If you are unsure who your pre-approver is, please <a href='/support' target='_new'>contact your Local Office support</a>.";
 
 const ltftOtherDiscussionsText =
-  "If applicable, please provide details of any other discussions you have had concerning your Less Than Full Time application.";
+  "If applicable, please provide details of any other discussions you have had concerning your LTFT training application.";
 
 const ltftDiscussionText3 =
   "For information on Professional support contact your <a href='/support' target='_new'>local office<a/>.";
@@ -110,7 +110,7 @@ export const ltftReasonsText1 =
   "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
 export const ltftStartDateImportantText1 =
-  "Less Than Full Time (LTFT) requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
+  "Less than full-time (LTFT) training requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
 
 export const ltftTier2VisaImportantText1 =
   "If you are on a Tier 2 or Skilled Worker visa, please make sure the proposed change to your full time working hours percentage (Part 3 of this application) complies with the requirements of your visa.";

@@ -20,6 +20,8 @@ import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import TextInputField from "../TextInputField";
 import { LtftFormStatus } from "../../../models/LtftTypes";
+import { isDateWithin16Weeks } from "../../../utilities/FormBuilderUtilities";
+import FieldWarningMsg from "../FieldWarningMsg";
 
 export function CctCalcSummaryDetails({
   viewedCalc,
@@ -182,8 +184,7 @@ export function CctCalcSummaryDetails({
                       <SummaryList.Row>
                         <SummaryList.Key>Change type</SummaryList.Key>
                         <SummaryList.Value>
-                          {changes[0].type === "LTFT" &&
-                            "Changing hours (LTFT)"}
+                          {changes[0].type === "LTFT" && "LTFT"}
                         </SummaryList.Value>
                       </SummaryList.Row>
                       <SummaryList.Row>
@@ -202,6 +203,14 @@ export function CctCalcSummaryDetails({
                               {displayValues.changeDate}
                             </span>
                           )}
+                          {displayValues.changeDate &&
+                            isDateWithin16Weeks(displayValues.changeDate) && (
+                              <FieldWarningMsg
+                                warningMsgs={[
+                                  "Note: Giving less than 16 weeks' notice to change your working hours will only be agreed in exceptional circumstances."
+                                ]}
+                              />
+                            )}
                         </SummaryList.Value>
                         {ltftFormStatus === "UNSUBMITTED" && (
                           <SummaryList.Actions>

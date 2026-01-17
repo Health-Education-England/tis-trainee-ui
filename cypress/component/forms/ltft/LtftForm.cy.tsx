@@ -22,7 +22,7 @@ import dayjs from "dayjs";
 
 const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
-  const qualifyingProgrammes = ["1"];
+  const qualifyingProgrammes = ["7ab1aae3-83c2-4bb6-b1f3-99146e79b362"];
   store.dispatch(
     updatedUserFeatures({
       forms: {

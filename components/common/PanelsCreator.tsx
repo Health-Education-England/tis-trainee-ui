@@ -117,27 +117,32 @@ export function PanelsCreator({
                       </>
                     )}
                   <p className={style.panelSubHeader} data-cy="subheaderLtft">
-                    Less Than Full Time (LTFT)
+                    Less than full-time (LTFT) training
                   </p>
                   <SummaryList.Row>
                     <SummaryList.Key>
-                      <Label size="s">Thinking of changing your hours?</Label>
+                      <Label data-cy="ltft-thinking" size="s">
+                        Thinking of changing your hours?
+                      </Label>
                     </SummaryList.Key>
                     <SummaryList.Value>
-                      <Link to="/notifications" data-cy="ltft-link">
-                        See your LTFT notification for more details on how to
+                      <Link
+                        to="/notifications"
+                        data-cy="ltft-link-notifications"
+                      >
+                        See your 'LTFT' notification for more details on how to
                         apply
                       </Link>
                     </SummaryList.Value>
                   </SummaryList.Row>
                   <SummaryList.Row>
                     <SummaryList.Key>
-                      <Label size="s">
-                        Ready to apply for Less Than Full Time (LTFT)?
+                      <Label size="s" data-cy="ltft-ready">
+                        Ready to make a LTFT application?
                       </Label>
                     </SummaryList.Key>
                     <SummaryList.Value>
-                      <Link to="/ltft" data-cy="ltft-link">
+                      <Link to="/ltft" data-cy="ltft-link-application">
                         Go to the LTFT application page
                       </Link>
                     </SummaryList.Value>

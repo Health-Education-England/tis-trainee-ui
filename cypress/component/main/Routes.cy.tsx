@@ -108,7 +108,7 @@ describe("Routes", () => {
       cy.get('[data-cy="programmemembershipsHeading"]').should("exist");
     });
 
-    it("should render OnboardingTracker when navigating to /programmes/1/onboarding-tracker", () => {
+    it("should render OnboardingTracker when navigating to /programmes/:id/onboarding-tracker", () => {
       const features = {
         ...mockUserFeaturesSpecialty,
         details: {
@@ -119,11 +119,14 @@ describe("Routes", () => {
           }
         }
       };
-      mountComponent("/programmes/1/onboarding-tracker", features);
+      mountComponent(
+        "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/onboarding-tracker",
+        features
+      );
       cy.get('[data-cy="onboardingTrackerHeading"]').should("exist");
     });
 
-    it("should render CojView error page when navigating to /programmes/1/sign-coj", () => {
+    it("should render CojView error page when navigating to /programmes/:id/sign-coj", () => {
       const features = {
         ...mockUserFeaturesSpecialty,
         details: {
@@ -134,7 +137,10 @@ describe("Routes", () => {
           }
         }
       };
-      mountComponent("/programmes/1/sign-coj", features);
+      mountComponent(
+        "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/sign-coj",
+        features
+      );
       cy.get('[data-cy="error-header-text"]').should("exist");
       cy.get('[data-cy="error-message-text"]').should("exist");
     });

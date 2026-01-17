@@ -145,7 +145,9 @@ export const LtftFormView = () => {
         {formData.status?.current?.state !== "DRAFT" && (
           <LtftStatusDetails {...formData} />
         )}
-        <h2>Review & submit your LTFT application</h2>
+        <h2 data-cy="reviewSubmitHeading">
+          Review & submit your LTFT training application
+        </h2>
         <FormViewBuilder
           jsonForm={formJson}
           formData={formData}
@@ -154,25 +156,31 @@ export const LtftFormView = () => {
         />
         <Card style={{ border: "4px #005eb8 solid" }}>
           <Card.Content>
-            <Card.Heading>
+            <Card.Heading data-cy="completionDateChangeHeading">
               Change to your completion date for {formData.pmName}
             </Card.Heading>
             <SummaryList>
               <SummaryList.Row>
-                <SummaryList.Key>Programme</SummaryList.Key>
-                <SummaryList.Value>{formData.pmName}</SummaryList.Value>
+                <SummaryList.Key data-cy="completionDateChangePmKey">
+                  Programme
+                </SummaryList.Key>
+                <SummaryList.Value data-cy="completionDateChangePmValue">
+                  {formData.pmName}
+                </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
-                <SummaryList.Key>
+                <SummaryList.Key data-cy="completionDateChangeWtesKey">
                   Working hours percentage change
                 </SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="completionDateChangeWtesValue">
                   {formData.wteBeforeChange}% → {formData.wte}%
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
-                <SummaryList.Key>Start date</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Key data-cy="completionDateChangeStartDateKey">
+                  Start date
+                </SummaryList.Key>
+                <SummaryList.Value data-cy="completionDateChangeStartDateValue">
                   {dayjs(formData.startDate).format("DD/MM/YYYY")}
                   {formData.startDate &&
                     isDateWithin16Weeks(formData.startDate) && (
@@ -181,24 +189,26 @@ export const LtftFormView = () => {
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
-                <SummaryList.Key>Current completion date</SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Key data-cy="completionDateChangeCurrentCompletionDateKey">
+                  Current completion date
+                </SummaryList.Key>
+                <SummaryList.Value data-cy="completionDateChangeCurrentCompletionDateValue">
                   {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme
                   end date on TIS)
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
-                <SummaryList.Key>
+                <SummaryList.Key data-cy="completionDateChangeEstimatedCompletionDateKey">
                   <strong>Estimated completion date after these changes</strong>
                 </SummaryList.Key>
-                <SummaryList.Value>
+                <SummaryList.Value data-cy="completionDateChangeEstimatedCompletionDateValue">
                   <strong style={{ color: "#007f3b" }}>
                     {dayjs(formData.cctDate).format("DD/MM/YYYY")}
                   </strong>
                 </SummaryList.Value>
               </SummaryList.Row>
             </SummaryList>
-            <p style={{ marginTop: "1rem" }}>
+            <p style={{ marginTop: "1rem" }} data-cy="completionDateChangeNote">
               <strong>Please note:</strong> This new completion date is an
               estimate as it does not take into account your full circumstances
               (e.g. Out of Programme, Parental Leave). Your formal completion
@@ -224,7 +234,7 @@ export const LtftFormView = () => {
                   <Form>
                     <TextInputField
                       name="name"
-                      id="ltftName"
+                      id="Name"
                       label="Please give your Less Than Full Time application a name"
                       placeholder="Type name here..."
                       width="300px"
