@@ -51,7 +51,7 @@ export const LtftStatusDetails = (formData: LtftObjNew) => {
               <SummaryList.Value data-cy="ltfReason">
                 {getStatusReasonLabel(
                   currentState,
-                  formData.status.current.detail.reason
+                  formData.status.current.detail.reason ?? ""
                 )}
               </SummaryList.Value>
             </SummaryList.Row>
