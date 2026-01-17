@@ -38,7 +38,7 @@ const navLinksSpecialty = [
 
 const navLinksLtftPilot = [
   ...navLinksSpecialty,
-  { name: "Changing hours (LTFT)", href: "/ltft" }
+  { name: "Less than full-time (LTFT)", href: "/ltft" }
 ];
 
 const comp = (

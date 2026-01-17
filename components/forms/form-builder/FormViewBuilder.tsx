@@ -82,7 +82,12 @@ function VisibleField({
             )}
           </SummaryList.Key>
           <SummaryList.Value data-cy={`${field.name}-value`}>
-            {formatEntryValue(formData[field.name], field.type)}
+            {formatEntryValue(
+              field.altDisplayVal
+                ? formData[field.altDisplayVal]
+                : formData[field.name],
+              field.type
+            )}
           </SummaryList.Value>
           {canEdit && (
             <SummaryList.Actions>

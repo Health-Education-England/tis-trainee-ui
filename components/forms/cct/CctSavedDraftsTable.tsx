@@ -9,7 +9,7 @@ import {
   SortingState,
   createColumnHelper
 } from "@tanstack/react-table";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import { useAppSelector } from "../../../redux/hooks/hooks";
 import dayjs from "dayjs";
 import { TableColumnHeader } from "../../notifications/TableColumnHeader";
 import history from "../../navigation/history";
@@ -19,16 +19,6 @@ import {
   deleteCctCalc,
   updatedNewCalcMade
 } from "../../../redux/slices/cctSlice";
-import {
-  setLtftCctSnapshot,
-  updatedLtft
-} from "../../../redux/slices/ltftSlice";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
-import { LtftDeclarationsModal } from "../ltft/LtftDeclarationsModal";
-import {
-  isValidProgramme,
-  populateLtftDraft
-} from "../../../utilities/ltftUtilities";
 import { Button } from "@aws-amplify/ui-react";
 import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
@@ -77,16 +67,14 @@ const columnsDefault = [
 ];
 
 const createColumns = (
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
   setIsCctModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
   setCalcToDelete: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
   const ltftColumn = columnHelper.display({
-    id: "makeLtft",
+    id: "deleteCct",
     cell: props => (
       <RowCctActions
         row={props.row.original}
-        setIsModalOpen={setIsModalOpen}
         setIsCctModalOpen={setIsCctModalOpen}
         setCalcToDelete={setCalcToDelete}
       />
@@ -96,12 +84,7 @@ const createColumns = (
 };
 
 export function CctSavedDraftsTable() {
-  const dispatch = useAppDispatch();
   const cctList = useAppSelector(state => state.cctList.cctList);
-  const tpData = useAppSelector(
-    state => state.traineeProfile.traineeProfileData
-  );
-  const cctSnapshot = useAppSelector(state => state.ltft.LtftCctSnapshot);
   const memoData = useMemo(() => {
     return cctList;
   }, [cctList]);
@@ -110,7 +93,6 @@ export function CctSavedDraftsTable() {
     { id: "lastModified", desc: true }
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCctModalOpen, setIsCctModalOpen] = useState(false);
   const [calcIdToDelete, setCalcIdToDelete] = useState<string | null>(null);
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
@@ -128,8 +110,8 @@ export function CctSavedDraftsTable() {
   };
 
   const columns = useMemo(
-    () => createColumns(setIsModalOpen, setIsCctModalOpen, setCalcIdToDelete),
-    [setIsCctModalOpen, setIsModalOpen, setCalcIdToDelete]
+    () => createColumns(setIsCctModalOpen, setCalcIdToDelete),
+    [setIsCctModalOpen, setCalcIdToDelete]
   );
 
   const table = useReactTable({
@@ -190,20 +172,6 @@ export function CctSavedDraftsTable() {
           })}
         </tbody>
       </table>
-      <LtftDeclarationsModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={() => {
-          const draftLtft = populateLtftDraft(
-            cctSnapshot,
-            tpData.personalDetails,
-            tpData.traineeTisId
-          );
-          dispatch(updatedLtft(draftLtft));
-          setIsModalOpen(false);
-          history.push("/ltft/create");
-        }}
-      />
       <ActionModal
         onSubmit={deleteCctCalcAndReloadList}
         isOpen={isCctModalOpen}
@@ -222,25 +190,15 @@ export function CctSavedDraftsTable() {
 
 type RowLtftActionsProps = {
   row: CctCalculation;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsCctModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setCalcToDelete: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export function RowCctActions({
   row,
-  setIsModalOpen,
   setIsCctModalOpen,
   setCalcToDelete
 }: Readonly<RowLtftActionsProps>) {
-  const isLtftPilot = useIsLtftPilot();
-
-  const makeLtftBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    store.dispatch(setLtftCctSnapshot(row));
-    setIsModalOpen(true);
-  };
-
   const deleteCctBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setCalcToDelete(row.id as string);
@@ -248,31 +206,14 @@ export function RowCctActions({
   };
 
   return (
-    <div style={{ display: "flex", gap: "1em" }}>
-      {isLtftPilot && isValidProgramme(row.programmeMembership.id) && (
-        <Button
-          type="button"
-          variation="primary"
-          size="small"
-          onClick={makeLtftBtnClick}
-          data-cy={`make-ltft-btn-${row.id}`}
-          style={{
-            minWidth: "18em",
-            maxWidth: "18em"
-          }}
-        >
-          Apply for Changing hours (LTFT)
-        </Button>
-      )}
-      <Button
-        type="button"
-        variation="destructive"
-        size="small"
-        onClick={deleteCctBtnClick}
-        data-cy={`delete-cct-btn-${row.id}`}
-      >
-        Delete
-      </Button>
-    </div>
+    <Button
+      type="button"
+      variation="destructive"
+      size="small"
+      onClick={deleteCctBtnClick}
+      data-cy={`delete-cct-btn-${row.id}`}
+    >
+      Delete
+    </Button>
   );
 }

@@ -1,4 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  PayloadAction,
+  createSelector
+} from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
@@ -6,7 +11,7 @@ import {
   initialPersonalDetails,
   PersonalDetails
 } from "../../models/PersonalDetails";
-import { DateUtilities } from "../../utilities/DateUtilities";
+import { DateUtilities, isPastIt } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
@@ -152,3 +157,9 @@ export const {
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>
   state.traineeProfile.traineeProfileData;
+
+export const selectPmsNotPast = createSelector(
+  selectTraineeProfile,
+  traineeProfile =>
+    traineeProfile.programmeMemberships.filter(pm => !isPastIt(pm.endDate))
+);

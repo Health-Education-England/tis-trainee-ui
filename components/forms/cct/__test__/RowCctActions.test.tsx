@@ -4,43 +4,6 @@ import store from "../../../../redux/store/store";
 import { Provider } from "react-redux";
 import { mockCctList } from "../../../../mock-data/mock-cct-data";
 
-let mockIsLtftPilotEnabled = false;
-let mockIsValidProgramme = true;
-
-jest.mock("../../../../redux/store/store", () => ({
-  __esModule: true,
-  default: {
-    dispatch: jest.fn(),
-    getState: jest.fn(() => ({
-      user: {
-        features: {
-          forms: {
-            ltft: {
-              enabled: true,
-              qualifyingProgrammes: ["some-id"]
-            }
-          }
-        }
-      }
-    })),
-    subscribe: jest.fn(() => jest.fn()),
-    replaceReducer: jest.fn()
-  }
-}));
-
-jest.mock("../../../../redux/slices/ltftSlice", () => ({
-  setLtftCctSnapshot: jest.fn(() => "MOCK_LTFT_ACTION")
-}));
-
-jest.mock("../../../../utilities/hooks/useIsLtftPilot", () => ({
-  useIsLtftPilot: () => mockIsLtftPilotEnabled
-}));
-
-jest.mock("../../../../utilities/ltftUtilities", () => ({
-  isValidProgramme: () => mockIsValidProgramme,
-  populateLtftDraft: jest.fn()
-}));
-
 jest.mock("../../../../components/navigation/history", () => ({
   push: jest.fn()
 }));
@@ -55,13 +18,11 @@ jest.mock("../../../../utilities/hooks/useSubmitting", () => ({
 
 describe("RowCctActions component", () => {
   const mockRow = mockCctList[0];
-  const mockSetIsModalOpen = jest.fn();
   const mockSetIsCctModalOpen = jest.fn();
   const mockSetCalcToDelete = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockIsLtftPilotEnabled = false;
   });
 
   it("renders the delete button", () => {
@@ -69,7 +30,6 @@ describe("RowCctActions component", () => {
       <Provider store={store}>
         <RowCctActions
           row={mockRow}
-          setIsModalOpen={mockSetIsModalOpen}
           setIsCctModalOpen={mockSetIsCctModalOpen}
           setCalcToDelete={mockSetCalcToDelete}
         />
@@ -85,7 +45,6 @@ describe("RowCctActions component", () => {
       <Provider store={store}>
         <RowCctActions
           row={mockRow}
-          setIsModalOpen={mockSetIsModalOpen}
           setIsCctModalOpen={mockSetIsCctModalOpen}
           setCalcToDelete={mockSetCalcToDelete}
         />
@@ -97,50 +56,5 @@ describe("RowCctActions component", () => {
 
     expect(mockSetCalcToDelete).toHaveBeenCalledWith(mockRow.id);
     expect(mockSetIsCctModalOpen).toHaveBeenCalledWith(true);
-  });
-
-  describe("with LTFT pilot feature enabled", () => {
-    beforeEach(() => {
-      mockIsLtftPilotEnabled = true;
-    });
-
-    it("renders the LTFT button when LTFT pilot is enabled", () => {
-      render(
-        <Provider store={store}>
-          <RowCctActions
-            row={mockRow}
-            setIsModalOpen={mockSetIsModalOpen}
-            setIsCctModalOpen={mockSetIsCctModalOpen}
-            setCalcToDelete={mockSetCalcToDelete}
-          />
-        </Provider>
-      );
-
-      const ltftButton = screen.getByRole("button", {
-        name: /Apply for Changing hours/i
-      });
-      expect(ltftButton).toBeInTheDocument();
-    });
-
-    it("dispatches action and opens LTFT modal when LTFT button is clicked", () => {
-      render(
-        <Provider store={store}>
-          <RowCctActions
-            row={mockRow}
-            setIsModalOpen={mockSetIsModalOpen}
-            setIsCctModalOpen={mockSetIsCctModalOpen}
-            setCalcToDelete={mockSetCalcToDelete}
-          />
-        </Provider>
-      );
-
-      const ltftButton = screen.getByRole("button", {
-        name: /Apply for Changing hours/i
-      });
-      fireEvent.click(ltftButton);
-
-      expect(store.dispatch).toHaveBeenCalledWith("MOCK_LTFT_ACTION");
-      expect(mockSetIsModalOpen).toHaveBeenCalledWith(true);
-    });
   });
 });

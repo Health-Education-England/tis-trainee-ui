@@ -25,8 +25,8 @@ export const Dates = ({
   arrayName,
   dtoName
 }: DatesProps) => {
-  const { handleBlur, handleChange, fieldWarning } = useFormContext();
-
+  const { handleBlur, handleChange, fieldWarningMsgs } = useFormContext();
+  const warningMsgs = fieldWarningMsgs[name] ?? [];
   return (
     <FieldWrapper
       name={name}
@@ -73,9 +73,9 @@ export const Dates = ({
             aria-labelledby={labelId}
             aria-describedby={fieldError ? errorId : undefined}
           />
-          {fieldWarning?.fieldName === name && !fieldError ? (
-            <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
-          ) : null}
+          {warningMsgs.length > 0 && !fieldError && (
+            <FieldWarningMsg warningMsgs={warningMsgs} />
+          )}
         </>
       )}
     </FieldWrapper>

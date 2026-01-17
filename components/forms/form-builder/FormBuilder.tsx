@@ -52,7 +52,7 @@ export type Field = {
   dependencies?: string[];
   visibleIf?: unknown[];
   placeholder?: string;
-  warning?: Warning;
+  warnings?: Warning[];
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
   parent?: string;
@@ -64,6 +64,8 @@ export type Field = {
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
+  altDisplayVal?: string;
+  maxDigits?: number;
 };
 export type FormData = {
   [key: string]: any;
@@ -93,7 +95,12 @@ type FormBuilderProps = {
   options: any;
   validationSchema: any;
 };
-export type MatcherName = "prevDateTest" | "postcodeTest";
+export type MatcherName =
+  | "prevDateTest"
+  | "postcodeTest"
+  | "ltft16WeeksTest"
+  | "ltftStandardWteTest";
+
 export type Warning = {
   matcher: MatcherName;
   msgText: string;

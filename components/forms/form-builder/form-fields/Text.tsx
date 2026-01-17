@@ -20,6 +20,7 @@ type TextProps = {
   readOnly?: boolean;
   dtoName?: string;
   hint?: string;
+  maxDigits?: number;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -34,17 +35,19 @@ export const Text: React.FC<TextProps> = ({
   isNumberField,
   readOnly,
   dtoName,
-  hint
+  hint,
+  maxDigits
 }: TextProps) => {
-  const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
+  const { handleBlur, handleChange, fieldWarningMsgs, fieldWidthData } =
     useFormContext();
-
   const inputId =
     arrayIndex !== undefined && arrayName
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
   const errorId = `${inputId}-error`;
+  const warningMsgs = fieldWarningMsgs[name] ?? [];
+
   return (
     <div
       className={`nhsuk-form-group${
@@ -70,8 +73,8 @@ export const Text: React.FC<TextProps> = ({
         id={inputId}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
-        onInput={e => handleNumberInput(isNumberField, e)}
-        type="text"
+        onInput={e => handleNumberInput(isNumberField, e, maxDigits)}
+        type={isNumberField ? "number" : "text"}
         name={name}
         value={value ?? ""}
         onChange={(event: any) =>
@@ -102,12 +105,12 @@ export const Text: React.FC<TextProps> = ({
             dtoName
           )
         }
-        maxLength={isNumberField ? 4 : 4096}
+        maxLength={isNumberField ? maxDigits : 4096}
         readOnly={readOnly}
       />
-      {fieldWarning?.fieldName === name && !fieldError ? (
-        <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
-      ) : null}
+      {warningMsgs.length > 0 && !fieldError && (
+        <FieldWarningMsg warningMsgs={warningMsgs} />
+      )}
     </div>
   );
 };

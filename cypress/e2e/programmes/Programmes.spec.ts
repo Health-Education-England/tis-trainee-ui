@@ -16,7 +16,7 @@ describe("Programmes", () => {
     // CCT calc user journey from placements
     cy.get('[data-cy="cct-link-header"]')
       .first()
-      .contains("Need a Changing hours (LTFT) calculation?");
+      .contains("Need a CCT calculation?");
     cy.get('[data-cy="cct-link"]').first().click();
     cy.get(".nhsuk-fieldset__heading").contains(
       "Certificate of Completion of Training (CCT)"

@@ -119,14 +119,29 @@ describe("Placements with MFA set up", () => {
 
     cy.get('[data-cy="subheaderLtft"]')
       .first()
-      .contains("Changing hours (LTFT)");
-    cy.get('[data-cy="ltft-link"]').first().click();
-    cy.url().should("include", "/notifications");
+      .contains("Less than full-time (LTFT)");
+
+    cy.get('[data-cy="ltft-thinking"]').contains(
+      "Thinking of changing your hours?"
+    );
+    cy.get('[data-cy="ltft-link-notifications"]')
+      .first()
+      .should("exist")
+      .and("have.attr", "href", "/notifications");
+    cy.get('[data-cy="ltft-ready"]').contains(
+      "Ready to make a LTFT application?"
+    );
+    cy.get('[data-cy="ltft-link-application"]')
+      .first()
+      .should("exist")
+      .and("have.attr", "href", "/ltft");
     cy.get('[data-cy="cct-link-header"]')
       .first()
-      .contains("Need a Changing hours (LTFT) calculation?");
-    cy.get('[data-cy="cct-link"]').first().click();
-    cy.url().should("include", "/cct");
+      .contains("Need a CCT calculation?");
+    cy.get('[data-cy="cct-link"]')
+      .first()
+      .should("exist")
+      .and("have.attr", "href", "/cct");
   });
 
   it("should show available data when partial Other Sites", () => {

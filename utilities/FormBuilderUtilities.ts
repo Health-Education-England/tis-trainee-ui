@@ -12,12 +12,13 @@ import {
   updatedFormA
 } from "../redux/slices/formASlice";
 import store from "../redux/store/store";
-import {
+import type {
   Field,
   Form,
   FormData,
   FormName,
-  MatcherName
+  MatcherName,
+  Warning
 } from "../components/forms/form-builder/FormBuilder";
 import {
   saveFormB,
@@ -47,7 +48,9 @@ import {
 } from "../redux/slices/ltftSlice";
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
-import { LtftObj } from "../models/LtftTypes";
+import { LtftObjNew } from "../models/LtftTypes";
+import { isPastIt } from "./DateUtilities";
+import { calcCctDate, findLinkedProgramme } from "./CctUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -119,8 +122,60 @@ function handleFormrToConfirm(formName: FormName, formData: FormData) {
   history.push(fullPath, { fromFormCreate: true });
 }
 
+export function prepLtftFormData(
+  formData: LtftObjNew,
+  returnPreppedData: boolean = false
+) {
+  const pmArrayNotPast = store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => !isPastIt(prog.endDate)
+    );
+  const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
+  if (linkedProgramme) {
+    let newCctDate = null;
+    if (
+      linkedProgramme.endDate &&
+      formData.startDate &&
+      formData.wte &&
+      formData.wteBeforeChange
+    ) {
+      newCctDate = calcCctDate(
+        linkedProgramme.endDate,
+        formData.wteBeforeChange,
+        formData.wte,
+        formData.startDate
+      );
+    }
+
+    const {
+      programmeName,
+      startDate,
+      endDate,
+      designatedBodyCode,
+      managingDeanery
+    } = linkedProgramme;
+
+    const preppedData = {
+      ...formData,
+      pmName: programmeName ?? "",
+      pmStartDate: startDate ?? "",
+      pmEndDate: endDate ?? "",
+      designatedBodyCode: designatedBodyCode ?? "",
+      managingDeanery: managingDeanery ?? "",
+      cctDate: newCctDate
+    };
+
+    store.dispatch(updatedLtft(preppedData));
+
+    if (returnPreppedData) {
+      return preppedData;
+    }
+  }
+}
+
 function handleLtftToConfirm(formData: FormData) {
-  store.dispatch(updatedLtft(formData as LtftObj));
+  prepLtftFormData(formData as LtftObjNew);
   store.dispatch(updatedCanEditLtft(true));
   history.push("/ltft/confirm");
 }
@@ -250,27 +305,53 @@ export function transformReferenceData(
   return transformedData;
 }
 
-export type ReturnedWarning = {
-  fieldName: string;
-  warningMsg: string;
-};
+export function isDateWithin16Weeks(dateVal: Date | string): boolean {
+  const today = dayjs().startOf("day");
+  const inputDate = dayjs(dateVal).startOf("day");
+  return inputDate.isBefore(today.add(16, "week"));
+}
 
-export function showFieldMatchWarning(
-  inputValue: string,
-  matcher: MatcherName,
-  warningMsg: string,
-  fieldName: string
-): ReturnedWarning | null {
-  if (matcher === "prevDateTest") {
-    const testDate = dayjs().subtract(1, "day");
-    const inputDate = dayjs(inputValue);
-    if (inputDate.isBefore(testDate)) {
-      return { fieldName, warningMsg };
-    } else return null;
-  } else if (matcher === "postcodeTest")
-    if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
-      return { fieldName, warningMsg };
-  return null;
+export function getFieldWarningMsgs(
+  inputValue: string | number,
+  warnings: Warning[]
+): string[] {
+  const stringTypeChecks: Partial<
+    Record<MatcherName, (val: string) => boolean>
+  > = {
+    prevDateTest: (val: string) => {
+      const testDate = dayjs().subtract(1, "day");
+      return dayjs(val).isBefore(testDate);
+    },
+    postcodeTest: (val: string) =>
+      !/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(val),
+    ltft16WeeksTest: (val: string) => isDateWithin16Weeks(val)
+  };
+
+  const numberTypeChecks: Partial<
+    Record<MatcherName, (val: number) => boolean>
+  > = {
+    ltftStandardWteTest: (val: number) => {
+      const standard = [100, 80, 70, 60, 50];
+      return !!val && !standard.includes(val);
+    }
+  };
+
+  return warnings.reduce((messages: string[], w) => {
+    const stringCheck = stringTypeChecks[w.matcher];
+    const numberCheck = numberTypeChecks[w.matcher];
+
+    if (stringCheck) {
+      if (stringCheck(String(inputValue))) {
+        messages.push(w.msgText);
+      }
+    } else if (numberCheck) {
+      const numVal = Number(inputValue);
+      if (!Number.isNaN(numVal) && numberCheck(numVal)) {
+        messages.push(w.msgText);
+      }
+    }
+    return messages;
+  }, []);
 }
 
 export function setTextFieldWidth(width: number) {
@@ -289,11 +370,15 @@ export function handleKeyDown(
 
 export function handleNumberInput(
   isNumberField: boolean | undefined,
-  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+  maxDigits?: number
 ) {
   if (isNumberField) {
     const input = e.target as HTMLInputElement;
-    input.value = input.value.replace(/\D/g, "");
+    input.value = input.value.replaceAll(/\D/g, "");
+    if (maxDigits !== undefined && input.value.length > maxDigits) {
+      input.value = input.value.slice(0, maxDigits);
+    }
   }
 }
 
@@ -434,7 +519,7 @@ async function updateForm(
   } else if (formName === "ltft") {
     await store.dispatch(
       updateLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -465,7 +550,7 @@ async function saveForm(
   } else if (formName === "ltft")
     await store.dispatch(
       saveLtft({
-        formData: formData as LtftObj,
+        formData: formData as LtftObjNew,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -495,7 +580,7 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export type FormDataType = FormRPartA | FormRPartB | LtftObj;
+export type FormDataType = FormRPartA | FormRPartB | LtftObjNew;
 
 export async function saveDraftForm(
   jsonForm: Form,
@@ -514,7 +599,7 @@ export async function saveDraftForm(
         isSubmit,
         jsonForm
       )
-    : formData;
+    : prepLtftFormData(formData as LtftObjNew, true);
 
   if (draftFormId) {
     await updateForm(
@@ -527,7 +612,7 @@ export async function saveDraftForm(
   } else {
     await saveForm(
       formName,
-      preppedFormData,
+      preppedFormData as FormData,
       isAutoSave,
       isSubmit,
       showFailToastOnly

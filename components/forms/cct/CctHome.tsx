@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
 import style from "../../Common.module.scss";
@@ -5,21 +6,15 @@ import history from "../../navigation/history";
 import { resetCctCalc } from "../../../redux/slices/cctSlice";
 import { Link } from "react-router-dom";
 import { CctSavedDrafts } from "./CctSavedDrafts";
-import { useEffect } from "react";
-import { loadCctList } from "../../../redux/slices/cctListSlice";
 import { CctProgrammesList } from "./CctProgrammesList";
-import { fetchLtftSummaryList } from "../../../redux/slices/ltftSummaryListSlice";
-import { useIsLtftPilot } from "../../../utilities/hooks/useIsLtftPilot";
-import { ltft16WeeksNotice } from "../../../utilities/Constants";
+import { loadCctList } from "../../../redux/slices/cctListSlice";
 
 export function CctHome() {
   const dispatch = useAppDispatch();
-  const isLtftPilot = useIsLtftPilot();
 
   useEffect(() => {
     dispatch(loadCctList());
-    if (isLtftPilot) dispatch(fetchLtftSummaryList());
-  }, [dispatch, isLtftPilot]);
+  }, [dispatch]);
 
   return (
     <>
@@ -27,7 +22,6 @@ export function CctHome() {
         <WarningCallout.Label visuallyHiddenText={false}>
           Important
         </WarningCallout.Label>
-        {ltft16WeeksNotice}
         <p>
           If your programme is not listed or any of the details are incorrect,
           please{" "}

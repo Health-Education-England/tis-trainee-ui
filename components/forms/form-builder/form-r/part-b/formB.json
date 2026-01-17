@@ -62,10 +62,12 @@
               "label": "Current Revalidation Date",
               "type": "date",
               "visible": true,
-              "warning": {
-                "matcher": "prevDateTest",
-                "msgText": "Warning: You have entered a past date. Please ignore if valid."
-              }
+              "warnings": [
+                {
+                  "matcher": "prevDateTest",
+                  "msgText": "Warning: This is a past date. Please ignore if valid."
+                }
+              ]
             },
             {
               "name": "prevRevalDate",
@@ -173,7 +175,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "parentalLeave",
@@ -182,7 +185,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "careerBreaks",
@@ -191,7 +195,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "paidLeave",
@@ -200,7 +205,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "unauthorisedLeave",
@@ -209,7 +215,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "otherLeave",
@@ -218,7 +225,8 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave"
+              "contributesToTotal": "totalLeave",
+              "maxDigits": 4
             },
             {
               "name": "totalLeave",
