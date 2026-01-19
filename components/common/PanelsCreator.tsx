@@ -130,8 +130,8 @@ export function PanelsCreator({
                         to="/notifications"
                         data-cy="ltft-link-notifications"
                       >
-                        See your 'LTFT' notification for more details on how to
-                        apply
+                        {`See your 'LTFT' notification for more details on how to
+                        apply`}
                       </Link>
                     </SummaryList.Value>
                   </SummaryList.Row>

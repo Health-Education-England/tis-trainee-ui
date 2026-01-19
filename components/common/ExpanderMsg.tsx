@@ -300,7 +300,7 @@ export const ExpanderMsg = ({
             </li>
             <li>
               <strong>Late Applications</strong> may be declined or delayed,
-              though exceptional circumstances (e.g., sudden disability,
+              though exceptional circumstances (e.g. sudden disability,
               significant life changes) are reviewed on a case-by-case basis.
             </li>
             <li>
