@@ -1,16 +1,20 @@
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { act } from "react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LtftFormView } from "../LtftFormView";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import * as FormBuilderUtilities from "../../../../utilities/FormBuilderUtilities";
-import { mockLtftDraft0 } from "../../../../mock-data/mock-ltft-data";
 import { configureStore } from "@reduxjs/toolkit";
+import { mockLtftFormObjAfterFirstSave } from "../../../../mock-data/mock-ltft-data";
 
 jest.mock("../../../../utilities/FormBuilderUtilities");
 jest.mock("../../../../utilities/hooks/useSelectFormData", () => ({
-  useSelectFormData: () => mockLtftDraft0
+  useSelectFormData: () => ({
+    ...mockLtftFormObjAfterFirstSave,
+    cctDate: "2026-01-01"
+  })
 }));
 jest.mock("../../../../utilities/hooks/useSubmitting", () => ({
   useSubmitting: () => ({
@@ -19,20 +23,23 @@ jest.mock("../../../../utilities/hooks/useSubmitting", () => ({
     isSubmitting: false
   })
 }));
-jest.mock("../../cct/CctCalcSummary", () => ({
-  CctCalcSummaryDetails: () => <div>CCT Summary</div>
-}));
 jest.mock("../../form-builder/FormViewBuilder", () => ({
   __esModule: true,
   default: () => <div>Form Builder</div>
 }));
 
-// Note: Mock the Declarations via factory to avoid the need to interact with the form to set canSubmit to true
+jest.mock("../../StartOverButton", () => ({
+  StartOverButton: () => <div>Start Over</div>
+}));
+
+jest.mock("../LtftStatusDetails", () => ({
+  LtftStatusDetails: () => <div>Ltft Status Details</div>
+}));
+
 jest.mock("../../../forms/Declarations", () => {
-  const React = require("react"); // Import React within the factory
+  const React = require("react");
   const { useEffect } = React;
 
-  // Define the component here inside the factory function
   const MockDeclarations = ({
     setCanSubmit
   }: {
@@ -57,7 +64,6 @@ jest.mock("../../../common/ActionModal", () => ({
     isOpen ? <div data-testid="ltft-modal">Modal Content</div> : null
 }));
 
-// Mock store setup
 let mockStoreState = {
   ltft: { canEdit: true, saveStatus: "idle" }
 };
@@ -72,7 +78,6 @@ jest.mock("../../../../redux/store/store", () => ({
   }
 }));
 
-// Simple Redux store for Provider
 const testStore = configureStore({
   reducer: (state = mockStoreState) => state
 });
@@ -92,10 +97,13 @@ describe("LtftFormView - Modal Display Tests", () => {
       </Provider>
     );
 
-    // Since declarations are auto-approved in our mock via useEffect, just type name and submit
+    expect(screen.queryByText("Please try again.")).not.toBeInTheDocument();
+
     await act(async () => {
       await user.type(
-        screen.getByLabelText(/Please give your Changing hours/),
+        screen.getByLabelText(
+          /Please give your Less Than Full Time application a name/
+        ),
         "Test Application"
       );
     });
@@ -143,7 +151,6 @@ describe("LtftFormView - Modal Display Tests", () => {
       expect(mockStoreState.ltft.saveStatus).toBe("failed");
     });
 
-    // Verify the modal is NOT present
     expect(screen.queryByTestId("ltft-modal")).not.toBeInTheDocument();
   });
 });

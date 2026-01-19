@@ -11,12 +11,13 @@ export type LtftFormStatus =
   | "REJECTED";
 
 export type LtftCctChange = {
-  calculationId: string;
-  cctDate: Date | string;
+  id?: string | null;
+  calculationId?: string | null;
+  cctDate: Date | string | null;
   type: CctType;
-  startDate: Date | string;
+  startDate: Date | string | null;
+  endDate?: Date | string | null;
   wte: number;
-  changeId: string;
 };
 
 export type LtftDeclarations = {
@@ -26,14 +27,14 @@ export type LtftDeclarations = {
 };
 
 export type LtftDiscussion = {
-  name: string;
-  email: string;
-  role: string;
+  name?: string | null;
+  email?: string | null;
+  role?: string | null;
 };
 
 export type LtftStatusDetails = {
-  reason: string;
-  message: string;
+  reason: string | null;
+  message: string | null;
 };
 
 export type LtftPd = {
@@ -72,28 +73,53 @@ export type StatusInfo = {
   revision: number;
 };
 
-export type LtftObj = {
+export type LtftObjNew = {
+  // LTFT form identifiers
   traineeTisId?: string;
   id?: string;
   formRef?: string;
   name?: string;
-  change: LtftCctChange;
-  declarations: LtftDeclarations;
-  tpdName: string;
-  tpdEmail: string;
-  otherDiscussions: LtftDiscussion[] | null;
-  personalDetails: LtftPd;
-  programmeMembership: LtftPm;
-  reasonsSelected: string[] | null;
-  reasonsOtherDetail: string | null;
-  supportingInformation: string | null;
   status: StatusLtft;
   created?: Date | string;
   lastModified?: Date | string;
+
+  // PM stuff
+  pmId: string;
+  pmName: string;
+  pmStartDate: Date | string;
+  pmEndDate: Date | string;
+  designatedBodyCode: string;
+  managingDeanery: string;
+
+  // change: LtftCctChange
+  cctDate: Date | string | null;
+  type: CctType;
+  startDate: Date | string | null;
+  wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
+  wte: number | null;
+
+  // declarations
+  declarations: LtftDeclarations;
+
+  // discussions
+  tpdName: string;
+  tpdEmail: string;
+  otherDiscussions: LtftDiscussion[] | null;
+
+  // reasons
+  reasonsSelected: string[] | null;
+  reasonsOtherDetail: string | null;
+  supportingInformation: string | null;
+
+  // Personal details
+  personalDetails: Omit<LtftPd, "skilledWorkerVisaHolder">;
+
+  // skilledWorkerVisaHolder moved to separate field
+  skilledWorkerVisaHolder: boolean | null;
 };
 
 export type LtftState = {
-  formData: LtftObj;
+  formData: LtftObjNew;
   LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
@@ -108,6 +134,7 @@ export type LtftDto = {
   traineeTisId: string;
   id: string | null;
   formRef: string | null;
+  revision?: number;
   name: string | null;
   change: LtftCctChange;
   declarations: {
@@ -125,6 +152,7 @@ export type LtftDto = {
     }[];
   };
   personalDetails: {
+    id?: string;
     title?: ProfileSType;
     forenames: ProfileSType;
     surname: ProfileSType;
@@ -150,8 +178,10 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
+  tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;
+    submitted?: unknown;
     history: StatusInfo[];
   };
   created: Date | string;

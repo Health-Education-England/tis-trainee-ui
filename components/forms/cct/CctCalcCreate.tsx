@@ -84,9 +84,7 @@ export function CctCalcCreate() {
       <FormBackLink text="Back to CCT Home" />
       <Card>
         <Card.Content>
-          <Card.Heading data-cy="cct-calc-header">
-            CCT Calculator - Changing hours (LTFT)
-          </Card.Heading>
+          <Card.Heading data-cy="cct-calc-header">CCT Calculator</Card.Heading>
           <WarningCallout data-cy="cct-calc-warning">
             <WarningCallout.Label visuallyHiddenText={false}>
               Please note
@@ -359,7 +357,7 @@ export function CctCalcCreate() {
                                                 .subtract(1, "day") && (
                                               <span data-cy="start-short-notice-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={shortNoticeMsg}
+                                                  warningMsgs={[shortNoticeMsg]}
                                                 />
                                               </span>
                                             )}
@@ -435,7 +433,7 @@ export function CctCalcCreate() {
                                                 .wte as number) && (
                                               <span data-cy="wte-increase-return-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={wteIncreaseMsg}
+                                                  warningMsgs={[wteIncreaseMsg]}
                                                 />
                                               </span>
                                             )}
@@ -452,7 +450,7 @@ export function CctCalcCreate() {
                                             ) && (
                                               <span data-cy="wte-custom-warn">
                                                 <FieldWarningMsg
-                                                  warningMsg={wteCustomMsg}
+                                                  warningMsgs={[wteCustomMsg]}
                                                 />
                                               </span>
                                             )}

@@ -5,7 +5,10 @@ import store from "../../../redux/store/store";
 import { HomeHeaderSection } from "../../../components/home/HomeHeaderSection";
 import history from "../../../components/navigation/history";
 import { updatedUserFeatures } from "../../../redux/slices/userSlice";
-import { mockUserFeaturesNonSpecialty, mockUserFeaturesSpecialty } from "../../../mock-data/trainee-profile";
+import {
+  mockUserFeaturesNonSpecialty,
+  mockUserFeaturesSpecialty
+} from "../../../mock-data/trainee-profile";
 
 describe("HomeHeaderSection", () => {
   it("should display the homeWelcomeHeaderText, homeWelcomeSubHeaderText, homeWelcomeBodyText, and tssUpdatesContainer on desktop", () => {
@@ -31,7 +34,7 @@ describe("HomeHeaderSection", () => {
       "Our goal is to improve your training experience by making TIS Self-Service a one-stop-shop "
     );
     cy.get('[data-cy="tssUpdatesContainer"]').should("exist");
-  });  
+  });
   it("should not display tssUpdatesContainer on desktop for non-specialty user", () => {
     cy.viewport(1920, 1080);
     store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));
@@ -65,7 +68,7 @@ describe("HomeHeaderSection", () => {
     cy.get("[data-cy=homeWelcomeBodyText]").should("not.exist");
     cy.get('[data-cy="tssUpdatesContainer"]').should("not.exist");
     cy.get('[data-cy="anchorEl_What\'s New"]').should("exist");
-  });  
+  });
   it("should not display homeWelcomeBodyText, tssUpdatesContainer and What's News section on mobile for non-specialty user", () => {
     cy.viewport(375, 812);
     store.dispatch(updatedUserFeatures(mockUserFeaturesNonSpecialty));

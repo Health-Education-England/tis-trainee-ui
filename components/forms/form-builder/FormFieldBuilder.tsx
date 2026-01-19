@@ -40,7 +40,8 @@ export function FormFieldBuilder({
     readOnly,
     rows,
     isMultiSelect,
-    hint
+    hint,
+    maxDigits
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
 
@@ -79,6 +80,7 @@ export function FormFieldBuilder({
           isNumberField={isNumberField}
           readOnly={readOnly}
           hint={hint}
+          maxDigits={maxDigits}
         />
       );
     case "textArea":

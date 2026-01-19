@@ -534,7 +534,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.clearAndType('[data-cy="currRevalDate-input"]', prevRevalDate);
   cy.get(".field-warning-msg")
     .should("exist")
-    .contains("Warning: You have entered a past date.");
+    .contains("Warning: This is a past date. Please ignore if valid.");
 
   cy.clearAndType('[data-cy="currRevalDate-input"]', currRevalDate);
   cy.get(".field-warning-msg").should("not.exist");
@@ -973,7 +973,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .should("include.text", "contact your Local Office support");
   cy.get('[data-cy="cct-calc-header"]')
     .should("exist")
-    .contains("CCT Calculator - Changing hours (LTFT)");
+    .contains("CCT Calculator");
   cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
     .should("exist")
     .contains("Are you are tier 2 skilled visa worker?");

@@ -164,14 +164,14 @@ export const HOME_CARDS: HomeCardProps[] = [
     ]
   },
   {
-    linkHeader: "Changing hours (LTFT)",
+    linkHeader: "Less than full-time (LTFT) training",
     isFeatureEnabled: (userFeatures: UserFeaturesType) =>
       userFeatures.forms.ltft.enabled,
     isClickable: true,
     route: "/ltft",
     items: [
       {
-        text: "Submit and track a Changing hours (Less Than Full Time) application",
+        text: "Submit and track a Less than full-time (LTFT) training application",
         isFeatureEnabled: true
       }
     ]

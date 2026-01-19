@@ -335,9 +335,12 @@ button:disabled {
 // field warning
 .field-warning-container {
   margin: 0.5rem 0 0 0;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem;
   text-align: left;
   display: flex;
+  border: 2px solid #ed8b00;
+  background-color: #fff3cd;
+  border-radius: 4px;
 }
 
 .field-warning-msg {

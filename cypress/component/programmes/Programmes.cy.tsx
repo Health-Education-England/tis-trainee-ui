@@ -129,7 +129,7 @@ describe("Programmes with MFA set up", () => {
     cy.get('[data-cy="subheaderOnboarding"]').should("not.exist");
     cy.get('[data-cy="cct-link-header"]')
       .first()
-      .contains("Need a Changing hours (LTFT) calculation?");
+      .contains("Need a CCT calculation?");
     // both progs and placements use same panel creator component so not repeating placement tests
   });
 
@@ -147,11 +147,14 @@ describe("Programmes with MFA set up", () => {
       "include.text",
       "Onboarding Tracker"
     );
-
     cy.get(
       '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
     )
-      .should("have.attr", "href", "/programmes/1/onboarding-tracker")
+      .should(
+        "have.attr",
+        "href",
+        "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/onboarding-tracker"
+      )
       .and("include.text", "Track your onboarding journey for this programme");
   });
 
