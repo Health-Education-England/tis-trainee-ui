@@ -422,4 +422,70 @@ describe("Programme confirmation", () => {
       .click({ force: true });
     cy.get("@DownloadPDF").should("have.been.called");
   });
+
+  it("should display the LTFT section when LTFT feature enabled", () => {
+    const userFeaturesWithLtft = {
+      ...mockUserFeaturesSpecialty,
+      forms: {
+        ...mockUserFeaturesSpecialty.forms,
+        ltft: {
+          enabled: true,
+          qualifyingProgrammes: []
+        }
+      }
+    };
+
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      userFeaturesWithLtft,
+      mockProgrammeMemberships
+    );
+    cy.get('[data-cy="subheaderLtft"]')
+      .first()
+      .should("exist")
+      .and("have.text", "Less than full-time (LTFT) training");
+    cy.get('[data-cy="ltft-link-notifications"]').should("exist");
+    cy.get('[data-cy="ltft-ready"]').should("exist");
+    cy.get('[data-cy="ltft-link-application"]').should("exist");
+  });
+
+  it("should not show LTFT section when LTFT feature disabled", () => {
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      mockProgrammeMemberships
+    );
+    cy.get('[data-cy="ltft-section"]').should("not.exist");
+  });
+  it("should not show CCT section when CCT feature disabled", () => {
+    const userFeaturesWithNoCct = {
+      ...mockUserFeaturesSpecialty,
+      cct: {
+        enabled: false
+      }
+    };
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      userFeaturesWithNoCct,
+      mockProgrammeMemberships
+    );
+    cy.get('[data-cy="cct-section"]').should("not.exist");
+  });
+  it("should show CCT section when CCT feature enabled", () => {
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      mockProgrammeMemberships
+    );
+    cy.get('[data-cy="cct-section"]').should("exist");
+    cy.get('[data-cy="cct-link-header"]')
+      .first()
+      .should("exist")
+      .and("have.text", "Need a CCT calculation?");
+    cy.get('[data-cy="cct-link"]').should("exist");
+  });
 });

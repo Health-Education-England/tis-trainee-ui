@@ -6,9 +6,9 @@ import store from "../../../redux/store/store";
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
 
-const yesNoError =
-  "Please select Yes or No for: Are you a Tier 2 / Skilled Worker Visa holder?";
-const reasonError = "At least one reason is required";
+export const LtftVisaError =
+  "Please select Yes or No for Tier 2 / Skilled Worker Visa status";
+export const ltftReasonsError = "At least one reason is required";
 
 const emailValidation = yup
   .string()
@@ -77,11 +77,7 @@ const personalDetailsDtoValidationSchema = yup.object().shape({
   gmcNumber: StringValidationSchema("GMC number", 20),
   telephoneNumber: phoneValidation("Contact Telephone"),
   mobileNumber: phoneValidation("Mobile Number"),
-  email: emailValidation,
-  skilledWorkerVisaHolder: yup
-    .boolean()
-    .typeError(yesNoError)
-    .required(yesNoError)
+  email: emailValidation
 });
 
 const wteValidation = (fieldName: string) =>
@@ -109,9 +105,17 @@ export const ltftValidationSchema = yup.object({
   otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),
   reasonsSelected: yup
     .array()
-    .min(1, reasonError)
-    .required(reasonError)
+    .min(1, ltftReasonsError)
+    .required(ltftReasonsError)
     .nullable(),
   personalDetails: personalDetailsDtoValidationSchema,
-  startDate: changeStartDateValidation
+  startDate: changeStartDateValidation,
+  skilledWorkerVisaHolder: yup
+    .boolean()
+    .typeError(LtftVisaError)
+    .required(LtftVisaError),
+  supportingInformation: yup
+    .string()
+    .required("Supporting information is required")
+    .nullable()
 });

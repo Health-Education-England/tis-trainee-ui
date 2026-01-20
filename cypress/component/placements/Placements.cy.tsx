@@ -117,31 +117,15 @@ describe("Placements with MFA set up", () => {
       .get('[data-cy="otherSpecialty211Val"]')
       .should("exist"); //alphabetic ordering
 
-    cy.get('[data-cy="subheaderLtft"]')
-      .first()
-      .contains("Less than full-time (LTFT)");
+    cy.get('[data-cy="subheaderLtft"]').should("not.exist");
 
-    cy.get('[data-cy="ltft-thinking"]').contains(
-      "Thinking of changing your hours?"
-    );
-    cy.get('[data-cy="ltft-link-notifications"]')
-      .first()
-      .should("exist")
-      .and("have.attr", "href", "/notifications");
-    cy.get('[data-cy="ltft-ready"]').contains(
-      "Ready to make a LTFT application?"
-    );
-    cy.get('[data-cy="ltft-link-application"]')
-      .first()
-      .should("exist")
-      .and("have.attr", "href", "/ltft");
-    cy.get('[data-cy="cct-link-header"]')
-      .first()
-      .contains("Need a CCT calculation?");
-    cy.get('[data-cy="cct-link"]')
-      .first()
-      .should("exist")
-      .and("have.attr", "href", "/cct");
+    cy.get('[data-cy="ltft-thinking"]').should("not.exist");
+    cy.get('[data-cy="ltft-link-notifications"]').should("not.exist");
+
+    cy.get('[data-cy="ltft-ready"]').should("not.exist");
+    cy.get('[data-cy="ltft-link-application"]').should("not.exist");
+    cy.get('[data-cy="cct-link-header"]').should("not.exist");
+    cy.get('[data-cy="cct-link"]').should("not.exist");
   });
 
   it("should show available data when partial Other Sites", () => {

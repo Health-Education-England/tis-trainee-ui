@@ -19,6 +19,10 @@ import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
 import { mockProgrammeMemberships } from "../../../../mock-data/trainee-profile";
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
 import dayjs from "dayjs";
+import {
+  ltftReasonsError,
+  LtftVisaError
+} from "../../../../components/forms/ltft/ltftValidationSchema";
 
 const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
@@ -169,6 +173,8 @@ describe("LtftForm - draft", () => {
     cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
       ltftReasonsText1
     );
+    cy.navNext();
+    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
     cy.get('[data-cy="reasonsSelected-label"]').should("exist");
     cy.get('[data-cy="reasonsSelected-hint"]').should(
@@ -182,6 +188,10 @@ describe("LtftForm - draft", () => {
 
     // part 8
     cy.get("h3").contains("Part 8 of 10 - Supporting information");
+    cy.navNext();
+    cy.get("#supportingInformation-error").contains(
+      "Supporting information is required"
+    );
     cy.get('[data-cy="supportingInformation-text-area-input"]').type(
       "This is my supporting information"
     );
@@ -192,6 +202,8 @@ describe("LtftForm - draft", () => {
     cy.get(".nhsuk-warning-callout > :nth-child(2) > p").contains(
       ltftTier2VisaImportantText1
     );
+    cy.navNext();
+    cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
     cy.navNext();
 
