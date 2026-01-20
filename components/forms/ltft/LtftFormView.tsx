@@ -130,7 +130,9 @@ export const LtftFormView = () => {
             data-cy="savePdfBtn"
             disabled={!formData.id}
             onClick={() => {
-              downloadLtftPdf(formData.id ?? "");
+              // TODO: enable when BE PDF has been updated
+              // downloadLtftPdf(formData.id ?? "");
+              globalThis.print();
             }}
           >
             Save a copy as a PDF
