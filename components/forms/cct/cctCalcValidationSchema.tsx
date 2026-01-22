@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import * as Yup from "yup";
-import { PmType } from "../../../redux/slices/cctSlice";
 
 const createBaseStartDateSchema = () => {
   return Yup.date()
@@ -14,14 +13,14 @@ const createBaseWteSchema = (
   max: number,
   isDecimal: boolean = true
 ) => {
-  const wteMsg = `WTE must be between ${min} and ${max}`;
+  const wteMsg = `Percentage must be between ${min} and ${max}`;
 
   return Yup.number()
-    .typeError(`${isDecimal ? "" : "Proposed "}WTE must be a number`)
+    .typeError(`${isDecimal ? "" : "proposed "}percentage must be a number`)
     .min(min, wteMsg)
     .max(max, wteMsg)
     .nullable()
-    .required(`Please enter a ${isDecimal ? "" : "Proposed "}WTE`);
+    .required(`Please enter a ${isDecimal ? "" : "proposed "}percentage`);
 };
 
 // Main validation schema
@@ -53,7 +52,7 @@ export const cctValidationSchema = Yup.object().shape({
         ),
       wte: createBaseWteSchema(0.01, 1, false).test(
         "is-different-from-programme-wte",
-        "WTE values must be different",
+        "Before and after percentages must be different",
         function (wte) {
           const p = this.options?.context?.programmeMembership.wte;
           return wte !== p;
@@ -62,34 +61,3 @@ export const cctValidationSchema = Yup.object().shape({
     })
   )
 });
-
-export const getStartDateValidationSchema = (programmeMembership: PmType) => {
-  return createBaseStartDateSchema()
-    .test(
-      "is-before-the-current-cct-date",
-      "Change date must be before the current completion date",
-      function (startDate) {
-        const currentCctDate = programmeMembership.endDate;
-        return dayjs(startDate).isBefore(dayjs(currentCctDate));
-      }
-    )
-    .test(
-      "is-on-or-after-programme-start",
-      "Change date must be on or after the programme start date",
-      function (startDate) {
-        const programmeStartDate = programmeMembership.startDate;
-        return dayjs(startDate).isSameOrAfter(dayjs(programmeStartDate));
-      }
-    );
-};
-
-export const getWteValidationSchema = (programmeMembership: PmType) => {
-  return createBaseWteSchema(1, 100, false).test(
-    "is-different-from-programme-wte",
-    "WTE values must be different",
-    function (wte) {
-      const p = (programmeMembership.wte as number) * 100;
-      return wte !== p;
-    }
-  );
-};

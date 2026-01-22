@@ -305,9 +305,13 @@ export function transformReferenceData(
   return transformedData;
 }
 
-export function isDateWithin16Weeks(dateVal: Date | string): boolean {
+export function isDateWithin16Weeks(
+  dateVal: Date | string,
+  includeTodayCheck?: boolean
+): boolean {
   const today = dayjs().startOf("day");
   const inputDate = dayjs(dateVal).startOf("day");
+  if (includeTodayCheck && inputDate.isBefore(today)) return false;
   return inputDate.isBefore(today.add(16, "week"));
 }
 
