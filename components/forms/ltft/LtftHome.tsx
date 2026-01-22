@@ -85,7 +85,7 @@ export function LtftHome({ pmOptions }: Readonly<LtftHomeProps>) {
                     </Button>
                   ) : (
                     <p data-cy="no-eligable-pms-message">
-                      You are not eligible to make a Less Than Full Time
+                      You are not eligible to make a Less than full-time (LTFT)
                       application at this time as you have no active current or
                       upcoming Programmes.
                     </p>

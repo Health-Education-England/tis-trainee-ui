@@ -90,10 +90,10 @@ export function CctCalcCreate() {
               Please note
             </WarningCallout.Label>
             <p>
-              This calculator is designed to show you the effect a change of
-              working hours (e.g. going Less Than Full Time) would have on your
-              programme completion date. Your formal CCT date will be confirmed
-              at ARCP.
+              This calculator is designed to show the effect a change of working
+              hours, for example Less than full-time (LTFT) training, would have
+              on your programme completion date. Your formal CCT date will be
+              confirmed at ARCP.
             </p>
             <p>
               {`We plan to expand the calculator's functionality in future

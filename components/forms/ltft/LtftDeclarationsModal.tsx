@@ -29,7 +29,7 @@ export const LtftDeclarationsModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 data-cy="ltft-declarations-modal-heading">
-        {`Before proceeding to the main Less Than Full Time application...`}
+        {`Before proceeding to the main Less than full-time (LTFT) application...`}
       </h2>
       <div>
         <Checkboxes>

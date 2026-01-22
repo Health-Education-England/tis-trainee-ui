@@ -27,7 +27,7 @@ export function Ltft() {
           data-cy="ltftHeading"
           style={{ color: "#005eb8" }}
         >
-          Less Than Full Time (LTFT)
+          Less than full-time (LTFT) training
         </Fieldset.Legend>
       </Fieldset>
       <Switch>
