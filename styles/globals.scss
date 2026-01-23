@@ -334,9 +334,8 @@ button:disabled {
 
 // field warning
 .field-warning-container {
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 1rem 0;
   padding: 0.5rem;
-  text-align: left;
   display: flex;
   border: 2px solid #ed8b00;
   background-color: #fff3cd;
@@ -346,8 +345,6 @@ button:disabled {
 .field-warning-msg {
   margin-left: 0.5rem;
   font-weight: 500;
-  white-space: pre-line;
-  text-align: justify;
 }
 
 .field-warning-icon {

@@ -9,299 +9,127 @@ import {
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import style from "../../Common.module.scss";
 import dayjs from "dayjs";
-import { Button as BtnAmplify } from "@aws-amplify/ui-react";
 import { CalcDetails } from "./CctCalcCreate";
-import { useState } from "react";
-import {
-  getStartDateValidationSchema,
-  getWteValidationSchema
-} from "./cctCalcValidationSchema";
-import { Formik, Form, FormikHelpers } from "formik";
-import * as Yup from "yup";
-import TextInputField from "../TextInputField";
-import { LtftFormStatus } from "../../../models/LtftTypes";
 import { isDateWithin16Weeks } from "../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../FieldWarningMsg";
+import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
+import { fteOptions } from "../../../utilities/Constants";
 
 export function CctCalcSummaryDetails({
-  viewedCalc,
-  ltftFormStatus
+  viewedCalc
 }: Readonly<{
   viewedCalc: CctCalculation;
-  ltftFormStatus?: LtftFormStatus;
 }>) {
   const { programmeMembership, cctDate, changes, name, created, lastModified } =
     viewedCalc;
-
-  const hasChanges = changes.length > 0;
-  const initChangeDateValue = dayjs(changes[0].startDate);
-  const initWteValue = ((changes[0].wte as number) * 100).toString();
-
-  const [editableFields, setEditableFields] = useState({
-    changeDate: false,
-    wte: false
-  });
-
-  const [displayValues, setDisplayValues] = useState({
-    changeDate: hasChanges ? initChangeDateValue.format("DD/MM/YYYY") : "",
-    wte: hasChanges ? `${initWteValue}%` : ""
-  });
-
-  const isEditMode = editableFields.changeDate || editableFields.wte;
-
-  const toggleEditMode = (field: "changeDate" | "wte") => {
-    setEditableFields(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
-  };
-
-  const validationSchema = Yup.object().shape({
-    changeDate: getStartDateValidationSchema(programmeMembership),
-    wte: getWteValidationSchema(programmeMembership)
-  });
-
-  const handleSubmit = (
-    values: { changeDate: string; wte: string },
-    { setSubmitting }: FormikHelpers<{ changeDate: string; wte: string }>
-  ) => {
-    setDisplayValues({
-      changeDate: dayjs(values.changeDate).format("DD/MM/YYYY"),
-      wte: `${values.wte}%`
-    });
-    setEditableFields({
-      changeDate: false,
-      wte: false
-    });
-    setSubmitting(false);
-  };
+  const { shortNoticeMsg, wteIncreaseMsg, wteCustomMsg } = cctCalcWarningsMsgs;
 
   return (
-    <Formik
-      initialValues={{
-        changeDate: hasChanges ? initChangeDateValue.format("YYYY-MM-DD") : "",
-        wte: hasChanges ? initWteValue : ""
-      }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isValid }) => (
-        <Form>
-          <Card className="pdf-visible">
-            <WarningCallout>
-              <WarningCallout.Label data-cy="cct-calc-warning-label">
-                New completion date
-              </WarningCallout.Label>
-              <p data-cy="cct-calc-warning-text1">
-                Please note: the new completion date shown below is indicative
-                and does not take into account your full circumstances (e.g. Out
-                of Programme, Parental Leave).
-              </p>
-              <p data-cy="cct-calc-warning-text2">
-                Your formal completion date will be agreed at ARCP.
-              </p>
-            </WarningCallout>
-            <Card.Content>
-              <Card.Heading data-cy="cct-calc-summary-header">
-                CCT Calculation Summary
-              </Card.Heading>
-              <Container>
-                <Row>
-                  <Col width="three-quarters">
-                    <SummaryList noBorder>
-                      <h3 className={style.panelSubHeader}>Linked Programme</h3>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Programme name</SummaryList.Key>
-                        <SummaryList.Value>
-                          {programmeMembership.name}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Start date</SummaryList.Key>
-                        <SummaryList.Value>
-                          {dayjs(programmeMembership.startDate).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Completion date</SummaryList.Key>
-                        <SummaryList.Value>
-                          {dayjs(programmeMembership.endDate).format(
-                            "DD/MM/YYYY"
-                          )}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <h3 className={style.panelSubHeader}>
-                        Current WTE percentage
-                      </h3>
-                      <SummaryList.Row>
-                        <SummaryList.Key>WTE</SummaryList.Key>
-                        <SummaryList.Value>
-                          {programmeMembership.wte &&
-                            programmeMembership.wte * 100}
-                          %
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                    </SummaryList>
-                  </Col>
-                </Row>
-              </Container>
-              <Container
-                className={
-                  ltftFormStatus === "UNSUBMITTED" ? "cct-calc-container" : ""
-                }
-              >
-                <Row>
-                  <Col width="full">
-                    {ltftFormStatus === "UNSUBMITTED" && (
-                      <WarningCallout data-cy="cct-recalc-warning-callout">
-                        <WarningCallout.Label data-cy="cct-recalc-warning-label">
-                          Recalculating your New completion date
-                        </WarningCallout.Label>
-                        <p>
-                          If required, please edit the{" "}
-                          <strong>Change date</strong> and/or{" "}
-                          <strong>Proposed WTE</strong> values to recalculate
-                          your <strong>New completion date</strong>.
-                        </p>
-                        <p>
-                          {`Please note: Any updated values are not saved until
-                          you 're-submit' the application (see below).`}
-                        </p>
-                      </WarningCallout>
+    <Card className="pdf-visible">
+      <WarningCallout>
+        <WarningCallout.Label data-cy="cct-calc-warning-label">
+          New completion date
+        </WarningCallout.Label>
+        <p data-cy="cct-calc-warning-text1">
+          Please note: the new completion date shown below is indicative and
+          does not take into account your full circumstances (e.g. Out of
+          Programme, Parental Leave).
+        </p>
+        <p data-cy="cct-calc-warning-text2">
+          Your formal completion date will be agreed at ARCP.
+        </p>
+      </WarningCallout>
+      <Card.Content>
+        <Card.Heading data-cy="cct-calc-summary-header">
+          CCT Calculation Summary
+        </Card.Heading>
+        <Container>
+          <Row>
+            <Col width="full">
+              <SummaryList noBorder>
+                <h3 className={style.panelSubHeader}>Linked Programme</h3>
+                <SummaryList.Row>
+                  <SummaryList.Key>Programme name</SummaryList.Key>
+                  <SummaryList.Value>
+                    {programmeMembership.name}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>Start date</SummaryList.Key>
+                  <SummaryList.Value>
+                    {dayjs(programmeMembership.startDate).format("DD/MM/YYYY")}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>Completion date</SummaryList.Key>
+                  <SummaryList.Value>
+                    {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <h3 className={style.panelSubHeader}> Changes</h3>
+                <SummaryList.Row>
+                  <SummaryList.Key>
+                    Full-time hours percentage before change
+                  </SummaryList.Key>
+                  <SummaryList.Value>
+                    {programmeMembership.wte && programmeMembership.wte * 100}%
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>
+                    Full-time hours percentage after change
+                  </SummaryList.Key>
+                  <SummaryList.Value>
+                    {changes[0].wte && changes[0].wte * 100}%
+                    {changes[0].wte! > programmeMembership.wte! && (
+                      <FieldWarningMsg warningMsgs={[wteIncreaseMsg]} />
                     )}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col
-                    width={
-                      ltftFormStatus === "UNSUBMITTED" ? "two-thirds" : "full"
-                    }
+                    {!fteOptions.some(
+                      option =>
+                        option.value === (changes[0].wte as number) * 100
+                    ) && <FieldWarningMsg warningMsgs={[wteCustomMsg]} />}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>Change start date</SummaryList.Key>
+                  <SummaryList.Value>
+                    {dayjs(changes[0].startDate).format("DD/MM/YYYY")}
+                    {isDateWithin16Weeks(changes[0].startDate, true) && (
+                      <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
+                    )}
+                    {dayjs(changes[0].startDate).isBefore(
+                      dayjs().startOf("day")
+                    ) && (
+                      <FieldWarningMsg
+                        warningMsgs={["Change start date is now in the past"]}
+                      />
+                    )}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+                <SummaryList.Row>
+                  <SummaryList.Key>New completion date</SummaryList.Key>
+                  <SummaryList.Value
+                    style={{
+                      color: "teal",
+                      fontWeight: "bold"
+                    }}
+                    data-cy="saved-cct-date"
                   >
-                    <h3 className={style.panelSubHeader}>Proposed changes</h3>
-                    <SummaryList noBorder>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Change type</SummaryList.Key>
-                        <SummaryList.Value>
-                          {changes[0].type === "LTFT" && "LTFT"}
-                        </SummaryList.Value>
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>LTFT start date</SummaryList.Key>
-                        <SummaryList.Value>
-                          {editableFields.changeDate ? (
-                            <TextInputField
-                              name="changeDate"
-                              label="Change date"
-                              type="date"
-                              data-cy="change-date-input"
-                              hidelabel
-                            />
-                          ) : (
-                            <span data-cy="changeDate-readonly">
-                              {displayValues.changeDate}
-                            </span>
-                          )}
-                          {displayValues.changeDate &&
-                            isDateWithin16Weeks(displayValues.changeDate) && (
-                              <FieldWarningMsg
-                                warningMsgs={[
-                                  "Note: Giving less than 16 weeks' notice to change your working hours will only be agreed in exceptional circumstances."
-                                ]}
-                              />
-                            )}
-                        </SummaryList.Value>
-                        {ltftFormStatus === "UNSUBMITTED" && (
-                          <SummaryList.Actions>
-                            <BtnAmplify
-                              type="button"
-                              size="small"
-                              style={{ minWidth: "9em" }}
-                              onClick={() => toggleEditMode("changeDate")}
-                              data-cy="edit-btn_date"
-                            >
-                              {editableFields.changeDate ? "Revert" : "Edit"}
-                            </BtnAmplify>
-                          </SummaryList.Actions>
-                        )}
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>Proposed WTE</SummaryList.Key>
-                        <SummaryList.Value data-cy="cct-view-new-wte">
-                          {editableFields.wte ? (
-                            <TextInputField
-                              name="wte"
-                              label="Proposed WTE"
-                              width={2}
-                              data-cy="wte-input"
-                              hidelabel
-                              inputSymbol="%"
-                            />
-                          ) : (
-                            <span data-cy="wte-readonly">
-                              {displayValues.wte}
-                            </span>
-                          )}
-                        </SummaryList.Value>
-                        {ltftFormStatus === "UNSUBMITTED" && (
-                          <SummaryList.Actions>
-                            <BtnAmplify
-                              type="button"
-                              size="small"
-                              style={{ minWidth: "9em" }}
-                              onClick={() => toggleEditMode("wte")}
-                              data-cy="edit-btn_wte"
-                            >
-                              {editableFields.wte ? "Revert" : "Edit"}
-                            </BtnAmplify>
-                          </SummaryList.Actions>
-                        )}
-                      </SummaryList.Row>
-                      <SummaryList.Row>
-                        <SummaryList.Key>New completion date</SummaryList.Key>
-                        <SummaryList.Value
-                          style={{
-                            color: isEditMode ? "grey" : "teal",
-                            fontWeight: "bold"
-                          }}
-                          data-cy="saved-cct-date"
-                        >
-                          {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
-                        </SummaryList.Value>
-                        {ltftFormStatus === "UNSUBMITTED" && isEditMode && (
-                          <SummaryList.Actions>
-                            <BtnAmplify
-                              type="submit"
-                              data-cy="cct-recalculate-btn"
-                              style={{
-                                minWidth: "8em",
-                                backgroundColor: "teal",
-                                color: "white"
-                              }}
-                              isDisabled={!isValid}
-                            >
-                              Recalculate
-                            </BtnAmplify>
-                          </SummaryList.Actions>
-                        )}
-                      </SummaryList.Row>
-                    </SummaryList>
-                  </Col>
-                </Row>
-              </Container>
-
-              {name && created && lastModified && (
-                <CalcDetails
-                  created={created}
-                  lastModified={lastModified}
-                  name={name}
-                />
-              )}
-            </Card.Content>
-          </Card>
-        </Form>
-      )}
-    </Formik>
+                    {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+              </SummaryList>
+            </Col>
+          </Row>
+        </Container>
+        {name && created && lastModified && (
+          <CalcDetails
+            created={created}
+            lastModified={lastModified}
+            name={name}
+          />
+        )}
+      </Card.Content>
+    </Card>
   );
 }

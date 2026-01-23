@@ -101,9 +101,7 @@ describe("LtftFormView - Modal Display Tests", () => {
 
     await act(async () => {
       await user.type(
-        screen.getByLabelText(
-          /Please give your Less Than Full Time application a name/
-        ),
+        screen.getByLabelText(/Please give your LTFT application a name/),
         "Test Application"
       );
     });

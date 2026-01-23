@@ -1019,7 +1019,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
 
   // - current WTE
   cy.clickSelect('[data-cy="programmeMembership.wte"]', null, true);
-  cy.get('[data-cy="changes[0].type"]').contains("WTE (e.g. LTFT)");
+  cy.get('[data-cy="changes[0].type"]').contains("LTFT");
   cy.get(".nhsuk-error-message").first().contains("Please enter a start date");
   cy.get('[data-cy="changes[0].startDate"]').type("2022-01-01");
   cy.get(".nhsuk-error-message")
@@ -1031,11 +1031,11 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .should("exist")
     .contains(shortNoticeMsg);
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Please enter a Proposed WTE"
+    "Please enter a proposed percentage"
   );
   cy.clickSelect('[data-cy="changes[0].wte"]', null, true);
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "WTE values must be different"
+    "Before and after percentages must be different"
   );
   cy.clickSelect('[data-cy="programmeMembership.wte"]', "80%", false);
   cy.clickSelect('[data-cy="changes[0].wte"]', "90%", false);

@@ -237,7 +237,7 @@ export const LtftFormView = () => {
                     <TextInputField
                       name="name"
                       id="Name"
-                      label="Please give your Less Than Full Time application a name"
+                      label="Please give your LTFT application a name"
                       placeholder="Type name here..."
                       width="300px"
                       readOnly={!canEditStatus}

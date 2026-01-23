@@ -175,7 +175,7 @@ export const ExpanderMsg = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Less Than Full Time (LTFT) minimum salary requirements | Workforce,
+            Less than full-time (LTFT) minimum salary requirements | Workforce,
             training and education | NHS England
           </a>{" "}
           for more information.

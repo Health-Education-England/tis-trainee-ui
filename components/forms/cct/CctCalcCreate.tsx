@@ -45,6 +45,7 @@ import { isPastIt } from "../../../utilities/DateUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import InfoTooltip from "../../common/InfoTooltip";
 import FormBackLink from "../../common/FormBackLink";
+import { isDateWithin16Weeks } from "../../../utilities/FormBuilderUtilities";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -90,10 +91,9 @@ export function CctCalcCreate() {
               Please note
             </WarningCallout.Label>
             <p>
-              This calculator is designed to show you the effect a change of
-              working hours (e.g. going Less Than Full Time) would have on your
-              programme completion date. Your formal CCT date will be confirmed
-              at ARCP.
+              This calculator is designed to show the effect Less than full-time
+              (LTFT) training will have on your programme completion date. Your
+              formal CCT date will be confirmed at ARCP.
             </p>
             <p>
               {`We plan to expand the calculator's functionality in future
@@ -260,13 +260,13 @@ export function CctCalcCreate() {
                               className={style.panelSubHeader}
                               data-cy="currentWte-header"
                             >
-                              Current WTE percentage
+                              Full-time percentage before change
                             </h3>
                           </div>
                           <div className="wte-tool-tip" data-cy="wte-tool-tip">
                             <InfoTooltip
                               tooltipId="WteInfo"
-                              content="Whole time equivalent (WTE)’ e.g. a full week of 40 hours has an WTE value of 100%."
+                              content="e.g. a full-time week of 40 hours is 100%; a part-time week of 24 hours is 60%."
                             />
                           </div>
                           <Row>
@@ -333,7 +333,7 @@ export function CctCalcCreate() {
                                             options={[
                                               {
                                                 value: "LTFT",
-                                                label: "WTE (e.g. LTFT)"
+                                                label: "LTFT"
                                               }
                                             ]}
                                             disabled={true}
@@ -342,19 +342,21 @@ export function CctCalcCreate() {
                                         <Col width="one-quarter">
                                           <TextInputField
                                             name={`changes[${index}].startDate`}
-                                            label="LTFT start date"
+                                            label="Start date of change"
                                             type="date"
                                             data-cy="change-start-date"
                                           />
-                                          {!(
-                                            errors.changes as CctCalculationErrors["changes"]
-                                          )?.[index]?.startDate &&
-                                            dayjs(
+                                          {dayjs(
+                                            values.changes[index].startDate
+                                          ).isSameOrAfter(
+                                            dayjs().startOf("day")
+                                          ) &&
+                                            !(
+                                              errors.changes as CctCalculationErrors["changes"]
+                                            )?.[index]?.startDate &&
+                                            isDateWithin16Weeks(
                                               values.changes[index].startDate
-                                            ) <
-                                              dayjs()
-                                                .add(16, "week")
-                                                .subtract(1, "day") && (
+                                            ) && (
                                               <span data-cy="start-short-notice-warn">
                                                 <FieldWarningMsg
                                                   warningMsgs={[shortNoticeMsg]}
@@ -374,7 +376,7 @@ export function CctCalcCreate() {
                                               />
                                             ))}
                                         </Col>
-                                        <Col width="one-quarter">
+                                        <Col width="one-half">
                                           {values.changes[index].type ===
                                             "LTFT" && (
                                             <AutocompleteSelect
@@ -405,7 +407,7 @@ export function CctCalcCreate() {
                                               }
                                               options={fteOptions}
                                               name={`changes[${index}].wte`}
-                                              label="Proposed WTE (%)"
+                                              label="Full-time percentage after change"
                                               isMulti={false}
                                               closeMenuOnSelect={true}
                                               isCreatable={true}
