@@ -79,7 +79,7 @@ export function CctCalcSummaryDetails({
                   <SummaryList.Key>
                     Full-time hours percentage after change
                   </SummaryList.Key>
-                  <SummaryList.Value>
+                  <SummaryList.Value data-cy="cct-view-new-wte">
                     {changes[0].wte && changes[0].wte * 100}%
                     {changes[0].wte! > programmeMembership.wte! && (
                       <FieldWarningMsg warningMsgs={[wteIncreaseMsg]} />
