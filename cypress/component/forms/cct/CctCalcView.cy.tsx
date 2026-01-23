@@ -53,7 +53,22 @@ describe("CctCalcView", () => {
     cy.get('[data-cy="cct-edit-btn"]').should("exist").click();
     cy.get(".nhsuk-error-summary").should("not.exist");
     cy.get('[data-cy="cct-save-pdf-btn"]').should("exist").click();
-    // cy.get("@print").should("be.called");
+    cy.get("@print").should("be.called");
+  });
+  it("renders the 'passed start date' warning message for a 'stale' saved calc", () => {
+    const pastStartDateCalc = {
+      ...mockCctList[0],
+      changes: [
+        {
+          ...mockCctList[0].changes[0],
+          startDate: dayjs().subtract(1, "day").format("YYYY-MM-DD")
+        }
+      ]
+    };
+    mountCctViewWithMockData(pastStartDateCalc, false);
+    cy.get(".field-warning-msg").contains(
+      "Change start date is now in the past"
+    );
   });
   it("renders an existing cct calculation that has NOT just been edited", () => {
     mountCctViewWithMockData(mockCctList[0], false);
