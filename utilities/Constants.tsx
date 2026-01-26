@@ -792,3 +792,6 @@ export const ltft16WeeksNotice = (
 
 export const ltft16WeeksWarningText =
   "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis.";
+
+export const ltft16WeeksWarningTextSubmitted =
+  "This application was submitted within 16 weeks of the intended Start date. Late applications are only considered on an exceptional basis.";

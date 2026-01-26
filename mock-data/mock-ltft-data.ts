@@ -520,3 +520,104 @@ export const mockLtftRejectedFormObj: LtftObjNew = {
     history: []
   }
 };
+
+export const mockLtftWithNoSubmissionHistory: LtftObjNew = {
+  ...mockLtftNewFormObj,
+  status: {
+    current: {
+      state: "DRAFT",
+      detail: { reason: null, message: null },
+      modifiedBy: { name: "", email: "", role: "TRAINEE" },
+      timestamp: "2026-01-13T10:00:00.000Z",
+      revision: 0
+    },
+    history: []
+  }
+};
+
+export const mockLtftWithSingleSubmissionHistory: LtftObjNew = {
+  ...mockLtftNewFormObj,
+  status: {
+    current: {
+      state: "APPROVED",
+      detail: { reason: null, message: null },
+      modifiedBy: { name: "", email: "", role: "ADMIN" },
+      timestamp: "2026-01-15T12:00:00.000Z",
+      revision: 1
+    },
+    history: [
+      {
+        state: "SUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "TRAINEE" },
+        timestamp: "2026-01-14T10:00:00.000Z",
+        revision: 0
+      }
+    ]
+  }
+};
+
+export const mockLtftWithMultipleSubmissionHistory: LtftObjNew = {
+  ...mockLtftNewFormObj,
+  status: {
+    current: {
+      state: "APPROVED",
+      detail: { reason: null, message: null },
+      modifiedBy: { name: "", email: "", role: "ADMIN" },
+      timestamp: "2026-01-20T12:00:00.000Z",
+      revision: 3
+    },
+    history: [
+      {
+        state: "SUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "TRAINEE" },
+        timestamp: "2026-01-18T10:00:00.000Z",
+        revision: 2
+      },
+      {
+        state: "UNSUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "ADMIN" },
+        timestamp: "2026-01-16T12:00:00.000Z",
+        revision: 1
+      },
+      {
+        state: "SUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "TRAINEE" },
+        timestamp: "2026-01-14T10:00:00.000Z",
+        revision: 0
+      }
+    ]
+  }
+};
+
+export const mockLtftWithCurrentSubmission: LtftObjNew = {
+  ...mockLtftNewFormObj,
+  status: {
+    current: {
+      state: "SUBMITTED",
+      detail: { reason: null, message: null },
+      modifiedBy: { name: "", email: "", role: "TRAINEE" },
+      timestamp: "2026-01-25T10:00:00.000Z",
+      revision: 2
+    },
+    history: [
+      {
+        state: "UNSUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "ADMIN" },
+        timestamp: "2026-01-20T12:00:00.000Z",
+        revision: 1
+      },
+      {
+        state: "SUBMITTED",
+        detail: { reason: null, message: null },
+        modifiedBy: { name: "", email: "", role: "TRAINEE" },
+        timestamp: "2026-01-15T10:00:00.000Z",
+        revision: 0
+      }
+    ]
+  }
+};

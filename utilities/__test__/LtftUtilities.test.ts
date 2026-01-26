@@ -1,5 +1,6 @@
 import { mockPersonalDetails } from "../../mock-data/trainee-profile";
 import {
+  findLatestSubmissionDate,
   mapLtftDtoToObj,
   mapLtftObjToDto,
   populateLtftDraftNew
@@ -9,7 +10,11 @@ import {
   mockLtftDraftUpdatedPmFormDtoFirstSavePayload,
   mockLtftDraftUpdatedPmFormObjNoSave,
   mockLtftFormObjAfterFirstSave,
-  mockLtftNewFormObj
+  mockLtftNewFormObj,
+  mockLtftWithCurrentSubmission,
+  mockLtftWithMultipleSubmissionHistory,
+  mockLtftWithNoSubmissionHistory,
+  mockLtftWithSingleSubmissionHistory
 } from "../../mock-data/mock-ltft-data";
 
 describe("populateLtftDraftNew", () => {
@@ -42,5 +47,31 @@ describe("mapDtoToLtftObj", () => {
   it("should map DTO to LtftObj correctly", () => {
     const ltftObj = mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto);
     expect(ltftObj).toEqual(mockLtftFormObjAfterFirstSave);
+  });
+});
+
+describe("findLatestSubmissionDate", () => {
+  it("should return null if there is no submission history", () => {
+    expect(
+      findLatestSubmissionDate(mockLtftWithNoSubmissionHistory)
+    ).toBeNull();
+  });
+
+  it("should return the correct date when there is a single submission in history", () => {
+    expect(
+      findLatestSubmissionDate(mockLtftWithSingleSubmissionHistory)
+    ).toEqual("2026-01-14T10:00:00.000Z");
+  });
+
+  it("should return the latest date when there are multiple submissions in history", () => {
+    expect(
+      findLatestSubmissionDate(mockLtftWithMultipleSubmissionHistory)
+    ).toEqual("2026-01-18T10:00:00.000Z");
+  });
+
+  it("should return the current timestamp if the current status is SUBMITTED and is latest", () => {
+    expect(findLatestSubmissionDate(mockLtftWithCurrentSubmission)).toEqual(
+      "2026-01-25T10:00:00.000Z"
+    );
   });
 });

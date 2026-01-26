@@ -305,14 +305,13 @@ export function transformReferenceData(
   return transformedData;
 }
 
-export function isDateWithin16Weeks(
+export function isDateWithin16WeeksOfFirstDate(
   dateVal: Date | string,
-  includeTodayCheck?: boolean
+  firstDate: Date | string = new Date()
 ): boolean {
-  const today = dayjs().startOf("day");
+  const subDate = dayjs(firstDate).startOf("day");
   const inputDate = dayjs(dateVal).startOf("day");
-  if (includeTodayCheck && inputDate.isBefore(today)) return false;
-  return inputDate.isBefore(today.add(16, "week"));
+  return inputDate.isBefore(subDate.add(16, "week"));
 }
 
 export function getFieldWarningMsgs(
@@ -328,7 +327,7 @@ export function getFieldWarningMsgs(
     },
     postcodeTest: (val: string) =>
       !/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(val),
-    ltft16WeeksTest: (val: string) => isDateWithin16Weeks(val)
+    ltft16WeeksTest: (val: string) => isDateWithin16WeeksOfFirstDate(val)
   };
 
   const numberTypeChecks: Partial<

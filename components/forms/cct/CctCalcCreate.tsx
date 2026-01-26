@@ -45,7 +45,7 @@ import { isPastIt } from "../../../utilities/DateUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import InfoTooltip from "../../common/InfoTooltip";
 import FormBackLink from "../../common/FormBackLink";
-import { isDateWithin16Weeks } from "../../../utilities/FormBuilderUtilities";
+import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 
 type CctCalculationErrors = {
   programmeMembership?: {
@@ -354,7 +354,7 @@ export function CctCalcCreate() {
                                             !(
                                               errors.changes as CctCalculationErrors["changes"]
                                             )?.[index]?.startDate &&
-                                            isDateWithin16Weeks(
+                                            isDateWithin16WeeksOfFirstDate(
                                               values.changes[index].startDate
                                             ) && (
                                               <span data-cy="start-short-notice-warn">

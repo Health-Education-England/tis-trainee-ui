@@ -220,7 +220,7 @@ describe("LTFT Form View - not editable (SUBMITTED)", () => {
     cy.get('[data-cy="pageHeader-Your Programme"]').should("exist");
     cy.get('[data-cy="edit-pmId"]').should("not.exist");
     cy.get('[data-cy="completionDateChangeStartDateKey"]').should("exist");
-    cy.get(".field-warning-msg").should("exist");
+    cy.get(".field-warning-msg").should("not.exist");
     cy.get('[data-cy="informationIsCorrect"]')
       .should("be.checked")
       .and("have.attr", "readonly");
@@ -229,6 +229,69 @@ describe("LTFT Form View - not editable (SUBMITTED)", () => {
       .and("have.attr", "readonly");
     cy.get('[data-cy="BtnSaveDraft"]').should("not.exist");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
+  });
+});
+
+describe("LTFT Form View - start date warnings", () => {
+  const shortNoticeDate = dayjs().add(2, "week").toDate();
+  const longNoticeDate = dayjs().add(17, "week").toDate();
+
+  it("should show warning when start date is within 16 weeks and NO previous submission", () => {
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      startDate: shortNoticeDate
+    });
+
+    cy.get('[data-cy="completionDateChangeStartDateValue"]').should("exist");
+    cy.get(".field-warning-msg")
+      .should("exist")
+      .and("contain.text", "classed as a late application");
+  });
+
+  it("should NOT show warning when start date is more than 16 weeks away and NO previous submission", () => {
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      startDate: longNoticeDate
+    });
+
+    cy.get('[data-cy="completionDateChangeStartDateValue"]').should("exist");
+    cy.get(".field-warning-msg").should("not.exist");
+  });
+
+  it("should show warning when start date is within 16 weeks of LATEST submission", () => {
+    const submissionDate = dayjs().subtract(1, "week").toISOString();
+    const shortNoticeStartDate = dayjs(submissionDate).add(15, "week").toDate();
+
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      startDate: shortNoticeStartDate,
+      status: {
+        current: {
+          ...mockLtftUnsubmittedFormObj.status.current,
+          state: "DRAFT"
+        },
+        history: [
+          {
+            state: "SUBMITTED",
+            detail: { reason: null, message: null },
+            modifiedBy: { name: "Trainee", email: "", role: "TRAINEE" },
+            timestamp: submissionDate,
+            revision: 0
+          }
+        ]
+      }
+    });
+
+    cy.get('[data-cy="completionDateChangeStartDateValue"]').should("exist");
+    cy.get(".field-warning-msg")
+      .should("exist")
+      .and("contain.text", "This application was submitted within 16 weeks");
   });
 });
 
