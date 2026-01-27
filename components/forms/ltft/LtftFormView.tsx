@@ -21,7 +21,7 @@ import {
 import Declarations from "../Declarations";
 import { StartOverButton } from "../StartOverButton";
 import {
-  isDateWithin16Weeks,
+  isDateWithin16WeeksOfFirstDate,
   saveDraftForm
 } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
@@ -40,7 +40,11 @@ import dayjs from "dayjs";
 import FieldWarningMsg from "../FieldWarningMsg";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import store from "../../../redux/store/store";
-import { ltft16WeeksWarningText } from "../../../utilities/Constants";
+import {
+  ltft16WeeksWarningText,
+  ltft16WeeksWarningTextSubmitted
+} from "../../../utilities/Constants";
+import { findLatestSubmissionDate } from "../../../utilities/ltftUtilities";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -51,6 +55,8 @@ export const LtftFormView = () => {
   const { isSubmitting, startSubmitting, stopSubmitting } = useSubmitting();
   const formData = useSelectFormData(ltftJson.name as FormName) as LtftObjNew;
   const canEditStatus = useAppSelector(state => state.ltft.canEdit);
+
+  const latestSubmittedLtft = findLatestSubmissionDate(formData);
 
   const formJson = ltftJson as FormType;
   const [canSubmit, setCanSubmit] = useState(false);
@@ -185,7 +191,18 @@ export const LtftFormView = () => {
                 <SummaryList.Value data-cy="completionDateChangeStartDateValue">
                   {dayjs(formData.startDate).format("DD/MM/YYYY")}
                   {formData.startDate &&
-                    isDateWithin16Weeks(formData.startDate) && (
+                    latestSubmittedLtft &&
+                    isDateWithin16WeeksOfFirstDate(
+                      formData.startDate,
+                      latestSubmittedLtft
+                    ) && (
+                      <FieldWarningMsg
+                        warningMsgs={[ltft16WeeksWarningTextSubmitted]}
+                      />
+                    )}
+                  {formData.startDate &&
+                    !latestSubmittedLtft &&
+                    isDateWithin16WeeksOfFirstDate(formData.startDate) && (
                       <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
                     )}
                 </SummaryList.Value>

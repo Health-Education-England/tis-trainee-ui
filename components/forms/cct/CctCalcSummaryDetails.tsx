@@ -10,7 +10,7 @@ import { CctCalculation } from "../../../redux/slices/cctSlice";
 import style from "../../Common.module.scss";
 import dayjs from "dayjs";
 import { CalcDetails } from "./CctCalcCreate";
-import { isDateWithin16Weeks } from "../../../utilities/FormBuilderUtilities";
+import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../FieldWarningMsg";
 import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
 import { fteOptions } from "../../../utilities/Constants";
@@ -94,9 +94,12 @@ export function CctCalcSummaryDetails({
                   <SummaryList.Key>Change start date</SummaryList.Key>
                   <SummaryList.Value>
                     {dayjs(changes[0].startDate).format("DD/MM/YYYY")}
-                    {isDateWithin16Weeks(changes[0].startDate, true) && (
-                      <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
-                    )}
+                    {dayjs(changes[0].startDate).isSameOrAfter(
+                      dayjs().startOf("day")
+                    ) &&
+                      isDateWithin16WeeksOfFirstDate(changes[0].startDate) && (
+                        <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
+                      )}
                     {dayjs(changes[0].startDate).isBefore(
                       dayjs().startOf("day")
                     ) && (

@@ -311,3 +311,17 @@ export function makeValidProgrammeOptions(
 
   return programmeOptions;
 }
+
+export function findLatestSubmissionDate(formData: LtftObjNew): string | null {
+  const { current, history = [] } = formData.status ?? {};
+
+  return [current, ...history].reduce((latest: string | null, item) => {
+    if (item?.state === "SUBMITTED" && item?.timestamp) {
+      if (!latest) {
+        return item.timestamp;
+      }
+      return dayjs(item.timestamp).isAfter(latest) ? item.timestamp : latest;
+    }
+    return latest;
+  }, null);
+}

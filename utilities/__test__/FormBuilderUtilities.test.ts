@@ -13,6 +13,7 @@ import {
   checkPush,
   getDraftFormId,
   handleSaveRedirect,
+  isDateWithin16WeeksOfFirstDate,
   setDraftFormRProps,
   setFormRDataForSubmit,
   transformReferenceData
@@ -28,6 +29,7 @@ import { FormRPartB } from "../../models/FormRPartB";
 import history from "../../components/navigation/history";
 import { updatedFormsRefreshNeeded } from "../../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../../redux/slices/ltftSummaryListSlice";
+import dayjs from "dayjs";
 
 describe("transformReferenceData", () => {
   beforeEach(() => {
@@ -237,4 +239,54 @@ describe("checkPush", () => {
       expect(history.push).toHaveBeenCalledWith(expectedPath);
     }
   );
+});
+
+describe("isDateWithin16WeeksOfFirstDate", () => {
+  const referenceDate = new Date("2023-10-01");
+
+  it("should return true when the date is the same as the start date", () => {
+    expect(isDateWithin16WeeksOfFirstDate(referenceDate, referenceDate)).toBe(
+      true
+    );
+  });
+
+  it("should return true when the date is 15 weeks after the start date", () => {
+    const dateVal = dayjs(referenceDate).add(15, "week").toDate();
+    expect(isDateWithin16WeeksOfFirstDate(dateVal, referenceDate)).toBe(true);
+  });
+
+  it("should return true when the date is just before 16 weeks after the start date", () => {
+    const dateVal = dayjs(referenceDate)
+      .add(16, "week")
+      .subtract(1, "day")
+      .toDate();
+    expect(isDateWithin16WeeksOfFirstDate(dateVal, referenceDate)).toBe(true);
+  });
+
+  it("should return false when the date is exactly 16 weeks after the start date", () => {
+    const dateVal = dayjs(referenceDate).add(16, "week").toDate();
+    expect(isDateWithin16WeeksOfFirstDate(dateVal, referenceDate)).toBe(false);
+  });
+
+  it("should return false when the date is more than 16 weeks after the start date", () => {
+    const dateVal = dayjs(referenceDate).add(16, "week").add(1, "day").toDate();
+    expect(isDateWithin16WeeksOfFirstDate(dateVal, referenceDate)).toBe(false);
+  });
+
+  it("should default the start date to today if not provided", () => {
+    const today = new Date();
+    expect(isDateWithin16WeeksOfFirstDate(today)).toBe(true);
+
+    const futureDate = dayjs().add(17, "week").toDate();
+    expect(isDateWithin16WeeksOfFirstDate(futureDate)).toBe(false);
+  });
+
+  it("should accept string date inputs", () => {
+    const refStr = "2023-01-01";
+    const validDateStr = "2023-02-01"; // within 16 weeks
+    const invalidDateStr = "2023-06-01"; // after 16 weeks (approx 5 months)
+
+    expect(isDateWithin16WeeksOfFirstDate(validDateStr, refStr)).toBe(true);
+    expect(isDateWithin16WeeksOfFirstDate(invalidDateStr, refStr)).toBe(false);
+  });
 });
