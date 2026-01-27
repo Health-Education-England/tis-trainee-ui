@@ -51,7 +51,7 @@
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "jest-sonar-reporter": "^2.0.0",
-    "lucide-react": "^0.555.0",
+    "lucide-react": "^0.562.0",
     "material-ui-confirm": "^3.0.9",
     "next": "^13.0.7",
     "nhsuk-frontend": "^6.1.2",
