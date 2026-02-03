@@ -137,7 +137,6 @@ export const LtftFormView = () => {
             disabled={!formData.id}
             onClick={() => {
               downloadLtftPdf(formData.id ?? "");
-              globalThis.print();
             }}
           >
             Save a copy as a PDF
