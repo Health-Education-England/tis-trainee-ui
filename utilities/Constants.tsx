@@ -795,3 +795,20 @@ export const ltft16WeeksWarningText =
 
 export const ltft16WeeksWarningTextSubmitted =
   "This application was submitted within 16 weeks of the intended Start date. Late applications are only considered on an exceptional basis.";
+
+export const tier2SkilledWorkerVisaInfo = (
+  <>
+    Please be aware that there are minimum requirements and conditions attached
+    to your visa, and that it is your responsibility to ensure your new work
+    schedule compliant. Please see{" "}
+    <a
+      href="https://medical.hee.nhs.uk/medical-training-recruitment/medical-specialty-training/overseas-applicants/overseas-sponsorship-guidance/less-than-full-time-ltft-minimum-salary-requirements"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Less than full-time (LTFT) minimum salary requirements | Workforce,
+      training and education | NHS England
+    </a>{" "}
+    for more information.
+  </>
+);

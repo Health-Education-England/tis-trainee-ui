@@ -172,7 +172,7 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
       "Important"
     ],
     [
-      ".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)",
+      ".nhsuk-warning-callout > :nth-child(2)",
       "This form has been pre-populated using the information available against your records"
     ],
     [
@@ -410,7 +410,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
     "Personal Details"
   );
   cy.checkElement("WarningCallout-formBImportantNotice-label");
-  cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").should(
+  cy.get(".nhsuk-warning-callout > :nth-child(2)").should(
     "include.text",
     "This form has been pre-populated using the information available against your records"
   );
@@ -976,7 +976,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .contains("CCT Calculator");
   cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
     .should("exist")
-    .contains("Are you are tier 2 skilled visa worker?");
+    .contains("Are you a Tier 2 Visa or Skilled Worker Visa holder?");
 
   cy.get(
     '[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text'

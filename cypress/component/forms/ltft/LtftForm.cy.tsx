@@ -140,11 +140,11 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").should(
+    cy.get(".nhsuk-warning-callout > :nth-child(3)").should(
       "include.text",
       ltftDiscussionText2.slice(0, 100)
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(4)").contains(
       "For information on Professional support contact"
     );
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
@@ -173,9 +173,7 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
-      ltftReasonsText1
-    );
+    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
     cy.navNext();
     cy.get("#reasonsSelected-error").contains(ltftReasonsError);
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
@@ -204,10 +202,11 @@ describe("LtftForm - draft", () => {
     cy.navNext();
 
     // part 9
-    cy.get("h3").contains("Part 9 of 10 - Tier 2 / Skilled Worker status");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > p").contains(
-      ltftTier2VisaImportantText1
+    cy.get("h3").contains(
+      "Part 9 of 10 - Tier 2 Visa or Skilled Worker Visa status"
     );
+    cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
+    cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
     cy.navNext();
     cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();

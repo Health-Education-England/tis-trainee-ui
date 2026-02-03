@@ -226,16 +226,16 @@
       ]
     },
     {
-      "pageName": "Tier 2 / Skilled Worker status",
+      "pageName": "Tier 2 Visa or Skilled Worker Visa status",
       "importantTxtName": "ltftTier2VisaImportantText",
       "expanderLinkName": "",
       "sections": [
         {
-          "sectionHeader": "Tier 2 / Skilled Worker status",
+          "sectionHeader": "Tier 2 Visa or Skilled Worker Visa status",
           "fields": [
             {
               "name": "skilledWorkerVisaHolder",
-              "label": "Are you a Tier 2 / Skilled Worker Visa holder?",
+              "label": "Are you a Tier 2 Visa or Skilled Worker Visa holder?",
               "type": "radio",
               "optionsKey": "yesNo",
               "visible": true

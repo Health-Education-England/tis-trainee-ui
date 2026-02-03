@@ -1,5 +1,6 @@
 import { ActionLink, Details } from "nhsuk-react-components";
 import { Link } from "react-router-dom";
+import { tier2SkilledWorkerVisaInfo } from "../../utilities/Constants";
 
 export type ExpanderNameType =
   | "dataSource"
@@ -7,6 +8,7 @@ export type ExpanderNameType =
   | "postTypes"
   | "cctInfo"
   | "skilledVisaWorker"
+  | "skilledVisaWorkerMoreInfo"
   | "whatIsLtft"
   | "preApproverInfo"
   | "ltft16WeeksNotice";
@@ -164,23 +166,13 @@ export const ExpanderMsg = ({
       )
     },
     skilledVisaWorker: {
-      summary: "Are you are tier 2 skilled visa worker?",
-      text: (
-        <>
-          Please be aware that there are minimum requirements and conditions
-          attached to your visa, and that it is your responsibility to ensure
-          your new work schedule is in compliance. Please see{" "}
-          <a
-            href="https://medical.hee.nhs.uk/medical-training-recruitment/medical-specialty-training/overseas-applicants/overseas-sponsorship-guidance/less-than-full-time-ltft-minimum-salary-requirements"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Less than full-time (LTFT) minimum salary requirements | Workforce,
-            training and education | NHS England
-          </a>{" "}
-          for more information.
-        </>
-      )
+      summary: "Are you a Tier 2 Visa or Skilled Worker Visa holder?",
+      text: tier2SkilledWorkerVisaInfo
+    },
+    skilledVisaWorkerMoreInfo: {
+      summary:
+        "More information for Tier 2 Visa or Skilled Worker Visa holders",
+      text: tier2SkilledWorkerVisaInfo
     },
     whatIsLtft: {
       summary:
