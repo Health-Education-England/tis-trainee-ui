@@ -58,7 +58,7 @@ const displayText: DisplayText = {
         GMC informed as soon as possible of any changes to your contact details.
         Your Local Deanery team remains your Designated Body throughout your
         time in training. You can update your Designated Body on your GMC Online
-        account under 'My Revalidation'.
+        account under &apos;My Revalidation&apos;.
       </p>
     </>
   ),
@@ -77,7 +77,7 @@ const displayText: DisplayText = {
         GMC informed as soon as possible of any changes to your contact details.
         Your Local Deanery team remains your Designated Body throughout your
         time in training. You can update your Designated Body on your GMC Online
-        account under 'My Revalidation'.
+        account under &apos;My Revalidation&apos;.
       </p>
       <p>
         Failure to appropriately complete a Form R Part B when requested may
@@ -133,8 +133,8 @@ const displayText: DisplayText = {
         not necessary to include any future placements beyond that.
       </p>
       <p>
-        Please add more Work placements if required using the 'Add a Work panel'
-        button below.
+        Please add more Work placements if required using the &apos;Add a Work
+        panel&apos; button below.
       </p>
       <p>
         NOTE - Work placements will be sorted in a descending order by End Date
