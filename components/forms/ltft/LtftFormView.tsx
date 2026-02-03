@@ -184,7 +184,7 @@ export const LtftFormView = () => {
               </SummaryList.Row>
               <SummaryList.Row>
                 <SummaryList.Key data-cy="completionDateChangeStartDateKey">
-                  Start date
+                  LTFT Start date
                 </SummaryList.Key>
                 <SummaryList.Value data-cy="completionDateChangeStartDateValue">
                   {dayjs(formData.startDate).format("DD/MM/YYYY")}

@@ -148,7 +148,11 @@ describe("LtftForm - draft", () => {
       "For information on Professional support contact"
     );
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
+    cy.navNext();
+    cy.get("#tpdName-error").contains("Pre-approver name is required");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
+    cy.get("#tpdName-error").should("not.exist");
+
     cy.get("#tpdEmail-error")
       .should("exist")
       .contains("Email address is required");

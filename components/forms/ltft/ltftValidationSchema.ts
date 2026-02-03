@@ -101,7 +101,7 @@ export const ltftValidationSchema = yup.object({
       return value !== Number(this.parent.wteBeforeChange);
     }
   ),
-  tpdName: StringValidationSchema("TPD Name"),
+  tpdName: StringValidationSchema("Pre-approver name"),
   tpdEmail: emailValidation,
   otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),
   reasonsSelected: yup
