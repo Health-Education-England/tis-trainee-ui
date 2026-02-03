@@ -147,8 +147,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       }
       if (fieldWarningsList.length > 0) {
         const val = formData[field.name];
-        if (val) {
-          const msgs = getFieldWarningMsgs(val, fieldWarningsList);
+        const hasConditionalWarnings = fieldWarningsList.some(
+          w => w.conditionalField
+        );
+        if (val || hasConditionalWarnings) {
+          const msgs = getFieldWarningMsgs(val, fieldWarningsList, formData);
           if (msgs.length > 0) {
             newWarningMsgs[field.name] = msgs;
           }

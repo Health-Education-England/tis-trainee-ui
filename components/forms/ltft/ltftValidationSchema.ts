@@ -83,10 +83,11 @@ const personalDetailsDtoValidationSchema = yup.object().shape({
 const wteValidation = (fieldName: string) =>
   yup
     .number()
-    .typeError(`${fieldName} must be a positive number`)
-    .min(1, `${fieldName} must be a positive number`)
+    .transform((value, originalValue) => (originalValue === "" ? null : value))
+    .required(`${fieldName} is required`)
+    .min(1, `${fieldName} cannot be zero`)
     .max(100, `${fieldName} cannot exceed 100`)
-    .required(`${fieldName} is required`);
+    .nullable();
 
 export const ltftValidationSchema = yup.object({
   pmId: StringValidationSchema("Programme"),

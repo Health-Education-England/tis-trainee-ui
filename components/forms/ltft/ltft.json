@@ -212,7 +212,14 @@
               "hint": "This helps us understand your circumstances and proposed arrangements.",
               "placeholder": "Example:\n'I would like to apply for 60% LTFT from March 2026 due to ongoing caring responsibilities. I plan to work three days per week and would appreciate flexibility around clinic days.'",
               "type": "textArea",
-              "visible": true
+              "visible": true,
+              "warnings": [
+                {
+                  "matcher": "ltft16WeeksTest",
+                  "msgText": "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours.",
+                  "conditionalField": "startDate"
+                }
+              ]
             }
           ]
         }

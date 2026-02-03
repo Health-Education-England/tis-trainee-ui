@@ -93,9 +93,13 @@ describe("LtftForm - draft", () => {
     );
     cy.navNext();
     cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours must be a positive number"
+      "The proposed percentage of full time hours is required"
     );
-    cy.get('[data-cy="wte-input"]').type("1");
+    cy.clearAndType('[data-cy="wte-input"]', "0");
+    cy.get("#wte-error").contains(
+      "The proposed percentage of full time hours cannot be zero"
+    );
+    cy.clearAndType('[data-cy="wte-input"]', "1");
     cy.get(".field-warning-container").should("exist");
     cy.get(".field-warning-msg").contains(
       "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
@@ -104,7 +108,6 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="navPrevious"]').click();
     cy.navNext();
     cy.get(".field-warning-msg").should("exist");
-
     cy.get('[data-cy="wte-input"]').type("0000");
     cy.get('[data-cy="wte-input"]').should("have.value", "100");
     cy.get(".field-warning-container").should("not.exist");
@@ -194,6 +197,9 @@ describe("LtftForm - draft", () => {
     );
     cy.get('[data-cy="supportingInformation-text-area-input"]').type(
       "This is my supporting information"
+    );
+    cy.get(".field-warning-msg").contains(
+      "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours."
     );
     cy.navNext();
 

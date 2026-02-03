@@ -104,6 +104,7 @@ export type MatcherName =
 export type Warning = {
   matcher: MatcherName;
   msgText: string;
+  conditionalField?: string;
 };
 
 export type ReturnedWidthData = {

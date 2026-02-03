@@ -316,7 +316,8 @@ export function isDateWithin16WeeksOfFirstDate(
 
 export function getFieldWarningMsgs(
   inputValue: string | number,
-  warnings: Warning[]
+  warnings: Warning[],
+  formData?: FormData
 ): string[] {
   const stringTypeChecks: Partial<
     Record<MatcherName, (val: string) => boolean>
@@ -340,15 +341,28 @@ export function getFieldWarningMsgs(
   };
 
   return warnings.reduce((messages: string[], w) => {
+    let valueToCheck = inputValue;
+    const hasConditionalField = !!(w.conditionalField && formData);
+
+    if (hasConditionalField) {
+      valueToCheck = formData[w.conditionalField as string];
+    } else if (!inputValue && inputValue !== 0) {
+      return messages;
+    }
+
     const stringCheck = stringTypeChecks[w.matcher];
     const numberCheck = numberTypeChecks[w.matcher];
 
     if (stringCheck) {
-      if (stringCheck(String(inputValue))) {
+      const valStr =
+        valueToCheck === undefined || valueToCheck === null
+          ? ""
+          : String(valueToCheck);
+      if (stringCheck(valStr)) {
         messages.push(w.msgText);
       }
     } else if (numberCheck) {
-      const numVal = Number(inputValue);
+      const numVal = Number(valueToCheck);
       if (!Number.isNaN(numVal) && numberCheck(numVal)) {
         messages.push(w.msgText);
       }
