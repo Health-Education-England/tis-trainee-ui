@@ -976,7 +976,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .contains("CCT Calculator");
   cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
     .should("exist")
-    .contains("Are you a Tier 2 Visa or Skilled Worker Visa holder?");
+    .contains("Are you a Skilled Worker visa holder?");
 
   cy.get(
     '[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text'

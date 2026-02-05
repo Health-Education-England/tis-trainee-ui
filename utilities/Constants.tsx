@@ -800,7 +800,7 @@ export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached
     to your visa, and that it is your responsibility to ensure your new work
-    schedule compliant. Please see{" "}
+    schedule is compliant. Please see{" "}
     <a
       href="https://medical.hee.nhs.uk/medical-training-recruitment/medical-specialty-training/overseas-applicants/overseas-sponsorship-guidance/less-than-full-time-ltft-minimum-salary-requirements"
       target="_blank"

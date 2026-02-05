@@ -206,9 +206,7 @@ describe("LtftForm - draft", () => {
     cy.navNext();
 
     // part 9
-    cy.get("h3").contains(
-      "Part 9 of 10 - Tier 2 Visa or Skilled Worker Visa status"
-    );
+    cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
     cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
     cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
     cy.navNext();

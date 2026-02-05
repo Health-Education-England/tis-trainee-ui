@@ -7,7 +7,7 @@ import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
 
 export const LtftVisaError =
-  "Please select Yes or No for Tier 2 / Skilled Worker Visa status";
+  "Please select Yes or No for Skilled Worker visa status";
 export const ltftReasonsError = "At least one reason is required";
 
 const emailValidation = yup

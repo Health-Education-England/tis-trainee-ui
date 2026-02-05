@@ -166,12 +166,11 @@ export const ExpanderMsg = ({
       )
     },
     skilledVisaWorker: {
-      summary: "Are you a Tier 2 Visa or Skilled Worker Visa holder?",
+      summary: "Are you a Skilled Worker visa holder?",
       text: tier2SkilledWorkerVisaInfo
     },
     skilledVisaWorkerMoreInfo: {
-      summary:
-        "More information for Tier 2 Visa or Skilled Worker Visa holders",
+      summary: "More information for Skilled Worker visa holders",
       text: tier2SkilledWorkerVisaInfo
     },
     whatIsLtft: {

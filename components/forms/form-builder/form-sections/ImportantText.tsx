@@ -30,7 +30,7 @@ export const ltftStartDateImportantText1 =
   "Less than full-time (LTFT) training requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
 
 export const ltftTier2VisaImportantText1 =
-  "If you are on a Tier 2 Visa or Skilled Worker Visa, please make sure the proposed change to your full time working hours percentage (Part 3 of this application) complies with the requirements of your visa.";
+  "If you are a Skilled Worker (formerly a Tier 2 General work) visa holder, please make sure the proposed change to your full time working hours percentage (Part 3 of this application) complies with the requirements of your visa.";
 
 export const personalDetailsCheckText1 =
   "Please check that the personal details we hold for you are correct and let us know of any changes.";
