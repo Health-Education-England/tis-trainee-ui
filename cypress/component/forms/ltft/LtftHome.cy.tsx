@@ -74,6 +74,11 @@ describe("LtftHome", () => {
         store.dispatch(updatedLtftSummaryList(mockLtftsList1));
         mountLtftHome([{ value: "pm-1", label: "Programme 1" }]);
 
+        // check for expander msgs
+        cy.get('[data-cy="whatIsLtftSummary"]').should("exist");
+        cy.get('[data-cy="ltft16WeeksNoticeSummary"]').should("exist");
+        cy.get('[data-cy="skilledVisaWorkerSummary"]').should("exist");
+
         cy.get('[data-cy="make-new-ltft-btn"]').should("exist");
 
         cy.get('[data-cy="ltft-summary-table-CURRENT"]').should("exist");

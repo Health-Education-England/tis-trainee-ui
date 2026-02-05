@@ -143,9 +143,7 @@ describe("LTFT Form View - editable (DRAFT)", () => {
     cy.get('[data-cy="edit-reasonsSelected"]').should("exist");
     cy.get('[data-cy="pageHeader-Supporting information"]').should("exist");
     cy.get('[data-cy="edit-supportingInformation"]').should("exist");
-    cy.get('[data-cy="pageHeader-Tier 2 / Skilled Worker status"]').should(
-      "exist"
-    );
+    cy.get('[data-cy="pageHeader-Skilled Worker visa status"]').should("exist");
     cy.get('[data-cy="edit-skilledWorkerVisaHolder"]').should("exist");
     cy.get('[data-cy="pageHeader-Personal Details"]').should("exist");
     cy.get('[data-cy="edit-forenames"]').should("exist");

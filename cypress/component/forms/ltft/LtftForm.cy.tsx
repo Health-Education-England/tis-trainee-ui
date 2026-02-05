@@ -93,9 +93,13 @@ describe("LtftForm - draft", () => {
     );
     cy.navNext();
     cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours must be a positive number"
+      "The proposed percentage of full time hours is required"
     );
-    cy.get('[data-cy="wte-input"]').type("1");
+    cy.clearAndType('[data-cy="wte-input"]', "0");
+    cy.get("#wte-error").contains(
+      "The proposed percentage of full time hours cannot be zero"
+    );
+    cy.clearAndType('[data-cy="wte-input"]', "1");
     cy.get(".field-warning-container").should("exist");
     cy.get(".field-warning-msg").contains(
       "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
@@ -104,7 +108,6 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="navPrevious"]').click();
     cy.navNext();
     cy.get(".field-warning-msg").should("exist");
-
     cy.get('[data-cy="wte-input"]').type("0000");
     cy.get('[data-cy="wte-input"]').should("have.value", "100");
     cy.get(".field-warning-container").should("not.exist");
@@ -137,15 +140,19 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").should(
+    cy.get(".nhsuk-warning-callout > :nth-child(3)").should(
       "include.text",
       ltftDiscussionText2.slice(0, 100)
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(3)").contains(
+    cy.get(".nhsuk-warning-callout > :nth-child(4)").contains(
       "For information on Professional support contact"
     );
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
+    cy.navNext();
+    cy.get("#tpdName-error").contains("Pre-approver name is required");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
+    cy.get("#tpdName-error").should("not.exist");
+
     cy.get("#tpdEmail-error")
       .should("exist")
       .contains("Email address is required");
@@ -170,9 +177,7 @@ describe("LtftForm - draft", () => {
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
-      ltftReasonsText1
-    );
+    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
     cy.navNext();
     cy.get("#reasonsSelected-error").contains(ltftReasonsError);
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
@@ -195,13 +200,15 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="supportingInformation-text-area-input"]').type(
       "This is my supporting information"
     );
+    cy.get(".field-warning-msg").contains(
+      "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours."
+    );
     cy.navNext();
 
     // part 9
-    cy.get("h3").contains("Part 9 of 10 - Tier 2 / Skilled Worker status");
-    cy.get(".nhsuk-warning-callout > :nth-child(2) > p").contains(
-      ltftTier2VisaImportantText1
-    );
+    cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
+    cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
+    cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
     cy.navNext();
     cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();

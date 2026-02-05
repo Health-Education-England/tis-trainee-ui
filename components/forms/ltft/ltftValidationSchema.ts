@@ -7,7 +7,7 @@ import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
 
 export const LtftVisaError =
-  "Please select Yes or No for Tier 2 / Skilled Worker Visa status";
+  "Please select Yes or No for Skilled Worker visa status";
 export const ltftReasonsError = "At least one reason is required";
 
 const emailValidation = yup
@@ -83,10 +83,11 @@ const personalDetailsDtoValidationSchema = yup.object().shape({
 const wteValidation = (fieldName: string) =>
   yup
     .number()
-    .typeError(`${fieldName} must be a positive number`)
-    .min(1, `${fieldName} must be a positive number`)
-    .max(100, `${fieldName} cannot exceed 100`)
-    .required(`${fieldName} is required`);
+    .nullable()
+    .transform((value, originalValue) => (originalValue === "" ? null : value))
+    .required(`${fieldName} is required`)
+    .min(1, `${fieldName} cannot be zero`)
+    .max(100, `${fieldName} cannot exceed 100`);
 
 export const ltftValidationSchema = yup.object({
   pmId: StringValidationSchema("Programme"),
@@ -100,7 +101,7 @@ export const ltftValidationSchema = yup.object({
       return value !== Number(this.parent.wteBeforeChange);
     }
   ),
-  tpdName: StringValidationSchema("TPD Name"),
+  tpdName: StringValidationSchema("Pre-approver name"),
   tpdEmail: emailValidation,
   otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),
   reasonsSelected: yup

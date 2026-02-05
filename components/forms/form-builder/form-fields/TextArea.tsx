@@ -1,6 +1,7 @@
 import React from "react";
 import { Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
+import FieldWarningMsg from "../../FieldWarningMsg";
 import { useFormContext } from "../FormContext";
 import { FieldWrapper } from "./FieldWrapper";
 
@@ -29,7 +30,8 @@ export const TextArea: React.FC<TextAreaProps> = ({
   rows,
   dtoName
 }) => {
-  const { handleBlur, handleChange } = useFormContext();
+  const { handleBlur, handleChange, fieldWarningMsgs } = useFormContext();
+  const warningMsgs = fieldWarningMsgs[name] ?? [];
 
   return (
     <FieldWrapper
@@ -41,29 +43,34 @@ export const TextArea: React.FC<TextAreaProps> = ({
       arrayName={arrayName}
     >
       {({ inputId, errorId }) => (
-        <Textarea
-          id={inputId}
-          data-cy={`${name}-text-area-input`}
-          onKeyDown={handleKeyDown}
-          name={name}
-          value={value ?? ""}
-          onChange={event =>
-            handleChange(
-              event as any,
-              undefined,
-              undefined,
-              arrayIndex,
-              arrayName,
-              dtoName
-            )
-          }
-          onBlur={handleBlur as any}
-          placeholder={placeholder}
-          rows={rows ?? 10}
-          spellCheck
-          aria-describedby={fieldError ? errorId : undefined}
-          className={fieldError ? "nhsuk-textarea--error" : ""}
-        />
+        <>
+          <Textarea
+            id={inputId}
+            data-cy={`${name}-text-area-input`}
+            onKeyDown={handleKeyDown}
+            name={name}
+            value={value ?? ""}
+            onChange={event =>
+              handleChange(
+                event as any,
+                undefined,
+                undefined,
+                arrayIndex,
+                arrayName,
+                dtoName
+              )
+            }
+            onBlur={handleBlur as any}
+            placeholder={placeholder}
+            rows={rows ?? 10}
+            spellCheck
+            aria-describedby={fieldError ? errorId : undefined}
+            className={fieldError ? "nhsuk-textarea--error" : ""}
+          />
+          {warningMsgs.length > 0 && !fieldError && (
+            <FieldWarningMsg warningMsgs={warningMsgs} />
+          )}
+        </>
       )}
     </FieldWrapper>
   );
