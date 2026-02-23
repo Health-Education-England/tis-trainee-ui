@@ -262,10 +262,11 @@ function getKeysToDisplay(
       store.getState().traineeProfile.traineeProfileData.personalDetails
         .gmcNumber;
 
-    const isValidGmcNum = gmcNumber === "UNKNOWN" || gmcNumber;
+    const shouldShowTrainingNumber =
+      gmcNumber === "UNKNOWN" || Boolean(gmcNumber);
 
     return Object.keys(rest).filter(k => {
-      if (k === "trainingNumber" && !isValidGmcNum) return false;
+      if (k === "trainingNumber" && !shouldShowTrainingNumber) return false;
 
       return (
         userFeatures.details.programmes.conditionsOfJoining.enabled ||

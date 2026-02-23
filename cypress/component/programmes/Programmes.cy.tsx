@@ -136,7 +136,7 @@ describe("Programmes with MFA set up", () => {
   it("should hide training number row for Non-Medical trainee", () => {
     const mockPersonalDetailsNullGmc = {
       ...mockPersonalDetails,
-      gmcNumber: null
+      gmcNumber: ""
     };
 
     const MockedProgrammes = () => {
@@ -155,6 +155,7 @@ describe("Programmes with MFA set up", () => {
       dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
       dispatch(updatedFormAList(mockFormList as FormRPartA[]));
       dispatch(updatedFormBList(mockFormList as FormRPartB[]));
+      dispatch(updatedActionsData([]));
       return <Programmes />;
     };
 
