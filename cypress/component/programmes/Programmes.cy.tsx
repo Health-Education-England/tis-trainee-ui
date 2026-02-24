@@ -194,6 +194,7 @@ describe("Programmes with MFA set up", () => {
       dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
       dispatch(updatedFormAList(mockFormList as FormRPartA[]));
       dispatch(updatedFormBList(mockFormList as FormRPartB[]));
+      dispatch(updatedActionsData([]));
       return <Programmes />;
     };
 
