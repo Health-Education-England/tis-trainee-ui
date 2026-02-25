@@ -133,6 +133,98 @@ describe("Programmes with MFA set up", () => {
     // both progs and placements use same panel creator component so not repeating placement tests
   });
 
+  it("should hide training number row for Non-Medical trainee", () => {
+    const mockPersonalDetailsNullGmc = {
+      ...mockPersonalDetails,
+      gmcNumber: ""
+    };
+
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedPreferredMfa("SMS"));
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetailsNullGmc,
+          qualifications: [],
+          programmeMemberships: mockProgrammeMemberships,
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
+      dispatch(updatedFormAList(mockFormList as FormRPartA[]));
+      dispatch(updatedFormBList(mockFormList as FormRPartB[]));
+      dispatch(updatedActionsData([]));
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get("[data-cy=trainingNumber0Key]").should("not.exist");
+    cy.get("[data-cy=trainingNumber0Val]").should("not.exist");
+  });
+
+  it("should show training number row for Medical trainee with UNKNOWN GMC number", () => {
+    const mockPersonalDetailsUnknownGmc = {
+      ...mockPersonalDetails,
+      gmcNumber: "UNKNOWN"
+    };
+
+    const MockedProgrammes = () => {
+      const dispatch = useAppDispatch();
+      dispatch(updatedPreferredMfa("SMS"));
+      dispatch(
+        updatedTraineeProfileData({
+          traineeTisId: "12345",
+          personalDetails: mockPersonalDetailsUnknownGmc,
+          qualifications: [],
+          programmeMemberships: mockProgrammeMemberships,
+          placements: []
+        })
+      );
+      dispatch(updatedTraineeProfileStatus("succeeded"));
+      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
+      dispatch(updatedFormAList(mockFormList as FormRPartA[]));
+      dispatch(updatedFormBList(mockFormList as FormRPartB[]));
+      dispatch(updatedActionsData([]));
+      return <Programmes />;
+    };
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <MockedProgrammes />
+        </Router>
+      </Provider>
+    );
+
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get("[data-cy=trainingNumber0Key]").should("exist");
+    cy.get("[data-cy=trainingNumber0Val]").should("exist");
+  });
+
+  it("should show training number row for Medical trainee with GMC number", () => {
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      mockProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get("[data-cy=trainingNumber0Key]").should("exist");
+    cy.get("[data-cy=trainingNumber0Val]")
+      .should("exist")
+      .and("contain.text", "EOE/ABC-123/1111111/C");
+  });
+
   it("Should display current Programme and Onboarding Tracker link when start date is within a year", () => {
     const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1, 1);
     mountProgrammesWithMockData(

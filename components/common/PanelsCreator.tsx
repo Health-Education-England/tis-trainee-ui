@@ -257,15 +257,23 @@ function getKeysToDisplay(
 ) {
   if (panelsName === TraineeProfileName.Programmes) {
     const { tisId, ...rest } = programmePanelTemplate;
-    const keys = Object.keys(rest);
-    return keys.filter(
-      k =>
+
+    const gmcNumber =
+      store.getState().traineeProfile.traineeProfileData.personalDetails
+        .gmcNumber;
+
+    return Object.keys(rest).filter(k => {
+      if (k === "trainingNumber" && !Boolean(gmcNumber)) return false;
+
+      return (
         userFeatures.details.programmes.conditionsOfJoining.enabled ||
         k !== "conditionsOfJoining"
-    );
+      );
+    });
   } else {
     const { tisId, subSpecialty, postAllowsSubspecialty, ...rest } =
       placementPanelTemplate;
+
     return Object.keys(rest);
   }
 }
