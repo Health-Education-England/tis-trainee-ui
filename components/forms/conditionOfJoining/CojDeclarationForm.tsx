@@ -11,6 +11,7 @@ import Declarations from "../Declarations";
 import history from "../../navigation/history";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useIsPhNonMedic } from "../../../utilities/hooks/useIsPhNonMedic";
 
 type CojDeclarationFormProps = {
   signedDate: Date | null;
@@ -23,6 +24,7 @@ export function CojDeclarationForm({
   matchedPmId
 }: Readonly<CojDeclarationFormProps>) {
   const [canSubmit, setCanSubmit] = useState(false);
+  const isPhNonMedic = useIsPhNonMedic();
   return (
     <Formik
       initialValues={[]}
@@ -41,26 +43,31 @@ export function CojDeclarationForm({
                 requirements:
               </SummaryList.Value>
             </SummaryList.Row>
-            <SummaryList.Row>
-              <SummaryList.Value>
-                <div className="info-message-container">
-                  <span className="info-message-icon">
-                    <FontAwesomeIcon icon={faInfoCircle} size="xl" />
-                  </span>
-                  <span className="info-message">
-                    If you are appointed as a{" "}
-                    <b>Public Health Non-Medical trainee</b>, any references to{" "}
-                    <b>GMC registration, Licensing, or medical Revalidation</b>{" "}
-                    are <b>not applicable</b> to your role.
-                    <br />
-                    <br />
-                    By signing these Conditions of Joining, you confirm your
-                    agreement with <b>only the applicable conditions</b> for
-                    your training programme.
-                  </span>
-                </div>
-              </SummaryList.Value>
-            </SummaryList.Row>
+            {isPhNonMedic && (
+              <SummaryList.Row>
+                <SummaryList.Value>
+                  <div className="info-message-container">
+                    <span className="info-message-icon">
+                      <FontAwesomeIcon icon={faInfoCircle} size="xl" />
+                    </span>
+                    <span className="info-message">
+                      If you are appointed as a{" "}
+                      <b>Public Health Non-Medical trainee</b>, any references
+                      to{" "}
+                      <b>
+                        GMC registration, Licensing, or medical Revalidation
+                      </b>{" "}
+                      are <b>not applicable</b> to your role.
+                      <br />
+                      <br />
+                      By signing these Conditions of Joining, you confirm your
+                      agreement with <b>only the applicable conditions</b> for
+                      your training programme.
+                    </span>
+                  </div>
+                </SummaryList.Value>
+              </SummaryList.Row>
+            )}
           </SummaryList>
           <Declarations
             setCanSubmit={setCanSubmit}

@@ -758,6 +758,14 @@ export const mockTraineeProfileNoGMC: TraineeProfile = {
   placements: mockPlacements
 };
 
+export const mockTraineeProfilePhNonMedic: TraineeProfile = {
+  traineeTisId: "789",
+  personalDetails: { ...mockPersonalDetails, publicHealthNumber:"1234567", gmcNumber: "", gdcNumber: "" },
+  qualifications: [],
+  programmeMemberships: mockProgrammeMemberships,
+  placements: mockPlacements
+};
+
 export const mockPlacementsForGrouping: Placement[] = [
   // Past
   {
