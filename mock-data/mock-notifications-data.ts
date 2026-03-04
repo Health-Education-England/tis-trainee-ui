@@ -176,7 +176,7 @@ export const mockInAppNotificationsData: NotificationType[] = [
     },
     type: "IN_APP",
     subject: "INDEMNITY_INSURANCE",
-    subjectText: "Indemnity Insurance for Speciality",
+    subjectText: "Indemnity Insurance for Specialty",
     contact: null,
     sentAt: new Date("2025-04-26T08:50:27.650Z"),
     readAt: new Date("2025-04-28T15:30:42.120Z"),

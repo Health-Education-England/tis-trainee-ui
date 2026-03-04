@@ -54,11 +54,20 @@ const displayText: DisplayText = {
         DETAILS (pre-populated or entered/amended by you) are correct.
       </p>
       <p>
-        It remains your own responsibility to keep your Designated Body and the
-        GMC informed as soon as possible of any changes to your contact details.
-        Your Local Deanery team remains your Designated Body throughout your
-        time in training. You can update your Designated Body on your GMC Online
-        account under &apos;My Revalidation&apos;.
+        It is your responsibility to keep your professional regulator (where
+        applicable) and your designated training body informed of any changes to
+        your contact details as soon as possible.
+      </p>
+      <p>
+        For trainees who are registered with the General Medical Council (GMC),
+        your Local Office remains your Designated Body throughout your training.
+        You can update your Designated Body via your GMC Online account under
+        &apos;My Revalidation&apos;.
+      </p>
+      <p>
+        If you are not registered with the GMC, you should ensure that your
+        contact details are kept up to date in accordance with your training
+        programme requirements.
       </p>
     </>
   ),
@@ -73,11 +82,20 @@ const displayText: DisplayText = {
         DETAILS (pre-populated or entered/amended by you) are correct.
       </p>
       <p>
-        It remains your own responsibility to keep your Designated Body and the
-        GMC informed as soon as possible of any changes to your contact details.
-        Your Local Deanery team remains your Designated Body throughout your
-        time in training. You can update your Designated Body on your GMC Online
-        account under &apos;My Revalidation&apos;.
+        It is your responsibility to keep your professional regulator (where
+        applicable) and your designated training body informed of any changes to
+        your contact details as soon as possible.
+      </p>
+      <p>
+        For trainees who are registered with the General Medical Council (GMC),
+        your Local Office remains your Designated Body throughout your training.
+        You can update your Designated Body via your GMC Online account under
+        &apos;My Revalidation&apos;.
+      </p>
+      <p>
+        If you are not registered with the GMC, you should ensure that your
+        contact details are kept up to date in accordance with your training
+        programme requirements.
       </p>
       <p>
         Failure to appropriately complete a Form R Part B when requested may
