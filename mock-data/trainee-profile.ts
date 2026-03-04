@@ -760,7 +760,12 @@ export const mockTraineeProfileNoGMC: TraineeProfile = {
 
 export const mockTraineeProfilePhNonMedic: TraineeProfile = {
   traineeTisId: "789",
-  personalDetails: { ...mockPersonalDetails, publicHealthNumber:"1234567", gmcNumber: "", gdcNumber: "" },
+  personalDetails: {
+    ...mockPersonalDetails,
+    publicHealthNumber: "1234567",
+    gmcNumber: "",
+    gdcNumber: ""
+  },
   qualifications: [],
   programmeMemberships: mockProgrammeMemberships,
   placements: mockPlacements

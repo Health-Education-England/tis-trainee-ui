@@ -163,7 +163,7 @@ describe("Conditions of Joining View - signed", () => {
   });
   it("renders the readonly GG9 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
     mount(<MockCojView {...mockProps} />);
-    cy.get('.info-message-container').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
     testPDFSaveButton();
     testSignedForm("GG9");
   });
@@ -175,7 +175,7 @@ describe("Conditions of Joining View - signed", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('.info-message-container').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
     testPDFSaveButton();
     testSignedForm("GG10");
   });
@@ -186,7 +186,7 @@ describe("Conditions of Joining View - unsigned", () => {
     mount(
       <MockCojView {...mockProps} conditionsOfJoiningSignedAtDate={null} />
     );
-    cy.get('.info-message-container').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
     testUnsignedForm("GG9");
   });
 
@@ -198,7 +198,7 @@ describe("Conditions of Joining View - unsigned", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('.info-message-container').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
     testUnsignedForm("GG10");
   });
 });
@@ -206,12 +206,12 @@ describe("Conditions of Joining View - unsigned", () => {
 describe("Conditions of Joining View - Public Health Non-Medic", () => {
   it("renders COJ view with Public Health Non-Medic info message box - signed", () => {
     mount(<MockCojView {...mockPropsPhNonMedic} />);
-    cy.get('.info-message-container').should("exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
   });  
   it("renders COJ view with Public Health Non-Medic info message box - unsigned", () => {
     mount(
       <MockCojView {...mockPropsPhNonMedic} conditionsOfJoiningSignedAtDate={null} />
     );
-    cy.get('.info-message-container').should("exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
   });
 });

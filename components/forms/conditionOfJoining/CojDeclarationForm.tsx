@@ -46,11 +46,17 @@ export function CojDeclarationForm({
             {isPhNonMedic && (
               <SummaryList.Row>
                 <SummaryList.Value>
-                  <div className="info-message-container">
+                  <div
+                    className="info-message-container"
+                    data-cy="phNonMedic-info-message-container"
+                  >
                     <span className="info-message-icon">
                       <FontAwesomeIcon icon={faInfoCircle} size="xl" />
                     </span>
-                    <span className="info-message">
+                    <span
+                      className="info-message"
+                      data-cy="phNonMedic-info-message"
+                    >
                       If you are appointed as a{" "}
                       <b>Public Health Non-Medical trainee</b>, any references
                       to{" "}
