@@ -464,12 +464,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   // check error summary (required fields)
   cy.get(".nhsuk-error-summary").contains("There is a problem");
   cy.get('[data-cy="error-txt-Forename is required"]').should("exist");
-  cy.get('[data-cy="error-txt-GMC-Registered Surname is required"]').should(
-    "exist"
-  );
-  cy.get('[data-cy="error-txt-GMC-Registered Surname is required"]').should(
-    "exist"
-  );
+  cy.get('[data-cy="error-txt-Surname is required"]').should("exist");
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
@@ -485,10 +480,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // check inline errors (required fields)
   cy.get("#forename-error").should("have.text", "Error: Forename is required");
-  cy.get("#surname-error").should(
-    "have.text",
-    "Error: GMC-Registered Surname is required"
-  );
+  cy.get("#surname-error").should("have.text", "Error: Surname is required");
   cy.get("#gmcNumber-error").should(
     "have.text",
     "Error: GMC number is required"

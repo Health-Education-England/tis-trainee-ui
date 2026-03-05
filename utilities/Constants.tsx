@@ -134,10 +134,10 @@ export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
   "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
 
 export const FORMR_HEADING_TEXT =
-  "Trainee registration for Postgraduate Speciality Training";
+  "Trainee registration for Postgraduate Training";
 
 export const FORMR_SUBHEADING_TEXT =
-  "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP.";
+  "Form R supports your ongoing training record and, where applicable, professional revalidation requirements. Trainees holding GMC registration are required to complete Form R in line with revalidation guidance. All trainees must complete Form R at the start of a new training programme and ahead of each ARCP.";
 
 export const FORMR_PARTA_DECLARATIONS = [
   CCT_DECLARATION,
