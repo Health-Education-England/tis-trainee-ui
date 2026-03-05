@@ -465,7 +465,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get(".nhsuk-error-summary").contains("There is a problem");
   cy.get('[data-cy="error-txt-Forename is required"]').should("exist");
   cy.get('[data-cy="error-txt-Surname is required"]').should("exist");
-  cy.get('[data-cy="error-txt-Surname is required"]').should("exist");
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
