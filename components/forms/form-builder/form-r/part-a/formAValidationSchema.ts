@@ -14,7 +14,7 @@ const dateValidationSchema = (fieldName: string) =>
 
 const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("GMC-Registered Surname"),
+  surname: StringValidationSchema("Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   dateOfBirth: dateValidationSchema("Your date of birth")
     .test("dateOfBirth", "You must be 18 years or above", value =>

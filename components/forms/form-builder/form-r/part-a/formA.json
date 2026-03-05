@@ -19,7 +19,7 @@
             },
             {
               "name": "surname",
-              "label": "Surname (as registered with your professional regulator, where applicable. e.g. GMC)",
+              "label": "Surname (as registered with your professional regulator, where applicable, e.g. GMC)",
               "placeholder": "type here...",
               "type": "text",
               "visible": true,
@@ -255,7 +255,7 @@
     },
     {
       "name": "willKeepInformed",
-      "label": "I will keep my professional regulator (where applicable e.g. GMC) and my training body informed as soon as possible of any changes to my contact details."
+      "label": "I will keep my professional regulator (where applicable, e.g. GMC) and my training body informed as soon as possible of any changes to my contact details."
     }
   ]
 }

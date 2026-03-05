@@ -141,7 +141,7 @@ const covid19ValidationSchema = yup.object().shape({
 const formBValidationSchemaDefault = yup.object({
   // Personal details - section 1
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("GMC-Registered Surname"),
+  surname: StringValidationSchema("Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   email: yup
     .string()
