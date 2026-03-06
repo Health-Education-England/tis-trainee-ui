@@ -735,6 +735,7 @@ export function validateFields(
     }
     return schema;
   }, finalValidationSchema);
+  finalValidationSchema.tests = validationSchema.tests; //any additional multi-field tests
   return finalValidationSchema.validate(values, { abortEarly: false });
 }
 

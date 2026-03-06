@@ -23,6 +23,8 @@ export function ProfileToFormRPartAInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
+    gdcNumber: pd?.gdcNumber,
+    publicHealthNumber: pd?.publicHealthNumber,
     localOfficeName: linkedFormRData?.localOfficeName,
     dateOfBirth: pd?.dateOfBirth ?? null,
     gender: isValidOption("gender", pd?.gender, refData),

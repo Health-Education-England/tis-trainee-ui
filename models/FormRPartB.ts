@@ -7,6 +7,8 @@ export interface FormRPartB extends IFormR {
   forename: ProfileSType;
   surname: ProfileSType;
   gmcNumber: ProfileSType;
+  gdcNumber: ProfileSType;
+  publicHealthNumber: ProfileSType;
   email: string;
   localOfficeName: ProfileSType;
   prevRevalBody: ProfileSType;
@@ -81,6 +83,8 @@ export const initialFormRBBeforeProfileData: FormRPartB = {
   forename: "",
   surname: "",
   gmcNumber: "",
+  gdcNumber: "",
+  publicHealthNumber: "",
   email: "",
   localOfficeName: "",
   prevRevalBody: "",

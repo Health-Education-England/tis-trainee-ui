@@ -4,22 +4,38 @@ import { FormRPartB } from "../../models/FormRPartB";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { useSelectFormData } from "./useSelectFormData";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
-import formBJson from "../../components/forms/form-builder/form-r/part-b/formB.json";
 import { formAValidationSchema } from "../../components/forms/form-builder/form-r/part-a/formAValidationSchema";
+import formBJson from "../../components/forms/form-builder/form-r/part-b/formB.json";
 import { getFormBValidationSchema } from "../../components/forms/form-builder/form-r/part-b/formBValidationSchema";
+import formAJsonPH from "../../components/forms/form-builder/form-r/part-a-ph/formA.json";
+import { formAValidationSchema as formAValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-a-ph/formAValidationSchema";
+import formBJsonPH from "../../components/forms/form-builder/form-r/part-b-ph/formB.json";
+import { getFormBValidationSchema as getFormBValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-b-ph/formBValidationSchema";
 
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
+  const traineeProfileData = useAppSelector(
+    state => state.traineeProfile.traineeProfileData
+  );
+  const personalDetails = traineeProfileData?.personalDetails || {};
+  const isPH =
+    (!personalDetails.gmcNumber || personalDetails.gmcNumber.trim() === "") &&
+    personalDetails.publicHealthNumber &&
+    personalDetails.publicHealthNumber.trim() !== "";
 
   let formJson: Form;
   let validationSchemaForView: any;
 
   if (formType === "A") {
-    formJson = formAJson as Form;
-    validationSchemaForView = formAValidationSchema;
+    formJson = isPH ? (formAJsonPH as Form) : (formAJson as Form);
+    validationSchemaForView = isPH
+      ? formAValidationSchemaPH
+      : formAValidationSchema;
   } else {
-    const baseFormJson = formBJson as Form;
-    validationSchemaForView = getFormBValidationSchema(activeCovid);
+    const baseFormJson = isPH ? (formBJsonPH as Form) : (formBJson as Form);
+    validationSchemaForView = isPH
+      ? getFormBValidationSchemaPH(activeCovid)
+      : getFormBValidationSchema(activeCovid);
 
     formJson = activeCovid
       ? baseFormJson

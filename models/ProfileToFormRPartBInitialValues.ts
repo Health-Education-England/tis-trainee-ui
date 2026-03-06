@@ -30,6 +30,8 @@ export function ProfileToFormRPartBInitialValues(
     forename: pd?.forenames,
     surname: pd?.surname,
     gmcNumber: pd?.gmcNumber,
+    gdcNumber: pd?.gdcNumber,
+    publicHealthNumber: pd?.publicHealthNumber,
     email: "",
     localOfficeName: linkedFormRData?.localOfficeName,
     prevRevalBody: pd?.prevRevalBody,
