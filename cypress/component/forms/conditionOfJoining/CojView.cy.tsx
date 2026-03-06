@@ -26,14 +26,6 @@ const mockProps = {
   conditionsOfJoiningVersion: "GG9" as CojVersionType
 };
 
-const mockPropsPhNonMedic = {
-  mockTraineeProfileData: mockTraineeProfilePhNonMedic,
-  tisId: pmId,
-  startDate: "2024-01-01",
-  conditionsOfJoiningSignedAtDate: new Date("2025-01-01"),
-  conditionsOfJoiningVersion: "GG9" as CojVersionType
-};
-
 const commonCheckboxes = [
   "isDeclareProvisional",
   "isDeclareSatisfy",
@@ -163,7 +155,7 @@ describe("Conditions of Joining View - signed", () => {
   });
   it("renders the readonly GG9 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
     mount(<MockCojView {...mockProps} />);
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testPDFSaveButton();
     testSignedForm("GG9");
   });
@@ -175,7 +167,7 @@ describe("Conditions of Joining View - signed", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testPDFSaveButton();
     testSignedForm("GG10");
   });
@@ -186,7 +178,7 @@ describe("Conditions of Joining View - unsigned", () => {
     mount(
       <MockCojView {...mockProps} conditionsOfJoiningSignedAtDate={null} />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testUnsignedForm("GG9");
   });
 
@@ -198,20 +190,7 @@ describe("Conditions of Joining View - unsigned", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("not.exist");
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testUnsignedForm("GG10");
-  });
-});
-
-describe("Conditions of Joining View - Public Health Non-Medic", () => {
-  it("renders COJ view with Public Health Non-Medic info message box - signed", () => {
-    mount(<MockCojView {...mockPropsPhNonMedic} />);
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
-  });  
-  it("renders COJ view with Public Health Non-Medic info message box - unsigned", () => {
-    mount(
-      <MockCojView {...mockPropsPhNonMedic} conditionsOfJoiningSignedAtDate={null} />
-    );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
   });
 });
