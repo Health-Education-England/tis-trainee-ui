@@ -290,3 +290,50 @@ describe("isDateWithin16WeeksOfFirstDate", () => {
     expect(isDateWithin16WeeksOfFirstDate(invalidDateStr, refStr)).toBe(false);
   });
 });
+
+describe("validateFields attaches and uses schema-level tests", () => {
+  it("should fail validation if schema-level test fails", async () => {
+    const Yup = require("yup");
+    const { validateFields } = require("../FormBuilderUtilities");
+    const validationSchema = Yup.object()
+      .shape({
+        gmcNumber: Yup.string().nullable(),
+        gdcNumber: Yup.string().nullable(),
+        publicHealthNumber: Yup.string().nullable()
+      })
+      .test(
+        "at-least-one-identifier",
+        "At least one of GMC number, GDC number, or Public Health number must be provided",
+        function (value: any) {
+          const { gmcNumber, gdcNumber, publicHealthNumber } = value || {};
+          return (
+            !!(gmcNumber && gmcNumber.trim()) ||
+            !!(gdcNumber && gdcNumber.trim()) ||
+            !!(publicHealthNumber && publicHealthNumber.trim())
+          );
+        }
+      );
+
+    const fields = [
+      { name: "gmcNumber", type: "text", visible: true },
+      { name: "gdcNumber", type: "text", visible: true },
+      { name: "publicHealthNumber", type: "text", visible: true }
+    ];
+
+    // All blank: should fail
+    const values = { gmcNumber: "", gdcNumber: "", publicHealthNumber: "" };
+    await expect(
+      validateFields(fields, values, validationSchema)
+    ).rejects.toThrow(/At least one of GMC number/);
+
+    // One filled: should pass
+    const values2 = {
+      gmcNumber: "123456",
+      gdcNumber: "",
+      publicHealthNumber: ""
+    };
+    await expect(
+      validateFields(fields, values2, validationSchema)
+    ).resolves.toBeDefined();
+  });
+});
