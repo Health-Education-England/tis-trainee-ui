@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import { getFormBValidationSchema } from "../form-builder/form-r/part-b-ph/formBValidationSchema";
 
 describe("formBValidationSchema - identifier and currentRevalDate validation", () => {
