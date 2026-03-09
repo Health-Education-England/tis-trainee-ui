@@ -11,6 +11,7 @@ import formAJsonPH from "../../components/forms/form-builder/form-r/part-a-ph/fo
 import { formAValidationSchema as formAValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-a-ph/formAValidationSchema";
 import formBJsonPH from "../../components/forms/form-builder/form-r/part-b-ph/formB.json";
 import { getFormBValidationSchema as getFormBValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-b-ph/formBValidationSchema";
+import { ProfileUtilities } from "../ProfileUtilities";
 
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
@@ -18,22 +19,21 @@ export const useFormRViewConfig = (formType: "A" | "B") => {
     state => state.traineeProfile.traineeProfileData
   );
   const personalDetails = traineeProfileData?.personalDetails || {};
-  const isPH =
-    (!personalDetails.gmcNumber || personalDetails.gmcNumber.trim() === "") &&
-    personalDetails.publicHealthNumber &&
-    personalDetails.publicHealthNumber.trim() !== "";
+  const isPHnonMed = ProfileUtilities.isPHnonMed(personalDetails);
 
   let formJson: Form;
   let validationSchemaForView: any;
 
   if (formType === "A") {
-    formJson = isPH ? (formAJsonPH as Form) : (formAJson as Form);
-    validationSchemaForView = isPH
+    formJson = isPHnonMed ? (formAJsonPH as Form) : (formAJson as Form);
+    validationSchemaForView = isPHnonMed
       ? formAValidationSchemaPH
       : formAValidationSchema;
   } else {
-    const baseFormJson = isPH ? (formBJsonPH as Form) : (formBJson as Form);
-    validationSchemaForView = isPH
+    const baseFormJson = isPHnonMed
+      ? (formBJsonPH as Form)
+      : (formBJson as Form);
+    validationSchemaForView = isPHnonMed
       ? getFormBValidationSchemaPH(activeCovid)
       : getFormBValidationSchema(activeCovid);
 

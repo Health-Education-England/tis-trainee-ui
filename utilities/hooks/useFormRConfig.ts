@@ -32,10 +32,7 @@ export const useFormRConfig = (formType: "A" | "B") => {
     state => state.traineeProfile.traineeProfileData
   );
   const personalDetails = traineeProfileData?.personalDetails || {};
-  const isPH =
-    (!personalDetails.gmcNumber || personalDetails.gmcNumber.trim() === "") &&
-    personalDetails.publicHealthNumber &&
-    personalDetails.publicHealthNumber.trim() !== "";
+  const isPHnonMed = ProfileUtilities.isPHnonMed(personalDetails);
 
   let formJson: Form;
   let validationSchema: any;
@@ -43,8 +40,10 @@ export const useFormRConfig = (formType: "A" | "B") => {
   let initialData: FormRPartA | FormRPartB;
 
   if (formType === "A") {
-    formJson = isPH ? (formAJsonPH as Form) : (formAJson as Form);
-    validationSchema = isPH ? formAValidationSchemaPH : formAValidationSchema;
+    formJson = isPHnonMed ? (formAJsonPH as Form) : (formAJson as Form);
+    validationSchema = isPHnonMed
+      ? formAValidationSchemaPH
+      : formAValidationSchema;
     const referenceData = transformReferenceData(rawReferenceData);
     const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
       (declaration: string) => ({ label: declaration, value: declaration })
@@ -55,8 +54,10 @@ export const useFormRConfig = (formType: "A" | "B") => {
     };
     initialData = formData;
   } else {
-    const baseFormJson = isPH ? (formBJsonPH as Form) : (formBJson as Form);
-    validationSchema = isPH
+    const baseFormJson = isPHnonMed
+      ? (formBJsonPH as Form)
+      : (formBJson as Form);
+    validationSchema = isPHnonMed
       ? getFormBValidationSchemaPH(activeCovid)
       : getFormBValidationSchema(activeCovid);
 
