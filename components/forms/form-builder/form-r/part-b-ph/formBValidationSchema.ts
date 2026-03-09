@@ -199,7 +199,12 @@ const formBValidationSchemaDefault = yup.object({
           return value === null || value === undefined || value === "";
         } else {
           // All others: must NOT be empty and must be a valid date in the allowed range
-          return value !== null && value !== undefined && value !== "" && DateUtilities.IsInsideDateRange(value);
+          return (
+            value !== null &&
+            value !== undefined &&
+            value !== "" &&
+            DateUtilities.IsInsideDateRange(value)
+          );
         }
       }
     ),
