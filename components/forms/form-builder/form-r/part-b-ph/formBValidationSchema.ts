@@ -187,7 +187,7 @@ const formBValidationSchemaDefault = yup.object({
     .mixed()
     .test(
       "currRevalDate",
-      "Current Revalidation Date must be empty for Public Health non-medical trainees, and required otherwise",
+      "Current Revalidation Date must be empty for Public Health non-medical trainees, and is required otherwise",
       function (value) {
         const { gmcNumber, publicHealthNumber } = this.parent || {};
         const isPH =
@@ -198,8 +198,8 @@ const formBValidationSchemaDefault = yup.object({
           // PH non-medical: must be empty
           return value === null || value === undefined || value === "";
         } else {
-          // All others: must NOT be empty
-          return value !== null && value !== undefined && value !== "";
+          // All others: must NOT be empty and must be a valid date in the allowed range
+          return value !== null && value !== undefined && value !== "" && DateUtilities.IsInsideDateRange(value);
         }
       }
     ),

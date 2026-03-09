@@ -45,7 +45,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
   if (formType === "A") {
     formJson = isPH ? (formAJsonPH as Form) : (formAJson as Form);
     validationSchema = isPH ? formAValidationSchemaPH : formAValidationSchema;
-    console.log("FormR PartA Is PH:", isPH);
     const referenceData = transformReferenceData(rawReferenceData);
     const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
       (declaration: string) => ({ label: declaration, value: declaration })
@@ -70,6 +69,7 @@ export const useFormRConfig = (formType: "A" | "B") => {
           )
         };
 
+    console.log("Raw reference data in useFormRConfig", rawReferenceData);
     const dbcInternal = [
       ...rawReferenceData.dbc.filter(
         (db: DesignatedBodyKeyValue) => db.internal
