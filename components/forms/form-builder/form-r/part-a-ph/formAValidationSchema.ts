@@ -12,19 +12,39 @@ const dateValidationSchema = (fieldName: string) =>
     .typeError(`${fieldName} must be a valid date`)
     .required(`${fieldName} is required`);
 
+// Custom validator: at least one of the given fields is a non-blank string
+const atLeastOneNonBlank = (fields: string[], message: string) =>
+  yup.string().test("at-least-one-non-blank", message, function () {
+    const parent = this.parent || {};
+    return fields.some(
+      field =>
+        !!(
+          parent[field] &&
+          typeof parent[field] === "string" &&
+          parent[field].trim()
+        )
+    );
+  });
+
 const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("Surname"),
-  gmcNumber: yup
-    .string()
+  gmcNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
     .nullable()
     .max(20, "GMC Number must be shorter than 20 characters"),
-  gdcNumber: yup
-    .string()
+  gdcNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
     .nullable()
     .max(20, "GDC Number must be shorter than 20 characters"),
-  publicHealthNumber: yup
-    .string()
+  publicHealthNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
     .nullable()
     .max(20, "Public Health Number must be shorter than 20 characters"),
   dateOfBirth: dateValidationSchema("Your date of birth")
@@ -107,20 +127,7 @@ const formAValidationSchemaDefault = {
     )
 };
 
-export const formAValidationSchema = yup
-  .object({ ...formAValidationSchemaDefault })
-  .test(
-    "at-least-one-identifier",
-    "At least one of GMC number, GDC number, or Public Health number must be provided",
-    function (value) {
-      const { gmcNumber, gdcNumber, publicHealthNumber } = value || {};
-      return (
-        !!(gmcNumber && gmcNumber.trim()) ||
-        !!(gdcNumber && gdcNumber.trim()) ||
-        !!(publicHealthNumber && publicHealthNumber.trim())
-      );
-    }
-  );
+export const formAValidationSchema = yup.object(formAValidationSchemaDefault);
 
 export const formAValidationSchemaView = yup.object({
   ...formAValidationSchemaDefault,

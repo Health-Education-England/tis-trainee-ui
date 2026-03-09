@@ -50,6 +50,20 @@ const leaveValidation = (fieldName: string) =>
 const leaveTotalValidation = (fieldName: string) =>
   yup.number().max(9999, `${fieldName} cannot exceed 9999 days`);
 
+// Custom validator: at least one of the given fields is a non-blank string
+const atLeastOneNonBlank = (fields: string[], message: string) =>
+  yup.string().test("at-least-one-non-blank", message, function () {
+    const parent = this.parent || {};
+    return fields.some(
+      field =>
+        !!(
+          parent[field] &&
+          typeof parent[field] === "string" &&
+          parent[field].trim()
+        )
+    );
+  });
+
 const panelSchemaValidation = yup.object().shape({
   declarationType: StringValidationSchema("Declaration type"),
   title: StringValidationSchema("Title"),
@@ -138,150 +152,143 @@ const covid19ValidationSchema = yup.object().shape({
     .required("How your placement was adjusted is required")
 });
 
-const formBValidationSchemaDefault = yup
-  .object({
-    // Personal details - section 1
-    forename: StringValidationSchema("Forename"),
-    surname: StringValidationSchema("Surname"),
-    gmcNumber: yup
-      .string()
-      .nullable()
-      .max(20, "GMC Number must be shorter than 20 characters"),
-    gdcNumber: yup
-      .string()
-      .nullable()
-      .max(20, "GDC Number must be shorter than 20 characters"),
-    publicHealthNumber: yup
-      .string()
-      .nullable()
-      .max(20, "Public Health Number must be shorter than 20 characters"),
-    email: yup
-      .string()
-      .email("Email address is invalid")
-      .max(255, "Email must be shorter than 255 characters")
-      .required("Email is required"),
-    prevRevalBody: yup.string().nullable(),
-    prevRevalBodyOther: StringValidationSchema(
-      "'Other' Previous Revalidation Body"
-    ),
-    currRevalDate: yup
-      .mixed()
-      .test(
-        "currRevalDate",
-        "Current Revalidation Date must be empty for Public Health non-medical trainees, and required otherwise",
-        function (value) {
-          const { gmcNumber, publicHealthNumber } = this.parent || {};
-          const isPH =
-            (!gmcNumber || gmcNumber.trim() === "") &&
-            publicHealthNumber &&
-            publicHealthNumber.trim() !== "";
-          if (isPH) {
-            // PH non-medical: must be empty
-            return value === null || value === undefined || value === "";
-          } else {
-            // All others: must NOT be empty
-            return value !== null && value !== undefined && value !== "";
-          }
+const formBValidationSchemaDefault = yup.object({
+  // Personal details - section 1
+  forename: StringValidationSchema("Forename"),
+  surname: StringValidationSchema("Surname"),
+  gmcNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
+    .nullable()
+    .max(20, "GMC Number must be shorter than 20 characters"),
+  gdcNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
+    .nullable()
+    .max(20, "GDC Number must be shorter than 20 characters"),
+  publicHealthNumber: atLeastOneNonBlank(
+    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
+    "At least one of GMC number, GDC number, or Public Health number must be provided"
+  )
+    .nullable()
+    .max(20, "Public Health Number must be shorter than 20 characters"),
+  email: yup
+    .string()
+    .email("Email address is invalid")
+    .max(255, "Email must be shorter than 255 characters")
+    .required("Email is required"),
+  prevRevalBody: yup.string().nullable(),
+  prevRevalBodyOther: StringValidationSchema(
+    "'Other' Previous Revalidation Body"
+  ),
+  currRevalDate: yup
+    .mixed()
+    .test(
+      "currRevalDate",
+      "Current Revalidation Date must be empty for Public Health non-medical trainees, and required otherwise",
+      function (value) {
+        const { gmcNumber, publicHealthNumber } = this.parent || {};
+        const isPH =
+          (!gmcNumber || gmcNumber.trim() === "") &&
+          publicHealthNumber &&
+          publicHealthNumber.trim() !== "";
+        if (isPH) {
+          // PH non-medical: must be empty
+          return value === null || value === undefined || value === "";
+        } else {
+          // All others: must NOT be empty
+          return value !== null && value !== undefined && value !== "";
         }
-      ),
-    prevRevalDate: yup
-      .string()
-      .nullable()
-      .test(
-        "prevRevalDate",
-        " please choose a previous Revalidation date from the past",
-        value => DateUtilities.IsPastDate(value)
-      ),
-    dualSpecialty: yup.string(),
+      }
+    ),
+  prevRevalDate: yup
+    .string()
+    .nullable()
+    .test(
+      "prevRevalDate",
+      " please choose a previous Revalidation date from the past",
+      value => DateUtilities.IsPastDate(value)
+    ),
+  dualSpecialty: yup.string(),
 
-    // Work - section 2
-    work: yup
-      .array()
-      .of(WorkValidationSchema)
-      .min(1, "At least one Type of Work is required"),
+  // Work - section 2
+  work: yup
+    .array()
+    .of(WorkValidationSchema)
+    .min(1, "At least one Type of Work is required"),
 
-    // TOOT - section 3
-    sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
-    parentalLeave: leaveValidation(
-      "Parental leave (incl Maternity / Paternity leave)"
-    ),
-    careerBreaks: leaveValidation(
-      "Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE)"
-    ),
-    paidLeave: leaveValidation(
-      "Paid / unpaid leave (e.g. compassionate, jury service)"
-    ),
-    unauthorisedLeave: leaveValidation(
-      "Unpaid/unauthorised leave including industrial action"
-    ),
-    otherLeave: leaveValidation("Other"),
-    totalLeave: leaveTotalValidation("Total leave"),
+  // TOOT - section 3
+  sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
+  parentalLeave: leaveValidation(
+    "Parental leave (incl Maternity / Paternity leave)"
+  ),
+  careerBreaks: leaveValidation(
+    "Career breaks within a Programme (OOPC) and non-training placements for experience (OOPE)"
+  ),
+  paidLeave: leaveValidation(
+    "Paid / unpaid leave (e.g. compassionate, jury service)"
+  ),
+  unauthorisedLeave: leaveValidation(
+    "Unpaid/unauthorised leave including industrial action"
+  ),
+  otherLeave: leaveValidation("Other"),
+  totalLeave: leaveTotalValidation("Total leave"),
 
-    // Declarations relating to Good Medical Practice - section 4
-    isHonest: booleanValidationSchema(honestValidationString),
-    isHealthy: booleanValidationSchema(healthyValidationString),
-    isWarned: yup
-      .boolean()
-      .typeError(warningsValidationString)
-      .required(warningsValidationString),
-    isComplying: booleanValidationSchema(complyingValidationString),
-    // Summary of previous resolved/unresolved Form R Declarations - section 5/6
-    havePreviousDeclarations: yup
-      .boolean()
-      .typeError(havePreviousDeclarationsString)
-      .required(havePreviousDeclarationsString),
-    havePreviousUnresolvedDeclarations: yup
-      .boolean()
-      .typeError(havePreviousUnresolvedDeclarationsString)
-      .required(havePreviousUnresolvedDeclarationsString),
-    previousDeclarations: yup
-      .array()
-      .typeError("At least one Previous Declaration is required")
-      .of(panelSchemaValidation)
-      .min(1, "At least one Previous Declaration is required"),
-    previousDeclarationSummary: StringValidationSchema(
-      "Summary of Previous Declarations",
-      4096
-    ),
+  // Declarations relating to Good Medical Practice - section 4
+  isHonest: booleanValidationSchema(honestValidationString),
+  isHealthy: booleanValidationSchema(healthyValidationString),
+  isWarned: yup
+    .boolean()
+    .typeError(warningsValidationString)
+    .required(warningsValidationString),
+  isComplying: booleanValidationSchema(complyingValidationString),
+  // Summary of previous resolved/unresolved Form R Declarations - section 5/6
+  havePreviousDeclarations: yup
+    .boolean()
+    .typeError(havePreviousDeclarationsString)
+    .required(havePreviousDeclarationsString),
+  havePreviousUnresolvedDeclarations: yup
+    .boolean()
+    .typeError(havePreviousUnresolvedDeclarationsString)
+    .required(havePreviousUnresolvedDeclarationsString),
+  previousDeclarations: yup
+    .array()
+    .typeError("At least one Previous Declaration is required")
+    .of(panelSchemaValidation)
+    .min(1, "At least one Previous Declaration is required"),
+  previousDeclarationSummary: StringValidationSchema(
+    "Summary of Previous Declarations",
+    4096
+  ),
 
-    // Summary of current resolved/ unresolved Form R Declarations - section 7/8
-    haveCurrentDeclarations: yup
-      .boolean()
-      .typeError(haveCurrentDeclarationsString)
-      .required(haveCurrentDeclarationsString),
-    haveCurrentUnresolvedDeclarations: yup
-      .boolean()
-      .typeError(haveCurrentUnresolvedDeclarationsString)
-      .required(haveCurrentUnresolvedDeclarationsString),
-    currentDeclarations: yup
-      .array()
-      .typeError("At least one Current Declaration is required")
-      .of(panelSchemaValidation)
-      .min(1, "At least one Current Declaration is required"),
-    currentDeclarationSummary: StringValidationSchema(
-      "Summary of Current Declarations",
-      4096
-    ),
+  // Summary of current resolved/ unresolved Form R Declarations - section 7/8
+  haveCurrentDeclarations: yup
+    .boolean()
+    .typeError(haveCurrentDeclarationsString)
+    .required(haveCurrentDeclarationsString),
+  haveCurrentUnresolvedDeclarations: yup
+    .boolean()
+    .typeError(haveCurrentUnresolvedDeclarationsString)
+    .required(haveCurrentUnresolvedDeclarationsString),
+  currentDeclarations: yup
+    .array()
+    .typeError("At least one Current Declaration is required")
+    .of(panelSchemaValidation)
+    .min(1, "At least one Current Declaration is required"),
+  currentDeclarationSummary: StringValidationSchema(
+    "Summary of Current Declarations",
+    4096
+  ),
 
-    // Covid section
-    haveCovidDeclarations: yup
-      .boolean()
-      .nullable()
-      .required(hasCovidDeclarationString),
-    covidDeclarationDto: covid19ValidationSchema
-  })
-  .test(
-    "at-least-one-identifier",
-    "At least one of GMC number, GDC number, or Public Health number must be provided",
-    function (value) {
-      const { gmcNumber, gdcNumber, publicHealthNumber } = value || {};
-      return (
-        !!(gmcNumber && gmcNumber.trim()) ||
-        !!(gdcNumber && gdcNumber.trim()) ||
-        !!(publicHealthNumber && publicHealthNumber.trim())
-      );
-    }
-  );
+  // Covid section
+  haveCovidDeclarations: yup
+    .boolean()
+    .nullable()
+    .required(hasCovidDeclarationString),
+  covidDeclarationDto: covid19ValidationSchema
+});
 
 export function getFormBValidationSchema(activeCovidSection: boolean) {
   let formBValidationSchema = formBValidationSchemaDefault;
