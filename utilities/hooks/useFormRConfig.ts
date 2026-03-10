@@ -22,6 +22,7 @@ import {
   FORMR_PARTA_DECLARATIONS
 } from "../Constants";
 import { ProfileUtilities } from "../ProfileUtilities";
+import { useIsPhNonMedic } from "./useIsPhNonMedic";
 
 export const useFormRConfig = (formType: "A" | "B") => {
   const formName: FormName = formType === "A" ? "formA" : "formB";
@@ -32,7 +33,7 @@ export const useFormRConfig = (formType: "A" | "B") => {
     state => state.traineeProfile.traineeProfileData
   );
   const personalDetails = traineeProfileData?.personalDetails || {};
-  const isPHnonMed = ProfileUtilities.isPHnonMed(personalDetails);
+  const isPHnonMed = useIsPhNonMedic();
 
   let formJson: Form;
   let validationSchema: any;

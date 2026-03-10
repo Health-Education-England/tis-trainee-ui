@@ -11,7 +11,7 @@ import formAJsonPH from "../../components/forms/form-builder/form-r/part-a-ph/fo
 import { formAValidationSchema as formAValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-a-ph/formAValidationSchema";
 import formBJsonPH from "../../components/forms/form-builder/form-r/part-b-ph/formB.json";
 import { getFormBValidationSchema as getFormBValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-b-ph/formBValidationSchema";
-import { ProfileUtilities } from "../ProfileUtilities";
+import { useIsPhNonMedic } from "./useIsPhNonMedic";
 
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
@@ -19,7 +19,7 @@ export const useFormRViewConfig = (formType: "A" | "B") => {
     state => state.traineeProfile.traineeProfileData
   );
   const personalDetails = traineeProfileData?.personalDetails || {};
-  const isPHnonMed = ProfileUtilities.isPHnonMed(personalDetails);
+  const isPHnonMed = useIsPhNonMedic();
 
   let formJson: Form;
   let validationSchemaForView: any;

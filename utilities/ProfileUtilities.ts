@@ -141,14 +141,6 @@ export class ProfileUtilities {
       groupedDateBoxed
     );
   };
-
-  public static isPHnonMed(personalDetails: PersonalDetails): boolean {
-    return (
-      (!personalDetails.gmcNumber || personalDetails.gmcNumber.trim() === "") &&
-      !!personalDetails.publicHealthNumber &&
-      personalDetails.publicHealthNumber.trim() !== ""
-    );
-  }
 }
 
 export function matchPlacementActionsToProgrammes(
