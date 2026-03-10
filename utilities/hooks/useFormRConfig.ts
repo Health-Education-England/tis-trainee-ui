@@ -8,9 +8,13 @@ import { useAppSelector } from "../../redux/hooks/hooks";
 import { selectAllReference } from "../../redux/slices/referenceSlice";
 import { useSelectFormData } from "./useSelectFormData";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
-import formBJson from "../../components/forms/form-builder/form-r/part-b/formB.json";
 import { formAValidationSchema } from "../../components/forms/form-builder/form-r/part-a/formAValidationSchema";
+import formBJson from "../../components/forms/form-builder/form-r/part-b/formB.json";
 import { getFormBValidationSchema } from "../../components/forms/form-builder/form-r/part-b/formBValidationSchema";
+import formAJsonPH from "../../components/forms/form-builder/form-r/part-a-ph/formA.json";
+import { formAValidationSchema as formAValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-a-ph/formAValidationSchema";
+import formBJsonPH from "../../components/forms/form-builder/form-r/part-b-ph/formB.json";
+import { getFormBValidationSchema as getFormBValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-b-ph/formBValidationSchema";
 import { transformReferenceData } from "../FormBuilderUtilities";
 import { DesignatedBodyKeyValue } from "../../models/DesignatedBodyKeyValue";
 import {
@@ -18,12 +22,14 @@ import {
   FORMR_PARTA_DECLARATIONS
 } from "../Constants";
 import { ProfileUtilities } from "../ProfileUtilities";
+import { useIsPhNonMedic } from "./useIsPhNonMedic";
 
 export const useFormRConfig = (formType: "A" | "B") => {
   const formName: FormName = formType === "A" ? "formA" : "formB";
   const formData = useSelectFormData(formName) as FormRPartA | FormRPartB;
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const rawReferenceData = useAppSelector(selectAllReference);
+  const isPHnonMed = useIsPhNonMedic();
 
   let formJson: Form;
   let validationSchema: any;
@@ -31,8 +37,10 @@ export const useFormRConfig = (formType: "A" | "B") => {
   let initialData: FormRPartA | FormRPartB;
 
   if (formType === "A") {
-    formJson = formAJson as Form;
-    validationSchema = formAValidationSchema;
+    formJson = isPHnonMed ? (formAJsonPH as Form) : (formAJson as Form);
+    validationSchema = isPHnonMed
+      ? formAValidationSchemaPH
+      : formAValidationSchema;
     const referenceData = transformReferenceData(rawReferenceData);
     const programmeDeclarationOptions = FORMR_PARTA_DECLARATIONS.map(
       (declaration: string) => ({ label: declaration, value: declaration })
@@ -43,8 +51,12 @@ export const useFormRConfig = (formType: "A" | "B") => {
     };
     initialData = formData;
   } else {
-    const baseFormJson = formBJson as Form;
-    validationSchema = getFormBValidationSchema(activeCovid);
+    const baseFormJson = isPHnonMed
+      ? (formBJsonPH as Form)
+      : (formBJson as Form);
+    validationSchema = isPHnonMed
+      ? getFormBValidationSchemaPH(activeCovid)
+      : getFormBValidationSchema(activeCovid);
 
     formJson = activeCovid
       ? baseFormJson

@@ -24,7 +24,7 @@ const haveCurrentUnresolvedDeclarationsString =
 const hasCovidDeclarationString =
   "Please select Yes or No for if Covid has affected your training";
 
-const booleanValidationSchema = (validationString: string) =>
+export const booleanValidationSchema = (validationString: string) =>
   yup
     .boolean()
     .typeError(validationString)
@@ -32,14 +32,14 @@ const booleanValidationSchema = (validationString: string) =>
     .oneOf([true], validationString)
     .required(validationString);
 
-const dateValidationSchema = (fieldName: string) =>
+export const dateValidationSchema = (fieldName: string) =>
   yup
     .date()
     .typeError(`${fieldName} must be a valid date`)
     .nullable()
     .required(`${fieldName} is required`);
 
-const leaveValidation = (fieldName: string) =>
+export const leaveValidation = (fieldName: string) =>
   yup
     .number()
     .integer(`${fieldName} must be rounded up to a whole number`)
@@ -47,7 +47,7 @@ const leaveValidation = (fieldName: string) =>
     .min(0, `${fieldName} must be a positive number or zero`)
     .required(`${fieldName} is required`);
 
-const leaveTotalValidation = (fieldName: string) =>
+export const leaveTotalValidation = (fieldName: string) =>
   yup.number().max(9999, `${fieldName} cannot exceed 9999 days`);
 
 const panelSchemaValidation = yup.object().shape({
@@ -138,7 +138,7 @@ const covid19ValidationSchema = yup.object().shape({
     .required("How your placement was adjusted is required")
 });
 
-const formBValidationSchemaDefault = yup.object({
+export const formBValidationSchemaDefaultJson = {
   // Personal details - section 1
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("Surname"),
@@ -246,7 +246,11 @@ const formBValidationSchemaDefault = yup.object({
     .nullable()
     .required(hasCovidDeclarationString),
   covidDeclarationDto: covid19ValidationSchema
-});
+};
+
+const formBValidationSchemaDefault = yup.object(
+  formBValidationSchemaDefaultJson
+);
 
 export function getFormBValidationSchema(activeCovidSection: boolean) {
   let formBValidationSchema = formBValidationSchemaDefault;
