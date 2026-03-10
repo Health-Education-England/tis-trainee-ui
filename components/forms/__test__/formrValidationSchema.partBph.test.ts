@@ -81,9 +81,7 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
   it("passes if only gmcNumber is provided", async () => {
     const data = {
       ...validBase,
-      gmcNumber: "123456",
-      gdcNumber: "",
-      publicHealthNumber: ""
+      gmcNumber: "123456"
     };
     await expect(schema.validate(data)).resolves.toBeTruthy();
   });
@@ -91,9 +89,7 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
   it("passes if only gdcNumber is provided", async () => {
     const data = {
       ...validBase,
-      gmcNumber: "",
-      gdcNumber: "654321",
-      publicHealthNumber: ""
+      gdcNumber: "654321"
     };
     await expect(schema.validate(data)).resolves.toBeTruthy();
   });
@@ -101,8 +97,6 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
   it("passes if only publicHealthNumber is provided", async () => {
     const data = {
       ...validBase,
-      gmcNumber: "",
-      gdcNumber: "",
       publicHealthNumber: "PH123",
       currRevalDate: "" // currRevalDate must be empty for PH non-medical trainees
     };
@@ -119,10 +113,21 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
     await expect(schema.validate(data)).resolves.toBeTruthy();
   });
 
-  it("fails if currRevalDate is not a valid date for non-PH", async () => {
+  it("fails if currRevalDate is not a valid date for non-PH GMC", async () => {
     const data = {
       ...validBase,
       gmcNumber: "123456",
+      currRevalDate: "not-a-date"
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /Current Revalidation Date must be empty for Public Health non-medical trainees, and is required otherwise/
+    );
+  });
+
+  it("fails if currRevalDate is not a valid date for non-PH GDC", async () => {
+    const data = {
+      ...validBase,
+      gdcNumber: "555666",
       currRevalDate: "not-a-date"
     };
     await expect(schema.validate(data)).rejects.toThrow(
@@ -141,10 +146,19 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
     );
   });
 
-  it("passes if currRevalDate is a valid date within allowed range for non-PH", async () => {
+  it("passes if currRevalDate is a valid date within allowed range for non-PH GMC", async () => {
     const data = {
       ...validBase,
       gmcNumber: "123456",
+      currRevalDate: "2030-01-01"
+    };
+    await expect(schema.validate(data)).resolves.toBeTruthy();
+  });
+
+  it("passes if currRevalDate is a valid date within allowed range for non-PH GDC", async () => {
+    const data = {
+      ...validBase,
+      gdcNumber: "555666",
       currRevalDate: "2030-01-01"
     };
     await expect(schema.validate(data)).resolves.toBeTruthy();
@@ -163,13 +177,17 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
   });
 
   it("fails if currRevalDate is empty for non-PH", async () => {
-    const data = { ...validBase, gmcNumber: "123456", currRevalDate: "" };
+    const data = {
+      ...validBase,
+      gmcNumber: "123456",
+      currRevalDate: ""
+    };
     await expect(schema.validate(data)).rejects.toThrow(
       /Current Revalidation Date must be empty for Public Health non-medical trainees, and is required otherwise/
     );
   });
 
-  it("passes if currRevalDate is provided for non-PH", async () => {
+  it("passes if currRevalDate is provided for non-PH GMC", async () => {
     const data = {
       ...validBase,
       gmcNumber: "123456",
@@ -178,10 +196,18 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
     await expect(schema.validate(data)).resolves.toBeTruthy();
   });
 
+  it("passes if currRevalDate is provided for non-PH GDC", async () => {
+    const data = {
+      ...validBase,
+      gdcNumber: "555666",
+      currRevalDate: "2025-01-01"
+    };
+    await expect(schema.validate(data)).resolves.toBeTruthy();
+  });
+
   it("passes if currRevalDate is empty for PH non-medical", async () => {
     const data = {
       ...validBase,
-      gmcNumber: "",
       publicHealthNumber: "PH123",
       currRevalDate: ""
     };
@@ -191,7 +217,6 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
   it("fails if currRevalDate is provided for PH non-medical", async () => {
     const data = {
       ...validBase,
-      gmcNumber: "",
       publicHealthNumber: "PH123",
       currRevalDate: "2025-01-01"
     };
