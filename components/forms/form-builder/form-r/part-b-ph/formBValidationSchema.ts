@@ -42,9 +42,10 @@ const formBValidationSchemaDefault = yup.object({
       "currRevalDate",
       "Current Revalidation Date must be empty for Public Health non-medical trainees, and is required otherwise",
       function (value) {
-        const { gmcNumber, publicHealthNumber } = this.parent || {};
+        const { gmcNumber, gdcNumber, publicHealthNumber } = this.parent || {};
         const isPH =
           (!gmcNumber || gmcNumber.trim() === "") &&
+          (!gdcNumber || gdcNumber.trim() === "") &&
           publicHealthNumber &&
           publicHealthNumber.trim() !== "";
         if (isPH) {
