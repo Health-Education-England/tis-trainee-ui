@@ -16,7 +16,8 @@ const atLeastOneNonBlank = (fields: string[], message: string) =>
     );
   });
 
-const formBValidationSchemaDefault = yup.object({ ...formBValidationSchemaDefaultJson,
+const formBValidationSchemaDefault = yup.object({
+  ...formBValidationSchemaDefaultJson,
   gmcNumber: atLeastOneNonBlank(
     ["gmcNumber", "gdcNumber", "publicHealthNumber"],
     "At least one of GMC number, GDC number, or Public Health number must be provided"

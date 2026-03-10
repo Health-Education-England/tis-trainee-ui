@@ -15,7 +15,8 @@ const atLeastOneNonBlank = (fields: string[], message: string) =>
     );
   });
 
-const formAValidationSchemaDefault = {...parentSchema,
+const formAValidationSchemaDefault = {
+  ...parentSchema,
   gmcNumber: atLeastOneNonBlank(
     ["gmcNumber", "gdcNumber", "publicHealthNumber"],
     "At least one of GMC number, GDC number, or Public Health number must be provided"

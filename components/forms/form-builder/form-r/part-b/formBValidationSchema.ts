@@ -248,7 +248,9 @@ export const formBValidationSchemaDefaultJson = {
   covidDeclarationDto: covid19ValidationSchema
 };
 
-const formBValidationSchemaDefault = yup.object(formBValidationSchemaDefaultJson)
+const formBValidationSchemaDefault = yup.object(
+  formBValidationSchemaDefaultJson
+);
 
 export function getFormBValidationSchema(activeCovidSection: boolean) {
   let formBValidationSchema = formBValidationSchemaDefault;
