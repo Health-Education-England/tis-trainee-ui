@@ -15,10 +15,6 @@ import { useIsPhNonMedic } from "./useIsPhNonMedic";
 
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
-  const traineeProfileData = useAppSelector(
-    state => state.traineeProfile.traineeProfileData
-  );
-  const personalDetails = traineeProfileData?.personalDetails || {};
   const isPHnonMed = useIsPhNonMedic();
 
   let formJson: Form;

@@ -13,7 +13,6 @@ import {
   ProfileDateBoxedGroup,
   TraineeProfile
 } from "../models/TraineeProfile";
-import { PersonalDetails } from "../models/PersonalDetails";
 
 export type ProfileSType = string | null | undefined;
 export class ProfileUtilities {

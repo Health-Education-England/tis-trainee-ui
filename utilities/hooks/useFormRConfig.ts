@@ -29,10 +29,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
   const formData = useSelectFormData(formName) as FormRPartA | FormRPartB;
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const rawReferenceData = useAppSelector(selectAllReference);
-  const traineeProfileData = useAppSelector(
-    state => state.traineeProfile.traineeProfileData
-  );
-  const personalDetails = traineeProfileData?.personalDetails || {};
   const isPHnonMed = useIsPhNonMedic();
 
   let formJson: Form;
@@ -71,7 +67,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
           )
         };
 
-    console.log("Raw reference data in useFormRConfig", rawReferenceData);
     const dbcInternal = [
       ...rawReferenceData.dbc.filter(
         (db: DesignatedBodyKeyValue) => db.internal
