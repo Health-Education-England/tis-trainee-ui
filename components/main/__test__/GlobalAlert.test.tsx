@@ -125,6 +125,24 @@ describe("GlobalAlert", () => {
     expect(screen.getByText(/We have moved/i)).toBeInTheDocument();
   });
 
+  test("renders recruit alert by default and can dismiss it", async () => {
+    const { container } = renderWithProviders(<GlobalAlert />);
+
+    const recruitAlert = queryByAttribute("data-cy", container, "recruitAlert");
+    expect(recruitAlert).toBeInTheDocument();
+    expect(screen.getByText(/deferral/i)).toBeInTheDocument();
+
+    const dismissButton = recruitAlert?.querySelector("button");
+    expect(dismissButton).toBeInTheDocument();
+    dismissButton && dismissButton.click();
+
+    renderWithProviders(<GlobalAlert />);
+
+    expect(
+      queryByAttribute("data-cy", container, "recruitAlert")
+    ).not.toBeInTheDocument();
+  });
+
   test("renders all alerts when conditions for them are met", () => {
     mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
 
@@ -148,6 +166,9 @@ describe("GlobalAlert", () => {
     ).toBeInTheDocument();
     expect(
       queryByAttribute("data-cy", container, "bookmarkAlert")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "recruitAlert")
     ).toBeInTheDocument();
   });
 

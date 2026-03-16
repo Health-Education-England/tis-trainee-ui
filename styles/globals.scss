@@ -170,6 +170,11 @@ body {
   margin: 0;
 }
 
+.recruit-alert {
+  display: flex;
+  align-items: flex-start;
+}
+
 .wte-percentage-header {
   display: inline-flex;
   align-items: center;
@@ -185,6 +190,17 @@ body {
   position: relative;
   top: 5px;
   float: right;
+}
+
+.recruit-alert-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.recruit-link {
+  display: inline-flex;
+  align-items: center;
 }
 
 .nhsuk-pagination__link {
@@ -355,7 +371,7 @@ button:disabled {
 .info-message-container {
   padding: 1rem;
   display: flex;
-  border: 2px solid #0072CE;
+  border: 2px solid #0072ce;
   background-color: #b1d9fa;
   border-radius: 4px;
 }
@@ -367,9 +383,8 @@ button:disabled {
 }
 
 .info-message-icon {
-  color: #0072CE;
+  color: #0072ce;
 }
-
 
 .PhoneInputInput {
   padding: 4px;
