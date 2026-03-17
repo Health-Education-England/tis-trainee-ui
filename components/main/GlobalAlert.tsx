@@ -86,13 +86,9 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
     <div className="recruit-alert" data-cy="recruitAlert">
       <div>
         <p>
-          <b>Shape the future deferral journey for all resident doctors.</b>
+          <b>Improve the deferral process. Earn a CPD letter.</b>
         </p>
-        <p>
-          Take part in NHS user research, influence real service improvements,
-          and receive a letter of participation for continuing professional
-          development (CPD).
-        </p>
+        <p>Help design a better experience for resident doctors nationwide.</p>
         <p>
           <ActionLink
             href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdUQlBTRTc1RUhJMlhERVBMQ0VBUzNHRkoxRi4u&route=shorturl"
@@ -100,7 +96,7 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
             rel="noopener noreferrer"
             className="recruit-link"
           >
-            Sign up now
+            Get involved
           </ActionLink>
         </p>
       </div>
