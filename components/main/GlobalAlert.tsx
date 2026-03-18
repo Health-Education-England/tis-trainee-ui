@@ -89,7 +89,6 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
           <b>Improve the deferral process. Earn a CPD letter.</b>
         </p>
         <p>Help design a better experience for resident doctors nationwide.</p>
-        <p>
           <ActionLink
             href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdUQlBTRTc1RUhJMlhERVBMQ0VBUzNHRkoxRi4u&route=shorturl"
             target="_blank"
@@ -98,7 +97,6 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
           >
             Get involved
           </ActionLink>
-        </p>
       </div>
       <button
         className="recruit-alert-close"

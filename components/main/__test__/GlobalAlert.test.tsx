@@ -134,7 +134,7 @@ describe("GlobalAlert", () => {
 
     const dismissButton = recruitAlert?.querySelector("button");
     expect(dismissButton).toBeInTheDocument();
-    dismissButton && dismissButton.click();
+    dismissButton?.click();
 
     renderWithProviders(<GlobalAlert />);
 
