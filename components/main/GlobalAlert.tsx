@@ -1,15 +1,17 @@
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { Fieldset } from "nhsuk-react-components";
+import { ActionLink, CloseIcon, Fieldset } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
+import { useState } from "react";
 
 export const GlobalAlert = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
+  const [recruitDismissed, setRecruitDismissed] = useState(false);
 
   if (preferredMfa === "NOMFA") return null;
 
@@ -23,6 +25,10 @@ export const GlobalAlert = () => {
     bookmark: {
       status: showBookmarkAlert,
       component: <BookmarkAlert />
+    },
+    recruit: {
+      status: !recruitDismissed,
+      component: <RecruitAlert onDismiss={() => setRecruitDismissed(true)} />
     }
   };
 
@@ -37,6 +43,7 @@ export const GlobalAlert = () => {
       <div className="nhsuk-width-container">
         {alerts.bookmark.status && alerts.bookmark.component}
         {alerts.actionSummary.status && alerts.actionSummary.component}
+        {alerts.recruit.status && alerts.recruit.component}
       </div>
     </aside>
   ) : null;
@@ -70,6 +77,35 @@ function BookmarkAlert() {
         Please update any bookmarks or password managers to use the new{" "}
         <a href="/">{window.location.origin}</a> address.
       </p>
+    </div>
+  );
+}
+
+function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
+  return (
+    <div className="recruit-alert" data-cy="recruitAlert">
+      <div>
+        <p>
+          <b>Improve the deferral process. Earn a CPD letter.</b>
+        </p>
+        <p>Help design a better experience for resident doctors nationwide.</p>
+        <ActionLink
+          href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdUQlBTRTc1RUhJMlhERVBMQ0VBUzNHRkoxRi4u&route=shorturl"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="recruit-link"
+        >
+          Get involved
+        </ActionLink>
+      </div>
+      <button
+        className="recruit-alert-close"
+        aria-label="Dismiss recruitment alert"
+        title="Dismiss recruitment alert"
+        onClick={onDismiss}
+      >
+        <CloseIcon />
+      </button>
     </div>
   );
 }
