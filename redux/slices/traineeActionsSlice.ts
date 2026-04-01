@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
+import { ApiResponse } from "../../services/apiService";
 import { TraineeActionsService } from "../../services/TraineeActionsService";
 import { TraineeAction } from "../../models/TraineeAction";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
@@ -23,7 +23,7 @@ export const fetchTraineeActionsData = createAsyncThunk(
   "traineeActions/fetchTraineeActionsData",
   async () => {
     const actionsService = new TraineeActionsService();
-    const response: AxiosResponse<TraineeAction[]> =
+    const response: ApiResponse<TraineeAction[]> =
       await actionsService.getIncompleteTraineeActions();
     const rawData = response.data;
 
@@ -41,7 +41,7 @@ export const completeTraineeAction = createAsyncThunk(
   "traineeActions/completeTraineeAction",
   async (actionId: string) => {
     const actionService = new TraineeActionsService();
-    const response: AxiosResponse<TraineeAction> =
+    const response: ApiResponse<TraineeAction> =
       await actionService.completeTraineeAction(actionId);
     return response.data;
   }

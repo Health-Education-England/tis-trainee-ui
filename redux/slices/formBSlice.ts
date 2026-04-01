@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
 import {
   FormRPartB,
   initialFormRBBeforeProfileData
 } from "../../models/FormRPartB";
 import { IFormR } from "../../models/IFormR";
+import { ApiResponse } from "../../services/apiService";
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
@@ -63,7 +63,7 @@ export const loadFormBList = createAsyncThunk(
   "formB/fetchFormBList",
   async () => {
     const formsService = new FormsService();
-    const response: AxiosResponse<IFormR[]> =
+    const response: ApiResponse<IFormR[]> =
       await formsService.getTraineeFormRPartBList();
     return DateUtilities.genericSort(response.data, "submissionDate", true);
   }

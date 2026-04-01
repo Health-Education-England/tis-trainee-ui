@@ -1,5 +1,5 @@
 import { TraineeReferenceService } from "../TraineeReferenceService";
-import { AxiosResponse } from "axios";
+import { ApiResponse } from "../apiService";
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { CombinedReferenceData } from "../../models/CombinedReferenceData";
 import { mockedCombinedReference } from "../../mock-data/combinedReferenceData";
@@ -7,7 +7,7 @@ import { mockedCombinedReference } from "../../mock-data/combinedReferenceData";
 const mockService = new TraineeReferenceService();
 describe("TraineeReferenceService", () => {
   it("getCombinedReferenceData method returns success response on promise resolve", () => {
-    const successResponse: Promise<AxiosResponse<CombinedReferenceData>> =
+    const successResponse: Promise<ApiResponse<CombinedReferenceData>> =
       Promise.resolve({
         data: mockedCombinedReference,
         status: 200,

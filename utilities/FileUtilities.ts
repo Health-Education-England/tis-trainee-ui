@@ -1,9 +1,9 @@
-import { AxiosResponse } from "axios";
 import { showToast, ToastType } from "../components/common/ToastMessage";
+import { ApiResponse } from "../services/apiService";
 import { FormsService } from "../services/FormsService";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
-type PdfFunction = () => Promise<AxiosResponse<Blob>>;
+type PdfFunction = () => Promise<ApiResponse<Blob>>;
 
 export class FileUtilities {
   public static async downloadPdf(filename: string, getPdf: PdfFunction) {
