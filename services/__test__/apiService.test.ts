@@ -253,6 +253,28 @@ describe("ApiService", () => {
     expect(sentrySpy).toHaveBeenCalledWith(networkError);
   });
 
+  it("should reject when session retrieval fails and capture the error", async () => {
+    const sentrySpy = jest.spyOn(Sentry, "captureException");
+    const mockedFetchAuthSession = fetchAuthSession as jest.MockedFunction<
+      typeof fetchAuthSession
+    >;
+    const sessionError = new Error("Session retrieval failed");
+    mockedFetchAuthSession.mockRejectedValue(sessionError);
+
+    const fetchMock = jest.fn();
+    Object.defineProperty(globalThis, "fetch", {
+      value: fetchMock,
+      writable: true,
+      configurable: true
+    });
+
+    const service = new ApiService("https://example.test");
+
+    await expect(service.get("/trainees")).rejects.toBe(sessionError);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(sentrySpy).toHaveBeenCalledWith(sessionError);
+  });
+
   it("should use fallback ApiError message when statusText is empty", () => {
     const apiError = new ApiError({
       data: undefined,
@@ -263,6 +285,20 @@ describe("ApiService", () => {
     });
 
     expect(apiError.message).toBe("Request failed with status 500");
+  });
+
+  it("should preserve ApiError prototype chain", () => {
+    const apiError = new ApiError({
+      data: undefined,
+      status: 400,
+      statusText: "Bad Request",
+      headers: {},
+      config: {}
+    });
+
+    expect(apiError).toBeInstanceOf(ApiError);
+    expect(apiError).toBeInstanceOf(Error);
+    expect(Object.getPrototypeOf(apiError)).toBe(ApiError.prototype);
   });
 
   it("should reject when 2xx JSON body is malformed and capture parse error", async () => {

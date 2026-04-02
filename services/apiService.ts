@@ -30,6 +30,10 @@ export class ApiError<T = unknown> extends Error {
     super(
       response.statusText || `Request failed with status ${response.status}`
     );
+    Object.setPrototypeOf(this, ApiError.prototype);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ApiError);
+    }
     this.name = "ApiError";
     this.data = response.data;
     this.status = response.status;
@@ -141,18 +145,19 @@ export class ApiService {
     formData?: TRequest,
     config: ApiRequestConfig = {}
   ): Promise<ApiResponse<TResponse>> {
-    const headers = await this.getRequestHeaders(config.headers);
     const responseType = config.responseType ?? "json";
-    const requestConfig: RequestInit = {
-      method,
-      headers
-    };
-
-    if (formData !== undefined) {
-      requestConfig.body = JSON.stringify(formData);
-    }
 
     try {
+      const headers = await this.getRequestHeaders(config.headers);
+      const requestConfig: RequestInit = {
+        method,
+        headers
+      };
+
+      if (formData !== undefined) {
+        requestConfig.body = JSON.stringify(formData);
+      }
+
       const response = await fetch(`${this.baseUrl}${endpoint}`, requestConfig);
       const responseHeaders = normalizeHeaders(response.headers);
 

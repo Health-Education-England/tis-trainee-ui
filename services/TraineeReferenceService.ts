@@ -1,5 +1,4 @@
-import ApiService from "./apiService";
-import { ApiResponse } from "./apiService";
+import ApiService, { ApiResponse } from "./apiService";
 import { CombinedReferenceData } from "../models/CombinedReferenceData";
 export class TraineeReferenceService extends ApiService {
   constructor() {
@@ -51,7 +50,7 @@ export class TraineeReferenceService extends ApiService {
   }
 
   getCombinedReferenceData(): Promise<CombinedReferenceData> {
-    return Promise.all([
+    return Promise.all<any>([
       this.get("/gender").then(response => response.data),
       this.get("/college").then(response => response.data),
       this.get("/dbc").then(response => response.data),
