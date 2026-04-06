@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
 import { FeatureFlags } from "../../models/FeatureFlags";
+import { ApiResponse } from "../../services/apiService";
 import { FormsService } from "../../services/FormsService";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
@@ -21,7 +21,7 @@ export const fetchFeatureFlags = createAsyncThunk(
   "forms/fetchFeatureFlags",
   async () => {
     const formsService = new FormsService();
-    const response: AxiosResponse<FeatureFlags> =
+    const response: ApiResponse<FeatureFlags> =
       await formsService.getFeatureFlags();
     return response.data;
   }

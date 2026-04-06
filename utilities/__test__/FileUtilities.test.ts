@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { ApiResponse } from "../../services/apiService";
 import { FileUtilities } from "../FileUtilities";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 jest.mock("../../components/common/ToastMessage");
@@ -25,14 +25,12 @@ describe("FileUtilities.downloadPdf", () => {
   });
 
   it("should download PDF successfully", async () => {
-    const mockResponse: AxiosResponse<Blob> = {
+    const mockResponse: ApiResponse<Blob> = {
       data: new Blob(["PDF content"], { type: "application/pdf" }),
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {
-        headers: {} as any
-      }
+      config: {}
     };
     const getPdfMock = jest.fn().mockResolvedValue(mockResponse);
 
@@ -43,7 +41,7 @@ describe("FileUtilities.downloadPdf", () => {
     expect(createElementMock).toHaveBeenCalledWith("a");
   });
 
-  it("should handle response with Axios error object", async () => {
+  it("should handle response with an error object", async () => {
     const errorResponse = { message: "Network error" };
     const getPdfMock = jest.fn().mockRejectedValue(errorResponse);
 

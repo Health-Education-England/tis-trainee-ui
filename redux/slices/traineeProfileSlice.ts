@@ -4,9 +4,9 @@ import {
   PayloadAction,
   createSelector
 } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
+import { ApiResponse } from "../../services/apiService";
 import {
   initialPersonalDetails,
   PersonalDetails
@@ -40,7 +40,7 @@ export const fetchTraineeProfileData = createAsyncThunk(
   "traineeProfile/fetchTraineeProfileData",
   async () => {
     const traineeProfileService = new TraineeProfileService();
-    const response: AxiosResponse<TraineeProfile> =
+    const response: ApiResponse<TraineeProfile> =
       await traineeProfileService.getTraineeProfile();
     return response.data;
   }
@@ -50,7 +50,7 @@ export const signCoj = createAsyncThunk(
   "traineeProfile/programmeMembership/signCoj",
   async (programmeMembershipId: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: AxiosResponse<ProgrammeMembership> =
+    const response: ApiResponse<ProgrammeMembership> =
       await traineeProfileService.signCoj(programmeMembershipId);
     return response.data;
   }
@@ -60,7 +60,7 @@ export const updateGmc = createAsyncThunk(
   "traineeProfile/personalDetails/updateGmc",
   async (gmc: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: AxiosResponse<PersonalDetails> =
+    const response: ApiResponse<PersonalDetails> =
       await traineeProfileService.updateGmc(gmc);
     return response.data;
   }

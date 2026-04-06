@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
 import { IFormR } from "../../models/IFormR";
 import { LifeCycleState } from "../../models/LifeCycleState";
+import { ApiResponse } from "../../services/apiService";
 import { FormsService } from "../../services/FormsService";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText } from "../../utilities/Constants";
@@ -33,7 +33,7 @@ export const fetchForms = createAsyncThunk(
   "forms/fetchForms",
   async (path: string) => {
     const formsService = new FormsService();
-    let response: AxiosResponse<IFormR[]>;
+    let response: ApiResponse<IFormR[]>;
     if (path === "/formr-a") {
       response = await formsService.getTraineeFormRPartAList();
     } else {

@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { ApiResponse } from "../apiService";
 import { TraineeProfileService } from "../TraineeProfileService";
 import {
   mockProgrammeMemberships,
@@ -12,7 +12,7 @@ import { FileUtilities } from "../../utilities/FileUtilities";
 const mockService = new TraineeProfileService();
 describe("TraineeProfileService", () => {
   it("getTraineeProfile method should return success response", () => {
-    const successResponse: Promise<AxiosResponse<TraineeProfile>> =
+    const successResponse: Promise<ApiResponse<TraineeProfile>> =
       Promise.resolve({
         data: mockTraineeProfile,
         status: 200,
@@ -35,7 +35,7 @@ describe("TraineeProfileService", () => {
   });
 
   it("signCoj method should return success response", () => {
-    const successResponse: Promise<AxiosResponse<ProgrammeMembership>> =
+    const successResponse: Promise<ApiResponse<ProgrammeMembership>> =
       Promise.resolve({
         data: mockProgrammeMemberships[0],
         status: 200,
@@ -66,7 +66,7 @@ describe("TraineeProfileService", () => {
   });
 
   it("getPmConfirmation method should download PM confirmation PDF", () => {
-    const successResponse: Promise<AxiosResponse<Blob>> = Promise.resolve({
+    const successResponse: Promise<ApiResponse<Blob>> = Promise.resolve({
       data: new Blob(),
       status: 200,
       statusText: "OK",
@@ -74,13 +74,11 @@ describe("TraineeProfileService", () => {
       config: {}
     });
 
-    jest
-      .spyOn(mockService.axiosInstance, "get")
-      .mockReturnValue(successResponse);
+    jest.spyOn(mockService, "get").mockReturnValue(successResponse);
 
     const result = mockService.getPmConfirmation("1");
 
-    expect(mockService.axiosInstance.get).toHaveBeenCalledWith(
+    expect(mockService.get).toHaveBeenCalledWith(
       "/programme-membership/1/confirmation",
       {
         headers: {
@@ -109,7 +107,7 @@ describe("TraineeProfileService", () => {
   });
 
   it("updateGmc method should return success response", () => {
-    const successResponse: Promise<AxiosResponse<ProgrammeMembership>> =
+    const successResponse: Promise<ApiResponse<ProgrammeMembership>> =
       Promise.resolve({
         data: mockProgrammeMemberships[0],
         status: 200,

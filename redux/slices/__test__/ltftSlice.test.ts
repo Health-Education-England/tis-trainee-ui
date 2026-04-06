@@ -20,8 +20,8 @@ import { FormsService } from "../../../services/FormsService";
 import * as ltftUtilities from "../../../utilities/ltftUtilities";
 import * as ToastMessage from "../../../components/common/ToastMessage";
 import { mapLtftObjToDto } from "../../../utilities/ltftUtilities";
-import { AxiosResponse, AxiosRequestHeaders } from "axios";
 import { LtftDto, LtftObjNew, LtftState } from "../../../models/LtftTypes";
+import { ApiResponse } from "../../../services/apiService";
 import { mockLtftFormObjAfterFirstSave } from "../../../mock-data/mock-ltft-data";
 
 jest.mock("../../../services/FormsService");
@@ -42,13 +42,11 @@ const createLtftThunkTests = (
   describe(`ltftSlice - ${thunkName} thunk`, () => {
     let store: TestStore;
     const mockFormData: LtftObjNew = mockLtftFormObjAfterFirstSave;
-    const mockResponse: AxiosResponse<LtftDto, any> = {
+    const mockResponse: ApiResponse<LtftDto> = {
       status: 200,
       statusText: "OK",
-      config: {
-        headers: {} as AxiosRequestHeaders
-      },
-      headers: {} as AxiosRequestHeaders,
+      config: {},
+      headers: {},
       data: {
         ...mapLtftObjToDto(mockFormData),
         id: "123updated",
@@ -302,7 +300,7 @@ describe("ltftSlice - deleteLtft thunk", () => {
 describe("ltftSlice - loadSavedLtft thunk", () => {
   let store: TestStore;
   const mockFormId = "ltft-456";
-  let mockResponse: AxiosResponse<LtftDto, any>;
+  let mockResponse: ApiResponse<LtftDto>;
   let mockMappedLtft: LtftObjNew;
 
   beforeEach(() => {
@@ -317,10 +315,8 @@ describe("ltftSlice - loadSavedLtft thunk", () => {
     mockResponse = {
       status: 200,
       statusText: "OK",
-      config: {
-        headers: {} as AxiosRequestHeaders
-      },
-      headers: {} as AxiosRequestHeaders,
+      config: {},
+      headers: {},
       data: {
         ...mapLtftObjToDto(mockLtftFormObjAfterFirstSave),
         id: mockFormId,

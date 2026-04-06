@@ -19,7 +19,7 @@ The app is written in [TypeScript](https://www.typescriptlang.org/) using the [R
 1. [React Router](https://reactrouter.com/) for Routing
 2. [Redux Toolkit](https://redux-toolkit.js.org/) for State Management
 3. [Redux-Thunk](https://github.com/reduxjs/redux-thunk) middleware (for e.g. handling asynchronous redux actions)
-4. [Axios](https://github.com/axios/axios) for HTTP communication
+4. Fetch API with a shared service wrapper for HTTP communication
 5. [nhsuk react components](https://github.com/NHSDigital/nhsuk-react-components/releases/tag/v1.2.0) for UI design
 6. [Jest](https://jestjs.io/) for unit and snapshot testing
 7. [Cypress](https://www.cypress.io/) for E2E testing amd Component Testing (CT)

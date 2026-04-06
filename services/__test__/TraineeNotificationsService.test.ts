@@ -1,4 +1,4 @@
-import { AxiosRequestHeaders, AxiosResponse } from "axios";
+import { ApiResponse } from "../apiService";
 import { TraineeNotificationsService } from "../TraineeNotificationsService";
 import { NotificationPage } from "../../redux/slices/notificationsSlice";
 import { mockInAppNotificationsData } from "../../mock-data/mock-notifications-data";
@@ -6,7 +6,7 @@ import { mockInAppNotificationsData } from "../../mock-data/mock-notifications-d
 const mockService = new TraineeNotificationsService();
 describe("TraineeNotificationsService", () => {
   it("getNotifications should call /notifications when no params provided", async () => {
-    const mockResponse: AxiosResponse<NotificationPage> = {
+    const mockResponse: ApiResponse<NotificationPage> = {
       data: {
         content: mockInAppNotificationsData,
         page: {
@@ -19,9 +19,7 @@ describe("TraineeNotificationsService", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {
-        headers: {} as AxiosRequestHeaders
-      }
+      config: {}
     };
 
     jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
@@ -41,7 +39,7 @@ describe("TraineeNotificationsService", () => {
       status: "UNREAD",
       keyword: "Placement"
     };
-    const mockResponse: AxiosResponse<NotificationPage> = {
+    const mockResponse: ApiResponse<NotificationPage> = {
       data: {
         content: mockInAppNotificationsData,
         page: {
@@ -54,9 +52,7 @@ describe("TraineeNotificationsService", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {
-        headers: {} as AxiosRequestHeaders
-      }
+      config: {}
     };
 
     jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
@@ -71,7 +67,7 @@ describe("TraineeNotificationsService", () => {
 
   it("getNotifications should ignore empty or null param field values", async () => {
     const params = { page: 1, type: "" };
-    const mockResponse: AxiosResponse<NotificationPage> = {
+    const mockResponse: ApiResponse<NotificationPage> = {
       data: {
         content: mockInAppNotificationsData,
         page: {
@@ -84,9 +80,7 @@ describe("TraineeNotificationsService", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {
-        headers: {} as AxiosRequestHeaders
-      }
+      config: {}
     };
 
     jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);
@@ -99,7 +93,7 @@ describe("TraineeNotificationsService", () => {
 
   it("getNotifications should ignore empty or null param values", async () => {
     const params = { page: "", type: "" };
-    const mockResponse: AxiosResponse<NotificationPage> = {
+    const mockResponse: ApiResponse<NotificationPage> = {
       data: {
         content: mockInAppNotificationsData,
         page: {
@@ -112,9 +106,7 @@ describe("TraineeNotificationsService", () => {
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {
-        headers: {} as AxiosRequestHeaders
-      }
+      config: {}
     };
 
     jest.spyOn(mockService, "get").mockResolvedValue(mockResponse);

@@ -1,57 +1,56 @@
-import ApiService from "./apiService";
-import { AxiosResponse } from "axios";
+import ApiService, { ApiResponse } from "./apiService";
 import { CombinedReferenceData } from "../models/CombinedReferenceData";
 export class TraineeReferenceService extends ApiService {
   constructor() {
     super("/api/reference");
   }
 
-  getGenders(): Promise<AxiosResponse<any>> {
+  getGenders(): Promise<ApiResponse<any>> {
     return this.get("/gender");
   }
 
-  getQualifications(): Promise<AxiosResponse<any>> {
+  getQualifications(): Promise<ApiResponse<any>> {
     return this.get("/qualification");
   }
 
-  getColleges(): Promise<AxiosResponse<any>> {
+  getColleges(): Promise<ApiResponse<any>> {
     return this.get("/college");
   }
 
-  getDesignatedBodies(): Promise<AxiosResponse<any>> {
+  getDesignatedBodies(): Promise<ApiResponse<any>> {
     return this.get("/dbc");
   }
 
-  getLocalOffices(): Promise<AxiosResponse<any>> {
+  getLocalOffices(): Promise<ApiResponse<any>> {
     return this.get("/local-office");
   }
 
-  getTrainingGrades(): Promise<AxiosResponse<any>> {
+  getTrainingGrades(): Promise<ApiResponse<any>> {
     return this.get("/grade");
   }
 
-  getImmigrationStatus(): Promise<AxiosResponse<any>> {
+  getImmigrationStatus(): Promise<ApiResponse<any>> {
     return this.get("/immigration-status");
   }
 
-  getCurricula(): Promise<AxiosResponse<any>> {
+  getCurricula(): Promise<ApiResponse<any>> {
     return this.get("/curriculum");
   }
 
-  getDeclarationType(): Promise<AxiosResponse<any>> {
+  getDeclarationType(): Promise<ApiResponse<any>> {
     return this.get("/declaration-type");
   }
 
-  getCovidChangeCircs(): Promise<AxiosResponse<any>> {
+  getCovidChangeCircs(): Promise<ApiResponse<any>> {
     return this.get("/covid-change-circs");
   }
 
-  getProgrammeMembershipType(): Promise<AxiosResponse<any>> {
+  getProgrammeMembershipType(): Promise<ApiResponse<any>> {
     return this.get("/programme-membership-type");
   }
 
   getCombinedReferenceData(): Promise<CombinedReferenceData> {
-    return Promise.all([
+    return Promise.all<any>([
       this.get("/gender").then(response => response.data),
       this.get("/college").then(response => response.data),
       this.get("/dbc").then(response => response.data),
