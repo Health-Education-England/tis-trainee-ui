@@ -161,7 +161,7 @@ describe("Form R Part A - JSON form fields visibility status checks", () => {
     cy.navNext();
     cy.clickSelect('[data-cy="trainingGrade"]', null, true);
     cy.get('[data-cy="startDate-input"]').type(startDate);
-    cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
+    // cy.clickSelect('[data-cy="programmeMembershipType"]', null, true);
     cy.clearAndType('[data-cy="wholeTimeEquivalent-input"]', "1");
     cy.get('[data-cy="navNext"]')
       .should("have.text", "Next:Review & submit")
