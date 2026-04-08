@@ -1,7 +1,36 @@
 import dayjs from "dayjs";
 import { CctCalculation } from "../redux/slices/cctSlice";
+import { calcCctDate } from "../utilities/CctUtilities";
 
-const changeStartDate = dayjs().format("YYYY-MM-DD");
+// mockCctList[0] cct data -----------------
+const pmStartDate1 = dayjs().subtract(2, "year").format("YYYY-MM-DD");
+const pmEndDate1 = dayjs().add(2, "year").format("YYYY-MM-DD");
+const wteBeforeChange1 = 1;
+const wte1 = 0.7;
+const startDate1 = dayjs().add(16, "week").format("YYYY-MM-DD");
+
+const cctDate1 = calcCctDate(pmEndDate1, wteBeforeChange1, wte1, startDate1);
+// -----------------------------------------
+
+// mockCctList[1] cct data -----------------
+const pmStartDate2 = dayjs().subtract(3, "year").format("YYYY-MM-DD");
+const pmEndDate2 = dayjs().add(5, "year").format("YYYY-MM-DD");
+const wteBeforeChange2 = 0.5;
+const wte2 = 0.8;
+const startDate2 = dayjs().add(15, "week").format("YYYY-MM-DD");
+
+const cctDate2 = calcCctDate(pmEndDate2, wteBeforeChange2, wte2, startDate2);
+// -----------------------------------------
+
+// mockCctCalc data -----------------
+const pmStartDate = dayjs().subtract(6, "year").format("YYYY-MM-DD");
+const pmEndDate = dayjs().add(2, "year").format("YYYY-MM-DD");
+const wteBeforeChange = 1;
+const wte = 0.8;
+const startDate = dayjs().add(20, "week").format("YYYY-MM-DD");
+
+const cctDate = calcCctDate(pmEndDate, wteBeforeChange, wte, startDate);
+// -----------------------------------------
 
 export const mockCctList: CctCalculation[] = [
   {
@@ -10,20 +39,20 @@ export const mockCctList: CctCalculation[] = [
     programmeMembership: {
       id: "a6de88b8-de41-48dd-9492-a518f5001176",
       name: "Cardiology",
-      startDate: "2020-01-01",
-      endDate: "2028-01-01",
-      wte: 1.0,
+      startDate: pmStartDate1,
+      endDate: pmEndDate1,
+      wte: wteBeforeChange1,
       designatedBodyCode: "WTF",
       managingDeanery: "North West"
     },
     changes: [
       {
         type: "LTFT",
-        startDate: changeStartDate,
-        wte: 0.7
+        startDate: startDate1,
+        wte: wte1
       }
     ],
-    cctDate: "2029-03-07",
+    cctDate: cctDate1,
     created: "2024-12-09T10:13:09.559Z",
     lastModified: "2024-12-09T15:11:04.100Z"
   },
@@ -33,20 +62,20 @@ export const mockCctList: CctCalculation[] = [
     programmeMembership: {
       id: "93dae29a-fd44-4b59-8779-3e7d3d90b237",
       name: "Respiratory Medicine",
-      startDate: "2024-08-07",
-      endDate: "2029-07-31",
-      wte: 1.0,
+      startDate: pmStartDate2,
+      endDate: pmEndDate2,
+      wte: wteBeforeChange2,
       designatedBodyCode: "WTF2",
       managingDeanery: "North East"
     },
     changes: [
       {
         type: "LTFT",
-        startDate: changeStartDate,
-        wte: 0.6
+        startDate: startDate1,
+        wte: wte2
       }
     ],
-    cctDate: "2032-06-20",
+    cctDate: cctDate2,
     created: "2025-01-20T10:13:09.559Z",
     lastModified: "2025-01-20T11:11:04.100Z"
   }
@@ -58,21 +87,21 @@ export const mockCctCalc: CctCalculation = {
   programmeMembership: {
     id: "a6de88b8-de41-48dd-9492-a518f5001176",
     name: "Cardiology",
-    startDate: "2020-01-01",
-    endDate: "2028-01-01",
-    wte: 1.0,
+    startDate: pmStartDate,
+    endDate: pmEndDate,
+    wte: wteBeforeChange,
     designatedBodyCode: "WTF3",
     managingDeanery: "North North West"
   },
   changes: [
     {
       type: "LTFT",
-      startDate: "2027-01-01",
-      wte: 0.8,
+      startDate: startDate,
+      wte: wte,
       id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
     }
   ],
-  cctDate: "2028-04-02",
+  cctDate: cctDate,
   created: "2024-12-09T10:13:09.559Z",
   lastModified: "2024-12-09T15:11:04.100Z"
 };
