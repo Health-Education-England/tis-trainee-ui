@@ -62,7 +62,7 @@ export default function SwFoundation() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              https://peninsuladeanery.nhs.uk/
+              Peninsula Deanery website
             </a>
           </li>
           <li>
@@ -72,7 +72,7 @@ export default function SwFoundation() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              https://www.severndeanery.nhs.uk/
+              Severn Deanery website
             </a>
           </li>
         </ul>
