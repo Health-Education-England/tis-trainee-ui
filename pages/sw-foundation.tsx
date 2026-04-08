@@ -34,29 +34,53 @@ export default function SwFoundation() {
         </div>
       </Header>
       <main className="nhsuk-width-container nhsuk-u-margin-top-5">
-        <legend
-          className="nhsuk-fieldset__legend nhsuk-fieldset__legend--m"
-          data-cy="tssOverview"
-        >
+        <h1 className="nhsuk-heading-m" data-cy="tssOverview">
           South West: Contacts for Foundation Doctors
-        </legend>
+        </h1>
         <p>
-          For Severn programmes (Programme number starts with &apos;SEV&apos;)
-          &ndash; contact{" "}
+          For <b>Severn</b> programmes &ndash; contact{" "}
           <a href="mailto:england.sevfoundation.sw@nhs.net">
             england.sevfoundation.sw@nhs.net
           </a>
         </p>
         <p>
-          For Peninsula programmes (Programme number starts with
-          &apos;SWP&apos;) &ndash; contact{" "}
+          For <b>Peninsula</b> programmes &ndash; contact{" "}
           <a href="mailto:england.penf1enquiries.sw@nhs.net">
             england.penf1enquiries.sw@nhs.net
           </a>
         </p>
+        <br />
+        <p>
+          If you are not sure which region your programme might fall into,
+          further details of each may be found here:
+        </p>
+        <ul>
+          <li>
+            <b>Peninsula</b>: (Programme number starts with &apos;SWP&apos;){" "}
+            <a
+              href="https://peninsuladeanery.nhs.uk/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://peninsuladeanery.nhs.uk/
+            </a>
+          </li>
+          <li>
+            <b>Severn</b>: (Programme number starts with &apos;SEV&apos;){" "}
+            <a
+              href="https://www.severndeanery.nhs.uk/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://www.severndeanery.nhs.uk/
+            </a>
+          </li>
+        </ul>
       </main>
       <Footer>
-        <Footer.Copyright>&copy; NHS England</Footer.Copyright>
+        <Footer.Copyright>
+          &copy; {new Date().getFullYear()} NHS England
+        </Footer.Copyright>
       </Footer>
     </>
   );
