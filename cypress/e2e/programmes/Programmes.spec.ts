@@ -25,11 +25,14 @@ describe("Programmes", () => {
     cy.checkAndFillNewCctCalcForm();
 
     // edit new wte
-    cy.get('[data-cy="cct-view-new-wte"]').contains("90%");
+    // edit new wte
+    cy.get('[data-cy="cct-view-new-wte-0"]').contains("90%");
     cy.get('[data-cy="cct-edit-btn"]').click();
     cy.clickSelect('[data-cy="changes[0].wte"]', "60%");
+    cy.get('[data-cy="calculate-change-btn-0"]').click();
+    cy.get('[data-cy="change-result-0"]').should("exist");
     cy.get('[data-cy="cct-calc-btn"]').click();
-    cy.get('[data-cy="cct-view-new-wte"]').contains("60%");
+    cy.get('[data-cy="cct-view-new-wte-0"]').contains("60%");
 
     // name and save new calc
     cy.get('[data-cy="cct-save-btn"]').should("exist").click();

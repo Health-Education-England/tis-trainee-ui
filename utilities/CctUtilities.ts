@@ -71,7 +71,9 @@ export function setDefaultProgrammeOption(
     ? {
         label: `${selectedProgramme.programmeName} (${dayjs(
           selectedProgramme.startDate
-        ).format("DD/MM/YYYY")})`,
+        ).format("DD/MM/YYYY")} to ${dayjs(selectedProgramme.endDate).format(
+          "DD/MM/YYYY"
+        )})`,
         value: selectedProgramme.tisId
       }
     : null;

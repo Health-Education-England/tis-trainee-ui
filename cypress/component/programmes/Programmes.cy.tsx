@@ -341,7 +341,7 @@ describe("Programme summary panel", () => {
       .invoke("show")
       .click({ force: true });
     cy.get("#conditionsOfJoining0CojInfo")
-      .should("be.visible")
+      .should("exist")
       .and(
         "include.text",
         "The Conditions of Joining a Specialty Training Programme is your acknowledgement that you will adhere to the professional responsibilities, including the need to participate actively in the assessment and, where applicable revalidation processes."

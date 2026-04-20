@@ -34,7 +34,7 @@ describe("CctCalcView", () => {
     cy.stub(window, "print").as("print");
     cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
     cy.get('[data-cy="cct-calc-warning-label"]').contains(
-      "New completion date"
+      "Projected completion date"
     );
     cy.get('[data-cy="cct-calc-warning-text1"]').should(
       "include.text",
@@ -55,20 +55,31 @@ describe("CctCalcView", () => {
     cy.get('[data-cy="cct-save-pdf-btn"]').should("exist").click();
     cy.get("@print").should("be.called");
   });
-  it("renders the 'passed start date' warning message for a 'stale' saved calc", () => {
+  it("renders an existing cct calc with a past start date without warning in summary", () => {
     const pastStartDateCalc = {
       ...mockCctList[0],
+      cctDate: "2030-03-15",
       changes: [
         {
           ...mockCctList[0].changes[0],
-          startDate: dayjs().subtract(1, "day").format("YYYY-MM-DD")
+          startDate: "2026-04-19",
+          endDate: "2029-04-20",
+          daysAdded: 329,
+          resultingCctDate: "2030-03-15"
         }
       ]
     };
     mountCctViewWithMockData(pastStartDateCalc, false);
-    cy.get(".field-warning-msg").contains(
-      "Change start date is now in the past"
+    cy.get('[data-cy="cct-calc-summary-header"]')
+      .should("exist")
+      .contains("CCT Calculation Summary");
+    cy.get('[data-cy="days-added-0"]').should("include.text", "329");
+    cy.get('[data-cy="change-resulting-cct-0"]').should(
+      "include.text",
+      "15/03/2030"
     );
+    cy.get('[data-cy="saved-cct-date"]').should("include.text", "15/03/2030");
+    cy.get(".field-warning-msg").should("not.exist");
   });
   it("renders an existing cct calculation that has NOT just been edited", () => {
     mountCctViewWithMockData(mockCctList[0], false);
@@ -128,7 +139,7 @@ describe("CctCalcView", () => {
     cy.get(".nhsuk-error-summary").should("not.exist");
   });
 
-  it("show warning if LTFT start date less than 16 weeks in the future", () => {
+  it("renders summary without short notice warning (warnings only in edit view)", () => {
     store.dispatch(updatedCctStatus("idle"));
     mountCctViewWithMockData(
       {
@@ -137,16 +148,19 @@ describe("CctCalcView", () => {
           {
             type: "LTFT",
             startDate: dayjs().add(15, "week").format("YYYY-MM-DD"),
-            wte: 0.7
+            endDate: mockCctList[0].programmeMembership.endDate,
+            wte: 0.7,
+            daysAdded: 0,
+            resultingCctDate: mockCctList[0].cctDate as string
           }
         ]
       },
       true
     );
-    cy.get(".field-warning-msg").should("exist");
+    cy.get(".field-warning-msg").should("not.exist");
   });
 
-  it("hide warning if LTFT start date longer than 16 weeks in the future", () => {
+  it("renders summary without short notice warning for distant start date", () => {
     store.dispatch(updatedCctStatus("idle"));
     mountCctViewWithMockData(
       {
@@ -155,7 +169,10 @@ describe("CctCalcView", () => {
           {
             type: "LTFT",
             startDate: dayjs().add(17, "week").format("YYYY-MM-DD"),
-            wte: 0.7
+            endDate: mockCctList[0].programmeMembership.endDate,
+            wte: 0.7,
+            daysAdded: 0,
+            resultingCctDate: mockCctList[0].cctDate as string
           }
         ]
       },

@@ -1,35 +1,35 @@
 import dayjs from "dayjs";
 import { CctCalculation } from "../redux/slices/cctSlice";
-import { calcCctDate } from "../utilities/CctUtilities";
+import { calcCctDate, calcCctExtension } from "../utilities/CctUtilities";
 
 // mockCctList[0] cct data -----------------
-const pmStartDate1 = dayjs().subtract(2, "year").format("YYYY-MM-DD");
-const pmEndDate1 = dayjs().add(2, "year").format("YYYY-MM-DD");
-const wteBeforeChange1 = 1;
+const pmStartDate1 = "2020-01-01";
+const pmEndDate1 = dayjs().add(3, "year").format("YYYY-MM-DD");
 const wte1 = 0.7;
 const startDate1 = dayjs().add(16, "week").format("YYYY-MM-DD");
 
-const cctDate1 = calcCctDate(pmEndDate1, wteBeforeChange1, wte1, startDate1);
+const cctDate1 = calcCctDate(pmEndDate1, startDate1, pmEndDate1, wte1);
+const daysAdded1 = calcCctExtension(startDate1, pmEndDate1, wte1);
 // -----------------------------------------
 
 // mockCctList[1] cct data -----------------
-const pmStartDate2 = dayjs().subtract(3, "year").format("YYYY-MM-DD");
-const pmEndDate2 = dayjs().add(5, "year").format("YYYY-MM-DD");
-const wteBeforeChange2 = 0.5;
-const wte2 = 0.8;
+const pmStartDate2 = "2022-01-01";
+const pmEndDate2 = dayjs().add(4, "year").format("YYYY-MM-DD");
+const wte2 = 0.5;
 const startDate2 = dayjs().add(15, "week").format("YYYY-MM-DD");
 
-const cctDate2 = calcCctDate(pmEndDate2, wteBeforeChange2, wte2, startDate2);
+const cctDate2 = calcCctDate(pmEndDate2, startDate2, pmEndDate2, wte2);
+const daysAdded2 = calcCctExtension(startDate2, pmEndDate2, wte2);
 // -----------------------------------------
 
 // mockCctCalc data -----------------
 const pmStartDate = dayjs().subtract(6, "year").format("YYYY-MM-DD");
 const pmEndDate = dayjs().add(2, "year").format("YYYY-MM-DD");
-const wteBeforeChange = 1;
 const wte = 0.8;
 const startDate = dayjs().add(20, "week").format("YYYY-MM-DD");
 
-const cctDate = calcCctDate(pmEndDate, wteBeforeChange, wte, startDate);
+const cctDate = calcCctDate(pmEndDate, startDate, pmEndDate, wte);
+const daysAdded = calcCctExtension(startDate, pmEndDate, wte);
 // -----------------------------------------
 
 export const mockCctList: CctCalculation[] = [
@@ -37,11 +37,11 @@ export const mockCctList: CctCalculation[] = [
     id: "6756c2b2-3c1f-4b8d-9e0a-5f6c7d8e9f0a",
     name: "bob1",
     programmeMembership: {
-      id: "a6de88b8-de41-48dd-9492-a518f5001176",
+      id: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
       name: "Cardiology",
       startDate: pmStartDate1,
       endDate: pmEndDate1,
-      wte: wteBeforeChange1,
+      wte: 1,
       designatedBodyCode: "WTF",
       managingDeanery: "North West"
     },
@@ -49,7 +49,10 @@ export const mockCctList: CctCalculation[] = [
       {
         type: "LTFT",
         startDate: startDate1,
-        wte: wte1
+        endDate: pmEndDate1,
+        wte: wte1,
+        daysAdded: daysAdded1,
+        resultingCctDate: cctDate1
       }
     ],
     cctDate: cctDate1,
@@ -60,11 +63,11 @@ export const mockCctList: CctCalculation[] = [
     id: "c96468cc-075c-4ac8-a5a2-1b53220a807e",
     name: "bob2",
     programmeMembership: {
-      id: "93dae29a-fd44-4b59-8779-3e7d3d90b237",
-      name: "Respiratory Medicine",
+      id: "2",
+      name: "General Practice",
       startDate: pmStartDate2,
       endDate: pmEndDate2,
-      wte: wteBeforeChange2,
+      wte: 0.5,
       designatedBodyCode: "WTF2",
       managingDeanery: "North East"
     },
@@ -72,7 +75,10 @@ export const mockCctList: CctCalculation[] = [
       {
         type: "LTFT",
         startDate: startDate1,
-        wte: wte2
+        endDate: pmEndDate2,
+        wte: wte2,
+        daysAdded: daysAdded2,
+        resultingCctDate: cctDate2
       }
     ],
     cctDate: cctDate2,
@@ -85,11 +91,11 @@ export const mockCctCalc: CctCalculation = {
   id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   name: "My Programme - Hours Reduction",
   programmeMembership: {
-    id: "a6de88b8-de41-48dd-9492-a518f5001176",
+    id: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
     name: "Cardiology",
     startDate: pmStartDate,
     endDate: pmEndDate,
-    wte: wteBeforeChange,
+    wte: 1,
     designatedBodyCode: "WTF3",
     managingDeanery: "North North West"
   },
@@ -97,8 +103,11 @@ export const mockCctCalc: CctCalculation = {
     {
       type: "LTFT",
       startDate: startDate,
+      endDate: pmEndDate,
       wte: wte,
-      id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb"
+      id: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+      daysAdded: daysAdded,
+      resultingCctDate: cctDate
     }
   ],
   cctDate: cctDate,

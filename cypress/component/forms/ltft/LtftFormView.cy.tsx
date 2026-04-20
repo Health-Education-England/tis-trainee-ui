@@ -15,7 +15,6 @@ import {
   mockLtftUnsubmittedFormObj,
   pmEndDate,
   wte,
-  wteBeforeChange,
   startDate,
   cctDate,
   mockLtftDraftFirstSuccessSaveResponseDto
@@ -108,16 +107,8 @@ describe("LTFT Form View - editable (DRAFT)", () => {
     cy.get('[data-cy="reviewSubmitHeading"]').should("exist");
     cy.get('[data-cy="pageHeader-Your Programme"]').should("exist");
     cy.get('[data-cy="edit-pmId"]').should("exist");
-    cy.get('[data-cy="pageHeader-Working hours before change"]').should(
-      "exist"
-    );
-    cy.get('[data-cy="wteBeforeChange-value"]').should(
-      "include.text",
-      wteBeforeChange.toString()
-    );
-    cy.get('[data-cy="edit-wteBeforeChange"]').should("exist");
     cy.get(
-      '[data-cy="pageHeader-Proposed change to your working hours"]'
+      '[data-cy="pageHeader-Less than full-time (LTFT) percentage"]'
     ).should("exist");
     cy.get('[data-cy="wte-value"]').should("include.text", wte.toString());
     cy.get('[data-cy="edit-wte"]').should("exist");
@@ -161,9 +152,7 @@ describe("LTFT Form View - editable (DRAFT)", () => {
     cy.get('[data-cy="completionDateChangePmValue"]').contains("Cardiology");
 
     cy.get('[data-cy="completionDateChangeWtesKey"]').should("exist");
-    cy.get('[data-cy="completionDateChangeWtesValue"]').contains(
-      `${wteBeforeChange}% → ${wte}%`
-    );
+    cy.get('[data-cy="completionDateChangeWtesValue"]').contains(`${wte}%`);
     cy.get('[data-cy="completionDateChangeStartDateKey"]').should("exist");
     cy.get('[data-cy="completionDateChangeStartDateValue"]').should(
       "include.text",

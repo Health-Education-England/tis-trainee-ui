@@ -954,15 +954,12 @@ Cypress.Commands.add("checkFlags", (name: string) => {
 });
 
 Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
-  const { shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } = cctCalcWarningsMsgs;
+  const { shortNoticeMsg, wteCustomMsg } = cctCalcWarningsMsgs;
   cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
   cy.url().should("include", "/cct");
-  cy.get('[data-cy="cct-calc-warning"]')
+  cy.get('[data-cy="cctInfoSummary"]')
     .should("exist")
-    .contains("Please note");
-  cy.get('[data-cy="cct-calc-warning"] > p > a')
-    .last()
-    .should("include.text", "contact your Local Office support");
+    .contains("TSS CCT Calculator - uses & limitations");
   cy.get('[data-cy="cct-calc-header"]')
     .should("exist")
     .contains("CCT Calculator");
@@ -992,48 +989,43 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   //main form - header
   cy.get('[data-cy="cct-calc-form"]').should("exist");
   cy.get('[data-cy="cct-calc-btn"]').should("not.exist");
-  cy.get('[data-cy="linked-prog-header"]').contains("Linked Programme");
+  cy.get('[data-cy="linked-prog-header"]').contains("Link your programme");
   cy.get('[data-cy="linked-prog-table"]').should("not.exist");
 
   // - linked prog
   cy.clickSelect('[data-cy="programmeMembership.id"]', null, true);
   cy.get('[data-cy="programmeMembership.id"]').should("exist");
-  cy.get('[data-cy="table-header-linked-prog-name"]').contains(
-    "Linked Programme"
-  );
-  cy.get('[data-cy="table-data-linked-prog-name"]').contains("Cardiology");
-  // - linked prog - clear
-  cy.get(
-    '[data-cy="programmeMembership.id"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
-  cy.get('[data-cy="linked-prog-table"]').should("not.exist");
-  cy.clickSelect('[data-cy="programmeMembership.id"]', null, true);
 
-  // - current WTE
-  cy.clickSelect('[data-cy="programmeMembership.wte"]', null, true);
-  cy.get('[data-cy="changes[0].type"]').contains("LTFT");
-  cy.get(".nhsuk-error-message").first().contains("Please enter a start date");
-  cy.get('[data-cy="changes[0].startDate"]').type("2022-01-01");
-  cy.get(".nhsuk-error-message")
-    .first()
-    .contains("Change date cannot be before today.");
-  cy.get('[data-cy="start-short-notice-warn"]').should("not.exist");
-  cy.get('[data-cy="changes[0].startDate"]').type(dayjs().format("YYYY-MM-DD"));
-  cy.get('[data-cy="start-short-notice-warn"]')
+  // - select change type LTFT
+  cy.get('[data-cy="changes[0].type"]').select("LTFT");
+  cy.get('[data-cy="changes[0].startDate"]').should("exist");
+
+  // - start date validation
+  cy.get('[data-cy="changes[0].startDate"]').type("2019-01-01");
+  cy.get('[data-cy="cct-calc-btn"]').click();
+  cy.get(".nhsuk-error-message").contains(
+    "Start date must not be before the programme start date"
+  );
+  cy.get('[data-cy="change-warnings-0"] .field-warning-msg')
+    .should("exist")
+    .contains("Note: This change start date is in the past");
+  cy.get('[data-cy="changes[0].startDate"]')
+    .clear()
+    .type(dayjs().format("YYYY-MM-DD"));
+  cy.get('[data-cy="change-warnings-0"] .field-warning-msg')
     .should("exist")
     .contains(shortNoticeMsg);
-  cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Please enter a proposed percentage"
-  );
-  cy.clickSelect('[data-cy="changes[0].wte"]', null, true);
-  cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Before and after percentages must be different"
-  );
-  cy.clickSelect('[data-cy="programmeMembership.wte"]', "80%", false);
+
+  // - LTFT percentage
   cy.clickSelect('[data-cy="changes[0].wte"]', "90%", false);
-  cy.get('[data-cy="wte-increase-return-warn"]')
+  cy.get('[data-cy="change-warnings-0"] .field-warning-msg')
+    .first()
     .should("exist")
-    .contains(wteIncreaseMsg);
-  cy.get('[data-cy="wte-custom-warn"]').should("exist").contains(wteCustomMsg);
+    .contains(wteCustomMsg);
+
+  // - set end date and calculate and view summary
+  cy.get('[data-cy="until-end-of-programme-0"]').check();
   cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
+  cy.get('[data-cy="result-row-0"]').should("exist");
+  cy.get('[data-cy="cct-view-summary-btn"]').should("exist").click();
 });

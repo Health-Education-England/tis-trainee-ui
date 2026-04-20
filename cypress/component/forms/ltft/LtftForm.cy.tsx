@@ -63,7 +63,7 @@ describe("LtftForm - draft", () => {
 
     // page 1
     cy.get("h2").contains("Application form");
-    cy.get("h3").contains("Part 1 of 10 - Your Programme");
+    cy.get("h3").contains("Part 1 of 9 - Your Programme");
     cy.get('[data-cy="pmId-label"]').contains(
       "Which programme will your proposed change in working hours affect?"
     );
@@ -77,50 +77,31 @@ describe("LtftForm - draft", () => {
     cy.get("#pmId-error").should("not.exist");
     cy.navNext();
 
-    // page 2
-    cy.get("h3").contains("Part 2 of 10 - Working hours before change");
-    cy.get('[data-cy="wteBeforeChange-label"]').should("exist");
-    cy.get('[data-cy="wteBeforeChange-hint"]').should("exist");
-    cy.get('[data-cy="wteBeforeChange-input"]').type("1.a");
-    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "1");
-    cy.get('[data-cy="wteBeforeChange-input"]').clear().type("1000");
-    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "100");
-    cy.navNext();
-
-    // part 3
+    // part 2
     cy.get("h3").contains(
-      "Part 3 of 10 - Proposed change to your working hours"
+      "Part 2 of 9 - Less than full-time (LTFT) percentage"
     );
     cy.navNext();
-    cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours is required"
-    );
+    cy.get("#wte-error").contains("LTFT percentage is required");
     cy.clearAndType('[data-cy="wte-input"]', "0");
-    cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours cannot be zero"
-    );
+    cy.get("#wte-error").contains("LTFT percentage must be a non-zero value");
     cy.clearAndType('[data-cy="wte-input"]', "1");
     cy.get(".field-warning-container").should("exist");
     cy.get(".field-warning-msg").contains(
-      "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
+      "Warning: A bespoke working hours arrangement (i.e. other than 80%, 70%, 60% or 50%) will require Dean approval."
     );
     // check warning persists on nav
     cy.get('[data-cy="navPrevious"]').click();
     cy.navNext();
     cy.get(".field-warning-msg").should("exist");
-    cy.get('[data-cy="wte-input"]').type("0000");
-    cy.get('[data-cy="wte-input"]').should("have.value", "100");
-    cy.get(".field-warning-container").should("not.exist");
-    cy.get("#wte-error").contains(
-      "Your proposed change must be different from the percentage you gave in Part 2"
-    );
     cy.get('[data-cy="wte-input"]').clear().type("80");
+    cy.get(".field-warning-container").should("not.exist");
     cy.get("#wte-error").should("not.exist");
     cy.get(".field-warning-container").should("not.exist");
     cy.navNext();
 
-    // part 4
-    cy.get("h3").contains("Part 4 of 10 - Start date");
+    // part 3
+    cy.get("h3").contains("Part 3 of 9 - Start date");
     const dateWithin16WeeksOfToday = dayjs()
       .startOf("day")
       .add(16, "weeks")
@@ -135,8 +116,8 @@ describe("LtftForm - draft", () => {
     cy.get("#startDate-error").should("not.exist");
     cy.navNext();
 
-    // Part 5
-    cy.get("h3").contains("Part 5 of 10 - Pre-approver discussions");
+    // Part 4
+    cy.get("h3").contains("Part 4 of 9 - Pre-approver discussions");
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
@@ -164,16 +145,16 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
-    // part 6
-    cy.get("h3").contains("Part 6 of 10 - Other discussions");
+    // part 5
+    cy.get("h3").contains("Part 5 of 9 - Other discussions");
     cy.get('[data-cy="add-Other Discussions-button"]').should("exist").click();
     cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
     cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
     cy.clickSelect('[data-cy="role"]');
     cy.navNext();
 
-    // part 7
-    cy.get("h3").contains("Part 7 of 10 - Reason(s) for applying");
+    // part 6
+    cy.get("h3").contains("Part 6 of 9 - Reason(s) for applying");
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
@@ -191,8 +172,8 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
     cy.navNext();
 
-    // part 8
-    cy.get("h3").contains("Part 8 of 10 - Supporting information");
+    // part 7
+    cy.get("h3").contains("Part 7 of 9 - Supporting information");
     cy.navNext();
     cy.get("#supportingInformation-error").contains(
       "Supporting information is required"
@@ -205,8 +186,8 @@ describe("LtftForm - draft", () => {
     );
     cy.navNext();
 
-    // part 9
-    cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
+    // part 8
+    cy.get("h3").contains("Part 8 of 9 - Skilled Worker visa status");
     cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
     cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
     cy.navNext();
@@ -214,8 +195,8 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
     cy.navNext();
 
-    // part 10
-    cy.get("h3").contains("Part 10 of 10 - Personal Details");
+    // part 9
+    cy.get("h3").contains("Part 9 of 9 - Personal Details");
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
   });
@@ -232,7 +213,7 @@ describe("LtftForm - submitted", () => {
     cy.get('[data-cy="ltftModified"]').should("exist");
     cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
     cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
+      "Part 1 of 9 - Your Programme"
     );
   });
 });
@@ -251,7 +232,7 @@ describe("LtftForm - unsubmitted", () => {
     cy.get('[data-cy="ltftMessage"]').contains("status reason message");
     cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
     cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
+      "Part 1 of 9 - Your Programme"
     );
   });
 });

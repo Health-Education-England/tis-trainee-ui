@@ -4,10 +4,16 @@ import { calcCctDate } from "../utilities/CctUtilities";
 
 export const pmStartDate = dayjs().subtract(3, "year").format("YYYY-MM-DD");
 export const pmEndDate = dayjs(pmStartDate).add(6, "year").format("YYYY-MM-DD");
-export const wteBeforeChange = 100;
 export const wte = 80;
+const wteFraction = wte / 100;
 export const startDate = dayjs().add(15, "week").format("YYYY-MM-DD");
-export const cctDate = calcCctDate(pmEndDate, wteBeforeChange, wte, startDate);
+export const endDate = pmEndDate;
+export const cctDate = calcCctDate(
+  pmEndDate,
+  startDate,
+  pmEndDate,
+  wteFraction
+);
 
 // Summary list
 export const mockLtftDraftList: LtftSummaryObj[] = [
@@ -161,10 +167,12 @@ export const mockLtftNewFormObj: LtftObjNew = {
   pmId: "",
   pmName: "",
   pmStartDate: "",
+  pmWte: 1,
   reasonsOtherDetail: null,
   reasonsSelected: null,
   skilledWorkerVisaHolder: null,
   startDate: null,
+  endDate: null,
   status: {
     current: {
       state: "DRAFT",
@@ -187,8 +195,7 @@ export const mockLtftNewFormObj: LtftObjNew = {
   tpdName: "",
   traineeTisId: "47165",
   type: "LTFT",
-  wte: null,
-  wteBeforeChange: null
+  wte: null
 };
 
 export const mockLtftDraftUpdatedPmFormObjNoSave: LtftObjNew = {
@@ -206,7 +213,14 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   id: null,
   formRef: null,
   name: null,
-  change: { cctDate: null, type: "LTFT", startDate: null, wte: 0, id: null },
+  change: {
+    cctDate: null,
+    type: "LTFT",
+    startDate: null,
+    endDate: null,
+    wte: 0,
+    id: null
+  },
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
@@ -230,7 +244,7 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
     name: "Cardiology",
     startDate: "2025-07-01",
     endDate: "2028-01-01",
-    wte: 0,
+    wte: 1,
     designatedBodyCode: "",
     managingDeanery: "East of England"
   },
@@ -275,7 +289,7 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
     managingDeanery: "East of England",
     startDate: "2025-07-01",
     endDate: "2028-01-01",
-    wte: 0.0
+    wte: 1
   },
   declarations: {
     discussedWithTpd: true,
@@ -366,10 +380,12 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   pmId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
   pmName: "Cardiology",
   pmStartDate: "2025-07-01",
+  pmWte: 1,
   reasonsOtherDetail: "",
   reasonsSelected: [],
   skilledWorkerVisaHolder: null,
   startDate: null,
+  endDate: null,
   status: {
     current: {
       detail: { message: null, reason: null },
@@ -393,8 +409,7 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   tpdName: "",
   traineeTisId: "47165",
   type: "LTFT",
-  wte: null,
-  wteBeforeChange: null
+  wte: null
 };
 
 export const mockLtftSubmittedFormObj: LtftObjNew = {
@@ -406,12 +421,13 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   pmName: "Cardiology",
   pmStartDate: pmStartDate,
   pmEndDate: pmEndDate,
+  pmWte: 1,
   designatedBodyCode: "",
   managingDeanery: "East of England",
   cctDate: cctDate,
   type: "LTFT",
   startDate: startDate,
-  wteBeforeChange: wteBeforeChange,
+  endDate: endDate,
   wte: wte,
   declarations: {
     discussedWithTpd: true,
