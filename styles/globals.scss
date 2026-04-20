@@ -170,11 +170,6 @@ body {
   margin: 0;
 }
 
-.recruit-alert {
-  display: flex;
-  align-items: flex-start;
-}
-
 .wte-percentage-header {
   display: inline-flex;
   align-items: center;
@@ -190,17 +185,6 @@ body {
   position: relative;
   top: 5px;
   float: right;
-}
-
-.recruit-alert-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.recruit-link {
-  display: inline-flex;
-  align-items: center;
 }
 
 .nhsuk-pagination__link {
