@@ -46,7 +46,7 @@ export const AutocompleteSelect: React.FC<AutocompleteSelectProps> = ({
     isMulti: isMulti,
     closeMenuOnSelect: closeMenuOnSelect,
     defaultValue: isMulti ? null : defaultOption,
-    placeholder: "Select or start typing...",
+    placeholder: "Select or type",
     className: "autocomplete-select",
     classNamePrefix: "react-select",
     theme: (theme: Theme) => ({

@@ -19,12 +19,13 @@ export function populateLtftDraftNew(
     pmName: "",
     pmStartDate: "",
     pmEndDate: "",
+    pmWte: 1,
     designatedBodyCode: "",
     managingDeanery: "",
     cctDate: null,
     type: "LTFT",
     startDate: null,
-    wteBeforeChange: null,
+    endDate: null,
     wte: null,
     declarations: {
       discussedWithTpd: true,
@@ -80,6 +81,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       cctDate: ltftObj.cctDate ?? null,
       type: "LTFT",
       startDate: ltftObj.startDate,
+      endDate: ltftObj.endDate ?? null,
       wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
       id: null
     },
@@ -115,7 +117,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       name: ltftObj.pmName ?? null,
       startDate: ltftObj.pmStartDate ?? null,
       endDate: ltftObj.pmEndDate ?? null,
-      wte: ltftObj.wteBeforeChange ? ltftObj.wteBeforeChange / 100 : 0,
+      wte: ltftObj.pmWte ?? 1,
       designatedBodyCode: ltftObj.designatedBodyCode ?? null,
       managingDeanery: ltftObj.managingDeanery ?? null
     },
@@ -170,14 +172,13 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     pmName: ltftDto.programmeMembership.name ?? "",
     pmStartDate: ltftDto.programmeMembership.startDate ?? null,
     pmEndDate: ltftDto.programmeMembership.endDate ?? "",
+    pmWte: ltftDto.programmeMembership.wte ?? 1,
     designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
     managingDeanery: ltftDto.programmeMembership.managingDeanery ?? "",
     cctDate: ltftDto.change.cctDate ?? null,
     type: ltftDto.change.type,
     startDate: ltftDto.change.startDate,
-    wteBeforeChange: ltftDto.programmeMembership.wte
-      ? Math.round(ltftDto.programmeMembership.wte * 100)
-      : null,
+    endDate: ltftDto.change.endDate ?? null,
     wte: ltftDto.change.wte ? Math.round(ltftDto.change.wte * 100) : null,
     declarations: {
       discussedWithTpd: ltftDto.declarations.discussedWithTpd,

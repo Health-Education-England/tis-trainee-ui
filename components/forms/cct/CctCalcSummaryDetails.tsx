@@ -4,16 +4,17 @@ import {
   Container,
   Row,
   SummaryList,
+  Table,
   WarningCallout
 } from "nhsuk-react-components";
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import style from "../../Common.module.scss";
 import dayjs from "dayjs";
 import { CalcDetails } from "./CctCalcCreate";
-import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
-import FieldWarningMsg from "../FieldWarningMsg";
-import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
-import { fteOptions } from "../../../utilities/Constants";
+import {
+  getCalculationTypeConfig,
+  hasWteChangeField
+} from "../../../utilities/CctUtilities";
 
 export function CctCalcSummaryDetails({
   viewedCalc
@@ -22,18 +23,16 @@ export function CctCalcSummaryDetails({
 }>) {
   const { programmeMembership, cctDate, changes, name, created, lastModified } =
     viewedCalc;
-  const { shortNoticeMsg, wteIncreaseMsg, wteCustomMsg } = cctCalcWarningsMsgs;
 
   return (
     <Card className="pdf-visible">
       <WarningCallout>
         <WarningCallout.Label data-cy="cct-calc-warning-label">
-          New completion date
+          Projected completion date
         </WarningCallout.Label>
         <p data-cy="cct-calc-warning-text1">
           Please note: the new completion date shown below is indicative and
-          does not take into account your full circumstances (e.g. Out of
-          Programme, Parental Leave).
+          does not take into account your full circumstances.
         </p>
         <p data-cy="cct-calc-warning-text2">
           Your formal completion date will be agreed at ARCP.
@@ -66,61 +65,89 @@ export function CctCalcSummaryDetails({
                     {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
                   </SummaryList.Value>
                 </SummaryList.Row>
-                <h3 className={style.panelSubHeader}> Changes</h3>
-                <SummaryList.Row>
-                  <SummaryList.Key>
-                    Full-time hours percentage before change
-                  </SummaryList.Key>
-                  <SummaryList.Value>
-                    {programmeMembership.wte && programmeMembership.wte * 100}%
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>
-                    Full-time hours percentage after change
-                  </SummaryList.Key>
-                  <SummaryList.Value data-cy="cct-view-new-wte">
-                    {changes[0].wte && changes[0].wte * 100}%
-                    {changes[0].wte! > programmeMembership.wte! && (
-                      <FieldWarningMsg warningMsgs={[wteIncreaseMsg]} />
-                    )}
-                    {!fteOptions.some(
-                      option =>
-                        option.value === (changes[0].wte as number) * 100
-                    ) && <FieldWarningMsg warningMsgs={[wteCustomMsg]} />}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Change start date</SummaryList.Key>
-                  <SummaryList.Value>
-                    {dayjs(changes[0].startDate).format("DD/MM/YYYY")}
-                    {dayjs(changes[0].startDate).isSameOrAfter(
-                      dayjs().startOf("day")
-                    ) &&
-                      isDateWithin16WeeksOfFirstDate(changes[0].startDate) && (
-                        <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
-                      )}
-                    {dayjs(changes[0].startDate).isBefore(
-                      dayjs().startOf("day")
-                    ) && (
-                      <FieldWarningMsg
-                        warningMsgs={["Change start date is now in the past"]}
-                      />
-                    )}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>New completion date</SummaryList.Key>
-                  <SummaryList.Value
-                    style={{
-                      color: "teal",
-                      fontWeight: "bold"
-                    }}
-                    data-cy="saved-cct-date"
-                  >
-                    {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
+
+                <h3 className={style.panelSubHeader}>Changes</h3>
+                <Table
+                  responsive
+                  className="cct-results-table"
+                  data-cy="cct-summary-table"
+                >
+                  <Table.Head>
+                    <Table.Row>
+                      <Table.Cell>Change</Table.Cell>
+                      <Table.Cell>Type</Table.Cell>
+                      <Table.Cell>Start date</Table.Cell>
+                      <Table.Cell>End date</Table.Cell>
+                      <Table.Cell>Days added</Table.Cell>
+                      <Table.Cell>Resulting completion date</Table.Cell>
+                    </Table.Row>
+                  </Table.Head>
+                  <Table.Body>
+                    {changes.map((change, index) => {
+                      const typeConfig = change.type
+                        ? getCalculationTypeConfig(change.type)
+                        : null;
+                      return (
+                        <Table.Row
+                          key={change.id ?? `change-${index}`}
+                          data-cy={`change-summary-${index}`}
+                        >
+                          <Table.Cell>{index + 1}</Table.Cell>
+                          <Table.Cell>
+                            {typeConfig?.shortLabel ?? change.type}
+                            {change.type &&
+                              hasWteChangeField(change.type) &&
+                              change.wte &&
+                              ` (${change.wte * 100}%)`}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {dayjs(change.startDate).format("DD/MM/YYYY")}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {dayjs(change.endDate).isSame(
+                              dayjs(programmeMembership.endDate),
+                              "day"
+                            )
+                              ? "End of programme"
+                              : dayjs(change.endDate).format("DD/MM/YYYY")}
+                          </Table.Cell>
+                          <Table.Cell data-cy={`days-added-${index}`}>
+                            {change.daysAdded}
+                          </Table.Cell>
+                          <Table.Cell
+                            data-cy={`change-resulting-cct-${index}`}
+                            style={{ color: "teal", fontWeight: "bold" }}
+                          >
+                            {dayjs(change.resultingCctDate).format(
+                              "DD/MM/YYYY"
+                            )}
+                          </Table.Cell>
+                        </Table.Row>
+                      );
+                    })}
+                  </Table.Body>
+                </Table>
+
+                {changes.length > 0 && (
+                  <>
+                    <h3 className={style.panelSubHeader}>Completion date</h3>
+                    <SummaryList.Row>
+                      <SummaryList.Key>
+                        Estimated new completion date
+                      </SummaryList.Key>
+                      <SummaryList.Value
+                        style={{
+                          color: "teal",
+                          fontWeight: "bold",
+                          fontSize: "1.2em"
+                        }}
+                        data-cy="saved-cct-date"
+                      >
+                        {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
+                      </SummaryList.Value>
+                    </SummaryList.Row>
+                  </>
+                )}
               </SummaryList>
             </Col>
           </Row>

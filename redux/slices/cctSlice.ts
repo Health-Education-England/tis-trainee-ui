@@ -2,15 +2,27 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
+import { hydrateCctCalc } from "../../utilities/CctUtilities";
 
-export type CctType = "LTFT";
+export type CalculationType =
+  | "LTFT"
+  | "OOPC"
+  | "OOPP"
+  | "OOPE"
+  | "PARENTAL"
+  | "PHASED"
+  | "SHIELDING"
+  | "SICKNESS"
+  | "UNPAID";
 
 export type CctChangeType = {
   id?: string;
-  type: CctType | null;
+  type: CalculationType | null;
   startDate: Date | string;
-  endDate?: Date | string;
+  endDate: Date | string;
   wte: number | null;
+  daysAdded?: number;
+  resultingCctDate?: string;
 };
 
 export type PmType = {
@@ -34,24 +46,26 @@ export type CctCalculation = {
   lastModified?: Date | string;
 };
 
+export const defaultCctChange: CctChangeType = {
+  type: null,
+  startDate: "",
+  endDate: "",
+  wte: null,
+  daysAdded: 0,
+  resultingCctDate: ""
+};
+
 export const defaultCctCalc: CctCalculation = {
   programmeMembership: {
     id: "",
     name: "",
     startDate: "",
     endDate: "",
-    wte: null,
+    wte: 1,
     designatedBodyCode: null,
     managingDeanery: null
   },
-  changes: [
-    {
-      type: "LTFT",
-      startDate: "",
-      endDate: "",
-      wte: null
-    }
-  ]
+  changes: [defaultCctChange]
 };
 
 type CctState = {
@@ -142,7 +156,7 @@ const cctSlice = createSlice({
       })
       .addCase(loadSavedCctCalc.fulfilled, (state, { payload }) => {
         state.status = "succeeded";
-        state.cctCalc = payload;
+        state.cctCalc = hydrateCctCalc(payload);
       })
       .addCase(loadSavedCctCalc.rejected, (state, { error }) => {
         state.status = "failed";

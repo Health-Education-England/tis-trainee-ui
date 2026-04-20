@@ -137,14 +137,14 @@ export function prepLtftFormData(
     if (
       linkedProgramme.endDate &&
       formData.startDate &&
-      formData.wte &&
-      formData.wteBeforeChange
+      formData.endDate &&
+      formData.wte
     ) {
       newCctDate = calcCctDate(
         linkedProgramme.endDate,
-        formData.wteBeforeChange,
-        formData.wte,
-        formData.startDate
+        formData.startDate,
+        formData.endDate,
+        formData.wte / 100 // convert back to decimal for calculation
       );
     }
 

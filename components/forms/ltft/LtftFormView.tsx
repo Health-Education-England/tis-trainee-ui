@@ -176,10 +176,10 @@ export const LtftFormView = () => {
               </SummaryList.Row>
               <SummaryList.Row>
                 <SummaryList.Key data-cy="completionDateChangeWtesKey">
-                  Working hours percentage change
+                  LTFT percentage
                 </SummaryList.Key>
                 <SummaryList.Value data-cy="completionDateChangeWtesValue">
-                  {formData.wteBeforeChange}% → {formData.wte}%
+                  {formData.wte}%
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>

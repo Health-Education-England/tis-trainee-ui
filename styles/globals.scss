@@ -1022,6 +1022,52 @@ td {
   margin-bottom: 16px;
 }
 
+.cct-change-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.cct-field-type {
+  flex: 0 0 180px;
+  min-width: 180px;
+}
+
+.cct-field-wte {
+  flex: 0 0 140px;
+  min-width: 140px;
+}
+
+.cct-field-date {
+  flex: 0 0 150px;
+  min-width: 130px;
+}
+
+.cct-field-end-date {
+  flex: 0 0 180px;
+  min-width: 150px;
+}
+
+.cct-field-remove {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-top: 28px;
+}
+
+.cct-change-warnings {
+  margin-top: 8px;
+}
+
+.cct-results-table {
+  border: 1px solid #d8dde0;
+
+  th:last-child,
+  td:last-child {
+    padding-right: 16px;
+  }
+}
+
 // Dialog component
 dialog {
   max-width: 50%;

@@ -109,58 +109,17 @@ export const ExpanderMsg = ({
         "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
     },
     cctInfo: {
-      summary: "CCT Calculator further information",
+      summary: "TSS CCT Calculator - uses & limitations",
       text: (
         <>
           <p>
-            This CCT calculation is designed to give a rough estimate of the
-            change in Programme end date based on a change in Whole Time
-            Equivalent (WTE) percentage{" "}
-            <i>
-              <b>before</b>
-            </i>{" "}
-            the specifics of your working arrangments are discussed with your
-            Training Programme Director (TPD).
+            This calculator is designed to <strong>estimate</strong> the effect
+            changes such as Less than full-time (LTFT) training, Out of
+            Programme, Parental Leave and other absences have on your CCT date.
           </p>
           <p>
-            <b>Q. What is your current WTE percentage?</b>
-          </p>
-          <p>
-            {`WTE (Whole Time Equivalent) is a measure of the proportion of full
-            time hours you are currently working as a percentage. If your
-            current percentage is not in the list you can add it by typing (e.g.
-            40 or 40%) and then clicking 'Create' to select it.`}
-          </p>
-          <p>
-            <b> Q. What WTE percentage(s) are you considering?</b>
-          </p>
-          <p>
-            The WTE percentage(s) you select are subject to availability and
-            agreement with your TPD.
-          </p>
-          <p>
-            {`The dropdown lists the standard WTE percentages. You can add your
-            own by typing and clicking 'Create' but this bespoke value might not
-            be possible.`}
-          </p>
-          <p>
-            Returning to full time (100% WTE) requires a full time vacancy to
-            exist.
-          </p>
-          <p>Some specialties will not allow 50% WTE.</p>
-          <p>
-            <b>Q. When should the WTE change begin?</b>
-          </p>
-          <p>
-            The required notice period is normally 16 weeks. Shorter notice
-            periods may be possible but will need to be agreed.
-          </p>
-          <p>
-            <b>Q. When should the WTE change end?</b>
-          </p>
-          <p>
-            The default is the current programme end date but you can choose to
-            end the change in WTE earlier.
+            It does not replace the CCT date that is formally agreed at your
+            ARCP, which will take into account your full circumstances.
           </p>
         </>
       )
@@ -214,8 +173,8 @@ export const ExpanderMsg = ({
           </p>
           <p>
             <i>
-              Note: you can use the same LTFT application form to go less than
-              full-time or increase your working hours percentage.
+              Note: you can use this LTFT application form to go from full-time
+              to LTFT or to change your LTFT working hours percentage.
             </i>
           </p>
         </>

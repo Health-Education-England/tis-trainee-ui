@@ -87,20 +87,17 @@ const wteValidation = (fieldName: string) =>
     .transform((value, originalValue) => (originalValue === "" ? null : value))
     .required(`${fieldName} is required`)
     .min(1, `${fieldName} cannot be zero`)
-    .max(100, `${fieldName} cannot exceed 100`);
+    .max(99, `${fieldName} cannot exceed 99`);
 
 export const ltftValidationSchema = yup.object({
   pmId: StringValidationSchema("Programme"),
-  wteBeforeChange: wteValidation(
-    "The percentage of full time hours before your proposed change"
-  ),
-  wte: wteValidation("The proposed percentage of full time hours").test(
-    "not-equal-to-before",
-    "Your proposed change must be different from the percentage you gave in Part 2",
-    function (value) {
-      return value !== Number(this.parent.wteBeforeChange);
-    }
-  ),
+  wte: yup
+    .number()
+    .typeError("LTFT percentage must be a number")
+    .required("LTFT percentage is required")
+    .min(1, "LTFT percentage must be a non-zero value")
+    .max(99, "LTFT percentage must be a non-zero value")
+    .nullable(),
   tpdName: StringValidationSchema("Pre-approver name"),
   tpdEmail: emailValidation,
   otherDiscussions: yup.array().of(DiscussionsValidationSchema).nullable(),
