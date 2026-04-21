@@ -20,6 +20,7 @@ export interface IProfile {
   traineeProfileData: TraineeProfile;
   status: string;
   gmcStatus: string;
+  emailStatus: string;
   error: any;
 }
 
@@ -33,6 +34,7 @@ export const initialState: IProfile = {
   },
   status: "idle",
   gmcStatus: "idle",
+  emailStatus: "idle",
   error: ""
 };
 
@@ -62,6 +64,16 @@ export const updateGmc = createAsyncThunk(
     const traineeProfileService = new TraineeProfileService();
     const response: ApiResponse<PersonalDetails> =
       await traineeProfileService.updateGmc(gmc);
+    return response.data;
+  }
+);
+
+export const updateEmail = createAsyncThunk(
+  "traineeProfile/personalDetails/updateEmail",
+  async (email: string) => {
+    const traineeProfileService = new TraineeProfileService();
+    const response: ApiResponse<PersonalDetails> =
+      await traineeProfileService.updateEmail(email);
     return response.data;
   }
 );
@@ -143,6 +155,22 @@ const traineeProfileSlice = createSlice({
         state.gmcStatus = "failed";
         state.error = action.error.message;
         showToast("GMC number could not be updated", ToastType.ERROR);
+      })
+      .addCase(updateEmail.pending, (state, _action) => {
+        state.emailStatus = "loading";
+      })
+      .addCase(updateEmail.fulfilled, (state, action) => {
+        state.emailStatus = "succeeded";
+        state.traineeProfileData.personalDetails = action.payload;
+        showToast(
+          "Your email update request has been sent. You will receive an email to your new address once the update has been applied",
+          ToastType.SUCCESS
+        );
+      })
+      .addCase(updateEmail.rejected, (state, action) => {
+        state.emailStatus = "failed";
+        state.error = action.error.message;
+        showToast("Email update request failed ", ToastType.ERROR);
       });
   }
 });

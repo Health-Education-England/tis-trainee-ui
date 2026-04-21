@@ -6,30 +6,50 @@ import TextInputField from "../forms/TextInputField";
 export type GmcDataType = {
   gmcNumber: string;
 };
+
+type GmcFormDataType = GmcDataType & {
+  confirmGmcNumber: string;
+};
+
 type GmcEditFormProps = {
   onSubmit: (data: GmcDataType) => void;
+};
+
+const isSevenDigitGmcNumber = (value?: string | null) => {
+  return !!value && /^\d{7}$/.test(value);
 };
 
 export const gmcValidationSchema = Yup.object().shape({
   gmcNumber: Yup.string()
     .nullable()
     .required("GMC number is required.")
-    .test("is-7-digit-number", "GMC must be a 7-digit number", value => {
-      if (value && value !== null && value !== "") {
-        return /^\d{7}$/.test(value);
-      }
-      return false;
-    })
+    .test(
+      "is-7-digit-number",
+      "GMC must be a 7-digit number",
+      isSevenDigitGmcNumber
+    ),
+  confirmGmcNumber: Yup.string()
+    .nullable()
+    .required("Confirm GMC number is required.")
+    .test(
+      "is-7-digit-number",
+      "GMC must be a 7-digit number",
+      isSevenDigitGmcNumber
+    )
+    .oneOf([Yup.ref("gmcNumber")], "GMC numbers must match")
 });
 
 export function GmcEditForm({ onSubmit }: Readonly<GmcEditFormProps>) {
   return (
     <Formik
       initialValues={{
-        gmcNumber: ""
+        gmcNumber: "",
+        confirmGmcNumber: ""
       }}
       validationSchema={gmcValidationSchema}
-      onSubmit={onSubmit}
+      onSubmit={(data: GmcFormDataType) =>
+        onSubmit({ gmcNumber: data.gmcNumber })
+      }
     >
       {({ dirty, isValid }) => (
         <Form>
@@ -39,6 +59,14 @@ export function GmcEditForm({ onSubmit }: Readonly<GmcEditFormProps>) {
             name="gmcNumber"
             width={10}
             placeholder="Enter GMC number"
+            maxLength={7}
+          />
+          <TextInputField
+            label="Confirm your 7-digit GMC number"
+            type="string"
+            name="confirmGmcNumber"
+            width={10}
+            placeholder="Confirm GMC number"
             maxLength={7}
           />
           <div id="gmc-btns">

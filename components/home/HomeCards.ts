@@ -126,6 +126,10 @@ export const HOME_CARDS: HomeCardProps[] = [
         text: "Update GMC number",
         isFeatureEnabled: (userFeatures: UserFeaturesType) =>
           userFeatures.details.profile.gmcUpdate.enabled
+      },
+      {
+        text: "Update email address",
+        isFeatureEnabled: true
       }
     ]
   },

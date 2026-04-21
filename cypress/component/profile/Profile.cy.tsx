@@ -66,10 +66,13 @@ describe("Profile with MFA set up", () => {
     cy.get("[data-cy=Email]")
       .should("exist")
       .should("contain.text", "email@email.com");
+    cy.get("[data-cy=updateEmailBtn]")
+      .should("exist")
+      .should("contain.text", "change");
     cy.get("[data-cy=postCode")
       .should("exist")
       .should("contain.text", "WC1B 5DN");
-    cy.get("[data-cy=updateGmcLink]")
+    cy.get("[data-cy=updateGmcBtn]")
       .should("exist")
       .should("contain.text", "change");
     cy.get("dialog")
@@ -115,14 +118,14 @@ describe("Profile with MFA set up", () => {
       </Provider>
     );
     cy.testDataSourceLink();
-    cy.get("[data-cy=updateGmcLink]").should("not.exist");
+    cy.get("[data-cy=updateGmcBtn]").should("not.exist");
   });
 
   it("should open GMC modal form when change button clicked.", () => {
     cy.testDataSourceLink();
-    cy.get("[data-cy=updateGmcLink]").click();
+    cy.get("[data-cy=updateGmcBtn]").click();
 
-    cy.get("dialog")
+    cy.get("dialog:visible")
       .should("exist")
       .should("have.attr", "data-cy", "dialogModal")
       .should("be.visible");
@@ -131,10 +134,25 @@ describe("Profile with MFA set up", () => {
       .should("exist")
       .should("have.value", "")
       .should("have.attr", "maxlength", "7");
+    cy.get("#confirmGmcNumber")
+      .should("exist")
+      .should("have.value", "")
+      .should("have.attr", "maxlength", "7");
+    cy.get("[data-cy=gmc-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#gmcNumber").clear().type("123456");
+    cy.get("#gmcNumber--error-message").contains(
+      "GMC must be a 7-digit number"
+    );
     cy.get("[data-cy=gmc-edit-btn]").should("exist").should("be.disabled");
     cy.get("#gmcNumber").clear().type("1234567");
+    cy.get("#confirmGmcNumber").clear().type("7654321");
+    cy.get("#confirmGmcNumber--error-message").contains(
+      "GMC numbers must match"
+    );
+    cy.get("[data-cy=gmc-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#confirmGmcNumber").clear().type("1234567");
     cy.get("[data-cy=gmc-edit-btn]").should("exist").should("not.be.disabled");
-    cy.get("[data-cy=modal-cancel-btn]")
+    cy.get("[data-cy=modal-cancel-btn]:visible")
       .should("exist")
       .should("not.be.disabled");
 
@@ -146,13 +164,73 @@ describe("Profile with MFA set up", () => {
       .should("not.be.visible");
   });
 
+  it("should open Email modal form when change button clicked.", () => {
+    cy.testDataSourceLink();
+    cy.get("[data-cy=updateEmailBtn]").click();
+
+    cy.get("dialog:visible")
+      .should("exist")
+      .should("have.attr", "data-cy", "dialogModal")
+      .should("be.visible");
+
+    cy.get("#email")
+      .should("exist")
+      .should("have.value", "")
+      .should("have.attr", "maxlength", "255");
+    cy.get("#confirmEmail")
+      .should("exist")
+      .should("have.value", "")
+      .should("have.attr", "maxlength", "255");
+    cy.get("[data-cy=email-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#email").clear().type("invalid-email");
+    cy.get("#email--error-message").contains("Email address is invalid");
+    cy.get("[data-cy=email-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#email").clear().type("new.email@tis.nhs.uk");
+    cy.get("#confirmEmail").clear().type("different.email@tis.nhs.uk");
+    cy.get("#confirmEmail--error-message").contains(
+      "Email addresses must match"
+    );
+    cy.get("[data-cy=email-edit-btn]").should("exist").should("be.disabled");
+    cy.get("#confirmEmail").clear().type("new.email@tis.nhs.uk");
+    cy.get("[data-cy=email-edit-btn]")
+      .should("exist")
+      .should("not.be.disabled");
+    cy.get("[data-cy=modal-cancel-btn]:visible")
+      .should("exist")
+      .should("not.be.disabled");
+
+    cy.get("[data-cy=email-edit-btn]").click();
+
+    cy.get("dialog")
+      .should("exist")
+      .should("have.attr", "data-cy", "dialogModal")
+      .should("not.be.visible");
+  });
+
+  it("Email modal form should retain value after Cancel.", () => {
+    cy.testDataSourceLink();
+    cy.get("[data-cy=updateEmailBtn]").should("exist").click();
+    cy.get("#email").clear().type("new.email@tis.nhs.uk");
+    cy.get("#confirmEmail").clear().type("new.email@tis.nhs.uk");
+    cy.get("[data-cy=modal-cancel-btn]:visible").should("exist").click();
+    cy.get("[data-cy=updateEmailBtn]").should("exist").click();
+    cy.get("#email")
+      .should("exist")
+      .should("have.value", "new.email@tis.nhs.uk");
+    cy.get("#confirmEmail")
+      .should("exist")
+      .should("have.value", "new.email@tis.nhs.uk");
+  });
+
   it("GMC modal form should retain value after Cancel.", () => {
     cy.testDataSourceLink();
-    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("[data-cy=updateGmcBtn]").should("exist").click();
     cy.get("#gmcNumber").clear().type("abc");
-    cy.get("[data-cy=modal-cancel-btn]").should("exist").click();
-    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("#confirmGmcNumber").clear().type("abc");
+    cy.get("[data-cy=modal-cancel-btn]:visible").should("exist").click();
+    cy.get("[data-cy=updateGmcBtn]").should("exist").click();
     cy.get("#gmcNumber").should("exist").should("have.value", "abc");
+    cy.get("#confirmGmcNumber").should("exist").should("have.value", "abc");
   });
 
   it("Profile should retain preexisting non-valid GMC value after Cancel.", () => {
@@ -182,15 +260,16 @@ describe("Profile with MFA set up", () => {
       </Provider>
     );
     cy.testDataSourceLink();
-    cy.get('[data-cy="General Medical Council (GMC)"]')
+    cy.get('[data-cy="General Medical Council (GMC)-value"]')
       .should("exist")
       .should("contain.text", "UNKNOWN");
 
-    cy.get("[data-cy=updateGmcLink]").should("exist").click();
+    cy.get("[data-cy=updateGmcBtn]").should("exist").click();
     cy.get("#gmcNumber").clear().type("1234567");
-    cy.get("[data-cy=modal-cancel-btn]").should("exist").click();
+    cy.get("#confirmGmcNumber").clear().type("1234567");
+    cy.get("[data-cy=modal-cancel-btn]:visible").should("exist").click();
 
-    cy.get('[data-cy="General Medical Council (GMC)"]')
+    cy.get('[data-cy="General Medical Council (GMC)-value"]')
       .should("exist")
       .should("contain.text", "UNKNOWN");
   });
