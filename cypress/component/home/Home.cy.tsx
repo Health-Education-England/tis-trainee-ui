@@ -148,6 +148,12 @@ describe("Home with MFA set up", () => {
         .should("contain", "Update GMC number");
     });
 
+    it("should display Profile email Update", () => {
+      cy.get(`[data-cy="Profile"]`)
+        .should("exist")
+        .should("contain", "Update email address");
+    });
+
     it("should display Programmes COJ card item", () => {
       cy.get(`[data-cy="Programmes"]`)
         .should("exist")

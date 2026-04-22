@@ -8,20 +8,27 @@ import style from "../Common.module.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { resetMfaJourney } from "../../redux/slices/userSlice";
 import { PersonalDetails } from "../../models/PersonalDetails";
-import { updateGmc } from "../../redux/slices/traineeProfileSlice";
+import { updateEmail, updateGmc } from "../../redux/slices/traineeProfileSlice";
 import { KeyValue } from "../../models/KeyValue";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { GmcDataType } from "./GmcEditForm";
 import { GmcEditModal } from "./GmcEditModal";
 import Loading from "../common/Loading";
+import { EmailDataType } from "./EmailEditForm";
+import { EmailEditModal } from "./EmailEditModal";
 
 const gmcFieldLabel = "General Medical Council (GMC)";
+const emailFieldLabel = "Email";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
-  const [showModal, setShowModal] = useState(false);
-  const handleChangeLinkClick = () => {
-    setShowModal(true);
+  const [showGmcModal, setShowGmcModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const handleGmcChangeClick = () => {
+    setShowGmcModal(true);
+  };
+  const handleEmailChangeClick = () => {
+    setShowEmailModal(true);
   };
 
   const pd = useAppSelector(
@@ -30,13 +37,22 @@ const Profile = () => {
 
   const userFeatures = useAppSelector(state => state.user.features);
 
-  const handleModalFormSubmit = (data: GmcDataType) => {
-    setShowModal(false);
+  const handleGmcModalSubmit = (data: GmcDataType) => {
+    setShowGmcModal(false);
     dispatch(updateGmc(data.gmcNumber));
   };
 
-  const handleModalFormClose = () => {
-    setShowModal(false);
+  const handleGmcModalClose = () => {
+    setShowGmcModal(false);
+  };
+
+  const handleEmailModalSubmit = (data: EmailDataType) => {
+    setShowEmailModal(false);
+    dispatch(updateEmail(data.email));
+  };
+
+  const handleEmailModalClose = () => {
+    setShowEmailModal(false);
   };
 
   const {
@@ -73,7 +89,7 @@ const Profile = () => {
       label: "Date of birth",
       value: DateUtilities.ToLocalDate(dateOfBirth)
     },
-    { label: "Email", value: email },
+    { label: emailFieldLabel, value: email },
     { label: "Telephone", value: telephoneNumber },
     { label: "Mobile", value: mobileNumber }
   ];
@@ -126,7 +142,9 @@ const Profile = () => {
   }, [dispatch]);
 
   const isLoading: boolean = useAppSelector(
-    state => state.traineeProfile.gmcStatus === "loading"
+    state =>
+      state.traineeProfile.gmcStatus === "loading" ||
+      state.traineeProfile.emailStatus === "loading"
   );
 
   if (isLoading) {
@@ -159,9 +177,22 @@ const Profile = () => {
         </SummaryList.Row>
         {personalData?.map(pd => (
           <SummaryList.Row key={pd.label} data-cy={pd.label}>
-            <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
-            <SummaryList.Value data-cy={pd.value}>{pd.value}</SummaryList.Value>
-            <SummaryList.Actions></SummaryList.Actions>
+            <SummaryList.Key data-cy={`${pd.label}-key`}>
+              {pd.label}
+            </SummaryList.Key>
+            <SummaryList.Value data-cy={`${pd.label}-value`}>
+              {pd.value}
+            </SummaryList.Value>
+            <SummaryList.Actions>
+              {pd.label === emailFieldLabel && (
+                <Button
+                  data-cy="updateEmailBtn"
+                  onClick={handleEmailChangeClick}
+                >
+                  change
+                </Button>
+              )}
+            </SummaryList.Actions>
           </SummaryList.Row>
         ))}
 
@@ -181,17 +212,19 @@ const Profile = () => {
         {registrationDetails?.map(
           rd =>
             rd.value && (
-              <SummaryList.Row key={rd.label} data-cy={rd.label}>
-                <SummaryList.Key>{rd.label}</SummaryList.Key>
-                <SummaryList.Value>{rd.value}</SummaryList.Value>
+              <SummaryList.Row key={rd.label}>
+                <SummaryList.Key data-cy={`${rd.label}-key`}>
+                  {rd.label}
+                </SummaryList.Key>
+                <SummaryList.Value data-cy={`${rd.label}-value`}>
+                  {rd.value}
+                </SummaryList.Value>
                 <SummaryList.Actions>
                   {rd.type === FieldType.Editable &&
                     rd.label === gmcFieldLabel && (
                       <Button
-                        className="internal-link"
-                        data-cy={`updateGmcLink`}
-                        onClick={handleChangeLinkClick}
-                        variation="link"
+                        data-cy={`updateGmcBtn`}
+                        onClick={handleGmcChangeClick}
                       >
                         change
                       </Button>
@@ -202,9 +235,14 @@ const Profile = () => {
         )}
       </SummaryList>
       <GmcEditModal
-        isOpen={showModal}
-        onClose={handleModalFormClose}
-        onSubmit={handleModalFormSubmit}
+        isOpen={showGmcModal}
+        onClose={handleGmcModalClose}
+        onSubmit={handleGmcModalSubmit}
+      />
+      <EmailEditModal
+        isOpen={showEmailModal}
+        onClose={handleEmailModalClose}
+        onSubmit={handleEmailModalSubmit}
       />
     </div>
   );

@@ -7,7 +7,6 @@ import {
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
-import { FileUtilities } from "../../utilities/FileUtilities";
 
 const mockService = new TraineeProfileService();
 describe("TraineeProfileService", () => {
@@ -125,6 +124,30 @@ describe("TraineeProfileService", () => {
     jest.spyOn(mockService, "put").mockRejectedValue(errorResponse);
 
     mockService.updateGmc("1234567").catch(res => {
+      expect(res).toEqual(errorResponse);
+    });
+  });
+
+  it("updateEmail method should return success response", async () => {
+    const successResponse: Promise<ApiResponse<void>> = Promise.resolve({
+      data: undefined,
+      status: 204,
+      statusText: "No Content",
+      headers: {},
+      config: {}
+    });
+
+    jest.spyOn(mockService, "put").mockReturnValue(successResponse);
+
+    await expect(
+      mockService.updateEmail("email@email.com")
+    ).resolves.toHaveProperty("status", 204);
+  });
+
+  it("updateEmail method should return failure response", () => {
+    jest.spyOn(mockService, "put").mockRejectedValue(errorResponse);
+
+    mockService.updateEmail("email@email.com").catch(res => {
       expect(res).toEqual(errorResponse);
     });
   });

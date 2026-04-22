@@ -41,8 +41,13 @@ export class TraineeProfileService extends ApiService {
   }
 
   async updateGmc(gmcNumber: string): Promise<ApiResponse<PersonalDetails>> {
-    let gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
+    let gmcDetails = { ...initialPersonalDetails, gmcNumber };
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
+  }
+
+  async updateEmail(email: string): Promise<ApiResponse<void>> {
+    let emailDetails = { ...initialPersonalDetails, email };
+    return this.put<void>("/basic-details/email-address", emailDetails);
   }
 
   async getCctCalculations(): Promise<ApiResponse<CctCalculation[]>> {
