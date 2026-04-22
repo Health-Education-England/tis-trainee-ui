@@ -68,13 +68,11 @@ export const updateGmc = createAsyncThunk(
   }
 );
 
-export const updateEmail = createAsyncThunk(
+export const updateEmail = createAsyncThunk<void, string>(
   "traineeProfile/personalDetails/updateEmail",
   async (email: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<PersonalDetails> =
-      await traineeProfileService.updateEmail(email);
-    return response.data;
+    await traineeProfileService.updateEmail(email);
   }
 );
 
@@ -159,9 +157,8 @@ const traineeProfileSlice = createSlice({
       .addCase(updateEmail.pending, (state, _action) => {
         state.emailStatus = "loading";
       })
-      .addCase(updateEmail.fulfilled, (state, action) => {
+      .addCase(updateEmail.fulfilled, (state, _action) => {
         state.emailStatus = "succeeded";
-        state.traineeProfileData.personalDetails = action.payload;
         showToast(
           "Your email update request has been sent. You will receive an email to your new address once the update has been applied",
           ToastType.SUCCESS

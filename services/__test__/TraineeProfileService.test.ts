@@ -1,15 +1,12 @@
 import { ApiResponse } from "../apiService";
 import { TraineeProfileService } from "../TraineeProfileService";
 import {
-  mockPersonalDetails,
   mockProgrammeMemberships,
   mockTraineeProfile
 } from "../../mock-data/trainee-profile";
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
-import { PersonalDetails } from "../../models/PersonalDetails";
-import { FileUtilities } from "../../utilities/FileUtilities";
 
 const mockService = new TraineeProfileService();
 describe("TraineeProfileService", () => {
@@ -131,19 +128,20 @@ describe("TraineeProfileService", () => {
     });
   });
 
-  it("updateEmail method should return success response", () => {
-    const successResponse: Promise<ApiResponse<PersonalDetails>> =
-      Promise.resolve({
-        data: mockPersonalDetails,
-        status: 200,
-        statusText: "OK",
-        headers: {},
-        config: {}
-      });
+  it("updateEmail method should return success response", async () => {
+    const successResponse: Promise<ApiResponse<void>> = Promise.resolve({
+      data: undefined,
+      status: 204,
+      statusText: "No Content",
+      headers: {},
+      config: {}
+    });
 
     jest.spyOn(mockService, "put").mockReturnValue(successResponse);
 
-    expect(mockService.updateEmail("email@email.com")).toEqual(successResponse);
+    await expect(
+      mockService.updateEmail("email@email.com")
+    ).resolves.toHaveProperty("status", 204);
   });
 
   it("updateEmail method should return failure response", () => {
