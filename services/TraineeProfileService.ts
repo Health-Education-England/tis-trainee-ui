@@ -47,7 +47,10 @@ export class TraineeProfileService extends ApiService {
 
   async updateEmail(email: string): Promise<ApiResponse<PersonalDetails>> {
     let emailDetails = { ...initialPersonalDetails, email };
-    return this.put<PersonalDetails>("/basic-details/email", emailDetails);
+    return this.put<PersonalDetails>(
+      "/basic-details/email-address",
+      emailDetails
+    );
   }
 
   async getCctCalculations(): Promise<ApiResponse<CctCalculation[]>> {
