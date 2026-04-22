@@ -72,7 +72,7 @@ export const updateEmail = createAsyncThunk(
   "traineeProfile/personalDetails/updateEmail",
   async (email: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<PersonalDetails> =
+    const response: ApiResponse<void> =
       await traineeProfileService.updateEmail(email);
     return response.data;
   }
@@ -161,7 +161,6 @@ const traineeProfileSlice = createSlice({
       })
       .addCase(updateEmail.fulfilled, (state, _action) => {
         state.emailStatus = "succeeded";
-        state.traineeProfileData.personalDetails = _action.payload;
         showToast(
           "Your email update request has been sent. You will receive an email to your new address once the update has been applied",
           ToastType.SUCCESS
