@@ -134,19 +134,12 @@ export function prepLtftFormData(
   const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
   if (linkedProgramme) {
     let newCctDate = null;
-    if (
-      linkedProgramme.endDate &&
-      formData.startDate &&
-      formData.endDate &&
-      formData.wte
-    ) {
-      newCctDate = calcCctDate(
-        linkedProgramme.endDate,
-        formData.startDate,
-        formData.endDate,
-        formData.wte / 100 // convert back to decimal for calculation
-      );
-    }
+    newCctDate = calcCctDate(
+      linkedProgramme.endDate,
+      formData.startDate as Date | string,
+      linkedProgramme.endDate, // Currently, all LTFT applications are to PM end date
+      Number(formData.wte) / 100 // convert back to decimal for calculation
+    );
 
     const {
       programmeName,
