@@ -2,12 +2,13 @@ import { mount } from "cypress/react";
 import { ProgrammeMembership } from "../../../models/ProgrammeMembership";
 import dayjs from "dayjs";
 import { OnboardingTrackerActions } from "../../../components/programmes/trackers/OnboardingTrackerActions";
-import { mockProgrammeMemberships } from "../../../mock-data/trainee-profile";
+import { mockProgrammeMemberships, mockUserFeaturesFoundation, mockUserFeaturesSpecialty } from "../../../mock-data/trainee-profile";
 import { Provider } from "react-redux";
 import store from "../../../redux/store/store";
 import { MemoryRouter } from "react-router-dom";
 import { LinkType } from "../../../utilities/Constants";
 import { TrackerLink } from "../../../components/programmes/trackers/TrackerLink";
+import { updatedUserFeatures } from "../../../redux/slices/userSlice";
 
 // This test file is to test the 'not available' logic in OnboardingTrackerActions component
 
@@ -82,6 +83,38 @@ describe("OnboardingTrackerActions", () => {
     cy.get('[data-cy="status-section-DAY_ONE_EMAIL"]').contains("not tracked");
   });
 });
+
+describe("SpecialtyOnboardingTrackerActions", () => {
+  beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
+    });
+    
+  it("should show Confitions of Joining and FormR PartA & PartB for Specialty trainee", () => {
+    mountOnboardingTrackerActionsWithMockData({
+      ...mockProgramme
+    });
+    cy.get('[data-cy="status-section-SIGN_COJ"]').should("exist");
+    cy.get('[data-cy="status-section-SIGN_FORM_R_PART_A"]').should("exist");
+    cy.get('[data-cy="status-section-SIGN_FORM_R_PART_B"]').should("exist");
+  });
+});
+
+describe("FoundationOnboardingTrackerActions", () => {
+  beforeEach(() => {
+      store.dispatch(updatedUserFeatures(mockUserFeaturesFoundation));
+    });
+    
+  it("should hide Confitions of Joining, LTFT and FormR PartA & PartB for Foundation trainee", () => {
+    mountOnboardingTrackerActionsWithMockData({
+      ...mockProgramme
+    });
+    cy.get('[data-cy="status-section-SIGN_COJ"]').should("not.exist");
+    cy.get('[data-cy="status-section-SIGN_FORM_R_PART_A"]').should("not.exist");
+    cy.get('[data-cy="status-section-SIGN_FORM_R_PART_B"]').should("not.exist");
+    cy.get('[data-cy="status-section-LTFT"]').should("not.exist");
+  });
+});
+
 
 // Test the TrackerLink component separately
 describe("TrackerLink", () => {
