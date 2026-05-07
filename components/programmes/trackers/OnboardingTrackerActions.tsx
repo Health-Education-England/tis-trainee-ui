@@ -26,8 +26,9 @@ import {
   TrackerActionType
 } from "../../../models/Tracker";
 import { NotificationSubjectType } from "../../../models/Notifications";
+import { UserFeaturesType } from "../../../models/FeatureFlags";
 
-const TRACKER_SECTIONS = [
+const getTrackerSections = (userFeatures: UserFeaturesType) => [
   {
     digit: 1,
     headerName: "Welcome (16 weeks)",
@@ -40,11 +41,11 @@ const TRACKER_SECTIONS = [
       "WELCOME_EMAIL",
       "WELCOME", // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
       "REVIEW_PROGRAMME",
-      "SIGN_COJ",
-      "SIGN_FORM_R_PART_A",
-      "SIGN_FORM_R_PART_B",
+      userFeatures.details.programmes.conditionsOfJoining.enabled && "SIGN_COJ",
+      userFeatures.forms.formr.enabled && "SIGN_FORM_R_PART_A",
+      userFeatures.forms.formr.enabled && "SIGN_FORM_R_PART_B",
       "TRAINING_NUMBER",
-      "LTFT",
+      userFeatures.forms.ltft.enabled && "LTFT",
       "DEFERRAL"
     ] as TrackerActionType[]
   },
@@ -108,6 +109,7 @@ export function OnboardingTrackerActions({
 }: Readonly<OnboardingTrackerActionsProps>) {
   const progId = panel.tisId as string;
   const { filteredActionsBelongingToThisProg } = useTraineeActions(progId);
+  const userFeatures = useAppSelector(state => state.user.features);
   const notificationsList = useAppSelector(
     state => state.notifications.notificationsList
   );
@@ -120,7 +122,7 @@ export function OnboardingTrackerActions({
   return (
     <Container className="tracker-container">
       <Row>
-        {TRACKER_SECTIONS.map(section => {
+        {getTrackerSections(userFeatures).map(section => {
           const sectionIsActive = section.isActive(panel.startDate as string);
           const sectionColor = sectionIsActive ? section.color : "#768692";
 
@@ -132,22 +134,25 @@ export function OnboardingTrackerActions({
                 headerName={section.headerName}
               />
 
-              {section.actions.map(actionTag => (
-                <TssTraineeAction
-                  key={actionTag}
-                  tag={actionTag}
-                  pmId={progId}
-                  notificationsMap={notificationsMap}
-                  status={
-                    sectionIsActive
-                      ? getActionStatus(
-                          actionTag,
-                          filteredActionsBelongingToThisProg
-                        )
-                      : "not available"
-                  }
-                />
-              ))}
+              {section.actions.map(
+                actionTag =>
+                  actionTag && (
+                    <TssTraineeAction
+                      key={actionTag}
+                      tag={actionTag}
+                      pmId={progId}
+                      notificationsMap={notificationsMap}
+                      status={
+                        sectionIsActive
+                          ? getActionStatus(
+                              actionTag,
+                              filteredActionsBelongingToThisProg
+                            )
+                          : "not available"
+                      }
+                    />
+                  )
+              )}
             </Col>
           );
         })}

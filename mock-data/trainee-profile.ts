@@ -1160,6 +1160,52 @@ export const mockUserFeaturesSpecialty: UserFeaturesType = {
   }
 };
 
+export const mockUserFeaturesFoundation: UserFeaturesType = {
+  actions: {
+    enabled: true
+  },
+  cct: {
+    enabled: true
+  },
+  details: {
+    enabled: true,
+    placements: {
+      enabled: true
+    },
+    profile: {
+      enabled: true,
+      gmcUpdate: {
+        enabled: true
+      }
+    },
+    programmes: {
+      enabled: true,
+      conditionsOfJoining: {
+        enabled: false
+      },
+      confirmation: {
+        enabled: true
+      }
+    }
+  },
+  forms: {
+    enabled: false,
+    formr: {
+      enabled: false
+    },
+    ltft: {
+      enabled: false,
+      qualifyingProgrammes: []
+    }
+  },
+  notifications: {
+    enabled: true
+  },
+  news: {
+    enabled: true
+  }
+};
+
 export const mockUserFeaturesLtftPilot: UserFeaturesType = {
   ...mockUserFeaturesSpecialty,
   forms: {
