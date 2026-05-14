@@ -4,6 +4,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import store from "../redux/store/store";
 import { Amplify } from "aws-amplify";
+import { I18n } from "aws-amplify/utils";
 import config from "../aws-amplify/config";
 // The styles.css import below is needed for Authenticator default theme https://ui.docs.amplify.aws/components/authenticator
 import "@aws-amplify/ui-react/styles.css";
@@ -14,6 +15,14 @@ import Chatbot from "../components/support/Chatbot";
 const GA4_ID: string = "G-JYWKL6G4R4";
 const HJID: string = "1733748";
 const HJSV: string = "6";
+
+I18n.putVocabularies({
+  en: {
+    "Authenticator App (TOTP)":
+      "Authenticator App Time‑based One‑Time Password (TOTP)",
+    "Confirm TOTP Code": "Enter the 6‑digit code from your Authenticator app"
+  }
+});
 
 Amplify.configure({
   Auth: {
