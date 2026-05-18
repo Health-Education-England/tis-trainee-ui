@@ -34,13 +34,13 @@ jobs:
         run: npm run report:generate
 
       - name: Create report artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cypress-reports
           path: cypress/reports
 
       - name: Create screenshot artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         # No screenshots generated if tests pass.
         if: failure()
         with:
@@ -48,7 +48,7 @@ jobs:
           path: cypress/screenshots
 
       - name: Create video artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         # Test run video was always captured, so this action uses "always()" condition
         if: always()
         with:
