@@ -3,7 +3,8 @@ import {
   render,
   screen,
   queryByAttribute,
-  waitForElementToBeRemoved
+  waitForElementToBeRemoved,
+  fireEvent
 } from "@testing-library/react";
 import { GlobalAlert } from "../GlobalAlert";
 import { Provider } from "react-redux";
@@ -27,7 +28,7 @@ jest.mock("../../../utilities/hooks/useTraineeActions", () => ({
 
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 
-describe("GlobalAlert", () => {
+fdescribe("GlobalAlert", () => {
   const mockUseTraineeActions = useTraineeActions as jest.Mock;
 
   beforeEach(() => {
@@ -130,20 +131,100 @@ describe("GlobalAlert", () => {
     expect(screen.getByText(/We have moved/i)).toBeInTheDocument();
   });
 
-  test("renders recruit alert by default and can dismiss it", async () => {
+  test("renders recruit alert by default and can dismiss it", () => {
     const { container } = renderWithProviders(<GlobalAlert />);
 
-    const recruitAlert = queryByAttribute("data-cy", container, "recruitAlert");
-    expect(recruitAlert).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "recruitAlert")
+    ).toBeInTheDocument();
     expect(screen.getByText(/Digital Product Collective/i)).toBeInTheDocument();
 
-    const dismissButton = recruitAlert?.querySelector("button");
-    expect(dismissButton).toBeInTheDocument();
-    dismissButton?.click();
+    const dismissButton = screen.getByRole("button", {
+      name: /dismiss recruitment alert/i
+    });
+    fireEvent.click(dismissButton);
 
-    await waitForElementToBeRemoved(() =>
+    expect(
       queryByAttribute("data-cy", container, "recruitAlert")
+    ).not.toBeInTheDocument();
+  });
+
+  test("recruit alert exposes the expected heading and Get involved link", () => {
+    renderWithProviders(<GlobalAlert />);
+
+    expect(
+      screen.getByRole("heading", { name: /Think you can make TSS better\?/i })
+    ).toBeInTheDocument();
+
+    const getInvolvedLink = screen.getByRole("link", { name: /get involved/i });
+    expect(getInvolvedLink).toHaveAttribute(
+      "href",
+      "https://forms.office.com/e/gnyr0hMuYN"
     );
+    expect(getInvolvedLink).toHaveAttribute("target", "_blank");
+    expect(getInvolvedLink).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  test("dismissing recruit alert keeps other alerts visible", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
+
+    const { container } = renderWithProviders(<GlobalAlert />, {
+      route: "/home",
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: true },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /dismiss recruitment alert/i })
+    );
+
+    expect(
+      queryByAttribute("data-cy", container, "recruitAlert")
+    ).not.toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "globalAlert")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "outstandingTraineeActions")
+    ).toBeInTheDocument();
+    expect(
+      queryByAttribute("data-cy", container, "bookmarkAlert")
+    ).toBeInTheDocument();
+  });
+
+  test("action summary alert links to /action-summary", () => {
+    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
+
+    renderWithProviders(<GlobalAlert />, { route: "/home" });
+
+    const link = screen.getByRole("link", {
+      name: /go to action summary page/i
+    });
+    expect(link).toHaveAttribute("href", "/action-summary");
+  });
+
+  test("bookmark alert shows the current origin as the new address", () => {
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: true },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    const originLink = screen.getByRole("link", {
+      name: globalThis.location.origin
+    });
+    expect(originLink).toHaveAttribute("href", "/");
   });
 
   test("renders all alerts when conditions for them are met", () => {
