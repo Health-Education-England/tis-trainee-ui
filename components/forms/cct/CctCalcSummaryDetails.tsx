@@ -12,8 +12,13 @@ import dayjs from "dayjs";
 import { CalcDetails } from "./CctCalcCreate";
 import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../FieldWarningMsg";
-import { cctCalcWarningsMsgs } from "../../../utilities/CctConstants";
+import {
+  cctCalcSummaryWarningMsgs,
+  cctCalcWarningsMsgs,
+  cctReadBeforeProceedingLabel
+} from "../../../utilities/CctConstants";
 import { fteOptions } from "../../../utilities/Constants";
+import { CctCalculatorLinks } from "./CctCalculatorLinks";
 
 export function CctCalcSummaryDetails({
   viewedCalc
@@ -28,16 +33,15 @@ export function CctCalcSummaryDetails({
     <Card className="pdf-visible">
       <WarningCallout>
         <WarningCallout.Label data-cy="cct-calc-warning-label">
-          New completion date
+          {cctReadBeforeProceedingLabel}
         </WarningCallout.Label>
         <p data-cy="cct-calc-warning-text1">
-          Please note: the new completion date shown below is indicative and
-          does not take into account your full circumstances (e.g. Out of
-          Programme, Parental Leave).
+          {cctCalcSummaryWarningMsgs.text1}
         </p>
         <p data-cy="cct-calc-warning-text2">
-          Your formal completion date will be agreed at ARCP.
+          {cctCalcSummaryWarningMsgs.text2}
         </p>
+        <CctCalculatorLinks />
       </WarningCallout>
       <Card.Content>
         <Card.Heading data-cy="cct-calc-summary-header">

@@ -1,4 +1,24 @@
 // cct calc warning messages
+export const cctReadBeforeProceedingLabel = "Please read before proceeding";
+
+export const cctHomeWarningMsgs = {
+  text1:
+    "We have temporarily removed the CCT Date calculator from TIS Self-Service while we address issues with the calculation logic that may result in incorrect calculations.",
+  text2:
+    "Please use a trusted NHS CCT calculator such as The Royal College of Emergency Medicine (RCEM) CCT Calculator (link below) to make a new calculation.",
+  text3:
+    "For now, you still have access to any previously-saved calculations but please use a trusted NHS CCT Calculator to verify their accuracy.",
+  text4:
+    "We apologise for the inconvenience and thank you for your patience as we work to resolve this issue."
+};
+
+export const cctCalcSummaryWarningMsgs = {
+  text1:
+    "Please note, the calculation below uses simplified calculation logic and may not be accurate. We are working to implement a more comprehensive and robust calculation method.",
+  text2:
+    "Please use a trusted NHS CCT Date Calculator such as The Royal College of Emergency Medicine (RCEM) CCT Calculator (link below) to verify the accuracy of this calculation and to make any new calculations in the meantime."
+};
+
 export const cctCalcWarningsMsgs = {
   noActiveProgsMsg:
     "You do not have any current, upcoming or future programmes to link to a CCT calculation.",
