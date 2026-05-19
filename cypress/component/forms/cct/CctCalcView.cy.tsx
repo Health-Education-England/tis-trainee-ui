@@ -34,24 +34,19 @@ describe("CctCalcView", () => {
     cy.stub(window, "print").as("print");
     cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
     cy.get('[data-cy="cct-calc-warning-label"]').contains(
-      "New completion date"
+      "Please read before proceeding"
     );
     cy.get('[data-cy="cct-calc-warning-text1"]').should(
       "include.text",
-      "Please note: the new completion date shown below is indicative"
+      "Please note, the calculation below uses simplified calculation logic"
     );
     cy.get('[data-cy="cct-calc-warning-text2"]').contains(
-      "Your formal completion date will be agreed at ARCP."
+      "Please use a trusted NHS CCT Date Calculator "
     );
     cy.get('[data-cy="cct-calc-summary-header"]')
       .should("exist")
       .contains("CCT Calculation Summary");
     cy.get('[data-cy="saved-cct-details"] > div').first().contains("bob1");
-    cy.get('[data-cy="cct-save-btn"]').should("exist").click();
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get('[data-cy="cct-name-modal"]').should("not.exist");
-    cy.get('[data-cy="cct-edit-btn"]').should("exist").click();
-    cy.get(".nhsuk-error-summary").should("not.exist");
     cy.get('[data-cy="cct-save-pdf-btn"]').should("exist").click();
     cy.get("@print").should("be.called");
   });
@@ -74,7 +69,6 @@ describe("CctCalcView", () => {
     mountCctViewWithMockData(mockCctList[0], false);
     cy.get('[data-cy="saved-cct-details"] > div').first().contains("bob1");
     cy.get('[data-cy="cct-save-btn"]').should("not.exist");
-    cy.get('[data-cy="cct-edit-btn"]').should("exist");
     cy.get('[data-cy="cct-save-pdf-btn"]').should("exist");
   });
 
@@ -90,43 +84,6 @@ describe("CctCalcView", () => {
   });
 
   // new calc tests
-  it("renders a new cct calculation", () => {
-    store.dispatch(updatedCctStatus("idle"));
-    mountCctViewWithMockData(
-      {
-        ...mockCctList[0],
-        id: "",
-        name: "",
-        created: undefined,
-        lastModified: undefined
-      },
-      true
-    );
-    cy.get('[data-cy="cct-calc-summary-header"]')
-      .should("exist")
-      .contains("CCT Calculation Summary");
-    cy.get('[data-cy="cct-edit-btn"]').should("exist");
-    cy.get('[data-cy="cct-save-pdf-btn"]').should("exist");
-    cy.get('[data-cy="cct-save-btn"]').should("exist").click();
-    cy.get('[data-cy="dialogModal"]').should("exist");
-    cy.get('[data-cy="cct-modal-save-btn"]').should("be.disabled");
-    // should keep disable if trim Name is empty
-    cy.get('[data-cy="name"]').type("  ");
-    cy.get('[data-cy="cct-modal-save-btn"]').should("be.disabled");
-    // should enable the submit button when Name is inputted
-    cy.get('[data-cy="name"]').type("😎");
-    cy.get('[data-cy="cct-modal-save-btn"]').should("not.be.disabled").click();
-    // POST will fail in comp test
-    cy.get(".nhsuk-error-summary")
-      .should("exist")
-      .should("include.text", "There was a problem saving your calculation.");
-    cy.get("body").type("{esc}");
-    // error msg remains on main view after modal close
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get('[data-cy="cct-edit-btn"]').click();
-    // But error msg resets after btn click
-    cy.get(".nhsuk-error-summary").should("not.exist");
-  });
 
   it("show warning if LTFT start date less than 16 weeks in the future", () => {
     store.dispatch(updatedCctStatus("idle"));

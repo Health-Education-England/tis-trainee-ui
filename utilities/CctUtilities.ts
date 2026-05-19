@@ -47,11 +47,10 @@ export function calcLtftChange(
   change: CctChangeType
 ) {
   const { startDate, wte } = change;
-  const fullTimeDays = dayjs(currentProgEndDate).diff(startDate, "days") + 1;
-  const wteDays = fullTimeDays * ((wte as number) / currentWte);
-  const ltftExtension = Math.round(fullTimeDays - wteDays);
+  const chunkDays = dayjs(currentProgEndDate).diff(startDate, "days");
+  const chunkDaysWTE = (chunkDays * currentWte) / (wte as number);
   return dayjs(currentProgEndDate)
-    .add(ltftExtension, "days")
+    .add(chunkDaysWTE - chunkDays, "days")
     .format("YYYY-MM-DD");
 }
 
@@ -61,13 +60,10 @@ export function calcCctDate(
   newWte: number,
   changeStartDate: Date | string
 ) {
-  const fullTimeDays =
-    dayjs(currentProgEndDate).diff(changeStartDate, "days") + 1;
-  const wteDays = fullTimeDays * (newWte / currentWte);
-  const cctExtension = Math.round(fullTimeDays - wteDays);
-
+  const chunkDays = dayjs(currentProgEndDate).diff(changeStartDate, "days");
+  const chunkDaysWTE = Math.ceil((chunkDays * currentWte) / newWte);
   return dayjs(currentProgEndDate)
-    .add(cctExtension, "days")
+    .add(chunkDaysWTE - chunkDays, "days")
     .format("YYYY-MM-DD");
 }
 
