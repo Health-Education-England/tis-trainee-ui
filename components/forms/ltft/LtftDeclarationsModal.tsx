@@ -43,9 +43,9 @@ export const LtftDeclarationsModal = ({
             will affect my programme completion date.
           </Checkboxes.Box>
           <Hint className="checkbox-hint">
-            You can make a CCT Calculation using this{" "}
-            <Link to="/cct">CCT Calculator</Link> to get a rough idea how
-            changing your hours will affect your programme completion date.
+            You can make a CCT Calculation using a{" "}
+            <Link to="/cct">CCT Calculator</Link> to get an idea how changing
+            your hours will affect your programme completion date.
           </Hint>
           <Checkboxes.Box
             name="discussedWithTpd"

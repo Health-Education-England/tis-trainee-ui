@@ -10,10 +10,9 @@ export type LtftFormStatus =
   | "APPROVED"
   | "REJECTED";
 
-export type LtftCctChange = {
+export type LtftChange = {
   id?: string | null;
   calculationId?: string | null;
-  cctDate: Date | string | null;
   type: CctType;
   startDate: Date | string | null;
   endDate?: Date | string | null;
@@ -91,8 +90,7 @@ export type LtftObjNew = {
   designatedBodyCode: string;
   managingDeanery: string;
 
-  // change: LtftCctChange
-  cctDate: Date | string | null;
+  // change: LtftChange
   type: CctType;
   startDate: Date | string | null;
   wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
@@ -136,7 +134,7 @@ export type LtftDto = {
   formRef: string | null;
   revision?: number;
   name: string | null;
-  change: LtftCctChange;
+  change: LtftChange;
   declarations: {
     discussedWithTpd: boolean | null;
     informationIsCorrect: boolean | null;
