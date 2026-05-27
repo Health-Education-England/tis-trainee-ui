@@ -21,7 +21,6 @@ export function populateLtftDraftNew(
     pmEndDate: "",
     designatedBodyCode: "",
     managingDeanery: "",
-    cctDate: null,
     type: "LTFT",
     startDate: null,
     wteBeforeChange: null,
@@ -77,7 +76,6 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
     formRef: ltftObj.formRef ?? null,
     name: ltftObj.name ?? null,
     change: {
-      cctDate: ltftObj.cctDate ?? null,
       type: "LTFT",
       startDate: ltftObj.startDate,
       wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
@@ -172,7 +170,6 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     pmEndDate: ltftDto.programmeMembership.endDate ?? "",
     designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
     managingDeanery: ltftDto.programmeMembership.managingDeanery ?? "",
-    cctDate: ltftDto.change.cctDate ?? null,
     type: ltftDto.change.type,
     startDate: ltftDto.change.startDate,
     wteBeforeChange: ltftDto.programmeMembership.wte

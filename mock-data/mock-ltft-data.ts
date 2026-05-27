@@ -1,13 +1,11 @@
 import { LtftDto, LtftObjNew, LtftSummaryObj } from "../models/LtftTypes";
 import dayjs from "dayjs";
-import { calcCctDate } from "../utilities/CctUtilities";
 
 export const pmStartDate = dayjs().subtract(3, "year").format("YYYY-MM-DD");
 export const pmEndDate = dayjs(pmStartDate).add(6, "year").format("YYYY-MM-DD");
 export const wteBeforeChange = 100;
 export const wte = 80;
 export const startDate = dayjs().add(15, "week").format("YYYY-MM-DD");
-export const cctDate = calcCctDate(pmEndDate, wteBeforeChange, wte, startDate);
 
 // Summary list
 export const mockLtftDraftList: LtftSummaryObj[] = [
@@ -137,7 +135,6 @@ export const mockLtftsList1 = [
 
 // New form Obj
 export const mockLtftNewFormObj: LtftObjNew = {
-  cctDate: null,
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
@@ -206,7 +203,7 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   id: null,
   formRef: null,
   name: null,
-  change: { cctDate: null, type: "LTFT", startDate: null, wte: 0, id: null },
+  change: { type: "LTFT", startDate: null, wte: 0, id: null },
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
@@ -293,8 +290,7 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
     type: "LTFT",
     wte: 0.0,
     startDate: null,
-    endDate: null,
-    cctDate: null
+    endDate: null
   },
   reasons: {
     selected: [],
@@ -337,7 +333,6 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
 
 // Mapped Obj after first save
 export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
-  cctDate: null,
   created: "2026-01-13T18:15:08.376574339Z",
   declarations: {
     discussedWithTpd: true,
@@ -408,7 +403,6 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   pmEndDate: pmEndDate,
   designatedBodyCode: "",
   managingDeanery: "East of England",
-  cctDate: cctDate,
   type: "LTFT",
   startDate: startDate,
   wteBeforeChange: wteBeforeChange,

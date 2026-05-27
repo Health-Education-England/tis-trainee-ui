@@ -17,7 +17,6 @@ import {
   wte,
   wteBeforeChange,
   startDate,
-  cctDate,
   mockLtftDraftFirstSuccessSaveResponseDto
 } from "../../../../mock-data/mock-ltft-data";
 import dayjs from "dayjs";
@@ -175,9 +174,6 @@ describe("LTFT Form View - editable (DRAFT)", () => {
     ).contains(
       `${dayjs(pmEndDate).format("DD/MM/YYYY")} (Programme end date on TIS)`
     );
-    cy.get(
-      '[data-cy="completionDateChangeEstimatedCompletionDateValue"] > strong'
-    ).contains(dayjs(cctDate).format("DD/MM/YYYY"));
 
     // declarations
     cy.get('[data-cy="BtnSaveDraft"]').should("not.be.disabled");

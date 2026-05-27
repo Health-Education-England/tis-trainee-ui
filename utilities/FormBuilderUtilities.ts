@@ -50,7 +50,7 @@ import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
-import { calcCctDate, findLinkedProgramme } from "./CctUtilities";
+import { findLinkedProgramme } from "./CctUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -133,21 +133,6 @@ export function prepLtftFormData(
     );
   const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
   if (linkedProgramme) {
-    let newCctDate = null;
-    if (
-      linkedProgramme.endDate &&
-      formData.startDate &&
-      formData.wte &&
-      formData.wteBeforeChange
-    ) {
-      newCctDate = calcCctDate(
-        linkedProgramme.endDate,
-        formData.wteBeforeChange,
-        formData.wte,
-        formData.startDate
-      );
-    }
-
     const {
       programmeName,
       startDate,
@@ -162,8 +147,7 @@ export function prepLtftFormData(
       pmStartDate: startDate ?? "",
       pmEndDate: endDate ?? "",
       designatedBodyCode: designatedBodyCode ?? "",
-      managingDeanery: managingDeanery ?? "",
-      cctDate: newCctDate
+      managingDeanery: managingDeanery ?? ""
     };
 
     store.dispatch(updatedLtft(preppedData));

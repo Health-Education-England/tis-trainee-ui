@@ -120,14 +120,6 @@ export const LtftFormView = () => {
     );
   }
 
-  if (!formData.cctDate) {
-    return (
-      <LtftViewWrapper>
-        <ErrorPage message="Please try again." />
-      </LtftViewWrapper>
-    );
-  }
-
   if (ltftStatus === "succeeded" || canEditStatus)
     return (
       <LtftViewWrapper>
@@ -163,7 +155,7 @@ export const LtftFormView = () => {
         <Card style={{ border: "4px #005eb8 solid" }}>
           <Card.Content>
             <Card.Heading data-cy="completionDateChangeHeading">
-              Change to your completion date for {formData.pmName}
+              Summary of changes to your {formData.pmName} Programme
             </Card.Heading>
             <SummaryList>
               <SummaryList.Row>
@@ -172,6 +164,15 @@ export const LtftFormView = () => {
                 </SummaryList.Key>
                 <SummaryList.Value data-cy="completionDateChangePmValue">
                   {formData.pmName}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key data-cy="completionDateChangeCurrentCompletionDateKey">
+                  Current completion date
+                </SummaryList.Key>
+                <SummaryList.Value data-cy="completionDateChangeCurrentCompletionDateValue">
+                  {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme
+                  end date on TIS)
                 </SummaryList.Value>
               </SummaryList.Row>
               <SummaryList.Row>
@@ -205,32 +206,11 @@ export const LtftFormView = () => {
                     )}
                 </SummaryList.Value>
               </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangeCurrentCompletionDateKey">
-                  Current completion date
-                </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangeCurrentCompletionDateValue">
-                  {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme
-                  end date on TIS)
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangeEstimatedCompletionDateKey">
-                  <strong>Estimated completion date after these changes</strong>
-                </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangeEstimatedCompletionDateValue">
-                  <strong style={{ color: "#007f3b" }}>
-                    {dayjs(formData.cctDate).format("DD/MM/YYYY")}
-                  </strong>
-                </SummaryList.Value>
-              </SummaryList.Row>
             </SummaryList>
-            <p style={{ marginTop: "1rem" }} data-cy="completionDateChangeNote">
-              <strong>Please note:</strong> This new completion date is an
-              estimate as it does not take into account your full circumstances
-              (e.g. Out of Programme, Parental Leave). Your formal completion
-              date will be agreed at ARCP.
-            </p>
+            <CompletionDateChangeText
+              wteBeforeChange={formData.wteBeforeChange}
+              wte={formData.wte}
+            />
           </Card.Content>
         </Card>
         <WarningCallout>
@@ -321,6 +301,24 @@ export const LtftFormView = () => {
     );
   return null;
 };
+
+function CompletionDateChangeText({
+  wteBeforeChange,
+  wte
+}: Readonly<{ wteBeforeChange: number | null; wte: number | null }>) {
+  const isReducingHours = Number(wteBeforeChange) > Number(wte);
+  const changeDirection = isReducingHours ? "Reducing" : "Increasing";
+  const completionDateEffect = isReducingHours ? "extend" : "shorten";
+  return (
+    <>
+      <p>
+        {`${changeDirection} your working hours from ${wteBeforeChange}% to ${wte}% will`}{" "}
+        <strong>{completionDateEffect}</strong> your programme completion date.
+      </p>
+      <p>Your formal completion date will be agreed at ARCP.</p>
+    </>
+  );
+}
 
 function LtftViewWrapper({
   children

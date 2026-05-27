@@ -9,7 +9,6 @@ import {
 import { CctCalculation } from "../../../redux/slices/cctSlice";
 import style from "../../Common.module.scss";
 import dayjs from "dayjs";
-import { CalcDetails } from "./CctCalcCreate";
 import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../FieldWarningMsg";
 import {
@@ -130,11 +129,11 @@ export function CctCalcSummaryDetails({
           </Row>
         </Container>
         {name && created && lastModified && (
-          <CalcDetails
-            created={created}
-            lastModified={lastModified}
-            name={name}
-          />
+          <section data-cy="saved-cct-details">
+            <div>{`Name: ${name}`}</div>
+            <div>{`Created: ${dayjs(created).toString()}`}</div>
+            <div>{`Last saved: ${dayjs(lastModified).toString()}`}</div>
+          </section>
         )}
       </Card.Content>
     </Card>
