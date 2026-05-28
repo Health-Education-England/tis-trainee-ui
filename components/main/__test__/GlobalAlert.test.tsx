@@ -3,7 +3,6 @@ import {
   render,
   screen,
   queryByAttribute,
-  waitForElementToBeRemoved,
   fireEvent
 } from "@testing-library/react";
 import { GlobalAlert } from "../GlobalAlert";
@@ -28,7 +27,7 @@ jest.mock("../../../utilities/hooks/useTraineeActions", () => ({
 
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
 
-fdescribe("GlobalAlert", () => {
+describe("GlobalAlert", () => {
   const mockUseTraineeActions = useTraineeActions as jest.Mock;
 
   beforeEach(() => {
