@@ -88,7 +88,81 @@
               "warnings": [
                 {
                   "matcher": "ltft16WeeksTest",
-                  "msgText": "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+                  "msgText": "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
+                }
+              ]
+            },
+            {
+              "name": "alternativeStartDate",
+              "label": "If you have an alternative start date that gives at least 16 weeks notice, please enter it here.",
+              "hint": "Leave blank if there is no suitable alternative — you can explain in your supporting information.",
+              "type": "date",
+              "visible": false,
+              "visibleIf": {
+                "matcher": "lessThan16WeeksTest",
+                "field": "startDate"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Reason(s) for applying",
+      "importantTxtName": "ltftReasonsInstructions",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Reason(s) for applying",
+          "fields": [
+            {
+              "name": "reasonsSelected",
+              "label": "Why are you applying?",
+              "placeholder": "Select all reasons that apply",
+              "type": "select",
+              "isMultiSelect": true,
+              "optionsKey": "ltftReasons",
+              "dependencies": ["reasonsOtherDetail"],
+              "visible": true,
+              "hint": "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
+            },
+            {
+              "name": "reasonsOtherDetail",
+              "label": "Other reason",
+              "placeholder": "type here...",
+              "type": "text",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "reasonsSelected",
+                "values": ["other"]
+              },
+              "visible": false,
+              "hint": "Please provide details for your 'other reason'."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Supporting information",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Supporting information",
+          "fields": [
+            {
+              "name": "supportingInformation",
+              "label": "Please provide brief supporting information for your application.",
+              "hint": "This helps us understand your circumstances and proposed arrangements.",
+              "placeholder": "Example:\n'I would like to apply for 60% LTFT from March 2026 due to ongoing caring responsibilities. I plan to work three days per week and would appreciate flexibility around clinic days.'",
+              "type": "textArea",
+              "visible": true,
+              "warnings": [
+                {
+                  "matcher": "ltft16WeeksTest",
+                  "msgText": "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable).",
+                  "conditionalField": "startDate"
                 }
               ]
             }
@@ -158,66 +232,6 @@
                   "type": "select",
                   "optionsKey": "ltftRoles",
                   "visible": true
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "pageName": "Reason(s) for applying",
-      "importantTxtName": "ltftReasonsInstructions",
-      "expanderLinkName": "",
-      "sections": [
-        {
-          "sectionHeader": "Reason(s) for applying",
-          "fields": [
-            {
-              "name": "reasonsSelected",
-              "label": "Why are you applying?",
-              "placeholder": "Select all reasons that apply",
-              "type": "select",
-              "isMultiSelect": true,
-              "optionsKey": "ltftReasons",
-              "dependencies": ["reasonsOtherDetail"],
-              "visible": true,
-              "hint": "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
-            },
-            {
-              "name": "reasonsOtherDetail",
-              "label": "Other reason",
-              "placeholder": "type here...",
-              "type": "text",
-              "visibleIf": ["other"],
-              "parent": "reasonsSelected",
-              "visible": false,
-              "hint": "Please provide details for your 'other reason'."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "pageName": "Supporting information",
-      "importantTxtName": "",
-      "expanderLinkName": "",
-      "sections": [
-        {
-          "sectionHeader": "Supporting information",
-          "fields": [
-            {
-              "name": "supportingInformation",
-              "label": "Please provide brief supporting information for your application.",
-              "hint": "This helps us understand your circumstances and proposed arrangements.",
-              "placeholder": "Example:\n'I would like to apply for 60% LTFT from March 2026 due to ongoing caring responsibilities. I plan to work three days per week and would appreciate flexibility around clinic days.'",
-              "type": "textArea",
-              "visible": true,
-              "warnings": [
-                {
-                  "matcher": "ltft16WeeksTest",
-                  "msgText": "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours.",
-                  "conditionalField": "startDate"
                 }
               ]
             }

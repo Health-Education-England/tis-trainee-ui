@@ -60,11 +60,14 @@
               "placeholder": "type here...",
               "type": "text",
               "visible": false,
-              "visibleIf": [
-                "Dependent - other immigration category",
-                "Other immigration categories i.e. overseas government employees, innovators etc."
-              ],
-              "parent": "immigrationStatus"
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "immigrationStatus",
+                "values": [
+                  "Dependent - other immigration category",
+                  "Other immigration categories i.e. overseas government employees, innovators etc."
+                ]
+              }
             },
             {
               "name": "qualification",
@@ -173,10 +176,13 @@
               "label": "Specialty 1 for Award of CCT",
               "type": "select",
               "visible": false,
-              "visibleIf": [
-                "I have been appointed to a programme leading to award of CCT"
-              ],
-              "parent": "declarationType",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "declarationType",
+                "values": [
+                  "I have been appointed to a programme leading to award of CCT"
+                ]
+              },
               "optionsKey": "curriculum"
             },
             {
@@ -184,10 +190,13 @@
               "label": "Specialty 2 for Award of CCT",
               "type": "select",
               "visible": false,
-              "visibleIf": [
-                "I have been appointed to a programme leading to award of CCT"
-              ],
-              "parent": "declarationType",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "declarationType",
+                "values": [
+                  "I have been appointed to a programme leading to award of CCT"
+                ]
+              },
               "optionsKey": "curriculum"
             },
             {

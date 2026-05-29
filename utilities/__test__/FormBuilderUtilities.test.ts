@@ -16,11 +16,13 @@ import {
   isDateWithin16WeeksOfFirstDate,
   setDraftFormRProps,
   setFormRDataForSubmit,
+  showFormField,
   transformReferenceData
 } from "../FormBuilderUtilities";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
 import { formANew } from "../../mock-data/draft-formr-parta";
 import {
+  Field,
   Form,
   FormName
 } from "../../components/forms/form-builder/FormBuilder";
@@ -288,5 +290,84 @@ describe("isDateWithin16WeeksOfFirstDate", () => {
 
     expect(isDateWithin16WeeksOfFirstDate(validDateStr, refStr)).toBe(true);
     expect(isDateWithin16WeeksOfFirstDate(invalidDateStr, refStr)).toBe(false);
+  });
+});
+
+describe("showFormField", () => {
+  const makeField = (overrides: Partial<Field>): Field => ({
+    name: "fieldUnderTest",
+    type: "text",
+    visible: false,
+    ...overrides
+  });
+
+  it("returns true when field.visible is true regardless of visibleIf", () => {
+    const field = makeField({ visible: true });
+    expect(showFormField(field, {})).toBe(true);
+  });
+
+  it("returns false when not visible and no visibleIf is set", () => {
+    expect(showFormField(makeField({}), { anything: "value" })).toBe(false);
+  });
+
+  describe("valueInList matcher", () => {
+    const field = makeField({
+      visibleIf: {
+        matcher: "valueInList",
+        field: "reasonsSelected",
+        values: ["other"]
+      }
+    });
+
+    it("is visible when scalar parent value is in the values list", () => {
+      expect(showFormField(field, { reasonsSelected: "other" })).toBe(true);
+    });
+
+    it("is hidden when scalar parent value is not in the values list", () => {
+      expect(showFormField(field, { reasonsSelected: "caring" })).toBe(false);
+    });
+
+    it("is visible when an array parent value contains a match", () => {
+      expect(
+        showFormField(field, { reasonsSelected: ["caring", "other"] })
+      ).toBe(true);
+    });
+
+    it("is hidden when an array parent value contains no match", () => {
+      expect(
+        showFormField(field, { reasonsSelected: ["caring", "training"] })
+      ).toBe(false);
+    });
+
+    it("is hidden when values is missing", () => {
+      const fieldNoValues = makeField({
+        visibleIf: { matcher: "valueInList", field: "reasonsSelected" }
+      });
+      expect(showFormField(fieldNoValues, { reasonsSelected: "other" })).toBe(
+        false
+      );
+    });
+  });
+
+  describe("lessThan16WeeksTest matcher", () => {
+    const field = makeField({
+      visibleIf: { matcher: "lessThan16WeeksTest", field: "startDate" }
+    });
+
+    it("is visible when startDate is within 16 weeks of today", () => {
+      const within = dayjs().add(10, "week").format("YYYY-MM-DD");
+      expect(showFormField(field, { startDate: within })).toBe(true);
+    });
+
+    it("is hidden when startDate is more than 16 weeks away", () => {
+      const beyond = dayjs().add(20, "week").format("YYYY-MM-DD");
+      expect(showFormField(field, { startDate: beyond })).toBe(false);
+    });
+
+    it("is hidden when startDate is empty", () => {
+      expect(showFormField(field, { startDate: "" })).toBe(false);
+      expect(showFormField(field, { startDate: null })).toBe(false);
+      expect(showFormField(field, {})).toBe(false);
+    });
   });
 });

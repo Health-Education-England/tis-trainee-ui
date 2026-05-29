@@ -18,6 +18,8 @@ import type {
   FormData,
   FormName,
   MatcherName,
+  VisibilityCondition,
+  VisibilityMatcherName,
   Warning
 } from "../components/forms/form-builder/FormBuilder";
 import {
@@ -455,11 +457,7 @@ export function setFormRDataForSubmit(
   const newFormData = jsonForm.pages.reduce((fd, page) => {
     page.sections.forEach(section => {
       section.fields.forEach(field => {
-        if (
-          field.visible ||
-          (field.parent &&
-            field?.visibleIf?.includes((fd as FormData)[field.parent]))
-        ) {
+        if (showFormField(field, fd)) {
           (fd as FormData)[field.name] = (formData as FormData)[field.name];
         } else {
           (fd as FormData)[field.name] = null;
@@ -695,12 +693,8 @@ export function validateFields(
         });
       } else if (field.type === "dto") {
         const dtoFields = field.objectFields ?? [];
-        const visibleDtoFields = dtoFields.filter(
-          dtoField =>
-            dtoField.visible ||
-            dtoField.visibleIf?.includes(
-              values[field.name][dtoField.parent as string]
-            )
+        const visibleDtoFields = dtoFields.filter(dtoField =>
+          showFormField(dtoField, values[field.name] ?? {})
         );
         const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
           const dtoFieldSchema = fieldSchema.fields[dtoField.name];
@@ -734,15 +728,29 @@ export function formatFieldName(fieldName: string) {
   return words.join(" ");
 }
 
+type VisibilityMatcher = (
+  fieldValue: unknown,
+  cond: VisibilityCondition
+) => boolean;
+
+const visibilityMatchers: Record<VisibilityMatcherName, VisibilityMatcher> = {
+  valueInList: (fieldValue, cond) => {
+    if (!cond.values) return false;
+    if (Array.isArray(fieldValue)) {
+      return fieldValue.some(v => cond.values!.includes(v));
+    }
+    return cond.values.includes(fieldValue);
+  },
+  lessThan16WeeksTest: fieldValue =>
+    !!fieldValue && isDateWithin16WeeksOfFirstDate(fieldValue as string)
+};
+
 export function showFormField(field: Field, formData: FormData) {
   if (field.visible) return true;
-  if (field.visibleIf) {
-    if (Array.isArray(formData[field.parent as string])) {
-      return formData[field.parent as string].includes(field.visibleIf[0]);
-    }
-    return field.visibleIf.includes(formData[field.parent as string]);
-  }
-  return false;
+  if (!field.visibleIf) return false;
+  const matcher = visibilityMatchers[field.visibleIf.matcher];
+  if (!matcher) return false;
+  return matcher(formData[field.visibleIf.field], field.visibleIf);
 }
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.

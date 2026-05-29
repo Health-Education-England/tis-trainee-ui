@@ -130,13 +130,47 @@ describe("LtftForm - draft", () => {
     cy.get("#startDate-error").contains("Change cannot begin before today");
     cy.clearAndType('[data-cy="startDate-input"]', dateWithin16WeeksOfToday);
     cy.get(".field-warning-msg").contains(
-      "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+      "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
     );
     cy.get("#startDate-error").should("not.exist");
+    cy.get('[data-cy="alternativeStartDate-input"]').should("be.visible");
     cy.navNext();
 
     // Part 5
-    cy.get("h3").contains("Part 5 of 10 - Pre-approver discussions");
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
+    cy.get(
+      '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
+    ).contains("Important");
+    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
+    cy.navNext();
+    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
+    cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
+    cy.get('[data-cy="reasonsSelected-label"]').should("exist");
+    cy.get('[data-cy="reasonsSelected-hint"]').should(
+      "include.text",
+      "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
+    );
+    cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
+    cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
+    cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
+    cy.navNext();
+
+    // Part 6
+    cy.get("h3").contains("Part 6 of 10 - Supporting information");
+    cy.navNext();
+    cy.get("#supportingInformation-error").contains(
+      "Supporting information is required"
+    );
+    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
+      "This is my supporting information"
+    );
+    cy.get(".field-warning-msg").contains(
+      "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable)."
+    );
+    cy.navNext();
+
+    // Part 7
+    cy.get("h3").contains("Part 7 of 10 - Pre-approver discussions");
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
@@ -164,45 +198,12 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
-    // part 6
-    cy.get("h3").contains("Part 6 of 10 - Other discussions");
+    // Part 8
+    cy.get("h3").contains("Part 8 of 10 - Other discussions");
     cy.get('[data-cy="add-Other Discussions-button"]').should("exist").click();
     cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
     cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
     cy.clickSelect('[data-cy="role"]');
-    cy.navNext();
-
-    // part 7
-    cy.get("h3").contains("Part 7 of 10 - Reason(s) for applying");
-    cy.get(
-      '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
-    ).contains("Important");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
-    cy.navNext();
-    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
-    cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
-    cy.get('[data-cy="reasonsSelected-label"]').should("exist");
-    cy.get('[data-cy="reasonsSelected-hint"]').should(
-      "include.text",
-      "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
-    );
-    cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
-    cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
-    cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
-    cy.navNext();
-
-    // part 8
-    cy.get("h3").contains("Part 8 of 10 - Supporting information");
-    cy.navNext();
-    cy.get("#supportingInformation-error").contains(
-      "Supporting information is required"
-    );
-    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
-      "This is my supporting information"
-    );
-    cy.get(".field-warning-msg").contains(
-      "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours."
-    );
     cy.navNext();
 
     // part 9
