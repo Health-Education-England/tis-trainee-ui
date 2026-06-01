@@ -206,6 +206,16 @@ export const LtftFormView = () => {
                     )}
                 </SummaryList.Value>
               </SummaryList.Row>
+              {formData.altStartDate && (
+                <SummaryList.Row>
+                  <SummaryList.Key data-cy="altStartDateKey">
+                    Alternative start date
+                  </SummaryList.Key>
+                  <SummaryList.Value data-cy="altStartDateValue">
+                    {dayjs(formData.altStartDate).format("DD/MM/YYYY")}
+                  </SummaryList.Value>
+                </SummaryList.Row>
+              )}
             </SummaryList>
             <CompletionDateChangeText
               wteBeforeChange={formData.wteBeforeChange}

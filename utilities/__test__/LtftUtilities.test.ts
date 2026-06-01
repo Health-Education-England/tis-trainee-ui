@@ -41,6 +41,15 @@ describe("mapLtftObjToDto", () => {
     const mappedDto = mapLtftObjToDto(mockLtftDraftUpdatedPmFormObjNoSave);
     expect(mappedDto).toEqual(mockLtftDraftUpdatedPmFormDtoFirstSavePayload);
   });
+
+  it("should map empty altStartDate to null", () => {
+    const mappedDto = mapLtftObjToDto({
+      ...mockLtftDraftUpdatedPmFormObjNoSave,
+      altStartDate: ""
+    });
+
+    expect(mappedDto.change.altStartDate).toBeNull();
+  });
 });
 
 describe("mapDtoToLtftObj", () => {

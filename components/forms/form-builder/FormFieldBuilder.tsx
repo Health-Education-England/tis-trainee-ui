@@ -135,6 +135,7 @@ export function FormFieldBuilder({
         <Dates
           name={name}
           label={label}
+          hint={hint}
           fieldError={error}
           placeholder={placeholder}
           value={value}

@@ -5,6 +5,7 @@ import { CHECK_PHONE_REGEX } from "../../../utilities/Constants";
 import store from "../../../redux/store/store";
 import { isPastIt } from "../../../utilities/DateUtilities";
 import { findLinkedProgramme } from "../../../utilities/CctUtilities";
+import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 
 export const LtftVisaError =
   "Please select Yes or No for Skilled Worker visa status";
@@ -21,6 +22,26 @@ const phoneValidation = (fieldName: string) =>
     CHECK_PHONE_REGEX,
     `${fieldName} is not valid`
   );
+
+const isOnOrBeforeProgrammeEnd = (
+  value: Date | null | undefined,
+  pmId: string | undefined
+) => {
+  if (!value || !pmId) return true;
+  const progsArrNotPast = store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => !isPastIt(prog.endDate)
+    );
+  const linkedProgramme = findLinkedProgramme(pmId, progsArrNotPast);
+  if (!linkedProgramme) return true;
+  const changeStartDate = dayjs(value).startOf("day");
+  const programmeEndDate = dayjs(linkedProgramme.endDate).startOf("day");
+  return (
+    changeStartDate.isBefore(programmeEndDate) ||
+    changeStartDate.isSame(programmeEndDate)
+  );
+};
 
 const changeStartDateValidation = yup
   .date()
@@ -42,26 +63,25 @@ const changeStartDateValidation = yup
     "is-before-programme-end",
     "Change cannot begin after the programme end date",
     function (value) {
-      const { pmId } = this.parent;
-      if (!value || !pmId) {
-        return true;
-      }
-      const progsArrNotPast = store
-        .getState()
-        .traineeProfile.traineeProfileData.programmeMemberships.filter(
-          prog => !isPastIt(prog.endDate)
-        );
-      const linkedProgramme = findLinkedProgramme(pmId, progsArrNotPast);
+      return isOnOrBeforeProgrammeEnd(value, this.parent.pmId);
+    }
+  );
 
-      if (linkedProgramme) {
-        const changeStartDate = dayjs(value).startOf("day");
-        const programmeEndDate = dayjs(linkedProgramme.endDate).startOf("day");
-        return (
-          changeStartDate.isBefore(programmeEndDate) ||
-          changeStartDate.isSame(programmeEndDate)
-        );
-      }
-      return true;
+const altStartDateValidation = yup
+  .date()
+  .nullable()
+  .transform((value, originalValue) => (originalValue === "" ? null : value))
+  .typeError("Alternative start date is not a valid date")
+  .test(
+    "alt-at-least-16-weeks",
+    "Alternative start date must be at least 16 weeks from today",
+    value => !value || !isDateWithin16WeeksOfFirstDate(value)
+  )
+  .test(
+    "alt-before-programme-end",
+    "Alternative start date cannot be after the programme end date",
+    function (value) {
+      return isOnOrBeforeProgrammeEnd(value, this.parent.pmId);
     }
   );
 
@@ -111,6 +131,7 @@ export const ltftValidationSchema = yup.object({
     .nullable(),
   personalDetails: personalDetailsDtoValidationSchema,
   startDate: changeStartDateValidation,
+  altStartDate: altStartDateValidation,
   skilledWorkerVisaHolder: yup
     .boolean()
     .typeError(LtftVisaError)

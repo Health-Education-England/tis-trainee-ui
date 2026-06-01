@@ -27,7 +27,13 @@ export const ltftReasonsText1 =
   "The reason(s) for applying will be used for reporting purposes and may inform the decision-making process. This will need to be discussed with your regional office.";
 
 export const ltftStartDateImportantText1 =
-  "Less than full-time (LTFT) training requests with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) will only be considered on an exceptional basis.";
+  "A Less than full-time (LTFT) training request with less than 16 weeks’ notice or outside the application window (should a regional team manage applications within a window) is classed as a late application and will only be considered on an exceptional basis.";
+
+export const ltftStartDateImportantText2 =
+  "If applicable, should your late application not be approved, when choosing a late application start date below, you will also be asked to provide an alternative start date at least 16 weeks in advance. This will hopefully lessen any admin delays in approving your application.";
+
+export const ltftStartDateImportantText3 =
+  "A late application will also need additional supporting information (Part 6 of this form). This includes the reasons for no suitable alternative start date being given (if applicable).";
 
 export const ltftTier2VisaImportantText1 =
   "If you are a Skilled Worker (formerly a Tier 2 General work) visa holder, please make sure the proposed change to your full time working hours percentage (Part 3 of this application) complies with the requirements of your visa.";
@@ -308,7 +314,13 @@ const displayText: DisplayText = {
     </>
   ),
   ltftReasonsInstructions: <p>{ltftReasonsText1}</p>,
-  ltftStartDateImportantText: <p>{ltftStartDateImportantText1}</p>,
+  ltftStartDateImportantText: (
+    <>
+      <p>{ltftStartDateImportantText1}</p>
+      <p>{ltftStartDateImportantText2}</p>
+      <p>{ltftStartDateImportantText3}</p>
+    </>
+  ),
   ltftTier2VisaImportantText: (
     <>
       <p>{ltftTier2VisaImportantText1}</p>

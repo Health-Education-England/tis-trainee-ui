@@ -67,8 +67,11 @@
               "label": "Please Specify 'Other'",
               "type": "select",
               "visible": false,
-              "visibleIf": ["other"],
-              "parent": "prevRevalBody",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "prevRevalBody",
+                "values": ["other"]
+              },
               "optionsKey": "dbcExternal"
             },
             {
@@ -287,8 +290,11 @@
               "label": "Are you complying with these conditions, warnings or undertakings?",
               "type": "checkbox",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "isWarned"
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "isWarned",
+                "values": [true]
+              }
             }
           ]
         }
@@ -331,8 +337,11 @@
               "name": "previousDeclarations",
               "type": "array",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "havePreviousDeclarations",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "havePreviousDeclarations",
+                "values": [true]
+              },
               "label": "Previous Resolved Declarations",
               "objectFields": [
                 {
@@ -388,8 +397,11 @@
               "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
               "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "havePreviousUnresolvedDeclarations"
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "havePreviousUnresolvedDeclarations",
+                "values": [true]
+              }
             }
           ]
         }
@@ -415,8 +427,11 @@
               "name": "currentDeclarations",
               "type": "array",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "haveCurrentDeclarations",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "haveCurrentDeclarations",
+                "values": [true]
+              },
               "label": "Current Resolved Declarations",
               "objectFields": [
                 {
@@ -472,8 +487,11 @@
               "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
               "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "haveCurrentUnresolvedDeclarations"
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "haveCurrentUnresolvedDeclarations",
+                "values": [true]
+              }
             }
           ]
         }
@@ -498,8 +516,11 @@
               "name": "covidDeclarationDto",
               "type": "dto",
               "visible": false,
-              "visibleIf": [true],
-              "parent": "haveCovidDeclarations",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "haveCovidDeclarations",
+                "values": [true]
+              },
               "objectFields": [
                 {
                   "name": "selfRateForCovid",
@@ -514,11 +535,14 @@
                   "type": "textArea",
                   "placeholder": "type here...",
                   "visible": false,
-                  "visibleIf": [
-                    "Below expectations for stage of training - needs further development",
-                    "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
-                  ],
-                  "parent": "selfRateForCovid"
+                  "visibleIf": {
+                    "matcher": "valueInList",
+                    "field": "selfRateForCovid",
+                    "values": [
+                      "Below expectations for stage of training - needs further development",
+                      "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
+                    ]
+                  }
                 },
                 {
                   "name": "otherInformationForPanel",
@@ -554,24 +578,33 @@
                   "type": "select",
                   "optionsKey": "covidChangeCircs",
                   "visible": false,
-                  "visibleIf": [true],
-                  "parent": "haveChangesToPlacement"
+                  "visibleIf": {
+                    "matcher": "valueInList",
+                    "field": "haveChangesToPlacement",
+                    "values": [true]
+                  }
                 },
                 {
                   "name": "changeCircumstanceOther",
                   "label": "Please Specify 'Other'",
                   "type": "textArea",
                   "visible": false,
-                  "visibleIf": ["Other"],
-                  "parent": "changeCircumstances"
+                  "visibleIf": {
+                    "matcher": "valueInList",
+                    "field": "changeCircumstances",
+                    "values": ["Other"]
+                  }
                 },
                 {
                   "name": "howPlacementAdjusted",
                   "label": "Please explain further how your placement was adjusted",
                   "type": "textArea",
                   "visible": false,
-                  "visibleIf": [true],
-                  "parent": "haveChangesToPlacement"
+                  "visibleIf": {
+                    "matcher": "valueInList",
+                    "field": "haveChangesToPlacement",
+                    "values": [true]
+                  }
                 },
                 {
                   "name": "educationSupervisorName",

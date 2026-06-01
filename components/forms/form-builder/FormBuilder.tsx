@@ -43,6 +43,14 @@ export type FieldType =
   | "array"
   | "dto";
 
+export type VisibilityMatcherName = "valueInList" | "lessThan16WeeksTest";
+
+export type VisibilityCondition = {
+  field: string;
+  matcher: VisibilityMatcherName;
+  values?: unknown[];
+};
+
 export type Field = {
   name: string;
   label?: string;
@@ -50,12 +58,11 @@ export type Field = {
   visible: boolean;
   optionsKey?: string;
   dependencies?: string[];
-  visibleIf?: unknown[];
+  visibleIf?: VisibilityCondition;
   placeholder?: string;
   warnings?: Warning[];
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
-  parent?: string;
   objectFields?: Field[];
   width?: number;
   isNumberField?: boolean;

@@ -16,8 +16,12 @@ import {
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
 import { LtftObjNew } from "../../../../models/LtftTypes";
 import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
-import { mockProgrammeMemberships } from "../../../../mock-data/trainee-profile";
+import {
+  mockProgrammeMemberships,
+  mockTraineeProfile
+} from "../../../../mock-data/trainee-profile";
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
+import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
 import {
   ltftReasonsError,
@@ -26,6 +30,7 @@ import {
 
 const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
+  store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
   const qualifyingProgrammes = ["7ab1aae3-83c2-4bb6-b1f3-99146e79b362"];
   store.dispatch(
     updatedUserFeatures({
@@ -130,13 +135,47 @@ describe("LtftForm - draft", () => {
     cy.get("#startDate-error").contains("Change cannot begin before today");
     cy.clearAndType('[data-cy="startDate-input"]', dateWithin16WeeksOfToday);
     cy.get(".field-warning-msg").contains(
-      "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis."
+      "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
     );
     cy.get("#startDate-error").should("not.exist");
+    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
     cy.navNext();
 
     // Part 5
-    cy.get("h3").contains("Part 5 of 10 - Pre-approver discussions");
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
+    cy.get(
+      '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
+    ).contains("Important");
+    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
+    cy.navNext();
+    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
+    cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
+    cy.get('[data-cy="reasonsSelected-label"]').should("exist");
+    cy.get('[data-cy="reasonsSelected-hint"]').should(
+      "include.text",
+      "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
+    );
+    cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
+    cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
+    cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
+    cy.navNext();
+
+    // Part 6
+    cy.get("h3").contains("Part 6 of 10 - Supporting information");
+    cy.navNext();
+    cy.get("#supportingInformation-error").contains(
+      "Supporting information is required"
+    );
+    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
+      "This is my supporting information"
+    );
+    cy.get(".field-warning-msg").contains(
+      "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable)."
+    );
+    cy.navNext();
+
+    // Part 7
+    cy.get("h3").contains("Part 7 of 10 - Pre-approver discussions");
     cy.get(
       '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
     ).should("exist");
@@ -164,45 +203,12 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
-    // part 6
-    cy.get("h3").contains("Part 6 of 10 - Other discussions");
+    // Part 8
+    cy.get("h3").contains("Part 8 of 10 - Other discussions");
     cy.get('[data-cy="add-Other Discussions-button"]').should("exist").click();
     cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
     cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
     cy.clickSelect('[data-cy="role"]');
-    cy.navNext();
-
-    // part 7
-    cy.get("h3").contains("Part 7 of 10 - Reason(s) for applying");
-    cy.get(
-      '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
-    ).contains("Important");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
-    cy.navNext();
-    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
-    cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
-    cy.get('[data-cy="reasonsSelected-label"]').should("exist");
-    cy.get('[data-cy="reasonsSelected-hint"]').should(
-      "include.text",
-      "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
-    );
-    cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
-    cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
-    cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
-    cy.navNext();
-
-    // part 8
-    cy.get("h3").contains("Part 8 of 10 - Supporting information");
-    cy.navNext();
-    cy.get("#supportingInformation-error").contains(
-      "Supporting information is required"
-    );
-    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
-      "This is my supporting information"
-    );
-    cy.get(".field-warning-msg").contains(
-      "Please include supporting information for why you are making a late application i.e. giving less than 16 weeks notice to change your working hours."
-    );
     cy.navNext();
 
     // part 9
@@ -218,6 +224,70 @@ describe("LtftForm - draft", () => {
     cy.get("h3").contains("Part 10 of 10 - Personal Details");
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
+  });
+});
+
+describe("LtftForm - alternative start date validation", () => {
+  const navigateToStartDateWithAltVisible = () => {
+    cy.clickSelect('[data-cy="pmId"]');
+    cy.navNext();
+    cy.clearAndType('[data-cy="wteBeforeChange-input"]', "100");
+    cy.navNext();
+    cy.clearAndType('[data-cy="wte-input"]', "80");
+    cy.navNext();
+    // Part 4 - Start date
+    cy.get("h3").contains("Part 4 of 10 - Start date");
+    const startDateWithin16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="startDate-input"]', startDateWithin16Weeks);
+    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
+  };
+
+  it("errors when the alternative start date is less than 16 weeks from today (alt-at-least-16-weeks)", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDateWithAltVisible();
+    const altDateWithin16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateWithin16Weeks);
+    cy.get("#altStartDate-error").contains(
+      "Alternative start date must be at least 16 weeks from today"
+    );
+    const altDateExactly16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateExactly16Weeks);
+    cy.get("#altStartDate-error").should("not.exist");
+  });
+
+  it("errors when the alternative start date is after the programme end date (alt-before-programme-end)", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDateWithAltVisible();
+    const altDateAfterProgrammeEnd = dayjs()
+      .startOf("day")
+      .add(3, "years")
+      .add(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateAfterProgrammeEnd);
+    cy.get("#altStartDate-error").contains(
+      "Alternative start date cannot be after the programme end date"
+    );
+
+    const altDateBeforeProgrammeEnd = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType(
+      '[data-cy="altStartDate-input"]',
+      altDateBeforeProgrammeEnd
+    );
+    cy.get("#altStartDate-error").should("not.exist");
   });
 });
 
