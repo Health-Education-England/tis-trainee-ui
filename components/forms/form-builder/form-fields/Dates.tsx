@@ -7,6 +7,7 @@ import { FieldWrapper } from "./FieldWrapper";
 type DatesProps = {
   name: string;
   label?: string;
+  hint?: string;
   fieldError?: string;
   placeholder?: string;
   value: string;
@@ -18,6 +19,7 @@ type DatesProps = {
 export const Dates = ({
   name,
   label,
+  hint,
   fieldError,
   placeholder,
   value,
@@ -31,6 +33,7 @@ export const Dates = ({
     <FieldWrapper
       name={name}
       label={label}
+      hint={hint}
       fieldError={fieldError}
       arrayIndex={arrayIndex}
       arrayName={arrayName}
