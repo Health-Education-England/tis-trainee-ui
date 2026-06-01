@@ -16,8 +16,12 @@ import {
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
 import { LtftObjNew } from "../../../../models/LtftTypes";
 import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
-import { mockProgrammeMemberships } from "../../../../mock-data/trainee-profile";
+import {
+  mockProgrammeMemberships,
+  mockTraineeProfile
+} from "../../../../mock-data/trainee-profile";
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
+import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
 import {
   ltftReasonsError,
@@ -26,6 +30,7 @@ import {
 
 const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
+  store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
   const qualifyingProgrammes = ["7ab1aae3-83c2-4bb6-b1f3-99146e79b362"];
   store.dispatch(
     updatedUserFeatures({
@@ -219,6 +224,70 @@ describe("LtftForm - draft", () => {
     cy.get("h3").contains("Part 10 of 10 - Personal Details");
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
+  });
+});
+
+describe("LtftForm - alternative start date validation", () => {
+  const navigateToStartDateWithAltVisible = () => {
+    cy.clickSelect('[data-cy="pmId"]');
+    cy.navNext();
+    cy.clearAndType('[data-cy="wteBeforeChange-input"]', "100");
+    cy.navNext();
+    cy.clearAndType('[data-cy="wte-input"]', "80");
+    cy.navNext();
+    // Part 4 - Start date
+    cy.get("h3").contains("Part 4 of 10 - Start date");
+    const startDateWithin16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="startDate-input"]', startDateWithin16Weeks);
+    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
+  };
+
+  it("errors when the alternative start date is less than 16 weeks from today (alt-at-least-16-weeks)", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDateWithAltVisible();
+    const altDateWithin16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .subtract(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateWithin16Weeks);
+    cy.get("#altStartDate-error").contains(
+      "Alternative start date must be at least 16 weeks from today"
+    );
+    const altDateExactly16Weeks = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateExactly16Weeks);
+    cy.get("#altStartDate-error").should("not.exist");
+  });
+
+  it("errors when the alternative start date is after the programme end date (alt-before-programme-end)", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDateWithAltVisible();
+    const altDateAfterProgrammeEnd = dayjs()
+      .startOf("day")
+      .add(3, "years")
+      .add(1, "day")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="altStartDate-input"]', altDateAfterProgrammeEnd);
+    cy.get("#altStartDate-error").contains(
+      "Alternative start date cannot be after the programme end date"
+    );
+
+    const altDateBeforeProgrammeEnd = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType(
+      '[data-cy="altStartDate-input"]',
+      altDateBeforeProgrammeEnd
+    );
+    cy.get("#altStartDate-error").should("not.exist");
   });
 });
 
