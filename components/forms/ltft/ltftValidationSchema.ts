@@ -67,7 +67,7 @@ const changeStartDateValidation = yup
     }
   );
 
-const alternativeStartDateValidation = yup
+const altStartDateValidation = yup
   .date()
   .nullable()
   .transform((value, originalValue) => (originalValue === "" ? null : value))
@@ -131,7 +131,7 @@ export const ltftValidationSchema = yup.object({
     .nullable(),
   personalDetails: personalDetailsDtoValidationSchema,
   startDate: changeStartDateValidation,
-  alternativeStartDate: alternativeStartDateValidation,
+  altStartDate: altStartDateValidation,
   skilledWorkerVisaHolder: yup
     .boolean()
     .typeError(LtftVisaError)

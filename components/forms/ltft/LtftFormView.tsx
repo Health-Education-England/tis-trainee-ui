@@ -206,13 +206,13 @@ export const LtftFormView = () => {
                     )}
                 </SummaryList.Value>
               </SummaryList.Row>
-              {formData.alternativeStartDate && (
+              {formData.altStartDate && (
                 <SummaryList.Row>
-                  <SummaryList.Key data-cy="alternativeStartDateKey">
+                  <SummaryList.Key data-cy="altStartDateKey">
                     Alternative start date
                   </SummaryList.Key>
-                  <SummaryList.Value data-cy="alternativeStartDateValue">
-                    {dayjs(formData.alternativeStartDate).format("DD/MM/YYYY")}
+                  <SummaryList.Value data-cy="altStartDateValue">
+                    {dayjs(formData.altStartDate).format("DD/MM/YYYY")}
                   </SummaryList.Value>
                 </SummaryList.Row>
               )}

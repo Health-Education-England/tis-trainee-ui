@@ -24,28 +24,28 @@ const baseValid = {
     email: "jo@example.com"
   },
   startDate: beyond16w,
-  alternativeStartDate: null,
+  altStartDate: null,
   skilledWorkerVisaHolder: false,
   supportingInformation: "info"
 };
 
-describe("ltftValidationSchema - alternativeStartDate (optional)", () => {
+describe("ltftValidationSchema - altStartDate (optional)", () => {
   beforeAll(() => {
     store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
   });
 
-  it("accepts a form with no alternativeStartDate when startDate is more than 16 weeks away", async () => {
+  it("accepts a form with no altStartDate when startDate is more than 16 weeks away", async () => {
     await expect(
       ltftValidationSchema.validate({ ...baseValid, startDate: beyond16w })
     ).resolves.toBeTruthy();
   });
 
-  it("accepts a late startDate with no alternativeStartDate provided", async () => {
+  it("accepts a late startDate with no altStartDate provided", async () => {
     await expect(
       ltftValidationSchema.validate({
         ...baseValid,
         startDate: within16w,
-        alternativeStartDate: null
+        altStartDate: null
       })
     ).resolves.toBeTruthy();
   });
@@ -55,27 +55,27 @@ describe("ltftValidationSchema - alternativeStartDate (optional)", () => {
       ltftValidationSchema.validate({
         ...baseValid,
         startDate: within16w,
-        alternativeStartDate: ""
+        altStartDate: ""
       })
     ).resolves.toBeTruthy();
   });
 
-  it("rejects an alternativeStartDate that is itself within 16 weeks", async () => {
+  it("rejects an altStartDate that is itself within 16 weeks", async () => {
     await expect(
       ltftValidationSchema.validate({
         ...baseValid,
         startDate: within16w,
-        alternativeStartDate: dayjs().add(8, "week").format("YYYY-MM-DD")
+        altStartDate: dayjs().add(8, "week").format("YYYY-MM-DD")
       })
     ).rejects.toThrow(/at least 16 weeks from today/);
   });
 
-  it("accepts an alternativeStartDate that is at least 16 weeks away", async () => {
+  it("accepts an altStartDate that is at least 16 weeks away", async () => {
     await expect(
       ltftValidationSchema.validate({
         ...baseValid,
         startDate: within16w,
-        alternativeStartDate: dayjs().add(20, "week").format("YYYY-MM-DD")
+        altStartDate: dayjs().add(20, "week").format("YYYY-MM-DD")
       })
     ).resolves.toBeTruthy();
   });

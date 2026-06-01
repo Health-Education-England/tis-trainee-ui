@@ -162,7 +162,7 @@ export const mockLtftNewFormObj: LtftObjNew = {
   reasonsSelected: null,
   skilledWorkerVisaHolder: null,
   startDate: null,
-  alternativeStartDate: null,
+  altStartDate: null,
   status: {
     current: {
       state: "DRAFT",
@@ -207,7 +207,7 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   change: {
     type: "LTFT",
     startDate: null,
-    alternativeStartDate: null,
+    altStartDate: null,
     wte: 0,
     id: null
   },
@@ -372,7 +372,7 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   reasonsSelected: [],
   skilledWorkerVisaHolder: null,
   startDate: null,
-  alternativeStartDate: null,
+  altStartDate: null,
   status: {
     current: {
       detail: { message: null, reason: null },
@@ -413,7 +413,7 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   managingDeanery: "East of England",
   type: "LTFT",
   startDate: startDate,
-  alternativeStartDate: null,
+  altStartDate: null,
   wteBeforeChange: wteBeforeChange,
   wte: wte,
   declarations: {

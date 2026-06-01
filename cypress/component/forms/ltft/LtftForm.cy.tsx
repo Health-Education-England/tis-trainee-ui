@@ -133,7 +133,7 @@ describe("LtftForm - draft", () => {
       "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
     );
     cy.get("#startDate-error").should("not.exist");
-    cy.get('[data-cy="alternativeStartDate-input"]').should("be.visible");
+    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
     cy.navNext();
 
     // Part 5
