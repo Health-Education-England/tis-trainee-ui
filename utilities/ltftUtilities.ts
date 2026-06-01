@@ -79,7 +79,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
     change: {
       type: "LTFT",
       startDate: ltftObj.startDate,
-      altStartDate: ltftObj.altStartDate,
+      altStartDate: ltftObj.altStartDate ? ltftObj.altStartDate : null,
       wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
       id: null
     },

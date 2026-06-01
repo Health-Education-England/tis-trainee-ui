@@ -32,7 +32,7 @@ export const ltftStartDateImportantText1 =
 export const ltftStartDateImportantText2 =
   "If applicable, should your late application not be approved, when choosing a late application start date below, you will also be asked to provide an alternative start date at least 16 weeks in advance. This will hopefully lessen any admin delays in approving your application.";
 
-export const ltftStartDateimportantText3 =
+export const ltftStartDateImportantText3 =
   "A late application will also need additional supporting information (Part 6 of this form). This includes the reasons for no suitable alternative start date being given (if applicable).";
 
 export const ltftTier2VisaImportantText1 =
@@ -318,7 +318,7 @@ const displayText: DisplayText = {
     <>
       <p>{ltftStartDateImportantText1}</p>
       <p>{ltftStartDateImportantText2}</p>
-      <p>{ltftStartDateimportantText3}</p>
+      <p>{ltftStartDateImportantText3}</p>
     </>
   ),
   ltftTier2VisaImportantText: (
