@@ -5,6 +5,7 @@ import MFA from "../authentication/setMfa/MFA";
 import PageNotFound from "../common/PageNotFound";
 import { Cct } from "../forms/cct/Cct";
 import CojView from "../forms/conditionOfJoining/CojView";
+import { Deferral } from "../forms/deferral/Deferral";
 import FormRPartA from "../forms/form-builder/form-r/part-a/FormRPartA";
 import FormRPartB from "../forms/form-builder/form-r/part-b/FormRPartB";
 import { Ltft } from "../forms/ltft/Ltft";
@@ -59,6 +60,9 @@ const Routes = () => {
       {userFeatures.cct.enabled && <Route path="/cct" component={Cct} />}
       {userFeatures.forms.ltft.enabled && (
         <Route path="/ltft" component={Ltft} />
+      )}
+      {userFeatures.deferral?.enabled && (
+        <Route path="/deferral" component={Deferral} />
       )}
       <Redirect exact path="/" to="/home" />
       <Route path="/*" component={PageNotFound} />

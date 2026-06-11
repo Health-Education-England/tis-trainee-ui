@@ -20,6 +20,7 @@ import { PANEL_KEYS } from "../../utilities/Constants";
 import {
   DateUtilities,
   isCurrentDateBoxed,
+  isFutureDateBoxed,
   isUpcomingDateBoxed
 } from "../../utilities/DateUtilities";
 import { StringUtilities } from "../../utilities/StringUtilities";
@@ -87,6 +88,31 @@ export function PanelsCreator({
               >
                 <p className={style.panelHeader}>{panelTitle}</p>
                 <SummaryList>
+                  {panelsName === TraineeProfileName.Programmes &&
+                    userFeatures.deferral?.enabled &&
+                    (isUpcomingDateBoxed(panel) ||
+                      isFutureDateBoxed(panel)) && (
+                      <>
+                        <p
+                          className={style.panelSubHeader}
+                          data-cy="subheaderDeferral"
+                        >
+                          Deferral
+                        </p>
+                        <SummaryList.Row>
+                          <SummaryList.Key>
+                            <Label size="s" data-cy="deferral-thinking">
+                              Looking to defer your start date?
+                            </Label>
+                          </SummaryList.Key>
+                          <SummaryList.Value>
+                            <Link to="/deferral" data-cy="deferral-link">
+                              Go to the Deferral page
+                            </Link>
+                          </SummaryList.Value>
+                        </SummaryList.Row>
+                      </>
+                    )}
                   {panelsName === TraineeProfileName.Programmes &&
                     dayjs(panel.startDate).isAfter(
                       dayjs().subtract(1, "year")

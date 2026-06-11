@@ -51,6 +51,20 @@ import {
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 import { LtftObjNew } from "../models/LtftTypes";
+import {
+  deleteDeferral,
+  resetToInitDeferral,
+  saveDeferral,
+  updatedCanEditDeferral,
+  updatedDeferral,
+  updatedEditPageNumberDeferral,
+  updateDeferral
+} from "../redux/slices/deferralSlice";
+import { DeferralObj } from "../models/DeferralTypes";
+import {
+  getDeferralProgrammeDetails,
+  isDeferralOver12Months
+} from "./deferralUtilities";
 import { isPastIt } from "./DateUtilities";
 import { findLinkedProgramme } from "./CctUtilities";
 
@@ -94,6 +108,8 @@ export function getEditPageNumber(formName: string) {
     return store.getState().formB.editPageNumber;
   } else if (formName === "ltft") {
     return store.getState().ltft.editPageNumber;
+  } else if (formName === "deferral") {
+    return store.getState().deferral.editPageNumber;
   }
   return 0;
 }
@@ -105,6 +121,8 @@ export function resetForm(formName: string) {
     store.dispatch(resetToInitFormB());
   } else if (formName === "ltft") {
     store.dispatch(resetToInitLtft());
+  } else if (formName === "deferral") {
+    store.dispatch(resetToInitDeferral());
   }
 }
 
@@ -166,9 +184,39 @@ function handleLtftToConfirm(formData: FormData) {
   history.push("/ltft/confirm");
 }
 
+export function prepDeferralFormData(
+  formData: DeferralObj,
+  returnPreppedData: boolean = false
+) {
+  const pmArrayNotPast = store
+    .getState()
+    .traineeProfile.traineeProfileData.programmeMemberships.filter(
+      prog => !isPastIt(prog.endDate)
+    );
+  const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
+  const preppedData: DeferralObj = {
+    ...formData,
+    ...getDeferralProgrammeDetails(linkedProgramme)
+  };
+
+  store.dispatch(updatedDeferral(preppedData));
+
+  if (returnPreppedData) {
+    return preppedData;
+  }
+}
+
+function handleDeferralToConfirm(formData: FormData) {
+  prepDeferralFormData(formData as DeferralObj);
+  store.dispatch(updatedCanEditDeferral(true));
+  history.push("/deferral/confirm");
+}
+
 export function continueToConfirm(formName: FormName, formData: FormData) {
   if (formName === "ltft") {
     handleLtftToConfirm(formData);
+  } else if (formName === "deferral") {
+    handleDeferralToConfirm(formData);
   } else {
     handleFormrToConfirm(formName, formData);
   }
@@ -182,6 +230,8 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
     store.dispatch(updatedEditPageNumberB(pageNumber));
   } else if (formName === "ltft") {
     store.dispatch(updatedEditPageNumberLtft(pageNumber));
+  } else if (formName === "deferral") {
+    store.dispatch(updatedEditPageNumberDeferral(pageNumber));
   }
 }
 
@@ -232,6 +282,11 @@ export function getEditPageLocation(formName: FormName, fieldName: string) {
       pathname: "/ltft/create",
       state: { fieldName }
     };
+  } else if (formName === "deferral") {
+    return {
+      pathname: "/deferral/create",
+      state: { fieldName }
+    };
   } else {
     return getFormREditPageLocation(formName, fieldName);
   }
@@ -249,6 +304,8 @@ export async function isFormDeleted(
     await store.dispatch(deleteFormB(formId));
   } else if (formName === "ltft") {
     await store.dispatch(deleteLtft(formId));
+  } else if (formName === "deferral") {
+    await store.dispatch(deleteDeferral(formId));
   }
   const state = store.getState();
   return state[formName].status === "succeeded";
@@ -301,7 +358,7 @@ export function isDateWithin16WeeksOfFirstDate(
 }
 
 export function getFieldWarningMsgs(
-  inputValue: string | number,
+  inputValue: unknown,
   warnings: Warning[],
   formData?: FormData
 ): string[] {
@@ -326,13 +383,28 @@ export function getFieldWarningMsgs(
     }
   };
 
-  return warnings.reduce((messages: string[], w) => {
-    let valueToCheck = inputValue;
-    const hasConditionalField = !!(w.conditionalField && formData);
+  const formDataChecks: Partial<
+    Record<MatcherName, (data: FormData) => boolean>
+  > = {
+    deferralOver12MonthsTest: data =>
+      isDeferralOver12Months(data.pmStartDate, data.newStartDate)
+  };
 
-    if (hasConditionalField) {
-      valueToCheck = formData[w.conditionalField as string];
-    } else if (!inputValue && inputValue !== 0) {
+  return warnings.reduce((messages: string[], w) => {
+    const formDataCheck = formDataChecks[w.matcher];
+    if (formDataCheck) {
+      if (formData && formDataCheck(formData)) {
+        messages.push(w.msgText);
+      }
+      return messages;
+    }
+
+    const valueToCheck =
+      w.conditionalField && formData
+        ? formData[w.conditionalField]
+        : inputValue;
+
+    if (!valueToCheck && valueToCheck !== 0) {
       return messages;
     }
 
@@ -340,10 +412,7 @@ export function getFieldWarningMsgs(
     const numberCheck = numberTypeChecks[w.matcher];
 
     if (stringCheck) {
-      const valStr =
-        valueToCheck === undefined || valueToCheck === null
-          ? ""
-          : String(valueToCheck);
+      const valStr = String(valueToCheck);
       if (stringCheck(valStr)) {
         messages.push(w.msgText);
       }
@@ -524,6 +593,15 @@ async function updateForm(
         showFailToastOnly
       })
     );
+  } else if (formName === "deferral") {
+    await store.dispatch(
+      updateDeferral({
+        formData: formData as DeferralObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      })
+    );
   }
 }
 
@@ -555,6 +633,15 @@ async function saveForm(
         showFailToastOnly
       })
     );
+  else if (formName === "deferral")
+    await store.dispatch(
+      saveDeferral({
+        formData: formData as DeferralObj,
+        isAutoSave,
+        isSubmit,
+        showFailToastOnly
+      })
+    );
 }
 
 export const getDraftFormId = (
@@ -567,6 +654,8 @@ export const getDraftFormId = (
     return formData?.id ?? store.getState().formB?.newFormId ?? null;
   } else if (formName === "ltft")
     return formData?.id ?? store.getState().ltft?.newFormId ?? null;
+  else if (formName === "deferral")
+    return formData?.id ?? store.getState().deferral?.newFormId ?? null;
   return null;
 };
 
@@ -576,10 +665,11 @@ const getSaveStatus = (formName: string) => {
   } else if (formName === "formB") {
     return store.getState().formB.saveStatus;
   } else if (formName === "ltft") return store.getState().ltft.saveStatus;
+  else if (formName === "deferral") return store.getState().deferral.saveStatus;
   return "idle";
 };
 
-export type FormDataType = FormRPartA | FormRPartB | LtftObjNew;
+export type FormDataType = FormRPartA | FormRPartB | LtftObjNew | DeferralObj;
 
 export async function saveDraftForm(
   jsonForm: Form,
@@ -592,13 +682,18 @@ export async function saveDraftForm(
   const formName = jsonForm.name;
   const draftFormId = getDraftFormId(formData, formName);
   const isFormR = formName === "formA" || formName === "formB";
-  const preppedFormData = isFormR
-    ? prepFormRData(
-        formData as Extract<FormDataType, FormRPartA | FormRPartB>,
-        isSubmit,
-        jsonForm
-      )
-    : prepLtftFormData(formData as LtftObjNew, true);
+  let preppedFormData: FormData | undefined;
+  if (isFormR) {
+    preppedFormData = prepFormRData(
+      formData as Extract<FormDataType, FormRPartA | FormRPartB>,
+      isSubmit,
+      jsonForm
+    );
+  } else if (formName === "deferral") {
+    preppedFormData = prepDeferralFormData(formData as DeferralObj, true);
+  } else {
+    preppedFormData = prepLtftFormData(formData as LtftObjNew, true);
+  }
 
   if (draftFormId) {
     await updateForm(
@@ -742,7 +837,9 @@ const visibilityMatchers: Record<VisibilityMatcherName, VisibilityMatcher> = {
     return cond.values.includes(fieldValue);
   },
   lessThan16WeeksTest: fieldValue =>
-    !!fieldValue && isDateWithin16WeeksOfFirstDate(fieldValue as string)
+    !!fieldValue && isDateWithin16WeeksOfFirstDate(fieldValue as string),
+  isNotEmpty: fieldValue =>
+    fieldValue !== undefined && fieldValue !== null && fieldValue !== ""
 };
 
 export function showFormField(field: Field, formData: FormData) {

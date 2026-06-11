@@ -7,6 +7,7 @@ export interface FeatureFlags {
 export type UserFeaturesType = {
   actions: Feature;
   cct: Feature;
+  deferral: Feature;
   details: DetailsFeatures;
   forms: FormFeatures;
   notifications: Feature;

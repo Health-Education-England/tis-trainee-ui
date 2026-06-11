@@ -12,6 +12,7 @@ import {
   BtnLocation,
   checkPush,
   getDraftFormId,
+  getFieldWarningMsgs,
   handleSaveRedirect,
   isDateWithin16WeeksOfFirstDate,
   setDraftFormRProps,
@@ -24,7 +25,8 @@ import { formANew } from "../../mock-data/draft-formr-parta";
 import {
   Field,
   Form,
-  FormName
+  FormName,
+  Warning
 } from "../../components/forms/form-builder/FormBuilder";
 import { FormRPartA } from "../../models/FormRPartA";
 import { FormRPartB } from "../../models/FormRPartB";
@@ -43,6 +45,31 @@ describe("transformReferenceData", () => {
     const expected = mockTransformedCombinedReferenceData;
     const result = transformReferenceData(data);
     expect(result).toEqual(expected);
+  });
+});
+
+describe("getFieldWarningMsgs deferral matcher", () => {
+  const warning: Warning = {
+    matcher: "deferralOver12MonthsTest",
+    msgText: "Deferral is over 12 months"
+  };
+
+  it("shows the warning from the form dates even when the field is empty", () => {
+    expect(
+      getFieldWarningMsgs("", [warning], {
+        pmStartDate: "01/08/2026",
+        newStartDate: "2027-08-02"
+      })
+    ).toEqual([warning.msgText]);
+  });
+
+  it("does not show the warning at exactly 12 months", () => {
+    expect(
+      getFieldWarningMsgs("", [warning], {
+        pmStartDate: "01/08/2026",
+        newStartDate: "2027-08-01"
+      })
+    ).toEqual([]);
   });
 });
 

@@ -43,7 +43,10 @@ export type FieldType =
   | "array"
   | "dto";
 
-export type VisibilityMatcherName = "valueInList" | "lessThan16WeeksTest";
+export type VisibilityMatcherName =
+  | "valueInList"
+  | "lessThan16WeeksTest"
+  | "isNotEmpty";
 
 export type VisibilityCondition = {
   field: string;
@@ -88,7 +91,7 @@ type Section = {
   fields: Field[];
   objectFields?: Field[];
 };
-export type FormName = "formA" | "formB" | "ltft";
+export type FormName = "formA" | "formB" | "ltft" | "deferral";
 export type FormDeclaration = {
   name: string;
   label: string;
@@ -106,7 +109,8 @@ export type MatcherName =
   | "prevDateTest"
   | "postcodeTest"
   | "ltft16WeeksTest"
-  | "ltftStandardWteTest";
+  | "ltftStandardWteTest"
+  | "deferralOver12MonthsTest";
 
 export type Warning = {
   matcher: MatcherName;

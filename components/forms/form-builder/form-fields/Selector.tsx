@@ -6,6 +6,7 @@ import {
 } from "../../../../utilities/FormBuilderUtilities";
 import { useFormContext } from "../FormContext";
 import { FieldWrapper } from "./FieldWrapper";
+import FieldWarningMsg from "../../FieldWarningMsg";
 
 type SelectorProps = {
   name: string;
@@ -34,7 +35,8 @@ export const Selector = ({
   hint,
   placeholder
 }: SelectorProps) => {
-  const { handleChange } = useFormContext();
+  const { handleChange, fieldWarningMsgs } = useFormContext();
+  const warningMsgs = fieldWarningMsgs[name] ?? [];
 
   return (
     <FieldWrapper
@@ -46,42 +48,47 @@ export const Selector = ({
       arrayName={arrayName}
     >
       {({ inputId, labelId, errorId }) => (
-        <Select
-          inputId={inputId}
-          aria-labelledby={labelId}
-          aria-describedby={fieldError ? errorId : undefined}
-          onKeyDown={handleKeyDown}
-          options={options}
-          onChange={selectedOption =>
-            handleChange(
-              {
-                currentTarget: {
-                  name,
-                  value: selectedOption ?? ""
-                }
-              },
-              selectedOption,
-              undefined,
-              arrayIndex,
-              arrayName,
-              dtoName
-            )
-          }
-          className="autocomplete-select"
-          classNamePrefix="react-select"
-          theme={theme => ({ ...theme, borderRadius: 0 })}
-          styles={colourStyles}
-          placeholder={placeholder}
-          value={
-            isMultiSelect
-              ? options?.filter((option: any) =>
-                  (value as string[])?.includes(option.value)
-                )
-              : options?.filter((option: any) => option.value === value)
-          }
-          isClearable
-          isMulti={isMultiSelect}
-        />
+        <>
+          <Select
+            inputId={inputId}
+            aria-labelledby={labelId}
+            aria-describedby={fieldError ? errorId : undefined}
+            onKeyDown={handleKeyDown}
+            options={options}
+            onChange={selectedOption =>
+              handleChange(
+                {
+                  currentTarget: {
+                    name,
+                    value: selectedOption ?? ""
+                  }
+                },
+                selectedOption,
+                undefined,
+                arrayIndex,
+                arrayName,
+                dtoName
+              )
+            }
+            className="autocomplete-select"
+            classNamePrefix="react-select"
+            theme={theme => ({ ...theme, borderRadius: 0 })}
+            styles={colourStyles}
+            placeholder={placeholder}
+            value={
+              isMultiSelect
+                ? options?.filter((option: any) =>
+                    (value as string[])?.includes(option.value)
+                  )
+                : options?.filter((option: any) => option.value === value)
+            }
+            isClearable
+            isMulti={isMultiSelect}
+          />
+          {warningMsgs.length > 0 && !fieldError && (
+            <FieldWarningMsg warningMsgs={warningMsgs} />
+          )}
+        </>
       )}
     </FieldWrapper>
   );

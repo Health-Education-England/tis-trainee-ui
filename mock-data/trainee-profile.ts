@@ -1029,6 +1029,9 @@ export const mockUserFeaturesNone: UserFeaturesType = {
   cct: {
     enabled: false
   },
+  deferral: {
+    enabled: false
+  },
   details: {
     enabled: false,
     placements: {
@@ -1073,6 +1076,9 @@ export const mockUserFeaturesNonSpecialty: UserFeaturesType = {
     enabled: false
   },
   cct: {
+    enabled: false
+  },
+  deferral: {
     enabled: false
   },
   details: {
@@ -1121,6 +1127,9 @@ export const mockUserFeaturesSpecialty: UserFeaturesType = {
   cct: {
     enabled: true
   },
+  deferral: {
+    enabled: true
+  },
   details: {
     enabled: true,
     placements: {
@@ -1165,6 +1174,9 @@ export const mockUserFeaturesFoundation: UserFeaturesType = {
     enabled: true
   },
   cct: {
+    enabled: true
+  },
+  deferral: {
     enabled: true
   },
   details: {

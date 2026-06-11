@@ -1,0 +1,202 @@
+{
+  "name": "deferral",
+  "pages": [
+    {
+      "pageName": "Your Programme",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Your Programme",
+          "fields": [
+            {
+              "name": "pmId",
+              "type": "select",
+              "label": "Which programme would you like to defer?",
+              "optionsKey": "pmOptions",
+              "visible": true,
+              "altDisplayVal": "pmName"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Deferred start date",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "When would you like to start your programme?",
+          "fields": [
+            {
+              "name": "pmStartDate",
+              "type": "text",
+              "label": "Your programme start date before deferral",
+              "hint": "Your planned deferral will begin from this date.",
+              "visible": true,
+              "readOnly": true
+            },
+            {
+              "name": "newStartDate",
+              "type": "date",
+              "label": "Choose your deferred programme start date",
+              "hint": "This is the date you want your programme to begin.",
+              "visible": true,
+              "warnings": [
+                {
+                  "matcher": "deferralOver12MonthsTest",
+                  "msgText": "A deferral of more than 12 months will most likely be declined. If you still wish to proceed, please use Supporting information (part 4) to explain your circumstances."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Reason for deferral",
+      "importantTxtName": "",
+      "expanderLinkName": "deferralStatutoryGrounds",
+      "sections": [
+        {
+          "sectionHeader": "Reason for deferral",
+          "fields": [
+            {
+              "name": "reasonSelected",
+              "label": "Why are you applying to defer?",
+              "placeholder": "Select your reason",
+              "type": "select",
+              "optionsKey": "deferralReasonOptions",
+              "dependencies": ["reasonOtherDetail"],
+              "visible": true,
+              "hint": "The start of training may normally only be deferred on statutory grounds (or to meet Defence requirements)."
+            },
+            {
+              "name": "reasonOtherDetail",
+              "label": "Other reason",
+              "placeholder": "type here...",
+              "type": "text",
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "reasonSelected",
+                "values": ["other reason"]
+              },
+              "visible": false,
+              "hint": "Please provide details for your 'other statutory reason'."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Supporting information",
+      "importantTxtName": "",
+      "expanderLinkName": "",
+      "sections": [
+        {
+          "sectionHeader": "Supporting information",
+          "fields": [
+            {
+              "name": "supportingInformation",
+              "label": "Supporting information",
+              "hint": "You can provide any additional information that may support your application.",
+              "placeholder": "Type here...",
+              "type": "textArea",
+              "visible": true,
+              "warnings": [
+                {
+                  "matcher": "deferralOver12MonthsTest",
+                  "msgText": "Supporting information is required for a deferral of more than 12 months. Please explain your circumstances."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Personal Details",
+      "importantTxtName": "personalDetailsCheckText",
+      "expanderLinkName": "dataSource",
+      "sections": [
+        {
+          "sectionHeader": "Personal Details",
+          "fields": [
+            {
+              "name": "personalDetails",
+              "type": "dto",
+              "visible": true,
+              "objectFields": [
+                {
+                  "name": "forenames",
+                  "label": "Forename ",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "surname",
+                  "label": "Surname (GMC-Registered)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true,
+                  "canGrow": true
+                },
+                {
+                  "name": "telephoneNumber",
+                  "label": "Contact Telephone",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "mobileNumber",
+                  "label": "Contact Mobile",
+                  "placeholder": "type here...",
+                  "type": "phone",
+                  "visible": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email Address",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "gmcNumber",
+                  "label": "GMC Number",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "gdcNumber",
+                  "label": "GDC Number (if applicable)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                },
+                {
+                  "name": "publicHealthNumber",
+                  "label": "Public Health Number (if applicable)",
+                  "placeholder": "type here...",
+                  "type": "text",
+                  "visible": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "declarations": [
+    {
+      "name": "informationIsCorrect",
+      "label": "I confirm that the information I have provided is correct and accurate to the best of my knowledge."
+    }
+  ]
+}

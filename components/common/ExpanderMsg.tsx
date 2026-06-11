@@ -11,7 +11,9 @@ export type ExpanderNameType =
   | "skilledVisaWorkerMoreInfo"
   | "whatIsLtft"
   | "preApproverInfo"
-  | "ltft16WeeksNotice";
+  | "ltft16WeeksNotice"
+  | "whatIsDeferral"
+  | "deferralStatutoryGrounds";
 
 export const ExpanderMsg = ({
   expanderName
@@ -307,6 +309,66 @@ export const ExpanderMsg = ({
           </ul>
         </>
       )
+    },
+    whatIsDeferral: {
+      summary: "What is Deferral and how do I apply?",
+      text: (
+        <>
+          <p>
+            <strong>Deferral</strong> is when you postpone the start date of
+            your specialty training programme (foundation, core, specialist or
+            GP training).
+          </p>
+          <p>
+            The start of training may normally only be deferred on statutory
+            grounds (e.g. maternity/paternity/adoption leave, ill health). For
+            the Defence Medical Academy only, training may also be deferred to
+            meet Defence Medical Services operational requirements.
+          </p>
+          <p>
+            Please apply at the earliest opportunity and give as much notice as
+            possible.
+          </p>
+          <p>
+            The period of deferral would not normally exceed one year. However,
+            in exceptional circumstances and with the Postgraduate Dean’s
+            approval, it could be extended to a maximum of two years before you
+            would need to reapply for a training post.
+          </p>
+          <p>
+            The rules for Deferral are governed by national postgraduate
+            training rules set out in the GMC Gold Guide.
+          </p>
+        </>
+      ),
+      actionLinkText:
+        "For more details see Gold Guide v10 page 28 (opens a new tab)",
+      actionLinkHref:
+        "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
+    },
+    deferralStatutoryGrounds: {
+      summary: "What reasons can I defer for?",
+      text: (
+        <>
+          <p>
+            The start of training for foundation, core and specialty training
+            may normally only be deferred on <strong>statutory grounds</strong>{" "}
+            (e.g. maternity/paternity/adoption leave, ill health).
+          </p>
+          <p>
+            For the Defence Medical Academy only, training may also be deferred
+            to meet Defence Medical Services operational requirements.
+          </p>
+          <p>
+            If you have any unanswered questions not covered in the Gold Guide,
+            please <Link to="/support">contact your Local Office support</Link>.
+          </p>
+        </>
+      ),
+      actionLinkText:
+        "For more details see Gold Guide v10 page 28 (opens a new tab)",
+      actionLinkHref:
+        "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
     }
   };
 

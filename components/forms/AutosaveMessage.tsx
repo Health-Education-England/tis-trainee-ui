@@ -11,7 +11,8 @@ type AutoSaveMessageProps = {
 const formStateMap = {
   formA: (state: RootState) => state.formA,
   formB: (state: RootState) => state.formB,
-  ltft: (state: RootState) => state.ltft
+  ltft: (state: RootState) => state.ltft,
+  deferral: (state: RootState) => state.deferral
 };
 
 const getFormState = (state: RootState, formName: FormName) => {

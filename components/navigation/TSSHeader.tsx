@@ -173,6 +173,13 @@ function makeTSSHeaderLinks(
       mobileOnly: false,
       showWithNoMfa: false,
       featureEnabled: userFeatures.forms.ltft.enabled
+    },
+    {
+      path: "deferral",
+      name: "Deferral",
+      mobileOnly: false,
+      showWithNoMfa: false,
+      featureEnabled: userFeatures.deferral?.enabled
     }
   ];
 

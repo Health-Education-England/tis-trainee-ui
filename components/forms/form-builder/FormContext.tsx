@@ -16,6 +16,7 @@ import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
 import { LtftObjNew } from "../../../models/LtftTypes";
+import { DeferralObj } from "../../../models/DeferralTypes";
 
 type FormContextType = {
   formData: FormData;
@@ -87,7 +88,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
   useFormAutosave(
     jsonForm,
-    formData as FormRPartA | FormRPartB | LtftObjNew,
+    formData as FormRPartA | FormRPartB | LtftObjNew | DeferralObj,
     setIsAutosaving
   );
 
@@ -147,14 +148,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       }
       if (fieldWarningsList.length > 0) {
         const val = formData[field.name];
-        const hasConditionalWarnings = fieldWarningsList.some(
-          w => w.conditionalField
-        );
-        if (val || hasConditionalWarnings) {
-          const msgs = getFieldWarningMsgs(val, fieldWarningsList, formData);
-          if (msgs.length > 0) {
-            newWarningMsgs[field.name] = msgs;
-          }
+        const msgs = getFieldWarningMsgs(val, fieldWarningsList, formData);
+        if (msgs.length > 0) {
+          newWarningMsgs[field.name] = msgs;
         }
       }
     });

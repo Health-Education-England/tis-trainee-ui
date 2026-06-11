@@ -581,3 +581,57 @@ describe("Programme confirmation", () => {
     cy.get('[data-cy="cct-link"]').should("exist");
   });
 });
+
+describe("Deferral", () => {
+  it("should show the Deferral section for an upcoming programme when feature enabled", () => {
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
+      mockProgrammeMembershipsForGrouping[2]
+    ]);
+    cy.get('[data-cy="upcomingExpand"]').click();
+    cy.get('[data-cy="subheaderDeferral"]')
+      .first()
+      .should("exist")
+      .and("have.text", "Deferral");
+    cy.get('[data-cy="deferral-thinking"]')
+      .first()
+      .should("exist")
+      .and("have.text", "Thinking of deferring your start date?");
+    cy.get('[data-cy="deferral-link"]')
+      .first()
+      .should("exist")
+      .and("have.attr", "href", "/deferral");
+  });
+
+  it("should show the Deferral section for a future programme when feature enabled", () => {
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
+      mockProgrammeMembershipsForGrouping[3]
+    ]);
+    cy.get('[data-cy="futureExpand"]').click();
+    cy.get('[data-cy="subheaderDeferral"]').first().should("exist");
+    cy.get('[data-cy="deferral-link"]').first().should("exist");
+  });
+
+  it("should not show the Deferral section for a current programme", () => {
+    mountProgrammesWithMockData("SMS", "succeeded", undefined, [
+      mockProgrammeMembershipsForGrouping[1]
+    ]);
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="subheaderDeferral"]').should("not.exist");
+    cy.get('[data-cy="deferral-link"]').should("not.exist");
+  });
+
+  it("should not show the Deferral section when feature disabled", () => {
+    const userFeaturesNoDeferral = {
+      ...mockUserFeaturesSpecialty,
+      deferral: {
+        enabled: false
+      }
+    };
+    mountProgrammesWithMockData("SMS", "succeeded", userFeaturesNoDeferral, [
+      mockProgrammeMembershipsForGrouping[2]
+    ]);
+    cy.get('[data-cy="upcomingExpand"]').click();
+    cy.get('[data-cy="subheaderDeferral"]').should("not.exist");
+    cy.get('[data-cy="deferral-link"]').should("not.exist");
+  });
+});
