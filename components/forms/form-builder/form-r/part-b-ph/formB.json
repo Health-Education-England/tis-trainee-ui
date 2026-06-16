@@ -26,24 +26,22 @@
               "canGrow": true
             },
             {
-              "name": "gmcNumber",
-              "label": "GMC Number",
-              "placeholder": "type here...",
-              "type": "text",
-              "visible": true
-            },
-            {
-              "name": "gdcNumber",
-              "label": "GDC Number",
-              "placeholder": "type here...",
-              "type": "text",
-              "visible": true
-            },
-            {
               "name": "publicHealthNumber",
               "label": "Public Health Number",
               "placeholder": "type here...",
               "type": "text",
+              "visible": true
+            },
+            {
+              "name": "hasGmcNumber",
+              "label": "I have a GMC Number",
+              "type": "checkbox",
+              "visible": true
+            },
+            {
+              "name": "hasGdcNumber",
+              "label": "I have a GDC Number",
+              "type": "checkbox",
               "visible": true
             },
             {

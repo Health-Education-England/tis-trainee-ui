@@ -233,7 +233,7 @@ const formBSlice = createSlice({
       })
       .addCase(loadSavedFormB.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formData =
+        const baseFormData =
           action.payload.covidFlagStatus &&
           action.payload.finalForm.haveCovidDeclarations === null
             ? {
@@ -241,6 +241,12 @@ const formBSlice = createSlice({
                 covidDeclarationDto: defaultCovidObject
               }
             : action.payload.finalForm;
+
+        state.formData = {
+          ...baseFormData,
+          hasGmcNumber: !!baseFormData.gmcNumber,
+          hasGdcNumber: !!baseFormData.gdcNumber
+        };
         state.displayCovid =
           action.payload.covidFlagStatus ||
           action.payload.finalForm.haveCovidDeclarations !== null;

@@ -183,7 +183,11 @@ const formASlice = createSlice({
       })
       .addCase(loadSavedFormA.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formData = action.payload;
+        state.formData = {
+          ...action.payload,
+          hasGmcNumber: !!action.payload.gmcNumber,
+          hasGdcNumber: !!action.payload.gdcNumber
+        };
       })
       .addCase(loadSavedFormA.rejected, (state, { error }) => {
         state.status = "failed";

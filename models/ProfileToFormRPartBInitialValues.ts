@@ -29,6 +29,8 @@ export function ProfileToFormRPartBInitialValues(
   return {
     forename: pd?.forenames,
     surname: pd?.surname,
+    hasGmcNumber: !!pd?.gmcNumber,
+    hasGdcNumber: !!pd?.gdcNumber,
     gmcNumber: pd?.gmcNumber,
     gdcNumber: pd?.gdcNumber,
     publicHealthNumber: pd?.publicHealthNumber,

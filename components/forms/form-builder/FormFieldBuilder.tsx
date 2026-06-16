@@ -1,5 +1,5 @@
 import React from "react";
-import { Field } from "./FormBuilder";
+import { Field, FormErrorsType } from "./FormBuilder";
 import { FormDtoBuilder } from "./FormDtoBuilder";
 import { Text } from "./form-fields/Text";
 import { TextArea } from "./form-fields/TextArea";
@@ -7,7 +7,11 @@ import { filteredOptions } from "../../../utilities/FormBuilderUtilities";
 import { Selector } from "./form-fields/Selector";
 import { Dates } from "./form-fields/Dates";
 import { Phone } from "./form-fields/Phone";
-import { Checkboxes } from "./form-fields/Checkboxes";
+import {
+  Checkboxes,
+  CONDITIONAL_FIELD_MAP,
+  ConditionalTextField
+} from "./form-fields/Checkboxes";
 import { Radios } from "./form-fields/Radios";
 import { FormArrayPanelBuilder } from "./FormArrayPanelBuilder";
 import { useScrollToField } from "../../../utilities/hooks/useScrollToField";
@@ -19,6 +23,7 @@ type FormFieldBuilderProps = {
   options?: any;
   arrayDetails?: { arrayIndex: number; arrayName: string };
   dtoName?: string;
+  formErrors?: FormErrorsType;
 };
 
 export function FormFieldBuilder({
@@ -158,6 +163,14 @@ export function FormFieldBuilder({
         />
       );
     case "checkbox":
+      const conditionalFieldName = CONDITIONAL_FIELD_MAP[name];
+      let conditional: React.ReactNode;
+
+      if (conditionalFieldName) {
+        conditional = (
+          <ConditionalTextField conditionalFieldName={conditionalFieldName} />
+        );
+      }
       return (
         <Checkboxes
           name={name}
@@ -167,6 +180,7 @@ export function FormFieldBuilder({
           arrayIndex={arrayIndex}
           arrayName={arrayName}
           dtoName={dtoName}
+          conditional={conditional}
         />
       );
 
