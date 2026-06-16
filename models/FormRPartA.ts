@@ -6,6 +6,8 @@ export interface FormRPartA extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;
   surname: ProfileSType;
+  hasGmcNumber: boolean;
+  hasGdcNumber: boolean;
   gmcNumber: ProfileSType;
   gdcNumber: ProfileSType;
   publicHealthNumber: ProfileSType;
@@ -44,6 +46,8 @@ export interface FormRPartA extends IFormR {
 export const initialFormRABeforeProfileData: FormRPartA = {
   forename: "",
   surname: "",
+  hasGmcNumber: false,
+  hasGdcNumber: false,
   gmcNumber: "",
   gdcNumber: "",
   publicHealthNumber: "",

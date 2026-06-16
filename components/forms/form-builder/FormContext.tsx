@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useEffect
 } from "react";
-import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
+import { Field, Form, FormData, FormErrorsType, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
   getFieldWarningMsgs,
@@ -47,6 +47,7 @@ type FormContextType = {
     React.SetStateAction<ReturnedWidthData | null>
   >;
   isAutosaving: boolean;
+  formErrors: FormErrorsType; 
 };
 
 const FormContext = createContext<FormContextType>({} as FormContextType);
@@ -84,6 +85,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
   const [isAutosaving, setIsAutosaving] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<FormErrorsType>({});
 
   useFormAutosave(
     jsonForm,
@@ -225,7 +227,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       setFieldWarningMsgs,
       fieldWidthData,
       setFieldWidthData,
-      isAutosaving
+      isAutosaving,
+      formErrors,
+      setFormErrors
     }),
     [
       formData,
@@ -236,7 +240,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       handleChange,
       fieldWarningMsgs,
       fieldWidthData,
-      isAutosaving
+      isAutosaving,
+      formErrors
     ]
   );
 

@@ -6,6 +6,8 @@ export interface FormRPartB extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;
   surname: ProfileSType;
+  hasGmcNumber: boolean;
+  hasGdcNumber: boolean;
   gmcNumber: ProfileSType;
   gdcNumber: ProfileSType;
   publicHealthNumber: ProfileSType;
@@ -82,6 +84,8 @@ export interface CovidDeclaration {
 export const initialFormRBBeforeProfileData: FormRPartB = {
   forename: "",
   surname: "",
+  hasGmcNumber: false,
+  hasGdcNumber: false,
   gmcNumber: "",
   gdcNumber: "",
   publicHealthNumber: "",
