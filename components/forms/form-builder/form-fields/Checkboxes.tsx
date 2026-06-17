@@ -1,7 +1,6 @@
 import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import { useFormContext } from "../FormContext";
-import { Text } from "./Text";
 
 type CheckboxesProps = {
   name: string;
@@ -13,6 +12,7 @@ type CheckboxesProps = {
   arrayName?: string;
   dtoName?: string;
   conditional?: React.ReactNode;
+  conditionalFieldName?: string;
 };
 
 export const Checkboxes: React.FC<CheckboxesProps> = ({
@@ -26,7 +26,7 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   dtoName,
   conditional
 }: CheckboxesProps) => {
-  const { handleChange, setFormData } = useFormContext();
+  const { handleChange } = useFormContext();
 
   const inputId =
     arrayIndex !== undefined && arrayName
@@ -63,21 +63,10 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
                 arrayName,
                 dtoName
               );
-              if (!isChecked) {
-                const conditionalFieldName = CONDITIONAL_FIELD_MAP[name];
-                if (conditionalFieldName) {
-                  setFormData(prev => ({
-                    ...prev,
-                    [conditionalFieldName]: ""
-                  }));
-                }
-              }
             }}
             placeholder={placeholder}
             aria-labelledby={labelId}
             aria-describedby={fieldError ? errorId : undefined}
-            aria-controls={conditional ? conditionalId : undefined}
-            aria-expanded={conditional ? checked : undefined}
           />
           <label
             className="nhsuk-label nhsuk-checkboxes__label"
@@ -103,42 +92,3 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
     </div>
   );
 };
-
-export const CONDITIONAL_FIELD_MAP: Record<string, string> = {
-  hasGmcNumber: "gmcNumber",
-  hasGdcNumber: "gdcNumber"
-};
-
-const CONDITIONAL_FIELD_LABELS: Record<string, string> = {
-  gmcNumber: "GMC Number",
-  gdcNumber: "GDC Number"
-};
-
-export function ConditionalTextField({
-  conditionalFieldName
-}: Readonly<{
-  conditionalFieldName: string;
-}>) {
-  const { formData, formErrors } = useFormContext();
-
-  const error = formErrors?.[conditionalFieldName];
-  const errorMessage = typeof error === "string" ? error : "";
-  const value = formData[conditionalFieldName] ?? "";
-
-  return (
-    <div className="nhsuk-form-group">
-      <Text
-        name={conditionalFieldName}
-        label={CONDITIONAL_FIELD_LABELS[conditionalFieldName]}
-        fieldError={errorMessage}
-        placeholder="type here..."
-        value={value}
-        width={undefined}
-        isNumberField={undefined}
-        readOnly={undefined}
-        hint={undefined}
-        maxDigits={undefined}
-      />
-    </div>
-  );
-}

@@ -7,14 +7,11 @@ import { filteredOptions } from "../../../utilities/FormBuilderUtilities";
 import { Selector } from "./form-fields/Selector";
 import { Dates } from "./form-fields/Dates";
 import { Phone } from "./form-fields/Phone";
-import {
-  Checkboxes,
-  CONDITIONAL_FIELD_MAP,
-  ConditionalTextField
-} from "./form-fields/Checkboxes";
+import { Checkboxes } from "./form-fields/Checkboxes";
 import { Radios } from "./form-fields/Radios";
 import { FormArrayPanelBuilder } from "./FormArrayPanelBuilder";
 import { useScrollToField } from "../../../utilities/hooks/useScrollToField";
+import { useFormContext } from "./FormContext";
 
 type FormFieldBuilderProps = {
   field: Field;
@@ -32,7 +29,8 @@ export function FormFieldBuilder({
   error,
   options,
   arrayDetails,
-  dtoName
+  dtoName,
+  formErrors
 }: Readonly<FormFieldBuilderProps>) {
   const {
     name,
@@ -46,9 +44,11 @@ export function FormFieldBuilder({
     rows,
     isMultiSelect,
     hint,
-    maxDigits
+    maxDigits,
+    conditionalField
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
+  const { currentPageFields, formData } = useFormContext();
 
   const shouldAttachScroll = arrayIndex === undefined && !arrayName;
 
@@ -163,14 +163,20 @@ export function FormFieldBuilder({
         />
       );
     case "checkbox":
-      const conditionalFieldName = CONDITIONAL_FIELD_MAP[name];
-      let conditional: React.ReactNode;
+      const childField = conditionalField
+        ? currentPageFields.find(f => f.name === conditionalField)
+        : undefined;
 
-      if (conditionalFieldName) {
-        conditional = (
-          <ConditionalTextField conditionalFieldName={conditionalFieldName} />
-        );
-      }
+      const conditional = childField ? (
+        <FormFieldBuilder
+          field={childField}
+          value={formData[childField.name] ?? ""}
+          error={(formErrors?.[childField.name] as string) ?? ""}
+          options={options}
+          formErrors={formErrors}
+        />
+      ) : undefined;
+
       return (
         <Checkboxes
           name={name}
@@ -181,6 +187,7 @@ export function FormFieldBuilder({
           arrayName={arrayName}
           dtoName={dtoName}
           conditional={conditional}
+          conditionalFieldName={conditionalField}
         />
       );
 
