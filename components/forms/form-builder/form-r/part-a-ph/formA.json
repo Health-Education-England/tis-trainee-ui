@@ -36,13 +36,39 @@
               "name": "hasGmcNumber",
               "label": "I have a GMC Number",
               "type": "checkbox",
-              "visible": true
+              "visible": true,
+              "conditionalField": "gmcNumber"
+            },
+            {
+              "name": "gmcNumber",
+              "label": "GMC Number",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": false,
+              "visibleIf": {
+                "field": "hasGmcNumber",
+                "matcher": "valueInList",
+                "values": [true]
+              }
             },
             {
               "name": "hasGdcNumber",
               "label": "I have a GDC Number",
               "type": "checkbox",
-              "visible": true
+              "visible": true,
+              "conditionalField": "gdcNumber"
+            },
+            {
+              "name": "gdcNumber",
+              "label": "GDC Number",
+              "placeholder": "type here...",
+              "type": "text",
+              "visible": false,
+              "visibleIf": {
+                "field": "hasGdcNumber",
+                "matcher": "valueInList",
+                "values": [true]
+              }
             },
             {
               "name": "dateOfBirth",

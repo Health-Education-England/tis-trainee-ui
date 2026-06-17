@@ -73,6 +73,7 @@ export type Field = {
   hint?: string;
   altDisplayVal?: string;
   maxDigits?: number;
+  conditionalField?: string;
 };
 export type FormData = {
   [key: string]: any;
@@ -151,6 +152,12 @@ export default function FormBuilder({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
   const location = useLocation<LocationState>();
+
+  const conditionalChildNames = new Set(
+    currentPageFields
+      .filter(field => field.type === "checkbox" && field.conditionalField)
+      .map(field => field.conditionalField as string)
+  );
 
   useEffect(() => {
     setCurrentPageFields(
@@ -242,12 +249,16 @@ export default function FormBuilder({
                 <Card.Content>
                   <Card.Heading>{section.sectionHeader}</Card.Heading>
                   {section.fields.map((field: Field) => {
+                    // Fields revealed as a checkbox's conditional child are
+                    // rendered (nested) by that checkbox, not standalone here.
+                    if (conditionalChildNames.has(field.name)) return null;
                     const fieldComponent = (
                       <FormFieldBuilder
                         field={field}
                         value={formData[field.name] ?? ""}
                         error={formErrors[field.name] ?? ""}
                         options={options}
+                        formErrors={formErrors}
                       />
                     );
                     return (

@@ -6,8 +6,8 @@ export interface FormRPartA extends IFormR {
   traineeTisId?: string;
   forename: ProfileSType;
   surname: ProfileSType;
-  hasGmcNumber: boolean;
-  hasGdcNumber: boolean;
+  hasGmcNumber?: boolean;
+  hasGdcNumber?: boolean;
   gmcNumber: ProfileSType;
   gdcNumber: ProfileSType;
   publicHealthNumber: ProfileSType;
