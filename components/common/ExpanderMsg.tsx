@@ -326,7 +326,7 @@ export const ExpanderMsg = ({
             meet Defence Medical Services operational requirements.
           </p>
           <p>
-            Please apply at the earliest opportunity and give as much notice as
+            Please apply at the earliest opportunity to give as much notice as
             possible.
           </p>
           <p>
@@ -342,7 +342,7 @@ export const ExpanderMsg = ({
         </>
       ),
       actionLinkText:
-        "For more details see Gold Guide v10 page 28 (opens a new tab)",
+        "For more details see Gold Guide v10 page 28 (opens in a new tab)",
       actionLinkHref:
         "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
     },

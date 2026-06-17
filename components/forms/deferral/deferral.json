@@ -27,7 +27,7 @@
       "expanderLinkName": "",
       "sections": [
         {
-          "sectionHeader": "When would you like to start your programme?",
+          "sectionHeader": "When would you like your programme to start?",
           "fields": [
             {
               "name": "pmStartDate",
@@ -46,7 +46,7 @@
               "warnings": [
                 {
                   "matcher": "deferralOver12MonthsTest",
-                  "msgText": "A deferral of more than 12 months will most likely be declined. If you still wish to proceed, please use Supporting information (part 4) to explain your circumstances."
+                  "msgText": "A deferral of more than 12 months is normally only granted in exceptional circumstances and requires Postgraduate Dean approval. You will be required to use Supporting information (part 4) to explain your circumstances."
                 }
               ]
             }
@@ -100,7 +100,7 @@
             {
               "name": "supportingInformation",
               "label": "Supporting information",
-              "hint": "You can provide any additional information that may support your application.",
+              "hint": "You can use this space to provide any additional information that may support your application.",
               "placeholder": "Type here...",
               "type": "textArea",
               "visible": true,

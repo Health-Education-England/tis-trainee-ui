@@ -10,7 +10,7 @@ type MaybeDate = Date | string | null | undefined;
 export const DEFERRAL_OVER_12_MONTHS_THRESHOLD = 12;
 
 export const deferralOver12MonthsWarning =
-  "A deferral of more than 12 months would normally only be granted in exceptional circumstances and requires Postgraduate Dean approval. Please use the supporting information section to explain your circumstances.";
+  "A deferral of more than 12 months is normally only granted in exceptional circumstances and requires Postgraduate Dean approval.";
 
 type DeferralProgrammeDetails = Pick<
   DeferralObj,
