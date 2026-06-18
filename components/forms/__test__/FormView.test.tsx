@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import { FormRView } from "../form-builder/form-r/FormRView";
+import { LifeCycleState } from "../../../models/LifeCycleState";
 
 // Mock the hell out of everything rather than using requireActual which was causing circular dependency issues
 jest.mock("../../../utilities/FormRUtilities", () => ({
@@ -145,6 +146,7 @@ describe("FormView", () => {
 
   const mockFormData = {
     traineeTisId: "123",
+    lifecycleState: LifeCycleState.Draft,
     isArcp: false,
     programmeMembershipId: "pm1",
     localOfficeName: "London"
