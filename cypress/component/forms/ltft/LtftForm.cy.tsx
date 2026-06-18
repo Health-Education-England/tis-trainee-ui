@@ -3,55 +3,38 @@ import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import {
-  mockLtftNewFormObj,
-  mockLtftSubmittedFormObj,
-  mockLtftUnsubmittedFormObj
+  mockLtftDraft0,
+  mockLtftUnsubmitted0
 } from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
-import { updatedLtft } from "../../../../redux/slices/ltftSlice";
+import { LtftObj, updatedLtft } from "../../../../redux/slices/ltftSlice";
+import { FormProvider } from "../../../../components/forms/form-builder/FormContext";
+import ltftJson from "../../../../components/forms/ltft/ltft.json";
+import {
+  Field,
+  Form
+} from "../../../../components/forms/form-builder/FormBuilder";
 import {
   ltftDiscussionText2,
   ltftReasonsText1,
-  ltftTier2VisaImportantText1
+  ltftReasonsText2
 } from "../../../../components/forms/form-builder/form-sections/ImportantText";
-import { LtftObjNew } from "../../../../models/LtftTypes";
-import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
-import {
-  mockProgrammeMemberships,
-  mockTraineeProfile
-} from "../../../../mock-data/trainee-profile";
-import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
-import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
-import dayjs from "dayjs";
-import {
-  ltftReasonsError,
-  LtftVisaError
-} from "../../../../components/forms/ltft/ltftValidationSchema";
 
-const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
+const mountLtftWithMockData = (mockLtftObj: LtftObj) => {
   store.dispatch(updatedLtft(mockLtftObj));
-  store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
-  const qualifyingProgrammes = ["7ab1aae3-83c2-4bb6-b1f3-99146e79b362"];
-  store.dispatch(
-    updatedUserFeatures({
-      forms: {
-        ltft: {
-          qualifyingProgrammes: qualifyingProgrammes,
-          enabled: true
-        }
-      }
-    } as any)
+  const initialPageFields = ltftJson.pages[0].sections.flatMap(
+    section => section.fields as Field[]
   );
-
-  const pmOptions = makeValidProgrammeOptions(
-    mockProgrammeMemberships,
-    qualifyingProgrammes
-  );
-
   mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/ltft/create"]}>
-        <LtftForm pmOptions={pmOptions} />
+        <FormProvider
+          initialData={mockLtftObj}
+          initialPageFields={initialPageFields}
+          jsonForm={ltftJson as Form}
+        >
+          <LtftForm />
+        </FormProvider>
       </MemoryRouter>
     </Provider>
   );
@@ -59,7 +42,7 @@ const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
 
 describe("LtftForm - draft", () => {
   it("renders the ltft form for completion", () => {
-    mountLtftWithMockData(mockLtftNewFormObj);
+    mountLtftWithMockData(mockLtftDraft0);
     // status details section should not exist in DRAFT
     cy.get('[data-cy="ltftName"]').should("not.exist");
     cy.get('[data-cy="ltftCreated"]').should("not.exist");
@@ -67,88 +50,50 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="ltftRef"]').should("not.exist");
 
     // page 1
-    cy.get("h2").contains("Application form");
-    cy.get("h3").contains("Part 1 of 10 - Your Programme");
-    cy.get('[data-cy="pmId-label"]').contains(
-      "Which programme will your proposed change in working hours affect?"
+    cy.get("h2").contains("Main application form");
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
+      "Part 1 of 3 - Discussing your proposals"
     );
-    cy.get("#pmId-error").should("not.exist");
-    cy.clickSelect('[data-cy="pmId"]');
-    cy.get("#pmId").clear();
-    cy.get("#pmId-error").should("exist").contains("Programme is required");
-    cy.get("#errorSummaryTitle").should("exist");
-    cy.get('[data-cy="error-txt-Programme is required"]').should("exist");
-    cy.clickSelect('[data-cy="pmId"]');
-    cy.get("#pmId-error").should("not.exist");
+    cy.get(
+      '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
+    ).should("exist");
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").should(
+      "include.text",
+      ltftDiscussionText2.slice(0, 100)
+    );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(4)").contains(
+      "For information on Professional support contact"
+    );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(5)").contains(
+      "Before submitting your LTFT application, you must have a discussion with your Training Programme Director"
+    );
+    cy.get(
+      ":nth-child(4) > .nhsuk-card__content > .nhsuk-card__heading"
+    ).contains("Your pre-approver details");
+    cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
+    cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
+    cy.get('[data-cy="tpdEmail-inline-error-msg"]')
+      .should("exist")
+      .contains("Email address is required");
+    cy.navNext(true);
+    cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
+    cy.get('[data-cy="tpdEmail-label"]').contains("Pre-approver email");
+    cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
     cy.navNext();
 
     // page 2
-    cy.get("h3").contains("Part 2 of 10 - Working hours before change");
-    cy.get('[data-cy="wteBeforeChange-label"]').should("exist");
-    cy.get('[data-cy="wteBeforeChange-hint"]').should("exist");
-    cy.get('[data-cy="wteBeforeChange-input"]').type("1.a");
-    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "1");
-    cy.get('[data-cy="wteBeforeChange-input"]').clear().type("1000");
-    cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "100");
-    cy.navNext();
-
-    // part 3
-    cy.get("h3").contains(
-      "Part 3 of 10 - Proposed change to your working hours"
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
+      "Part 2 of 3 - Reason(s) for applying"
     );
-    cy.navNext();
-    cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours is required"
-    );
-    cy.clearAndType('[data-cy="wte-input"]', "0");
-    cy.get("#wte-error").contains(
-      "The proposed percentage of full time hours cannot be zero"
-    );
-    cy.clearAndType('[data-cy="wte-input"]', "1");
-    cy.get(".field-warning-container").should("exist");
-    cy.get(".field-warning-msg").contains(
-      "Warning: A bespoke working hours arrangement (i.e. other than 100%, 80%, 70%, 60% or 50%) will require Dean approval."
-    );
-    // check warning persists on nav
-    cy.get('[data-cy="navPrevious"]').click();
-    cy.navNext();
-    cy.get(".field-warning-msg").should("exist");
-    cy.get('[data-cy="wte-input"]').type("0000");
-    cy.get('[data-cy="wte-input"]').should("have.value", "100");
-    cy.get(".field-warning-container").should("not.exist");
-    cy.get("#wte-error").contains(
-      "Your proposed change must be different from the percentage you gave in Part 2"
-    );
-    cy.get('[data-cy="wte-input"]').clear().type("80");
-    cy.get("#wte-error").should("not.exist");
-    cy.get(".field-warning-container").should("not.exist");
-    cy.navNext();
-
-    // part 4
-    cy.get("h3").contains("Part 4 of 10 - Start date");
-    const dateWithin16WeeksOfToday = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .subtract(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="startDate-input"]', "1000-05-01");
-    cy.get("#startDate-error").contains("Change cannot begin before today");
-    cy.clearAndType('[data-cy="startDate-input"]', dateWithin16WeeksOfToday);
-    cy.get(".field-warning-msg").contains(
-      "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
-    );
-    cy.get("#startDate-error").should("not.exist");
-    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
-    cy.navNext();
-
-    // Part 5
-    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
     cy.get(
       '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
     ).contains("Important");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
-    cy.navNext();
-    cy.get("#reasonsSelected-error").contains(ltftReasonsError);
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").contains(
+      ltftReasonsText1
+    );
+    cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(2)").contains(
+      ltftReasonsText2
+    );
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
     cy.get('[data-cy="reasonsSelected-label"]').should("exist");
     cy.get('[data-cy="reasonsSelected-hint"]').should(
@@ -156,160 +101,29 @@ describe("LtftForm - draft", () => {
       "You can choose more than one reason if applicable (for example, 'Caring responsibilities' and 'Training / career development')."
     );
     cy.get('[data-cy="reasonsOtherDetail-input"]').should("not.exist");
+    cy.get('[data-cy="supportingInformation-text-area-input"]').should("exist");
     cy.clickSelect('[data-cy="reasonsSelected"]', "other reason");
     cy.get('[data-cy="reasonsOtherDetail-input"]').type("My other reason");
     cy.navNext();
 
-    // Part 6
-    cy.get("h3").contains("Part 6 of 10 - Supporting information");
-    cy.navNext();
-    cy.get("#supportingInformation-error").contains(
-      "Supporting information is required"
+    // page 3
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').contains(
+      "Part 3 of 3 - Personal Details"
     );
-    cy.get('[data-cy="supportingInformation-text-area-input"]').type(
-      "This is my supporting information"
-    );
-    cy.get(".field-warning-msg").contains(
-      "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable)."
-    );
-    cy.navNext();
-
-    // Part 7
-    cy.get("h3").contains("Part 7 of 10 - Pre-approver discussions");
-    cy.get(
-      '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
-    ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(3)").should(
-      "include.text",
-      ltftDiscussionText2.slice(0, 100)
-    );
-    cy.get(".nhsuk-warning-callout > :nth-child(4)").contains(
-      "For information on Professional support contact"
-    );
-    cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
-    cy.navNext();
-    cy.get("#tpdName-error").contains("Pre-approver name is required");
-    cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
-    cy.get("#tpdName-error").should("not.exist");
-
-    cy.get("#tpdEmail-error")
-      .should("exist")
-      .contains("Email address is required");
-    cy.get(".nhsuk-error-summary").should("exist");
-    cy.get('[data-cy="error-txt-Email address is required"]').should("exist");
     cy.navNext(true);
     cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
-    cy.get('[data-cy="tpdEmail-label"]').contains("Pre-approver email");
-    cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
-    cy.navNext();
-
-    // Part 8
-    cy.get("h3").contains("Part 8 of 10 - Other discussions");
-    cy.get('[data-cy="add-Other Discussions-button"]').should("exist").click();
-    cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
-    cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
-    cy.clickSelect('[data-cy="role"]');
-    cy.navNext();
-
-    // part 9
-    cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
-    cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
-    cy.navNext();
-    cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);
+    cy.get('[data-cy="skilledWorkerVisaHolder-inline-error-msg"]').contains(
+      "Please select Yes or No for: Are you a Tier 2 / Skilled Worker Visa holder?"
+    );
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
-    cy.navNext();
-
-    // part 10
-    cy.get("h3").contains("Part 10 of 10 - Personal Details");
     cy.navNext();
     cy.url().should("include", "/ltft/confirm");
   });
 });
 
-describe("LtftForm - alternative start date validation", () => {
-  const navigateToStartDateWithAltVisible = () => {
-    cy.clickSelect('[data-cy="pmId"]');
-    cy.navNext();
-    cy.clearAndType('[data-cy="wteBeforeChange-input"]', "100");
-    cy.navNext();
-    cy.clearAndType('[data-cy="wte-input"]', "80");
-    cy.navNext();
-    // Part 4 - Start date
-    cy.get("h3").contains("Part 4 of 10 - Start date");
-    const startDateWithin16Weeks = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .subtract(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="startDate-input"]', startDateWithin16Weeks);
-    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
-  };
-
-  it("errors when the alternative start date is less than 16 weeks from today (alt-at-least-16-weeks)", () => {
-    mountLtftWithMockData(mockLtftNewFormObj);
-    navigateToStartDateWithAltVisible();
-    const altDateWithin16Weeks = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .subtract(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateWithin16Weeks);
-    cy.get("#altStartDate-error").contains(
-      "Alternative start date must be at least 16 weeks from today"
-    );
-    const altDateExactly16Weeks = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateExactly16Weeks);
-    cy.get("#altStartDate-error").should("not.exist");
-  });
-
-  it("errors when the alternative start date is after the programme end date (alt-before-programme-end)", () => {
-    mountLtftWithMockData(mockLtftNewFormObj);
-    navigateToStartDateWithAltVisible();
-    const altDateAfterProgrammeEnd = dayjs()
-      .startOf("day")
-      .add(3, "years")
-      .add(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateAfterProgrammeEnd);
-    cy.get("#altStartDate-error").contains(
-      "Alternative start date cannot be after the programme end date"
-    );
-
-    const altDateBeforeProgrammeEnd = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .format("YYYY-MM-DD");
-    cy.clearAndType(
-      '[data-cy="altStartDate-input"]',
-      altDateBeforeProgrammeEnd
-    );
-    cy.get("#altStartDate-error").should("not.exist");
-  });
-});
-
-describe("LtftForm - submitted", () => {
-  it("should render status details section", () => {
-    mountLtftWithMockData(mockLtftSubmittedFormObj);
-    cy.get('[data-cy="SUBMITTED-header"]')
-      .should("exist")
-      .contains("Submitted application");
-    cy.get('[data-cy="ltftName"]').contains("my submitted ltft application");
-    cy.get('[data-cy="ltftCreated"]').should("exist");
-    cy.get('[data-cy="ltftModified"]').should("exist");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
-    cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
-    );
-  });
-});
-
 describe("LtftForm - unsubmitted", () => {
   it("should render status details section", () => {
-    mountLtftWithMockData(mockLtftUnsubmittedFormObj);
+    mountLtftWithMockData(mockLtftUnsubmitted0);
     cy.get('[data-cy="UNSUBMITTED-header"]')
       .should("exist")
       .contains("Unsubmitted application");
@@ -319,9 +133,6 @@ describe("LtftForm - unsubmitted", () => {
     cy.get('[data-cy="ltftModifiedBy"]').contains("TIS Admin");
     cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
     cy.get('[data-cy="ltftMessage"]').contains("status reason message");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
-    cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
-    );
+    cy.get('[data-cy="ltftRef"]').contains("ltft_4_001");
   });
 });

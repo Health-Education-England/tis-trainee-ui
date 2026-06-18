@@ -4,6 +4,7 @@ import {
   handleNumberInput
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
+import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
 import { Hint } from "nhsuk-react-components";
 
@@ -20,7 +21,6 @@ type TextProps = {
   readOnly?: boolean;
   dtoName?: string;
   hint?: string;
-  maxDigits?: number;
 };
 
 export const Text: React.FC<TextProps> = ({
@@ -35,25 +35,18 @@ export const Text: React.FC<TextProps> = ({
   isNumberField,
   readOnly,
   dtoName,
-  hint,
-  maxDigits
+  hint
 }: TextProps) => {
-  const { handleBlur, handleChange, fieldWarningMsgs, fieldWidthData } =
+  const { handleBlur, handleChange, fieldWarning, fieldWidthData } =
     useFormContext();
+
   const inputId =
     arrayIndex !== undefined && arrayName
       ? `${arrayName}-${arrayIndex}-${name}--input`
       : name;
   const labelId = `${inputId}--label`;
-  const errorId = `${inputId}-error`;
-  const warningMsgs = fieldWarningMsgs[name] ?? [];
-
   return (
-    <div
-      className={`nhsuk-form-group${
-        fieldError ? " nhsuk-form-group--error" : ""
-      }`}
-    >
+    <>
       <label
         className="nhsuk-label"
         htmlFor={inputId}
@@ -63,18 +56,13 @@ export const Text: React.FC<TextProps> = ({
         {label}
       </label>
       {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
-      {fieldError && (
-        <span id={errorId} className="nhsuk-error-message">
-          <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
-        </span>
-      )}
       <input
         autoComplete="off"
         id={inputId}
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}
-        onInput={e => handleNumberInput(isNumberField, e, maxDigits)}
-        type={isNumberField ? "number" : "text"}
+        onInput={e => handleNumberInput(isNumberField, e)}
+        type="text"
         name={name}
         value={value ?? ""}
         onChange={(event: any) =>
@@ -94,7 +82,6 @@ export const Text: React.FC<TextProps> = ({
         }`}
         placeholder={placeholder}
         aria-labelledby={labelId}
-        aria-describedby={fieldError ? errorId : undefined}
         onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
           handleBlur(
             event,
@@ -105,12 +92,15 @@ export const Text: React.FC<TextProps> = ({
             dtoName
           )
         }
-        maxLength={isNumberField ? maxDigits : 4096}
+        maxLength={isNumberField ? 4 : 4096}
         readOnly={readOnly}
       />
-      {warningMsgs.length > 0 && !fieldError && (
-        <FieldWarningMsg warningMsgs={warningMsgs} />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </div>
+      {fieldWarning?.fieldName === name && !fieldError ? (
+        <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
+      ) : null}
+    </>
   );
 };

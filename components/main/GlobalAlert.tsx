@@ -1,17 +1,17 @@
+import React, { useState } from "react";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { ActionLink, CloseIcon, Fieldset } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
-import { useState } from "react";
 
 export const GlobalAlert = () => {
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const showBookmarkAlert = useAppSelector(state => state.user.redirected);
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
-  const [recruitDismissed, setRecruitDismissed] = useState(false);
+  const [surveyDismissed, setSurveyDismissed] = useState(false);
 
   if (preferredMfa === "NOMFA") return null;
 
@@ -26,9 +26,9 @@ export const GlobalAlert = () => {
       status: showBookmarkAlert,
       component: <BookmarkAlert />
     },
-    recruit: {
-      status: !recruitDismissed,
-      component: <RecruitAlert onDismiss={() => setRecruitDismissed(true)} />
+    survey: {
+      status: !surveyDismissed,
+      component: <SurveyAlert onDismiss={() => setSurveyDismissed(true)} />
     }
   };
 
@@ -36,14 +36,14 @@ export const GlobalAlert = () => {
 
   return hasAlerts ? (
     <aside
-      className="app-global-alert hide-from-print"
+      className="app-global-alert"
       id="app-global-alert"
       data-cy="globalAlert"
     >
       <div className="nhsuk-width-container">
+        {alerts.survey.status && alerts.survey.component}
         {alerts.bookmark.status && alerts.bookmark.component}
         {alerts.actionSummary.status && alerts.actionSummary.component}
-        {alerts.recruit.status && alerts.recruit.component}
       </div>
     </aside>
   ) : null;
@@ -81,30 +81,34 @@ function BookmarkAlert() {
   );
 }
 
-function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
+function SurveyAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
   return (
-    <div className="recruit-alert" data-cy="recruitAlert">
+    <div className="survey-alert" data-cy="surveyAlert">
       <div>
         <p>
-          <h3>Think you can make TSS better?</h3>
+          <b>Help us improve TSS:</b> We are running an annual survey to better
+          understand how TSS is meeting user needs, where we can do better, and
+          the impact of changes.
         </p>
         <p>
-          Join the Digital Product Collective of Resident Doctors: We&#39;ll
-          Shape the Future of TIS Self-Service Together!
+          It should only take a few minutes to complete, and will really help
+          improve the service.
         </p>
-        <ActionLink
-          href="https://forms.office.com/e/gnyr0hMuYN"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="recruit-link"
-        >
-          Get involved
-        </ActionLink>
+        <p>
+          <ActionLink
+            href="https://forms.office.com/pages/responsepage.aspx?id=slTDN7CF9UeyIge0jXdO44uWlnrGjTNIhMe4L0OxPpdURjBMUjU2R09MRDBRNkkwWTNPMkJaQ1ZBWC4u&route=shorturl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="survey-link"
+          >
+            Take the survey now
+          </ActionLink>
+        </p>
       </div>
       <button
-        className="recruit-alert-close"
-        aria-label="Dismiss recruitment alert"
-        title="Dismiss recruitment alert"
+        className="survey-alert-close"
+        aria-label="Dismiss survey alert"
+        title="Dismiss survey alert"
         onClick={onDismiss}
       >
         <CloseIcon />

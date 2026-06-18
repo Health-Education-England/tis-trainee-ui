@@ -6,23 +6,26 @@ import {
 } from "@reduxjs/toolkit";
 import ltftReducer, {
   saveLtft,
+  LtftObj,
   updateLtft,
   deleteLtft,
   loadSavedLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
   resetToInitLtft,
+  setLtftCctSnapshot,
   updatedLtft,
   updatedLtftSaveStatus,
-  initialState
+  initialState,
+  LtftState
 } from "../ltftSlice";
 import { FormsService } from "../../../services/FormsService";
 import * as ltftUtilities from "../../../utilities/ltftUtilities";
 import * as ToastMessage from "../../../components/common/ToastMessage";
-import { mapLtftObjToDto } from "../../../utilities/ltftUtilities";
-import { LtftDto, LtftObjNew, LtftState } from "../../../models/LtftTypes";
-import { ApiResponse } from "../../../services/apiService";
-import { mockLtftFormObjAfterFirstSave } from "../../../mock-data/mock-ltft-data";
+import { mockLtftDraft1 } from "../../../mock-data/mock-ltft-data";
+import { CctCalculation } from "../cctSlice";
+import { LtftDto, mapLtftObjToDto } from "../../../utilities/ltftUtilities";
+import { AxiosResponse, AxiosRequestHeaders } from "axios";
 
 jest.mock("../../../services/FormsService");
 jest.mock("../../../utilities/ltftUtilities");
@@ -34,6 +37,7 @@ type TestStore = EnhancedStore<{
   dispatch: ThunkDispatch<{ ltft: LtftState }, unknown, AnyAction>;
 };
 
+// Factory function to create tests for saveLtft and updateLtft thunks
 const createLtftThunkTests = (
   thunkName: string,
   thunkAction: typeof saveLtft | typeof updateLtft,
@@ -41,19 +45,21 @@ const createLtftThunkTests = (
 ): void => {
   describe(`ltftSlice - ${thunkName} thunk`, () => {
     let store: TestStore;
-    const mockFormData: LtftObjNew = mockLtftFormObjAfterFirstSave;
-    const mockResponse: ApiResponse<LtftDto> = {
+    const mockFormData: LtftObj = mockLtftDraft1;
+    const mockResponse: AxiosResponse<LtftDto, any> = {
       status: 200,
       statusText: "OK",
-      config: {},
-      headers: {},
+      config: {
+        headers: {} as AxiosRequestHeaders
+      },
+      headers: {} as AxiosRequestHeaders,
       data: {
         ...mapLtftObjToDto(mockFormData),
         id: "123updated",
         lastModified: "2023-01-01T12:30:00"
       }
     };
-    const mockMappedResponse: LtftObjNew = {
+    const mockMappedResponse: LtftObj = {
       ...mockFormData,
       id: "123updated",
       lastModified: "2023-01-01T12:30:00"
@@ -300,8 +306,8 @@ describe("ltftSlice - deleteLtft thunk", () => {
 describe("ltftSlice - loadSavedLtft thunk", () => {
   let store: TestStore;
   const mockFormId = "ltft-456";
-  let mockResponse: ApiResponse<LtftDto>;
-  let mockMappedLtft: LtftObjNew;
+  let mockResponse: AxiosResponse<LtftDto, any>;
+  let mockMappedLtft: LtftObj;
 
   beforeEach(() => {
     store = configureStore({
@@ -315,17 +321,19 @@ describe("ltftSlice - loadSavedLtft thunk", () => {
     mockResponse = {
       status: 200,
       statusText: "OK",
-      config: {},
-      headers: {},
+      config: {
+        headers: {} as AxiosRequestHeaders
+      },
+      headers: {} as AxiosRequestHeaders,
       data: {
-        ...mapLtftObjToDto(mockLtftFormObjAfterFirstSave),
+        ...mapLtftObjToDto(mockLtftDraft1),
         id: mockFormId,
         lastModified: "2023-01-01T12:30:00"
       }
     };
 
     mockMappedLtft = {
-      ...mockLtftFormObjAfterFirstSave,
+      ...mockLtftDraft1,
       id: mockFormId
     };
 
@@ -383,6 +391,7 @@ describe("ltftSlice - loadSavedLtft thunk", () => {
   });
 });
 
+// reducer tests
 describe("ltftSlice - reducers", () => {
   let store: TestStore;
 
@@ -405,28 +414,38 @@ describe("ltftSlice - reducers", () => {
 
     store.dispatch(resetToInitLtft());
 
+    // Verify state was reset
     expect(store.getState().ltft).toEqual(initialState);
   });
 
+  test("setLtftCctSnapshot should update LtftCctSnapshot", () => {
+    const mockCctSnapshot = {
+      id: "cct-123",
+      created: "2024-01-01"
+    } as unknown as CctCalculation;
+
+    store.dispatch(setLtftCctSnapshot(mockCctSnapshot));
+
+    expect(store.getState().ltft.LtftCctSnapshot).toEqual(mockCctSnapshot);
+  });
+
   test("updatedLtft should update formData", () => {
-    store.dispatch(updatedLtft(mockLtftFormObjAfterFirstSave));
-    expect(store.getState().ltft.formData).toEqual(
-      mockLtftFormObjAfterFirstSave
-    );
+    store.dispatch(updatedLtft(mockLtftDraft1));
+    expect(store.getState().ltft.formData).toEqual(mockLtftDraft1);
   });
 
   test("updatedCanEditLtft should update canEdit flag", () => {
-    expect(store.getState().ltft.canEdit).toBe(false);
+    expect(store.getState().ltft.canEdit).toBe(false); // Initial state
 
     store.dispatch(updatedCanEditLtft(true));
-    expect(store.getState().ltft.canEdit).toBe(true); // Initial state
+    expect(store.getState().ltft.canEdit).toBe(true);
 
     store.dispatch(updatedCanEditLtft(false));
     expect(store.getState().ltft.canEdit).toBe(false);
   });
 
   test("updatedEditPageNumberLtft should update editPageNumber", () => {
-    expect(store.getState().ltft.editPageNumber).toBe(0);
+    expect(store.getState().ltft.editPageNumber).toBe(0); // Initial state
 
     store.dispatch(updatedEditPageNumberLtft(3));
     expect(store.getState().ltft.editPageNumber).toBe(3);
@@ -436,7 +455,7 @@ describe("ltftSlice - reducers", () => {
   });
 
   test("updatedLtftSaveStatus should update saveStatus", () => {
-    expect(store.getState().ltft.saveStatus).toBe("idle");
+    expect(store.getState().ltft.saveStatus).toBe("idle"); // Initial state
 
     store.dispatch(updatedLtftSaveStatus("saving"));
     expect(store.getState().ltft.saveStatus).toBe("saving");

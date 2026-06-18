@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { BackLink } from "nhsuk-react-components";
+import { FormRUtilities } from "../../utilities/FormRUtilities";
 import style from "../Common.module.scss";
 import history from "../navigation/history";
 
@@ -20,7 +21,7 @@ export const FormBackLink = ({
       className={className}
       data-cy={
         text
-          ? `backLink-to-${text.replaceAll(/\s+/g, "-").toLowerCase()}`
+          ? `backLink-to-${text.replace(/\s+/g, "-").toLowerCase()}`
           : "backLink"
       }
       onClick={() => history.push(path)}

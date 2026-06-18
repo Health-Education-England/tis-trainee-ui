@@ -10,14 +10,13 @@ export type LtftFormStatus =
   | "APPROVED"
   | "REJECTED";
 
-export type LtftChange = {
-  id?: string | null;
-  calculationId?: string | null;
+export type LtftCctChange = {
+  calculationId: string;
+  cctDate: Date | string;
   type: CctType;
-  startDate: Date | string | null;
-  altStartDate?: Date | string | null;
-  endDate?: Date | string | null;
+  startDate: Date | string;
   wte: number;
+  changeId: string;
 };
 
 export type LtftDeclarations = {
@@ -27,14 +26,14 @@ export type LtftDeclarations = {
 };
 
 export type LtftDiscussion = {
-  name?: string | null;
-  email?: string | null;
-  role?: string | null;
+  name: string;
+  email: string;
+  role: string;
 };
 
 export type LtftStatusDetails = {
-  reason: string | null;
-  message: string | null;
+  reason: string;
+  message: string;
 };
 
 export type LtftPd = {
@@ -73,53 +72,28 @@ export type StatusInfo = {
   revision: number;
 };
 
-export type LtftObjNew = {
-  // LTFT form identifiers
+export type LtftObj = {
   traineeTisId?: string;
   id?: string;
   formRef?: string;
   name?: string;
-  status: StatusLtft;
-  created?: Date | string;
-  lastModified?: Date | string;
-
-  // PM stuff
-  pmId: string;
-  pmName: string;
-  pmStartDate: Date | string;
-  pmEndDate: Date | string;
-  designatedBodyCode: string;
-  managingDeanery: string;
-
-  // change: LtftChange
-  type: CctType;
-  startDate: Date | string | null;
-  altStartDate: Date | string | null;
-  wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
-  wte: number | null;
-
-  // declarations
+  change: LtftCctChange;
   declarations: LtftDeclarations;
-
-  // discussions
   tpdName: string;
   tpdEmail: string;
   otherDiscussions: LtftDiscussion[] | null;
-
-  // reasons
+  personalDetails: LtftPd;
+  programmeMembership: LtftPm;
   reasonsSelected: string[] | null;
   reasonsOtherDetail: string | null;
   supportingInformation: string | null;
-
-  // Personal details
-  personalDetails: Omit<LtftPd, "skilledWorkerVisaHolder">;
-
-  // skilledWorkerVisaHolder moved to separate field
-  skilledWorkerVisaHolder: boolean | null;
+  status: StatusLtft;
+  created?: Date | string;
+  lastModified?: Date | string;
 };
 
 export type LtftState = {
-  formData: LtftObjNew;
+  formData: LtftObj;
   LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
@@ -134,9 +108,8 @@ export type LtftDto = {
   traineeTisId: string;
   id: string | null;
   formRef: string | null;
-  revision?: number;
   name: string | null;
-  change: LtftChange;
+  change: LtftCctChange;
   declarations: {
     discussedWithTpd: boolean | null;
     informationIsCorrect: boolean | null;
@@ -152,7 +125,6 @@ export type LtftDto = {
     }[];
   };
   personalDetails: {
-    id?: string;
     title?: ProfileSType;
     forenames: ProfileSType;
     surname: ProfileSType;
@@ -178,10 +150,8 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
-  tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;
-    submitted?: unknown;
     history: StatusInfo[];
   };
   created: Date | string;

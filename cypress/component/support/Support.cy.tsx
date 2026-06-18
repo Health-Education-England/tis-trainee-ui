@@ -88,7 +88,7 @@ describe("Support", () => {
     )
       .should("exist")
       .first()
-      .type("less")
+      .type("chan")
       .get(".react-select__menu")
       .find(".react-select__option")
       .first()

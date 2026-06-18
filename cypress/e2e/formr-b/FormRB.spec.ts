@@ -34,7 +34,7 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
       .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
     cy.get('[data-cy="forename-input"]').clear();
-    cy.get("#forename-error").should("exist");
+    cy.checkElement("forename-inline-error-msg");
     cy.clearAndType('[data-cy="email-input"]', "test.reset@hee.nhs.uk");
     cy.log("save still works with errors");
     cy.get('[data-cy="autosaveStatusMsg"]').should(
@@ -50,13 +50,14 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
     cy.log(
       "No error message should be displayed until new changes or navigation"
     );
-    cy.get("#forename-error").should("not.exist");
+    cy.checkElement("forename-inline-error-msg", null, false);
     cy.get('[data-cy="email-input"]').should(
       "have.value",
       "test.reset@hee.nhs.uk"
     );
     cy.navNext();
-    cy.get("#forename-error").should("exist");
+    cy.checkElement("forename-inline-error-msg");
+    cy.checkElement("error-txt-Forename is required");
 
     cy.log("Delete draft form");
     cy.startOver();
@@ -64,8 +65,8 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
   });
 });
 
-describe("Form R (Part B) - Submit a new form pt1", () => {
-  it("should complete part of a new Form R Part B and save draft.", () => {
+describe("Form R (Part B) - Submit a new form", () => {
+  it("complete part of a new Form R Part B.", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form").click();
     cy.checkForFormLinkerAndComplete();
@@ -85,10 +86,8 @@ describe("Form R (Part B) - Submit a new form pt1", () => {
     cy.checkElement("BtnSaveExit-formB").click();
     cy.checkElement("btn-Edit saved draft form");
   });
-});
 
-describe("Form R (Part B) - Submit a new form pt2", () => {
-  it("should re-open and complete the rest of the Form R Part B and submit.", () => {
+  it("complete the rest of the Form R Part B.", () => {
     cy.signInToTss(10000, "/formr-b");
     cy.checkElement("btn-Edit saved draft form").click();
     cy.checkElement("BtnShortcutToConfirm", null, false);
@@ -109,6 +108,14 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
     cy.log(
       "################ check Confirm page, edit, and submit ###################"
     );
+    cy.checkElement(
+      "formrbSubheading",
+      "Trainee registration for Postgraduate Speciality Training"
+    );
+    cy.checkElement(
+      "formrbInfo",
+      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+    );
     cy.checkElement("forename-value", `Bob-${today.format("YYYY-MM-DD")}`);
     cy.checkElement("edit-forename").click();
     cy.get('[data-cy="progress-header"] > h3').should(
@@ -126,30 +133,28 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();
     cy.checkElement("BtnSubmit", "Submit Form").click();
+    // final submit via linker modal
     cy.get('[data-cy="form-linker-submit-btn"]').click();
+    cy.checkElement("Submit new form");
+  });
+
+  it("Should show the submitted form in the list", () => {
+    cy.signInToTss(30000, "/formr-b");
+    cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
+    cy.contains("Submitted forms").should("exist");
+    cy.get('[data-cy="formr-row-0"]').click();
+    cy.get('[data-cy="submissionDateTop"]').should(
+      "include.text",
+      `Form submitted on: ${today.format("DD/MM/YYYY")}`
+    );
+    cy.checkElement("savePdfBtn");
+    cy.checkElement("forename-value", "Bob-edited");
+    cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
+    cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
+    cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
+    //check linkage
+    cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
+    cy.get('[data-cy="backLink"]').click();
+    cy.contains("Submitted forms").should("exist");
   });
 });
-
-// Note: Temporarily commenting out the below tests while we investigate and fix failing tests.
-
-// describe("Form R (Part B) - check latest submitted form", () => {
-//   it("Should show the submitted form in the list", () => {
-//     cy.signInToTss(30000, "/formr-b");
-//     cy.checkElement("Submit new form");
-//     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
-//     cy.contains("Submitted forms").should("exist");
-//     cy.get('[data-cy="formr-row-0"]').scrollIntoView().click();
-//     cy.get('[data-cy="submissionDateTop"]').should(
-//       "include.text",
-//       `Form submitted on: ${today.format("DD/MM/YYYY")}`
-//     );
-//     cy.checkElement("savePdfBtn");
-//     cy.checkElement("forename-value", "Bob-edited");
-//     cy.checkElement("surname-value", `Smith-${today.format("YYYY-MM-DD")}`);
-//     cy.get('[data-cy="isDeclarationAccepted"]').should("be.checked");
-//     cy.get('[data-cy="isConsentAccepted"]').should("be.checked");
-//     cy.get('[data-cy="ARCP Form?-value"]').should("have.text", "No");
-//     cy.get('[data-cy="backLink-to-back-to-form-r-part-b-home"]').click();
-//     cy.contains("Submitted forms").should("exist");
-//   });
-// });

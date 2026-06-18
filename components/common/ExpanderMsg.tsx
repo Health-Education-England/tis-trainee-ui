@@ -1,17 +1,11 @@
 import { ActionLink, Details } from "nhsuk-react-components";
-import { Link } from "react-router-dom";
-import { tier2SkilledWorkerVisaInfo } from "../../utilities/Constants";
 
 export type ExpanderNameType =
   | "dataSource"
   | "formRDeclarationsExplained"
   | "postTypes"
   | "cctInfo"
-  | "skilledVisaWorker"
-  | "skilledVisaWorkerMoreInfo"
-  | "whatIsLtft"
-  | "preApproverInfo"
-  | "ltft16WeeksNotice";
+  | "skilledVisaWorker";
 
 export const ExpanderMsg = ({
   expanderName
@@ -106,7 +100,7 @@ export const ExpanderMsg = ({
       actionLinkText:
         "See the latest Gold Guide for more details (opens a new tab)",
       actionLinkHref:
-        "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
+        "https://www.copmed.org.uk/images/docs/gold-guide-9th-edition/Gold-Guide-9th-Edition-August-2022.pdf"
     },
     cctInfo: {
       summary: "CCT Calculator further information",
@@ -166,145 +160,21 @@ export const ExpanderMsg = ({
       )
     },
     skilledVisaWorker: {
-      summary: "Are you a Skilled Worker visa holder?",
-      text: tier2SkilledWorkerVisaInfo
-    },
-    skilledVisaWorkerMoreInfo: {
-      summary: "More information for Skilled Worker visa holders",
-      text: tier2SkilledWorkerVisaInfo
-    },
-    whatIsLtft: {
-      summary:
-        "What is Less than full-time (LTFT) training and how do I apply?",
+      summary: "Are you are tier 2 skilled visa worker?",
       text: (
         <>
-          <p>
-            <strong>Less than full-time (LTFT) training</strong> is when a
-            resident doctor such as yourself reduces their working hours below
-            the standard 100% full-time (40 hrs per week) to a different
-            percentage such as 60% or 80%.
-          </p>
-          <p>
-            <strong>
-              As a resident doctor you are welcome to apply for LTFT training:
-            </strong>
-          </p>
-          <p>
-            There are many reasons a resident doctor may choose to apply for
-            LTFT training. Consideration is also given to the impact this will
-            have on training pathway and expected CCT.
-          </p>
-          <ul>
-            <li>
-              <strong>If already in training</strong>, first discuss your
-              proposals with your pre-approver, which is usually a training
-              programme director, educational supervisor or GP programme
-              manager. If you are unsure who your pre-approver is, please{" "}
-              <Link to="/support">contact your Local Office support</Link>{" "}
-            </li>
-            <li>
-              <strong>If not yet commenced training</strong>, and your programme
-              is not listed, please{" "}
-              <Link to="/support">contact your Local Office support</Link>{" "}
-            </li>
-          </ul>
-          <p>
-            <strong>When you are ready to apply for LTFT</strong>, please use
-            the button below to make a new application.
-          </p>
-          <p>
-            <i>
-              Note: you can use the same LTFT application form to go less than
-              full-time or increase your working hours percentage.
-            </i>
-          </p>
-        </>
-      ),
-      actionLinkText:
-        "See the latest Gold Guide for more details (opens a new tab)",
-      actionLinkHref:
-        "https://www.copmed.org.uk/images/docs/goldguide10thedition/Gold%20Guide%2010th%20Edition%20August%202024.pdf"
-    },
-    preApproverInfo: {
-      summary: "What should I discuss with my pre-approver?",
-      text: (
-        <>
-          <p>
-            Before submitting your LTFT application, you must have a discussion
-            with your Training Programme Director (TPD) or Primary Approver.
-            This conversation ensures your request supports both your personal
-            circumstances and your training progression.
-          </p>
-          <p>
-            During this discussion, you should cover:
-            <ul>
-              <ul>
-                <li>
-                  Your reason(s) for requesting LTFT (e.g. caring
-                  responsibilities, health, professional development,
-                  wellbeing).
-                </li>
-                <li>
-                  The proposed working pattern (e.g. 60%, 80% of your full-time
-                  working hours, expected days per week).
-                </li>
-                <li>
-                  Impact on training progression, pay changes and completion
-                  dates.
-                </li>
-                <li>Planned start date and notice period.</li>
-                <li>Any support or adjustments you may need.</li>
-              </ul>
-              <p>
-                The purpose of this discussion is to ensure understanding and
-                support within your training programme.
-              </p>
-            </ul>
-          </p>
-        </>
-      )
-    },
-    ltft16WeeksNotice: {
-      summary: "What is the 16 weeks notice period for LTFT?",
-      text: (
-        <>
-          <p>
-            <strong>16 weeks notice guidance</strong>
-          </p>
-          <ul>
-            <li>
-              <strong>Aim</strong> for a minimum of 16 weeks before your desired
-              LTFT start date to allow for your application to be processed
-              smoothly.
-            </li>
-            <li>
-              <strong>The 16 weeks starts</strong> from the date your completed
-              LTFT application (with Pre approver (TPD) agreement) is submitted
-              on TIS Self-Service, and not from the date of any initial
-              discussions.
-            </li>
-            <li>
-              <strong>This allows time</strong> for your Educational Supervisor
-              (ES), Training Programme Director (TPD), and the employing trust
-              (including payroll/HR) to arrange new contracts, schedules, and
-              funding.
-            </li>
-            <li>
-              <strong>Late Applications</strong> may be declined or delayed,
-              though exceptional circumstances (e.g. sudden disability,
-              significant life changes) are reviewed on a case-by-case basis.
-            </li>
-            <li>
-              <strong>Check with your region</strong> for any specific
-              application windows and deadlines (e.g. September rotations) as
-              these can vary slightly by region (Local Office) and training
-              specialty.
-            </li>
-            <p>
-              <Link to="/support">Contact your Local Office support</Link> for
-              further details.
-            </p>
-          </ul>
+          Please be aware that there are minimum requirements and conditions
+          attached to your visa, and that it is your responsibility to ensure
+          your new work schedule is in compliance. Please see{" "}
+          <a
+            href="https://medical.hee.nhs.uk/medical-training-recruitment/medical-specialty-training/overseas-applicants/overseas-sponsorship-guidance/less-than-full-time-ltft-minimum-salary-requirements"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Less Than Full Time (LTFT) minimum salary requirements | Workforce,
+            training and education | NHS England
+          </a>{" "}
+          for more information.
         </>
       )
     }

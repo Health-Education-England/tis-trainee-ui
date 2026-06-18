@@ -1,21 +1,16 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect
-} from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
-  getFieldWarningMsgs,
+  ReturnedWarning,
   setTextFieldWidth,
+  showFieldMatchWarning,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
 import { FormRPartA } from "../../../models/FormRPartA";
 import { FormRPartB } from "../../../models/FormRPartB";
-import { LtftObjNew } from "../../../models/LtftTypes";
+import { LtftObj } from "../../../models/LtftTypes";
 
 type FormContextType = {
   formData: FormData;
@@ -41,7 +36,8 @@ type FormContextType = {
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
   jsonForm: Form;
-  fieldWarningMsgs: Record<string, string[]>;
+  fieldWarning: ReturnedWarning | null;
+  setFieldWarning: React.Dispatch<React.SetStateAction<ReturnedWarning | null>>;
   fieldWidthData: ReturnedWidthData | null;
   setFieldWidthData: React.Dispatch<
     React.SetStateAction<ReturnedWidthData | null>
@@ -78,16 +74,16 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
   const [currentPageFields, setCurrentPageFields] =
     useState<Field[]>(initialPageFields);
-  const [fieldWarningMsgs, setFieldWarningMsgs] = useState<
-    Record<string, string[]>
-  >({});
+  const [fieldWarning, setFieldWarning] = useState<ReturnedWarning | null>(
+    null
+  );
   const [fieldWidthData, setFieldWidthData] =
     useState<ReturnedWidthData | null>(null);
   const [isAutosaving, setIsAutosaving] = useState<boolean>(false);
 
   useFormAutosave(
     jsonForm,
-    formData as FormRPartA | FormRPartB | LtftObjNew,
+    formData as FormRPartA | FormRPartB | LtftObj,
     setIsAutosaving
   );
 
@@ -138,36 +134,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({
     []
   );
 
-  useEffect(() => {
-    const newWarningMsgs: Record<string, string[]> = {};
-    currentPageFields.forEach(field => {
-      const fieldWarningsList = [];
-      if (field.warnings) {
-        fieldWarningsList.push(...field.warnings);
-      }
-      if (fieldWarningsList.length > 0) {
-        const val = formData[field.name];
-        const hasConditionalWarnings = fieldWarningsList.some(
-          w => w.conditionalField
-        );
-        if (val || hasConditionalWarnings) {
-          const msgs = getFieldWarningMsgs(val, fieldWarningsList, formData);
-          if (msgs.length > 0) {
-            newWarningMsgs[field.name] = msgs;
-          }
-        }
-      }
-    });
-
-    setFieldWarningMsgs(existingWarningMsgs => {
-      if (
-        JSON.stringify(existingWarningMsgs) === JSON.stringify(newWarningMsgs)
-      )
-        return existingWarningMsgs;
-      return newWarningMsgs;
-    });
-  }, [formData, currentPageFields]);
-
   const handleChange = useCallback(
     (
       event: React.ChangeEvent<HTMLInputElement>,
@@ -187,6 +153,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       );
 
       updateFormData(name, currentValue, arrayIndex, arrayName, dtoName);
+
+      if (primaryField?.warning) {
+        const matcher = primaryField.warning.matcher;
+        const msg = primaryField.warning.msgText;
+        const warning = showFieldMatchWarning(currentValue, matcher, msg, name);
+        setFieldWarning(warning);
+      }
 
       if (primaryField?.type === "text" && primaryField?.canGrow) {
         const newWidth = setTextFieldWidth(currentValue.length);
@@ -221,8 +194,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       currentPageFields,
       setCurrentPageFields,
       jsonForm,
-      fieldWarningMsgs,
-      setFieldWarningMsgs,
+      fieldWarning,
+      setFieldWarning,
       fieldWidthData,
       setFieldWidthData,
       isAutosaving
@@ -234,7 +207,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       jsonForm,
       handleBlur,
       handleChange,
-      fieldWarningMsgs,
+      fieldWarning,
       fieldWidthData,
       isAutosaving
     ]

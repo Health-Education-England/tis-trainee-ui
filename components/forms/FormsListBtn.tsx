@@ -1,29 +1,23 @@
 import { Button } from "nhsuk-react-components";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import { LifeCycleState } from "../../../../models/LifeCycleState";
-import history from "../../../navigation/history";
-import { updatedFormALifecycleState } from "../../../../redux/slices/formASlice";
-import { updatedFormBLifecycleState } from "../../../../redux/slices/formBSlice";
+import { useAppSelector } from "../../redux/hooks/hooks";
+import history from "../navigation/history";
+import { LifeCycleState } from "../../models/LifeCycleState";
 
 type FormsListBtnType = {
   pathName: string;
 };
 
-const FormRListBtn = ({ pathName }: FormsListBtnType) => {
-  const dispatch = useAppDispatch();
+const FormsListBtn = ({ pathName }: FormsListBtnType) => {
   const draftFormProps = useAppSelector(state => state.forms?.draftFormProps);
   const formName = pathName.split("/")[1] === "formr-a" ? "formA" : "formB";
   const isFormDeleting = useAppSelector(
     state => state[formName].status === "deleting"
   );
 
-  const handleBtnClick = () => {
+  const handleBtnClick = async () => {
     if (draftFormProps?.id) {
       history.push(`${pathName}/${draftFormProps.id}/create`);
     } else {
-      formName === "formA"
-        ? dispatch(updatedFormALifecycleState(LifeCycleState.Draft))
-        : dispatch(updatedFormBLifecycleState(LifeCycleState.Draft));
       history.push(`${pathName}/new/create`);
     }
   };
@@ -44,7 +38,7 @@ const FormRListBtn = ({ pathName }: FormsListBtnType) => {
   );
 };
 
-export default FormRListBtn;
+export default FormsListBtn;
 
 function chooseBtnText(lifecycleState: LifeCycleState | undefined) {
   switch (lifecycleState) {

@@ -1,4 +1,5 @@
-import ApiService, { ApiResponse } from "./apiService";
+import { AxiosResponse } from "axios";
+import ApiService from "./apiService";
 import { TraineeAction } from "../models/TraineeAction";
 
 export class TraineeActionsService extends ApiService {
@@ -6,13 +7,13 @@ export class TraineeActionsService extends ApiService {
     super("/api");
   }
 
-  async getIncompleteTraineeActions(): Promise<ApiResponse<TraineeAction[]>> {
+  async getIncompleteTraineeActions(): Promise<AxiosResponse<TraineeAction[]>> {
     return this.get<TraineeAction[]>(`/actions`);
   }
 
   async completeTraineeAction(
     actionId: string
-  ): Promise<ApiResponse<TraineeAction>> {
+  ): Promise<AxiosResponse<TraineeAction>> {
     return this.post<TraineeAction>(`/actions/${actionId}/complete`);
   }
 }

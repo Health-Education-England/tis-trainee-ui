@@ -1,4 +1,4 @@
-import { ApiResponse } from "../apiService";
+﻿import { AxiosResponse } from "axios";
 import { TraineeProfileService } from "../TraineeProfileService";
 import {
   mockProgrammeMemberships,
@@ -7,17 +7,18 @@ import {
 import { errorResponse } from "../../mock-data/service-api-err-res";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
+import { FileUtilities } from "../../utilities/FileUtilities";
 
 const mockService = new TraineeProfileService();
 describe("TraineeProfileService", () => {
   it("getTraineeProfile method should return success response", () => {
-    const successResponse: Promise<ApiResponse<TraineeProfile>> =
+    const successResponse: Promise<AxiosResponse<TraineeProfile>> =
       Promise.resolve({
         data: mockTraineeProfile,
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {}
+        config: { headers: {} } as any
       });
 
     jest.spyOn(mockService, "get").mockReturnValue(successResponse);
@@ -34,13 +35,13 @@ describe("TraineeProfileService", () => {
   });
 
   it("signCoj method should return success response", () => {
-    const successResponse: Promise<ApiResponse<ProgrammeMembership>> =
+    const successResponse: Promise<AxiosResponse<ProgrammeMembership>> =
       Promise.resolve({
         data: mockProgrammeMemberships[0],
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {}
+        config: { headers: {} } as any
       });
 
     jest.spyOn(mockService, "post").mockReturnValue(successResponse);
@@ -65,19 +66,21 @@ describe("TraineeProfileService", () => {
   });
 
   it("getPmConfirmation method should download PM confirmation PDF", () => {
-    const successResponse: Promise<ApiResponse<Blob>> = Promise.resolve({
+    const successResponse: Promise<AxiosResponse<Blob>> = Promise.resolve({
       data: new Blob(),
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {}
+      config: { headers: {} } as any
     });
 
-    jest.spyOn(mockService, "get").mockReturnValue(successResponse);
+    jest
+      .spyOn(mockService.axiosInstance, "get")
+      .mockReturnValue(successResponse);
 
     const result = mockService.getPmConfirmation("1");
 
-    expect(mockService.get).toHaveBeenCalledWith(
+    expect(mockService.axiosInstance.get).toHaveBeenCalledWith(
       "/programme-membership/1/confirmation",
       {
         headers: {
@@ -106,13 +109,13 @@ describe("TraineeProfileService", () => {
   });
 
   it("updateGmc method should return success response", () => {
-    const successResponse: Promise<ApiResponse<ProgrammeMembership>> =
+    const successResponse: Promise<AxiosResponse<ProgrammeMembership>> =
       Promise.resolve({
         data: mockProgrammeMemberships[0],
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {}
+        config: { headers: {} } as any
       });
 
     jest.spyOn(mockService, "put").mockReturnValue(successResponse);
@@ -124,30 +127,6 @@ describe("TraineeProfileService", () => {
     jest.spyOn(mockService, "put").mockRejectedValue(errorResponse);
 
     mockService.updateGmc("1234567").catch(res => {
-      expect(res).toEqual(errorResponse);
-    });
-  });
-
-  it("updateEmail method should return success response", async () => {
-    const successResponse: Promise<ApiResponse<void>> = Promise.resolve({
-      data: undefined,
-      status: 204,
-      statusText: "No Content",
-      headers: {},
-      config: {}
-    });
-
-    jest.spyOn(mockService, "put").mockReturnValue(successResponse);
-
-    await expect(
-      mockService.updateEmail("email@email.com")
-    ).resolves.toHaveProperty("status", 204);
-  });
-
-  it("updateEmail method should return failure response", () => {
-    jest.spyOn(mockService, "put").mockRejectedValue(errorResponse);
-
-    mockService.updateEmail("email@email.com").catch(res => {
       expect(res).toEqual(errorResponse);
     });
   });

@@ -32,10 +32,7 @@ const specialtyCards = [
   "CCT (Certificate of Completion of Training)"
 ];
 
-const ltftPilotCards = [
-  ...specialtyCards,
-  "Less than full-time (LTFT) training"
-];
+const ltftPilotCards = [...specialtyCards, "Changing hours (LTFT)"];
 
 describe("Home with MFA set up", () => {
   describe("When all features disabled", () => {
@@ -146,12 +143,6 @@ describe("Home with MFA set up", () => {
       cy.get(`[data-cy="Profile"]`)
         .should("exist")
         .should("contain", "Update GMC number");
-    });
-
-    it("should display Profile email Update", () => {
-      cy.get(`[data-cy="Profile"]`)
-        .should("exist")
-        .should("contain", "Update email address");
     });
 
     it("should display Programmes COJ card item", () => {

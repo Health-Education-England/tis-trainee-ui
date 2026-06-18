@@ -24,7 +24,6 @@ import { Link, useLocation } from "react-router-dom";
 import { ImportantText } from "./form-sections/ImportantText";
 import { AutosaveMessage } from "../AutosaveMessage";
 import { AutosaveNote } from "../AutosaveNote";
-import { useAppSelector } from "../../../redux/hooks/hooks";
 import { StartOverButton } from "../StartOverButton";
 import ScrollToTop from "../../common/ScrollToTop";
 import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
@@ -43,14 +42,6 @@ export type FieldType =
   | "array"
   | "dto";
 
-export type VisibilityMatcherName = "valueInList" | "lessThan16WeeksTest";
-
-export type VisibilityCondition = {
-  field: string;
-  matcher: VisibilityMatcherName;
-  values?: unknown[];
-};
-
 export type Field = {
   name: string;
   label?: string;
@@ -58,11 +49,12 @@ export type Field = {
   visible: boolean;
   optionsKey?: string;
   dependencies?: string[];
-  visibleIf?: VisibilityCondition;
+  visibleIf?: unknown[];
   placeholder?: string;
-  warnings?: Warning[];
+  warning?: Warning;
   canGrow?: boolean;
   viewWhenEmpty?: boolean;
+  parent?: string;
   objectFields?: Field[];
   width?: number;
   isNumberField?: boolean;
@@ -71,8 +63,6 @@ export type Field = {
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
-  altDisplayVal?: string;
-  maxDigits?: number;
 };
 export type FormData = {
   [key: string]: any;
@@ -102,27 +92,16 @@ type FormBuilderProps = {
   options: any;
   validationSchema: any;
 };
-export type MatcherName =
-  | "prevDateTest"
-  | "postcodeTest"
-  | "ltft16WeeksTest"
-  | "ltftStandardWteTest";
-
+export type MatcherName = "prevDateTest" | "postcodeTest";
 export type Warning = {
   matcher: MatcherName;
   msgText: string;
-  conditionalField?: string;
 };
 
 export type ReturnedWidthData = {
   fieldName: string;
   width: number;
 };
-export type FieldErrorType =
-  | string
-  | { [key: string]: FieldErrorType }
-  | FieldErrorType[];
-export type FormErrorsType = { [key: string]: FieldErrorType };
 
 type LocationState = {
   fieldName?: string;
@@ -149,7 +128,6 @@ export default function FormBuilder({
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
   const location = useLocation<LocationState>();
 
   useEffect(() => {
@@ -320,8 +298,7 @@ export default function FormBuilder({
       </nav>
       <Container>
         <Row>
-          {/* TODO: remove canEditStatusLtft after LTFT routes are refactored */}
-          {(canEditStatusLtft || location.state?.fieldName) && (
+          {location.state?.fieldName && (
             <Col width="one-half">
               <Button
                 onClick={(e: { preventDefault: () => void }) =>
@@ -353,9 +330,7 @@ export default function FormBuilder({
   );
 }
 
-export function FormErrors({
-  formErrors
-}: Readonly<{ formErrors: FormErrorsType }>) {
+export function FormErrors(formErrors: any) {
   return (
     <ErrorSummary
       aria-labelledby="errorSummaryTitle"
@@ -373,61 +348,49 @@ export function FormErrors({
 }
 
 type FormErrorsListProps = {
-  formErrors: FormErrorsType;
+  formErrors: any;
 };
 
 function FormErrorsList({ formErrors }: Readonly<FormErrorsListProps>) {
-  const scrollToField = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    const element =
-      document.getElementById(id) || document.getElementById(`${id}--input`);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-      element.focus({ preventScroll: true });
-    }
-  };
-  const renderErrors = (errors: FormErrorsType, parentKey: string = "") => {
+  const renderErrors = (formErrors: any) => {
     return (
-      <ul className="nhsuk-list nhsuk-error-summary__list">
-        {Object.keys(errors).map(key => {
-          const error = errors[key];
-          const uniqueId = parentKey ? `${parentKey}-${key}` : key;
-          if (typeof error === "string") {
+      <ul>
+        {Object.keys(formErrors).map(key => {
+          if (typeof formErrors[key] === "string") {
             return (
-              <li key={uniqueId}>
-                <a
-                  href={`#${uniqueId}-error`}
-                  data-cy={`error-txt-${error}`}
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollToField(e, uniqueId);
-                  }}
-                >
-                  {error}
-                </a>
-              </li>
+              <div
+                key={key}
+                className="error-spacing_div"
+                data-cy={`error-txt-${formErrors[key]}`}
+              >
+                {formErrors[key]}
+              </div>
             );
-          } else if (Array.isArray(error)) {
-            return error.map((itemError: any, index: number) => {
-              if (!itemError || Object.keys(itemError).length === 0)
-                return null;
-              const itemParentKey = `${uniqueId}-${index}`;
+          } else if (Array.isArray(formErrors[key])) {
+            return formErrors[key].map((error: any, index: number) => {
               return (
-                <li key={`${key}[${index}]`}>
-                  <span className="nhsuk-u-font-weight-bold">
-                    {`${formatFieldName(key)} ${index + 1}`}
+                <li
+                  key={`${key}[${index}]`}
+                  className="error-summary_li_nested"
+                >
+                  <span>
+                    <b>{`${formatFieldName(key)} ${index + 1}`}</b>
                   </span>
-                  {renderErrors(itemError, itemParentKey)}
+                  <span>{renderErrors(error)}</span>
                 </li>
               );
             });
           } else {
-            return <li key={key}>{renderErrors(error, uniqueId)}</li>;
+            return (
+              <li key={key} className="error-summary_li">
+                {renderErrors(formErrors[key])}
+              </li>
+            );
           }
         })}
       </ul>
     );
   };
 
-  return <>{renderErrors(formErrors)}</>;
+  return <div>{renderErrors(formErrors)}</div>;
 }

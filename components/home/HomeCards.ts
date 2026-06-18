@@ -126,10 +126,6 @@ export const HOME_CARDS: HomeCardProps[] = [
         text: "Update GMC number",
         isFeatureEnabled: (userFeatures: UserFeaturesType) =>
           userFeatures.details.profile.gmcUpdate.enabled
-      },
-      {
-        text: "Update email address",
-        isFeatureEnabled: true
       }
     ]
   },
@@ -168,14 +164,14 @@ export const HOME_CARDS: HomeCardProps[] = [
     ]
   },
   {
-    linkHeader: "Less than full-time (LTFT) training",
+    linkHeader: "Changing hours (LTFT)",
     isFeatureEnabled: (userFeatures: UserFeaturesType) =>
       userFeatures.forms.ltft.enabled,
     isClickable: true,
     route: "/ltft",
     items: [
       {
-        text: "Submit and track a Less than full-time (LTFT) training application",
+        text: "Submit and track a Changing hours (Less Than Full Time) application",
         isFeatureEnabled: true
       }
     ]

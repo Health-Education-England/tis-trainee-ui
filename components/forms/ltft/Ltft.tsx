@@ -1,24 +1,13 @@
 import { Fieldset } from "nhsuk-react-components";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
 import { LtftHome } from "./LtftHome";
 import { LtftForm } from "./LtftForm";
 import { LtftFormView } from "./LtftFormView";
-import { useAppSelector } from "../../../redux/hooks/hooks";
-import { makeValidProgrammeOptions } from "../../../utilities/ltftUtilities";
-import { selectPmsNotPast } from "../../../redux/slices/traineeProfileSlice";
+import FormBackLink from "../../common/FormBackLink";
 
 export function Ltft() {
-  const pmsNotPast = useAppSelector(selectPmsNotPast);
-  const pmIdsFromFeatFlags =
-    useAppSelector(
-      state => state.user.features.forms.ltft.qualifyingProgrammes
-    ) ?? [];
-  const pmOptionsForLtft = makeValidProgrammeOptions(
-    pmsNotPast,
-    pmIdsFromFeatFlags
-  );
-
+  const location = useLocation();
   return (
     <>
       <Fieldset>
@@ -27,22 +16,18 @@ export function Ltft() {
           data-cy="ltftHeading"
           style={{ color: "#005eb8" }}
         >
-          Less than full-time (LTFT) training
+          Changing hours (LTFT)
         </Fieldset.Legend>
+        {location.pathname !== "/ltft" && (
+          <FormBackLink text="Back to LTFT home" />
+        )}
       </Fieldset>
       <Switch>
-        <Route
-          exact
-          path="/ltft"
-          render={() => <LtftHome pmOptions={pmOptionsForLtft} />}
-        />
-        <Route
-          exact
-          path="/ltft/create"
-          render={() => <LtftForm pmOptions={pmOptionsForLtft} />}
-        />
-        <Route exact path="/ltft/confirm" render={() => <LtftFormView />} />
-        <Route exact path="/ltft/:id" render={() => <LtftFormView />} />
+        <Route exact path="/ltft" component={LtftHome} />
+        <Route exact path="/ltft/new/create" component={LtftForm} />
+        <Route exact path="/ltft/:id/create" component={LtftForm} />
+        <Route exact path="/ltft/new/view" component={LtftFormView} />
+        <Route exact path="/ltft/:id/view" component={LtftFormView} />
         <Route path="/ltft/*" component={PageNotFound} />
       </Switch>
     </>

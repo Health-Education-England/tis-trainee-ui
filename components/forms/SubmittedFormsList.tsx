@@ -1,12 +1,15 @@
 import { Card, Hint, WarningCallout } from "nhsuk-react-components";
-import { IFormR } from "../../../../models/IFormR";
+import { IFormR } from "../../models/IFormR";
 import {
   DateUtilities,
   DateType,
   isWithinRange
-} from "../../../../utilities/DateUtilities";
-import { getLinkedProgrammeDetails } from "../../../../utilities/FormRUtilities";
-import history from "../../../navigation/history";
+} from "../../utilities/DateUtilities";
+import {
+  FormRUtilities,
+  getLinkedProgrammeDetails
+} from "../../utilities/FormRUtilities";
+import history from "../navigation/history";
 import { ReactNode, useMemo, useState } from "react";
 import {
   CellContext,
@@ -19,9 +22,9 @@ import {
   SortingState,
   useReactTable
 } from "@tanstack/react-table";
-import { TableColumnHeader } from "../../../notifications/TableColumnHeader";
+import { TableColumnHeader } from "../notifications/TableColumnHeader";
 import dayjs from "dayjs";
-import { useAppSelector } from "../../../../redux/hooks/hooks";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 interface ISubmittedFormsList {
   formRList: IFormR[];
@@ -29,7 +32,7 @@ interface ISubmittedFormsList {
   latestSubDate: DateType;
 }
 
-const SubmittedFormRList = ({
+const SubmittedFormsList = ({
   formRList,
   path,
   latestSubDate
@@ -237,4 +240,4 @@ const SubmittedFormRList = ({
   );
 };
 
-export default SubmittedFormRList;
+export default SubmittedFormsList;
