@@ -1,4 +1,5 @@
-import ApiService, { ApiResponse } from "./apiService";
+import { AxiosResponse } from "axios";
+import ApiService from "./apiService";
 import { NotificationPage } from "../redux/slices/notificationsSlice";
 
 export class TraineeNotificationsService extends ApiService {
@@ -7,7 +8,7 @@ export class TraineeNotificationsService extends ApiService {
   }
   async getNotifications(
     params?: Record<string, string | number>
-  ): Promise<ApiResponse<NotificationPage>> {
+  ): Promise<AxiosResponse<NotificationPage>> {
     const searchParams = new URLSearchParams();
     if (params) {
       for (const [key, value] of Object.entries(params)) {
@@ -27,23 +28,25 @@ export class TraineeNotificationsService extends ApiService {
 
   async markNotificationAsRead(
     notificationId: string
-  ): Promise<ApiResponse<any>> {
+  ): Promise<AxiosResponse<any>> {
     return this.put<any>(`/notifications/${notificationId}/mark-read`);
   }
 
   async markNotificationAsUnread(
     notificationId: string
-  ): Promise<ApiResponse<any>> {
+  ): Promise<AxiosResponse<any>> {
     return this.put<any>(`/notifications/${notificationId}/mark-unread`);
   }
 
-  async archiveNotification(notificationId: string): Promise<ApiResponse<any>> {
+  async archiveNotification(
+    notificationId: string
+  ): Promise<AxiosResponse<any>> {
     return this.put<any>(`/notifications/${notificationId}/archive`);
   }
 
   async getNotificationMessage(
     notificationId: string
-  ): Promise<ApiResponse<any>> {
+  ): Promise<AxiosResponse<any>> {
     return this.get<any>(`/notifications/${notificationId}/message`);
   }
 }

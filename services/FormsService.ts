@@ -1,4 +1,5 @@
-import ApiService, { ApiRequestConfig, ApiResponse } from "./apiService";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+import ApiService from "./apiService";
 import { FormRPartA } from "../models/FormRPartA";
 import { FormRPartB } from "../models/FormRPartB";
 import { FeatureFlags } from "../models/FeatureFlags";
@@ -12,111 +13,112 @@ export class FormsService extends ApiService {
   }
 
   async downloadTraineeCojPdf(programmeMembership: ProgrammeMembership) {
-    const requestConfig: ApiRequestConfig = {
+    let requestConfig: AxiosRequestConfig<ProgrammeMembership> = {
       headers: {
         Accept: "application/pdf"
       },
       responseType: "blob"
     };
-
-    return this.put<Blob, ProgrammeMembership>(
+    return this.axiosInstance.put<ProgrammeMembership, AxiosResponse<Blob>>(
       "/coj",
       programmeMembership,
       requestConfig
     );
   }
 
-  async downloadTraineeLtftPdf(id: string): Promise<ApiResponse<Blob>> {
-    const requestConfig: ApiRequestConfig = {
+  async downloadTraineeLtftPdf(id: string) {
+    const requestConfig: AxiosRequestConfig = {
       headers: {
         Accept: "application/pdf"
       },
       responseType: "blob"
     };
-
-    return this.get<Blob>("/ltft/" + id, requestConfig);
+    return this.axiosInstance.get<Blob, AxiosResponse<Blob>>(
+      "/ltft/" + id,
+      requestConfig
+    );
   }
 
   async saveTraineeFormRPartA(
     formData: FormRPartA
-  ): Promise<ApiResponse<FormRPartA>> {
+  ): Promise<AxiosResponse<FormRPartA>> {
     return this.post<FormRPartA>("/formr-parta", formData);
   }
 
   async updateTraineeFormRPartA(
     formData: FormRPartA
-  ): Promise<ApiResponse<FormRPartA>> {
+  ): Promise<AxiosResponse<FormRPartA>> {
     return this.put<FormRPartA>("/formr-parta", formData);
   }
 
-  async getTraineeFormRPartAList(): Promise<ApiResponse<IFormR[]>> {
+  async getTraineeFormRPartAList(): Promise<AxiosResponse<IFormR[]>> {
     return this.get<IFormR[]>("/formr-partas");
   }
 
   async getTraineeFormRPartAByFormId(
     id: string
-  ): Promise<ApiResponse<FormRPartA>> {
+  ): Promise<AxiosResponse<FormRPartA>> {
     return this.get<FormRPartA>(`/formr-parta/${id}`);
   }
   async saveTraineeFormRPartB(
     formData: FormRPartB
-  ): Promise<ApiResponse<FormRPartB>> {
+  ): Promise<AxiosResponse<FormRPartB>> {
     const { isDeclarationAccepted, isConsentAccepted, ...newFormData } =
       formData;
     return this.post<FormRPartB>("/formr-partb", newFormData);
   }
 
-  async getTraineeFormRPartBList(): Promise<ApiResponse<IFormR[]>> {
+  async getTraineeFormRPartBList(): Promise<AxiosResponse<IFormR[]>> {
     return this.get<IFormR[]>("/formr-partbs");
   }
 
   async getTraineeFormRPartBByFormId(
     id: string
-  ): Promise<ApiResponse<FormRPartB>> {
+  ): Promise<AxiosResponse<FormRPartB>> {
     return this.get<FormRPartB>(`/formr-partb/${id}`);
   }
 
   async updateTraineeFormRPartB(
     formData: FormRPartB
-  ): Promise<ApiResponse<FormRPartB>> {
+  ): Promise<AxiosResponse<FormRPartB>> {
     const { isDeclarationAccepted, isConsentAccepted, ...newFormData } =
       formData;
     return this.put<FormRPartB>("/formr-partb", newFormData);
   }
 
-  async deleteTraineeFormRPartA(id: string): Promise<ApiResponse> {
+  async deleteTraineeFormRPartA(id: string): Promise<AxiosResponse> {
     return this.delete(`/formr-parta/${id}`);
   }
 
-  async deleteTraineeFormRPartB(id: string): Promise<ApiResponse> {
+  async deleteTraineeFormRPartB(id: string): Promise<AxiosResponse> {
     return this.delete(`/formr-partb/${id}`);
   }
 
-  async getFeatureFlags(): Promise<ApiResponse<FeatureFlags>> {
+  async getFeatureFlags(): Promise<AxiosResponse<FeatureFlags>> {
     return this.get<FeatureFlags>("/feature-flags");
   }
 
-  async getLtftSummaryList(): Promise<ApiResponse<LtftSummaryObj[]>> {
+  async getLtftSummaryList(): Promise<AxiosResponse<LtftSummaryObj[]>> {
     return this.get<LtftSummaryObj[]>("/ltft");
   }
 
-  async saveLtft(mappedFormData: LtftDto): Promise<ApiResponse<LtftDto>> {
+  async saveLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
     return this.post<LtftDto>("/ltft", mappedFormData);
   }
 
-  async updateLtft(mappedFormData: LtftDto): Promise<ApiResponse<LtftDto>> {
+  async updateLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
     return this.put<LtftDto>(`/ltft/${mappedFormData.id}`, mappedFormData);
   }
 
-  async deleteLtft(formId: string): Promise<ApiResponse> {
+  async deleteLtft(formId: string): Promise<AxiosResponse> {
     return this.delete(`/ltft/${formId}`);
   }
 
-  async getLtftFormById(id: string): Promise<ApiResponse<LtftDto>> {
+  async getLtftFormById(id: string): Promise<AxiosResponse<LtftDto>> {
     return this.get<LtftDto>(`/ltft/${id}`);
   }
 
-  async submitLtft(mappedFormData: LtftDto): Promise<ApiResponse<LtftDto>> {
+  async submitLtft(mappedFormData: LtftDto): Promise<AxiosResponse<LtftDto>> {
     return this.put<LtftDto>(
       `/ltft/${mappedFormData.id}/submit`,
       mappedFormData
@@ -126,14 +128,14 @@ export class FormsService extends ApiService {
   async unsubmitLtft(
     id: string,
     reason: ReasonMsgObj
-  ): Promise<ApiResponse<LtftDto>> {
+  ): Promise<AxiosResponse<LtftDto>> {
     return this.put<LtftDto, ReasonMsgObj>(`/ltft/${id}/unsubmit`, reason);
   }
 
   async withdrawLtft(
     id: string,
     reason: ReasonMsgObj
-  ): Promise<ApiResponse<LtftDto>> {
+  ): Promise<AxiosResponse<LtftDto>> {
     return this.put<LtftDto, ReasonMsgObj>(`/ltft/${id}/withdraw`, reason);
   }
 }

@@ -12,9 +12,9 @@ const dateValidationSchema = (fieldName: string) =>
     .typeError(`${fieldName} must be a valid date`)
     .required(`${fieldName} is required`);
 
-export const formAValidationSchemaDefault = {
+const formAValidationSchemaDefault = {
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("Surname"),
+  surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   dateOfBirth: dateValidationSchema("Your date of birth")
     .test("dateOfBirth", "You must be 18 years or above", value =>

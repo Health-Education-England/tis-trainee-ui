@@ -1,3 +1,4 @@
+import { matchPath } from "react-router-dom";
 import * as Yup from "yup";
 import { CombinedReferenceData } from "../models/CombinedReferenceData";
 import { FormRPartA } from "../models/FormRPartA";
@@ -8,19 +9,17 @@ import {
   deleteFormA,
   loadSavedFormA,
   resetToInitFormA,
+  updatedCanEdit,
   updatedEditPageNumber,
   updatedFormA
 } from "../redux/slices/formASlice";
 import store from "../redux/store/store";
-import type {
+import {
   Field,
   Form,
   FormData,
   FormName,
-  MatcherName,
-  VisibilityCondition,
-  VisibilityMatcherName,
-  Warning
+  MatcherName
 } from "../components/forms/form-builder/FormBuilder";
 import {
   saveFormB,
@@ -28,6 +27,7 @@ import {
   deleteFormB,
   loadSavedFormB,
   resetToInitFormB,
+  updatedCanEditB,
   updatedEditPageNumberB,
   updatedFormB
 } from "../redux/slices/formBSlice";
@@ -50,9 +50,7 @@ import {
 } from "../redux/slices/ltftSlice";
 import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
-import { LtftObjNew } from "../models/LtftTypes";
-import { isPastIt } from "./DateUtilities";
-import { findLinkedProgramme } from "./CctUtilities";
+import { LtftObj } from "../models/LtftTypes";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -108,6 +106,10 @@ export function resetForm(formName: string) {
   }
 }
 
+type LtftParams = {
+  id?: string;
+};
+
 function handleFormrToConfirm(formName: FormName, formData: FormData) {
   const redirectPath = formName === "formA" ? "/formr-a" : "/formr-b";
   let id: string | undefined;
@@ -115,55 +117,31 @@ function handleFormrToConfirm(formName: FormName, formData: FormData) {
   if (formName === "formA") {
     id = formData.id ?? store.getState().formA.newFormId;
     store.dispatch(updatedFormA(formData as FormRPartA));
+    store.dispatch(updatedCanEdit(true));
   } else if (formName === "formB") {
     id = formData.id ?? store.getState().formB.newFormId;
     store.dispatch(updatedFormB(formData as FormRPartB));
+    store.dispatch(updatedCanEditB(true));
   }
   const suffix = id ? `/${id}/view` : "/new/view";
   const fullPath = `${redirectPath}${suffix}`;
   history.push(fullPath, { fromFormCreate: true });
 }
 
-export function prepLtftFormData(
-  formData: LtftObjNew,
-  returnPreppedData: boolean = false
-) {
-  const pmArrayNotPast = store
-    .getState()
-    .traineeProfile.traineeProfileData.programmeMemberships.filter(
-      prog => !isPastIt(prog.endDate)
-    );
-  const linkedProgramme = findLinkedProgramme(formData.pmId, pmArrayNotPast);
-  if (linkedProgramme) {
-    const {
-      programmeName,
-      startDate,
-      endDate,
-      designatedBodyCode,
-      managingDeanery
-    } = linkedProgramme;
-
-    const preppedData = {
-      ...formData,
-      pmName: programmeName ?? "",
-      pmStartDate: startDate ?? "",
-      pmEndDate: endDate ?? "",
-      designatedBodyCode: designatedBodyCode ?? "",
-      managingDeanery: managingDeanery ?? ""
-    };
-
-    store.dispatch(updatedLtft(preppedData));
-
-    if (returnPreppedData) {
-      return preppedData;
+function handleLtftToConfirm(formData: FormData) {
+  const currentPath = history.location.pathname;
+  store.dispatch(updatedLtft(formData as LtftObj));
+  if (currentPath === "/ltft/new/create") {
+    history.push("/ltft/new/view", { fromFormCreate: true });
+  } else {
+    const match = matchPath<LtftParams>(currentPath, {
+      path: "/ltft/:id/create"
+    });
+    if (match && match.params.id) {
+      const id = match.params.id;
+      history.push(`/ltft/${id}/view`, { fromFormCreate: true });
     }
   }
-}
-
-function handleLtftToConfirm(formData: FormData) {
-  prepLtftFormData(formData as LtftObjNew);
-  store.dispatch(updatedCanEditLtft(true));
-  history.push("/ltft/confirm");
 }
 
 export function continueToConfirm(formName: FormName, formData: FormData) {
@@ -185,21 +163,13 @@ export function setEditPageNumber(formName: string, pageNumber: number) {
   }
 }
 
-// TODO: Rename function  and refactor these blocks when LTFT is added ----------------
-function getFormREditPageLocation(
-  formName: Extract<FormName, "formA" | "formB">,
-  fieldName: string
-) {
-  // TODO: change Type to FormName when LTFT is added
-  const getPath = (name: Extract<FormName, "formA" | "formB">, id?: string) => {
-    const urlName = mapFormNameToUrl(name);
+export function getEditPageLocation(formName: FormName, fieldName: string) {
+  const getPath = (name: FormName, id?: string) => {
+    const urlName = mapFormNameToUrl(name as FormName);
     return id ? `/${urlName}/${id}/create` : `/${urlName}/new/create`;
   };
 
-  const pathnameMap: Record<
-    Extract<FormName, "formA" | "formB">,
-    () => string
-  > = {
+  const pathnameMap: Record<FormName, () => string> = {
     formA: () => {
       const id =
         store.getState().formA.formData?.id ?? store.getState().formA.newFormId;
@@ -209,13 +179,12 @@ function getFormREditPageLocation(
       const id =
         store.getState().formB.formData?.id ?? store.getState().formB.newFormId;
       return getPath("formB", id);
+    },
+    ltft: () => {
+      const id =
+        store.getState().ltft.formData?.id ?? store.getState().ltft.newFormId;
+      return getPath("ltft", id);
     }
-    // ,
-    // ltft: () => {
-    //   const id =
-    //     store.getState().ltft.formData?.id ?? store.getState().ltft.newFormId;
-    //   return getPath("ltft", id);
-    // }
   };
 
   const pathname = pathnameMap[formName]();
@@ -225,19 +194,6 @@ function getFormREditPageLocation(
     state: { fieldName }
   };
 }
-
-export function getEditPageLocation(formName: FormName, fieldName: string) {
-  if (formName === "ltft") {
-    return {
-      pathname: "/ltft/create",
-      state: { fieldName }
-    };
-  } else {
-    return getFormREditPageLocation(formName, fieldName);
-  }
-}
-
-// ----------------------------------------------------------------------
 
 export async function isFormDeleted(
   formName: FormName,
@@ -291,70 +247,27 @@ export function transformReferenceData(
   return transformedData;
 }
 
-export function isDateWithin16WeeksOfFirstDate(
-  dateVal: Date | string,
-  firstDate: Date | string = new Date()
-): boolean {
-  const subDate = dayjs(firstDate).startOf("day");
-  const inputDate = dayjs(dateVal).startOf("day");
-  return inputDate.isBefore(subDate.add(16, "week"));
-}
+export type ReturnedWarning = {
+  fieldName: string;
+  warningMsg: string;
+};
 
-export function getFieldWarningMsgs(
-  inputValue: string | number,
-  warnings: Warning[],
-  formData?: FormData
-): string[] {
-  const stringTypeChecks: Partial<
-    Record<MatcherName, (val: string) => boolean>
-  > = {
-    prevDateTest: (val: string) => {
-      const testDate = dayjs().subtract(1, "day");
-      return dayjs(val).isBefore(testDate);
-    },
-    postcodeTest: (val: string) =>
-      !/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(val),
-    ltft16WeeksTest: (val: string) => isDateWithin16WeeksOfFirstDate(val)
-  };
-
-  const numberTypeChecks: Partial<
-    Record<MatcherName, (val: number) => boolean>
-  > = {
-    ltftStandardWteTest: (val: number) => {
-      const standard = [100, 80, 70, 60, 50];
-      return !!val && !standard.includes(val);
-    }
-  };
-
-  return warnings.reduce((messages: string[], w) => {
-    let valueToCheck = inputValue;
-    const hasConditionalField = !!(w.conditionalField && formData);
-
-    if (hasConditionalField) {
-      valueToCheck = formData[w.conditionalField as string];
-    } else if (!inputValue && inputValue !== 0) {
-      return messages;
-    }
-
-    const stringCheck = stringTypeChecks[w.matcher];
-    const numberCheck = numberTypeChecks[w.matcher];
-
-    if (stringCheck) {
-      const valStr =
-        valueToCheck === undefined || valueToCheck === null
-          ? ""
-          : String(valueToCheck);
-      if (stringCheck(valStr)) {
-        messages.push(w.msgText);
-      }
-    } else if (numberCheck) {
-      const numVal = Number(valueToCheck);
-      if (!Number.isNaN(numVal) && numberCheck(numVal)) {
-        messages.push(w.msgText);
-      }
-    }
-    return messages;
-  }, []);
+export function showFieldMatchWarning(
+  inputValue: string,
+  matcher: MatcherName,
+  warningMsg: string,
+  fieldName: string
+): ReturnedWarning | null {
+  if (matcher === "prevDateTest") {
+    const testDate = dayjs().subtract(1, "day");
+    const inputDate = dayjs(inputValue);
+    if (inputDate.isBefore(testDate)) {
+      return { fieldName, warningMsg };
+    } else return null;
+  } else if (matcher === "postcodeTest")
+    if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i.test(inputValue))
+      return { fieldName, warningMsg };
+  return null;
 }
 
 export function setTextFieldWidth(width: number) {
@@ -373,15 +286,11 @@ export function handleKeyDown(
 
 export function handleNumberInput(
   isNumberField: boolean | undefined,
-  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-  maxDigits?: number
+  e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
 ) {
   if (isNumberField) {
     const input = e.target as HTMLInputElement;
-    input.value = input.value.replaceAll(/\D/g, "");
-    if (maxDigits !== undefined && input.value.length > maxDigits) {
-      input.value = input.value.slice(0, maxDigits);
-    }
+    input.value = input.value.replace(/\D/g, "");
   }
 }
 
@@ -457,7 +366,11 @@ export function setFormRDataForSubmit(
   const newFormData = jsonForm.pages.reduce((fd, page) => {
     page.sections.forEach(section => {
       section.fields.forEach(field => {
-        if (showFormField(field, fd)) {
+        if (
+          field.visible ||
+          (field.parent &&
+            field?.visibleIf?.includes((fd as FormData)[field.parent]))
+        ) {
           (fd as FormData)[field.name] = (formData as FormData)[field.name];
         } else {
           (fd as FormData)[field.name] = null;
@@ -518,7 +431,7 @@ async function updateForm(
   } else if (formName === "ltft") {
     await store.dispatch(
       updateLtft({
-        formData: formData as LtftObjNew,
+        formData: formData as LtftObj,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -549,7 +462,7 @@ async function saveForm(
   } else if (formName === "ltft")
     await store.dispatch(
       saveLtft({
-        formData: formData as LtftObjNew,
+        formData: formData as LtftObj,
         isAutoSave,
         isSubmit,
         showFailToastOnly
@@ -579,7 +492,7 @@ const getSaveStatus = (formName: string) => {
   return "idle";
 };
 
-export type FormDataType = FormRPartA | FormRPartB | LtftObjNew;
+export type FormDataType = FormRPartA | FormRPartB | LtftObj;
 
 export async function saveDraftForm(
   jsonForm: Form,
@@ -598,7 +511,7 @@ export async function saveDraftForm(
         isSubmit,
         jsonForm
       )
-    : prepLtftFormData(formData as LtftObjNew, true);
+    : formData;
 
   if (draftFormId) {
     await updateForm(
@@ -611,7 +524,7 @@ export async function saveDraftForm(
   } else {
     await saveForm(
       formName,
-      preppedFormData as FormData,
+      preppedFormData,
       isAutoSave,
       isSubmit,
       showFailToastOnly
@@ -620,7 +533,7 @@ export async function saveDraftForm(
   handleSaveRedirect(formName, shouldRedirect);
 }
 
-export function mapFormNameToUrl(formName: FormName): string {
+function mapFormNameToUrl(formName: FormName): string {
   switch (formName) {
     case "formA":
       return "formr-a";
@@ -693,8 +606,12 @@ export function validateFields(
         });
       } else if (field.type === "dto") {
         const dtoFields = field.objectFields ?? [];
-        const visibleDtoFields = dtoFields.filter(dtoField =>
-          showFormField(dtoField, values[field.name] ?? {})
+        const visibleDtoFields = dtoFields.filter(
+          dtoField =>
+            dtoField.visible ||
+            dtoField.visibleIf?.includes(
+              values[field.name][dtoField.parent as string]
+            )
         );
         const dtoSchema = visibleDtoFields.reduce((dtoSchema, dtoField) => {
           const dtoFieldSchema = fieldSchema.fields[dtoField.name];
@@ -728,29 +645,15 @@ export function formatFieldName(fieldName: string) {
   return words.join(" ");
 }
 
-type VisibilityMatcher = (
-  fieldValue: unknown,
-  cond: VisibilityCondition
-) => boolean;
-
-const visibilityMatchers: Record<VisibilityMatcherName, VisibilityMatcher> = {
-  valueInList: (fieldValue, cond) => {
-    if (!cond.values) return false;
-    if (Array.isArray(fieldValue)) {
-      return fieldValue.some(v => cond.values!.includes(v));
-    }
-    return cond.values.includes(fieldValue);
-  },
-  lessThan16WeeksTest: fieldValue =>
-    !!fieldValue && isDateWithin16WeeksOfFirstDate(fieldValue as string)
-};
-
 export function showFormField(field: Field, formData: FormData) {
   if (field.visible) return true;
-  if (!field.visibleIf) return false;
-  const matcher = visibilityMatchers[field.visibleIf.matcher];
-  if (!matcher) return false;
-  return matcher(formData[field.visibleIf.field], field.visibleIf);
+  if (field.visibleIf) {
+    if (Array.isArray(formData[field.parent as string])) {
+      return formData[field.parent as string].includes(field.visibleIf[0]);
+    }
+    return field.visibleIf.includes(formData[field.parent as string]);
+  }
+  return false;
 }
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.

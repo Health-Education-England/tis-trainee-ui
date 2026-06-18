@@ -7,8 +7,6 @@ export const draftFormRPartB: FormRPartB = {
   forename: "Anthony Mara",
   surname: "Gilliam",
   gmcNumber: "1111111",
-  gdcNumber: "2222222",
-  publicHealthNumber: "3333333",
   email: "email@email.com",
   localOfficeName: "Thames Valley",
   prevRevalBody: "Midlands",
@@ -94,8 +92,6 @@ export const draftFormRPartBWithNullCareerBreak: FormRPartB = {
   forename: "Billy",
   surname: "Ocean",
   gmcNumber: "1111111",
-  gdcNumber: "2222222",
-  publicHealthNumber: "3333333",
   email: "email2@email.com",
   localOfficeName: "Thames Valley",
   prevRevalBody: "Midlands",
@@ -172,8 +168,6 @@ export const draftFormRPartBWithNoLeaveTotal = {
   forename: "Anthony Mara",
   surname: "Gilliam",
   gmcNumber: "1111111",
-  gdcNumber: "2222222",
-  publicHealthNumber: "3333333",
   email: "email@email.com",
   localOfficeName: "Thames Valley",
   prevRevalBody: "Midlands",
@@ -242,19 +236,4 @@ export const draftFormRPartBWithNoLeaveTotal = {
   lifecycleState: LifeCycleState.Unsubmitted,
   submissionDate: "2020-04-01",
   lastModifiedDate: "2020-04-16"
-};
-
-export const mockCovidDto = {
-  selfRateForCovid:
-    "Satisfactory progress for stage of training and required competencies met",
-  reasonOfSelfRate: null,
-  otherInformationForPanel: "Some other info",
-  discussWithSupervisorChecked: "Yes",
-  discussWithSomeoneChecked: "No",
-  haveChangesToPlacement: "Yes",
-  changeCircumstances: "Other",
-  changeCircumstanceOther: "Other circumstance details",
-  howPlacementAdjusted: "Adjusted placement details",
-  educationSupervisorName: "Dr. Supervisor",
-  educationSupervisorEmail: "supervisor@example.com"
 };

@@ -167,12 +167,21 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   // Header section
 
   const containedEls = [
+    [".nhsuk-fieldset__heading", "Form R (Part A)"],
+    [
+      '[data-cy="formraSubheading"]',
+      "Trainee registration for Postgraduate Speciality Training"
+    ],
+    [
+      '[data-cy="formraInfo"]',
+      "The Form R is a vital aspect of Revalidation (this applies to those holding GMC registration) and you are expected to complete one at the start of a new training programme and ahead of each ARCP."
+    ],
     [
       '[data-cy="WarningCallout-formAImportantNotice-label"] > span',
       "Important"
     ],
     [
-      ".nhsuk-warning-callout > :nth-child(2)",
+      ".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)",
       "This form has been pre-populated using the information available against your records"
     ],
     [
@@ -229,32 +238,28 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
 
   // test inline error
   cy.clearAndType('[data-cy="dateOfBirth-input"]', "1000-05-01");
-  cy.get("#dateOfBirth-error").should(
+  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should(
     "have.text",
-    "Error: Date of Birth is before the minimum date allowed"
+    "Date of Birth is before the minimum date allowed"
   );
 
-  cy.get("#email-error").should(
+  cy.get('[data-cy="error-txt-Email address is required"]').should(
     "have.text",
-    "Error: Email address is required"
+    "Email address is required"
   );
 
   // test error summary
-  cy.get(".nhsuk-error-summary").should("exist");
-  cy.get("#errorSummaryTitle").should("have.text", "There is a problem");
-  cy.get(
-    '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
-  ).should("exist");
-  cy.get('[data-cy="error-txt-Email address is required"]')
-    .should("exist")
-    .click();
+  cy.get('[data-cy="errorSummary"] > p').should(
+    "have.text",
+    "Before proceeding to the next section please address the following:"
+  );
   cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
   cy.clearAndType('[data-cy="dateOfBirth-input"]', "2000-05-01");
-  cy.get(".nhsuk-error-summary").should("not.exist");
+  cy.get('[data-cy="errorSummary"] > p').should("not.exist");
   cy.get(
     '[data-cy="error-txt-Date of Birth is before the minimum date allowed"]'
   ).should("not.exist");
-  cy.get('[data-cy="error-txt-Email address is required"]').should("not.exist");
+  cy.get('[data-cy="dateOfBirth-inline-error-msg"]').should("not.exist");
 
   // test soft validation
   cy.clearAndType('[data-cy="postCode-input"]', "123456");
@@ -264,10 +269,10 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   );
   cy.get('[data-cy="postCode-input"]').clear();
   cy.get(".field-warning-msg").should("not.exist");
-  cy.get("#postCode-error").should("exist");
+  cy.get('[data-cy="postCode-inline-error-msg"]').should("exist");
   cy.clearAndType('[data-cy="postCode-input"]', "123456");
   cy.get(".field-warning-msg").should("exist");
-  cy.get("#postCode-error").should("not.exist");
+  cy.get('[data-cy="postCode-inline-error-msg"]').should("not.exist");
 
   // check disabled next button
   cy.clearAndType('[data-cy="email-input"]', "x@x");
@@ -325,13 +330,13 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.clickRadioCheck(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
   );
-  cy.get("#cctSpecialty1-error").should("exist");
+  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clickRadioCheck(
     '[data-cy="declarationType-I will be seeking specialist registration by application for a CESR-input"]'
   );
   cy.get('[data-cy="cctSpecialty1]').should("not.exist");
-  cy.get("#cctSpecialty1-error").should("not.exist");
+  cy.get('[data-cy="cctSpecialty1-inline-error-msg"]').should("not.exist");
   cy.clearAndType('[data-cy="completionDate-input"]', "2032-12-30");
   cy.get('[data-cy="programmeSpecialty-hint"]').should(
     "have.text",
@@ -342,7 +347,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
     "readonly"
   );
 
-  cy.get("#college-error").should("exist");
+  cy.get('[data-cy="college-inline-error-msg"]').should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.clickSelect('[data-cy="college"]', "dent", true);
   cy.get(".nhsuk-error-summary").should("not.exist");
@@ -380,7 +385,9 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
     );
   cy.navNext();
   cy.get(".nhsuk-error-summary").should("exist");
-  cy.get("#errorSummaryTitle").should("have.text", "There is a problem");
+  cy.get("b").contains(
+    "Before proceeding to the next section please address the following:"
+  );
   cy.get(
     '[data-cy="error-txt-Training hours (Full Time Equivalent) needs to be a number less than or equal to 1 and greater than zero (a maximum of 2 decimal places)"]'
   ).should("exist");
@@ -410,7 +417,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
     "Personal Details"
   );
   cy.checkElement("WarningCallout-formBImportantNotice-label");
-  cy.get(".nhsuk-warning-callout > :nth-child(2)").should(
+  cy.get(".nhsuk-warning-callout > :nth-child(2) > :nth-child(1)").should(
     "include.text",
     "This form has been pre-populated using the information available against your records"
   );
@@ -423,6 +430,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // header stuff
   const pdContainsEls1 = [
+    ['[data-cy="formRBHeading"]', "Form R (Part B)"],
     [
       '[data-cy="autosaveNote"]',
       "Note: This form will autosave 2 seconds after you pause making changes."
@@ -445,13 +453,18 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="surname-input"]').clear();
   cy.get('[data-cy="gmcNumber-input"]').clear();
   cy.get('[data-cy="email-input"]').clear();
+  cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
 
   // check the 'save & exit' button is disabled when form dirty and and autosave is triggered
   cy.get('[data-cy="BtnSaveExit-formB"]')
     .should("be.disabled")
     .should("have.text", "Saving...");
 
+  cy.get(
+    '[data-cy="prevRevalBody"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
+  ).click();
   cy.get('[data-cy="currRevalDate-input"]').clear();
+  cy.get('[data-cy="prevRevalDate-input"]').clear();
   cy.get('[data-cy="programmeSpecialty-input"]').should(
     "have.attr",
     "readonly"
@@ -462,13 +475,18 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   ).click();
 
   // check error summary (required fields)
-  cy.get(".nhsuk-error-summary").contains("There is a problem");
+  cy.get(".nhsuk-error-summary").contains(
+    "Before proceeding to the next section please address the following:"
+  );
   cy.get('[data-cy="error-txt-Forename is required"]').should("exist");
-  cy.get('[data-cy="error-txt-Surname is required"]').should("exist");
+  cy.get('[data-cy="error-txt-GMC-Registered Surname is required"]').should(
+    "exist"
+  );
+  cy.get('[data-cy="error-txt-GMC number is required"]').should("exist");
   cy.get('[data-cy="error-txt-Email is required"]').should("exist");
   cy.get(
     '[data-cy="error-txt-Current Revalidation date must be a valid date"]'
-  );
+  ).should("exist");
 
   // (non-required fields)
   cy.get('[data-cy="error-txt-Previous Revalidation date is required"]').should(
@@ -479,21 +497,15 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   );
 
   // check inline errors (required fields)
-  cy.get("#forename-error").should("have.text", "Error: Forename is required");
-  cy.get("#surname-error").should("have.text", "Error: Surname is required");
-  cy.get("#gmcNumber-error").should(
-    "have.text",
-    "Error: GMC number is required"
-  );
-  cy.get("#email-error").should("have.text", "Error: Email is required");
-  cy.get("#currRevalDate-error").should(
-    "have.text",
-    "Error: Current Revalidation date must be a valid date"
-  );
+  cy.get('[data-cy="forename-inline-error-msg"]').should("exist");
+  cy.get('[data-cy="surname-inline-error-msg"]').should("exist");
+  cy.get('[data-cy="gmcNumber-inline-error-msg"]').should("exist");
+  cy.get('[data-cy="email-inline-error-msg"]').should("exist");
+  cy.get('[data-cy="currRevalDate-inline-error-msg"]').should("exist");
 
   // (non-required fields)
-  cy.get("#prevRevalDate-error").should("not.exist");
-  cy.get("#dualSpecialty-error").should("not.exist");
+  cy.get('[data-cy="prevRevalDate-inline-error-msg"]').should("not.exist");
+  cy.get('[data-cy="dualSpecialty-inline-error-msg"]').should("not.exist");
 
   // check disabled navNext
   cy.get('[data-cy="navNext"]').should(
@@ -503,10 +515,12 @@ Cypress.Commands.add("checkAndFillSection1", () => {
 
   // more email validation
   cy.clearAndType('[data-cy="email-input"]', "bo");
-  cy.get("#email-error").should("exist").contains("Email address is invalid");
+  cy.get('[data-cy="email-inline-error-msg"]')
+    .should("exist")
+    .contains("Email address is invalid");
   cy.get(".nhsuk-error-summary").contains("Email address is invalid");
   cy.clearAndType('[data-cy="email-input"]', "traineeui.tester@hee.nhs.uk");
-  cy.get("#email-error").should("not.exist");
+  cy.get('[data-cy="email-inline-error-msg"]').should("not.exist");
   cy.get(".nhsuk-error-summary").should("not.contain", "Email is required");
 
   // check 'other' option conditional rendering
@@ -514,19 +528,20 @@ Cypress.Commands.add("checkAndFillSection1", () => {
   cy.get('[data-cy="prevRevalBodyOther-label"]').should("exist");
 
   // Check validation for 'other' option choices
-  cy.get("#prevRevalBodyOther-error").should("exist");
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("exist");
   cy.clickSelect('[data-cy="prevRevalBodyOther"]', null, true);
   cy.clickSelect('[data-cy="prevRevalBody"]', null, true);
-  cy.get("#prevRevalBodyOther-error").should("not.exist");
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("not.exist");
 
   cy.clickSelect('[data-cy="prevRevalBody"]', "oth");
   cy.clickSelect('[data-cy="prevRevalBodyOther"]', null);
-  cy.get("#prevRevalBodyOther-error").should("not.exist");
+  cy.get('[data-cy="prevRevalBodyOther-inline-error-msg"]').should("not.exist");
+
   // more date validation
   cy.clearAndType('[data-cy="currRevalDate-input"]', prevRevalDate);
   cy.get(".field-warning-msg")
     .should("exist")
-    .contains("Warning: This is a past date. Please ignore if valid.");
+    .contains("Warning: You have entered a past date.");
 
   cy.clearAndType('[data-cy="currRevalDate-input"]', currRevalDate);
   cy.get(".field-warning-msg").should("not.exist");
@@ -553,24 +568,25 @@ Cypress.Commands.add("checkAndFillSection2", () => {
   cy.checkElement("autosaveNote");
   cy.get(".nhsuk-card__heading").contains("Type of Work");
   cy.clickAllRemoveWorkButtons();
-  cy.get(".nhsuk-error-summary").contains("There is a problem");
+  cy.get(".nhsuk-error-summary").contains(
+    "Before proceeding to the next section please address the following:"
+  );
   cy.get('[data-cy="error-txt-At least one Type of Work is required"]');
 
   // add a work panel
   cy.checkElement("add-Work-button", "Add a Work panel", true).click();
 
   // check the inline errors
-  cy.get("#work-0-typeOfWork--input-error").should("exist");
-  cy.get("#work-0-trainingPost--input-error").should("exist");
-  cy.get("#work-0-startDate--input-error").should("exist");
-  cy.get("#work-0-endDate--input-error").should("exist");
-  cy.get("#work-0-site--input-error").should("exist");
-  cy.get("#work-0-siteLocation--input-error").should("exist");
-  cy.get("#work-0-siteKnownAs--input-error").should("not.exist");
+  cy.checkElement("typeOfWork-inline-error-msg");
+  cy.checkElement("trainingPost-inline-error-msg");
+  cy.checkElement("startDate-inline-error-msg");
+  cy.checkElement("endDate-inline-error-msg");
+  cy.checkElement("site-inline-error-msg");
+  cy.checkElement("siteLocation-inline-error-msg");
+  cy.checkElement("siteKnownAs-inline-error-msg", null, false);
 
   // check the error summary
-
-  cy.get(".nhsuk-error-summary").contains("Work 1");
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").contains("Work 1");
   cy.checkElement("error-txt-Type of Work is required");
   cy.checkElement("error-txt-Training Post is required");
   cy.checkElement("error-txt-Start date must be a valid date");
@@ -592,18 +608,27 @@ Cypress.Commands.add("checkAndFillSection2", () => {
 
   // add another work panel
   cy.checkElement("add-Work-button").click();
-  cy.get(".error-summary").contains("Work 2");
+  cy.get(".error-summary").should("exist");
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").contains("Work 2");
 
   // force an error in first panel
   cy.get('[data-cy="startDate-input"]').clear();
 
   // check error summary again
-  cy.get(".error-summary").contains("Work 1");
-  cy.get(":nth-child(2) > .nhsuk-u-font-weight-bold").contains("Work 2");
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").contains("Work 1");
+  cy.get(":nth-child(2) > :nth-child(1) > b").contains("Work 2");
 
   // check inline errors on first panel
-  cy.get("#work-0-startDate--input-error").should("exist");
-  cy.get("#work-0-endDate--input-error").should("exist");
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(4) > [data-cy="startDate"] > [data-cy="startDate-inline-error-msg"]'
+  )
+    .should("exist")
+    .contains("Start date must be a valid date");
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(5) > [data-cy="endDate"] > [data-cy="endDate-inline-error-msg"]'
+  )
+    .should("exist")
+    .contains("End date must be later than or equal to Start date");
 
   // fill in second panel
   cy.get('[data-cy="typeOfWork-input"]:last').type("Some Work 2");
@@ -631,6 +656,7 @@ Cypress.Commands.add("checkAndFillSection2", () => {
 
 // ### SECTION 3: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection3", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Whole Scope of Practice: Time Out Of Training (TOOT)"
@@ -639,7 +665,10 @@ Cypress.Commands.add("checkAndFillSection3", () => {
     "TOOT days (round up to the nearest whole day)"
   );
   cy.checkElement("sicknessAbsence-input").clear();
-  cy.get("#sicknessAbsence-error").should("exist");
+  cy.checkElement(
+    "sicknessAbsence-inline-error-msg",
+    "Short and Long-term sickness absence must be a positive number or zero"
+  );
 
   cy.get(".nhsuk-error-summary").should("exist");
   cy.checkElement(
@@ -658,7 +687,8 @@ Cypress.Commands.add("checkAndFillSection3", () => {
     .should("have.value", "9999");
   cy.get('[data-cy="totalLeave-input"]').should("have.attr", "readonly");
   cy.get('[data-cy="totalLeave-input"]').should("have.value", "19998");
-  cy.get("#totalLeave-error").should("exist");
+  cy.checkElement("totalLeave-inline-error-msg");
+  cy.checkElement("error-txt-Total leave cannot exceed 9999 days", null);
   cy.log("still navigate back to previous section with errors");
   cy.get('[data-cy="navPrevious"]').click();
   cy.get('[data-cy="progress-header"] > h3').should(
@@ -672,6 +702,7 @@ Cypress.Commands.add("checkAndFillSection3", () => {
 
 // ### SECTION 4: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection4", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Good Medical Practice: Declarations"
@@ -679,8 +710,8 @@ Cypress.Commands.add("checkAndFillSection4", () => {
   cy.get(".nhsuk-card__heading").contains("Declarations");
   cy.get('[data-cy="isHonest-checkbox"]').check();
 
-  cy.get("#isHealthy-error").should("exist");
-  cy.get("#isWarned-error").should("exist");
+  cy.checkElement("isHealthy-inline-error-msg");
+  cy.checkElement("isWarned-inline-error-msg");
   cy.get(".nhsuk-error-summary").should("exist");
   cy.checkElement(
     "error-txt-Please confirm your acceptance to Good Medical Practice personal health obligations"
@@ -709,18 +740,19 @@ Cypress.Commands.add("checkAndFillSection4", () => {
   cy.get('[data-cy="isHealthy-checkbox"]').check();
   cy.get(".nhsuk-error-summary").should("exist");
 
-  cy.get("#isWarned-error").should("exist");
+  cy.checkElement("isWarned-inline-error-msg");
   cy.checkElement(
     "error-txt-Please select Yes or No relating to conditions, warnings, or undertakings"
   );
   cy.get('[data-cy="isWarned-Yes-input"]').click();
-  cy.get("#isComplying-error").should("exist");
+  cy.checkElement("isComplying-inline-error-msg");
   cy.get('[data-cy="isWarned-No-input"]').click();
-  cy.get("#isComplying-error").should("not.exist");
+  cy.checkElement("isComplying-inline-error-msg", null, false);
 });
 
 // ### SECTION 5: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection5", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Good Medical Practice: Health Statement"
@@ -731,6 +763,7 @@ Cypress.Commands.add("checkAndFillSection5", () => {
 
 // ### SECTION 6: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection6", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Summary of previous resolved Form R Declarations"
@@ -744,23 +777,33 @@ Cypress.Commands.add("checkAndFillSection6", () => {
   cy.get(
     '[data-cy="error-txt-At least one Previous Declaration is required"]'
   ).should("exist");
-
-  cy.get('[data-cy="add-Previous Declarations-button"]').click();
-  cy.get("#previousDeclarations-0-declarationType--input-error").should(
-    "exist"
-  );
+  cy.checkElement("add-Previous Declarations-button");
   cy.get('[data-cy="havePreviousDeclarations-No-input"]').click();
   cy.get(".nhsuk-error-summary").should("not.exist");
+
   cy.get('[data-cy="havePreviousDeclarations-Yes-input"]').click();
+  cy.get('[data-cy="add-Previous Declarations-button"]').click();
   cy.get(".nhsuk-error-summary").should("exist");
-  cy.get('[data-cy="remove-Previous Declarations-1-button"]').click();
+  cy.get('[data-cy="declarationType-label"]').should(
+    "have.text",
+    "Declaration Type"
+  );
+  cy.get('[data-cy="declarationType-inline-error-msg"]').should("exist");
+  cy.get('[data-cy="error-txt-Declaration type is required"]').should("exist");
+  cy.get('[data-cy="remove-Previous Declarations-1-button"]')
+    .should("exist")
+    .click();
   cy.get(".nhsuk-error-summary").should("exist");
+  cy.get(
+    '[data-cy="error-txt-At least one Previous Declaration is required"]'
+  ).should("exist");
   cy.get('[data-cy="havePreviousDeclarations-No-input"]').click();
   cy.get(".nhsuk-error-summary").should("not.exist");
 });
 
 // ### SECTION 7: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection7", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Summary of previous unresolved Form R Declarations"
@@ -772,11 +815,22 @@ Cypress.Commands.add("checkAndFillSection7", () => {
   cy.navNext();
   cy.get(".nhsuk-error-summary").should("exist");
   cy.get(
-    '[data-cy="error-txt-Please select Yes or No for previous unresolved declarations"]'
+    '[data-cy="havePreviousUnresolvedDeclarations-inline-error-msg"]'
   ).should("exist");
-  cy.get("#havePreviousUnresolvedDeclarations-error").should("exist");
+  cy.get(".nhsuk-error-summary").should("exist");
+  cy.get(
+    '[data-cy="error-txt-Please select Yes or No for previous declarations"]'
+  ).should("exist");
+  cy.get('[data-cy="havePreviousUnresolvedDeclarations-No-input"]').click();
+  cy.get(".nhsuk-error-summary").should("not.exist");
+  cy.checkElement(
+    "havePreviousUnresolvedDeclarations-inline-error-msg",
+    null,
+    false
+  );
+  cy.checkElement("previousDeclarationSummary-text-area-input", null, false);
   cy.get('[data-cy="havePreviousUnresolvedDeclarations-Yes-input"]').click();
-  cy.get("#previousDeclarationSummary-error").should("exist");
+  cy.get(".nhsuk-error-summary").should("exist");
   cy.get('[data-cy="previousDeclarationSummary-text-area-input"]')
     .should("be.visible")
     .type("prev unresolved dec summary ");
@@ -784,6 +838,7 @@ Cypress.Commands.add("checkAndFillSection7", () => {
 
 // ### SECTION 8: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection8", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Summary of new resolved Form R Declarations"
@@ -802,40 +857,85 @@ Cypress.Commands.add("checkAndFillSection8", () => {
   cy.get(
     '[data-cy="error-txt-At least one Current Declaration is required"]'
   ).should("not.exist");
-  cy.get(".nhsuk-error-summary").contains("Current Declarations 1");
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").should(
+    "have.text",
+    "Current Declarations 1"
+  );
   cy.get('[data-cy="error-txt-Declaration type is required"]').should("exist");
+  cy.get('[data-cy="declarationType-inline-error-msg"]').should("exist");
   cy.get('[data-cy="error-txt-Date of entry must be a valid date"]').should(
     "exist"
   );
+  cy.get('[data-cy="dateOfEntry-inline-error-msg"]').should("exist");
   cy.get('[data-cy="error-txt-Title is required"]').should("exist");
+  cy.get('[data-cy="title-inline-error-msg"]').should("exist");
   cy.get('[data-cy="error-txt-Location of entry is required"]').should("exist");
-
+  cy.get('[data-cy="locationOfEntry-inline-error-msg"]').should("exist");
+  // complete panel 1
   cy.clickSelect('[data-cy="declarationType"]');
   cy.clearAndType('[data-cy="dateOfEntry-input"]', "2024-04-01");
   cy.clearAndType('[data-cy="title-input"]', "dec 1 title");
   cy.clearAndType('[data-cy="locationOfEntry-input"]', "dec 1 loc");
   cy.get(".nhsuk-error-summary").should("not.exist");
-
   // add another panel
   cy.get('[data-cy="add-Current Declarations-button"]').click();
-  cy.get(".nhsuk-error-summary").contains("Current Declarations 2");
-
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").should(
+    "have.text",
+    "Current Declarations 2"
+  );
+  cy.checkElement("error-txt-Title is required");
+  cy.checkElement("title-inline-error-msg");
   // force an error in panel 1
-  cy.get('[data-cy="locationOfEntry-input"]').first().clear();
-  cy.get(".nhsuk-error-summary").contains("Current Declarations 1");
-  cy.get("#currentDeclarations-0-locationOfEntry--input-error");
-
-  // Remove panel 1
-  cy.get('[data-cy="remove-Current Declarations-1-button"]').click();
-  cy.get(".nhsuk-error-summary").should("exist");
-
-  cy.get('[data-cy="haveCurrentDeclarations-No-input"]').click();
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(4) > [data-cy="title-input"]'
+  ).clear();
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(4) > [data-cy="title-inline-error-msg"]'
+  ).should("exist");
+  cy.get(
+    ".error-summary_li > :nth-child(1) > :nth-child(1) > :nth-child(1) > b"
+  ).should("have.text", "Current Declarations 1");
+  // remove error in panel 1
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(4) > [data-cy="title-input"]'
+  ).type("new dec 1 title");
+  cy.get(
+    ':nth-child(1) > .nhsuk-card__content > :nth-child(4) > [data-cy="title-inline-error-msg"]'
+  ).should("not.exist");
+  cy.get(".error-summary_li_nested > :nth-child(1) > b").should(
+    "have.text",
+    "Current Declarations 2"
+  );
+  // complete panel 2
+  cy.clickSelect(
+    ':nth-child(2) > .nhsuk-card__content > :nth-child(2) > [data-cy="declarationType"]'
+  );
+  cy.clearAndType(
+    ':nth-child(2) > .nhsuk-card__content > :nth-child(3) > [data-cy="dateOfEntry"] > [data-cy="dateOfEntry-input"]',
+    "2024-04-02"
+  );
+  cy.clearAndType(
+    ':nth-child(2) > .nhsuk-card__content > :nth-child(4) > [data-cy="title-input"]',
+    "dec 2 title"
+  );
+  cy.clearAndType(
+    ':nth-child(2) > .nhsuk-card__content > :nth-child(5) > [data-cy="locationOfEntry-input"]',
+    "dec 2 loc"
+  );
   cy.get(".nhsuk-error-summary").should("not.exist");
-  // Note: already checked panel manipulation for Work section.
+
+  // remove panel 1
+  cy.get('[data-cy="remove-Current Declarations-1-button"]').click();
+
+  // check the remaining panel
+  cy.get(".react-select__value-container").should("have.text", "Complaint");
+  cy.get('[data-cy="title-input"]').should("have.value", "dec 2 title");
+  cy.get('[data-cy="locationOfEntry-input"]').should("have.value", "dec 2 loc");
 });
 
 // ### SECTION 9: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection9", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Summary of new unresolved Form R Declarations"
@@ -847,6 +947,7 @@ Cypress.Commands.add("checkAndFillSection9", () => {
 
 // ### SECTION 10: CHECK AND FILL
 Cypress.Commands.add("checkAndFillSection10", () => {
+  cy.get(".nhsuk-fieldset__heading").contains("Form R (Part B)");
   cy.get('[data-cy="progress-header"] > h3').should(
     "include.text",
     "Compliments"
@@ -955,7 +1056,7 @@ Cypress.Commands.add("checkFlags", (name: string) => {
 
 Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   const { shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } = cctCalcWarningsMsgs;
-  cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
+  cy.get('[data-cy="backLink-to-cct-home"]').should("exist");
   cy.url().should("include", "/cct");
   cy.get('[data-cy="cct-calc-warning"]')
     .should("exist")
@@ -965,10 +1066,10 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .should("include.text", "contact your Local Office support");
   cy.get('[data-cy="cct-calc-header"]')
     .should("exist")
-    .contains("CCT Calculator");
+    .contains("CCT Calculator - Changing hours (LTFT)");
   cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
     .should("exist")
-    .contains("Are you a Skilled Worker visa holder?");
+    .contains("Are you are tier 2 skilled visa worker?");
 
   cy.get(
     '[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text'
@@ -1011,7 +1112,7 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
 
   // - current WTE
   cy.clickSelect('[data-cy="programmeMembership.wte"]', null, true);
-  cy.get('[data-cy="changes[0].type"]').contains("LTFT");
+  cy.get('[data-cy="changes[0].type"]').contains("WTE (e.g. LTFT)");
   cy.get(".nhsuk-error-message").first().contains("Please enter a start date");
   cy.get('[data-cy="changes[0].startDate"]').type("2022-01-01");
   cy.get(".nhsuk-error-message")
@@ -1023,11 +1124,11 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
     .should("exist")
     .contains(shortNoticeMsg);
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Please enter a proposed percentage"
+    "Please enter a Proposed WTE"
   );
   cy.clickSelect('[data-cy="changes[0].wte"]', null, true);
   cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Before and after percentages must be different"
+    "WTE values must be different"
   );
   cy.clickSelect('[data-cy="programmeMembership.wte"]', "80%", false);
   cy.clickSelect('[data-cy="changes[0].wte"]', "90%", false);

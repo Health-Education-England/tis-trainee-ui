@@ -1,23 +1,23 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosResponse } from "axios";
 import {
   FormRPartA,
   initialFormRABeforeProfileData
 } from "../../models/FormRPartA";
 import { IFormR } from "../../models/IFormR";
-import { ApiResponse } from "../../services/apiService";
 import { FormsService } from "../../services/FormsService";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
-import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormA {
   formAList: IFormR[];
   formData: FormRPartA;
   status: string;
   error: any;
   editPageNumber: number;
+  canEdit: boolean;
   saveStatus: SaveStatusProps;
   saveLatestTimeStamp: string;
   newFormId: string | undefined;
@@ -29,6 +29,7 @@ export const initialState: IFormA = {
   status: "idle",
   error: "",
   editPageNumber: 0,
+  canEdit: false,
   saveStatus: "idle",
   saveLatestTimeStamp: "none this session",
   newFormId: undefined
@@ -38,7 +39,7 @@ export const loadFormAList = createAsyncThunk(
   "formA/fetchFormAList",
   async () => {
     const formsService = new FormsService();
-    const response: ApiResponse<IFormR[]> =
+    const response: AxiosResponse<IFormR[]> =
       await formsService.getTraineeFormRPartAList();
     return DateUtilities.genericSort(response.data, "submissionDate", true);
   }
@@ -138,6 +139,9 @@ const formASlice = createSlice({
     updatedEditPageNumber(state, action: PayloadAction<number>) {
       return { ...state, editPageNumber: action.payload };
     },
+    updatedCanEdit(state, action: PayloadAction<boolean>) {
+      return { ...state, canEdit: action.payload };
+    },
     updatedSaveStatus(state, action: PayloadAction<SaveStatusProps>) {
       return { ...state, saveStatus: action.payload };
     },
@@ -152,12 +156,6 @@ const formASlice = createSlice({
     },
     updatedNewFormId(state, action: PayloadAction<string>) {
       return { ...state, newFormId: action.payload };
-    },
-    updatedFormALifecycleState(state, action: PayloadAction<LifeCycleState>) {
-      return {
-        ...state,
-        formData: { ...state.formData, lifecycleState: action.payload }
-      };
     }
   },
   extraReducers(builder): void {
@@ -328,13 +326,16 @@ export const {
   resetToInitFormA,
   updatedFormA,
   updatedEditPageNumber,
+  updatedCanEdit,
   updatedSaveStatus,
   updatedSaveLatestTimeStamp,
   updatedFormAStatus,
   updatedFormAList,
-  updatedNewFormId,
-  updatedFormALifecycleState
+  updatedNewFormId
 } = formASlice.actions;
 
 export const selectSavedFormA = (state: { formA: IFormA }) =>
   state.formA.formData;
+
+export const selectCanEditStatus = (state: { formA: IFormA }) =>
+  state.formA.canEdit;

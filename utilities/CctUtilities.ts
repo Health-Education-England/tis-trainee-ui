@@ -17,15 +17,38 @@ export function findLinkedProgramme(
   return progs.find(prog => prog.tisId === id);
 }
 
-// Used for mock data only
-export function calcCctDate(
+export function makeProgrammeOptions(progs: ProgrammeMembership[]) {
+  return progs.map(programme => ({
+    label: `${programme.programmeName} (${dayjs(programme.startDate).format(
+      "DD/MM/YYYY"
+    )})`,
+    value: programme.tisId
+  }));
+}
+
+export function setDefaultProgrammeOption(
+  id: string | null,
+  progs: ProgrammeMembership[]
+) {
+  const selectedProgramme = id ? findLinkedProgramme(id, progs) : null;
+  return selectedProgramme
+    ? {
+        label: `${selectedProgramme.programmeName} (${dayjs(
+          selectedProgramme.startDate
+        ).format("DD/MM/YYYY")})`,
+        value: selectedProgramme.tisId
+      }
+    : null;
+}
+
+export function calcLtftChange(
   currentProgEndDate: Date | string,
   currentWte: number,
-  newWte: number,
-  changeStartDate: Date | string
+  change: CctChangeType
 ) {
-  const chunkDays = dayjs(currentProgEndDate).diff(changeStartDate, "days");
-  const chunkDaysWTE = Math.ceil((chunkDays * currentWte) / newWte);
+  const { startDate, wte } = change;
+  const chunkDays = dayjs(currentProgEndDate).diff(startDate, "days");
+  const chunkDaysWTE = Math.ceil((chunkDays * currentWte) / (wte as number));
   return dayjs(currentProgEndDate)
     .add(chunkDaysWTE - chunkDays, "days")
     .format("YYYY-MM-DD");

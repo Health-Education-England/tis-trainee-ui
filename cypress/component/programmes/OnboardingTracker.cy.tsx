@@ -59,11 +59,7 @@ const mountOnboardingTrackerWithMockData = (
 
   mount(
     <Provider store={store}>
-      <MemoryRouter
-        initialEntries={[
-          "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/onboarding-tracker"
-        ]}
-      >
+      <MemoryRouter initialEntries={["/programmes/1/onboarding-tracker"]}>
         <Route
           path="/programmes/:id/onboarding-tracker"
           render={() => <MockedOnboardingTracker />}
@@ -81,7 +77,7 @@ describe("OnboardingTracker", () => {
   });
   it("renders tracker when matching PM found", () => {
     mountOnboardingTrackerWithMockData("SMS", "succeeded");
-    cy.get('[data-cy="backLink-to-back-to-programmes-list"]')
+    cy.get('[data-cy="backLink-to-programmes"]')
       .should("be.visible")
       .should("have.text", "Back to Programmes list");
     cy.get("[data-cy=onboardingTrackerHeading]").should("be.visible");
@@ -99,7 +95,7 @@ describe("OnboardingTracker", () => {
         "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
       );
     cy.get(
-      ":nth-child(1) > :nth-child(2) > .action-card > .action-card-contents > .fa-circle-info > path"
+      ":nth-child(1) > :nth-child(2) > .action-card > .action-card-contents > .svg-inline--fa > path"
     ).click({ force: true });
     cy.get("dialog").should("be.visible");
     cy.get(
@@ -124,10 +120,10 @@ describe("OnboardingTracker", () => {
     ).should("have.css", "color", "rgb(66, 85, 99)");
     cy.get(
       '[data-cy="status-section-REVIEW_PROGRAMME"] > :nth-child(2) > [data-cy="status-text"]'
-    ).contains("completed");
+    ).contains("outstanding");
     cy.get(
       '[data-cy="status-section-REVIEW_PROGRAMME"] > [data-cy="status-icon"] > .svg-inline--fa > path'
-    ).should("have.css", "color", "rgb(0, 100, 0)");
+    ).should("have.css", "color", "rgb(213, 40, 27)");
     cy.get(
       '[data-cy="status-section-SIGN_COJ"] > :nth-child(2) > [data-cy="status-text"]'
     ).contains("completed");

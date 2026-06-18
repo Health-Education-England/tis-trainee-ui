@@ -129,100 +129,8 @@ describe("Programmes with MFA set up", () => {
     cy.get('[data-cy="subheaderOnboarding"]').should("not.exist");
     cy.get('[data-cy="cct-link-header"]')
       .first()
-      .contains("Need a CCT calculation?");
+      .contains("Need a Changing hours (LTFT) calculation?");
     // both progs and placements use same panel creator component so not repeating placement tests
-  });
-
-  it("should hide training number row for Non-Medical trainee", () => {
-    const mockPersonalDetailsNullGmc = {
-      ...mockPersonalDetails,
-      gmcNumber: ""
-    };
-
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedPreferredMfa("SMS"));
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetailsNullGmc,
-          qualifications: [],
-          programmeMemberships: mockProgrammeMemberships,
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
-      dispatch(updatedFormAList(mockFormList as FormRPartA[]));
-      dispatch(updatedFormBList(mockFormList as FormRPartB[]));
-      dispatch(updatedActionsData([]));
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
-
-    cy.get('[data-cy="currentExpand"]').click();
-    cy.get("[data-cy=trainingNumber0Key]").should("not.exist");
-    cy.get("[data-cy=trainingNumber0Val]").should("not.exist");
-  });
-
-  it("should show training number row for Medical trainee with UNKNOWN GMC number", () => {
-    const mockPersonalDetailsUnknownGmc = {
-      ...mockPersonalDetails,
-      gmcNumber: "UNKNOWN"
-    };
-
-    const MockedProgrammes = () => {
-      const dispatch = useAppDispatch();
-      dispatch(updatedPreferredMfa("SMS"));
-      dispatch(
-        updatedTraineeProfileData({
-          traineeTisId: "12345",
-          personalDetails: mockPersonalDetailsUnknownGmc,
-          qualifications: [],
-          programmeMemberships: mockProgrammeMemberships,
-          placements: []
-        })
-      );
-      dispatch(updatedTraineeProfileStatus("succeeded"));
-      dispatch(updatedUserFeatures(mockUserFeaturesSpecialty));
-      dispatch(updatedFormAList(mockFormList as FormRPartA[]));
-      dispatch(updatedFormBList(mockFormList as FormRPartB[]));
-      dispatch(updatedActionsData([]));
-      return <Programmes />;
-    };
-
-    mount(
-      <Provider store={store}>
-        <Router history={history}>
-          <MockedProgrammes />
-        </Router>
-      </Provider>
-    );
-
-    cy.get('[data-cy="currentExpand"]').click();
-    cy.get("[data-cy=trainingNumber0Key]").should("exist");
-    cy.get("[data-cy=trainingNumber0Val]").should("exist");
-  });
-
-  it("should show training number row for Medical trainee with GMC number", () => {
-    mountProgrammesWithMockData(
-      "SMS",
-      "succeeded",
-      undefined,
-      mockProgrammeMemberships
-    );
-    cy.get('[data-cy="currentExpand"]').click();
-    cy.get("[data-cy=trainingNumber0Key]").should("exist");
-    cy.get("[data-cy=trainingNumber0Val]")
-      .should("exist")
-      .and("contain.text", "EOE/ABC-123/1111111/C");
   });
 
   it("Should display current Programme and Onboarding Tracker link when start date is within a year", () => {
@@ -239,14 +147,11 @@ describe("Programmes with MFA set up", () => {
       "include.text",
       "Onboarding Tracker"
     );
+
     cy.get(
       '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
     )
-      .should(
-        "have.attr",
-        "href",
-        "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/onboarding-tracker"
-      )
+      .should("have.attr", "href", "/programmes/1/onboarding-tracker")
       .and("include.text", "Track your onboarding journey for this programme");
   });
 
@@ -513,71 +418,5 @@ describe("Programme confirmation", () => {
       .should("exist")
       .click({ force: true });
     cy.get("@DownloadPDF").should("have.been.called");
-  });
-
-  it("should display the LTFT section when LTFT feature enabled", () => {
-    const userFeaturesWithLtft = {
-      ...mockUserFeaturesSpecialty,
-      forms: {
-        ...mockUserFeaturesSpecialty.forms,
-        ltft: {
-          enabled: true,
-          qualifyingProgrammes: []
-        }
-      }
-    };
-
-    mountProgrammesWithMockData(
-      "SMS",
-      "succeeded",
-      userFeaturesWithLtft,
-      mockProgrammeMemberships
-    );
-    cy.get('[data-cy="subheaderLtft"]')
-      .first()
-      .should("exist")
-      .and("have.text", "Less than full-time (LTFT) training");
-    cy.get('[data-cy="ltft-link-notifications"]').should("exist");
-    cy.get('[data-cy="ltft-ready"]').should("exist");
-    cy.get('[data-cy="ltft-link-application"]').should("exist");
-  });
-
-  it("should not show LTFT section when LTFT feature disabled", () => {
-    mountProgrammesWithMockData(
-      "SMS",
-      "succeeded",
-      undefined,
-      mockProgrammeMemberships
-    );
-    cy.get('[data-cy="ltft-section"]').should("not.exist");
-  });
-  it("should not show CCT section when CCT feature disabled", () => {
-    const userFeaturesWithNoCct = {
-      ...mockUserFeaturesSpecialty,
-      cct: {
-        enabled: false
-      }
-    };
-    mountProgrammesWithMockData(
-      "SMS",
-      "succeeded",
-      userFeaturesWithNoCct,
-      mockProgrammeMemberships
-    );
-    cy.get('[data-cy="cct-section"]').should("not.exist");
-  });
-  it("should show CCT section when CCT feature enabled", () => {
-    mountProgrammesWithMockData(
-      "SMS",
-      "succeeded",
-      undefined,
-      mockProgrammeMemberships
-    );
-    cy.get('[data-cy="cct-section"]').should("exist");
-    cy.get('[data-cy="cct-link-header"]')
-      .first()
-      .should("exist")
-      .and("have.text", "Need a CCT calculation?");
-    cy.get('[data-cy="cct-link"]').should("exist");
   });
 });

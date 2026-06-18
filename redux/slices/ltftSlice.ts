@@ -10,10 +10,11 @@ import { DateUtilities } from "../../utilities/DateUtilities";
 import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { showToast, ToastType } from "../../components/common/ToastMessage";
 import { ReasonMsgObj } from "../../components/common/ActionModal";
-import { LtftObjNew, LtftState } from "../../models/LtftTypes";
+import { LtftObj, LtftState, StatusInfo } from "../../models/LtftTypes";
+export type { LtftObj, LtftState, StatusInfo };
 
 export const initialState: LtftState = {
-  formData: {} as LtftObjNew,
+  formData: {} as LtftObj,
   LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
@@ -33,7 +34,7 @@ export const saveLtft = createAsyncThunk(
       isSubmit,
       showFailToastOnly
     }: {
-      formData: LtftObjNew;
+      formData: LtftObj;
       isAutoSave: boolean;
       isSubmit: boolean;
       showFailToastOnly: boolean;
@@ -68,7 +69,7 @@ export const updateLtft = createAsyncThunk(
       isSubmit,
       showFailToastOnly
     }: {
-      formData: LtftObjNew;
+      formData: LtftObj;
       isAutoSave: boolean;
       isSubmit: boolean;
       showFailToastOnly: boolean;
@@ -134,7 +135,10 @@ const ltftSlice = createSlice({
     resetToInitLtft() {
       return initialState;
     },
-    updatedLtft(state, action: PayloadAction<LtftObjNew>) {
+    setLtftCctSnapshot(state, action: PayloadAction<CctCalculation>) {
+      state.LtftCctSnapshot = action.payload;
+    },
+    updatedLtft(state, action: PayloadAction<LtftObj>) {
       state.formData = action.payload;
     },
     updatedCanEditLtft(state, action: PayloadAction<boolean>) {
@@ -337,6 +341,7 @@ const ltftSlice = createSlice({
 
 export const {
   resetToInitLtft,
+  setLtftCctSnapshot,
   updatedLtft,
   updatedCanEditLtft,
   updatedEditPageNumberLtft,
@@ -345,3 +350,4 @@ export const {
 } = ltftSlice.actions;
 
 export default ltftSlice.reducer;
+

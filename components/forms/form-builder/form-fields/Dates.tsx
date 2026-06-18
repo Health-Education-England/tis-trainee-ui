@@ -1,14 +1,12 @@
-import React from "react";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { useFormContext } from "../FormContext";
-import { FieldWrapper } from "./FieldWrapper";
+import FieldErrorInline from "./FieldErrorInline";
 
 type DatesProps = {
   name: string;
-  label?: string;
-  hint?: string;
-  fieldError?: string;
+  label: string | undefined;
+  fieldError: string;
   placeholder?: string;
   value: string;
   arrayIndex?: number;
@@ -19,7 +17,6 @@ type DatesProps = {
 export const Dates = ({
   name,
   label,
-  hint,
   fieldError,
   placeholder,
   value,
@@ -27,60 +24,65 @@ export const Dates = ({
   arrayName,
   dtoName
 }: DatesProps) => {
-  const { handleBlur, handleChange, fieldWarningMsgs } = useFormContext();
-  const warningMsgs = fieldWarningMsgs[name] ?? [];
+  const { handleBlur, handleChange, fieldWarning } = useFormContext();
+
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
-    <FieldWrapper
-      name={name}
-      label={label}
-      hint={hint}
-      fieldError={fieldError}
-      arrayIndex={arrayIndex}
-      arrayName={arrayName}
-    >
-      {({ inputId, labelId, errorId }) => (
-        <>
-          <input
-            id={inputId}
-            onKeyDown={handleKeyDown}
-            type="date"
-            data-cy={`${name}-input`}
-            name={name}
-            value={value}
-            onChange={event =>
-              handleChange(
-                event,
-                undefined,
-                undefined,
-                arrayIndex,
-                arrayName,
-                dtoName
-              )
-            }
-            onBlur={event =>
-              handleBlur(
-                event,
-                undefined,
-                undefined,
-                arrayIndex,
-                arrayName,
-                dtoName
-              )
-            }
-            className={`nhsuk-input nhsuk-input--width-20 ${
-              fieldError ? "nhsuk-input--error" : ""
-            }`}
-            placeholder={placeholder}
-            min="1920-01-01"
-            max="2119-12-31"
-            aria-labelledby={labelId}
-            aria-describedby={fieldError ? errorId : undefined}
-          />
-          {warningMsgs.length > 0 && !fieldError && (
-            <FieldWarningMsg warningMsgs={warningMsgs} />
-          )}
-        </>
+    <div data-cy={name}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
+        {label}
+      </label>
+      <input
+        id={inputId}
+        onKeyDown={handleKeyDown}
+        type="date"
+        data-cy={`${name}-input`}
+        name={name}
+        value={value}
+        onChange={event => {
+          handleChange(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          );
+        }}
+        onBlur={(event: React.FocusEvent<HTMLInputElement>) =>
+          handleBlur(
+            event,
+            undefined,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
+        }
+        className={`nhsuk-input nhsuk-input--width-20 ${
+          fieldError ? "nhsuk-input--error" : ""
+        }`}
+        placeholder={placeholder}
+        min="1920-01-01"
+        max="2119-12-31"
+        aria-labelledby={labelId}
+      />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </FieldWrapper>
+      {fieldWarning?.fieldName === name && !fieldError ? (
+        <FieldWarningMsg warningMsg={fieldWarning?.warningMsg} />
+      ) : null}
+    </div>
   );
 };

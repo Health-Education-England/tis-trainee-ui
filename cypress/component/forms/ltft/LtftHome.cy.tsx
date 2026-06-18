@@ -10,11 +10,11 @@ import {
 import { mockLtftsList1 } from "../../../../mock-data/mock-ltft-data";
 import { sureText } from "../../../../utilities/Constants";
 
-const mountLtftHome = (pmOptions: { value: string; label: string }[] = []) => {
+const mountLtftHome = () => {
   mount(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/ltft"]}>
-        <LtftHome pmOptions={pmOptions} />
+        <LtftHome />
       </MemoryRouter>
     </Provider>
   );
@@ -51,7 +51,7 @@ describe("LtftHome", () => {
 
   describe("Success state", () => {
     describe("'In progress' table", () => {
-      it("should handle empty state (with no eligable PMs) correctly", () => {
+      it("should handle empty state correctly", () => {
         store.dispatch(updatedLtftSummaryList([]));
         store.dispatch(updatedLtftSummaryListStatus("succeeded"));
         mountLtftHome();
@@ -63,23 +63,18 @@ describe("LtftHome", () => {
         cy.get('[data-cy="no-saved-drafts"]').contains(
           "You have no in progress applications."
         );
-        cy.get('[data-cy="no-eligable-pms-message"]').should("exist");
+        cy.get('[data-cy="cct-link"]')
+          .should("exist")
+          .should("have.attr", "href", "/cct");
         cy.get('[data-cy="ltft-previous-header"]')
           .should("exist")
           .contains("Previous applications");
       });
 
-      it("should show table with draft applications (and make new applic btn)", () => {
+      it("should show table with draft applications", () => {
         store.dispatch(updatedLtftSummaryListStatus("succeeded"));
         store.dispatch(updatedLtftSummaryList(mockLtftsList1));
-        mountLtftHome([{ value: "pm-1", label: "Programme 1" }]);
-
-        // check for expander msgs
-        cy.get('[data-cy="whatIsLtftSummary"]').should("exist");
-        cy.get('[data-cy="ltft16WeeksNoticeSummary"]').should("exist");
-        cy.get('[data-cy="skilledVisaWorkerSummary"]').should("exist");
-
-        cy.get('[data-cy="make-new-ltft-btn"]').should("exist");
+        mountLtftHome();
 
         cy.get('[data-cy="ltft-summary-table-CURRENT"]').should("exist");
         cy.get('[data-cy="filterDRAFTLtft"]').should("be.checked");
@@ -124,12 +119,6 @@ describe("LtftHome", () => {
         cy.get(
           '[data-cy="ltft-summary-table-PREVIOUS"] > tbody > [data-cy="ltft-row-1"] > [data-cy="1_status"]'
         ).contains("SUBMITTED");
-      });
-
-      it('should handle "Unsubmit" modal correctly', () => {
-        store.dispatch(updatedLtftSummaryListStatus("succeeded"));
-        store.dispatch(updatedLtftSummaryList(mockLtftsList1));
-        mountLtftHome();
 
         // Test unsubmit modal
         cy.get(
@@ -144,13 +133,10 @@ describe("LtftHome", () => {
           "Please provide any supplementary information if needed"
         );
         cy.get('[data-cy="message"]').type("Test unsubmit message");
-        cy.get('[data-cy="modal-cancel-btn"]').last().click({ force: true });
-      });
-
-      it('should handle "Withdraw" modal correctly', () => {
-        store.dispatch(updatedLtftSummaryListStatus("succeeded"));
-        store.dispatch(updatedLtftSummaryList(mockLtftsList1));
-        mountLtftHome();
+        cy.get('[data-cy="modal-cancel-btn"]')
+          .last()
+          .contains("Cancel")
+          .click();
 
         // Test withdraw modal
         cy.get(
@@ -160,7 +146,7 @@ describe("LtftHome", () => {
         cy.get('[data-cy="warningLabel-Withdraw"]').contains("Withdraw");
         cy.get("#reason-1--label").contains("Change of circumstances");
         cy.get("#reason-2--label").contains("other reason");
-        cy.get('[data-cy="modal-cancel-btn"]').last().click({ force: true });
+        cy.get('[data-cy="modal-cancel-btn"]').last().click();
       });
     });
   });

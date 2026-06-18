@@ -1,4 +1,5 @@
-import ApiService, { ApiRequestConfig, ApiResponse } from "./apiService";
+import { AxiosResponse, AxiosRequestConfig } from "axios";
+import ApiService from "./apiService";
 import { TraineeProfile } from "../models/TraineeProfile";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import {
@@ -12,13 +13,13 @@ export class TraineeProfileService extends ApiService {
     super("/api/trainee");
   }
 
-  async getTraineeProfile(): Promise<ApiResponse<TraineeProfile>> {
+  async getTraineeProfile(): Promise<AxiosResponse<TraineeProfile>> {
     return this.get<TraineeProfile>("/profile");
   }
 
   async signCoj(
     programmeMembershipId: string
-  ): Promise<ApiResponse<ProgrammeMembership>> {
+  ): Promise<AxiosResponse<ProgrammeMembership>> {
     return this.post<ProgrammeMembership>(
       `/programme-membership/${programmeMembershipId}/sign-coj`
     );
@@ -26,51 +27,48 @@ export class TraineeProfileService extends ApiService {
 
   async getPmConfirmation(
     programmeMembershipId: string
-  ): Promise<ApiResponse<Blob>> {
-    const requestConfig: ApiRequestConfig = {
+  ): Promise<AxiosResponse<Blob>> {
+    let requestConfig: AxiosRequestConfig<string> = {
       headers: {
         Accept: "application/pdf"
       },
       responseType: "blob"
     };
 
-    return this.get<Blob>(
+    return this.axiosInstance.get<Blob>(
       `/programme-membership/${programmeMembershipId}/confirmation`,
       requestConfig
     );
   }
 
-  async updateGmc(gmcNumber: string): Promise<ApiResponse<PersonalDetails>> {
-    let gmcDetails = { ...initialPersonalDetails, gmcNumber };
+  async updateGmc(gmcNumber: string): Promise<AxiosResponse<PersonalDetails>> {
+    let gmcDetails = { ...initialPersonalDetails, ...{ gmcNumber: gmcNumber } };
     return this.put<PersonalDetails>("/basic-details/gmc-number", gmcDetails);
   }
 
-  async updateEmail(email: string): Promise<ApiResponse<void>> {
-    let emailDetails = { ...initialPersonalDetails, email };
-    return this.put<void>("/basic-details/email-address", emailDetails);
-  }
-
-  async getCctCalculations(): Promise<ApiResponse<CctCalculation[]>> {
+  async getCctCalculations(): Promise<AxiosResponse<CctCalculation[]>> {
     return this.get("/cct/calculation");
   }
 
-  async getCctCalculation(cctId: string): Promise<ApiResponse<CctCalculation>> {
+  async getCctCalculation(
+    cctId: string
+  ): Promise<AxiosResponse<CctCalculation>> {
     return this.get<CctCalculation>(`/cct/calculation/${cctId}`);
   }
 
   async saveCctCalculation(
     cctCalc: CctCalculation
-  ): Promise<ApiResponse<CctCalculation>> {
+  ): Promise<AxiosResponse<CctCalculation>> {
     return this.post<CctCalculation>("/cct/calculation", cctCalc);
   }
 
   async updateCctCalculation(
     cctCalc: CctCalculation
-  ): Promise<ApiResponse<CctCalculation>> {
+  ): Promise<AxiosResponse<CctCalculation>> {
     return this.put<CctCalculation>(`/cct/calculation/${cctCalc.id}`, cctCalc);
   }
 
-  async deleteCctCalculation(cctId: string): Promise<ApiResponse> {
+  async deleteCctCalculation(cctId: string): Promise<AxiosResponse> {
     return this.delete(`/cct/calculation/${cctId}`);
   }
 }

@@ -19,7 +19,7 @@
             },
             {
               "name": "surname",
-              "label": "Surname (as registered with your professional regulator, where applicable, e.g, GMC)",
+              "label": "GMC-Registered Surname",
               "placeholder": "type here...",
               "type": "text",
               "visible": true,
@@ -53,11 +53,8 @@
               "label": "Please Specify 'Other'",
               "type": "select",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "prevRevalBody",
-                "values": ["other"]
-              },
+              "visibleIf": ["other"],
+              "parent": "prevRevalBody",
               "optionsKey": "dbcExternal"
             },
             {
@@ -65,12 +62,10 @@
               "label": "Current Revalidation Date",
               "type": "date",
               "visible": true,
-              "warnings": [
-                {
-                  "matcher": "prevDateTest",
-                  "msgText": "Warning: This is a past date. Please ignore if valid."
-                }
-              ]
+              "warning": {
+                "matcher": "prevDateTest",
+                "msgText": "Warning: You have entered a past date. Please ignore if valid."
+              }
             },
             {
               "name": "prevRevalDate",
@@ -178,8 +173,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "parentalLeave",
@@ -188,8 +182,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "careerBreaks",
@@ -198,8 +191,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "paidLeave",
@@ -208,8 +200,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "unauthorisedLeave",
@@ -218,8 +209,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "otherLeave",
@@ -228,8 +218,7 @@
               "visible": true,
               "width": 2,
               "isNumberField": true,
-              "contributesToTotal": "totalLeave",
-              "maxDigits": 4
+              "contributesToTotal": "totalLeave"
             },
             {
               "name": "totalLeave",
@@ -276,11 +265,8 @@
               "label": "Are you complying with these conditions, warnings or undertakings?",
               "type": "checkbox",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "isWarned",
-                "values": [true]
-              }
+              "visibleIf": [true],
+              "parent": "isWarned"
             }
           ]
         }
@@ -323,11 +309,8 @@
               "name": "previousDeclarations",
               "type": "array",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "havePreviousDeclarations",
-                "values": [true]
-              },
+              "visibleIf": [true],
+              "parent": "havePreviousDeclarations",
               "label": "Previous Resolved Declarations",
               "objectFields": [
                 {
@@ -383,11 +366,8 @@
               "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
               "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "havePreviousUnresolvedDeclarations",
-                "values": [true]
-              }
+              "visibleIf": [true],
+              "parent": "havePreviousUnresolvedDeclarations"
             }
           ]
         }
@@ -413,11 +393,8 @@
               "name": "currentDeclarations",
               "type": "array",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "haveCurrentDeclarations",
-                "values": [true]
-              },
+              "visibleIf": [true],
+              "parent": "haveCurrentDeclarations",
               "label": "Current Resolved Declarations",
               "objectFields": [
                 {
@@ -473,11 +450,8 @@
               "placeholder": "• Concern Type\n• Date\n• Location/site\n• Reflection (if available) - location in eportfolio",
               "label": "Please provide a brief summary, including where you were working, the date of the event, and your reflection where appropriate. If known, please identify what investigations are pending relating to the event and which organisation is undertaking the investigation.",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "haveCurrentUnresolvedDeclarations",
-                "values": [true]
-              }
+              "visibleIf": [true],
+              "parent": "haveCurrentUnresolvedDeclarations"
             }
           ]
         }
@@ -502,11 +476,8 @@
               "name": "covidDeclarationDto",
               "type": "dto",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "haveCovidDeclarations",
-                "values": [true]
-              },
+              "visibleIf": [true],
+              "parent": "haveCovidDeclarations",
               "objectFields": [
                 {
                   "name": "selfRateForCovid",
@@ -521,14 +492,11 @@
                   "type": "textArea",
                   "placeholder": "type here...",
                   "visible": false,
-                  "visibleIf": {
-                    "matcher": "valueInList",
-                    "field": "selfRateForCovid",
-                    "values": [
-                      "Below expectations for stage of training - needs further development",
-                      "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
-                    ]
-                  }
+                  "visibleIf": [
+                    "Below expectations for stage of training - needs further development",
+                    "Satisfactory progress meeting expectations for stage of training but some required competencies not met due to COVID 19"
+                  ],
+                  "parent": "selfRateForCovid"
                 },
                 {
                   "name": "otherInformationForPanel",
@@ -564,33 +532,24 @@
                   "type": "select",
                   "optionsKey": "covidChangeCircs",
                   "visible": false,
-                  "visibleIf": {
-                    "matcher": "valueInList",
-                    "field": "haveChangesToPlacement",
-                    "values": [true]
-                  }
+                  "visibleIf": [true],
+                  "parent": "haveChangesToPlacement"
                 },
                 {
                   "name": "changeCircumstanceOther",
                   "label": "Please Specify 'Other'",
                   "type": "textArea",
                   "visible": false,
-                  "visibleIf": {
-                    "matcher": "valueInList",
-                    "field": "changeCircumstances",
-                    "values": ["Other"]
-                  }
+                  "visibleIf": ["Other"],
+                  "parent": "changeCircumstances"
                 },
                 {
                   "name": "howPlacementAdjusted",
                   "label": "Please explain further how your placement was adjusted",
                   "type": "textArea",
                   "visible": false,
-                  "visibleIf": {
-                    "matcher": "valueInList",
-                    "field": "haveChangesToPlacement",
-                    "values": [true]
-                  }
+                  "visibleIf": [true],
+                  "parent": "haveChangesToPlacement"
                 },
                 {
                   "name": "educationSupervisorName",
@@ -635,7 +594,7 @@
     },
     {
       "name": "isConsentAccepted",
-      "label": "I give permission for my past and present ARCP portfolios and/or appraisal documentation to be viewed by appropriate training programme representatives for the purposes of training oversight and progression. For trainees who are registered with the General Medical Council (GMC), this includes viewing by my Responsible Officer (RO) and sharing with my Designated Body for the purposes of revalidation. Where my Responsible Officer or Designated Body changes during my training, I consent (where applicable) to relevant information being shared with my new Responsible Officer to support continuity of training and professional regulatory requirements."
+      "label": "I give permission for my past and present ARCP portfolios and / or appraisal documentation to be viewed by my Responsible Officer and any appropriate person nominated by the Responsible Officer. Additionally if my Responsible Officer or Designated Body changes during my training period, I give permission for my current Responsible Officer to share this information with my new Responsible Officer for the purposes of Revalidation."
     }
   ]
 }

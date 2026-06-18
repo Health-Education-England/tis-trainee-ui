@@ -19,7 +19,7 @@
             },
             {
               "name": "surname",
-              "label": "Surname (as registered with your professional regulator, where applicable, e.g. GMC)",
+              "label": "GMC-Registered Surname",
               "placeholder": "type here...",
               "type": "text",
               "visible": true,
@@ -60,14 +60,11 @@
               "placeholder": "type here...",
               "type": "text",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "immigrationStatus",
-                "values": [
-                  "Dependent - other immigration category",
-                  "Other immigration categories i.e. overseas government employees, innovators etc."
-                ]
-              }
+              "visibleIf": [
+                "Dependent - other immigration category",
+                "Other immigration categories i.e. overseas government employees, innovators etc."
+              ],
+              "parent": "immigrationStatus"
             },
             {
               "name": "qualification",
@@ -117,12 +114,10 @@
               "placeholder": "type...",
               "type": "text",
               "visible": true,
-              "warnings": [
-                {
-                  "matcher": "postcodeTest",
-                  "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
-                }
-              ]
+              "warning": {
+                "matcher": "postcodeTest",
+                "msgText": "Warning: Non-UK postcode detected. Please ignore if valid."
+              }
             },
             {
               "name": "telephoneNumber",
@@ -176,13 +171,10 @@
               "label": "Specialty 1 for Award of CCT",
               "type": "select",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "declarationType",
-                "values": [
-                  "I have been appointed to a programme leading to award of CCT"
-                ]
-              },
+              "visibleIf": [
+                "I have been appointed to a programme leading to award of CCT"
+              ],
+              "parent": "declarationType",
               "optionsKey": "curriculum"
             },
             {
@@ -190,13 +182,10 @@
               "label": "Specialty 2 for Award of CCT",
               "type": "select",
               "visible": false,
-              "visibleIf": {
-                "matcher": "valueInList",
-                "field": "declarationType",
-                "values": [
-                  "I have been appointed to a programme leading to award of CCT"
-                ]
-              },
+              "visibleIf": [
+                "I have been appointed to a programme leading to award of CCT"
+              ],
+              "parent": "declarationType",
               "optionsKey": "curriculum"
             },
             {
@@ -264,7 +253,7 @@
     },
     {
       "name": "willKeepInformed",
-      "label": "I will keep my professional regulator (where applicable, e.g. GMC) and my training body informed as soon as possible of any changes to my contact details."
+      "label": "I will keep my Designated Body and the GMC informed as soon as possible of any change to my contact details."
     }
   ]
 }

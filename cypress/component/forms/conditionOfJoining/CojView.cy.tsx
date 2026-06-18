@@ -2,7 +2,7 @@
 /// <reference path="../../../../cypress/support/index.d.ts" />
 
 import { mount } from "cypress/react";
-import { mockTraineeProfile, mockTraineeProfilePhNonMedic } from "../../../../mock-data/trainee-profile";
+import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 import {
   COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE,
   NO_MATCHING_PM_ERROR_MESSAGE
@@ -155,7 +155,6 @@ describe("Conditions of Joining View - signed", () => {
   });
   it("renders the readonly GG9 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
     mount(<MockCojView {...mockProps} />);
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testPDFSaveButton();
     testSignedForm("GG9");
   });
@@ -167,7 +166,6 @@ describe("Conditions of Joining View - signed", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testPDFSaveButton();
     testSignedForm("GG10");
   });
@@ -178,7 +176,6 @@ describe("Conditions of Joining View - unsigned", () => {
     mount(
       <MockCojView {...mockProps} conditionsOfJoiningSignedAtDate={null} />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testUnsignedForm("GG9");
   });
 
@@ -190,7 +187,6 @@ describe("Conditions of Joining View - unsigned", () => {
         conditionsOfJoiningVersion={"GG10" as CojVersionType}
       />
     );
-    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testUnsignedForm("GG10");
   });
 });

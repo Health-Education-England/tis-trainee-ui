@@ -1,4 +1,4 @@
-import { ApiResponse } from "../apiService";
+import { AxiosResponse } from "axios";
 import { FormsService } from "../FormsService";
 import { submittedFormRPartAs } from "../../mock-data/submitted-formr-parta";
 import { submittedFormRPartBs } from "../../mock-data/submitted-formr-partb";
@@ -11,37 +11,42 @@ const mockService = new FormsService();
 describe("FormsService", () => {
   it("downloadTraineeCojPdf method should download PDF from server", async () => {
     const programmeMembership = mockProgrammeMemberships[0];
-    const successResponse: ApiResponse<Blob> = {
+    const successResponse: AxiosResponse<Blob> = {
       data: new Blob(),
       status: 200,
       statusText: "OK",
       headers: {},
-      config: {}
+      config: { headers: {} } as any
     };
 
-    jest.spyOn(mockService, "put").mockResolvedValue(successResponse);
+    jest
+      .spyOn(mockService.axiosInstance, "put")
+      .mockResolvedValue(successResponse);
 
     const result = await mockService.downloadTraineeCojPdf(programmeMembership);
 
-    expect(mockService.put).toHaveBeenCalledWith("/coj", programmeMembership, {
-      headers: {
-        Accept: "application/pdf"
-      },
-      responseType: "blob"
-    });
+    expect(mockService.axiosInstance.put).toHaveBeenCalledWith(
+      "/coj",
+      programmeMembership,
+      {
+        headers: {
+          Accept: "application/pdf"
+        },
+        responseType: "blob"
+      }
+    );
     expect(result).toEqual(successResponse);
   });
 
   it("getTraineeFormRPartA method should return success response", () => {
-    const successResponse: Promise<ApiResponse<FormRPartA[]>> = Promise.resolve(
-      {
+    const successResponse: Promise<AxiosResponse<FormRPartA[]>> =
+      Promise.resolve({
         data: submittedFormRPartAs,
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {}
-      }
-    );
+        config: { headers: {} } as any
+      });
 
     jest.spyOn(mockService, "get").mockReturnValue(successResponse);
 
@@ -49,13 +54,15 @@ describe("FormsService", () => {
   });
 
   it("saveTraineeFormRPartA method should return success response", () => {
-    const successResponse: Promise<ApiResponse<FormRPartA>> = Promise.resolve({
-      data: submittedFormRPartAs[0],
-      status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {}
-    });
+    const successResponse: Promise<AxiosResponse<FormRPartA>> = Promise.resolve(
+      {
+        data: submittedFormRPartAs[0],
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config: { headers: {} } as any
+      }
+    );
 
     jest.spyOn(mockService, "post").mockReturnValue(successResponse);
 
@@ -65,15 +72,14 @@ describe("FormsService", () => {
   });
 
   it("getTraineeFormRPartB method should return success response", () => {
-    const successResponse: Promise<ApiResponse<FormRPartB[]>> = Promise.resolve(
-      {
+    const successResponse: Promise<AxiosResponse<FormRPartB[]>> =
+      Promise.resolve({
         data: submittedFormRPartBs,
         status: 200,
         statusText: "OK",
         headers: {},
-        config: {}
-      }
-    );
+        config: { headers: {} } as any
+      });
 
     jest.spyOn(mockService, "get").mockReturnValue(successResponse);
 
@@ -81,13 +87,15 @@ describe("FormsService", () => {
   });
 
   it("saveTraineeFormRPartB method should return success response", () => {
-    const successResponse: Promise<ApiResponse<FormRPartB>> = Promise.resolve({
-      data: submittedFormRPartBs[0],
-      status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {}
-    });
+    const successResponse: Promise<AxiosResponse<FormRPartB>> = Promise.resolve(
+      {
+        data: submittedFormRPartBs[0],
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config: { headers: {} } as any
+      }
+    );
 
     jest.spyOn(mockService, "post").mockReturnValue(successResponse);
 
@@ -104,12 +112,12 @@ describe("FormsService", () => {
     });
   });
   it("deleteTraineeFormRPartA method should return success response", () => {
-    const successResponse: Promise<ApiResponse> = Promise.resolve({
+    const successResponse: Promise<AxiosResponse> = Promise.resolve({
       data: {},
       status: 204,
       statusText: "OK",
       headers: {},
-      config: {}
+      config: { headers: {} } as any
     });
 
     jest.spyOn(mockService, "delete").mockReturnValue(successResponse);
@@ -117,12 +125,12 @@ describe("FormsService", () => {
     expect(mockService.deleteTraineeFormRPartA("123")).toEqual(successResponse);
   });
   it("deleteTraineeFormRPartB method should return success response", () => {
-    const successResponse: Promise<ApiResponse> = Promise.resolve({
+    const successResponse: Promise<AxiosResponse> = Promise.resolve({
       data: {},
       status: 204,
       statusText: "OK",
       headers: {},
-      config: {}
+      config: { headers: {} } as any
     });
 
     jest.spyOn(mockService, "delete").mockReturnValue(successResponse);

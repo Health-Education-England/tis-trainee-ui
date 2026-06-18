@@ -1,86 +1,214 @@
+import {
+  mockLtftDraft0,
+  mockLtftDraft1,
+  mockLtftDto1
+} from "../../mock-data/mock-ltft-data";
+import { mockCctCalc } from "../../mock-data/mock-cct-data";
 import { mockPersonalDetails } from "../../mock-data/trainee-profile";
 import {
-  findLatestSubmissionDate,
   mapLtftDtoToObj,
   mapLtftObjToDto,
-  populateLtftDraftNew
+  populateLtftDraft
 } from "../ltftUtilities";
-import {
-  mockLtftDraftFirstSuccessSaveResponseDto,
-  mockLtftDraftUpdatedPmFormDtoFirstSavePayload,
-  mockLtftDraftUpdatedPmFormObjNoSave,
-  mockLtftFormObjAfterFirstSave,
-  mockLtftNewFormObj,
-  mockLtftWithCurrentSubmission,
-  mockLtftWithMultipleSubmissionHistory,
-  mockLtftWithNoSubmissionHistory,
-  mockLtftWithSingleSubmissionHistory
-} from "../../mock-data/mock-ltft-data";
+import { StatusInfo } from "../../models/LtftTypes";
+const otherDiscussions = [
+  {
+    name: "My other discussion 1",
+    email: "My other discussion 1 email",
+    role: "Associate Dean"
+  },
+  {
+    name: "My other discussion 2",
+    email: "My other discussion 2 email",
+    role: "Educational Supervisor (ES)"
+  }
+];
 
-describe("populateLtftDraftNew", () => {
+const statusData = {
+  current: {
+    state: "DRAFT",
+    detail: {
+      reason: "",
+      message: ""
+    },
+    modifiedBy: {
+      name: "",
+      email: "",
+      role: ""
+    },
+    timestamp: "",
+    revision: 0
+  } as StatusInfo,
+  history: [] as StatusInfo[]
+};
+
+const dateCreated = "2025-02-01T00:00:00Z";
+const dateModified = "2025-02-02T00:00:00Z";
+
+describe("populateLtftDraft", () => {
+  const cctSnapshot = mockCctCalc;
   const personalDetails = mockPersonalDetails;
-  const traineeTisId = "47165";
+  const traineeTisId = "4";
   it("should populate the ltft draft correctly", () => {
-    const ltftDraft = populateLtftDraftNew(personalDetails, traineeTisId);
-
-    const expectedLtftDraft = {
-      ...mockLtftNewFormObj,
-      personalDetails: {
-        ...mockLtftNewFormObj.personalDetails,
-        mobileNumber: "07465879348",
-        gdcNumber: "",
-        publicHealthNumber: ""
-      }
-    };
-    expect(ltftDraft).toEqual(expectedLtftDraft);
+    const ltftDraft = populateLtftDraft(
+      cctSnapshot,
+      personalDetails,
+      traineeTisId
+    );
+    expect(ltftDraft).toEqual(mockLtftDraft0);
   });
 });
 
 describe("mapLtftObjToDto", () => {
-  it("should map LtftObj to DTO correctly", () => {
-    const mappedDto = mapLtftObjToDto(mockLtftDraftUpdatedPmFormObjNoSave);
-    expect(mappedDto).toEqual(mockLtftDraftUpdatedPmFormDtoFirstSavePayload);
+  const ltftDto = mapLtftObjToDto({
+    ...mockLtftDraft1,
+    otherDiscussions: otherDiscussions,
+    status: statusData,
+    created: dateCreated,
+    lastModified: dateModified
+  });
+  it("should map discussions correctly", () => {
+    expect(ltftDto.discussions).toEqual({
+      tpdName: "",
+      tpdEmail: "",
+      other: otherDiscussions
+    });
   });
 
-  it("should map empty altStartDate to null", () => {
-    const mappedDto = mapLtftObjToDto({
-      ...mockLtftDraftUpdatedPmFormObjNoSave,
-      altStartDate: ""
+  it("should map reasons correctly", () => {
+    expect(ltftDto.reasons).toEqual({
+      selected: [],
+      otherDetail: "",
+      supportingInformation: null
     });
+  });
 
-    expect(mappedDto.change.altStartDate).toBeNull();
+  it("should map other properties correctly", () => {
+    expect(ltftDto.id).toBe("fc13458c-5b0b-442f-8907-6f9af8fc0ffb");
+    expect(ltftDto.name).toBe("My Programme - Hours Reduction");
+    expect(ltftDto.change).toEqual({
+      calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+      cctDate: "2028-04-02",
+      type: "LTFT",
+      startDate: "2027-01-01",
+      wte: 0.8
+    });
+    expect(ltftDto.declarations).toEqual({
+      discussedWithTpd: true,
+      informationIsCorrect: true,
+      notGuaranteed: true
+    });
+    expect(ltftDto.personalDetails).toEqual({
+      title: "Mr",
+      surname: "Gilliam",
+      forenames: "Anthony Mara",
+      telephoneNumber: "01632960363",
+      mobileNumber: "07465879348",
+      email: "email@email.com",
+      gmcNumber: "1111111",
+      gdcNumber: "",
+      publicHealthNumber: "",
+      skilledWorkerVisaHolder: false
+    });
+    expect(ltftDto.programmeMembership).toEqual({
+      id: "a6de88b8-de41-48dd-9492-a518f5001176",
+      name: "Cardiology",
+      startDate: "2020-01-01",
+      endDate: "2028-01-01",
+      wte: 1,
+      designatedBodyCode: "WTF3",
+      managingDeanery: "North North West"
+    });
+    expect(ltftDto.status).toEqual(statusData);
+    expect(ltftDto.created).toBe(dateCreated);
+    expect(ltftDto.lastModified).toBe(dateModified);
   });
 });
 
 describe("mapDtoToLtftObj", () => {
-  it("should map DTO to LtftObj correctly", () => {
-    const ltftObj = mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto);
-    expect(ltftObj).toEqual(mockLtftFormObjAfterFirstSave);
+  const mockLtftObj = mapLtftDtoToObj({
+    traineeTisId: "4",
+    ...mockLtftDto1,
+    discussions: {
+      tpdName: "My tpd name",
+      tpdEmail: "email@4.tpd",
+      other: otherDiscussions
+    },
+    change: {
+      calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+      cctDate: "2028-04-02",
+      type: "LTFT",
+      startDate: "2027-01-01",
+      wte: 0.8
+    },
+    reasons: {
+      selected: ["Unique opportunities", "other"],
+      otherDetail: "my other reason 2",
+      supportingInformation: "my supporting info"
+    },
+    status: statusData,
+    created: dateCreated,
+    lastModified: dateModified,
+    formRef: "ltft_-1_003"
+  });
+  it("should map discussions correctly", () => {
+    expect(mockLtftObj.tpdName).toEqual("My tpd name");
+    expect(mockLtftObj.tpdEmail).toEqual("email@4.tpd");
+    expect(mockLtftObj.otherDiscussions).toEqual(otherDiscussions);
+  });
+
+  it("should map reasons correctly", () => {
+    expect(mockLtftObj.reasonsSelected).toEqual([
+      "Unique opportunities",
+      "other"
+    ]);
+    expect(mockLtftObj.reasonsOtherDetail).toEqual("my other reason 2");
+    expect(mockLtftObj.supportingInformation).toEqual("my supporting info");
+  });
+
+  it("should map other properties correctly", () => {
+    expect(mockLtftObj.id).toBe("fc13458c-5b0b-442f-8907-6f9af8fc0ffb");
+    expect(mockLtftObj.name).toBe("My Programme - Hours Reduction");
+    expect(mockLtftObj.change).toEqual({
+      calculationId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      cctDate: "2028-04-02",
+      changeId: "fc13458c-5b0b-442f-8907-6f9af8fc0ffb",
+      type: "LTFT",
+      startDate: "2027-01-01",
+      wte: 0.8
+    });
+    expect(mockLtftObj.declarations).toEqual({
+      discussedWithTpd: true,
+      informationIsCorrect: true,
+      notGuaranteed: true
+    });
+    expect(mockLtftObj.traineeTisId).toEqual("4");
+    expect(mockLtftObj.personalDetails).toEqual({
+      title: "Mr",
+      surname: "Gilliam",
+      forenames: "Anthony Mara",
+      telephoneNumber: "01632960363",
+      mobileNumber: "07465879348",
+      email: "email@email.com",
+      gmcNumber: "1111111",
+      gdcNumber: "",
+      publicHealthNumber: "",
+      skilledWorkerVisaHolder: false
+    });
+    expect(mockLtftObj.programmeMembership).toEqual({
+      id: "a6de88b8-de41-48dd-9492-a518f5001176",
+      name: "Cardiology",
+      startDate: "2020-01-01",
+      endDate: "2028-01-01",
+      wte: 1,
+      designatedBodyCode: "WTF3",
+      managingDeanery: "North North West"
+    });
+    expect(mockLtftObj.status).toEqual(statusData);
+    expect(mockLtftObj.created).toBe(dateCreated);
+    expect(mockLtftObj.lastModified).toBe(dateModified);
   });
 });
 
-describe("findLatestSubmissionDate", () => {
-  it("should return null if there is no submission history", () => {
-    expect(
-      findLatestSubmissionDate(mockLtftWithNoSubmissionHistory)
-    ).toBeNull();
-  });
-
-  it("should return the correct date when there is a single submission in history", () => {
-    expect(
-      findLatestSubmissionDate(mockLtftWithSingleSubmissionHistory)
-    ).toEqual("2026-01-14T10:00:00.000Z");
-  });
-
-  it("should return the latest date when there are multiple submissions in history", () => {
-    expect(
-      findLatestSubmissionDate(mockLtftWithMultipleSubmissionHistory)
-    ).toEqual("2026-01-18T10:00:00.000Z");
-  });
-
-  it("should return the current timestamp if the current status is SUBMITTED and is latest", () => {
-    expect(findLatestSubmissionDate(mockLtftWithCurrentSubmission)).toEqual(
-      "2026-01-25T10:00:00.000Z"
-    );
-  });
-});

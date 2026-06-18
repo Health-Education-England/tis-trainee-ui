@@ -62,7 +62,7 @@ export const mockProgrammeMemberships: ProgrammeMembership[] = [
     startDate: new Date("2020-01-01"),
     endDate: dayjs().add(3, "year").toDate(),
     programmeCompletionDate: new Date("2019-12-31"),
-    tisId: "7ab1aae3-83c2-4bb6-b1f3-99146e79b362",
+    tisId: "1",
     programmeName: "Cardiology",
     programmeNumber: "EOE8945",
     trainingNumber: "EOE/ABC-123/1111111/C",
@@ -758,19 +758,6 @@ export const mockTraineeProfileNoGMC: TraineeProfile = {
   placements: mockPlacements
 };
 
-export const mockTraineeProfilePhNonMedic: TraineeProfile = {
-  traineeTisId: "789",
-  personalDetails: {
-    ...mockPersonalDetails,
-    publicHealthNumber: "1234567",
-    gmcNumber: "",
-    gdcNumber: ""
-  },
-  qualifications: [],
-  programmeMemberships: mockProgrammeMemberships,
-  placements: mockPlacements
-};
-
 export const mockPlacementsForGrouping: Placement[] = [
   // Past
   {
@@ -1149,52 +1136,6 @@ export const mockUserFeaturesSpecialty: UserFeaturesType = {
     },
     ltft: {
       enabled: false, // Pilot-only.
-      qualifyingProgrammes: []
-    }
-  },
-  notifications: {
-    enabled: true
-  },
-  news: {
-    enabled: true
-  }
-};
-
-export const mockUserFeaturesFoundation: UserFeaturesType = {
-  actions: {
-    enabled: true
-  },
-  cct: {
-    enabled: true
-  },
-  details: {
-    enabled: true,
-    placements: {
-      enabled: true
-    },
-    profile: {
-      enabled: true,
-      gmcUpdate: {
-        enabled: true
-      }
-    },
-    programmes: {
-      enabled: true,
-      conditionsOfJoining: {
-        enabled: false
-      },
-      confirmation: {
-        enabled: true
-      }
-    }
-  },
-  forms: {
-    enabled: false,
-    formr: {
-      enabled: false
-    },
-    ltft: {
-      enabled: false,
       qualifyingProgrammes: []
     }
   },

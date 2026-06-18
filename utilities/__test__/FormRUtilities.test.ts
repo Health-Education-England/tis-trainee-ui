@@ -10,20 +10,6 @@ import {
   sortProgrammesForLinker
 } from "../FormRUtilities";
 
-jest.mock("../../redux/store/store", () => ({
-  dispatch: jest.fn()
-}));
-
-jest.mock("../../redux/slices/formASlice", () => ({
-  updatedCanEdit: jest.fn(),
-  loadSavedFormA: jest.fn()
-}));
-
-jest.mock("../../redux/slices/formBSlice", () => ({
-  updatedCanEditB: jest.fn(),
-  loadSavedFormB: jest.fn()
-}));
-
 describe("FormRUtilities - filterProgrammesForLinker", () => {
   it("should return 'ARCP' programmes", () => {
     const programmes = mockProgrammesForLinkerTest;

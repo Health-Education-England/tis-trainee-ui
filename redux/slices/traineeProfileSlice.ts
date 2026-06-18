@@ -1,17 +1,12 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  PayloadAction,
-  createSelector
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosResponse } from "axios";
 import { TraineeProfile } from "../../models/TraineeProfile";
 import { TraineeProfileService } from "../../services/TraineeProfileService";
-import { ApiResponse } from "../../services/apiService";
 import {
   initialPersonalDetails,
   PersonalDetails
 } from "../../models/PersonalDetails";
-import { DateUtilities, isPastIt } from "../../utilities/DateUtilities";
+import { DateUtilities } from "../../utilities/DateUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 import { toastErrText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
@@ -20,7 +15,6 @@ export interface IProfile {
   traineeProfileData: TraineeProfile;
   status: string;
   gmcStatus: string;
-  emailStatus: string;
   error: any;
 }
 
@@ -34,7 +28,6 @@ export const initialState: IProfile = {
   },
   status: "idle",
   gmcStatus: "idle",
-  emailStatus: "idle",
   error: ""
 };
 
@@ -42,7 +35,7 @@ export const fetchTraineeProfileData = createAsyncThunk(
   "traineeProfile/fetchTraineeProfileData",
   async () => {
     const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<TraineeProfile> =
+    const response: AxiosResponse<TraineeProfile> =
       await traineeProfileService.getTraineeProfile();
     return response.data;
   }
@@ -52,7 +45,7 @@ export const signCoj = createAsyncThunk(
   "traineeProfile/programmeMembership/signCoj",
   async (programmeMembershipId: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<ProgrammeMembership> =
+    const response: AxiosResponse<ProgrammeMembership> =
       await traineeProfileService.signCoj(programmeMembershipId);
     return response.data;
   }
@@ -62,18 +55,8 @@ export const updateGmc = createAsyncThunk(
   "traineeProfile/personalDetails/updateGmc",
   async (gmc: string) => {
     const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<PersonalDetails> =
+    const response: AxiosResponse<PersonalDetails> =
       await traineeProfileService.updateGmc(gmc);
-    return response.data;
-  }
-);
-
-export const updateEmail = createAsyncThunk(
-  "traineeProfile/personalDetails/updateEmail",
-  async (email: string) => {
-    const traineeProfileService = new TraineeProfileService();
-    const response: ApiResponse<void> =
-      await traineeProfileService.updateEmail(email);
     return response.data;
   }
 );
@@ -155,21 +138,6 @@ const traineeProfileSlice = createSlice({
         state.gmcStatus = "failed";
         state.error = action.error.message;
         showToast("GMC number could not be updated", ToastType.ERROR);
-      })
-      .addCase(updateEmail.pending, (state, _action) => {
-        state.emailStatus = "loading";
-      })
-      .addCase(updateEmail.fulfilled, (state, _action) => {
-        state.emailStatus = "succeeded";
-        showToast(
-          "Your email update request has been sent. You will receive an email to your new address once the update has been applied",
-          ToastType.SUCCESS
-        );
-      })
-      .addCase(updateEmail.rejected, (state, action) => {
-        state.emailStatus = "failed";
-        state.error = action.error.message;
-        showToast("Email update request failed ", ToastType.ERROR);
       });
   }
 });
@@ -184,9 +152,3 @@ export const {
 
 export const selectTraineeProfile = (state: { traineeProfile: IProfile }) =>
   state.traineeProfile.traineeProfileData;
-
-export const selectPmsNotPast = createSelector(
-  selectTraineeProfile,
-  traineeProfile =>
-    traineeProfile.programmeMemberships.filter(pm => !isPastIt(pm.endDate))
-);

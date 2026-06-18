@@ -4,14 +4,15 @@ import {
   colourStyles,
   handleKeyDown
 } from "../../../../utilities/FormBuilderUtilities";
+import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
-import { FieldWrapper } from "./FieldWrapper";
+import { Hint } from "nhsuk-react-components";
 
 type SelectorProps = {
   name: string;
-  label?: string;
+  label: string | undefined;
   options: any;
-  fieldError?: string;
+  fieldError: string;
   value: string | string[];
   arrayIndex?: number;
   arrayName?: string;
@@ -36,53 +37,63 @@ export const Selector = ({
 }: SelectorProps) => {
   const { handleChange } = useFormContext();
 
+  const inputId =
+    arrayIndex !== undefined && arrayName
+      ? `${arrayName}-${arrayIndex}-${name}--input`
+      : name;
+  const labelId = `${inputId}--label`;
+
   return (
-    <FieldWrapper
-      name={name}
-      label={label}
-      hint={hint}
-      fieldError={fieldError}
-      arrayIndex={arrayIndex}
-      arrayName={arrayName}
-    >
-      {({ inputId, labelId, errorId }) => (
-        <Select
-          inputId={inputId}
-          aria-labelledby={labelId}
-          aria-describedby={fieldError ? errorId : undefined}
-          onKeyDown={handleKeyDown}
-          options={options}
-          onChange={selectedOption =>
-            handleChange(
-              {
-                currentTarget: {
-                  name,
-                  value: selectedOption ?? ""
-                }
-              },
-              selectedOption,
-              undefined,
-              arrayIndex,
-              arrayName,
-              dtoName
-            )
-          }
-          className="autocomplete-select"
-          classNamePrefix="react-select"
-          theme={theme => ({ ...theme, borderRadius: 0 })}
-          styles={colourStyles}
-          placeholder={placeholder}
-          value={
-            isMultiSelect
-              ? options?.filter((option: any) =>
-                  (value as string[])?.includes(option.value)
-                )
-              : options?.filter((option: any) => option.value === value)
-          }
-          isClearable
-          isMulti={isMultiSelect}
-        />
+    <div data-cy={name}>
+      <label
+        className="nhsuk-label"
+        htmlFor={inputId}
+        id={labelId}
+        data-cy={`${name}-label`}
+      >
+        {label}
+      </label>
+      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      <Select
+        inputId={inputId}
+        aria-labelledby={labelId}
+        onKeyDown={handleKeyDown}
+        options={options}
+        onChange={selectedOption =>
+          handleChange(
+            {
+              currentTarget: {
+                name,
+                value: selectedOption ?? ""
+              }
+            },
+            selectedOption,
+            undefined,
+            arrayIndex,
+            arrayName,
+            dtoName
+          )
+        }
+        className="autocomplete-select"
+        classNamePrefix="react-select"
+        theme={theme => ({
+          ...theme,
+          borderRadius: 0
+        })}
+        styles={colourStyles}
+        placeholder={placeholder}
+        value={
+          isMultiSelect
+            ? options?.filter((option: any) => value.includes(option.value))
+            : options?.filter((option: any) => option.value === value)
+        }
+        isClearable={true}
+        isMulti={isMultiSelect}
+        // closeMenuOnSelect={!isMultiSelect}
+      />
+      {fieldError && (
+        <FieldErrorInline fieldError={fieldError} fieldName={name} />
       )}
-    </FieldWrapper>
+    </div>
   );
 };

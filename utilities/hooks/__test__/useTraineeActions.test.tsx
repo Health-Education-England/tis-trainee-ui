@@ -16,7 +16,6 @@ const mockTraineeProfile: IProfile = {
   traineeProfileData: mockProfileDataToTestPlacementActions,
   status: "Succeeded",
   gmcStatus: "idle",
-  emailStatus: "idle",
   error: ""
 };
 

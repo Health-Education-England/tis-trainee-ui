@@ -7,14 +7,13 @@ import {
   selectAllSubmittedforms,
   updatedFormsRefreshNeeded
 } from "../../../../redux/slices/formsSlice";
-import FormRListBtn from "./FormRListBtn";
+import FormsListBtn from "../../FormsListBtn";
 import { useLocation } from "react-router-dom";
-import SubmittedFormRList from "./SubmittedFormRList";
+import SubmittedFormsList from "../../SubmittedFormsList";
 import { Col, Container, Row } from "nhsuk-react-components";
 import { StartOverButton } from "../../StartOverButton";
 import { FormName } from "../FormBuilder";
 import ErrorPage from "../../../common/ErrorPage";
-import { resetForm } from "../../../../utilities/FormBuilderUtilities";
 
 export function FormRHome() {
   const dispatch = useAppDispatch();
@@ -34,10 +33,9 @@ export function FormRHome() {
   );
 
   useEffect(() => {
-    resetForm(formName);
     dispatch(fetchForms(pathname));
     dispatch(updatedFormsRefreshNeeded(false));
-  }, [dispatch, pathname, needFormsRefresh, formName]);
+  }, [dispatch, pathname, needFormsRefresh]);
 
   if (formRListStatus === "loading") return <Loading />;
   if (formRListStatus === "failed")
@@ -52,7 +50,7 @@ export function FormRHome() {
         <Container>
           <Row>
             <Col width="one-third">
-              <FormRListBtn pathName={pathname} />
+              <FormsListBtn pathName={pathname} />
             </Col>
           </Row>
           <Row>
@@ -65,7 +63,7 @@ export function FormRHome() {
             </Col>
           </Row>
         </Container>
-        <SubmittedFormRList
+        <SubmittedFormsList
           formRList={submittedListDesc}
           path={pathname}
           latestSubDate={latestSubDate}

@@ -1,4 +1,4 @@
-import { Field, Form, FormData, FormErrorsType, FormName } from "./FormBuilder";
+import { Field, Form, FormData, FormName } from "./FormBuilder";
 import { Card, SummaryList } from "nhsuk-react-components";
 import {
   formatFieldName,
@@ -10,10 +10,14 @@ import { DateUtilities } from "../../../utilities/DateUtilities";
 import { strDateRegex } from "../../../utilities/Constants";
 import { Link } from "react-router-dom";
 
+type FieldError = string | { [key: string]: FieldError } | FieldError[];
+
+type FormErrors = { [key: string]: FieldError };
+
 type VisibleFieldProps = {
   field: Field;
   formData: FormData;
-  formErrors: FormErrorsType;
+  formErrors: FormErrors;
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
@@ -66,28 +70,17 @@ function VisibleField({
         </div>
       );
     }
-    const error = formErrors[field.name];
-    const errorMessage = typeof error === "string" ? error : null;
-
     return (
       <SummaryList className="nhsuk-u-margin-bottom-4">
         <SummaryList.Row key={field.name}>
-          <SummaryList.Key data-cy={`${field.name}-label`} id={field.name}>
-            <span>{field.label}</span>
-            {errorMessage && (
-              <span className="nhsuk-error-message">
-                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
-                {errorMessage}
-              </span>
-            )}
+          <SummaryList.Key
+            data-cy={`${field.name}-label`}
+            className={formErrors[field.name] ? "nhsuk-error-message" : ""}
+          >
+            {field.label}
           </SummaryList.Key>
           <SummaryList.Value data-cy={`${field.name}-value`}>
-            {formatEntryValue(
-              field.altDisplayVal
-                ? formData[field.altDisplayVal]
-                : formData[field.name],
-              field.type
-            )}
+            {formatEntryValue(formData[field.name], field.type)}
           </SummaryList.Value>
           {canEdit && (
             <SummaryList.Actions>
@@ -110,7 +103,7 @@ type FormViewBuilder = {
   jsonForm: Form;
   formData: FormData;
   canEdit: boolean;
-  formErrors: FormErrorsType;
+  formErrors: FormErrors;
 };
 
 export default function FormViewBuilder({
@@ -181,7 +174,7 @@ type ArrayFieldRendererProps = {
   canEdit: boolean;
   pageIndex: number;
   jsonFormName: FormName;
-  formErrors: FormErrorsType;
+  formErrors: FormErrors;
 };
 
 function ArrayFieldRenderer({
@@ -193,26 +186,12 @@ function ArrayFieldRenderer({
   formErrors
 }: Readonly<ArrayFieldRendererProps>) {
   if (!fieldVal || fieldVal.length === 0) {
-    const errorMessage = formErrors[field.name] as string;
     return (
       <ArrayPanel
         title={
-          <>
-            <p
-              data-cy="empty-array-panel-val"
-              style={{ fontSize: "19px" }}
-              id={field.name}
-              tabIndex={-1}
-            >
-              Not provided
-            </p>
-            {errorMessage && (
-              <span className="nhsuk-error-message">
-                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
-                {errorMessage}
-              </span>
-            )}
-          </>
+          <p data-cy="empty-array-panel-val" style={{ fontSize: "19px" }}>
+            Not provided
+          </p>
         }
         action={
           canEdit ? (
@@ -260,31 +239,21 @@ function ArrayFieldRenderer({
               const itemErrors = Array.isArray(arrayErrors)
                 ? arrayErrors[index]
                 : null;
-              let errorMessage: string | null = null;
+              let hasError = false;
               if (
                 itemErrors &&
                 typeof itemErrors === "object" &&
                 !Array.isArray(itemErrors)
               ) {
-                const err = itemErrors[key];
-                if (typeof err === "string") {
-                  errorMessage = err;
-                }
+                hasError = !!itemErrors[key];
               }
               return (
                 <SummaryList.Row key={i}>
                   <SummaryList.Key
                     data-cy={`${key}-key`}
-                    id={`${field.name}-${index}-${key}`}
-                    tabIndex={-1}
+                    className={hasError ? "nhsuk-error-message" : ""}
                   >
-                    <span>{formatFieldName(key)}</span>
-                    {errorMessage && (
-                      <span className="nhsuk-error-message">
-                        <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
-                        {errorMessage}
-                      </span>
-                    )}
+                    {formatFieldName(key)}
                   </SummaryList.Key>
                   <SummaryList.Value data-cy={`${key}-value`}>
                     {formatEntryValue(value, valueType)}

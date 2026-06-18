@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import store from "../../../redux/store/store";
 import FormSavePDF from "../../../components/forms/FormSavePDF";
+import { FormRUtilities } from "../../../utilities/FormRUtilities";
 import history from "../../../components/navigation/history";
 import React, { ReactNode } from "react";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
@@ -20,22 +21,24 @@ const mountWithProviders = (children: ReactNode) => {
 
 describe("FormSavePDF", () => {
   it("should show the 'PDF help' link when 'save Pdf' button clicked and no matched PM", () => {
-    cy.stub(window, "print").as("PrintPDF");
+    // cy.stub(FormRUtilities, "historyPush").as("Back"); //TODO refactor to use history directly
+    cy.stub(FormRUtilities, "windowPrint").as("PrintPDF");
+
     mountWithProviders(<FormSavePDF pmId="1" />);
     cy.get("[data-cy=pdfHelpLink]").should("not.exist");
     cy.get("[data-cy=savePdfBtn]").click();
     cy.get("@PrintPDF").should("have.been.called");
     cy.get("[data-cy=pdfHelpLink]").should("exist");
+    cy.get("[data-cy=backLink]").click();
+    cy.get("@Back").should("have.been.called");
   });
-});
 
-describe("Save PDF matched PM", () => {
   it("should not show the 'PDF help' link when 'save Pdf' button clicked and matched PM", () => {
     cy.stub(FileUtilities, "downloadPdf").as("DownloadPDF");
     const MockedFormsListBtnNoDraftForms = () => {
       const dispatch = useAppDispatch();
       dispatch(updatedTraineeProfileData(mockTraineeProfile));
-      return <FormSavePDF pmId="7ab1aae3-83c2-4bb6-b1f3-99146e79b362" />;
+      return <FormSavePDF pmId="1" />;
     };
     mountWithProviders(<MockedFormsListBtnNoDraftForms />);
     cy.get("[data-cy=savePdfBtn]").click();

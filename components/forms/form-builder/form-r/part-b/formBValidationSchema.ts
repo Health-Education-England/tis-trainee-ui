@@ -24,7 +24,7 @@ const haveCurrentUnresolvedDeclarationsString =
 const hasCovidDeclarationString =
   "Please select Yes or No for if Covid has affected your training";
 
-export const booleanValidationSchema = (validationString: string) =>
+const booleanValidationSchema = (validationString: string) =>
   yup
     .boolean()
     .typeError(validationString)
@@ -32,14 +32,14 @@ export const booleanValidationSchema = (validationString: string) =>
     .oneOf([true], validationString)
     .required(validationString);
 
-export const dateValidationSchema = (fieldName: string) =>
+const dateValidationSchema = (fieldName: string) =>
   yup
     .date()
     .typeError(`${fieldName} must be a valid date`)
     .nullable()
     .required(`${fieldName} is required`);
 
-export const leaveValidation = (fieldName: string) =>
+const leaveValidation = (fieldName: string) =>
   yup
     .number()
     .integer(`${fieldName} must be rounded up to a whole number`)
@@ -47,7 +47,7 @@ export const leaveValidation = (fieldName: string) =>
     .min(0, `${fieldName} must be a positive number or zero`)
     .required(`${fieldName} is required`);
 
-export const leaveTotalValidation = (fieldName: string) =>
+const leaveTotalValidation = (fieldName: string) =>
   yup.number().max(9999, `${fieldName} cannot exceed 9999 days`);
 
 const panelSchemaValidation = yup.object().shape({
@@ -138,10 +138,10 @@ const covid19ValidationSchema = yup.object().shape({
     .required("How your placement was adjusted is required")
 });
 
-export const formBValidationSchemaDefaultJson = {
+const formBValidationSchemaDefault = yup.object({
   // Personal details - section 1
   forename: StringValidationSchema("Forename"),
-  surname: StringValidationSchema("Surname"),
+  surname: StringValidationSchema("GMC-Registered Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
   email: yup
     .string()
@@ -246,11 +246,7 @@ export const formBValidationSchemaDefaultJson = {
     .nullable()
     .required(hasCovidDeclarationString),
   covidDeclarationDto: covid19ValidationSchema
-};
-
-const formBValidationSchemaDefault = yup.object(
-  formBValidationSchemaDefaultJson
-);
+});
 
 export function getFormBValidationSchema(activeCovidSection: boolean) {
   let formBValidationSchema = formBValidationSchemaDefault;
