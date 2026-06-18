@@ -146,6 +146,7 @@ describe("FormView", () => {
 
   const mockFormData = {
     traineeTisId: "123",
+    lifecycleState: LifeCycleState.Draft,
     isArcp: false,
     programmeMembershipId: "pm1",
     localOfficeName: "London",
