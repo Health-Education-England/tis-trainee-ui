@@ -116,3 +116,47 @@ describe("FormRForm (Part B) - new form /new/create", () => {
     cy.get('[data-cy="surname-input"]').should("contain.value", "Ocean");
   });
 });
+
+describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
+  beforeEach(() => {
+    store.dispatch(resetToInitFormB());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedFormBLifecycleState(LifeCycleState.Draft));
+    store.dispatch(
+      updatedTraineeProfileData({
+        ...defaultProfileTestData,
+        personalDetails: {
+          ...mockPersonalDetails,
+          publicHealthNumber: "ph001",
+          gmcNumber: "",
+          gdcNumber: ""
+        }
+      })
+    );
+  mount(
+        <Provider store={store}>
+          <MemoryRouter initialEntries={["/formr-a/new/create"]}>
+            <FormRForm formType="B" />
+          </MemoryRouter>
+        </Provider>
+      );
+
+      cy.get("dialog").should("be.visible");
+      cy.get('[data-cy="isArcp0"]').should("exist").click();
+      cy.get('button[data-cy="form-linker-submit-btn"]').should("be.disabled");
+      cy.clickSelect('[data-cy="programmeMembershipId"]');
+
+      cy.get('button[data-cy="form-linker-submit-btn"]')
+        .should("not.be.disabled")
+        .click();
+
+      cy.get('[data-cy="progress-header"] > h3').should(
+        "contain.text",
+        "Part 1 of 10 - Personal Details"
+      );
+    });
+    
+  it("shows check GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
+    cy.checkAndFillPhGmcGdc();
+  });
+});

@@ -26,7 +26,7 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   dtoName,
   conditional
 }: CheckboxesProps) => {
-  const { handleChange } = useFormContext();
+  const { handleChange, setFormData } = useFormContext();
 
   const inputId =
     arrayIndex !== undefined && arrayName
@@ -63,10 +63,21 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
                 arrayName,
                 dtoName
               );
+              if (!isChecked) {
+                const conditionalFieldName = CONDITIONAL_FIELD_MAP[name];
+                if (conditionalFieldName) {
+                  setFormData(prev => ({
+                    ...prev,
+                    [conditionalFieldName]: ""
+                  }));
+                }
+              }
             }}
             placeholder={placeholder}
             aria-labelledby={labelId}
             aria-describedby={fieldError ? errorId : undefined}
+            aria-controls={conditional ? conditionalId : undefined}
+            aria-expanded={conditional ? checked : undefined}
           />
           <label
             className="nhsuk-label nhsuk-checkboxes__label"
@@ -91,4 +102,9 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
       </div>
     </div>
   );
+};
+
+const CONDITIONAL_FIELD_MAP: Record<string, string> = {
+  hasGmcNumber: "gmcNumber",
+  hasGdcNumber: "gdcNumber"
 };

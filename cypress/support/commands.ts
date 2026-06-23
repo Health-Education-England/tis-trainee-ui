@@ -1037,3 +1037,50 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
   cy.get('[data-cy="wte-custom-warn"]').should("exist").contains(wteCustomMsg);
   cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
 });
+
+Cypress.Commands.add("checkAndFillPhGmcGdc", () => {
+  // shows both checkboxes and hides GMC/GDC fields by default
+  cy.get('[data-cy="hasGmcNumber-checkbox"]')
+      .should("exist")
+      .should("not.be.checked");
+  cy.get('[data-cy="hasGdcNumber-checkbox"]')
+    .should("exist")
+    .should("not.be.checked");
+  cy.get('[data-cy="gmcNumber-input"]').should("not.exist");
+  cy.get('[data-cy="gdcNumber-input"]').should("not.exist");
+
+  // reveals GMC Number field when checkbox is ticked
+  cy.get('[data-cy="hasGmcNumber-checkbox"]').click();
+  cy.get('[data-cy="gmcNumber-input"]').should("exist").should("be.visible");
+  cy.get('[data-cy="gdcNumber-input"]').should("not.exist");
+
+  // reveals GDC Number field when checkbox is ticked
+  cy.get('[data-cy="hasGdcNumber-checkbox"]').click();
+  cy.get('[data-cy="gdcNumber-input"]').should("exist").should("be.visible");
+  // hides GMC field again when unticked
+  cy.get('[data-cy="hasGmcNumber-checkbox"]').click();
+  cy.get('[data-cy="gmcNumber-input"]').should("not.exist");
+  // remove typed GMC value when unticked and reticked
+  cy.get('[data-cy="hasGmcNumber-checkbox"]').click();
+  cy.clearAndType('[data-cy="gmcNumber-input"]', "1234567");
+  cy.get('[data-cy="hasGmcNumber-checkbox"]').click();
+  cy.get('[data-cy="gmcNumber-input"]').should("not.exist");
+  cy.get('[data-cy="hasGmcNumber-checkbox"]').click();
+  cy.get('[data-cy="gmcNumber-input"]')
+    .should("exist")
+    .should("not.have.value");
+  // shows validation error on GMC Number field when ticked but empty
+  cy.get('[data-cy="gmcNumber-input"]').clear();
+  cy.get("#gmcNumber-error").should(
+    "have.text",
+    "Error: Please enter your GMC number"
+  );
+  cy.get('[data-cy="error-txt-Please enter your GMC number"]').should("exist");
+  // shows validation error on GDC Number field when ticked but empty
+  cy.get('[data-cy="gdcNumber-input"]').clear();
+  cy.get("#gdcNumber-error").should(
+    "have.text",
+    "Error: Please enter your GDC number"
+  );
+  cy.get('[data-cy="error-txt-Please enter your GDC number"]').should("exist");
+});

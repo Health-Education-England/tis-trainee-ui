@@ -162,7 +162,7 @@ export function FormFieldBuilder({
           dtoName={dtoName}
         />
       );
-    case "checkbox":
+    case "checkbox": {
       const childField = conditionalField
         ? currentPageFields.find(f => f.name === conditionalField)
         : undefined;
@@ -190,6 +190,7 @@ export function FormFieldBuilder({
           conditionalFieldName={conditionalField}
         />
       );
+    }
 
     default:
       return null;

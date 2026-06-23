@@ -144,10 +144,10 @@ export default function FormBuilder({
   } = useFormContext();
 
   const conditionalChildNames = new Set(
-  currentPageFields
-    .filter(field => field.type === "checkbox" && field.conditionalField)
-    .map(field => field.conditionalField as string)
-);
+    currentPageFields
+      .filter(field => field.type === "checkbox" && field.conditionalField)
+      .map(field => field.conditionalField as string)
+  );
 
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;

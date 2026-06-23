@@ -18,24 +18,30 @@ const atLeastOneNonBlank = (fields: string[], message: string) =>
 
 const formBValidationSchemaDefault = yup.object({
   ...formBValidationSchemaDefaultJson,
-  gmcNumber: atLeastOneNonBlank(
-    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
-    "At least one of GMC number, GDC number, or Public Health number must be provided"
-  )
-    .nullable()
-    .max(20, "GMC Number must be shorter than 20 characters"),
-  gdcNumber: atLeastOneNonBlank(
-    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
-    "At least one of GMC number, GDC number, or Public Health number must be provided"
-  )
-    .nullable()
-    .max(20, "GDC Number must be shorter than 20 characters"),
   publicHealthNumber: atLeastOneNonBlank(
     ["gmcNumber", "gdcNumber", "publicHealthNumber"],
     "At least one of GMC number, GDC number, or Public Health number must be provided"
   )
     .nullable()
     .max(20, "Public Health Number must be shorter than 20 characters"),
+  hasGmcNumber: yup.boolean().nullable(),
+  gmcNumber: yup
+    .string()
+    .nullable()
+    .max(20, "GMC Number must be shorter than 20 characters")
+    .when("hasGmcNumber", {
+      is: true,
+      then: schema => schema.required("Please enter your GMC number")
+    }),
+  hasGdcNumber: yup.boolean().nullable(),
+  gdcNumber: yup
+    .string()
+    .nullable()
+    .max(20, "GDC Number must be shorter than 20 characters")
+    .when("hasGdcNumber", {
+      is: true,
+      then: schema => schema.required("Please enter your GDC number")
+    }),
   currRevalDate: yup
     .mixed()
     .test(

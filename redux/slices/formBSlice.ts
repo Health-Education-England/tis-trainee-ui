@@ -277,7 +277,11 @@ const formBSlice = createSlice({
         saveFormB.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           state.newFormId = data.id;
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
@@ -332,7 +336,11 @@ const formBSlice = createSlice({
         updateFormB.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
               data.lastModifiedDate,

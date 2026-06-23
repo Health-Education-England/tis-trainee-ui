@@ -5,12 +5,7 @@ import React, {
   useCallback,
   useEffect
 } from "react";
-import {
-  Field,
-  Form,
-  FormData,
-  ReturnedWidthData
-} from "./FormBuilder";
+import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
   determineCurrentValue,
   getFieldWarningMsgs,

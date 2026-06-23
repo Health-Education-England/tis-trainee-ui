@@ -48,7 +48,9 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
       }
     ],
     currentDeclarationSummary: "Summary",
+    hasGmcNumber: false,
     gmcNumber: "",
+    hasGdcNumber: false,
     gdcNumber: "",
     publicHealthNumber: "",
     currRevalDate: "2025-01-01",
@@ -78,6 +80,29 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
     );
   });
 
+  it("fails if hasGmcNumber is ticked, but gmcNumber is empty", async () => {
+    const data = {
+      ...validBase,
+      publicHealthNumber: "PH123",
+      hasGmcNumber: true,
+      currRevalDate: null
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /Please enter your GMC number/
+    );
+  });
+
+  it("fails if gmcNumber longer than 20 char", async () => {
+    const data = {
+      ...validBase,
+      publicHealthNumber: "PH123",
+      gmcNumber: "123456789012345678901"
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /GMC Number must be shorter than 20 characters/
+    );
+  });
+
   it("passes if only gmcNumber is provided", async () => {
     const data = {
       ...validBase,
@@ -86,12 +111,44 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
     await expect(schema.validate(data)).resolves.toBeTruthy();
   });
 
+  it("fails if hasGdcNumber is ticked, but gdcNumber is empty", async () => {
+    const data = {
+      ...validBase,
+      publicHealthNumber: "PH123",
+      hasGdcNumber: true
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /Please enter your GDC number/
+    );
+  });
+
+  it("fails if gdcNumber longer than 20 char", async () => {
+    const data = {
+      ...validBase,
+      publicHealthNumber: "PH123",
+      gdcNumber: "123456789012345678901"
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /GDC Number must be shorter than 20 characters/
+    );
+  });
+
   it("passes if only gdcNumber is provided", async () => {
     const data = {
       ...validBase,
       gdcNumber: "654321"
     };
     await expect(schema.validate(data)).resolves.toBeTruthy();
+  });
+
+  it("fails if publicHealthNumber longer than 20 char", async () => {
+    const data = {
+      ...validBase,
+      publicHealthNumber: "123456789012345678901"
+    };
+    await expect(schema.validate(data)).rejects.toThrow(
+      /Public Health Number must be shorter than 20 characters/
+    );
   });
 
   it("passes if only publicHealthNumber is provided", async () => {
