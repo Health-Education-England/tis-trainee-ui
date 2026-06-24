@@ -23,7 +23,7 @@ export const Radios: React.FC<RadiosProps> = ({
   arrayName,
   dtoName
 }: RadiosProps) => {
-  const { handleChange } = useFormContext();
+  const { handleChange, setFormData } = useFormContext();
   const idPrefix =
     arrayIndex !== undefined && arrayName
       ? `${arrayName}-${arrayIndex}-${name}`
@@ -64,7 +64,7 @@ export const Radios: React.FC<RadiosProps> = ({
                   name={name} // Keep original name for form binding
                   value={option.value}
                   checked={isChecked(value, option.value)}
-                  onChange={event =>
+                  onChange={event => {
                     handleChange(
                       event,
                       undefined,
@@ -72,8 +72,19 @@ export const Radios: React.FC<RadiosProps> = ({
                       arrayIndex,
                       arrayName,
                       dtoName
-                    )
-                  }
+                    );
+                    const conditionalFieldName = CONDITIONAL_FIELD_MAP[name];
+                    if (conditionalFieldName) {
+                      const selectedValue = event.currentTarget.value;
+                      const isNo = selectedValue === "No" || selectedValue === "false";
+                      if (isNo) {
+                        setFormData(prev => ({
+                          ...prev,
+                          [conditionalFieldName]: null, // or false, depending on your schema
+                        }));
+                      }
+                    }
+                  }}
                   placeholder={option.value}
                   aria-labelledby={labelId}
                   aria-describedby={fieldError ? errorId : undefined}
@@ -104,3 +115,7 @@ function isChecked(
     formDataValue === optionValue
   );
 }
+
+const CONDITIONAL_FIELD_MAP: Record<string, string> = {
+  isWarned: "isComplying",
+};

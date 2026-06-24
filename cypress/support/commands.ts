@@ -715,6 +715,15 @@ Cypress.Commands.add("checkAndFillSection4", () => {
   );
   cy.get('[data-cy="isWarned-Yes-input"]').click();
   cy.get("#isComplying-error").should("exist");
+  cy.get('[data-cy="isWarned-Yes-input"]').click();
+  cy.get('[data-cy="isComplying-checkbox"]').check();
+  // remove isComplying tick when unchecked isWarned
+  cy.get('[data-cy="isWarned-No-input"]').click();
+  cy.get('[data-cy="isWarned-Yes-input"]').click();
+  cy.get('[data-cy="isComplying-checkbox"]')
+    .should("exist")
+    .should("not.have.value");
+  cy.get("#isComplying-error").should("exist");
   cy.get('[data-cy="isWarned-No-input"]').click();
   cy.get("#isComplying-error").should("not.exist");
 });
