@@ -25,17 +25,15 @@ const DecideTotp = ({ handleSectionSubmit }: IDecideTotp) => {
       {({ values, handleSubmit, isSubmitting }) => (
         <Form>
           <Card feature data-cy="appInstalledAlreadyChoose">
-            <Card.Content>
-              <Card.Heading>
-                I&#39;ve already installed an Authenticator App
-              </Card.Heading>
-              <MultiChoiceInputField
-                type="radios"
-                id="appInstalledAlready"
-                name="appInstalledAlready"
-                items={YES_NO_OPTIONS}
-              ></MultiChoiceInputField>
-            </Card.Content>
+            <Card.Heading>
+              I&#39;ve already installed an Authenticator App
+            </Card.Heading>
+            <MultiChoiceInputField
+              type="radios"
+              id="appInstalledAlready"
+              name="appInstalledAlready"
+              items={YES_NO_OPTIONS}
+            ></MultiChoiceInputField>
           </Card>
           {values.appInstalledAlready === "true" && <ThreeMinMsg />}
           {values.appInstalledAlready !== null && (

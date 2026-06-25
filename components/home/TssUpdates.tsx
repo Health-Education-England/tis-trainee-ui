@@ -1,4 +1,4 @@
-import { ListPanel } from "nhsuk-react-components";
+// import { ListPanel } from "nhsuk-react-components";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { Post } from "../../models/WPPost";
 
@@ -52,7 +52,7 @@ export const TssUpdates: React.FC = () => {
   return (
     <div className="tss-updates-content" data-cy="tssUpdatesContainer">
       <WhatsNewHeader />
-      <ListPanel>
+      {/* <ListPanel>
         <ListPanel.Item key={id}>
           <h3 className="list-panel-header" data-cy={`postTitle${id}`}>
             {title.rendered}
@@ -61,7 +61,7 @@ export const TssUpdates: React.FC = () => {
             {extractTextFromHTML(excerpt.rendered)}
           </p>
         </ListPanel.Item>
-      </ListPanel>
+      </ListPanel> */}
     </div>
   );
 };

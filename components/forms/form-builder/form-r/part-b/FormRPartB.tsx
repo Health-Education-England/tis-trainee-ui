@@ -1,7 +1,7 @@
 import { Route, Switch, useLocation } from "react-router-dom";
 import ScrollTo from "../../../ScrollTo";
 import PageTitle from "../../../../common/PageTitle";
-import { Fieldset } from "nhsuk-react-components";
+import { Fieldset, Legend } from "nhsuk-react-components";
 import PageNotFound from "../../../../common/PageNotFound";
 import {
   FORMR_HEADING_TEXT,
@@ -20,13 +20,14 @@ export default function FormB() {
       <PageTitle title="Form R Part-B" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className="fieldset-legend__header"
           data-cy="formRBHeading"
+          size="xl"
         >
           Form R (Part B)
-        </Fieldset.Legend>
+        </Legend>
         {location.pathname === "/formr-b" && (
           <>
             <p className="nhsuk-heading-s" data-cy="formrbSubheading">

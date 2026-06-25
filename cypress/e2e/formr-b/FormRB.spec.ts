@@ -22,7 +22,7 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
 
     cy.log("No autosave if no changes made");
     cy.get('[data-cy="homeLink"]').should("exist").click();
-    cy.get('[data-cy="menuToggleBtn"]').click();
+    cy.get(".nhsuk-header__menu-toggle").click();
     cy.get('[data-cy="Form R (B)"]').click();
     cy.get('[data-cy="Submit new form"]').scrollIntoView().click();
     cy.checkForFormLinkerAndComplete();
@@ -42,9 +42,9 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
       "Autosave status: Success"
     );
     cy.get('[data-cy="Support"]').scrollIntoView().click();
-    cy.get(".nhsuk-header__navigation-close > .nhsuk-icon").click();
+    cy.get(".nhsuk-header__menu-toggle").click();
     cy.get(".nhsuk-fieldset__heading").contains("Support");
-    cy.get('[data-cy="menuToggleBtn"]').click();
+    cy.get(".nhsuk-header__menu-toggle").click();
     cy.get('[data-cy="Form R (B)"]').should("exist").click();
     cy.checkElement("btn-Edit saved draft form").click();
     cy.log(

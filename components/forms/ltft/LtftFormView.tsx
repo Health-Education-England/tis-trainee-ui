@@ -153,78 +153,76 @@ export const LtftFormView = () => {
           formErrors={{}}
         />
         <Card style={{ border: "4px #005eb8 solid" }}>
-          <Card.Content>
-            <Card.Heading data-cy="completionDateChangeHeading">
-              Summary of changes to your {formData.pmName} Programme
-            </Card.Heading>
-            <SummaryList>
+          <Card.Heading data-cy="completionDateChangeHeading">
+            Summary of changes to your {formData.pmName} Programme
+          </Card.Heading>
+          <SummaryList>
+            <SummaryList.Row>
+              <SummaryList.Key data-cy="completionDateChangePmKey">
+                Programme
+              </SummaryList.Key>
+              <SummaryList.Value data-cy="completionDateChangePmValue">
+                {formData.pmName}
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Key data-cy="completionDateChangeCurrentCompletionDateKey">
+                Current completion date
+              </SummaryList.Key>
+              <SummaryList.Value data-cy="completionDateChangeCurrentCompletionDateValue">
+                {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme end
+                date on TIS)
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Key data-cy="completionDateChangeWtesKey">
+                Working hours percentage change
+              </SummaryList.Key>
+              <SummaryList.Value data-cy="completionDateChangeWtesValue">
+                {formData.wteBeforeChange}% → {formData.wte}%
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Key data-cy="completionDateChangeStartDateKey">
+                LTFT Start date
+              </SummaryList.Key>
+              <SummaryList.Value data-cy="completionDateChangeStartDateValue">
+                {dayjs(formData.startDate).format("DD/MM/YYYY")}
+                {formData.startDate &&
+                  latestSubmittedLtft &&
+                  isDateWithin16WeeksOfFirstDate(
+                    formData.startDate,
+                    latestSubmittedLtft
+                  ) && (
+                    <FieldWarningMsg
+                      warningMsgs={[ltft16WeeksWarningTextSubmitted]}
+                    />
+                  )}
+                {formData.startDate &&
+                  !latestSubmittedLtft &&
+                  isDateWithin16WeeksOfFirstDate(formData.startDate) && (
+                    <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
+                  )}
+              </SummaryList.Value>
+            </SummaryList.Row>
+            {formData.altStartDate && (
               <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangePmKey">
-                  Programme
+                <SummaryList.Key data-cy="altStartDateKey">
+                  Alternative start date
                 </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangePmValue">
-                  {formData.pmName}
+                <SummaryList.Value data-cy="altStartDateValue">
+                  {dayjs(formData.altStartDate).format("DD/MM/YYYY")}
                 </SummaryList.Value>
               </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangeCurrentCompletionDateKey">
-                  Current completion date
-                </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangeCurrentCompletionDateValue">
-                  {dayjs(formData.pmEndDate).format("DD/MM/YYYY")} (Programme
-                  end date on TIS)
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangeWtesKey">
-                  Working hours percentage change
-                </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangeWtesValue">
-                  {formData.wteBeforeChange}% → {formData.wte}%
-                </SummaryList.Value>
-              </SummaryList.Row>
-              <SummaryList.Row>
-                <SummaryList.Key data-cy="completionDateChangeStartDateKey">
-                  LTFT Start date
-                </SummaryList.Key>
-                <SummaryList.Value data-cy="completionDateChangeStartDateValue">
-                  {dayjs(formData.startDate).format("DD/MM/YYYY")}
-                  {formData.startDate &&
-                    latestSubmittedLtft &&
-                    isDateWithin16WeeksOfFirstDate(
-                      formData.startDate,
-                      latestSubmittedLtft
-                    ) && (
-                      <FieldWarningMsg
-                        warningMsgs={[ltft16WeeksWarningTextSubmitted]}
-                      />
-                    )}
-                  {formData.startDate &&
-                    !latestSubmittedLtft &&
-                    isDateWithin16WeeksOfFirstDate(formData.startDate) && (
-                      <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
-                    )}
-                </SummaryList.Value>
-              </SummaryList.Row>
-              {formData.altStartDate && (
-                <SummaryList.Row>
-                  <SummaryList.Key data-cy="altStartDateKey">
-                    Alternative start date
-                  </SummaryList.Key>
-                  <SummaryList.Value data-cy="altStartDateValue">
-                    {dayjs(formData.altStartDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-              )}
-            </SummaryList>
-            <CompletionDateChangeText
-              wteBeforeChange={formData.wteBeforeChange}
-              wte={formData.wte}
-            />
-          </Card.Content>
+            )}
+          </SummaryList>
+          <CompletionDateChangeText
+            wteBeforeChange={formData.wteBeforeChange}
+            wte={formData.wte}
+          />
         </Card>
         <WarningCallout>
-          <WarningCallout.Label>Declarations</WarningCallout.Label>
+          <WarningCallout.Heading>Declarations</WarningCallout.Heading>
 
           <Declarations
             setCanSubmit={setCanSubmit}

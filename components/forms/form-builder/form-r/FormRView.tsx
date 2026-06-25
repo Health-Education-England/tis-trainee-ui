@@ -213,7 +213,7 @@ const FormRReviewView = ({
       />
 
       <WarningCallout>
-        <WarningCallout.Label>Declarations</WarningCallout.Label>
+        <WarningCallout.Heading>Declarations</WarningCallout.Heading>
         <form>
           <Declarations
             setCanSubmit={setCanSubmit}

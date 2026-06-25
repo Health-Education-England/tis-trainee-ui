@@ -1,5 +1,5 @@
 import React from "react";
-import { Hint } from "nhsuk-react-components";
+import { HintText } from "nhsuk-react-components";
 
 export type BaseFieldProps = {
   name: string;
@@ -49,7 +49,7 @@ export function FieldWrapper({
       >
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {hint && <HintText data-cy={`${name}-hint`}>{hint}</HintText>}
       {fieldError && (
         <span id={errorId} className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}
