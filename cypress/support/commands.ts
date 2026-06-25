@@ -304,7 +304,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1"]').should("be.visible");
   cy.get('[data-cy="cctSpecialty2"]').should("be.visible");
   cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
-  cy.get('[data-cy="cctSpecialty1"]').should("include.text", "ACCS");
+  cy.get('[data-cy="cctSpecialty1"]').should("not.have.value");
 
   // hide the cctSpecialty fields
   cy.clickRadioCheck(
@@ -312,14 +312,15 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   );
   cy.get('[data-cy="cctSpecialty1]').should("not.exist");
   cy.get('[data-cy="cctSpecialty2]').should("not.exist");
-  // unhide the cctSpecialty fields to see if the cct1 value is still there
+  // unhide the cctSpecialty fields to see if the cct1 value is cleared
   cy.clickRadioCheck(
     '[data-cy="declarationType-I have been appointed to a programme leading to award of CCT-input"]'
   );
   cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
-  ).should("include.text", "ACCS");
+  ).should("not.have.value");  
+  cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
 
   // hidden fields should not be validated
   cy.clickRadioCheck(
@@ -762,7 +763,6 @@ Cypress.Commands.add("checkAndFillSection6", () => {
   cy.get(".nhsuk-error-summary").should("not.exist");
   cy.get('[data-cy="havePreviousDeclarations-Yes-input"]').click();
   cy.get(".nhsuk-error-summary").should("exist");
-  cy.get('[data-cy="remove-Previous Declarations-1-button"]').click();
   cy.get(".nhsuk-error-summary").should("exist");
   cy.get('[data-cy="havePreviousDeclarations-No-input"]').click();
   cy.get(".nhsuk-error-summary").should("not.exist");
