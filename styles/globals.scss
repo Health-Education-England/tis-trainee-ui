@@ -1,6 +1,5 @@
-@import "~nhsuk-frontend/dist/nhsuk";
+@use "nhsuk-frontend" as *;
 
-@import "~nhsuk-frontend/dist/nhsuk/core/all";
 @import "react-phone-number-input/style.css";
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;

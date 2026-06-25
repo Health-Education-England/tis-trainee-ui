@@ -63,57 +63,55 @@ export default function ActionSummary() {
       ) : (
         groupedOutstandingActions.map(group => (
           <Card key={group["Programme ID"]}>
-            <Card.Content>
-              <Card.Heading>{group["Programme Membership name"]}</Card.Heading>
-              <Table responsive>
-                <Table.Head>
-                  <Table.Row>
-                    <Table.Cell>Action</Table.Cell>
-                    <Table.Cell>Due By</Table.Cell>
-                    <Table.Cell>Status</Table.Cell>
-                  </Table.Row>
-                </Table.Head>
-                <Table.Body>
-                  {group["Outstanding actions"].map(action => {
-                    if (!action.type) return null;
-                    const actionInfo = getActionTypeInfo(action);
-                    if (!actionInfo) return null;
-                    const { label, link } = actionInfo;
-                    return (
-                      <Table.Row key={action.id}>
-                        <Table.Cell>
-                          <Link to={link}>{label}</Link>
-                        </Table.Cell>
-                        <Table.Cell>
-                          {dayjs(action.dueBy).format("DD/MM/YYYY")}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span>
-                            <FontAwesomeIcon
-                              icon={faExclamationCircle}
-                              color="red"
-                            />{" "}
-                            Outstanding
-                          </span>
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })}
-                </Table.Body>
-              </Table>
-              <div style={{ marginTop: "2rem" }}>
-                <h3 className="nhsuk-heading-s">Onboarding Tracker</h3>
-                <Link
-                  to={`/programmes/${group["Programme ID"]}/onboarding-tracker`}
-                  className="nhsuk-link"
-                >
-                  <p>
-                    View Onboarding Tracker for{" "}
-                    {group["Programme Membership name"]}
-                  </p>
-                </Link>
-              </div>
-            </Card.Content>
+            <Card.Heading>{group["Programme Membership name"]}</Card.Heading>
+            <Table responsive>
+              <Table.Head>
+                <Table.Row>
+                  <Table.Cell>Action</Table.Cell>
+                  <Table.Cell>Due By</Table.Cell>
+                  <Table.Cell>Status</Table.Cell>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                {group["Outstanding actions"].map(action => {
+                  if (!action.type) return null;
+                  const actionInfo = getActionTypeInfo(action);
+                  if (!actionInfo) return null;
+                  const { label, link } = actionInfo;
+                  return (
+                    <Table.Row key={action.id}>
+                      <Table.Cell>
+                        <Link to={link}>{label}</Link>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {dayjs(action.dueBy).format("DD/MM/YYYY")}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>
+                          <FontAwesomeIcon
+                            icon={faExclamationCircle}
+                            color="red"
+                          />{" "}
+                          Outstanding
+                        </span>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+            <div style={{ marginTop: "2rem" }}>
+              <h3 className="nhsuk-heading-s">Onboarding Tracker</h3>
+              <Link
+                to={`/programmes/${group["Programme ID"]}/onboarding-tracker`}
+                className="nhsuk-link"
+              >
+                <p>
+                  View Onboarding Tracker for{" "}
+                  {group["Programme Membership name"]}
+                </p>
+              </Link>
+            </div>
           </Card>
         ))
       )}

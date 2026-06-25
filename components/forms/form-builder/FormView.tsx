@@ -130,9 +130,9 @@ export const FormView = ({
       )}
       {canEditStatus && (
         <WarningCallout data-cy="warningConfirmation">
-          <WarningCallout.Label visuallyHiddenText={false}>
+          <WarningCallout.Heading visuallyHiddenText="">
             Confirmation
-          </WarningCallout.Label>
+          </WarningCallout.Heading>
           <p>
             {`Please check the information entered below is correct, agree to the
             Declarations at the bottom of the page, and then click 'Submit
@@ -155,7 +155,7 @@ export const FormView = ({
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
 
       <WarningCallout>
-        <WarningCallout.Label>Declarations</WarningCallout.Label>
+        <WarningCallout.Heading>Declarations</WarningCallout.Heading>
         <form>
           <Declarations
             setCanSubmit={setCanSubmit}

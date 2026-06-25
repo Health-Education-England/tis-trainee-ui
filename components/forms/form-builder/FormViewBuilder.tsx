@@ -80,34 +80,32 @@ export default function FormViewBuilder({
       {jsonForm.pages.map((page, pageIndex) => (
         <div key={page.pageName}>
           <Card feature>
-            <Card.Content>
-              <Card.Heading>{page.pageName}</Card.Heading>
-              {page.sections.map((section, _sectionIndex) => (
-                <div key={section.sectionHeader}>
-                  {canEdit && (
-                    <Button
-                      data-cy={`edit-${section.sectionHeader}`}
-                      secondary
-                      onClick={() =>
-                        handleEditSection(pageIndex, jsonForm.name, history)
-                      }
-                    >
-                      Edit Section
-                    </Button>
-                  )}
-                  <SummaryList>
-                    {section.fields.map(field => (
-                      <VisibleField
-                        key={field.name}
-                        field={field}
-                        formData={formData}
-                        formErrors={formErrors}
-                      />
-                    ))}
-                  </SummaryList>
-                </div>
-              ))}
-            </Card.Content>
+            <Card.Heading>{page.pageName}</Card.Heading>
+            {page.sections.map((section, _sectionIndex) => (
+              <div key={section.sectionHeader}>
+                {canEdit && (
+                  <Button
+                    data-cy={`edit-${section.sectionHeader}`}
+                    secondary
+                    onClick={() =>
+                      handleEditSection(pageIndex, jsonForm.name, history)
+                    }
+                  >
+                    Edit Section
+                  </Button>
+                )}
+                <SummaryList>
+                  {section.fields.map(field => (
+                    <VisibleField
+                      key={field.name}
+                      field={field}
+                      formData={formData}
+                      formErrors={formErrors}
+                    />
+                  ))}
+                </SummaryList>
+              </div>
+            ))}
           </Card>
         </div>
       ))}
@@ -121,20 +119,18 @@ function displayListValue(fieldVal: any, fieldType?: string) {
     if (fieldVal.length === 0) return "Not provided";
     return fieldVal.map((item: any, index: number) => (
       <Card key={index} className="container-form-view">
-        <Card.Content>
-          {Object.entries(item).map((entry: any, index: number) => (
-            <Container key={index}>
-              <Row style={{ marginBottom: "0.5em" }}>
-                <Col width="one-half">
-                  <Label>
-                    <b>{formatFieldName(entry[0])}</b>
-                  </Label>
-                </Col>
-                <Col width="one-half">{displayListValue(entry[1])}</Col>
-              </Row>
-            </Container>
-          ))}
-        </Card.Content>
+        {Object.entries(item).map((entry: any, index: number) => (
+          <Container key={index}>
+            <Row style={{ marginBottom: "0.5em" }}>
+              <Col width="one-half">
+                <Label>
+                  <b>{formatFieldName(entry[0])}</b>
+                </Label>
+              </Col>
+              <Col width="one-half">{displayListValue(entry[1])}</Col>
+            </Row>
+          </Container>
+        ))}
       </Card>
     ));
   }

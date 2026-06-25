@@ -1,16 +1,15 @@
 import { Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
-import { SignOutBtn } from "../common/SignOutBtn";
-import { useEffect, type ComponentProps } from "react";
+import { useEffect } from "react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { getNotificationCount } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
 import { EmailsBtn } from "../notifications/EmailsBtn";
 import { UserFeaturesType } from "../../models/FeatureFlags";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const TSSHeader = () => {
+  const { signOut } = useAuthenticator(context => [context.user]);
   const dispatch = useAppDispatch();
   const unreadNotificationCount = useAppSelector(
     state => state.notifications.unreadNotificationCount
@@ -53,14 +52,22 @@ const TSSHeader = () => {
           </>
         )}
 
-        <Header.AccountItem href="/profile">
-          <span style={{ marginTop: "0.25rem" }}>
-            <FontAwesomeIcon icon={faUser} style={{ marginRight: "0.5rem" }} />
-            {concatName}
-          </span>
+        <Header.AccountItem
+          asElement={NavLink}
+          data-cy="profileLink"
+          href="/profile"
+          icon
+          to="/profile"
+        >
+          {concatName}
         </Header.AccountItem>
-        <Header.AccountItem>
-          <SignOutBtn />
+        <Header.AccountItem
+          as="button"
+          data-cy="signOutBtn"
+          onClick={signOut}
+          type="button"
+        >
+          Sign out
         </Header.AccountItem>
       </Header.Account>
       <Header.Navigation>
@@ -142,40 +149,41 @@ function makeTSSHeaderLinks(
     },
     {
       path: "ltft",
-      name: "Changing hours (LTFT)",
+      name: "Less than full-time ",
       mobileOnly: false,
       showWithNoMfa: false,
       featureEnabled: userFeatures.forms.ltft.enabled
     }
   ];
 
-  const makeLi = (pathObj: {
+  const makeNavigationItem = (pathObj: {
     path: string;
     name: string;
     mobileOnly: boolean;
     showWithNoMfa: boolean;
     featureEnabled: boolean;
-  }) => (
-    <div
-      data-cy="nav-link-wrapper"
-      key={pathObj.name}
-      className={`nhsuk-header__navigation-item ${
-        pathObj.mobileOnly ? "mobile-only-nav" : ""
-      }`}
-      hidden={
-        ((preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
-          !pathObj.showWithNoMfa) ||
-        !pathObj?.featureEnabled
-      }
-    >
-      <NavLink
+  }) => {
+    const hasRestrictedMfa = preferredMfa === "NOMFA" || preferredMfa === "SMS";
+    const shouldShow =
+      pathObj.featureEnabled && (!hasRestrictedMfa || pathObj.showWithNoMfa);
+
+    if (!shouldShow) {
+      return null;
+    }
+
+    return (
+      <Header.NavigationItem
+        asElement={NavLink}
+        className={pathObj.mobileOnly ? "mobile-only-nav" : undefined}
         data-cy={pathObj.name}
-        className="nhsuk-header__navigation-link"
+        href={`/${pathObj.path}`}
+        key={pathObj.name}
         to={`/${pathObj.path}`}
       >
         {pathObj.name}
-      </NavLink>
-    </div>
-  );
-  return paths.map(p => makeLi(p));
+      </Header.NavigationItem>
+    );
+  };
+
+  return paths.map(makeNavigationItem);
 }

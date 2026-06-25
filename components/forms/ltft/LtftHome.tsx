@@ -44,41 +44,37 @@ export function LtftHome() {
   return (
     <>
       <Card>
-        <Card.Content>
-          <>
-            <Card.Heading data-cy="ltft-in-progress-header">
-              In progress applications
-            </Card.Heading>
-            <LtftSummary
-              ltftSummaryType="CURRENT"
-              ltftSummaryStatus={ltftFormsListStatus}
-              ltftSummaryList={draftOrUnsubmittedLtftSummary}
-            />
-            <Container>
-              <Row style={{ fontSize: "19px" }}>
-                <Col width="full">
-                  To begin a new application{" "}
-                  <Link to="/cct" data-cy="cct-link">
-                    please go to your list of saved CCT calculations
-                  </Link>{" "}
-                  and click the button to apply for Changing hours (LTFT).
-                </Col>
-              </Row>
-            </Container>
-          </>
-        </Card.Content>
-      </Card>
-      <Card>
-        <Card.Content>
-          <Card.Heading data-cy="ltft-previous-header">
-            Previous applications
+        <>
+          <Card.Heading data-cy="ltft-in-progress-header">
+            In progress applications
           </Card.Heading>
           <LtftSummary
-            ltftSummaryType="PREVIOUS"
+            ltftSummaryType="CURRENT"
             ltftSummaryStatus={ltftFormsListStatus}
-            ltftSummaryList={previousLtftSummaries}
+            ltftSummaryList={draftOrUnsubmittedLtftSummary}
           />
-        </Card.Content>
+          <Container>
+            <Row style={{ fontSize: "19px" }}>
+              <Col width="full">
+                To begin a new application{" "}
+                <Link to="/cct" data-cy="cct-link">
+                  please go to your list of saved CCT calculations
+                </Link>{" "}
+                and click the button to apply for Changing hours (LTFT).
+              </Col>
+            </Row>
+          </Container>
+        </>
+      </Card>
+      <Card>
+        <Card.Heading data-cy="ltft-previous-header">
+          Previous applications
+        </Card.Heading>
+        <LtftSummary
+          ltftSummaryType="PREVIOUS"
+          ltftSummaryStatus={ltftFormsListStatus}
+          ltftSummaryList={previousLtftSummaries}
+        />
       </Card>
     </>
   );

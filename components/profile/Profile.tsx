@@ -156,13 +156,11 @@ const Profile = () => {
             {forenames && `${forenames} `}
             {surname}
           </SummaryList.Value>
-          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         {personalData?.map(pd => (
           <SummaryList.Row key={pd.label} data-cy={pd.label}>
             <SummaryList.Key data-cy={pd.label}>{pd.label}</SummaryList.Key>
             <SummaryList.Value data-cy={pd.value}>{pd.value}</SummaryList.Value>
-            <SummaryList.Actions></SummaryList.Actions>
           </SummaryList.Row>
         ))}
 
@@ -174,7 +172,6 @@ const Profile = () => {
             <p>{address3}</p>
             <p data-cy="postCode">{postCode}</p>
           </SummaryList.Value>
-          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
           Registration details
@@ -185,7 +182,7 @@ const Profile = () => {
               <SummaryList.Row key={rd.label} data-cy={rd.label}>
                 <SummaryList.Key>{rd.label}</SummaryList.Key>
                 <SummaryList.Value>{rd.value}</SummaryList.Value>
-                <SummaryList.Actions>
+                <SummaryList.Action asElement="span">
                   {rd.type === FieldType.Editable &&
                     rd.label === gmcFieldLabel && (
                       <Button
@@ -197,7 +194,7 @@ const Profile = () => {
                         change
                       </Button>
                     )}
-                </SummaryList.Actions>
+                </SummaryList.Action>
               </SummaryList.Row>
             )
         )}

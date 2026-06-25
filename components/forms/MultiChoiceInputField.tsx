@@ -44,9 +44,6 @@ const MultiChoiceInputField: React.FC<Props> = props => {
       >
         {props?.items?.map((item, index) => (
           <FormChildElement
-            labelProps={""}
-            hint={""}
-            hintProps={""}
             key={item.value}
             value={item.value}
             id={item.id}

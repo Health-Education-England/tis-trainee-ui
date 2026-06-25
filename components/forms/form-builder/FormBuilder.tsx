@@ -206,24 +206,22 @@ export default function FormBuilder({
           {pages[currentPage]?.sections.map((section: Section) => (
             <React.Fragment key={section.sectionHeader}>
               <Card feature>
-                <Card.Content>
-                  <Card.Heading>{section.sectionHeader}</Card.Heading>
-                  {section.fields.map((field: Field) => {
-                    const fieldComponent = (
-                      <FormFieldBuilder
-                        field={field}
-                        value={formData[field.name] ?? ""}
-                        error={formErrors[field.name] ?? ""}
-                        options={options}
-                      />
-                    );
-                    return (
-                      <div key={field.name} className="nhsuk-form-group">
-                        {showFormField(field, formData) ? fieldComponent : null}
-                      </div>
-                    );
-                  })}
-                </Card.Content>
+                <Card.Heading>{section.sectionHeader}</Card.Heading>
+                {section.fields.map((field: Field) => {
+                  const fieldComponent = (
+                    <FormFieldBuilder
+                      field={field}
+                      value={formData[field.name] ?? ""}
+                      error={formErrors[field.name] ?? ""}
+                      options={options}
+                    />
+                  );
+                  return (
+                    <div key={field.name} className="nhsuk-form-group">
+                      {showFormField(field, formData) ? fieldComponent : null}
+                    </div>
+                  );
+                })}
               </Card>
             </React.Fragment>
           ))}

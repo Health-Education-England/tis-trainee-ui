@@ -34,32 +34,30 @@ const ConfirmEmail = () => {
   return (
     <>
       <Card feature>
-        <Card.Content>
-          <Card.Heading>Email MFA</Card.Heading>
-          <p>Using email as your second authentication factor:</p>
-          <ul>
-            <li>You will enter your email and password</li>
-            <li>Receive a 6-digit verification code via email</li>
-            <li>Enter this code to sign in</li>
-          </ul>
-          <p>
-            This adds an extra layer of security to your account and helps
-            protect your sensitive information.
-          </p>
-          <Details>
-            <Details.Summary>Why use Email MFA?</Details.Summary>
-            <Details.Text>
-              <p>
-                {`
+        <Card.Heading>Email MFA</Card.Heading>
+        <p>Using email as your second authentication factor:</p>
+        <ul>
+          <li>You will enter your email and password</li>
+          <li>Receive a 6-digit verification code via email</li>
+          <li>Enter this code to sign in</li>
+        </ul>
+        <p>
+          This adds an extra layer of security to your account and helps protect
+          your sensitive information.
+        </p>
+        <Details>
+          <Details.Summary>Why use Email MFA?</Details.Summary>
+          <Details.Text>
+            <p>
+              {`
                 Email MFA provides additional security without requiring a
                 mobile phone. It is more secure than SMS MFA and it's convenient
                 as you can access your email from multiple devices. The
                 verification codes expire after a short period, ensuring only
                 you can access your account.`}
-              </p>
-            </Details.Text>
-          </Details>
-        </Card.Content>
+            </p>
+          </Details.Text>
+        </Details>
       </Card>
       <Button
         onClick={handleConfirmEmail}

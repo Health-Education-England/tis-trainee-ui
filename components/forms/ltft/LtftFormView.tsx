@@ -147,7 +147,7 @@ export const LtftFormView = () => {
           formErrors={{}}
         />
         <WarningCallout>
-          <WarningCallout.Label>Declarations</WarningCallout.Label>
+          <WarningCallout.Heading>Declarations</WarningCallout.Heading>
 
           <Declarations
             setCanSubmit={setCanSubmit}

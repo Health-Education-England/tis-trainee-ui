@@ -7,12 +7,12 @@ type ImportantText = {
 export const ImportantText = ({ txtName }: ImportantText) => {
   return (
     <WarningCallout>
-      <WarningCallout.Label
-        visuallyHiddenText={false}
+      <WarningCallout.Heading
+        visuallyHiddenText=""
         data-cy={`WarningCallout-${txtName}-label`}
       >
         Important
-      </WarningCallout.Label>
+      </WarningCallout.Heading>
       {displayText[txtName]}
     </WarningCallout>
   );

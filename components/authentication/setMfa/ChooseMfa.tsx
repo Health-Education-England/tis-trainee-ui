@@ -87,19 +87,17 @@ const ChooseMfa = () => {
                 </p>
               </Details.Text>
             </Details>
-            <Card cardType="feature">
-              <Card.Content>
-                <Card.Heading>Next time I sign in...</Card.Heading>
-                <p>
-                  I want to verify my identity with a One Time Password (OTP):
-                </p>
-                <MultiChoiceInputField
-                  type="radios"
-                  id="mfaChoice"
-                  name="mfaChoice"
-                  items={getMfaOptions(preferredMfa)}
-                ></MultiChoiceInputField>
-              </Card.Content>
+            <Card feature>
+              <Card.Heading>Next time I sign in...</Card.Heading>
+              <p>
+                I want to verify my identity with a One Time Password (OTP):
+              </p>
+              <MultiChoiceInputField
+                type="radios"
+                id="mfaChoice"
+                name="mfaChoice"
+                items={getMfaOptions(preferredMfa)}
+              ></MultiChoiceInputField>
             </Card>
             <Button
               onClick={() => {

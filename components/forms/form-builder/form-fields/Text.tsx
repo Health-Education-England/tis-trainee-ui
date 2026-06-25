@@ -6,7 +6,7 @@ import {
 import FieldWarningMsg from "../../FieldWarningMsg";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
-import { Hint } from "nhsuk-react-components";
+import { HintText } from "nhsuk-react-components";
 
 type TextProps = {
   name: string;
@@ -44,7 +44,7 @@ export const Text: React.FC<TextProps> = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {hint && <HintText data-cy={`${name}-hint`}>{hint}</HintText>}
       <input
         data-cy={`${name}-input`}
         onKeyDown={handleKeyDown}

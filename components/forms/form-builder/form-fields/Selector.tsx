@@ -6,7 +6,7 @@ import {
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
-import { Hint } from "nhsuk-react-components";
+import { HintText } from "nhsuk-react-components";
 
 type SelectorProps = {
   name: string;
@@ -41,7 +41,7 @@ export const Selector = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {hint && <HintText data-cy={`${name}-hint`}>{hint}</HintText>}
       <Select
         onKeyDown={handleKeyDown}
         options={options}

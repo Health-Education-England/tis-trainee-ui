@@ -231,12 +231,10 @@ const SubmittedFormsList = ({
         </HintText>
       )}
       <Card>
-        <Card.Content>
-          <Card.Heading data-cy="formr-previous-header">
-            Submitted forms
-          </Card.Heading>
-          {content}
-        </Card.Content>
+        <Card.Heading data-cy="formr-previous-header">
+          Submitted forms
+        </Card.Heading>
+        {content}
       </Card>
     </>
   );

@@ -37,7 +37,7 @@ export default function Declarations({
   return (
     <Checkboxes>
       {formDeclarations.map(declaration => (
-        <Checkboxes.Box
+        <Checkboxes.Item
           key={declaration.name}
           data-cy={declaration.name}
           name={declaration.name}
@@ -46,7 +46,7 @@ export default function Declarations({
           readOnly={!canEdit}
         >
           {declaration.label}
-        </Checkboxes.Box>
+        </Checkboxes.Item>
       ))}
     </Checkboxes>
   );

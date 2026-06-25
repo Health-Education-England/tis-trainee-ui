@@ -1,4 +1,4 @@
-import { Hint, Textarea } from "nhsuk-react-components";
+import { HintText, Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldErrorInline from "./FieldErrorInline";
 import { useFormContext } from "../FormContext";
@@ -34,7 +34,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
       <label className="nhsuk-label" htmlFor={name} data-cy={`${name}-label`}>
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {hint && <HintText data-cy={`${name}-hint`}>{hint}</HintText>}
       <Textarea
         data-cy={`${name}-text-area-input`}
         onKeyDown={handleKeyDown}

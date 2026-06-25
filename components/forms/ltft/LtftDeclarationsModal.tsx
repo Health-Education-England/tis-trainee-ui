@@ -38,9 +38,7 @@ export const LtftDeclarationsModal = ({
           onChange={handleCheckboxChange}
         >
           <Checkboxes.Item
-            labelProps={""}
             hint="your pre-approver will..."
-            hintProps={""}
             name="discussedWithTpd"
             data-cy="discussedWithTpd"
             checked={decValues.discussedWithTpd}
@@ -49,14 +47,14 @@ export const LtftDeclarationsModal = ({
             my pre-approver.
           </Checkboxes.Item>
 
-          {/* <Checkboxes.Box
+          {/* <Checkboxes.Item
             name="discussedWithTpd"
             data-cy="discussedWithTpd"
             checked={decValues.discussedWithTpd}
             onChange={handleCheckboxChange}
           >
             {`I have discussed the proposal outlined in the CCT calculation with my pre-approver.`}
-          </Checkboxes.Box> */}
+          </Checkboxes.Item> */}
           {/* <HintText className="checkbox-hint">
             <p>
               Your pre-approver will usually be your Training Programme Director
@@ -106,7 +104,7 @@ export const LtftDeclarationsModal = ({
               </Details.Text>
             </Details>
           </HintText> */}
-          {/* <Checkboxes.Box
+          {/* <Checkboxes.Item
             name="understandStartover"
             data-cy="understandStartover"
             checked={decValues.understandStartover}
@@ -114,7 +112,7 @@ export const LtftDeclarationsModal = ({
           >
             {`I understand that if I proceed to the main Changing hours (LTFT)
             application, a copy of these CCT Calculation details will be used for this application.`}
-          </Checkboxes.Box> */}
+          </Checkboxes.Item> */}
           {/* <HintText className="checkbox-hint">
             {`If you do proceed but later want to use different CCT Calculation
             details for your LTFT application, you will be able to discard your

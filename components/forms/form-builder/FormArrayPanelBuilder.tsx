@@ -50,36 +50,34 @@ export function FormArrayPanelBuilder({
     <>
       {formData[field.name]?.map((_arrObj: any, index: number) => (
         <Card key={index} className="container">
-          <Card.Content>
-            <p>
-              <b>{`${formattedFieldName} ${index + 1}`}</b>
-            </p>
-            {field.objectFields?.map(objField => (
-              <div key={objField.name} className="nhsuk-form-group">
-                {showFormField(objField, formData[field.name][index]) ? (
-                  <FormFieldBuilder
-                    field={objField}
-                    value={formData[field.name][index][objField.name] ?? ""}
-                    error={panelErrors?.[index]?.[objField.name] ?? ""}
-                    options={options}
-                    arrayDetails={{ arrayIndex: index, arrayName: field.name }}
-                  />
-                ) : null}
-              </div>
-            ))}
-            <div>
-              <Button
-                secondary
-                onClick={(e: { preventDefault: () => void }) => {
-                  e.preventDefault();
-                  removePanel(index);
-                }}
-                data-cy={`remove-${formattedFieldName}-${index + 1}-button`}
-              >
-                {`Remove ${formattedFieldName} ${index + 1}`}
-              </Button>
+          <p>
+            <b>{`${formattedFieldName} ${index + 1}`}</b>
+          </p>
+          {field.objectFields?.map(objField => (
+            <div key={objField.name} className="nhsuk-form-group">
+              {showFormField(objField, formData[field.name][index]) ? (
+                <FormFieldBuilder
+                  field={objField}
+                  value={formData[field.name][index][objField.name] ?? ""}
+                  error={panelErrors?.[index]?.[objField.name] ?? ""}
+                  options={options}
+                  arrayDetails={{ arrayIndex: index, arrayName: field.name }}
+                />
+              ) : null}
             </div>
-          </Card.Content>
+          ))}
+          <div>
+            <Button
+              secondary
+              onClick={(e: { preventDefault: () => void }) => {
+                e.preventDefault();
+                removePanel(index);
+              }}
+              data-cy={`remove-${formattedFieldName}-${index + 1}-button`}
+            >
+              {`Remove ${formattedFieldName} ${index + 1}`}
+            </Button>
+          </div>
         </Card>
       ))}
       <Button

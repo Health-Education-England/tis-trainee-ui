@@ -43,7 +43,7 @@ export function ActionModal({
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText={cancelBtnText}>
       <WarningCallout data-cy="actionModalWarning">
         <WarningCallout.Heading
-          visuallyHiddenText={false}
+          visuallyHiddenText=""
           data-cy={`warningLabel-${warningLabel}`}
         >
           {warningLabel}

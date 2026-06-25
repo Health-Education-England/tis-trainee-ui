@@ -1,6 +1,35 @@
 import { defineConfig } from "cypress";
 import cypressOtp from "cypress-otp";
 import codeCoverageTask from "@cypress/code-coverage/task";
+import path from "path";
+
+const coverageWebpackConfig = {
+  module: {
+    rules: [
+      {
+        test: /\.[jt]sx?$/,
+        include: [
+          "components",
+          "models",
+          "pages",
+          "redux",
+          "services",
+          "utilities"
+        ].map(directory => path.resolve(__dirname, directory)),
+        enforce: "post",
+        use: {
+          loader: require.resolve("babel-loader"),
+          options: {
+            babelrc: false,
+            configFile: false,
+            plugins: [require.resolve("babel-plugin-istanbul")],
+            sourceMaps: true
+          }
+        }
+      }
+    ]
+  }
+};
 
 export default defineConfig({
   reporter: "cypress-mochawesome-reporter",
@@ -14,7 +43,8 @@ export default defineConfig({
   component: {
     devServer: {
       framework: "next",
-      bundler: "webpack"
+      bundler: "webpack",
+      webpackConfig: coverageWebpackConfig
     },
     specPattern: "cypress/component/**/*.cy.{ts,tsx}",
     setupNodeEvents(on, config) {
@@ -32,7 +62,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on("task", { generateOTP: cypressOtp });
-      codeCoverageTask(on, config);
       require("cypress-mochawesome-reporter/plugin")(on);
       require("cypress-localstorage-commands/plugin")(on, config);
       return config;
