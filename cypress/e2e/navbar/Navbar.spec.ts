@@ -23,17 +23,10 @@ describe("Desktop/ tablet header", () => {
         .should("exist")
         .contains(/Support/);
       cy.get(".nhsuk-header__navigation-link").should("exist").contains(/MFA/);
-      cy.get(".nhsuk-button")
+      cy.get('[data-cy="signOutBtn"]')
         .should("exist")
         .contains(/Sign out/);
-      if (size === mobileView) {
-        cy.get(".nhsuk-header__menu-toggle").should("exist").click();
-        cy.get('[data-cy="signOutBtn"]');
-      } else {
-        cy.get(
-          '.top-nav-container > .top-nav-container > [data-cy="signOutBtn"]'
-        ).click();
-      }
+      cy.get('[data-cy="signOutBtn"]').click();
     });
   });
 });

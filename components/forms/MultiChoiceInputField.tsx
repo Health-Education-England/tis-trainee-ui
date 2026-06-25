@@ -21,7 +21,7 @@ const MultiChoiceInputField: React.FC<Props> = props => {
   const [field, { error }, helpers] = useField(props);
   const FormElement = props.type === "radios" ? Radios : Checkboxes;
   const FormChildElement =
-    props.type === "radios" ? Radios.Radio : Checkboxes.Box;
+    props.type === "radios" ? Radios.Item : Checkboxes.Item;
   return (
     <div
       data-jest={props.name}

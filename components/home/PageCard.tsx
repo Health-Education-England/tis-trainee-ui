@@ -31,12 +31,10 @@ export function PageCard({
       }}
       data-cy={linkHeader}
     >
-      <Card.Content>
-        <Card.Heading className="nhsuk-heading-m">
-          <Card.Link href="">{linkHeader}</Card.Link>
-        </Card.Heading>
-        <ul className={style.ull}>{listItems}</ul>
-      </Card.Content>
+      <Card.Heading className="nhsuk-heading-m">
+        <Card.Link href="">{linkHeader}</Card.Link>
+      </Card.Heading>
+      <ul className={style.ull}>{listItems}</ul>
     </Card>
   );
 }

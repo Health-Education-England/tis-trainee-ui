@@ -90,14 +90,14 @@ function VisibleField({
             )}
           </SummaryList.Value>
           {canEdit && (
-            <SummaryList.Actions>
+            <SummaryList.Action asElement="span">
               <ChangeLink
                 targetField={field.name}
                 label={field.label ?? ""}
                 jsonFormName={jsonFormName}
                 pageIndex={pageIndex}
               />
-            </SummaryList.Actions>
+            </SummaryList.Action>
           )}
         </SummaryList.Row>
       </SummaryList>
@@ -124,29 +124,27 @@ export default function FormViewBuilder({
       {jsonForm.pages.map((page, pageIndex) => (
         <div key={page.pageName}>
           <Card>
-            <Card.Content>
-              <Card.Heading
-                data-cy={`pageHeader-${page.pageName}`}
-                style={{ color: "#005eb8" }}
-              >
-                {page.pageName}
-              </Card.Heading>
-              {page.sections.map((section, _sectionIndex) => (
-                <div key={section.sectionHeader}>
-                  {section.fields.map(field => (
-                    <VisibleField
-                      key={field.name}
-                      field={field}
-                      formData={formData}
-                      formErrors={formErrors}
-                      pageIndex={pageIndex}
-                      jsonFormName={jsonForm.name}
-                      canEdit={canEdit}
-                    />
-                  ))}
-                </div>
-              ))}
-            </Card.Content>
+            <Card.Heading
+              data-cy={`pageHeader-${page.pageName}`}
+              style={{ color: "#005eb8" }}
+            >
+              {page.pageName}
+            </Card.Heading>
+            {page.sections.map((section, _sectionIndex) => (
+              <div key={section.sectionHeader}>
+                {section.fields.map(field => (
+                  <VisibleField
+                    key={field.name}
+                    field={field}
+                    formData={formData}
+                    formErrors={formErrors}
+                    pageIndex={pageIndex}
+                    jsonFormName={jsonForm.name}
+                    canEdit={canEdit}
+                  />
+                ))}
+              </div>
+            ))}
           </Card>
         </div>
       ))}

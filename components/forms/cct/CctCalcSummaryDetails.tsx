@@ -31,9 +31,9 @@ export function CctCalcSummaryDetails({
   return (
     <Card className="pdf-visible">
       <WarningCallout>
-        <WarningCallout.Label data-cy="cct-calc-warning-label">
+        <WarningCallout.Heading data-cy="cct-calc-warning-label">
           {cctReadBeforeProceedingLabel}
-        </WarningCallout.Label>
+        </WarningCallout.Heading>
         <p data-cy="cct-calc-warning-text1">
           {cctCalcSummaryWarningMsgs.text1}
         </p>
@@ -42,100 +42,97 @@ export function CctCalcSummaryDetails({
         </p>
         <CctCalculatorLinks />
       </WarningCallout>
-      <Card.Content>
-        <Card.Heading data-cy="cct-calc-summary-header">
-          CCT Calculation Summary
-        </Card.Heading>
-        <Container>
-          <Row>
-            <Col width="full">
-              <SummaryList noBorder>
-                <h3 className={style.panelSubHeader}>Linked Programme</h3>
-                <SummaryList.Row>
-                  <SummaryList.Key>Programme name</SummaryList.Key>
-                  <SummaryList.Value>
-                    {programmeMembership.name}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Start date</SummaryList.Key>
-                  <SummaryList.Value>
-                    {dayjs(programmeMembership.startDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Completion date</SummaryList.Key>
-                  <SummaryList.Value>
-                    {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <h3 className={style.panelSubHeader}> Changes</h3>
-                <SummaryList.Row>
-                  <SummaryList.Key>
-                    Full-time hours percentage before change
-                  </SummaryList.Key>
-                  <SummaryList.Value>
-                    {programmeMembership.wte && programmeMembership.wte * 100}%
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>
-                    Full-time hours percentage after change
-                  </SummaryList.Key>
-                  <SummaryList.Value data-cy="cct-view-new-wte">
-                    {changes[0].wte && changes[0].wte * 100}%
-                    {changes[0].wte! > programmeMembership.wte! && (
-                      <FieldWarningMsg warningMsgs={[wteIncreaseMsg]} />
+      <Card.Heading data-cy="cct-calc-summary-header">
+        CCT Calculation Summary
+      </Card.Heading>
+      <Container>
+        <Row>
+          <Col width="full">
+            <SummaryList noBorder>
+              <h3 className={style.panelSubHeader}>Linked Programme</h3>
+              <SummaryList.Row>
+                <SummaryList.Key>Programme name</SummaryList.Key>
+                <SummaryList.Value>
+                  {programmeMembership.name}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Start date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(programmeMembership.startDate).format("DD/MM/YYYY")}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Completion date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(programmeMembership.endDate).format("DD/MM/YYYY")}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <h3 className={style.panelSubHeader}> Changes</h3>
+              <SummaryList.Row>
+                <SummaryList.Key>
+                  Full-time hours percentage before change
+                </SummaryList.Key>
+                <SummaryList.Value>
+                  {programmeMembership.wte && programmeMembership.wte * 100}%
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>
+                  Full-time hours percentage after change
+                </SummaryList.Key>
+                <SummaryList.Value data-cy="cct-view-new-wte">
+                  {changes[0].wte && changes[0].wte * 100}%
+                  {changes[0].wte! > programmeMembership.wte! && (
+                    <FieldWarningMsg warningMsgs={[wteIncreaseMsg]} />
+                  )}
+                  {!fteOptions.some(
+                    option => option.value === (changes[0].wte as number) * 100
+                  ) && <FieldWarningMsg warningMsgs={[wteCustomMsg]} />}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>Change start date</SummaryList.Key>
+                <SummaryList.Value>
+                  {dayjs(changes[0].startDate).format("DD/MM/YYYY")}
+                  {dayjs(changes[0].startDate).isSameOrAfter(
+                    dayjs().startOf("day")
+                  ) &&
+                    isDateWithin16WeeksOfFirstDate(changes[0].startDate) && (
+                      <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
                     )}
-                    {!fteOptions.some(
-                      option =>
-                        option.value === (changes[0].wte as number) * 100
-                    ) && <FieldWarningMsg warningMsgs={[wteCustomMsg]} />}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>Change start date</SummaryList.Key>
-                  <SummaryList.Value>
-                    {dayjs(changes[0].startDate).format("DD/MM/YYYY")}
-                    {dayjs(changes[0].startDate).isSameOrAfter(
-                      dayjs().startOf("day")
-                    ) &&
-                      isDateWithin16WeeksOfFirstDate(changes[0].startDate) && (
-                        <FieldWarningMsg warningMsgs={[shortNoticeMsg]} />
-                      )}
-                    {dayjs(changes[0].startDate).isBefore(
-                      dayjs().startOf("day")
-                    ) && (
-                      <FieldWarningMsg
-                        warningMsgs={["Change start date is now in the past"]}
-                      />
-                    )}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-                <SummaryList.Row>
-                  <SummaryList.Key>New completion date</SummaryList.Key>
-                  <SummaryList.Value
-                    style={{
-                      color: "teal",
-                      fontWeight: "bold"
-                    }}
-                    data-cy="saved-cct-date"
-                  >
-                    {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
-                  </SummaryList.Value>
-                </SummaryList.Row>
-              </SummaryList>
-            </Col>
-          </Row>
-        </Container>
-        {name && created && lastModified && (
-          <section data-cy="saved-cct-details">
-            <div>{`Name: ${name}`}</div>
-            <div>{`Created: ${dayjs(created).toString()}`}</div>
-            <div>{`Last saved: ${dayjs(lastModified).toString()}`}</div>
-          </section>
-        )}
-      </Card.Content>
+                  {dayjs(changes[0].startDate).isBefore(
+                    dayjs().startOf("day")
+                  ) && (
+                    <FieldWarningMsg
+                      warningMsgs={["Change start date is now in the past"]}
+                    />
+                  )}
+                </SummaryList.Value>
+              </SummaryList.Row>
+              <SummaryList.Row>
+                <SummaryList.Key>New completion date</SummaryList.Key>
+                <SummaryList.Value
+                  style={{
+                    color: "teal",
+                    fontWeight: "bold"
+                  }}
+                  data-cy="saved-cct-date"
+                >
+                  {cctDate && dayjs(cctDate).format("DD/MM/YYYY")}
+                </SummaryList.Value>
+              </SummaryList.Row>
+            </SummaryList>
+          </Col>
+        </Row>
+      </Container>
+      {name && created && lastModified && (
+        <section data-cy="saved-cct-details">
+          <div>{`Name: ${name}`}</div>
+          <div>{`Created: ${dayjs(created).toString()}`}</div>
+          <div>{`Last saved: ${dayjs(lastModified).toString()}`}</div>
+        </section>
+      )}
     </Card>
   );
 }

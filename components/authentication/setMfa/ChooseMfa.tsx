@@ -88,18 +88,16 @@ const ChooseMfa = () => {
               </Details.Text>
             </Details>
             <Card feature>
-              <Card.Content>
-                <Card.Heading>Next time I sign in...</Card.Heading>
-                <p>
-                  I want to verify my identity with a One Time Password (OTP):
-                </p>
-                <MultiChoiceInputField
-                  type="radios"
-                  id="mfaChoice"
-                  name="mfaChoice"
-                  items={getMfaOptions(preferredMfa)}
-                ></MultiChoiceInputField>
-              </Card.Content>
+              <Card.Heading>Next time I sign in...</Card.Heading>
+              <p>
+                I want to verify my identity with a One Time Password (OTP):
+              </p>
+              <MultiChoiceInputField
+                type="radios"
+                id="mfaChoice"
+                name="mfaChoice"
+                items={getMfaOptions(preferredMfa)}
+              ></MultiChoiceInputField>
             </Card>
             <Button
               onClick={() => {
@@ -126,9 +124,7 @@ function MfaWarning({ preferredMfa }: MfaWarningProps) {
   const cyTag = preferredMfa === "NOMFA" ? "mfaSetup" : "mfaAlreadyWarning";
   return (
     <WarningCallout data-cy={cyTag}>
-      <WarningCallout.Label visuallyHiddenText={false}>
-        Important
-      </WarningCallout.Label>
+      <WarningCallout.Heading>Important</WarningCallout.Heading>
       <p>{getPrefMfa(preferredMfa)}</p>
     </WarningCallout>
   );

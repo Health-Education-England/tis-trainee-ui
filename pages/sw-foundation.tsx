@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import { Footer, Header } from "nhsuk-react-components";
-import { NHSEnglandLogoWhite } from "../public/NHSEnglandLogoWhite";
 
 export default function SwFoundation() {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,22 +16,12 @@ export default function SwFoundation() {
       <Head>
         <title>South West: Contacts for Foundation Doctors</title>
       </Head>
-      <Header>
-        <Header.Container>
-          <div className="nhsuk-header__logo" data-cy="headerLogo">
-            <a
-              href="/"
-              aria-label="TSS home page"
-              className="nhsuk-header__navigation-link header-logo-link"
-            >
-              <NHSEnglandLogoWhite />
-            </a>
-          </div>
-        </Header.Container>
-        <div className="nhsuk-width-container">
-          <span className="tss-name">TIS Self-Service</span>
-        </div>
-      </Header>
+      <Header
+        service={{
+          href: "/",
+          text: "TIS Self-Service"
+        }}
+      />
       <main className="nhsuk-width-container nhsuk-u-margin-top-5">
         <h1 className="nhsuk-heading-m" data-cy="tssOverview">
           South West: Contacts for Foundation Doctors

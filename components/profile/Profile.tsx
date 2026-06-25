@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Fieldset, SummaryList } from "nhsuk-react-components";
+import { Fieldset, Legend, SummaryList } from "nhsuk-react-components";
 import { Button } from "@aws-amplify/ui-react";
 import PageTitle from "../common/PageTitle";
 import ScrollTo from "../forms/ScrollTo";
@@ -156,13 +156,14 @@ const Profile = () => {
       <PageTitle title="Profile" />
       <ScrollTo />
       <Fieldset>
-        <Fieldset.Legend
+        <Legend
           isPageHeading
           className={style.fieldLegHeader}
           data-cy="profileHeading"
+          size="xl"
         >
           Profile
-        </Fieldset.Legend>
+        </Legend>
       </Fieldset>
       <DataSourceMsg />
       <SummaryList>
@@ -173,7 +174,6 @@ const Profile = () => {
             {forenames && `${forenames} `}
             {surname}
           </SummaryList.Value>
-          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         {personalData?.map(pd => (
           <SummaryList.Row key={pd.label} data-cy={pd.label}>
@@ -183,7 +183,7 @@ const Profile = () => {
             <SummaryList.Value data-cy={`${pd.label}-value`}>
               {pd.value}
             </SummaryList.Value>
-            <SummaryList.Actions>
+            <SummaryList.Action asElement="span">
               {pd.label === emailFieldLabel && (
                 <Button
                   data-cy="updateEmailBtn"
@@ -192,7 +192,7 @@ const Profile = () => {
                   change
                 </Button>
               )}
-            </SummaryList.Actions>
+            </SummaryList.Action>
           </SummaryList.Row>
         ))}
 
@@ -204,7 +204,6 @@ const Profile = () => {
             <p>{address3}</p>
             <p data-cy="postCode">{postCode}</p>
           </SummaryList.Value>
-          <SummaryList.Actions></SummaryList.Actions>
         </SummaryList.Row>
         <div className="nhsuk-heading-m nhsuk-u-margin-top-4">
           Registration details
@@ -219,7 +218,7 @@ const Profile = () => {
                 <SummaryList.Value data-cy={`${rd.label}-value`}>
                   {rd.value}
                 </SummaryList.Value>
-                <SummaryList.Actions>
+                <SummaryList.Action asElement="span">
                   {rd.type === FieldType.Editable &&
                     rd.label === gmcFieldLabel && (
                       <Button
@@ -229,7 +228,7 @@ const Profile = () => {
                         change
                       </Button>
                     )}
-                </SummaryList.Actions>
+                </SummaryList.Action>
               </SummaryList.Row>
             )
         )}

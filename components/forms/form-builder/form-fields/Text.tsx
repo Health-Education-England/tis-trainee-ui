@@ -5,7 +5,7 @@ import {
 } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { useFormContext } from "../FormContext";
-import { Hint } from "nhsuk-react-components";
+import { HintText } from "nhsuk-react-components";
 
 type TextProps = {
   name: string;
@@ -62,7 +62,7 @@ export const Text: React.FC<TextProps> = ({
       >
         {label}
       </label>
-      {hint && <Hint data-cy={`${name}-hint`}>{hint}</Hint>}
+      {hint && <HintText data-cy={`${name}-hint`}>{hint}</HintText>}
       {fieldError && (
         <span id={errorId} className="nhsuk-error-message">
           <span className="nhsuk-u-visually-hidden">Error:</span> {fieldError}

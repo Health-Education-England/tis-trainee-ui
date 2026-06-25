@@ -1,7 +1,5 @@
-import dayjs from "dayjs";
-import { Col, Footer, Row } from "nhsuk-react-components";
+import { Footer } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
-import styles from "./TSSFooter.module.scss";
 
 interface TSSFooterProps {
   appVersion: string;
@@ -10,54 +8,41 @@ interface TSSFooterProps {
 const TSSFooter = ({ appVersion }: TSSFooterProps) => {
   return (
     <Footer>
-      <Footer.List>
-        <Row>
-          <Col width="one-quarter">
-            <NavLink
-              className={styles.refLink}
-              data-cy="linkSupport"
-              to={"/support"}
-            >
-              Support
-            </NavLink>
-          </Col>
-          <Col width="one-quarter">
-            <a
-              className={styles.refLink}
-              data-cy="linkAbout"
-              href="https://tis-support.hee.nhs.uk/about-tis/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              About
-            </a>
-          </Col>
-          <Col width="one-quarter">
-            <a
-              className={styles.refLink}
-              data-cy="linkPrivacyPolicy"
-              href="https://www.hee.nhs.uk/about/privacy-notice"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Privacy &amp; Cookies Policy
-            </a>
-          </Col>
-        </Row>
-      </Footer.List>
-      <Footer.Copyright data-cy="copyrightText">
-        &copy; NHS England {dayjs().year()}
-      </Footer.Copyright>
-      {appVersion ? (
-        <Footer.List>
-          <Footer.ListItem>
+      <Footer.Meta>
+        <Footer.ListItem
+          asElement={NavLink}
+          data-cy="linkSupport"
+          href="/support"
+          to="/support"
+        >
+          Support
+        </Footer.ListItem>
+        <Footer.ListItem
+          data-cy="linkAbout"
+          href="https://tis-support.hee.nhs.uk/about-tis/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          About
+        </Footer.ListItem>
+        <Footer.ListItem
+          data-cy="linkPrivacyPolicy"
+          href="https://www.hee.nhs.uk/about/privacy-notice"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Privacy & Cookies Policy
+        </Footer.ListItem>
+        <Footer.Copyright data-cy="copyrightText">
+          &copy; NHS England
+          {appVersion && (
             <span
-              className={styles.footerVersionText}
+              className="nhsuk-u-display-block nhsuk-u-margin-top-2"
               data-cy="versionText"
             >{`version: ${appVersion}`}</span>
-          </Footer.ListItem>
-        </Footer.List>
-      ) : null}
+          )}
+        </Footer.Copyright>
+      </Footer.Meta>
     </Footer>
   );
 };

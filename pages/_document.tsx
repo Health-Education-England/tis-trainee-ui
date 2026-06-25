@@ -13,7 +13,7 @@ export default function Document() {
         <meta name="robots" content="noindex,nofollow" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
-      <body>
+      <body className="nhsuk-frontend-supported">
         <Main />
         <NextScript />
       </body>

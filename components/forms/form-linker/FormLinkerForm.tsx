@@ -83,7 +83,7 @@ export function FormLinkerForm({
     <div>
       {warningText && (
         <WarningCallout data-cy="formWarning">
-          <WarningCallout.Label>Important</WarningCallout.Label>
+          <WarningCallout.Heading>Important</WarningCallout.Heading>
           <p>{warningText}</p>
         </WarningCallout>
       )}

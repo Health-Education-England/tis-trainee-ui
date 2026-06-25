@@ -63,50 +63,46 @@ export function LtftHome({ pmOptions }: Readonly<LtftHomeProps>) {
       <ExpanderMsg expanderName="ltft16WeeksNotice" />
       <ExpanderMsg expanderName="skilledVisaWorker" />
       <Card>
-        <Card.Content>
-          <>
-            <Card.Heading data-cy="ltft-in-progress-header">
-              In progress applications
-            </Card.Heading>
-            <LtftSummary
-              ltftSummaryType="CURRENT"
-              ltftSummaryStatus={ltftFormsListStatus}
-              ltftSummaryList={draftOrUnsubmittedLtftSummary}
-            />
-            <Container>
-              <Row style={{ fontSize: "19px" }}>
-                <Col width="full">
-                  {pmOptions.length ? (
-                    <Button
-                      data-cy="make-new-ltft-btn"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      Make a new application
-                    </Button>
-                  ) : (
-                    <p data-cy="no-eligable-pms-message">
-                      You are not eligible to make a Less than full-time (LTFT)
-                      application at this time as you have no active current or
-                      upcoming Programmes.
-                    </p>
-                  )}
-                </Col>
-              </Row>
-            </Container>
-          </>
-        </Card.Content>
-      </Card>
-      <Card>
-        <Card.Content>
-          <Card.Heading data-cy="ltft-previous-header">
-            Previous applications
+        <>
+          <Card.Heading data-cy="ltft-in-progress-header">
+            In progress applications
           </Card.Heading>
           <LtftSummary
-            ltftSummaryType="PREVIOUS"
+            ltftSummaryType="CURRENT"
             ltftSummaryStatus={ltftFormsListStatus}
-            ltftSummaryList={previousLtftSummaries}
+            ltftSummaryList={draftOrUnsubmittedLtftSummary}
           />
-        </Card.Content>
+          <Container>
+            <Row style={{ fontSize: "19px" }}>
+              <Col width="full">
+                {pmOptions.length ? (
+                  <Button
+                    data-cy="make-new-ltft-btn"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Make a new application
+                  </Button>
+                ) : (
+                  <p data-cy="no-eligable-pms-message">
+                    You are not eligible to make a Less than full-time (LTFT)
+                    application at this time as you have no active current or
+                    upcoming Programmes.
+                  </p>
+                )}
+              </Col>
+            </Row>
+          </Container>
+        </>
+      </Card>
+      <Card>
+        <Card.Heading data-cy="ltft-previous-header">
+          Previous applications
+        </Card.Heading>
+        <LtftSummary
+          ltftSummaryType="PREVIOUS"
+          ltftSummaryStatus={ltftFormsListStatus}
+          ltftSummaryList={previousLtftSummaries}
+        />
       </Card>
       <LtftDeclarationsModal
         isOpen={isModalOpen}
