@@ -187,7 +187,6 @@ export function FormFieldBuilder({
           arrayName={arrayName}
           dtoName={dtoName}
           conditional={conditional}
-          conditionalFieldName={conditionalField}
         />
       );
     }

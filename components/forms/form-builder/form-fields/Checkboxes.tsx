@@ -12,7 +12,6 @@ type CheckboxesProps = {
   arrayName?: string;
   dtoName?: string;
   conditional?: React.ReactNode;
-  conditionalFieldName?: string;
 };
 
 export const Checkboxes: React.FC<CheckboxesProps> = ({

@@ -167,21 +167,22 @@ export const FormProvider: React.FC<FormProviderProps> = ({
         return existingWarningMsgs;
       return newWarningMsgs;
     });
+  }, [formData, currentPageFields]);
 
-    // remove child field value when depending parent field unchecked
-    if (!isFormDirty) return;
+  useEffect(() => {
+    // remove child field value when depending parent field is unchecked
     setFormData(prevFormData => {
+      let changed = false;
       const cleaned = currentPageFields.reduce((acc, field) => {
-        if (!showFormField(field, acc)) {
+        if (!showFormField(field, acc) && acc[field.name] != null) {
+          changed = true;
           return { ...acc, [field.name]: null };
         }
         return acc;
       }, prevFormData);
-      return JSON.stringify(cleaned) === JSON.stringify(prevFormData)
-        ? prevFormData
-        : cleaned;
+      return changed ? cleaned : prevFormData;
     });
-  }, [formData, currentPageFields, isFormDirty]);
+  }, [formData, currentPageFields]);
 
   const handleChange = useCallback(
     (
