@@ -90,3 +90,37 @@ describe("FormRForm (Part A) - new form /new/create", () => {
     );
   });
 });
+
+describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedFormALifecycleState(LifeCycleState.Draft));
+    store.dispatch(
+      updatedTraineeProfileData({
+        ...defaultProfileTestData,
+        personalDetails: {
+          ...mockPersonalDetails,
+          publicHealthNumber: "ph001",
+          gmcNumber: "",
+          gdcNumber: ""
+        }
+      })
+    );
+mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/formr-a/new/create"]}>
+          <FormRForm formType="A" />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    cy.get('[data-cy="isArcp0"]').click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.get('button[data-cy="form-linker-submit-btn"]').click();
+    cy.get('[data-cy="progress-header"]').should("exist");
+  });
+  it("shows check GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
+    cy.checkAndFillPhGmcGdc();
+  });
+});

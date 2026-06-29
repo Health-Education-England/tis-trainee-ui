@@ -17,18 +17,24 @@ const atLeastOneNonBlank = (fields: string[], message: string) =>
 
 const formAValidationSchemaDefault = {
   ...parentSchema,
-  gmcNumber: atLeastOneNonBlank(
-    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
-    "At least one of GMC number, GDC number, or Public Health number must be provided"
-  )
+  hasGmcNumber: yup.boolean().nullable(),
+  hasGdcNumber: yup.boolean().nullable(),
+  gmcNumber: yup
+    .string()
     .nullable()
-    .max(20, "GMC Number must be shorter than 20 characters"),
-  gdcNumber: atLeastOneNonBlank(
-    ["gmcNumber", "gdcNumber", "publicHealthNumber"],
-    "At least one of GMC number, GDC number, or Public Health number must be provided"
-  )
+    .max(20, "GMC Number must be shorter than 20 characters")
+    .when("hasGmcNumber", {
+      is: true,
+      then: schema => schema.required("Please enter your GMC number")
+    }),
+  gdcNumber: yup
+    .string()
     .nullable()
-    .max(20, "GDC Number must be shorter than 20 characters"),
+    .max(20, "GDC Number must be shorter than 20 characters")
+    .when("hasGdcNumber", {
+      is: true,
+      then: schema => schema.required("Please enter your GDC number")
+    }),
   publicHealthNumber: atLeastOneNonBlank(
     ["gmcNumber", "gdcNumber", "publicHealthNumber"],
     "At least one of GMC number, GDC number, or Public Health number must be provided"

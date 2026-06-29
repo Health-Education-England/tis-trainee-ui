@@ -64,7 +64,7 @@ export const Radios: React.FC<RadiosProps> = ({
                   name={name} // Keep original name for form binding
                   value={option.value}
                   checked={isChecked(value, option.value)}
-                  onChange={event =>
+                  onChange={event => {
                     handleChange(
                       event,
                       undefined,
@@ -72,8 +72,8 @@ export const Radios: React.FC<RadiosProps> = ({
                       arrayIndex,
                       arrayName,
                       dtoName
-                    )
-                  }
+                    );
+                  }}
                   placeholder={option.value}
                   aria-labelledby={labelId}
                   aria-describedby={fieldError ? errorId : undefined}

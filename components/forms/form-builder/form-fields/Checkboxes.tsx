@@ -11,6 +11,7 @@ type CheckboxesProps = {
   arrayIndex?: number;
   arrayName?: string;
   dtoName?: string;
+  conditional?: React.ReactNode;
 };
 
 export const Checkboxes: React.FC<CheckboxesProps> = ({
@@ -21,7 +22,8 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
   value,
   arrayIndex,
   arrayName,
-  dtoName
+  dtoName,
+  conditional
 }: CheckboxesProps) => {
   const { handleChange } = useFormContext();
 
@@ -31,6 +33,8 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
       : name;
   const labelId = `${inputId}--label`;
   const errorId = `${inputId}-error`;
+  const conditionalId = `conditional-${inputId}`;
+  const checked = Boolean(value);
 
   return (
     <div
@@ -47,12 +51,13 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
             onKeyDown={handleKeyDown}
             type="checkbox"
             name={name}
-            checked={Boolean(value)}
+            checked={checked}
             onChange={event => {
+              const isChecked = event.currentTarget.checked;
               handleChange(
                 event,
                 undefined,
-                event.currentTarget.checked,
+                isChecked,
                 arrayIndex,
                 arrayName,
                 dtoName
@@ -61,6 +66,8 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
             placeholder={placeholder}
             aria-labelledby={labelId}
             aria-describedby={fieldError ? errorId : undefined}
+            aria-controls={conditional ? conditionalId : undefined}
+            aria-expanded={conditional ? checked : undefined}
           />
           <label
             className="nhsuk-label nhsuk-checkboxes__label"
@@ -76,6 +83,12 @@ export const Checkboxes: React.FC<CheckboxesProps> = ({
             </span>
           )}
         </div>
+
+        {conditional && checked && (
+          <div className="nhsuk-checkboxes__conditional" id={conditionalId}>
+            {conditional}
+          </div>
+        )}
       </div>
     </div>
   );

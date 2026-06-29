@@ -73,6 +73,7 @@ export type Field = {
   hint?: string;
   altDisplayVal?: string;
   maxDigits?: number;
+  conditionalField?: string;
 };
 export type FormData = {
   [key: string]: any;
@@ -141,6 +142,12 @@ export default function FormBuilder({
     jsonForm,
     isAutosaving
   } = useFormContext();
+
+  const conditionalChildNames = new Set(
+    currentPageFields
+      .filter(field => field.type === "checkbox" && field.conditionalField)
+      .map(field => field.conditionalField as string)
+  );
 
   const jsonFormName = jsonForm.name;
   const pages = jsonForm.pages;
@@ -242,12 +249,15 @@ export default function FormBuilder({
                 <Card.Content>
                   <Card.Heading>{section.sectionHeader}</Card.Heading>
                   {section.fields.map((field: Field) => {
+                    if (conditionalChildNames.has(field.name)) return null;
+
                     const fieldComponent = (
                       <FormFieldBuilder
                         field={field}
                         value={formData[field.name] ?? ""}
                         error={formErrors[field.name] ?? ""}
                         options={options}
+                        formErrors={formErrors}
                       />
                     );
                     return (

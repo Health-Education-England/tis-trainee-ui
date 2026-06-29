@@ -10,6 +10,7 @@ import {
   determineCurrentValue,
   getFieldWarningMsgs,
   setTextFieldWidth,
+  showFormField,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
@@ -165,6 +166,21 @@ export const FormProvider: React.FC<FormProviderProps> = ({
       )
         return existingWarningMsgs;
       return newWarningMsgs;
+    });
+  }, [formData, currentPageFields]);
+
+  useEffect(() => {
+    // remove child field value when depending parent field is unchecked
+    setFormData(prevFormData => {
+      let changed = false;
+      const cleaned = currentPageFields.reduce((acc, field) => {
+        if (!showFormField(field, acc) && acc[field.name] != null) {
+          changed = true;
+          return { ...acc, [field.name]: null };
+        }
+        return acc;
+      }, prevFormData);
+      return changed ? cleaned : prevFormData;
     });
   }, [formData, currentPageFields]);
 

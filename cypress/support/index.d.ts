@@ -22,6 +22,7 @@ declare global {
       checkAndFillSection10(): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
       checkAndFillNewCctCalcForm(): Chainable<Element>;
+      checkAndFillPhGmcGdc(): Chainable<Element>;
       checkElement(
         selector: string,
         text: string | number | null = null,

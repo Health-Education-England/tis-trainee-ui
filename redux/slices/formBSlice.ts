@@ -233,7 +233,7 @@ const formBSlice = createSlice({
       })
       .addCase(loadSavedFormB.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formData =
+        const baseFormData =
           action.payload.covidFlagStatus &&
           action.payload.finalForm.haveCovidDeclarations === null
             ? {
@@ -241,6 +241,12 @@ const formBSlice = createSlice({
                 covidDeclarationDto: defaultCovidObject
               }
             : action.payload.finalForm;
+
+        state.formData = {
+          ...baseFormData,
+          hasGmcNumber: !!baseFormData.gmcNumber,
+          hasGdcNumber: !!baseFormData.gdcNumber
+        };
         state.displayCovid =
           action.payload.covidFlagStatus ||
           action.payload.finalForm.haveCovidDeclarations !== null;
@@ -271,7 +277,11 @@ const formBSlice = createSlice({
         saveFormB.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           state.newFormId = data.id;
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
@@ -326,7 +336,11 @@ const formBSlice = createSlice({
         updateFormB.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
               data.lastModifiedDate,

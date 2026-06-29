@@ -183,7 +183,11 @@ const formASlice = createSlice({
       })
       .addCase(loadSavedFormA.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.formData = action.payload;
+        state.formData = {
+          ...action.payload,
+          hasGmcNumber: !!action.payload.gmcNumber,
+          hasGdcNumber: !!action.payload.gdcNumber
+        };
       })
       .addCase(loadSavedFormA.rejected, (state, { error }) => {
         state.status = "failed";
@@ -211,7 +215,11 @@ const formASlice = createSlice({
         saveFormA.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           state.newFormId = data.id;
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
@@ -266,7 +274,11 @@ const formASlice = createSlice({
         updateFormA.fulfilled,
         (state, { payload: { data, isAutoSave, isSubmit } }) => {
           state.saveStatus = "succeeded";
-          state.formData = data;
+          state.formData = {
+            ...data,
+            hasGmcNumber: !!data.gmcNumber,
+            hasGdcNumber: !!data.gdcNumber
+          };
           if (isAutoSave)
             state.saveLatestTimeStamp = DateUtilities.ConvertToLondonTime(
               data.lastModifiedDate,
