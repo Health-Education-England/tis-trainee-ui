@@ -1,17 +1,13 @@
-import { Footer } from "nhsuk-react-components";
+import styles from '../../Auth.module.scss'
 
 export const AuthFooter = (): JSX.Element => {
   return (
-    <Footer>
-      <Footer.Meta>
-        <Footer.ListItem href="https://tis-support.hee.nhs.uk/about-tis/">
-          About
-        </Footer.ListItem>
-        <Footer.ListItem href="https://www.hee.nhs.uk/about/privacy-notice">
-          Privacy & Cookies
-        </Footer.ListItem>
-        <Footer.Copyright data-cy="footerCopy" />
-      </Footer.Meta>
-    </Footer>
+    <footer className={styles.authFooterLinks}>
+      <a className={styles.authFooterLink} href="https://tis-support.hee.nhs.uk/about-tis/" target="_blank" rel="noopener noreferrer">About</a>
+
+      <a className={styles.authFooterLink} href="https://www.hee.nhs.uk/about/privacy-notice" target="_blank" rel="noopener noreferrer">Privacy & Cookies</a>
+
+      <span className={styles.authFooterText}>© NHS England {new Date().getFullYear()}</span>
+    </footer>
   );
 };
