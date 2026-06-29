@@ -1,4 +1,3 @@
-// import { ListPanel } from "nhsuk-react-components";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { Post } from "../../models/WPPost";
 
@@ -52,16 +51,14 @@ export const TssUpdates: React.FC = () => {
   return (
     <div className="tss-updates-content" data-cy="tssUpdatesContainer">
       <WhatsNewHeader />
-      {/* <ListPanel>
-        <ListPanel.Item key={id}>
-          <h3 className="list-panel-header" data-cy={`postTitle${id}`}>
-            {title.rendered}
-          </h3>
-          <p data-cy={`postExcerpt${id}`}>
-            {extractTextFromHTML(excerpt.rendered)}
-          </p>
-        </ListPanel.Item>
-      </ListPanel> */}
+      <article className="whats-new-item">
+        <h3 data-cy={`postTitle${id}`}>
+          {title.rendered}
+        </h3>
+        <p data-cy={`postExcerpt${id}`}>
+          {extractTextFromHTML(excerpt.rendered)}
+        </p>
+      </article>
     </div>
   );
 };

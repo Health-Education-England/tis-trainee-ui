@@ -196,6 +196,10 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+
+  .nhsuk-icon--cross {
+    fill: #005eb8;
+  }
 }
 
 .recruit-link {
@@ -529,10 +533,6 @@ ol[type="a"] {
   box-sizing: border-box;
   border: solid #ffffff33 2px;
   padding: 16px;
-}
-
-.list-panel-header {
-  margin-bottom: 0;
 }
 
 .internal-link {
