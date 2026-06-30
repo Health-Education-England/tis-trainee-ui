@@ -1,5 +1,10 @@
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { ActionLink, Fieldset, Legend } from "nhsuk-react-components";
+import {
+  ActionLink,
+  Fieldset,
+  Legend,
+  CrossIcon
+} from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
@@ -109,7 +114,7 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         title="Dismiss recruitment alert"
         onClick={onDismiss}
       >
-        x
+        <CrossIcon />
       </button>
     </div>
   );
