@@ -52,9 +52,7 @@ export const TssUpdates: React.FC = () => {
     <div className="tss-updates-content" data-cy="tssUpdatesContainer">
       <WhatsNewHeader />
       <article className="whats-new-item">
-        <h3 data-cy={`postTitle${id}`}>
-          {title.rendered}
-        </h3>
+        <h3 data-cy={`postTitle${id}`}>{title.rendered}</h3>
         <p data-cy={`postExcerpt${id}`}>
           {extractTextFromHTML(excerpt.rendered)}
         </p>
