@@ -26,6 +26,12 @@ $alertYellow: #ffeb3b;
 }
 
 // profile
+.panelsWrapper {
+  .contentsList {
+    margin-left: 2.25rem;
+  }
+}
+
 .panelDiv {
   padding: 0.75rem;
   border-radius: 6px;
