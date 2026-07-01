@@ -30,6 +30,16 @@ $alertYellow: #ffeb3b;
   padding: 0.75rem;
   border-radius: 6px;
   margin: 0 16px 0 16px;
+
+  // Removes the empty 3rd column when there are no actions in nhsuk-react-component Summary List
+  :global(.nhsuk-summary-list__row--no-actions::after) {
+    display: none;
+  }
+
+  // Removes the default padding on the content nhsuk-react-component
+  :global(.nhsuk-card__content) {
+    padding: unset;
+  }
 }
 
 .panelDivHighlight {

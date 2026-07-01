@@ -62,14 +62,16 @@ export function PanelsCreator({
   const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
   const panelsTitle = PANEL_KEYS[panelsName];
 
+  const getPanelTitle = (panel: ProfileType): string =>
+    panelsName === TraineeProfileName.Programmes
+      ? (panel as ProgrammeMembership).programmeName
+      : (panel as Placement).site;
+
   return (
     <Card.Group>
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: ProfileType, index: number) => {
-          const panelTitle =
-            panelsName === TraineeProfileName.Programmes
-              ? (panel as ProgrammeMembership).programmeName
-              : (panel as Placement).site;
+          const panelTitle = getPanelTitle(panel);
 
           const currentAction = unreviewedActions.filter(
             action =>
