@@ -2,6 +2,8 @@ import {
   BodyText,
   Button,
   Card,
+  ContentsList,
+  ContentsListItem,
   Label,
   SummaryList
 } from "nhsuk-react-components";
@@ -62,14 +64,28 @@ export function PanelsCreator({
   const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
   const panelsTitle = PANEL_KEYS[panelsName];
 
+  const getPanelTitle = (panel: ProfileType): string =>
+    panelsName === TraineeProfileName.Programmes
+      ? (panel as ProgrammeMembership).programmeName
+      : (panel as Placement).site;
+
+  const makePanelId = (panel: ProfileType) =>
+    `panel-${getPanelTitle(panel).toLowerCase()}`;
+
   return (
-    <Card.Group>
+    <Card.Group className={style.panelsWrapper}>
+      {panelsArr.length > 1 && (
+        <ContentsList className={style.contentsList}>
+          {panelsArr.map((panel: ProfileType, index: number) => (
+            <ContentsListItem href={`#${makePanelId(panel)}`} key={index}>
+              {getPanelTitle(panel)}
+            </ContentsListItem>
+          ))}
+        </ContentsList>
+      )}
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: ProfileType, index: number) => {
-          const panelTitle =
-            panelsName === TraineeProfileName.Programmes
-              ? (panel as ProgrammeMembership).programmeName
-              : (panel as Placement).site;
+          const panelTitle = getPanelTitle(panel);
 
           const currentAction = unreviewedActions.filter(
             action =>
@@ -77,7 +93,7 @@ export function PanelsCreator({
               action.type === "REVIEW_DATA"
           );
           return (
-            <Card.GroupItem key={index} width="one-half">
+            <Card.GroupItem key={index} width="full">
               <Card
                 className={
                   currentAction.length > 0
@@ -85,7 +101,9 @@ export function PanelsCreator({
                     : style.panelDiv
                 }
               >
-                <p className={style.panelHeader}>{panelTitle}</p>
+                <p id={makePanelId(panel)} className={style.panelHeader}>
+                  {panelTitle}
+                </p>
                 <SummaryList>
                   {panelsName === TraineeProfileName.Programmes &&
                     dayjs(panel.startDate).isAfter(
