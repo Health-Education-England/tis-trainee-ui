@@ -44,38 +44,52 @@ const Support = () => {
             <p>Click the link below to view FAQ&apos;s (opens a new window)</p>
           </Legend>
         </Fieldset>
-        <ActionLink
-          data-cy="supportCreateAccFaqsLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://tis-support.hee.nhs.uk/trainees/when-i-sign-up/"
-        >
-          When I Create an Account
-        </ActionLink>
-        <ActionLink
-          data-cy="supportSignInFaqsLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
-        >
-          When I Sign In
-        </ActionLink>
-        <ActionLink
-          data-cy="supportFormRFaqsLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://tis-support.hee.nhs.uk/trainees/form-r/"
-        >
-          Form R
-        </ActionLink>
-        <ActionLink
-          data-cy="supportChangesFaqsLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://tis-support.hee.nhs.uk/trainees/changes-to-account/"
-        >
-          Changes to Account
-        </ActionLink>
+        <ul className="nhsuk-list">
+          <li>
+            <ActionLink
+              className="nhsuk-u-margin-bottom-0"
+              data-cy="supportCreateAccFaqsLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://tis-support.hee.nhs.uk/trainees/when-i-sign-up/"
+            >
+              When I Create an Account
+            </ActionLink>
+          </li>
+          <li>
+            <ActionLink
+              className="nhsuk-u-margin-bottom-0"
+              data-cy="supportSignInFaqsLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://tis-support.hee.nhs.uk/trainees/when-i-log-in/"
+            >
+              When I Sign In
+            </ActionLink>
+          </li>
+          <li>
+            <ActionLink
+              className="nhsuk-u-margin-bottom-0"
+              data-cy="supportFormRFaqsLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://tis-support.hee.nhs.uk/trainees/form-r/"
+            >
+              Form R
+            </ActionLink>
+          </li>
+          <li>
+            <ActionLink
+              className="nhsuk-u-margin-bottom-0"
+              data-cy="supportChangesFaqsLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://tis-support.hee.nhs.uk/trainees/changes-to-account/"
+            >
+              Changes to Account
+            </ActionLink>
+          </li>
+        </ul>
       </Card>
       <Card feature data-cy="loSupportLabel">
         <Card.Heading data-cy="loSupportHeading">
