@@ -1,14 +1,18 @@
 import dayjs from "dayjs";
 import {
+  mockProgrammeMembershipFoundation,
   mockProgrammeMemberships,
-  mockProgrammesForLinkerTest
+  mockProgrammesForLinkerTest,
+  mockProgrammesForLinkerTestWithFoundation
 } from "../../mock-data/trainee-profile";
 import {
   filterProgrammesForLinker,
+  isFoundationProgramme,
   makeWarningText,
   processLinkedFormData,
   sortProgrammesForLinker
 } from "../FormRUtilities";
+import { ProgrammeMembership } from "../../models/ProgrammeMembership";
 
 jest.mock("../../redux/store/store", () => ({
   dispatch: jest.fn()
@@ -65,6 +69,16 @@ describe("FormRUtilities - filterProgrammesForLinker", () => {
     expect(filteredProgrammes[2].endDate).toBe(
       dayjs().add(3, "year").format("YYYY-MM-DD")
     );
+  });
+
+  it("should exclude Foundation programmes even when they fall within the current date range", () => {
+    const programmes = mockProgrammesForLinkerTestWithFoundation;
+    const filteredProgrammes = filterProgrammesForLinker(programmes, false);
+    expect(
+      filteredProgrammes.some(
+        programme => programme.tisId === mockProgrammeMembershipFoundation.tisId
+      )
+    ).toBe(false);
   });
 });
 
@@ -197,5 +211,35 @@ describe("FormRUtilities - processLinkedFormData", () => {
     );
 
     expect(result.linkedProgramme).toBeUndefined();
+  });
+});
+
+describe("FormRUtilities - isFoundationProgramme", () => {
+  it("should return false when programme is null", () => {
+    const result = isFoundationProgramme(
+      null as unknown as ProgrammeMembership
+    );
+    expect(result).toEqual(false);
+  });
+
+  it("should return false when programme.curricula is undefined", () => {
+    const programme = {
+      ...mockProgrammeMemberships[0],
+      curricula: undefined
+    } as unknown as ProgrammeMembership;
+    const result = isFoundationProgramme(programme);
+    expect(result).toEqual(false);
+  });
+
+  it("should return true when a curriculum has the foundation subtype", () => {
+    const result = isFoundationProgramme(
+      mockProgrammeMembershipFoundation
+    );
+    expect(result).toEqual(true);
+  });
+
+  it("should return false for a non-foundation programme", () => {
+    const result = isFoundationProgramme(mockProgrammesForLinkerTest[0]);
+    expect(result).toEqual(false);
   });
 });

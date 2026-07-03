@@ -11,7 +11,8 @@ import {
   mockPersonalDetails,
   mockProgrammesForLinkerTest,
   mockProgrammesForLinkerTestOutsideArcp,
-  mockProgrammesForLinkerTestOutsideNewStarter
+  mockProgrammesForLinkerTestOutsideNewStarter,
+  mockProgrammesForLinkerTestWithFoundation
 } from "../../../../mock-data/trainee-profile";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
@@ -216,5 +217,34 @@ describe("FormLinkerModal", () => {
     cy.get('[data-cy="isArcp1"]').click();
     cy.get('[data-cy="error-header-text"]').should("exist");
     cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
+  });
+
+  it("should not display Foundation programmes as linkable options", () => {
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammesForLinkerTestWithFoundation,
+        placements: [],
+        qualifications: []
+      })
+    );
+
+    mountComponent();
+    cy.get('[data-cy="isArcp0"]').click();
+    cy.get('[data-cy="programmeMembershipId"]').should("exist");
+
+    // Foundation programme should be filtered out and never shown as an option
+    cy.get('[data-cy="programmeMembershipId"]').should(
+      "not.contain.text",
+      "Foundation Programme"
+    );
+
+    // Switch to New Starter to confirm it's also excluded there
+    cy.get('[data-cy="isArcp1"]').click();
+    cy.get('[data-cy="programmeMembershipId"]').should(
+      "not.contain.text",
+      "Foundation Programme"
+    );
   });
 });
