@@ -167,12 +167,9 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
   // Header section
 
   const containedEls = [
+    ['[data-cy="WarningCallout-formAImportantNotice-label"]', "Important"],
     [
-      '[data-cy="WarningCallout-formAImportantNotice-label"] > span',
-      "Important"
-    ],
-    [
-      ".nhsuk-warning-callout > :nth-child(2)",
+      ".nhsuk-card--warning .nhsuk-card__content > :nth-child(2)",
       "This form has been pre-populated using the information available against your records"
     ],
     [
@@ -285,7 +282,7 @@ Cypress.Commands.add("checkAndFillFormASection1", () => {
 
 Cypress.Commands.add("checkAndFillFormASection2", () => {
   // Page 2
-  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"] > span').should(
+  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"]').should(
     "not.exist"
   );
 
@@ -356,7 +353,7 @@ Cypress.Commands.add("checkAndFillFormASection3", () => {
     "Part 3 of 3 - Programme Details"
   );
 
-  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"] > span').should(
+  cy.get('[data-cy="WarningCallout-formAImportantNotice-label"]').should(
     "not.exist"
   );
 
@@ -411,7 +408,7 @@ Cypress.Commands.add("checkAndFillSection1", () => {
     "Personal Details"
   );
   cy.checkElement("WarningCallout-formBImportantNotice-label");
-  cy.get(".nhsuk-warning-callout > :nth-child(2)").should(
+  cy.get(".nhsuk-card--warning .nhsuk-card__content > :nth-child(2)").should(
     "include.text",
     "This form has been pre-populated using the information available against your records"
   );
