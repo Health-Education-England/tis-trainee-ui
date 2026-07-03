@@ -77,14 +77,14 @@ Cypress.Commands.add(
         cy.wait(waitTimeMs);
       }
 
-      cy.visit("/", { failOnStatusCode: false, timeout: 60000 });
+      cy.visit("/home", { failOnStatusCode: false, timeout: 60000 });
       if (viewport) cy.viewport(viewport);
       cy.signIn();
       cy.get('[data-cy="signOutBtn"]').should("exist");
     });
 
     cy.then(() => {
-      const urlString = visitUrl ?? "/";
+      const urlString = visitUrl ?? "/home";
       cy.visit(urlString, { failOnStatusCode: false, timeout: 60000 });
     });
   }

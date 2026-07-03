@@ -9,13 +9,18 @@ export default function SwFoundation() {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) return null;
+  const head = (
+    <Head>
+      <title>South West: Contacts for Foundation Doctors</title>
+      <meta name="robots" content="noindex,nofollow" />
+    </Head>
+  );
+
+  if (!isMounted) return head;
 
   return (
     <>
-      <Head>
-        <title>South West: Contacts for Foundation Doctors</title>
-      </Head>
+      {head}
       <Header
         service={{
           href: "/",

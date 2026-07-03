@@ -8,7 +8,6 @@ describe("Placements", () => {
 
   it("should show the correct text for each placement ", () => {
     cy.get('[data-cy="homeLink"]').should("exist");
-    cy.get('[data-cy="homeWelcomeHeaderText"]').should("not.exist");
     cy.get(".nhsuk-fieldset__heading")
       .should("exist")
       .should("contain.text", "Placements");

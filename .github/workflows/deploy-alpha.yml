@@ -42,14 +42,14 @@ jobs:
 
       - name: Deploy app build to S3 bucket
         run: |
-          mv ./out/[[...app]].html ./out/index.html
+          mv "./out/[...app].html" "./out/app-shell.html"
           aws s3 sync ./out/ s3://${{ secrets.AWS_S3_BUCKET_DSP_ALPHA }}/${{ env.app_version }} --delete
 
       - name: Update Cloudfront Origin Path
         run: |
           aws cloudfront get-distribution-config --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} > ${{ env.ORIGINAL_CONFIG_FILENAME }}
           etag=`jq '.ETag' ${{ env.ORIGINAL_CONFIG_FILENAME }} | xargs`
-          jq '.DistributionConfig | (.Origins.Items[] | select(.Id | contains("website")).OriginPath) = "/${{ env.app_version }}"' ${{ env.ORIGINAL_CONFIG_FILENAME }} > ${{ env.UPDATED_CONFIG_FILENAME }}
+          jq '.DistributionConfig | (.Origins.Items[] | select(.Id | contains("website")).OriginPath) = "/${{ env.app_version }}" | (.CustomErrorResponses.Items[]? | select(.ResponsePagePath == "/index.html").ResponsePagePath) = "/app-shell.html"' ${{ env.ORIGINAL_CONFIG_FILENAME }} > ${{ env.UPDATED_CONFIG_FILENAME }}
           aws cloudfront update-distribution --id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --if-match $etag --distribution-config file://${{ env.UPDATED_CONFIG_FILENAME }}
         env:
           ORIGINAL_CONFIG_FILENAME: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID}}_get.json

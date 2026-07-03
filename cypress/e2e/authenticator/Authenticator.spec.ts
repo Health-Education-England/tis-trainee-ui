@@ -37,7 +37,7 @@ const assertFooterLinks = (elNo: number, elNo2: number, elHref: string) => {
 
 describe("Authenticator sign in", () => {
   before(() => {
-    cy.visit("/");
+    cy.visit("/home");
   });
 
   it("Sign in should show logo and heading, password toggle visibility, and support links", () => {
@@ -59,7 +59,7 @@ describe("Authenticator sign in", () => {
 
 describe("Authenticator sign up", () => {
   before(() => {
-    cy.visit("/");
+    cy.visit("/home");
   });
 
   it("Sign up should show the password strength & matching errors, checkboxes, and footer links", () => {

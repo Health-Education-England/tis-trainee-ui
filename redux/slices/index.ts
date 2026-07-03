@@ -7,7 +7,6 @@ import formAReducer from "./formASlice";
 import formBReducer from "./formBSlice";
 import featureFlagsReducer from "./featureFlagsSlice";
 import userReducer from "./userSlice";
-import tssUpdatesReducer from "./tssUpdatesSlice";
 import notificationsReducer from "./notificationsSlice";
 import cctReducer from "./cctSlice";
 import cctListReducer from "./cctListSlice";
@@ -23,7 +22,6 @@ const rootReducer = combineReducers({
   formB: formBReducer,
   featureFlags: featureFlagsReducer,
   user: userReducer,
-  tssUpdates: tssUpdatesReducer,
   notifications: notificationsReducer,
   cct: cctReducer,
   cctList: cctListReducer,

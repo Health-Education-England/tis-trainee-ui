@@ -61,6 +61,8 @@ const Routes = () => {
         <Route path="/ltft" component={Ltft} />
       )}
       <Redirect exact path="/" to="/home" />
+      <Redirect exact path="/sign-in" to="/home" />
+      <Redirect exact path="/sign-up" to="/home" />
       <Route path="/*" component={PageNotFound} />
     </Switch>
   );

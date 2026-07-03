@@ -17,10 +17,13 @@ describe("Home", () => {
 
   it("should find profile button and click in to the profile section", () => {
     cy.get('[data-cy="homeLink"]').should("not.exist");
-    cy.get('[data-cy="homeWelcomeHeaderText"]')
+    cy.get('[data-cy="whatsNewLink"]')
       .should("exist")
-      .should("contain.html", "Welcome to<br>TIS Self-Service");
-    cy.get('[data-cy="tssUpdatesContainer"]').should("exist");
+      .should("have.attr", "href")
+      .and(
+        "include",
+        "https://tis-support.hee.nhs.uk/about-tis/welcome-to-the-tss-updates/"
+      );
     cy.get('[data-cy="tssOverview"]').should("exist");
 
     homeArr.forEach(section => {

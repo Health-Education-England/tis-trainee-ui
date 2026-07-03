@@ -27,6 +27,13 @@ describe("Desktop/ tablet header", () => {
         .should("exist")
         .contains(/Sign out/);
       cy.get('[data-cy="signOutBtn"]').click();
+
+      // Signing out should redirect to the landing page
+      cy.location("pathname").should("eq", "/");
+      cy.get("[data-cy=landingHeading]").should(
+        "contain.text",
+        "TIS Self-Service"
+      );
     });
   });
 });

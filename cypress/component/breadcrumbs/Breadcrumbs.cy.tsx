@@ -19,5 +19,3 @@ describe("Breadcrumbs", () => {
     cy.get('[data-cy="homeLink"]').should("exist").should("have.text", "Home");
   });
 });
-
-// TODO mock useLocation to test HomeHeaderSection comp
