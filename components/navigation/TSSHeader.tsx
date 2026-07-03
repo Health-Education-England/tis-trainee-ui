@@ -106,11 +106,11 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.details.placements.enabled
     },
     {
-      path: "cct",
-      name: "CCT",
+      path: "ltft",
+      name: "Less than full-time (LTFT)",
       mobileOnly: false,
       showWithNoMfa: false,
-      featureEnabled: userFeatures.cct.enabled
+      featureEnabled: userFeatures.forms.ltft.enabled
     },
     {
       path: "formr-a",
@@ -127,20 +127,6 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.forms.formr.enabled
     },
     {
-      path: "support",
-      name: "Support",
-      mobileOnly: true,
-      showWithNoMfa: true,
-      featureEnabled: true
-    },
-    {
-      path: "mfa",
-      name: "MFA set-up",
-      mobileOnly: true,
-      showWithNoMfa: true,
-      featureEnabled: true
-    },
-    {
       path: "profile",
       name: "Profile",
       mobileOnly: false,
@@ -148,11 +134,25 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.details.profile.enabled
     },
     {
-      path: "ltft",
-      name: "Less than full-time (LTFT)",
+      path: "support",
+      name: "Support",
+      mobileOnly: false,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
+    {
+      path: "mfa",
+      name: "MFA set-up",
+      mobileOnly: false,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
+    {
+      path: "cct",
+      name: "CCT",
       mobileOnly: false,
       showWithNoMfa: false,
-      featureEnabled: userFeatures.forms.ltft.enabled
+      featureEnabled: userFeatures.cct.enabled
     }
   ];
 
