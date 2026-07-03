@@ -143,10 +143,12 @@ describe("LtftForm - draft", () => {
 
     // Part 5
     cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
-    cy.get(
-      '[data-cy="WarningCallout-ltftReasonsInstructions-label"] > span'
-    ).contains("Important");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftReasonsText1);
+    cy.get('[data-cy="WarningCallout-ltftReasonsInstructions-label"]').contains(
+      "Important"
+    );
+    cy.get(".nhsuk-card--warning .nhsuk-card__content > p").contains(
+      ltftReasonsText1
+    );
     cy.navNext();
     cy.get("#reasonsSelected-error").contains(ltftReasonsError);
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
@@ -177,15 +179,15 @@ describe("LtftForm - draft", () => {
     // Part 7
     cy.get("h3").contains("Part 7 of 10 - Pre-approver discussions");
     cy.get(
-      '[data-cy="WarningCallout-ltftDiscussionInstructions-label"] > span'
+      '[data-cy="WarningCallout-ltftDiscussionInstructions-label"]'
     ).should("exist");
-    cy.get(".nhsuk-warning-callout > :nth-child(3)").should(
+    cy.get(".nhsuk-card--warning .nhsuk-card__content > :nth-child(3)").should(
       "include.text",
       ltftDiscussionText2.slice(0, 100)
     );
-    cy.get(".nhsuk-warning-callout > :nth-child(4)").contains(
-      "For information on Professional support contact"
-    );
+    cy.get(
+      ".nhsuk-card--warning .nhsuk-card__content > :nth-child(4)"
+    ).contains("For information on Professional support contact");
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
     cy.navNext();
     cy.get("#tpdName-error").contains("Pre-approver name is required");
@@ -213,7 +215,9 @@ describe("LtftForm - draft", () => {
 
     // part 9
     cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
-    cy.get(".nhsuk-warning-callout > p").contains(ltftTier2VisaImportantText1);
+    cy.get(".nhsuk-card--warning .nhsuk-card__content > p").contains(
+      ltftTier2VisaImportantText1
+    );
     cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
     cy.navNext();
     cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);

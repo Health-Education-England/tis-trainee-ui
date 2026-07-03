@@ -369,6 +369,7 @@ export function FormErrors({
       aria-labelledby="errorSummaryTitle"
       role="alert"
       tabIndex={-1}
+      disableAutoFocus
     >
       <div className="error-summary" data-cy="errorSummary">
         <h2 id="errorSummaryTitle" className="nhsuk-error-summary__title">
