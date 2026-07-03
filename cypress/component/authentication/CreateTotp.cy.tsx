@@ -9,7 +9,6 @@ import { updatedTempMfa } from "../../../redux/slices/userSlice";
 import store from "../../../redux/store/store";
 import CreateTotp from "../../../components/authentication/setMfa/totp/CreateTotp";
 import history from "../../../components/navigation/history";
-import React from "react";
 
 describe("CreateTotp sections", () => {
   it("should not render a totp section if NOMFA", () => {
@@ -46,7 +45,7 @@ describe("CreateTotp sections", () => {
       .should("exist")
       .should("include.text", "No");
     cy.get("[data-cy=appInstalledAlready0]").click();
-    cy.get(".nhsuk-warning-callout").should("exist");
+    cy.get("[data-cy=threeMinWarning]").should("exist");
     cy.get(".nhsuk-button")
       .should("exist")
       .should(
@@ -54,7 +53,7 @@ describe("CreateTotp sections", () => {
         "Add 'NHS TIS Self-Service' to your Authenticator App"
       );
     cy.get("[data-cy=appInstalledAlready1]").click();
-    cy.get(".nhsuk-warning-callout").should("not.exist");
+    cy.get("[data-cy=threeMinWarning]").should("not.exist");
 
     // progress to Install totp section
     cy.get(".nhsuk-button").should("exist").click();
