@@ -234,17 +234,19 @@ describe("FormLinkerModal", () => {
     cy.get('[data-cy="isArcp0"]').click();
     cy.get('[data-cy="programmeMembershipId"]').should("exist");
 
-    // Foundation programme should be filtered out and never shown as an option
-    cy.get('[data-cy="programmeMembershipId"]').should(
-      "not.contain.text",
-      "Foundation Programme"
+    // Foundation programmes should not be shown
+    cy.get('[data-cy="programmeMembershipId"] input').type("foundation");
+    cy.contains("No options").should("exist");
+
+    // Non-foundation programmes should still be shown
+    cy.clickSelect('[data-cy="programmeMembershipId"]', "acute");
+    cy.get('[data-cy="programmeMembershipId"]').contains(
+      `Acute medicine (start: ${dayjs().format("DD/MM/YYYY")})`
     );
 
-    // Switch to New Starter to confirm it's also excluded there
+    // Switch to New Starter to confirm Foundation programmes not shown
     cy.get('[data-cy="isArcp1"]').click();
-    cy.get('[data-cy="programmeMembershipId"]').should(
-      "not.contain.text",
-      "Foundation Programme"
-    );
+    cy.get('[data-cy="programmeMembershipId"] input').type("foundation");
+    cy.contains("No options").should("exist");
   });
 });
