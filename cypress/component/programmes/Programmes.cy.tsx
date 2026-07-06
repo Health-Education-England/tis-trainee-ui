@@ -100,6 +100,46 @@ describe("Programmes with MFA set up", () => {
     };
     return updatedProgrammeMemberships;
   };
+  it("should display context menu links when there are 2 or more current programmes", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      updatedProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="programmeContents"]')
+      .should("exist")
+      .and("contain.text", "Cardiology")
+      .and("contain.text", "General Practice");
+
+    cy.contains('[data-cy="programmeContents"] a', "Cardiology").should(
+      "have.attr",
+      "href",
+      "#panel-cardiology"
+    );
+
+    cy.contains('[data-cy="programmeContents"] a', "General Practice").should(
+      "have.attr",
+      "href",
+      "#panel-general practice"
+    );
+  });
+
+  it("should'nt display content menu links when there are 1 or less current programmes", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(
+      1
+    ).slice(0, 1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      updatedProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="programmeContents"]').should("not.exist");
+  });
   it("should display current Programme but no Onboarding Tracker link when start date is not within a year", () => {
     const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1);
     mountProgrammesWithMockData(
