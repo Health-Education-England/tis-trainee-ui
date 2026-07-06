@@ -236,7 +236,9 @@ describe("Desktop Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get(".nhsuk-header__navigation-item:visible").should("not.exist");
+      cy.get(".nhsuk-header__navigation-item:visible")
+        .its("length")
+        .should("eq", navLinksBase.length);
     });
   });
 
@@ -263,7 +265,7 @@ describe("Desktop Header with MFA set up", () => {
     it("should not display any unexpected links", () => {
       cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksNonSpecialty.length - 2);
+        .should("eq", navLinksNonSpecialty.length);
     });
   });
 
@@ -296,7 +298,7 @@ describe("Desktop Header with MFA set up", () => {
     it("should not display any unexpected links", () => {
       cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksSpecialty.length - 2);
+        .should("eq", navLinksSpecialty.length);
     });
   });
 
@@ -329,7 +331,14 @@ describe("Desktop Header with MFA set up", () => {
     it("should not display any unexpected links", () => {
       cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksLtftPilot.length - 2);
+        .should("eq", navLinksLtftPilot.length - 3);
+      cy.get(".nhsuk-header__navigation-item:hidden")
+        .its("length")
+        .should("eq", 3);
+      cy.get("#toggle-menu").should("exist").click();
+      cy.get(".nhsuk-header__navigation-item:visible")
+        .its("length")
+        .should("eq", navLinksLtftPilot.length);
     });
   });
 });
