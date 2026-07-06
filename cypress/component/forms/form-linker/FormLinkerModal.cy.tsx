@@ -11,7 +11,8 @@ import {
   mockPersonalDetails,
   mockProgrammesForLinkerTest,
   mockProgrammesForLinkerTestOutsideArcp,
-  mockProgrammesForLinkerTestOutsideNewStarter
+  mockProgrammesForLinkerTestOutsideNewStarter,
+  mockProgrammesForLinkerTestWithFoundation
 } from "../../../../mock-data/trainee-profile";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
@@ -216,5 +217,36 @@ describe("FormLinkerModal", () => {
     cy.get('[data-cy="isArcp1"]').click();
     cy.get('[data-cy="error-header-text"]').should("exist");
     cy.get('[data-cy="form-linker-submit-btn"]').should("be.disabled");
+  });
+
+  it("should not display Foundation programmes as linkable options", () => {
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "12345",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammesForLinkerTestWithFoundation,
+        placements: [],
+        qualifications: []
+      })
+    );
+
+    mountComponent();
+    cy.get('[data-cy="isArcp0"]').click();
+    cy.get('[data-cy="programmeMembershipId"]').should("exist");
+
+    // Foundation programmes should not be shown
+    cy.get('[data-cy="programmeMembershipId"] input').type("foundation");
+    cy.contains("No options").should("exist");
+
+    // Non-foundation programmes should still be shown
+    cy.clickSelect('[data-cy="programmeMembershipId"]', "acute");
+    cy.get('[data-cy="programmeMembershipId"]').contains(
+      `Acute medicine (start: ${dayjs().format("DD/MM/YYYY")})`
+    );
+
+    // Switch to New Starter to confirm Foundation programmes not shown
+    cy.get('[data-cy="isArcp1"]').click();
+    cy.get('[data-cy="programmeMembershipId"] input').type("foundation");
+    cy.contains("No options").should("exist");
   });
 });
