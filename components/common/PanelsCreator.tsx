@@ -75,7 +75,10 @@ export function PanelsCreator({
   return (
     <Card.Group className={style.panelsWrapper}>
       {panelsArr.length > 1 && (
-        <ContentsList className={style.contentsList}>
+        <ContentsList
+          className={style.contentsList}
+          data-cy="programmeContents"
+        >
           {panelsArr.map((panel: ProfileType, index: number) => (
             <ContentsListItem href={`#${makePanelId(panel)}`} key={index}>
               {getPanelTitle(panel)}
