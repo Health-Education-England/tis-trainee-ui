@@ -1,4 +1,3 @@
-import { Button } from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "react-tooltip";
@@ -35,6 +34,7 @@ export const NotificationsBtn = ({
         />
         {unreadNotificationCount > 0 && (
           <span
+            className="notification-badge"
             style={{
               position: "relative",
               top: "-6px",
