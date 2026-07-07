@@ -16,6 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 import "@cypress/code-coverage/support";
+import "react-phone-number-input/style.css";
 import "../../styles/globals.scss";
 
 // Alternatively you can use CommonJS syntax:

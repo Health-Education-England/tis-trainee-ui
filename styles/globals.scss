@@ -1,7 +1,5 @@
 @use "nhsuk-frontend" as *;
 
-@import "react-phone-number-input/style.css";
-
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
 $nhsSuccess: #006400;
@@ -1135,29 +1133,6 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .checkbox-hint {
   margin-left: 3rem;
   padding-left: 0.25rem;
-}
-
-.nhsuk-checkboxes--small {
-  .nhsuk-checkboxes__input {
-    width: 28px;
-    height: 28px;
-  }
-
-  .nhsuk-checkboxes__label {
-    padding: 0;
-
-    &::before {
-      width: 28px;
-      height: 28px;
-    }
-
-    &::after {
-      width: 16px;
-      height: 9px;
-      top: 8px;
-      left: 6px;
-    }
-  }
 }
 
 time {

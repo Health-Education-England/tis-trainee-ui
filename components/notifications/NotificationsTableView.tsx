@@ -14,7 +14,13 @@ import {
   switchNotification
 } from "../../utilities/NotificationsUtilities";
 import { emailColumns, inAppColumns } from "./columns";
-import { Button, Col, Container, Row } from "nhsuk-react-components";
+import {
+  Button,
+  Checkboxes,
+  Col,
+  Container,
+  Row
+} from "nhsuk-react-components";
 import {
   markNotificationAsRead,
   NotificationMsgType,
@@ -172,29 +178,20 @@ function NotificationFilterCheckbox({
   );
 
   return (
-    <div className="nhsuk-checkboxes nhsuk-checkboxes--small">
-      <div className="nhsuk-checkboxes__item">
-        <input
-          className="nhsuk-checkboxes__input"
-          type="checkbox"
-          id={id}
-          value={notificationsStatusFilter || ""}
-          defaultChecked={false}
-          checked={notificationsStatusFilter === filterValue}
-          onChange={() =>
-            applyNotificationStatusFilter(
-              notificationsStatusFilter === "" ? filterValue : ""
-            )
-          }
-        />
-        <label
-          htmlFor={id}
-          className="nhsuk-label nhsuk-checkboxes__label"
-          data-cy={`checkboxLabel-${label}`}
-        >
-          {label}
-        </label>
-      </div>
-    </div>
+    <Checkboxes small>
+      <Checkboxes.Item
+        id={id}
+        data-cy={id}
+        value={filterValue}
+        checked={notificationsStatusFilter === filterValue}
+        onChange={() =>
+          applyNotificationStatusFilter(
+            notificationsStatusFilter === "" ? filterValue : ""
+          )
+        }
+      >
+        {label}
+      </Checkboxes.Item>
+    </Checkboxes>
   );
 }
