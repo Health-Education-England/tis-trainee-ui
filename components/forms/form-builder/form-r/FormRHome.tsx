@@ -50,9 +50,9 @@ export function FormRHome() {
         <ScrollTo />
         <br />
         <WarningCallout data-cy="formr-migration-warning">
-          <WarningCallout.Label visuallyHiddenText={false}>
+          <WarningCallout.Heading visuallyHiddenText="">
             Form-R Migration in Progress
-          </WarningCallout.Label>
+          </WarningCallout.Heading>
           <p>
             We are currently migrating Form-Rs to a new system. The migration
             process may take up to 24 hours to complete.
