@@ -10,7 +10,7 @@ import {
 import FormRListBtn from "./FormRListBtn";
 import { useLocation } from "react-router-dom";
 import SubmittedFormRList from "./SubmittedFormRList";
-import { Col, Container, Row } from "nhsuk-react-components";
+import { Col, Container, Row, WarningCallout } from "nhsuk-react-components";
 import { StartOverButton } from "../../StartOverButton";
 import { FormName } from "../FormBuilder";
 import ErrorPage from "../../../common/ErrorPage";
@@ -49,6 +49,21 @@ export function FormRHome() {
       <>
         <ScrollTo />
         <br />
+        <WarningCallout data-cy="formr-migration-warning">
+          <WarningCallout.Label visuallyHiddenText={false}>
+            Form-R Migration in Progress
+          </WarningCallout.Label>
+          <p>
+            We are currently migrating Form-Rs to a new system. The migration
+            process may take up to 24 hours to complete.
+          </p>
+          <p data-cy="formr-migration-warning-text2">
+            During this time, some existing form submissions may not be visible.
+            This is expected and does not mean your form has been lost - it will
+            become available again once it has been successfully migrated.
+          </p>
+          <p>We appreciate your patience while we complete this work.</p>
+        </WarningCallout>
         <Container>
           <Row>
             <Col width="one-third">
