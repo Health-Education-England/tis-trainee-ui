@@ -115,7 +115,10 @@ describe("NotificationsTable with In-app notifications data", () => {
     cy.get('[data-cy="emailBtn"]').should("exist").should("not.be.disabled");
     cy.get('[data-cy="inAppBtn"]').should("exist").should("be.disabled");
     cy.get("#unreadCheck").should("exist").should("not.be.checked");
-    cy.get('[data-cy="checkboxLabel-Show UNREAD status only"]').should("exist");
+    cy.get('label[for="unreadCheck"]').should(
+      "include.text",
+      "Show UNREAD status only"
+    );
 
     // table columns
     cy.get(`[data-cy=notificationsTable]`).should("exist");
@@ -212,7 +215,10 @@ describe("NotificationsTable with Email notifications data", () => {
     cy.get('[data-cy="emailBtn"]').should("exist").should("be.disabled");
     cy.get('[data-cy="inAppBtn"]').should("exist").should("not.be.disabled");
     cy.get("#failedCheck").should("exist").should("not.be.checked");
-    cy.get('[data-cy="checkboxLabel-Show FAILED status only"]').should("exist");
+    cy.get('label[for="failedCheck"]').should(
+      "include.text",
+      "Show FAILED status only"
+    );
 
     // table columns
     cy.get('[data-cy="notificationsTable-status"]')

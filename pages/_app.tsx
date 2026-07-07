@@ -1,3 +1,4 @@
+import "react-phone-number-input/style.css";
 import "../styles/globals.scss";
 import type { AppProps } from "next/app";
 import React from "react";
