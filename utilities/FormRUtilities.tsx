@@ -75,6 +75,10 @@ export function filterProgrammesForLinker(
   const lastYear = dayjs(now).subtract(1, "year").startOf("day");
 
   return programmes.filter(programme => {
+    if (isFoundationProgramme(programme)) {
+      return false;
+    }
+
     const startDate = dayjs(programme.startDate).startOf("day");
     const endDate = dayjs(programme.endDate).startOf("day");
     const currentProgramme = startDate <= now && endDate >= now;
@@ -145,4 +149,23 @@ export function processLinkedFormData(
     localOfficeName,
     linkedProgramme
   };
+}
+
+export function isFoundationProgramme(programme: ProgrammeMembership): boolean {
+  const FOUNDATION_CURRICULUM_SUBTYPE = "FOUNDATION";
+  const FOUNDATION_SPECIALTY = "Foundation";
+
+  if (!programme?.curricula) {
+    return false;
+  }
+
+  return programme.curricula.some(curriculum => {
+    const specialty = curriculum.curriculumSpecialty;
+    const subtype = curriculum.curriculumSubType;
+
+    return (
+      subtype?.toUpperCase() === FOUNDATION_CURRICULUM_SUBTYPE.toUpperCase() ||
+      specialty?.toUpperCase() === FOUNDATION_SPECIALTY.toUpperCase()
+    );
+  });
 }
