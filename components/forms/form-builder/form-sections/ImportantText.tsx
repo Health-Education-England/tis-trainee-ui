@@ -9,7 +9,10 @@ type ImportantText = {
 export const ImportantText = ({ txtName }: ImportantText) => {
   return (
     <WarningCallout>
-      <WarningCallout.Heading data-cy={`WarningCallout-${txtName}-label`}>
+      <WarningCallout.Heading
+        data-cy={`WarningCallout-${txtName}-label`}
+        visuallyHiddenText=""
+      >
         Important
       </WarningCallout.Heading>
       {displayText[txtName]}
