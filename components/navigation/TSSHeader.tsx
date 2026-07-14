@@ -1,15 +1,15 @@
 import { Header } from "nhsuk-react-components";
 import { NavLink } from "react-router-dom";
-import { SignOutBtn } from "../common/SignOutBtn";
-import { NHSEnglandLogoWhite } from "../../public/NHSEnglandLogoWhite";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { useEffect } from "react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 import { getNotificationCount } from "../../redux/slices/notificationsSlice";
 import { NotificationsBtn } from "../notifications/NotificationsBtn";
-import { UserFeaturesType } from "../../models/FeatureFlags";
 import { EmailsBtn } from "../notifications/EmailsBtn";
+import { UserFeaturesType } from "../../models/FeatureFlags";
 
 const TSSHeader = () => {
+  const { signOut } = useAuthenticator(context => [context.user]);
   const dispatch = useAppDispatch();
   const unreadNotificationCount = useAppSelector(
     state => state.notifications.unreadNotificationCount
@@ -19,6 +19,10 @@ const TSSHeader = () => {
   );
   const preferredMfa = useAppSelector(state => state.user.preferredMfa);
   const userFeatures = useAppSelector(state => state.user.features);
+  const traineeProfileDetails = useAppSelector(
+    state => state.traineeProfile.traineeProfileData.personalDetails
+  );
+  const concatName = `${traineeProfileDetails.forenames} ${traineeProfileDetails.surname}`;
 
   useEffect(() => {
     if (notificationsStatus === "idle") {
@@ -26,77 +30,53 @@ const TSSHeader = () => {
     }
   }, [notificationsStatus, dispatch]);
 
-  const notificationBtns = userFeatures.notifications.enabled && (
-    <>
-      <EmailsBtn data-cy="emailBtnHDR" />
-      <NotificationsBtn
-        unreadNotificationCount={unreadNotificationCount}
-        data-cy="notificationBtnHDR"
-      />
-    </>
-  );
-
   return (
-    <Header>
-      <Header.Container>
-        <div className="nhsuk-header__logo" data-cy="headerLogo">
-          <a
-            href="/"
-            aria-label="TSS home page"
-            className="nhsuk-header__navigation-link header-logo-link"
-          >
-            <NHSEnglandLogoWhite />
-          </a>
-        </div>
-        <Header.Content>
-          <div className="mobile-header">
-            {notificationBtns}
-            <Header.MenuToggle data-cy="menuToggleBtn" />
-          </div>
-          <div className="top-nav-container">
-            {notificationBtns}
-            <div className="top-nav-container">
-              <NavLink
-                className="nhsuk-header__navigation-link"
-                data-cy="topNavSupport"
-                to="/support"
-              >
-                Support
-              </NavLink>
-              <NavLink
-                className="nhsuk-header__navigation-link"
-                data-cy="topNavMfaSetup"
-                to="/mfa"
-              >
-                MFA set-up
-              </NavLink>
-              <SignOutBtn />
-            </div>
-          </div>
-        </Header.Content>
-      </Header.Container>
-      <div className="nhsuk-width-container">
-        <span className="tss-name" data-cy="tssName">
-          TIS Self-Service{" "}
-          <a
-            className="tss-beta-link"
-            href="https://architecture.digital.nhs.uk/information/glossary"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i>(Private Beta)</i>
-          </a>
-        </span>
-      </div>
-      <Header.Nav style={{ maxWidth: "100%" }}>
+    <Header
+      service={{
+        href: "/",
+        text: "TIS Self-Service"
+      }}
+    >
+      <Header.Account>
+        {userFeatures.notifications.enabled && (
+          <>
+            <Header.AccountItem>
+              <NotificationsBtn
+                unreadNotificationCount={unreadNotificationCount}
+                data-cy="notificationBtnHDR"
+              />
+            </Header.AccountItem>
+            <Header.AccountItem>
+              <EmailsBtn data-cy="emailBtnHDR" />
+            </Header.AccountItem>
+          </>
+        )}
+
+        <Header.AccountItem
+          asElement={NavLink}
+          data-cy="profileLink"
+          href="/profile"
+          icon
+          to="/profile"
+        >
+          {concatName}
+        </Header.AccountItem>
+        <Header.AccountItem
+          as="button"
+          data-cy="signOutBtn"
+          onClick={signOut}
+          type="button"
+        >
+          Sign out
+        </Header.AccountItem>
+      </Header.Account>
+      <Header.Navigation>
         {makeTSSHeaderLinks(preferredMfa, userFeatures)}
-        <div className="nhsuk-header__navigation-item mobile-only-nav">
-          <SignOutBtn />
-        </div>
-      </Header.Nav>
+      </Header.Navigation>
     </Header>
   );
 };
+
 export default TSSHeader;
 
 function makeTSSHeaderLinks(
@@ -126,11 +106,11 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.details.placements.enabled
     },
     {
-      path: "cct",
-      name: "CCT",
+      path: "ltft",
+      name: "Less than full-time (LTFT)",
       mobileOnly: false,
       showWithNoMfa: false,
-      featureEnabled: userFeatures.cct.enabled
+      featureEnabled: userFeatures.forms.ltft.enabled
     },
     {
       path: "formr-a",
@@ -147,20 +127,6 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.forms.formr.enabled
     },
     {
-      path: "support",
-      name: "Support",
-      mobileOnly: true,
-      showWithNoMfa: true,
-      featureEnabled: true
-    },
-    {
-      path: "mfa",
-      name: "MFA set-up",
-      mobileOnly: true,
-      showWithNoMfa: true,
-      featureEnabled: true
-    },
-    {
       path: "profile",
       name: "Profile",
       mobileOnly: false,
@@ -168,41 +134,56 @@ function makeTSSHeaderLinks(
       featureEnabled: userFeatures.details.profile.enabled
     },
     {
-      path: "ltft",
-      name: "Less than full-time (LTFT)",
+      path: "support",
+      name: "Support",
+      mobileOnly: false,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
+    {
+      path: "mfa",
+      name: "MFA set-up",
+      mobileOnly: false,
+      showWithNoMfa: true,
+      featureEnabled: true
+    },
+    {
+      path: "cct",
+      name: "CCT",
       mobileOnly: false,
       showWithNoMfa: false,
-      featureEnabled: userFeatures.forms.ltft.enabled
+      featureEnabled: userFeatures.cct.enabled
     }
   ];
 
-  const makeLi = (pathObj: {
+  const makeNavigationItem = (pathObj: {
     path: string;
     name: string;
     mobileOnly: boolean;
     showWithNoMfa: boolean;
     featureEnabled: boolean;
-  }) => (
-    <div
-      data-cy="nav-link-wrapper"
-      key={pathObj.name}
-      className={`nhsuk-header__navigation-item ${
-        pathObj.mobileOnly ? "mobile-only-nav" : ""
-      }`}
-      hidden={
-        ((preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
-          !pathObj.showWithNoMfa) ||
-        !pathObj?.featureEnabled
-      }
-    >
-      <NavLink
+  }) => {
+    const hasRestrictedMfa = preferredMfa === "NOMFA" || preferredMfa === "SMS";
+    const shouldShow =
+      pathObj.featureEnabled && (!hasRestrictedMfa || pathObj.showWithNoMfa);
+
+    if (!shouldShow) {
+      return null;
+    }
+
+    return (
+      <Header.NavigationItem
+        asElement={NavLink}
+        className={pathObj.mobileOnly ? "mobile-only-nav" : undefined}
         data-cy={pathObj.name}
-        className="nhsuk-header__navigation-link"
+        href={`/${pathObj.path}`}
+        key={pathObj.name}
         to={`/${pathObj.path}`}
       >
         {pathObj.name}
-      </NavLink>
-    </div>
-  );
-  return paths.map(p => makeLi(p));
+      </Header.NavigationItem>
+    );
+  };
+
+  return paths.map(makeNavigationItem);
 }

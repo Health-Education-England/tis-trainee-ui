@@ -58,24 +58,19 @@ describe("Header with MFA set up", () => {
   });
 
   it("should contain header logo", () => {
-    cy.get("[data-cy=headerLogo] > a")
+    cy.get(".nhsuk-header__service-logo")
       .should("exist")
       .should("have.attr", "href", "/");
-    cy.get("[data-cy=tssName]").should(
+    cy.get(".nhsuk-header__service-name").should(
       "contain.text",
-      "TIS Self-Service (Private Beta)"
-    );
-    cy.get("[data-cy=tssName] > a").should(
-      "have.attr",
-      "href",
-      "https://architecture.digital.nhs.uk/information/glossary"
+      "TIS Self-Service"
     );
   });
 
   it("should contain menu and sign out buttons", () => {
-    cy.get(`[data-cy=menuToggleBtn]`)
+    cy.get(".nhsuk-header__menu-toggle")
       .should("exist")
-      .should("contain.text", "Menu");
+      .should("contain.text", "More");
     cy.get("[data-cy=signOutBtn]")
       .should("exist")
       .should("contain.text", "Sign out");
@@ -102,7 +97,7 @@ describe("Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+      cy.get(".nhsuk-header__navigation-item")
         .its("length")
         .should("eq", navLinksBase.length);
     });
@@ -129,7 +124,7 @@ describe("Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+      cy.get(".nhsuk-header__navigation-item")
         .its("length")
         .should("eq", navLinksNonSpecialty.length);
     });
@@ -162,7 +157,7 @@ describe("Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+      cy.get(".nhsuk-header__navigation-item")
         .its("length")
         .should("eq", navLinksSpecialty.length);
     });
@@ -195,7 +190,7 @@ describe("Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:not([hidden])')
+      cy.get(".nhsuk-header__navigation-item")
         .its("length")
         .should("eq", navLinksLtftPilot.length);
     });
@@ -210,23 +205,23 @@ describe("Desktop Header with MFA set up", () => {
   });
 
   it("should contain header logo", () => {
-    cy.get("[data-cy=headerLogo] > a")
+    cy.get(".nhsuk-header__service-logo")
       .should("be.visible")
       .should("have.attr", "href", "/");
-    cy.get("[data-cy=tssName]").should("contain.text", "TIS Self-Service");
+    cy.get(".nhsuk-header__service-name").should(
+      "contain.text",
+      "TIS Self-Service"
+    );
   });
 
-  it("should contain top nav container", () => {
-    cy.get(".top-nav-container").should("be.visible");
-    cy.get('.top-nav-container > [data-cy="signOutBtn"]').should("be.visible");
-    cy.get('.top-nav-container > [data-cy="topNavSupport"]')
+  it("should contain account navigation", () => {
+    cy.get(".nhsuk-header__account").should("be.visible");
+    cy.get('[data-cy="profileLink"]')
       .should("be.visible")
-      .should("contain.text", "Support")
-      .should("have.attr", "href", "/support");
-    cy.get('.top-nav-container > [data-cy="topNavMfaSetup"]')
+      .should("have.attr", "href", "/profile");
+    cy.get('[data-cy="signOutBtn"]')
       .should("be.visible")
-      .should("contain.text", "MFA set-up")
-      .should("have.attr", "href", "/mfa");
+      .should("contain.text", "Sign out");
   });
 
   describe("When all features disabled", () => {
@@ -241,7 +236,9 @@ describe("Desktop Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:visible').should("not.exist");
+      cy.get(".nhsuk-header__navigation-item:visible")
+        .its("length")
+        .should("eq", navLinksBase.length);
     });
   });
 
@@ -266,9 +263,9 @@ describe("Desktop Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:visible')
+      cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksNonSpecialty.length - 2);
+        .should("eq", navLinksNonSpecialty.length);
     });
   });
 
@@ -299,9 +296,9 @@ describe("Desktop Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:visible')
+      cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksSpecialty.length - 2);
+        .should("eq", navLinksSpecialty.length);
     });
   });
 
@@ -332,9 +329,16 @@ describe("Desktop Header with MFA set up", () => {
     });
 
     it("should not display any unexpected links", () => {
-      cy.get('[data-cy="nav-link-wrapper"]:visible')
+      cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksLtftPilot.length - 2);
+        .should("eq", navLinksLtftPilot.length - 3);
+      cy.get(".nhsuk-header__navigation-item:hidden")
+        .its("length")
+        .should("eq", 3);
+      cy.get("#toggle-menu").should("exist").click();
+      cy.get(".nhsuk-header__navigation-item:visible")
+        .its("length")
+        .should("eq", navLinksLtftPilot.length);
     });
   });
 });

@@ -17,7 +17,6 @@ import {
   mockPlacementNoSubSpecialtyPostNotAllows
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
-import React from "react";
 import { MFAType, updatedPreferredMfa } from "../../../redux/slices/userSlice";
 import {
   updatedTraineeProfileData,
@@ -221,9 +220,8 @@ describe("Placements with MFA set up", () => {
   it("should show alternative text when no panel data available", () => {
     mountPlacementsWithMockData([], "SMS", "succeeded");
     cy.get('[data-cy="upcomingExpand"]').click();
-    cy.get(
-      '[data-cy="upcomingExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-card > [data-cy="notAssignedplacements"]'
-    )
+    cy.get('[data-cy="upcomingExpand"]')
+      .find('[data-cy="notAssignedplacements"]')
       .should("exist")
       .should("contain.text", "You are not assigned to any placements");
   });

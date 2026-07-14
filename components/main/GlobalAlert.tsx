@@ -1,5 +1,10 @@
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { ActionLink, CloseIcon, Fieldset } from "nhsuk-react-components";
+import {
+  ActionLink,
+  Fieldset,
+  Legend,
+  CrossIcon
+} from "nhsuk-react-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation } from "react-router-dom";
@@ -66,9 +71,11 @@ function ActionsSummaryAlert() {
 function BookmarkAlert() {
   return (
     <div data-cy="bookmarkAlert" className="bookmark-alert">
-      <Fieldset.Legend size="s" className="bookmark-alert-header">
-        We have moved
-      </Fieldset.Legend>
+      <Fieldset>
+        <Legend size="s" className="bookmark-alert-header">
+          We have moved
+        </Legend>
+      </Fieldset>
       <p>
         You are seeing this message because you accessed this site using an old
         address, we have redirected you here automatically.
@@ -107,7 +114,7 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         title="Dismiss recruitment alert"
         onClick={onDismiss}
       >
-        <CloseIcon />
+        <CrossIcon />
       </button>
     </div>
   );

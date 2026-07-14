@@ -246,27 +246,25 @@ export default function FormBuilder({
           {pages[currentPage]?.sections.map((section: Section) => (
             <React.Fragment key={section.sectionHeader}>
               <Card feature>
-                <Card.Content>
-                  <Card.Heading>{section.sectionHeader}</Card.Heading>
-                  {section.fields.map((field: Field) => {
-                    if (conditionalChildNames.has(field.name)) return null;
+                <Card.Heading>{section.sectionHeader}</Card.Heading>
+                {section.fields.map((field: Field) => {
+                  if (conditionalChildNames.has(field.name)) return null;
 
-                    const fieldComponent = (
-                      <FormFieldBuilder
-                        field={field}
-                        value={formData[field.name] ?? ""}
-                        error={formErrors[field.name] ?? ""}
-                        options={options}
-                        formErrors={formErrors}
-                      />
-                    );
-                    return (
-                      <div key={field.name} className="nhsuk-form-group">
-                        {showFormField(field, formData) ? fieldComponent : null}
-                      </div>
-                    );
-                  })}
-                </Card.Content>
+                  const fieldComponent = (
+                    <FormFieldBuilder
+                      field={field}
+                      value={formData[field.name] ?? ""}
+                      error={formErrors[field.name] ?? ""}
+                      options={options}
+                      formErrors={formErrors}
+                    />
+                  );
+                  return (
+                    <div key={field.name} className="nhsuk-form-group">
+                      {showFormField(field, formData) ? fieldComponent : null}
+                    </div>
+                  );
+                })}
               </Card>
             </React.Fragment>
           ))}
@@ -371,6 +369,7 @@ export function FormErrors({
       aria-labelledby="errorSummaryTitle"
       role="alert"
       tabIndex={-1}
+      disableAutoFocus
     >
       <div className="error-summary" data-cy="errorSummary">
         <h2 id="errorSummaryTitle" className="nhsuk-error-summary__title">

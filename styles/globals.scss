@@ -1,6 +1,4 @@
-@import "~nhsuk-frontend/packages/nhsuk";
-@import "~nhsuk-frontend/packages/core/all";
-@import "react-phone-number-input/style.css";
+@use "nhsuk-frontend" as *;
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
@@ -196,6 +194,10 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+
+  .nhsuk-icon--cross {
+    fill: #005eb8;
+  }
 }
 
 .recruit-link {
@@ -232,36 +234,6 @@ button:disabled {
 
 .nhsuk-header__navigation-list {
   justify-content: flex-start;
-}
-
-.nhsuk-header__navigation-link {
-  transition: all 200ms ease-in-out;
-  &.active,
-  &:hover,
-  &:focus,
-  &:focus:visited,
-  &:active,
-  &:active:visited {
-    background-color: darken(#005eb8, 7%) !important;
-    color: #fff;
-  }
-}
-
-.header-logo-link {
-  padding: 0 !important;
-}
-
-.nhsuk-header__menu-toggle {
-  &.closeMenu {
-    text-indent: -9999px;
-    line-height: 0; /* Collapse the original line */
-    &::after {
-      content: "Hide";
-      text-indent: 0;
-      display: block;
-      line-height: 24px; /* New content takes up original line height */
-    }
-  }
 }
 
 .hide-label {
@@ -561,10 +533,6 @@ ol[type="a"] {
   padding: 16px;
 }
 
-.list-panel-header {
-  margin-bottom: 0;
-}
-
 .internal-link {
   text-decoration: underline;
   cursor: pointer;
@@ -592,32 +560,6 @@ ol[type="a"] {
   .whats-new-header {
     font-size: 1.25rem;
     font-weight: normal;
-  }
-}
-
-// nav header
-.tss-beta-link {
-  color: #fff !important; // needed to override NHSUK default
-  font-size: 1rem;
-}
-
-.tss-beta-link:focus:visited {
-  color: black !important;
-}
-
-.top-nav-container {
-  display: flex;
-  justify-content: space-between;
-  max-height: 3rem;
-}
-
-.top-nav-container a {
-  cursor: pointer;
-}
-
-@media (max-width: 989px) {
-  .top-nav-container {
-    display: none;
   }
 }
 
@@ -698,40 +640,7 @@ ol[type="a"] {
   padding-top: 0.5em;
 }
 
-// ---- Notifications Icon ----
-
-.notification-btn {
-  margin: 0.3rem 0 0 1rem;
-  position: "relative";
-  padding: 0 1rem;
-  box-shadow: 0 1px 0 transparent;
-  background-color: transparent;
-  &:hover,
-  &:focus {
-    background-color: darken(#005eb8, 7%) !important;
-  }
-}
-
-.notification-btn:hover .notification-badge {
-  background-color: darken(#ed8b00, 7%);
-}
-
-.notification-badge {
-  position: absolute;
-  bottom: 45%;
-  left: 50%;
-  background-color: #ed8b00;
-  color: white;
-  min-height: 30%;
-  min-width: 30%;
-  border-radius: 16px;
-  padding: 2% 10%;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+// Notifications table
 .notification-type-btn {
   margin: 0.3rem 1rem 1rem 0;
   padding: 0 1rem;
@@ -1224,29 +1133,6 @@ html:has(dialog[data-cy="formLinkerModal"][open]) {
 .checkbox-hint {
   margin-left: 3rem;
   padding-left: 0.25rem;
-}
-
-.nhsuk-checkboxes--small {
-  .nhsuk-checkboxes__input {
-    width: 28px;
-    height: 28px;
-  }
-
-  .nhsuk-checkboxes__label {
-    padding: 0;
-
-    &::before {
-      width: 28px;
-      height: 28px;
-    }
-
-    &::after {
-      width: 16px;
-      height: 9px;
-      top: 8px;
-      left: 6px;
-    }
-  }
 }
 
 time {

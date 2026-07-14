@@ -1,4 +1,4 @@
-import { Card, Fieldset } from "nhsuk-react-components";
+import { Card, Fieldset, Legend } from "nhsuk-react-components";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { chunkArray } from "../../utilities/ListUtilities";
 import { isFeatureEnabled } from "../../utilities/FeatureFlagUtilities";
@@ -15,9 +15,11 @@ const Home = () => {
 
   return (
     <div className="nhsuk-width-container nhsuk-u-margin-top-5">
-      <Fieldset.Legend size="m" data-cy="tssOverview">
-        TIS Self-Service overview
-      </Fieldset.Legend>
+      <Fieldset>
+        <Legend size="m" data-cy="tssOverview">
+          TIS Self-Service overview
+        </Legend>
+      </Fieldset>
 
       {cardGroups.map((group, index) => (
         <Card.Group key={index}>

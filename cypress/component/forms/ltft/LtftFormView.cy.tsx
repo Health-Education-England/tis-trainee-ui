@@ -191,7 +191,7 @@ describe("LTFT Form View - editable (DRAFT)", () => {
     cy.get("@updateLtftStub").should("have.been.called");
 
     // action modal
-    cy.get('[data-cy="warningLabel-Submit"] > span').should("exist");
+    cy.get('[data-cy="warningLabel-Submit"]').should("exist");
     cy.get('[data-cy="warningText-Submit"]').should("exist");
     cy.get('[data-cy="additionalInfo"]').should("exist");
     cy.get('[data-cy="modal-cancel-btn"]').should("exist");

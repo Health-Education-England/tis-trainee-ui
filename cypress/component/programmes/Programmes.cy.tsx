@@ -18,7 +18,6 @@ import {
   mockUserFeaturesSpecialty
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
-import React from "react";
 import {
   MFAType,
   updatedPreferredMfa,
@@ -101,6 +100,46 @@ describe("Programmes with MFA set up", () => {
     };
     return updatedProgrammeMemberships;
   };
+  it("should display context menu links when there are 2 or more current programmes", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      updatedProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="programmeContents"]')
+      .should("exist")
+      .and("contain.text", "Cardiology")
+      .and("contain.text", "General Practice");
+
+    cy.contains('[data-cy="programmeContents"] a', "Cardiology").should(
+      "have.attr",
+      "href",
+      "#panel-cardiology"
+    );
+
+    cy.contains('[data-cy="programmeContents"] a', "General Practice").should(
+      "have.attr",
+      "href",
+      "#panel-general practice"
+    );
+  });
+
+  it("should'nt display content menu links when there are 1 or less current programmes", () => {
+    const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(
+      1
+    ).slice(0, 1);
+    mountProgrammesWithMockData(
+      "SMS",
+      "succeeded",
+      undefined,
+      updatedProgrammeMemberships
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get('[data-cy="programmeContents"]').should("not.exist");
+  });
   it("should display current Programme but no Onboarding Tracker link when start date is not within a year", () => {
     const updatedProgrammeMemberships = createUpdatedProgrammeMemberships(1);
     mountProgrammesWithMockData(
@@ -239,15 +278,14 @@ describe("Programmes with MFA set up", () => {
       "include.text",
       "Onboarding Tracker"
     );
-    cy.get(
-      '[data-cy="currentExpand"] > .nhsuk-details__text > .nhsuk-grid-row > .nhsuk-grid-column-one-half > .nhsuk-card > .nhsuk-summary-list > :nth-child(2) > .nhsuk-summary-list__value > p > a'
-    )
+    cy.get('[data-cy="currentExpand"]')
+      .find(".nhsuk-summary-list")
+      .contains("a", "Track your onboarding journey for this programme")
       .should(
         "have.attr",
         "href",
         "/programmes/7ab1aae3-83c2-4bb6-b1f3-99146e79b362/onboarding-tracker"
-      )
-      .and("include.text", "Track your onboarding journey for this programme");
+      );
   });
 
   it("should show alternative text when no Programme/ panel data available", () => {

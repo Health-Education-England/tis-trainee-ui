@@ -20,9 +20,9 @@ describe("Form R Part A - Draft form", () => {
       "contain.text",
       "Part 1 of 3 - Personal Details"
     );
-    cy.get(
-      '[data-cy="WarningCallout-formAImportantNotice-label"] > span'
-    ).contains("Important");
+    cy.get('[data-cy="WarningCallout-formAImportantNotice-label"]').contains(
+      "Important"
+    );
     cy.get('[data-cy="dataSourceSummary"]').should("exist").click();
     const immigrationTxt = "Refugee in the UK";
     cy.get('[data-cy="autosaveStatusMsg"]')

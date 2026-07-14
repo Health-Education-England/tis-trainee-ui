@@ -1,4 +1,4 @@
-import { Button, Checkboxes, Hint } from "nhsuk-react-components";
+import { Button, Checkboxes, HintText } from "nhsuk-react-components";
 import { Modal } from "../../common/Modal";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -33,7 +33,7 @@ export const LtftDeclarationsModal = ({
       </h2>
       <div>
         <Checkboxes>
-          <Checkboxes.Box
+          <Checkboxes.Item
             name="madeCctCalc"
             data-cy="madeCctCalc"
             checked={decValues.madeCctCalc}
@@ -41,21 +41,21 @@ export const LtftDeclarationsModal = ({
           >
             I understand that a change to my full time working hours percentage
             will affect my programme completion date.
-          </Checkboxes.Box>
-          <Hint className="checkbox-hint">
+          </Checkboxes.Item>
+          <HintText className="checkbox-hint">
             You can make a CCT Calculation using a{" "}
             <Link to="/cct">CCT Calculator</Link> to get an idea how changing
             your hours will affect your programme completion date.
-          </Hint>
-          <Checkboxes.Box
+          </HintText>
+          <Checkboxes.Item
             name="discussedWithTpd"
             data-cy="discussedWithTpd"
             checked={decValues.discussedWithTpd}
             onChange={handleCheckboxChange}
           >
             {`I have discussed my proposed changes and the effect on my completion date with my pre-approver. They are aware of this application to change my hours.`}
-          </Checkboxes.Box>
-          <Hint className="checkbox-hint">
+          </Checkboxes.Item>
+          <HintText className="checkbox-hint">
             <ExpanderMsg expanderName="preApproverInfo" />
             <p>
               Your pre-approver will usually be your Training Programme Director
@@ -66,7 +66,7 @@ export const LtftDeclarationsModal = ({
               </Link>
               .
             </p>
-          </Hint>
+          </HintText>
         </Checkboxes>
         <Button
           type="button"

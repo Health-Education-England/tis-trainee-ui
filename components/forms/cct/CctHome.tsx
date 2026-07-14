@@ -20,9 +20,9 @@ export function CctHome() {
   return (
     <>
       <WarningCallout data-cy="cct-home-warning">
-        <WarningCallout.Label visuallyHiddenText={false}>
+        <WarningCallout.Heading visuallyHiddenText="">
           {cctReadBeforeProceedingLabel}
-        </WarningCallout.Label>
+        </WarningCallout.Heading>
         <p data-cy="cct-home-warning-text1">{cctHomeWarningMsgs.text1}</p>
         <p data-cy="cct-home-warning-text2">{cctHomeWarningMsgs.text2}</p>
         <p data-cy="cct-home-warning-text3">{cctHomeWarningMsgs.text3}</p>
