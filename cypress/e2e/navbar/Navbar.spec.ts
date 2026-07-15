@@ -6,14 +6,18 @@ describe("Desktop/ tablet header", () => {
   const desktopView = "macbook-15";
   const sizes = [mobileView, desktopView];
 
-  beforeEach(() => {
-    cy.signInToTss(30000);
-  });
-
   sizes.forEach((size: any) => {
     it(`should have menu items after successfull sign-in on ${size} screen`, () => {
-      cy.viewport(size);
+      cy.signInToTss(30000, "/", size);
 
+      cy.get(".nhsuk-header__menu-toggle").then($el => {
+        cy.log(`Found ${$el.length} menu toggle(s)`);
+        console.log($el.get(0)?.outerHTML);
+      });
+      cy.get(".nhsuk-header__navigation-link").should("exist");
+      // Currently, the nav menu list should always exists regardless of screen size
+      cy.get(".nhsuk-header__menu-toggle").should("exist").click();
+      cy.get(".nhsuk-header__menu-list").should("not.have.attr", "hidden");
       cy.get(".nhsuk-header__navigation-link")
         .should("exist")
         .contains(/Profile/);
