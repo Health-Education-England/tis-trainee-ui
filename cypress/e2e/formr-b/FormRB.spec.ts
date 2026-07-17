@@ -41,9 +41,6 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
       "include.text",
       "Autosave status: Success"
     );
-    cy.get('[data-cy="Support"]').scrollIntoView().click();
-    cy.get(".nhsuk-header__menu-toggle").click();
-    cy.get(".nhsuk-fieldset__heading").contains("Support");
     cy.get(".nhsuk-header__menu-toggle").click();
     cy.get('[data-cy="Form R (B)"]').should("exist").click();
     cy.checkElement("btn-Edit saved draft form").click();

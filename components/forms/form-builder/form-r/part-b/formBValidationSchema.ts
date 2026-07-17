@@ -168,6 +168,9 @@ export const formBValidationSchemaDefaultJson = {
       "prevRevalDate",
       " please choose a previous Revalidation date from the past",
       value => DateUtilities.IsPastDate(value)
+    )
+    .test("prevRevalDateMin", "The date cannot be before 01/01/1970", value =>
+      DateUtilities.IsNotBeforeUnixEpoch(value)
     ),
   dualSpecialty: yup.string(),
 
