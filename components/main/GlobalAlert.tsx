@@ -109,6 +109,7 @@ function RecruitAlert({ onDismiss }: Readonly<{ onDismiss: () => void }>) {
         </ActionLink>
       </div>
       <button
+        type="button"
         className="recruit-alert-close"
         aria-label="Dismiss recruitment alert"
         title="Dismiss recruitment alert"

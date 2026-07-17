@@ -15,6 +15,7 @@ export const NotificationsBtn = ({
   };
   return (
     <button
+      type="button"
       data-cy="notificationBtn"
       data-tooltip-id="NotificationsCount"
       onClick={handleBtnClick}
