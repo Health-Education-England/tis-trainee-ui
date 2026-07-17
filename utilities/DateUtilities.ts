@@ -111,6 +111,16 @@ export class DateUtilities {
     return true;
   }
 
+  public static IsNotBeforeUnixEpoch(value: DateType | undefined): boolean {
+    if (value) {
+      const dayDate = day(value);
+      return (
+        dayDate.isValid() && dayDate.isSameOrAfter(day("1970-01-01"), "day")
+      );
+    }
+    return true;
+  }
+
   public static IsPastDate(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);

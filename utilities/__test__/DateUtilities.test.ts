@@ -50,6 +50,22 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsLegalAge(belowLegalAge)).toEqual(false);
   });
 
+  it("IsNotBeforeUnixEpoch should return true if date is null", () => {
+    expect(DateUtilities.IsNotBeforeUnixEpoch(null)).toEqual(true);
+  });
+
+  it("IsNotBeforeUnixEpoch should return true if date is the epoch date", () => {
+    expect(DateUtilities.IsNotBeforeUnixEpoch("1970-01-01")).toEqual(true);
+  });
+
+  it("IsNotBeforeUnixEpoch should return true if date is after the epoch date", () => {
+    expect(DateUtilities.IsNotBeforeUnixEpoch("1970-01-02")).toEqual(true);
+  });
+
+  it("IsNotBeforeUnixEpoch should return false if date is before the epoch date", () => {
+    expect(DateUtilities.IsNotBeforeUnixEpoch("1969-12-31")).toEqual(false);
+  });
+
   it("IsPastDate should return true if date is null", () => {
     expect(DateUtilities.IsPastDate(null)).toEqual(true);
   });

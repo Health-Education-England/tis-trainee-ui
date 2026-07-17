@@ -10,6 +10,7 @@ export const EmailsBtn = () => {
   };
   return (
     <button
+      type="button"
       data-cy="emailBtn"
       data-tooltip-id="EmailCount"
       onClick={handleBtnClick}

@@ -115,6 +115,35 @@ describe("FormRForm (Part B) - new form /new/create", () => {
     cy.get('[data-cy="forename-input"]').should("contain.value", "Billy");
     cy.get('[data-cy="surname-input"]').should("contain.value", "Ocean");
   });
+
+  it("allows a null prevRevalDate but errors when the date is before the UNIX epoch", () => {
+    store.dispatch(updatedFormB(draftFormRPartBWithNullCareerBreak));
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/formr-b/6e644647434834getee/create"]}>
+          <Route path="/formr-b/:id/create">
+            <FormRForm formType="B" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    cy.get('[data-cy="prevRevalDate-input"]').should(
+      "contain.value",
+      "2020-04-22"
+    );
+    cy.get("#prevRevalDate-error").should("not.exist");
+
+    cy.clearAndType('[data-cy="prevRevalDate-input"]', "1969-12-31");
+    cy.get("#prevRevalDate-error").should(
+      "have.text",
+      "Error: The date cannot be before 01/01/1970"
+    );
+
+    cy.get('[data-cy="prevRevalDate-input"]').clear();
+    cy.get("#prevRevalDate-error").should("not.exist");
+  });
 });
 
 describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
@@ -133,29 +162,29 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
         }
       })
     );
-  mount(
-        <Provider store={store}>
-          <MemoryRouter initialEntries={["/formr-a/new/create"]}>
-            <FormRForm formType="B" />
-          </MemoryRouter>
-        </Provider>
-      );
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/formr-a/new/create"]}>
+          <FormRForm formType="B" />
+        </MemoryRouter>
+      </Provider>
+    );
 
-      cy.get("dialog").should("be.visible");
-      cy.get('[data-cy="isArcp0"]').should("exist").click();
-      cy.get('button[data-cy="form-linker-submit-btn"]').should("be.disabled");
-      cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.get("dialog").should("be.visible");
+    cy.get('[data-cy="isArcp0"]').should("exist").click();
+    cy.get('button[data-cy="form-linker-submit-btn"]').should("be.disabled");
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
 
-      cy.get('button[data-cy="form-linker-submit-btn"]')
-        .should("not.be.disabled")
-        .click();
+    cy.get('button[data-cy="form-linker-submit-btn"]')
+      .should("not.be.disabled")
+      .click();
 
-      cy.get('[data-cy="progress-header"] > h3').should(
-        "contain.text",
-        "Part 1 of 10 - Personal Details"
-      );
-    });
-    
+    cy.get('[data-cy="progress-header"] > h3').should(
+      "contain.text",
+      "Part 1 of 10 - Personal Details"
+    );
+  });
+
   it("shows check GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
     cy.checkAndFillPhGmcGdc();
   });
