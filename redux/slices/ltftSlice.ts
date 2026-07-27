@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CctCalculation } from "./cctSlice";
 import {
   mapLtftDtoToObj,
-  mapLtftObjToDto
+  mapLtftObjToDto,
+  resetLegacyStartDateSection
 } from "../../utilities/ltftUtilities";
 import { FormsService } from "../../services/FormsService";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
@@ -123,7 +124,7 @@ export const loadSavedLtft = createAsyncThunk(
   async (id: string) => {
     const formsService = new FormsService();
     const response = await formsService.getLtftFormById(id);
-    return mapLtftDtoToObj(response.data);
+    return resetLegacyStartDateSection(mapLtftDtoToObj(response.data));
   }
 );
 

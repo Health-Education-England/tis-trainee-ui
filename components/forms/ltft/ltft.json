@@ -75,33 +75,86 @@
     {
       "pageName": "Start date",
       "importantTxtName": "ltftStartDateImportantText",
-      "expanderLinkName": "",
+      "expanderLinkName": "ltft16WeeksNotice",
       "sections": [
         {
           "sectionHeader": "Start date for change to your working hours",
           "fields": [
             {
+              "name": "canGiveCompliantStartDate",
+              "label": "Are you giving at least 16 weeks' notice to change your working hours?",
+              "type": "radio",
+              "optionsKey": "yesNo",
+              "visible": true,
+              "hideInViewWhenEmpty": true
+            },
+            {
+              "name": "earliestStartDateInfo",
+              "type": "info",
+              "label": "The earliest date this change to your working hours can begin is {value} (16 weeks from today).",
+              "visible": false,
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "canGiveCompliantStartDate",
+                "values": [true]
+              },
+              "computedValue": "ltft16WeeksNoticeDate"
+            },
+            {
               "name": "startDate",
               "label": "When should this change to your working hours begin?",
               "type": "date",
-              "visible": true,
-              "warnings": [
-                {
-                  "matcher": "ltft16WeeksTest",
-                  "msgText": "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
-                }
-              ]
+              "visible": false,
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "canGiveCompliantStartDate",
+                "values": [true]
+              },
+              "showInViewWhenPopulated": true
+            },
+            {
+              "name": "startDateInfo",
+              "type": "info",
+              "label": "Unless your exceptional circumstances are accepted, the earliest your change to working hours can start is {value} (16 weeks from today). If you submit your form today, this date will be set as your LTFT start date.",
+              "visible": false,
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "canGiveCompliantStartDate",
+                "values": [false]
+              },
+              "computedValue": "ltft16WeeksNoticeDate"
+            },
+            {
+              "name": "exceptionalReasons",
+              "label": "Please give the exceptional reason(s) why you cannot give 16 weeks' notice to change your working hours.",
+              "placeholder": "type here...",
+              "type": "textArea",
+              "visible": false,
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "canGiveCompliantStartDate",
+                "values": [false]
+              },
+              "hint": "Exceptional circumstances include such things as sudden disability, significant life changes (see the '16 weeks notice period' guidance above)."
+            },
+            {
+              "name": "exceptionalReasonsDate",
+              "label": "When would you like this change to your working hours to begin?",
+              "hint": "This must be a date from today up to 16 weeks from today. An earlier start date is not guaranteed and will be considered as part of your exceptional circumstances.",
+              "type": "date",
+              "visible": false,
+              "visibleIf": {
+                "matcher": "valueInList",
+                "field": "canGiveCompliantStartDate",
+                "values": [false]
+              }
             },
             {
               "name": "altStartDate",
               "label": "If you have an alternative start date that gives at least 16 weeks notice, please enter it here.",
               "hint": "Leave blank if there is no suitable alternative",
               "type": "date",
-              "visible": false,
-              "visibleIf": {
-                "matcher": "lessThan16WeeksTest",
-                "field": "startDate"
-              }
+              "visible": false
             }
           ]
         }
@@ -157,14 +210,7 @@
               "hint": "This helps us understand your circumstances and proposed arrangements.",
               "placeholder": "Example:\n'I would like to apply for 60% LTFT from March 2026 due to ongoing caring responsibilities. I plan to work three days per week and would appreciate flexibility around clinic days.'",
               "type": "textArea",
-              "visible": true,
-              "warnings": [
-                {
-                  "matcher": "ltft16WeeksTest",
-                  "msgText": "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable).",
-                  "conditionalField": "startDate"
-                }
-              ]
+              "visible": true
             }
           ]
         }

@@ -1,9 +1,12 @@
+import dayjs from "dayjs";
 import { mockPersonalDetails } from "../../mock-data/trainee-profile";
 import {
   findLatestSubmissionDate,
   mapLtftDtoToObj,
   mapLtftObjToDto,
-  populateLtftDraftNew
+  populateLtftDraftNew,
+  resetLegacyStartDateSection,
+  stampLtftStartDateOnSubmit
 } from "../ltftUtilities";
 import {
   mockLtftDraftFirstSuccessSaveResponseDto,
@@ -50,12 +53,155 @@ describe("mapLtftObjToDto", () => {
 
     expect(mappedDto.change.altStartDate).toBeNull();
   });
+
+  it("maps the No path (canGiveCompliantStartDate false) to isExceptional true", () => {
+    const noPath = {
+      ...mockLtftDraftUpdatedPmFormObjNoSave,
+      canGiveCompliantStartDate: false
+    };
+    expect(mapLtftObjToDto(noPath).change.isExceptional).toBe(true);
+  });
+
+  it("maps the Yes path (canGiveCompliantStartDate true) to isExceptional false", () => {
+    const yesPath = {
+      ...mockLtftDraftUpdatedPmFormObjNoSave,
+      canGiveCompliantStartDate: true
+    };
+    expect(mapLtftObjToDto(yesPath).change.isExceptional).toBe(false);
+  });
+
+  it("maps a legacy null through to isExceptional null (no inversion)", () => {
+    const legacy = {
+      ...mockLtftDraftUpdatedPmFormObjNoSave,
+      canGiveCompliantStartDate: null
+    };
+    expect(mapLtftObjToDto(legacy).change.isExceptional).toBeNull();
+  });
 });
 
 describe("mapDtoToLtftObj", () => {
   it("should map DTO to LtftObj correctly", () => {
     const ltftObj = mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto);
     expect(ltftObj).toEqual(mockLtftFormObjAfterFirstSave);
+  });
+
+  it("maps isExceptional true back to canGiveCompliantStartDate false (No path)", () => {
+    const dto = {
+      ...mockLtftDraftFirstSuccessSaveResponseDto,
+      change: {
+        ...mockLtftDraftFirstSuccessSaveResponseDto.change,
+        isExceptional: true
+      }
+    };
+    expect(mapLtftDtoToObj(dto).canGiveCompliantStartDate).toBe(false);
+  });
+
+  it("maps isExceptional false back to canGiveCompliantStartDate true (Yes path)", () => {
+    const dto = {
+      ...mockLtftDraftFirstSuccessSaveResponseDto,
+      change: {
+        ...mockLtftDraftFirstSuccessSaveResponseDto.change,
+        isExceptional: false
+      }
+    };
+    expect(mapLtftDtoToObj(dto).canGiveCompliantStartDate).toBe(true);
+  });
+
+  it("maps a missing/null isExceptional to canGiveCompliantStartDate null (legacy)", () => {
+    expect(
+      mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto)
+        .canGiveCompliantStartDate
+    ).toBeNull();
+  });
+});
+
+describe("resetLegacyStartDateSection", () => {
+  it("clears the start-date fields for a legacy DRAFT (canGiveCompliantStartDate null)", () => {
+    const legacyDraft = {
+      ...mockLtftNewFormObj,
+      startDate: "2026-01-01",
+      altStartDate: "2026-06-01",
+      exceptionalReasons: "legacy reason",
+      exceptionalReasonsDate: "2026-02-01"
+    };
+
+    const result = resetLegacyStartDateSection(legacyDraft);
+
+    expect(result.startDate).toBeNull();
+    expect(result.altStartDate).toBeNull();
+    expect(result.exceptionalReasons).toBeNull();
+    expect(result.exceptionalReasonsDate).toBeNull();
+    expect(result.canGiveCompliantStartDate).toBeNull();
+  });
+
+  it("leaves the form untouched once canGiveCompliantStartDate has been answered", () => {
+    const answeredDraft = {
+      ...mockLtftNewFormObj,
+      canGiveCompliantStartDate: true,
+      startDate: "2026-06-01"
+    };
+
+    expect(resetLegacyStartDateSection(answeredDraft)).toBe(answeredDraft);
+  });
+
+  it("leaves non-DRAFT forms untouched even when canGiveCompliantStartDate is null", () => {
+    const submittedLegacy = {
+      ...mockLtftNewFormObj,
+      altStartDate: "2026-06-01",
+      status: {
+        ...mockLtftNewFormObj.status,
+        current: {
+          ...mockLtftNewFormObj.status.current,
+          state: "SUBMITTED" as const
+        }
+      }
+    };
+
+    expect(resetLegacyStartDateSection(submittedLegacy)).toBe(submittedLegacy);
+  });
+});
+
+describe("stampLtftStartDateOnSubmit", () => {
+  const compliantDate = dayjs().add(16, "week").format("YYYY-MM-DD");
+
+  it("stamps the 16-week compliant date onto a No-path form with no startDate", () => {
+    const noPath = {
+      ...mockLtftNewFormObj,
+      canGiveCompliantStartDate: false,
+      startDate: null
+    };
+    const result = stampLtftStartDateOnSubmit(noPath);
+    expect(result.startDate).toBe(compliantDate);
+  });
+
+  it("keeps an already-stamped startDate (re-derivation only follows a clear-on-edit)", () => {
+    const previouslyStamped = dayjs().add(10, "week").format("YYYY-MM-DD");
+    const noPath = {
+      ...mockLtftNewFormObj,
+      canGiveCompliantStartDate: false,
+      startDate: previouslyStamped
+    };
+    const result = stampLtftStartDateOnSubmit(noPath);
+    expect(result).toBe(noPath);
+    expect(result.startDate).toBe(previouslyStamped);
+  });
+
+  it("leaves the Yes path untouched, where startDate is user-entered", () => {
+    const yesPath = {
+      ...mockLtftNewFormObj,
+      canGiveCompliantStartDate: true,
+      startDate: null
+    };
+    expect(stampLtftStartDateOnSubmit(yesPath)).toBe(yesPath);
+  });
+
+  it("leaves a legacy form (canGiveCompliantStartDate null) untouched", () => {
+    const legacy = {
+      ...mockLtftNewFormObj,
+      canGiveCompliantStartDate: null,
+      startDate: null
+    };
+    expect(stampLtftStartDateOnSubmit(legacy)).toBe(legacy);
   });
 });
 

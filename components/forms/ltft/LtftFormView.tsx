@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import { useParams } from "react-router-dom";
 import {
   loadSavedLtft,
+  updatedLtft,
   updatedLtftSaveStatus
 } from "../../../redux/slices/ltftSlice";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
@@ -14,6 +15,7 @@ import {
   Card,
   Col,
   Container,
+  InsetText,
   Row,
   SummaryList,
   WarningCallout
@@ -21,8 +23,10 @@ import {
 import Declarations from "../Declarations";
 import { StartOverButton } from "../StartOverButton";
 import {
+  computedValueGenerators,
   isDateWithin16WeeksOfFirstDate,
-  saveDraftForm
+  saveDraftForm,
+  setEditPageNumber
 } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import TextInputField from "../TextInputField";
@@ -40,11 +44,13 @@ import dayjs from "dayjs";
 import FieldWarningMsg from "../FieldWarningMsg";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import store from "../../../redux/store/store";
+import { ltft16WeeksWarningTextSubmitted } from "../../../utilities/Constants";
 import {
-  ltft16WeeksWarningText,
-  ltft16WeeksWarningTextSubmitted
-} from "../../../utilities/Constants";
-import { findLatestSubmissionDate } from "../../../utilities/ltftUtilities";
+  clearStartDateSection,
+  findLatestSubmissionDate,
+  stampLtftStartDateOnSubmit
+} from "../../../utilities/ltftUtilities";
+import history from "../../navigation/history";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -58,15 +64,65 @@ export const LtftFormView = () => {
 
   const latestSubmittedLtft = findLatestSubmissionDate(formData);
 
+  const derivedStartDate =
+    formData.canGiveCompliantStartDate === false && !formData.startDate
+      ? computedValueGenerators.ltft16WeeksNoticeDate()
+      : null; // Note: 16 weeks notice date that will be stamped on submission (if no compliant start date is set)
+
   const formJson = ltftJson as FormType;
   const [canSubmit, setCanSubmit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showLegacyStartDateModal, setShowLegacyStartDateModal] =
+    useState(false);
+
+  const isLegacyStartDate = formData.canGiveCompliantStartDate === null;
 
   useEffect(() => {
     if (id) {
       dispatch(loadSavedLtft(id));
     }
   }, [id, dispatch]);
+
+  const handleLegacyStartDateEditConfirm = () => {
+    dispatch(updatedLtft(clearStartDateSection(formData)));
+    const startDatePageIndex = formJson.pages.findIndex(
+      page => page.pageName === "Start date"
+    );
+    setEditPageNumber(formJson.name, startDatePageIndex);
+    setShowLegacyStartDateModal(false);
+    history.push({
+      pathname: "/ltft/create",
+      state: { fieldName: "canGiveCompliantStartDate" }
+    });
+  };
+
+  const legacyStartDateNotice = isLegacyStartDate ? (
+    <InsetText data-cy="legacyStartDateNote">
+      {canEditStatus ? (
+        <>
+          <p>
+            This application was started under the previous start date process
+            and is now handled differently. To change any start date details,
+            you&apos;ll need to complete the start date section again in the
+            updated format. Your originally submitted dates are shown in the
+            summary below.
+          </p>
+          <Button
+            type="button"
+            data-cy="updateLegacyStartDate"
+            onClick={() => setShowLegacyStartDateModal(true)}
+          >
+            Update start date section
+          </Button>
+        </>
+      ) : (
+        <p>
+          This application was submitted under the previous start date process.
+          The start dates are shown in the summary below.
+        </p>
+      )}
+    </InsetText>
+  ) : undefined;
 
   const handleSubClick = async (values: { name: string }) => {
     setAction("Submit", "", formJson.name);
@@ -104,7 +160,12 @@ export const LtftFormView = () => {
 
   const handleModalFormSubmit = async () => {
     startSubmitting();
-    await saveDraftForm(formJson, formData, false, true);
+    await saveDraftForm(
+      formJson,
+      stampLtftStartDateOnSubmit(formData),
+      false,
+      true
+    );
     stopSubmitting();
     setShowModal(false);
     resetAction();
@@ -151,6 +212,11 @@ export const LtftFormView = () => {
           formData={formData}
           canEdit={canEditStatus}
           formErrors={{}}
+          pageNotices={
+            legacyStartDateNotice
+              ? { "Start date": legacyStartDateNotice }
+              : undefined
+          }
         />
         <Card style={{ border: "4px #005eb8 solid" }}>
           <Card.Heading data-cy="completionDateChangeHeading">
@@ -187,8 +253,19 @@ export const LtftFormView = () => {
                 LTFT Start date
               </SummaryList.Key>
               <SummaryList.Value data-cy="completionDateChangeStartDateValue">
-                {dayjs(formData.startDate).format("DD/MM/YYYY")}
-                {formData.startDate &&
+                {derivedStartDate ? (
+                  <>
+                    {dayjs(derivedStartDate).format("DD/MM/YYYY")}
+                    {
+                      " (16 weeks from today - this date will be set when you submit your application)"
+                    }
+                  </>
+                ) : (
+                  formData.startDate &&
+                  dayjs(formData.startDate).format("DD/MM/YYYY")
+                )}
+                {isLegacyStartDate &&
+                  formData.startDate &&
                   latestSubmittedLtft &&
                   isDateWithin16WeeksOfFirstDate(
                     formData.startDate,
@@ -197,11 +274,6 @@ export const LtftFormView = () => {
                     <FieldWarningMsg
                       warningMsgs={[ltft16WeeksWarningTextSubmitted]}
                     />
-                  )}
-                {formData.startDate &&
-                  !latestSubmittedLtft &&
-                  isDateWithin16WeeksOfFirstDate(formData.startDate) && (
-                    <FieldWarningMsg warningMsgs={[ltft16WeeksWarningText]} />
                   )}
               </SummaryList.Value>
             </SummaryList.Row>
@@ -304,6 +376,16 @@ export const LtftFormView = () => {
           submittingBtnText={currentAction.submittingText}
           isSubmitting={isSubmitting}
           additionalInfo={currentAction.additionalInfo}
+        />
+        <ActionModal
+          onSubmit={handleLegacyStartDateEditConfirm}
+          isOpen={showLegacyStartDateModal}
+          onClose={() => setShowLegacyStartDateModal(false)}
+          cancelBtnText="Cancel"
+          warningLabel="Start date process updated"
+          warningText="Editing the start date section will clear the start date details you gave under the previous process. You'll need to complete this section again in the updated format."
+          submittingBtnText=""
+          isSubmitting={false}
         />
       </LtftViewWrapper>
     );

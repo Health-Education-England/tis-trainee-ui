@@ -4,6 +4,7 @@ import { FormDtoBuilder } from "./FormDtoBuilder";
 import { Text } from "./form-fields/Text";
 import { TextArea } from "./form-fields/TextArea";
 import { filteredOptions } from "../../../utilities/FormBuilderUtilities";
+import { InfoText } from "./form-fields/InfoText";
 import { Selector } from "./form-fields/Selector";
 import { Dates } from "./form-fields/Dates";
 import { Phone } from "./form-fields/Phone";
@@ -45,7 +46,8 @@ export function FormFieldBuilder({
     isMultiSelect,
     hint,
     maxDigits,
-    conditionalField
+    conditionalField,
+    computedValue
   } = field;
   const { arrayIndex, arrayName } = arrayDetails ?? {};
   const { currentPageFields, formData } = useFormContext();
@@ -162,6 +164,11 @@ export function FormFieldBuilder({
           dtoName={dtoName}
         />
       );
+    case "info":
+      return (
+        <InfoText name={name} label={label} computedValue={computedValue} />
+      );
+
     case "checkbox": {
       const childField = conditionalField
         ? currentPageFields.find(f => f.name === conditionalField)

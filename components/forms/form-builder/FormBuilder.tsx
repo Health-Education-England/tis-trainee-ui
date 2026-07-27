@@ -41,7 +41,8 @@ export type FieldType =
   | "phone"
   | "checkbox"
   | "array"
-  | "dto";
+  | "dto"
+  | "info";
 
 export type VisibilityMatcherName = "valueInList" | "lessThan16WeeksTest";
 
@@ -50,6 +51,8 @@ export type VisibilityCondition = {
   matcher: VisibilityMatcherName;
   values?: unknown[];
 };
+
+export type ComputedValueName = "ltft16WeeksNoticeDate";
 
 export type Field = {
   name: string;
@@ -62,12 +65,14 @@ export type Field = {
   placeholder?: string;
   warnings?: Warning[];
   canGrow?: boolean;
-  viewWhenEmpty?: boolean;
+  hideInViewWhenEmpty?: boolean; // Note: stops the "not provided" showing in view if the field is empty.
+  showInViewWhenPopulated?: boolean; // Note: overrides the input-form visibleIf to show the field in the read-only view if it has a value.
   objectFields?: Field[];
   width?: number;
   isNumberField?: boolean;
   contributesToTotal?: string;
   readOnly?: boolean;
+  computedValue?: ComputedValueName; // Note: e.g. derived LTFT 16-week start date
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;

@@ -27,83 +27,103 @@ function VisibleField({
   jsonFormName,
   canEdit
 }: Readonly<VisibleFieldProps>) {
-  const isVisible = showFormField(field, formData);
-  if (isVisible) {
-    if (field.type === "dto") {
-      return (
-        <>
-          {field.objectFields?.map(nestedField => (
-            <VisibleField
-              key={nestedField.name}
-              field={nestedField}
-              formData={formData[field.name]}
-              formErrors={formErrors}
-              pageIndex={pageIndex}
-              jsonFormName={jsonFormName}
-              canEdit={canEdit}
-            />
-          ))}
-        </>
-      );
-    }
-    if (field.type === "array") {
-      return (
-        <div key={field.name}>
-          <h3
-            data-cy={`${field.name}-array-panel-header`}
-            className="nhsuk-heading-s nhsuk-u-margin-bottom-4"
-          >
-            {field.label}
-          </h3>
-          <ArrayFieldRenderer
-            fieldVal={formData[field.name]}
-            field={field}
-            canEdit={canEdit}
+  const viewState = getFieldViewState(field, formData);
+  // Note: info fields are UI-only to help form completion
+  if (viewState === "hidden" || field.type === "info") {
+    return null;
+  }
+  if (field.type === "dto") {
+    return (
+      <>
+        {field.objectFields?.map(nestedField => (
+          <VisibleField
+            key={nestedField.name}
+            field={nestedField}
+            formData={formData[field.name]}
+            formErrors={formErrors}
             pageIndex={pageIndex}
             jsonFormName={jsonFormName}
-            formErrors={formErrors}
+            canEdit={canEdit}
           />
-        </div>
-      );
-    }
-    const error = formErrors[field.name];
-    const errorMessage = typeof error === "string" ? error : null;
-
-    return (
-      <SummaryList className="nhsuk-u-margin-bottom-4">
-        <SummaryList.Row key={field.name}>
-          <SummaryList.Key data-cy={`${field.name}-label`} id={field.name}>
-            <span>{field.label}</span>
-            {errorMessage && (
-              <span className="nhsuk-error-message">
-                <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
-                {errorMessage}
-              </span>
-            )}
-          </SummaryList.Key>
-          <SummaryList.Value data-cy={`${field.name}-value`}>
-            {formatEntryValue(
-              field.altDisplayVal
-                ? formData[field.altDisplayVal]
-                : formData[field.name],
-              field.type
-            )}
-          </SummaryList.Value>
-          {canEdit && (
-            <SummaryList.Action asElement="span">
-              <ChangeLink
-                targetField={field.name}
-                label={field.label ?? ""}
-                jsonFormName={jsonFormName}
-                pageIndex={pageIndex}
-              />
-            </SummaryList.Action>
-          )}
-        </SummaryList.Row>
-      </SummaryList>
+        ))}
+      </>
     );
   }
-  return null;
+  if (field.type === "array") {
+    return (
+      <div key={field.name}>
+        <h3
+          data-cy={`${field.name}-array-panel-header`}
+          className="nhsuk-heading-s nhsuk-u-margin-bottom-4"
+        >
+          {field.label}
+        </h3>
+        <ArrayFieldRenderer
+          fieldVal={formData[field.name]}
+          field={field}
+          canEdit={canEdit}
+          pageIndex={pageIndex}
+          jsonFormName={jsonFormName}
+          formErrors={formErrors}
+        />
+      </div>
+    );
+  }
+  const error = formErrors[field.name];
+  const errorMessage = typeof error === "string" ? error : null;
+
+  return (
+    <SummaryList className="nhsuk-u-margin-bottom-4">
+      <SummaryList.Row key={field.name}>
+        <SummaryList.Key data-cy={`${field.name}-label`} id={field.name}>
+          <span>{field.label}</span>
+          {errorMessage && (
+            <span className="nhsuk-error-message">
+              <span className="nhsuk-u-visually-hidden">Error:</span>{" "}
+              {errorMessage}
+            </span>
+          )}
+        </SummaryList.Key>
+        <SummaryList.Value data-cy={`${field.name}-value`}>
+          {formatEntryValue(
+            field.altDisplayVal
+              ? formData[field.altDisplayVal]
+              : formData[field.name],
+            field.type
+          )}
+        </SummaryList.Value>
+        {canEdit && viewState === "editable" && (
+          <SummaryList.Action asElement="span">
+            <ChangeLink
+              targetField={field.name}
+              label={field.label ?? ""}
+              jsonFormName={jsonFormName}
+              pageIndex={pageIndex}
+            />
+          </SummaryList.Action>
+        )}
+      </SummaryList.Row>
+    </SummaryList>
+  );
+}
+
+type FieldViewState = "hidden" | "editable" | "readOnly";
+
+function getFieldViewState(field: Field, formData: FormData): FieldViewState {
+  const fieldValue = formData[field.name];
+  const isPopulated =
+    fieldValue !== null && fieldValue !== undefined && fieldValue !== "";
+
+  if (field.hideInViewWhenEmpty && !isPopulated) {
+    return "hidden";
+  }
+  if (showFormField(field, formData)) {
+    return "editable";
+  }
+  if (field.showInViewWhenPopulated && isPopulated) {
+    return "readOnly"; // Note: field flagged showInViewWhenPopulated e.g. a startDate stamped at submission on the "No" path, which is not editable, so no change link is rendered.
+  }
+  return "hidden"; // Note: field flagged hideInViewWhenEmpty is hidden when no value
 }
 
 type FormViewBuilder = {
@@ -111,13 +131,15 @@ type FormViewBuilder = {
   formData: FormData;
   canEdit: boolean;
   formErrors: FormErrorsType;
+  pageNotices?: Record<string, React.ReactNode>;
 };
 
 export default function FormViewBuilder({
   jsonForm,
   formData,
   canEdit,
-  formErrors
+  formErrors,
+  pageNotices
 }: Readonly<FormViewBuilder>) {
   return (
     <div>
@@ -145,6 +167,7 @@ export default function FormViewBuilder({
                 ))}
               </div>
             ))}
+            {pageNotices?.[page.pageName]}
           </Card>
         </div>
       ))}

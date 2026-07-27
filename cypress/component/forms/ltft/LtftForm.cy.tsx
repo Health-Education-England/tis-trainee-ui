@@ -2,11 +2,7 @@ import store from "../../../../redux/store/store";
 import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import {
-  mockLtftNewFormObj,
-  mockLtftSubmittedFormObj,
-  mockLtftUnsubmittedFormObj
-} from "../../../../mock-data/mock-ltft-data";
+import { mockLtftNewFormObj } from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
 import { updatedLtft } from "../../../../redux/slices/ltftSlice";
 import {
@@ -18,12 +14,15 @@ import { LtftObjNew } from "../../../../models/LtftTypes";
 import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
 import {
   mockProgrammeMemberships,
-  mockTraineeProfile
+  mockTraineeProfile,
+  mockUserFeaturesLtftPilot
 } from "../../../../mock-data/trainee-profile";
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
 import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import dayjs from "dayjs";
 import {
+  ltftExceptionalReasonsError,
+  ltftNoticeError,
   ltftReasonsError,
   LtftVisaError
 } from "../../../../components/forms/ltft/ltftValidationSchema";
@@ -32,16 +31,7 @@ const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
   store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
   const qualifyingProgrammes = ["7ab1aae3-83c2-4bb6-b1f3-99146e79b362"];
-  store.dispatch(
-    updatedUserFeatures({
-      forms: {
-        ltft: {
-          qualifyingProgrammes: qualifyingProgrammes,
-          enabled: true
-        }
-      }
-    } as any)
-  );
+  store.dispatch(updatedUserFeatures(mockUserFeaturesLtftPilot));
 
   const pmOptions = makeValidProgrammeOptions(
     mockProgrammeMemberships,
@@ -88,7 +78,8 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="wteBeforeChange-hint"]').should("exist");
     cy.get('[data-cy="wteBeforeChange-input"]').type("1.a");
     cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "1");
-    cy.get('[data-cy="wteBeforeChange-input"]').clear().type("1000");
+    cy.get('[data-cy="wteBeforeChange-input"]').clear();
+    cy.get('[data-cy="wteBeforeChange-input"]').type("1000");
     cy.get('[data-cy="wteBeforeChange-input"]').should("have.value", "100");
     cy.navNext();
 
@@ -119,27 +110,48 @@ describe("LtftForm - draft", () => {
     cy.get("#wte-error").contains(
       "Your proposed change must be different from the percentage you gave in Part 2"
     );
-    cy.get('[data-cy="wte-input"]').clear().type("80");
+    cy.get('[data-cy="wte-input"]').clear();
+    cy.get('[data-cy="wte-input"]').type("80");
     cy.get("#wte-error").should("not.exist");
     cy.get(".field-warning-container").should("not.exist");
     cy.navNext();
 
-    // part 4
+    // part 4 - Start date (Yes / compliant path)
     cy.get("h3").contains("Part 4 of 10 - Start date");
+    cy.get('[data-cy="startDate-input"]').should("not.exist");
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("not.exist");
+    cy.navNext();
+    cy.get("#canGiveCompliantStartDate-error").contains(ltftNoticeError);
+    cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').check();
+    cy.get("#canGiveCompliantStartDate-error").should("not.exist");
+    cy.get('[data-cy="earliestStartDateInfo-info"]')
+      .should("be.visible")
+      .contains("16 weeks from today");
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("not.exist");
+    cy.navNext(true);
+    cy.get("#startDate-error").contains("Please provide a valid Start Date");
     const dateWithin16WeeksOfToday = dayjs()
       .startOf("day")
       .add(16, "weeks")
       .subtract(1, "day")
       .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="startDate-input"]', "1000-05-01");
-    cy.get("#startDate-error").contains("Change cannot begin before today");
     cy.clearAndType('[data-cy="startDate-input"]', dateWithin16WeeksOfToday);
-    cy.get(".field-warning-msg").contains(
-      "Warning: The start date you have chosen (within 16 weeks) is classed as a late application and will be considered on an exceptional basis. You will be prompted in Part 6 to provide your reason(s) for this."
+    cy.get("#startDate-error").contains(
+      "Change cannot begin less than 16 weeks from today"
     );
+    const compliantStartDate = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="startDate-input"]', compliantStartDate);
     cy.get("#startDate-error").should("not.exist");
-    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
-    cy.navNext();
+    cy.navNext(true);
 
     // Part 5
     cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
@@ -149,7 +161,7 @@ describe("LtftForm - draft", () => {
     cy.get(".nhsuk-card--warning .nhsuk-card__content > p").contains(
       ltftReasonsText1
     );
-    cy.navNext();
+    cy.navNext(true);
     cy.get("#reasonsSelected-error").contains(ltftReasonsError);
     cy.get(".nhsuk-card__heading").contains("Reason(s) for applying");
     cy.get('[data-cy="reasonsSelected-label"]').should("exist");
@@ -164,17 +176,14 @@ describe("LtftForm - draft", () => {
 
     // Part 6
     cy.get("h3").contains("Part 6 of 10 - Supporting information");
-    cy.navNext();
+    cy.navNext(true);
     cy.get("#supportingInformation-error").contains(
       "Supporting information is required"
     );
     cy.get('[data-cy="supportingInformation-text-area-input"]').type(
       "This is my supporting information"
     );
-    cy.get(".field-warning-msg").contains(
-      "Please include supporting information for why you are making a late application (less than 16 weeks notice) and why no suitable alternative start date is given (if applicable)."
-    );
-    cy.navNext();
+    cy.navNext(true);
 
     // Part 7
     cy.get("h3").contains("Part 7 of 10 - Pre-approver discussions");
@@ -189,7 +198,7 @@ describe("LtftForm - draft", () => {
       ".nhsuk-card--warning .nhsuk-card__content > :nth-child(4)"
     ).contains("For information on Professional support contact");
     cy.get('[data-cy="tpdName-label"]').contains("Pre-approver name");
-    cy.navNext();
+    cy.navNext(true);
     cy.get("#tpdName-error").contains("Pre-approver name is required");
     cy.get('[data-cy="tpdName-input"]').type("Dr. TPD");
     cy.get("#tpdName-error").should("not.exist");
@@ -203,7 +212,7 @@ describe("LtftForm - draft", () => {
     cy.get('[data-cy="navNext"]').should("have.class", "disabled-link");
     cy.get('[data-cy="tpdEmail-label"]').contains("Pre-approver email");
     cy.get('[data-cy="tpdEmail-input"]').type("tpd@e.mail");
-    cy.navNext();
+    cy.navNext(true);
 
     // Part 8
     cy.get("h3").contains("Part 8 of 10 - Other discussions");
@@ -211,7 +220,7 @@ describe("LtftForm - draft", () => {
     cy.clearAndType('[data-cy="name-input"]', "Mr AN Other");
     cy.clearAndType('[data-cy="email-input"]', "mr@an.other");
     cy.clickSelect('[data-cy="role"]');
-    cy.navNext();
+    cy.navNext(true);
 
     // part 9
     cy.get("h3").contains("Part 9 of 10 - Skilled Worker visa status");
@@ -231,101 +240,123 @@ describe("LtftForm - draft", () => {
   });
 });
 
-describe("LtftForm - alternative start date validation", () => {
-  const navigateToStartDateWithAltVisible = () => {
+describe("LtftForm - start date exceptions (No / exceptional path)", () => {
+  const navigateToStartDatePage = () => {
     cy.clickSelect('[data-cy="pmId"]');
     cy.navNext();
     cy.clearAndType('[data-cy="wteBeforeChange-input"]', "100");
     cy.navNext();
     cy.clearAndType('[data-cy="wte-input"]', "80");
     cy.navNext();
-    // Part 4 - Start date
     cy.get("h3").contains("Part 4 of 10 - Start date");
-    const startDateWithin16Weeks = dayjs()
-      .startOf("day")
-      .add(16, "weeks")
-      .subtract(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="startDate-input"]', startDateWithin16Weeks);
-    cy.get('[data-cy="altStartDate-input"]').should("be.visible");
   };
 
-  it("errors when the alternative start date is less than 16 weeks from today (alt-at-least-16-weeks)", () => {
+  it("does not capture a start date (it is stamped at submission) and requires exceptional reasons plus a date when 16 weeks' notice cannot be given", () => {
     mountLtftWithMockData(mockLtftNewFormObj);
-    navigateToStartDateWithAltVisible();
-    const altDateWithin16Weeks = dayjs()
+    navigateToStartDatePage();
+    cy.get('[data-cy="canGiveCompliantStartDate-No-input"]').check();
+    cy.get('[data-cy="startDate-input"]').should("not.exist"); //Note: stamped at submission
+    cy.get('[data-cy="earliestStartDateInfo-info"]').should("not.exist");
+    cy.get('[data-cy="startDateInfo-info"]')
+      .should("be.visible")
+      .contains("16 weeks from today");
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "be.visible"
+    );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("be.visible");
+    cy.navNext(true);
+    cy.get("#exceptionalReasons-error").contains(ltftExceptionalReasonsError);
+    cy.get("#exceptionalReasonsDate-error").contains(
+      "Please provide a valid date"
+    );
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').type(
+      "My exceptional reason"
+    );
+    cy.get("#exceptionalReasons-error").should("not.exist");
+
+    const yesterday = dayjs()
       .startOf("day")
-      .add(16, "weeks")
       .subtract(1, "day")
       .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateWithin16Weeks);
-    cy.get("#altStartDate-error").contains(
-      "Alternative start date must be at least 16 weeks from today"
+    cy.clearAndType('[data-cy="exceptionalReasonsDate-input"]', yesterday);
+    cy.get("#exceptionalReasonsDate-error").contains(
+      "The date cannot be before today"
     );
-    const altDateExactly16Weeks = dayjs()
+    const sixteenWeeks = dayjs()
       .startOf("day")
       .add(16, "weeks")
       .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateExactly16Weeks);
-    cy.get("#altStartDate-error").should("not.exist");
-  });
-
-  it("errors when the alternative start date is after the programme end date (alt-before-programme-end)", () => {
-    mountLtftWithMockData(mockLtftNewFormObj);
-    navigateToStartDateWithAltVisible();
-    const altDateAfterProgrammeEnd = dayjs()
-      .startOf("day")
-      .add(3, "years")
-      .add(1, "day")
-      .format("YYYY-MM-DD");
-    cy.clearAndType('[data-cy="altStartDate-input"]', altDateAfterProgrammeEnd);
-    cy.get("#altStartDate-error").contains(
-      "Alternative start date cannot be after the programme end date"
+    cy.clearAndType('[data-cy="exceptionalReasonsDate-input"]', sixteenWeeks);
+    cy.get("#exceptionalReasonsDate-error").contains(
+      "The date must be less than 16 weeks from today"
     );
 
-    const altDateBeforeProgrammeEnd = dayjs()
+    const withinSixteenWeeks = dayjs()
       .startOf("day")
-      .add(16, "weeks")
+      .add(8, "weeks")
       .format("YYYY-MM-DD");
     cy.clearAndType(
-      '[data-cy="altStartDate-input"]',
-      altDateBeforeProgrammeEnd
+      '[data-cy="exceptionalReasonsDate-input"]',
+      withinSixteenWeeks
     );
-    cy.get("#altStartDate-error").should("not.exist");
+    cy.get("#exceptionalReasonsDate-error").should("not.exist");
+    cy.navNext();
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
   });
-});
 
-describe("LtftForm - submitted", () => {
-  it("should render status details section", () => {
-    mountLtftWithMockData(mockLtftSubmittedFormObj);
-    cy.get('[data-cy="SUBMITTED-header"]')
-      .should("exist")
-      .contains("Submitted application");
-    cy.get('[data-cy="ltftName"]').contains("my submitted ltft application");
-    cy.get('[data-cy="ltftCreated"]').should("exist");
-    cy.get('[data-cy="ltftModified"]').should("exist");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
-    cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
+  it("switches between the compliant and exceptional fields as the notice answer changes", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDatePage();
+    cy.get('[data-cy="canGiveCompliantStartDate-No-input"]').check();
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "be.visible"
     );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("be.visible");
+    cy.get('[data-cy="startDate-input"]').should("not.exist");
+    cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').check();
+    cy.get('[data-cy="startDate-input"]')
+      .should("be.visible")
+      .and("not.have.attr", "readonly");
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("not.exist");
   });
-});
 
-describe("LtftForm - unsubmitted", () => {
-  it("should render status details section", () => {
-    mountLtftWithMockData(mockLtftUnsubmittedFormObj);
-    cy.get('[data-cy="UNSUBMITTED-header"]')
-      .should("exist")
-      .contains("Unsubmitted application");
-    cy.get('[data-cy="ltftName"]').contains("my Unsubmitted LTFT");
-    cy.get('[data-cy="ltftCreated"]').should("exist");
-    cy.get('[data-cy="ltftModified"]').should("exist");
-    cy.get('[data-cy="ltftModifiedBy"]').contains("TIS Admin");
-    cy.get('[data-cy="ltfReason"]').contains("Change WTE percentage");
-    cy.get('[data-cy="ltftMessage"]').contains("status reason message");
-    cy.get('[data-cy="ltftRef"]').contains("ltft_47165_001");
-    cy.get('[data-cy="progress-header"] > h3').contains(
-      "Part 1 of 10 - Your Programme"
+  it("clears the previous path's answers when the 'can give...' answer is changed, so stale data from the other path is not carried forward", () => {
+    mountLtftWithMockData(mockLtftNewFormObj);
+    navigateToStartDatePage();
+
+    cy.get('[data-cy="canGiveCompliantStartDate-No-input"]').check();
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').type(
+      "My exceptional reason"
     );
+    const withinSixteenWeeks = dayjs()
+      .startOf("day")
+      .add(8, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType(
+      '[data-cy="exceptionalReasonsDate-input"]',
+      withinSixteenWeeks
+    );
+
+    // Switch to Yes
+    cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').check();
+    const compliantStartDate = dayjs()
+      .startOf("day")
+      .add(16, "weeks")
+      .format("YYYY-MM-DD");
+    cy.clearAndType('[data-cy="startDate-input"]', compliantStartDate);
+
+    // Back to No
+    cy.get('[data-cy="canGiveCompliantStartDate-No-input"]').check();
+    cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
+      "have.value",
+      ""
+    );
+    cy.get('[data-cy="exceptionalReasonsDate-input"]').should("have.value", "");
+
+    cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').check();
+    cy.get('[data-cy="startDate-input"]').should("have.value", "");
   });
 });

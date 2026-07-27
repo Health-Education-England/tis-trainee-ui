@@ -5,7 +5,11 @@ export const pmStartDate = dayjs().subtract(3, "year").format("YYYY-MM-DD");
 export const pmEndDate = dayjs(pmStartDate).add(6, "year").format("YYYY-MM-DD");
 export const wteBeforeChange = 100;
 export const wte = 80;
-export const startDate = dayjs().add(15, "week").format("YYYY-MM-DD");
+export const startDate = dayjs().add(15, "week").format("YYYY-MM-DD"); // A late/legacy start date, within 16 weeks of today.
+export const compliantStartDate = dayjs().add(16, "week").format("YYYY-MM-DD"); // The compliant date stamped onto a "No" (canGiveCompliantStartDate === false) form at submission at least 16 weeks away.
+export const exceptionalRequestedDate = dayjs()
+  .add(8, "week")
+  .format("YYYY-MM-DD");
 
 // Summary list
 export const mockLtftDraftList: LtftSummaryObj[] = [
@@ -161,8 +165,11 @@ export const mockLtftNewFormObj: LtftObjNew = {
   reasonsOtherDetail: null,
   reasonsSelected: null,
   skilledWorkerVisaHolder: null,
+  canGiveCompliantStartDate: null,
   startDate: null,
   altStartDate: null,
+  exceptionalReasons: null,
+  exceptionalReasonsDate: null,
   status: {
     current: {
       state: "DRAFT",
@@ -206,8 +213,11 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   name: null,
   change: {
     type: "LTFT",
+    isExceptional: null,
     startDate: null,
     altStartDate: null,
+    exceptionalReasons: null,
+    exceptionalReasonsDate: null,
     wte: 0,
     id: null
   },
@@ -371,8 +381,11 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   reasonsOtherDetail: "",
   reasonsSelected: [],
   skilledWorkerVisaHolder: null,
+  canGiveCompliantStartDate: null,
   startDate: null,
   altStartDate: null,
+  exceptionalReasons: null,
+  exceptionalReasonsDate: null,
   status: {
     current: {
       detail: { message: null, reason: null },
@@ -412,8 +425,11 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   designatedBodyCode: "",
   managingDeanery: "East of England",
   type: "LTFT",
-  startDate: startDate,
+  canGiveCompliantStartDate: false,
+  startDate: compliantStartDate,
   altStartDate: null,
+  exceptionalReasons: "My exceptional reason for a late application",
+  exceptionalReasonsDate: exceptionalRequestedDate,
   wteBeforeChange: wteBeforeChange,
   wte: wte,
   declarations: {

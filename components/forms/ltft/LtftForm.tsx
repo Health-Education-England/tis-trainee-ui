@@ -4,7 +4,6 @@ import ErrorPage from "../../common/ErrorPage";
 import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
 import { FormProvider } from "../form-builder/FormContext";
 import ltftJson from "./ltft.json";
-import { LtftStatusDetails } from "./LtftStatusDetails";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
 type LtftFormProps = {
@@ -55,9 +54,6 @@ export function LtftForm({ pmOptions }: LtftFormProps) {
   return formData?.declarations?.discussedWithTpd ? (
     <div>
       <h2>Application form</h2>
-      {formData.status?.current?.state !== "DRAFT" && (
-        <LtftStatusDetails {...formData} />
-      )}
       <FormProvider
         initialData={formData}
         initialPageFields={initialPageFields}

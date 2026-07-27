@@ -23,59 +23,59 @@ const baseValid = {
     mobileNumber: "01234567890",
     email: "jo@example.com"
   },
+  canGiveCompliantStartDate: false,
   startDate: beyond16w,
   altStartDate: null,
+  exceptionalReasons: "A valid exceptional reason",
+  exceptionalReasonsDate: within16w,
   skilledWorkerVisaHolder: false,
   supportingInformation: "info"
 };
 
-describe("ltftValidationSchema - altStartDate (optional)", () => {
+describe("ltftValidationSchema - exceptionalReasonsDate (mandatory when exceptional)", () => {
   beforeAll(() => {
     store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
   });
 
-  it("accepts a form with no altStartDate when startDate is more than 16 weeks away", async () => {
-    await expect(
-      ltftValidationSchema.validate({ ...baseValid, startDate: beyond16w })
-    ).resolves.toBeTruthy();
+  it("rejects a missing exceptionalReasonsDate", async () => {
+    const { exceptionalReasonsDate, ...withoutDate } = baseValid;
+    await expect(ltftValidationSchema.validate(withoutDate)).rejects.toThrow(
+      /provide the date you would like this change to begin/
+    );
   });
 
-  it("accepts a late startDate with no altStartDate provided", async () => {
+  it("rejects an exceptionalReasonsDate in the past", async () => {
     await expect(
       ltftValidationSchema.validate({
         ...baseValid,
-        startDate: within16w,
-        altStartDate: null
+        exceptionalReasonsDate: dayjs().subtract(1, "day").format("YYYY-MM-DD")
+      })
+    ).rejects.toThrow(/cannot be before today/);
+  });
+
+  it("rejects an exceptionalReasonsDate 16 or more weeks in the future", async () => {
+    await expect(
+      ltftValidationSchema.validate({
+        ...baseValid,
+        exceptionalReasonsDate: beyond16w
+      })
+    ).rejects.toThrow(/less than 16 weeks from today/);
+  });
+
+  it("accepts an exceptionalReasonsDate today", async () => {
+    await expect(
+      ltftValidationSchema.validate({
+        ...baseValid,
+        exceptionalReasonsDate: dayjs().format("YYYY-MM-DD")
       })
     ).resolves.toBeTruthy();
   });
 
-  it("treats an empty string as cleared (no typeError)", async () => {
+  it("accepts an exceptionalReasonsDate within 16 weeks", async () => {
     await expect(
       ltftValidationSchema.validate({
         ...baseValid,
-        startDate: within16w,
-        altStartDate: ""
-      })
-    ).resolves.toBeTruthy();
-  });
-
-  it("rejects an altStartDate that is itself within 16 weeks", async () => {
-    await expect(
-      ltftValidationSchema.validate({
-        ...baseValid,
-        startDate: within16w,
-        altStartDate: dayjs().add(8, "week").format("YYYY-MM-DD")
-      })
-    ).rejects.toThrow(/at least 16 weeks from today/);
-  });
-
-  it("accepts an altStartDate that is at least 16 weeks away", async () => {
-    await expect(
-      ltftValidationSchema.validate({
-        ...baseValid,
-        startDate: within16w,
-        altStartDate: dayjs().add(20, "week").format("YYYY-MM-DD")
+        exceptionalReasonsDate: within16w
       })
     ).resolves.toBeTruthy();
   });
