@@ -51,3 +51,6 @@ next-env.d.ts
 #json-server for mock api
 db.json
 db-*.json
+
+# generated on the fly by the coverage script from .babelrc.coverage; committing it would disable SWC for the production build
+.babelrc
