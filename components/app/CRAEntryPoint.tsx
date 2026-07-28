@@ -12,6 +12,7 @@ import { AuthHeader } from "../authentication/signup/header/AuthHeader";
 import { AuthFooter } from "../authentication/signup/footer/AuthFooter";
 import { AuthCheckboxFields } from "../authentication/signup/formFields/AuthCheckboxFields";
 import { AuthSupportLinks } from "../authentication/signup/sharedPrimitives/AuthSupportLinks";
+import { isLocalAuthBypassEnabled } from "../../utilities/localAuth";
 
 const tagManagerArgs = {
   gtmId: "GTM-5PWDC87"
@@ -101,7 +102,18 @@ function CRAEntryPoint() {
     }
   };
 
-  // const hideSignUpDependingOnEnv = process.env.REACT_APP_ENV !== "production";
+  const appContent = (
+    <Router history={history}>
+      <>
+        <ToastContainer transition={Zoom} limit={2} hideProgressBar={true} />
+        <Main />
+      </>
+    </Router>
+  );
+
+  if (isLocalAuthBypassEnabled()) {
+    return <Authenticator.Provider>{appContent}</Authenticator.Provider>;
+  }
 
   return (
     <Authenticator
@@ -124,18 +136,7 @@ function CRAEntryPoint() {
         }
       }}
     >
-      {() => (
-        <Router history={history}>
-          <>
-            <ToastContainer
-              transition={Zoom}
-              limit={2}
-              hideProgressBar={true}
-            />
-            <Main />
-          </>
-        </Router>
-      )}
+      {() => <>{appContent}</>}
     </Authenticator>
   );
 }

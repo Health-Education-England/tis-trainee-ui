@@ -1,6 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchMFAPreference, fetchAuthSession } from "aws-amplify/auth";
 import { UserFeaturesType } from "../../models/FeatureFlags";
+import {
+  decodeJwtPayload,
+  fetchLocalAuthToken,
+  isLocalAuthBypassEnabled
+} from "../../utilities/localAuth";
 
 export type CojVersionType = "GG9" | "GG10";
 
@@ -21,14 +26,22 @@ export interface IUser {
   redirected: boolean;
 }
 
+const LOCAL_BYPASS_DEFAULT_MFA: MFAType = "EMAIL";
+
+const getDefaultPreferredMfa = (): MFAType =>
+  isLocalAuthBypassEnabled() ? LOCAL_BYPASS_DEFAULT_MFA : "NOMFA";
+
+const getDefaultEnabledMfa = (): MFAType[] =>
+  isLocalAuthBypassEnabled() ? [LOCAL_BYPASS_DEFAULT_MFA] : [];
+
 const initialState: IUser = {
   status: "idle",
   tempMfa: "NOMFA",
   smsSection: 1,
   totpSection: 1,
   error: "",
-  preferredMfa: "NOMFA",
-  enabledMfa: [],
+  preferredMfa: getDefaultPreferredMfa(),
+  enabledMfa: getDefaultEnabledMfa(),
   username: "",
   features: {
     actions: {
@@ -81,6 +94,11 @@ const initialState: IUser = {
 export const fetchUserSession = createAsyncThunk(
   "user/fetchUserSession",
   async () => {
+    if (isLocalAuthBypassEnabled()) {
+      const localToken = await fetchLocalAuthToken();
+      return decodeJwtPayload<Record<string, unknown>>(localToken);
+    }
+
     const session = await fetchAuthSession();
     return session.tokens?.idToken?.payload;
   }
@@ -89,6 +107,13 @@ export const fetchUserSession = createAsyncThunk(
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
+    if (isLocalAuthBypassEnabled()) {
+      return {
+        preferred: LOCAL_BYPASS_DEFAULT_MFA,
+        enabled: [LOCAL_BYPASS_DEFAULT_MFA]
+      };
+    }
+
     const mfaPreference = await fetchMFAPreference();
     return {
       preferred: mfaPreference.preferred,
@@ -165,8 +190,8 @@ const userSlice = createSlice({
       })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMfa = action.payload.preferred ?? "NOMFA";
-        state.enabledMfa = action.payload.enabled ?? [];
+        state.preferredMfa = action.payload.preferred ?? getDefaultPreferredMfa();
+        state.enabledMfa = action.payload.enabled ??  getDefaultEnabledMfa();
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";
