@@ -39,6 +39,17 @@ You will also see any lint errors in the console.
 Note: To populate the form with data, you will need to run the Docker containers to start the back-end services. See
 [dev-handbook](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service) for more details on these services.
 
+### Local auth bypass (development only)
+
+You can start the app with local auth bypass enabled via `npm run dev:local-user`.
+
+To bypass Amplify login locally and use a JWT supplied by your local nginx proxy, set:
+
+- `NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED="true"`
+- `NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT="/local-user/token"` (optional override)
+
+When enabled, the app fetches the JWT from the configured endpoint and uses it for API authorization headers and local session bootstrap.
+
 ## Testing with BrowserStack
 
 Sign in [BrowserStack](https://www.browserstack.com/users/sign_in) with your work email. Start a web testing session by clicking `Live` on the menu bar. You can enter the URL of TSS Preprod/Prod for testing.<br />
