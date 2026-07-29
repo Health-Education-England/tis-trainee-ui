@@ -18,6 +18,12 @@ export const InfoText = ({ name, label, computedValue }: InfoTextProps) => {
     ? DateUtilities.ToLocalDate(generatedValue)
     : "";
   const [before, after] = (label ?? "").split("{value}");
+  if (after !== undefined && !displayValue) {
+    console.warn(
+      `InfoText "${name}": label contains a "{value}" token but couldn't generate a computed value so nothing rendered.`
+    ); // Note: Edge case so just warn dev of poss misconfiguration...
+    return null; // ... and return null to avoid broken sentence.
+  }
   return (
     <InsetText data-cy={`${name}-info`}>
       <p>

@@ -308,11 +308,7 @@ const displayText: DisplayText = {
     </>
   ),
   ltftReasonsInstructions: <p>{ltftReasonsText1}</p>,
-  ltftStartDateImportantText: (
-    <>
-      <p>{ltftStartDateImportantText1}</p>
-    </>
-  ),
+  ltftStartDateImportantText: <p>{ltftStartDateImportantText1}</p>,
   ltftTier2VisaImportantText: (
     <>
       <p>{ltftTier2VisaImportantText1}</p>
