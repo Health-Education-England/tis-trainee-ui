@@ -598,3 +598,79 @@ describe("LTFT Form View - legacy: read-only display & Update migration", () => 
     cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
   });
 });
+
+describe("LTFT Form View - incomplete Start date section", () => {
+  const makeSectionReset = (base: LtftObjNew): LtftObjNew => ({
+    ...base,
+    canGiveCompliantStartDate: null,
+    startDate: null,
+    altStartDate: null,
+    exceptionalReasons: null,
+    exceptionalReasonsDate: null
+  });
+
+  beforeEach(() => {
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+  });
+
+  it("UNSUBMITTED: shows the incomplete notice, not the legacy one, and blocks re-submission", () => {
+    mountLtftViewWithMockData(makeSectionReset(mockLtftUnsubmittedFormObj));
+
+    cy.get('[data-cy="legacyStartDateNote"]').should("not.exist");
+    cy.get('[data-cy="incompleteStartDateNote"]')
+      .should("exist")
+      .and("contain.text", "The start date section is incomplete");
+    cy.get('[data-cy="completeStartDateSection"]').should("exist");
+
+    cy.get('[data-cy="informationIsCorrect"]').check();
+    cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="name"]').clear();
+    cy.get('[data-cy="name"]').type("my re-submitted ltft application");
+    cy.get('[data-cy="BtnSubmit"]').should("have.attr", "disabled");
+  });
+
+  it("UNSUBMITTED: blocks re-submission when the Yes path was answered but no start date was given", () => {
+    mountLtftViewWithMockData({
+      ...makeSectionReset(mockLtftUnsubmittedFormObj),
+      canGiveCompliantStartDate: true
+    });
+
+    cy.get('[data-cy="incompleteStartDateNote"]').should("exist");
+    cy.get('[data-cy="informationIsCorrect"]').check();
+    cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="name"]').clear();
+    cy.get('[data-cy="name"]').type("my re-submitted ltft application");
+    cy.get('[data-cy="BtnSubmit"]').should("have.attr", "disabled");
+  });
+
+  it("UNSUBMITTED legacy: still allows re-submission of untouched pre-rework start date details", () => {
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      canGiveCompliantStartDate: null,
+      startDate: startDate,
+      altStartDate: dayjs().add(30, "week").format("YYYY-MM-DD"),
+      exceptionalReasons: null,
+      exceptionalReasonsDate: null
+    });
+
+    cy.get('[data-cy="legacyStartDateNote"]').should("exist");
+    cy.get('[data-cy="incompleteStartDateNote"]').should("not.exist");
+
+    cy.get('[data-cy="informationIsCorrect"]').check();
+    cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="name"]').clear();
+    cy.get('[data-cy="name"]').type("my re-submitted ltft application");
+    cy.get('[data-cy="BtnSubmit"]').should("not.have.attr", "disabled");
+  });
+
+  it("SUBMITTED (read-only): shows neither notice and offers no submit action", () => {
+    store.dispatch(updatedLtftStatus("succeeded"));
+    store.dispatch(updatedCanEditLtft(false));
+    mountLtftViewWithMockData(makeSectionReset(mockLtftSubmittedFormObj));
+
+    cy.get('[data-cy="legacyStartDateNote"]').should("not.exist");
+    cy.get('[data-cy="incompleteStartDateNote"]').should("not.exist");
+    cy.get('[data-cy="BtnSubmit"]').should("not.exist");
+  });
+});

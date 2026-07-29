@@ -793,6 +793,15 @@ export const ltft16WeeksNotice = (
 export const ltft16WeeksWarningTextSubmitted =
   "This application was submitted within 16 weeks of the intended Start date. Late applications are only considered on an exceptional basis.";
 
+export const ltftLegacyStartDateGateLabel = "Start date page has been updated";
+export const ltftLegacyStartDateGateText =
+  "Since you submitted this application, the Start date page has been reworked. If you proceed, your start date information will be reset and you will need to complete this page again.";
+export const ltftLegacyStartDateGateProceedBtn = "Proceed";
+export const ltftLegacyStartDateGateSkipBtn = "Skip";
+export const ltftLegacyStartDateGateSkipHint =
+  "Skipping the Start date page keeps your original start date information intact for re-submission.";
+export const ltftLegacyStartDateGateCancelBtn = "Stay on this page";
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

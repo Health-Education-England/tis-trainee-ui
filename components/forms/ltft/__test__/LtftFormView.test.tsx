@@ -115,6 +115,11 @@ describe("LtftFormView - Modal Display Tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Note: the module is auto-mocked, so validateFields returns undefined and the Start date section check would throw on .then - give it a promise to chain off.
+
+    (FormBuilderUtilities.validateFields as jest.Mock).mockResolvedValue(
+      undefined
+    );
     mockStoreState = {
       ltft: { canEdit: true, saveStatus: "idle" }
     };

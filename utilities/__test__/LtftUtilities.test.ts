@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { mockPersonalDetails } from "../../mock-data/trainee-profile";
 import {
   findLatestSubmissionDate,
+  hasLegacyStartDateData,
   mapLtftDtoToObj,
   mapLtftObjToDto,
   populateLtftDraftNew,
@@ -112,6 +113,57 @@ describe("mapDtoToLtftObj", () => {
       mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto)
         .canGiveCompliantStartDate
     ).toBeNull();
+  });
+});
+
+describe("hasLegacyStartDateData", () => {
+  it("is true when canGiveCompliantStartDate is null and a startDate was given", () => {
+    expect(
+      hasLegacyStartDateData({
+        ...mockLtftNewFormObj,
+        startDate: "2026-01-01"
+      })
+    ).toBe(true);
+  });
+
+  it("is true when canGiveCompliantStartDate is null and only an altStartDate was given", () => {
+    expect(
+      hasLegacyStartDateData({
+        ...mockLtftNewFormObj,
+        altStartDate: "2026-06-01"
+      })
+    ).toBe(true);
+  });
+
+  it("is false for a new form that has not reached the Start date page yet", () => {
+    expect(hasLegacyStartDateData(mockLtftNewFormObj)).toBe(false);
+  });
+
+  it("is false once the legacy section has been reset, so the trainee is not warned twice", () => {
+    const reset = {
+      ...mockLtftNewFormObj,
+      startDate: null,
+      altStartDate: null,
+      status: {
+        ...mockLtftNewFormObj.status,
+        current: {
+          ...mockLtftNewFormObj.status.current,
+          state: "UNSUBMITTED" as const
+        }
+      }
+    };
+
+    expect(hasLegacyStartDateData(reset)).toBe(false);
+  });
+
+  it("is false once canGiveCompliantStartDate has been answered", () => {
+    expect(
+      hasLegacyStartDateData({
+        ...mockLtftNewFormObj,
+        canGiveCompliantStartDate: true,
+        startDate: "2026-06-01"
+      })
+    ).toBe(false);
   });
 });
 

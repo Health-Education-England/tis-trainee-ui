@@ -76,6 +76,7 @@
       "pageName": "Start date",
       "importantTxtName": "ltftStartDateImportantText",
       "expanderLinkName": "ltft16WeeksNotice",
+      "gatedIf": "ltftLegacyStartDate",
       "sections": [
         {
           "sectionHeader": "Start date for change to your working hours",

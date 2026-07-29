@@ -2,9 +2,15 @@ import store from "../../../../redux/store/store";
 import { mount } from "cypress/react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import { mockLtftNewFormObj } from "../../../../mock-data/mock-ltft-data";
+import {
+  mockLtftNewFormObj,
+  mockLtftUnsubmittedFormObj
+} from "../../../../mock-data/mock-ltft-data";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
-import { updatedLtft } from "../../../../redux/slices/ltftSlice";
+import {
+  updatedEditPageNumberLtft,
+  updatedLtft
+} from "../../../../redux/slices/ltftSlice";
 import {
   ltftDiscussionText2,
   ltftReasonsText1,
@@ -26,6 +32,11 @@ import {
   ltftReasonsError,
   LtftVisaError
 } from "../../../../components/forms/ltft/ltftValidationSchema";
+import {
+  ltftLegacyStartDateGateCancelBtn,
+  ltftLegacyStartDateGateLabel,
+  ltftLegacyStartDateGateSkipHint
+} from "../../../../utilities/Constants";
 
 const mountLtftWithMockData = (mockLtftObj: LtftObjNew) => {
   store.dispatch(updatedLtft(mockLtftObj));
@@ -358,5 +369,134 @@ describe("LtftForm - start date exceptions (No / exceptional path)", () => {
 
     cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').check();
     cy.get('[data-cy="startDate-input"]').should("have.value", "");
+  });
+});
+
+describe("LtftForm - legacy Start date page gate", () => {
+  const legacyStartDate = dayjs().add(20, "week").format("YYYY-MM-DD");
+  const legacyAltStartDate = dayjs().add(30, "week").format("YYYY-MM-DD");
+
+  const mockLegacyUnsubmitted: LtftObjNew = {
+    ...mockLtftUnsubmittedFormObj,
+    canGiveCompliantStartDate: null,
+    startDate: legacyStartDate,
+    altStartDate: legacyAltStartDate,
+    exceptionalReasons: null,
+    exceptionalReasonsDate: null
+  };
+
+  const mountAtPageBeforeStartDate = (mockLtftObj: LtftObjNew) => {
+    store.dispatch(updatedEditPageNumberLtft(2));
+    mountLtftWithMockData(mockLtftObj);
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+  };
+
+  it("warns instead of entering the Start date page when navigating forward into it", () => {
+    mountAtPageBeforeStartDate(mockLegacyUnsubmitted);
+    cy.navNext();
+
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+    cy.get('[data-cy="pageGateLabel"]').should(
+      "contain.text",
+      ltftLegacyStartDateGateLabel
+    );
+    cy.get('[data-cy="pageGateText"]').should(
+      "contain.text",
+      "your start date information will be reset"
+    );
+    cy.get('[data-cy="gateSkipHint"]').should(
+      "contain.text",
+      ltftLegacyStartDateGateSkipHint
+    );
+    cy.get('[data-cy="gateSkipBtn"]').should(
+      "have.attr",
+      "aria-describedby",
+      "gateSkipHint"
+    );
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+  });
+
+  it("Proceed clears the legacy answers, opens the Start date page, and does not warn again", () => {
+    mountAtPageBeforeStartDate(mockLegacyUnsubmitted);
+    cy.navNext();
+    cy.get('[data-cy="gateProceedBtn"]').click();
+
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains("Part 4 of 10 - Start date");
+    cy.get('[data-cy="canGiveCompliantStartDate-Yes-input"]').should(
+      "not.be.checked"
+    );
+    cy.get('[data-cy="canGiveCompliantStartDate-No-input"]').should(
+      "not.be.checked"
+    );
+
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+    cy.navNext();
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains("Part 4 of 10 - Start date");
+  });
+
+  it("Skip steps over the Start date page and keeps the legacy answers, so the gate still fires on the way back", () => {
+    mountAtPageBeforeStartDate(mockLegacyUnsubmitted);
+    cy.navNext();
+    cy.get('[data-cy="gateSkipBtn"]').click();
+
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
+
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
+  });
+
+  it("Skip steps back over the Start date page when travelling backwards", () => {
+    store.dispatch(updatedEditPageNumberLtft(4));
+    mountLtftWithMockData(mockLegacyUnsubmitted);
+    cy.get("h3").contains("Part 5 of 10 - Reason(s) for applying");
+
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+    cy.get('[data-cy="gateSkipBtn"]').click();
+
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+  });
+
+  it("the cancel option leaves the trainee where they are with nothing cleared", () => {
+    mountAtPageBeforeStartDate(mockLegacyUnsubmitted);
+    cy.navNext();
+    cy.get('[data-cy="modal-cancel-btn"]')
+      .should("contain.text", ltftLegacyStartDateGateCancelBtn)
+      .click();
+
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains(
+      "Part 3 of 10 - Proposed change to your working hours"
+    );
+
+    cy.navNext();
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+  });
+
+  it("does not gate a new form that simply has not reached the Start date page yet", () => {
+    mountAtPageBeforeStartDate({
+      ...mockLtftNewFormObj,
+      pmId: mockLtftUnsubmittedFormObj.pmId,
+      wteBeforeChange: 100,
+      wte: 80
+    });
+    cy.navNext();
+
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get("h3").contains("Part 4 of 10 - Start date");
   });
 });

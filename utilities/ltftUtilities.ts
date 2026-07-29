@@ -266,6 +266,10 @@ export const clearStartDateSection = (ltftObj: LtftObjNew): LtftObjNew => ({
   exceptionalReasonsDate: null
 });
 
+export const hasLegacyStartDateData = (ltftObj: LtftObjNew): boolean =>
+  ltftObj.canGiveCompliantStartDate === null &&
+  (ltftObj.startDate != null || ltftObj.altStartDate != null);
+
 // Note: legacy DRAFT, canGiveCompliantStartDate is null. Its old start date answers no longer fit the new start date flow, so clear and make trainee complete that page from scratch. ('New' drafts that haven't answered the question yet already have these fields null).
 export const resetLegacyStartDateSection = (
   ltftObj: LtftObjNew

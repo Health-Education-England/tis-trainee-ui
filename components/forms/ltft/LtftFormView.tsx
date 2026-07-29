@@ -9,7 +9,7 @@ import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import { Form as FormType, FormName } from "../form-builder/FormBuilder";
 import ltftJson from "./ltft.json";
 import FormViewBuilder from "../form-builder/FormViewBuilder";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -26,7 +26,8 @@ import {
   computedValueGenerators,
   isDateWithin16WeeksOfFirstDate,
   saveDraftForm,
-  setEditPageNumber
+  setEditPageNumber,
+  validateFields
 } from "../../../utilities/FormBuilderUtilities";
 import { useSubmitting } from "../../../utilities/hooks/useSubmitting";
 import TextInputField from "../TextInputField";
@@ -48,9 +49,11 @@ import { ltft16WeeksWarningTextSubmitted } from "../../../utilities/Constants";
 import {
   clearStartDateSection,
   findLatestSubmissionDate,
+  hasLegacyStartDateData,
   stampLtftStartDateOnSubmit
 } from "../../../utilities/ltftUtilities";
 import history from "../../navigation/history";
+import { ltftValidationSchema } from "./ltftValidationSchema";
 
 export const LtftFormView = () => {
   const dispatch = useAppDispatch();
@@ -75,7 +78,11 @@ export const LtftFormView = () => {
   const [showLegacyStartDateModal, setShowLegacyStartDateModal] =
     useState(false);
 
-  const isLegacyStartDate = formData.canGiveCompliantStartDate === null;
+  const hasLegacyStartDate = hasLegacyStartDateData(formData);
+  const startDatePageIndex = formJson.pages.findIndex(
+    page => page.pageName === "Start date"
+  );
+  const [isStartDateSectionValid, setIsStartDateSectionValid] = useState(true);
 
   useEffect(() => {
     if (id) {
@@ -83,46 +90,80 @@ export const LtftFormView = () => {
     }
   }, [id, dispatch]);
 
-  const handleLegacyStartDateEditConfirm = () => {
-    dispatch(updatedLtft(clearStartDateSection(formData)));
-    const startDatePageIndex = formJson.pages.findIndex(
-      page => page.pageName === "Start date"
+  useEffect(() => {
+    // Note: This effect is to make sure a legacy start date page reset can't be left incomplete
+    const startDateFields = formJson.pages[startDatePageIndex].sections.flatMap(
+      section => section.fields
     );
+    validateFields(startDateFields, formData, ltftValidationSchema)
+      .then(() => setIsStartDateSectionValid(true))
+      .catch(() => setIsStartDateSectionValid(false));
+  }, [formData, formJson, startDatePageIndex]);
+
+  // Note: a legacy application can be re-submitted with its original (pre-rework) start date details untouched, so it is exempt from the completeness check.
+  const isStartDateSectionSubmittable =
+    hasLegacyStartDate || isStartDateSectionValid;
+
+  const goToStartDatePage = () => {
     setEditPageNumber(formJson.name, startDatePageIndex);
-    setShowLegacyStartDateModal(false);
     history.push({
       pathname: "/ltft/create",
       state: { fieldName: "canGiveCompliantStartDate" }
     });
   };
 
-  const legacyStartDateNotice = isLegacyStartDate ? (
-    <InsetText data-cy="legacyStartDateNote">
-      {canEditStatus ? (
-        <>
+  const handleLegacyStartDateEditConfirm = () => {
+    dispatch(updatedLtft(clearStartDateSection(formData)));
+    setShowLegacyStartDateModal(false);
+    goToStartDatePage();
+  };
+
+  let startDatePageNotice: ReactNode;
+  if (hasLegacyStartDate) {
+    startDatePageNotice = (
+      <InsetText data-cy="legacyStartDateNote">
+        {canEditStatus ? (
+          <>
+            <p>
+              This application was started under the previous start date process
+              and is now handled differently. To change any start date details,
+              you&apos;ll need to complete the start date section again in the
+              updated format. Your originally submitted dates are shown in the
+              summary below.
+            </p>
+            <Button
+              type="button"
+              data-cy="updateLegacyStartDate"
+              onClick={() => setShowLegacyStartDateModal(true)}
+            >
+              Update start date section
+            </Button>
+          </>
+        ) : (
           <p>
-            This application was started under the previous start date process
-            and is now handled differently. To change any start date details,
-            you&apos;ll need to complete the start date section again in the
-            updated format. Your originally submitted dates are shown in the
-            summary below.
+            This application was submitted under the previous start date
+            process. The start dates are shown in the summary below.
           </p>
-          <Button
-            type="button"
-            data-cy="updateLegacyStartDate"
-            onClick={() => setShowLegacyStartDateModal(true)}
-          >
-            Update start date section
-          </Button>
-        </>
-      ) : (
+        )}
+      </InsetText>
+    );
+  } else if (canEditStatus && !isStartDateSectionValid) {
+    startDatePageNotice = (
+      <InsetText data-cy="incompleteStartDateNote">
         <p>
-          This application was submitted under the previous start date process.
-          The start dates are shown in the summary below.
+          The start date section is incomplete. You need to complete it before
+          you can submit this application.
         </p>
-      )}
-    </InsetText>
-  ) : undefined;
+        <Button
+          type="button"
+          data-cy="completeStartDateSection"
+          onClick={goToStartDatePage}
+        >
+          Complete start date section
+        </Button>
+      </InsetText>
+    );
+  }
 
   const handleSubClick = async (values: { name: string }) => {
     setAction("Submit", "", formJson.name);
@@ -213,8 +254,8 @@ export const LtftFormView = () => {
           canEdit={canEditStatus}
           formErrors={{}}
           pageNotices={
-            legacyStartDateNotice
-              ? { "Start date": legacyStartDateNotice }
+            startDatePageNotice
+              ? { "Start date": startDatePageNotice }
               : undefined
           }
         />
@@ -264,7 +305,7 @@ export const LtftFormView = () => {
                   formData.startDate &&
                   dayjs(formData.startDate).format("DD/MM/YYYY")
                 )}
-                {isLegacyStartDate &&
+                {hasLegacyStartDate &&
                   formData.startDate &&
                   latestSubmittedLtft &&
                   isDateWithin16WeeksOfFirstDate(
@@ -321,7 +362,10 @@ export const LtftFormView = () => {
                     <Button
                       type="submit"
                       disabled={
-                        !values.name.trim() || !canSubmit || isSubmitting
+                        !values.name.trim() ||
+                        !canSubmit ||
+                        isSubmitting ||
+                        !isStartDateSectionSubmittable
                       }
                       data-cy="BtnSubmit"
                     >
