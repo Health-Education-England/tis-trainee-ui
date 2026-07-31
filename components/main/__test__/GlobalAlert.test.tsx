@@ -182,7 +182,9 @@ describe("GlobalAlert", () => {
         id: "hy-1",
         title: "Take part in our study",
         content: {
-          raw: { children: [{ type: "paragraph", children: [{ text: "Details" }] }] }
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
         }
       }
     ];
@@ -241,7 +243,9 @@ describe("GlobalAlert", () => {
         id: "hy-1",
         title: "Take part in our study",
         content: {
-          raw: { children: [{ type: "paragraph", children: [{ text: "Details" }] }] }
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
         }
       }
     ];
@@ -250,7 +254,11 @@ describe("GlobalAlert", () => {
     renderWithProviders(<GlobalAlert />, {
       initialState: {
         user: { preferredMfa: "SMS", redirected: false },
-        traineeActions: { traineeActionsData: [], status: "succeeded", error: "" },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        },
         announcements: {
           announcements: mockAnnouncements,
           status: "succeeded",
@@ -270,7 +278,9 @@ describe("GlobalAlert", () => {
         id: "hy-1",
         title: "Take part in our study",
         content: {
-          raw: { children: [{ type: "paragraph", children: [{ text: "Details" }] }] }
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
         }
       }
     ];
@@ -279,7 +289,11 @@ describe("GlobalAlert", () => {
     renderWithProviders(<GlobalAlert />, {
       initialState: {
         user: { preferredMfa: "SMS", redirected: false },
-        traineeActions: { traineeActionsData: [], status: "succeeded", error: "" },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        },
         announcements: {
           announcements: mockAnnouncements,
           status: "succeeded",
