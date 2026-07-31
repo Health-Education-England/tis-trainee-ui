@@ -168,11 +168,6 @@ body {
   margin: 0;
 }
 
-.recruit-alert {
-  display: flex;
-  align-items: flex-start;
-}
-
 .wte-percentage-header {
   display: inline-flex;
   align-items: center;
@@ -190,7 +185,21 @@ body {
   float: right;
 }
 
-.recruit-alert-close {
+.announcement-banner {
+  display: flex;
+  align-items: flex-start;
+}
+
+.announcement-content {
+  width: 100%;
+
+  .nhsuk-action-link {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.announcement-banner-close {
   background: none;
   border: none;
   cursor: pointer;
@@ -198,11 +207,6 @@ body {
   .nhsuk-icon--cross {
     fill: #005eb8;
   }
-}
-
-.recruit-link {
-  display: inline-flex;
-  align-items: center;
 }
 
 .nhsuk-pagination__link {
