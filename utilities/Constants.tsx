@@ -516,7 +516,7 @@ export const onboardingTrackerAction: Record<
 
 export const NOTIFICATION_SUBJECT_MAP: Record<TrackerActionType, string> = {
   WELCOME_EMAIL: "Welcome Email",
-  WELCOME: "Royal Society Registration",
+  WELCOME: "Royal College Registration",
   REVIEW_PROGRAMME: "Review Programme",
   SIGN_COJ: "Sign COJ",
   SIGN_FORM_R_PART_A: "Sign Form R Part A",
@@ -543,7 +543,7 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
     ),
     WELCOME: (
       <p>
-        Royal Society / Faculty registration is done outside of TIS
+        Royal College / Faculty registration is done outside of TIS
         Self-Service.
       </p>
     ),
