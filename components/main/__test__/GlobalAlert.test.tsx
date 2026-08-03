@@ -3,7 +3,8 @@ import {
   render,
   screen,
   queryByAttribute,
-  fireEvent
+  fireEvent,
+  waitFor
 } from "@testing-library/react";
 import { GlobalAlert } from "../GlobalAlert";
 import { Provider } from "react-redux";
@@ -13,11 +14,18 @@ import userReducer, { IUser } from "../../../redux/slices/userSlice";
 import traineeActionsReducer, {
   IAction
 } from "../../../redux/slices/traineeActionsSlice";
+import announcementsReducer from "../../../redux/slices/announcementsSlice";
 import { RootState } from "../../../redux/store/store";
+import { Announcement } from "../../../models/Announcement";
 
 type GlobalAlertTestState = {
   user: Partial<IUser>;
   traineeActions: Partial<IAction>;
+  announcements?: {
+    announcements: Announcement[];
+    status: string;
+    error: string;
+  };
 };
 
 // Mock the useTraineeActions hook
@@ -25,13 +33,20 @@ jest.mock("../../../utilities/hooks/useTraineeActions", () => ({
   useTraineeActions: jest.fn()
 }));
 
+jest.mock("../../../services/AnnouncementsService", () => ({
+  getAnnouncements: jest.fn().mockResolvedValue([])
+}));
+
 import { useTraineeActions } from "../../../utilities/hooks/useTraineeActions";
+import { getAnnouncements } from "../../../services/AnnouncementsService";
 
 describe("GlobalAlert", () => {
   const mockUseTraineeActions = useTraineeActions as jest.Mock;
 
   beforeEach(() => {
     mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: false });
+    (getAnnouncements as jest.Mock).mockResolvedValue([]);
+    window.localStorage.clear();
   });
 
   afterEach(() => {
@@ -63,7 +78,8 @@ describe("GlobalAlert", () => {
     const store = configureStore({
       reducer: {
         user: userReducer,
-        traineeActions: traineeActionsReducer
+        traineeActions: traineeActionsReducer,
+        announcements: announcementsReducer
       },
       preloadedState: initialState as unknown as RootState
     });
@@ -130,73 +146,6 @@ describe("GlobalAlert", () => {
     expect(screen.getByText(/We have moved/i)).toBeInTheDocument();
   });
 
-  test("renders recruit alert by default and can dismiss it", () => {
-    const { container } = renderWithProviders(<GlobalAlert />);
-
-    expect(
-      queryByAttribute("data-cy", container, "recruitAlert")
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Digital Product Collective/i)).toBeInTheDocument();
-
-    const dismissButton = screen.getByRole("button", {
-      name: /dismiss recruitment alert/i
-    });
-    fireEvent.click(dismissButton);
-
-    expect(
-      queryByAttribute("data-cy", container, "recruitAlert")
-    ).not.toBeInTheDocument();
-  });
-
-  test("recruit alert exposes the expected heading and Get involved link", () => {
-    renderWithProviders(<GlobalAlert />);
-
-    expect(
-      screen.getByRole("heading", { name: /Think you can make TSS better\?/i })
-    ).toBeInTheDocument();
-
-    const getInvolvedLink = screen.getByRole("link", { name: /get involved/i });
-    expect(getInvolvedLink).toHaveAttribute(
-      "href",
-      "https://forms.office.com/e/gnyr0hMuYN"
-    );
-    expect(getInvolvedLink).toHaveAttribute("target", "_blank");
-    expect(getInvolvedLink).toHaveAttribute("rel", "noopener noreferrer");
-  });
-
-  test("dismissing recruit alert keeps other alerts visible", () => {
-    mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
-
-    const { container } = renderWithProviders(<GlobalAlert />, {
-      route: "/home",
-      initialState: {
-        user: { preferredMfa: "SMS", redirected: true },
-        traineeActions: {
-          traineeActionsData: [],
-          status: "succeeded",
-          error: ""
-        }
-      }
-    });
-
-    fireEvent.click(
-      screen.getByRole("button", { name: /dismiss recruitment alert/i })
-    );
-
-    expect(
-      queryByAttribute("data-cy", container, "recruitAlert")
-    ).not.toBeInTheDocument();
-    expect(
-      queryByAttribute("data-cy", container, "globalAlert")
-    ).toBeInTheDocument();
-    expect(
-      queryByAttribute("data-cy", container, "outstandingTraineeActions")
-    ).toBeInTheDocument();
-    expect(
-      queryByAttribute("data-cy", container, "bookmarkAlert")
-    ).toBeInTheDocument();
-  });
-
   test("action summary alert links to /action-summary", () => {
     mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
 
@@ -226,8 +175,20 @@ describe("GlobalAlert", () => {
     expect(originLink).toHaveAttribute("href", "/");
   });
 
-  test("renders all alerts when conditions for them are met", () => {
+  test("renders all alerts when conditions for them are met", async () => {
     mockUseTraineeActions.mockReturnValue({ hasOutstandingActions: true });
+    const mockAnnouncements: Announcement[] = [
+      {
+        id: "hy-1",
+        title: "Take part in our study",
+        content: {
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
+        }
+      }
+    ];
+    (getAnnouncements as jest.Mock).mockResolvedValue(mockAnnouncements);
 
     const { container } = renderWithProviders(<GlobalAlert />, {
       route: "/placements",
@@ -235,6 +196,11 @@ describe("GlobalAlert", () => {
         user: { preferredMfa: "SMS", redirected: true },
         traineeActions: {
           traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        },
+        announcements: {
+          announcements: mockAnnouncements,
           status: "succeeded",
           error: ""
         }
@@ -251,7 +217,7 @@ describe("GlobalAlert", () => {
       queryByAttribute("data-cy", container, "bookmarkAlert")
     ).toBeInTheDocument();
     expect(
-      queryByAttribute("data-cy", container, "recruitAlert")
+      await screen.findByRole("heading", { name: "Take part in our study" })
     ).toBeInTheDocument();
   });
 
@@ -269,5 +235,102 @@ describe("GlobalAlert", () => {
       }
     });
     expect(screen.queryByTestId("globalAlert")).not.toBeInTheDocument();
+  });
+
+  test("does not fetch announcements when preferredMfa is NOMFA", () => {
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "NOMFA", redirected: false },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    expect(getAnnouncements).not.toHaveBeenCalled();
+  });
+
+  test("renders announcement banner when Hygraph has published announcements", async () => {
+    const mockAnnouncements: Announcement[] = [
+      {
+        id: "hy-1",
+        title: "Take part in our study",
+        content: {
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
+        }
+      }
+    ];
+    (getAnnouncements as jest.Mock).mockResolvedValue(mockAnnouncements);
+
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: false },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        },
+        announcements: {
+          announcements: mockAnnouncements,
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    expect(
+      await screen.findByRole("heading", { name: "Take part in our study" })
+    ).toBeInTheDocument();
+  });
+
+  test("dismissing an announcement persists to localStorage and hides it", async () => {
+    const mockAnnouncements: Announcement[] = [
+      {
+        id: "hy-1",
+        title: "Take part in our study",
+        content: {
+          raw: {
+            children: [{ type: "paragraph", children: [{ text: "Details" }] }]
+          }
+        }
+      }
+    ];
+    (getAnnouncements as jest.Mock).mockResolvedValue(mockAnnouncements);
+
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "SMS", redirected: false },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        },
+        announcements: {
+          announcements: mockAnnouncements,
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    await screen.findByRole("heading", { name: "Take part in our study" });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Dismiss announcement" })
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("heading", { name: "Take part in our study" })
+      ).not.toBeInTheDocument();
+    });
+
+    expect(
+      JSON.parse(window.localStorage.getItem("tss-dismissed-announcements")!)
+    ).toEqual(["hy-1"]);
   });
 });
