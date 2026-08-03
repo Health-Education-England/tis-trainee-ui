@@ -384,7 +384,7 @@ export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 // Onboarding Tracker Actions
 const welcomeEmailText =
   "Receive 'Welcome' email 16 weeks prior to starting in post";
-const royalSocietyText = "Register with Royal College / Faculty";
+const royalSocietyText = "Register with Royal Society/ Faculty";
 const reviewProgrammeText = "Review your Programme data";
 const signCojText = "Sign Conditions of Joining (CoJ) Agreement";
 const formRPartAText = "Submit Form R (Part A)";
@@ -516,7 +516,7 @@ export const onboardingTrackerAction: Record<
 
 export const NOTIFICATION_SUBJECT_MAP: Record<TrackerActionType, string> = {
   WELCOME_EMAIL: "Welcome Email",
-  WELCOME: "Royal College Registration",
+  WELCOME: "Royal Society Registration",
   REVIEW_PROGRAMME: "Review Programme",
   SIGN_COJ: "Sign COJ",
   SIGN_FORM_R_PART_A: "Sign Form R Part A",
@@ -543,7 +543,7 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
     ),
     WELCOME: (
       <p>
-        Royal College / Faculty registration is done outside of TIS
+        Royal Society / Faculty registration is done outside of TIS
         Self-Service.
       </p>
     ),
