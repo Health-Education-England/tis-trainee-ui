@@ -384,7 +384,7 @@ export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 // Onboarding Tracker Actions
 const welcomeEmailText =
   "Receive 'Welcome' email 16 weeks prior to starting in post";
-const royalSocietyText = "Register with Royal Society/ Faculty";
+const royalSocietyText = "Register with Royal College / Faculty";
 const reviewProgrammeText = "Review your Programme data";
 const signCojText = "Sign Conditions of Joining (CoJ) Agreement";
 const formRPartAText = "Submit Form R (Part A)";
