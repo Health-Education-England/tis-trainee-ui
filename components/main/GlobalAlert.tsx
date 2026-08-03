@@ -16,13 +16,18 @@ export const GlobalAlert = () => {
   const announcements = useAppSelector(
     state => state.announcements.announcements
   );
+  const announcementsStatus = useAppSelector(
+    state => state.announcements.status
+  );
   const { hasOutstandingActions } = useTraineeActions();
   const pathname = useLocation().pathname;
   const { dismissedIds, dismiss } = useDismissedAnnouncements();
 
   useEffect(() => {
-    dispatch(fetchAnnouncements());
-  }, [dispatch]);
+    if (announcementsStatus === "idle" && preferredMfa !== "NOMFA") {
+      dispatch(fetchAnnouncements());
+    }
+  }, [dispatch, announcementsStatus, preferredMfa]);
 
   if (preferredMfa === "NOMFA") return null;
 

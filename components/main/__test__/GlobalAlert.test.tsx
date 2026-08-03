@@ -237,6 +237,21 @@ describe("GlobalAlert", () => {
     expect(screen.queryByTestId("globalAlert")).not.toBeInTheDocument();
   });
 
+  test("does not fetch announcements when preferredMfa is NOMFA", () => {
+    renderWithProviders(<GlobalAlert />, {
+      initialState: {
+        user: { preferredMfa: "NOMFA", redirected: false },
+        traineeActions: {
+          traineeActionsData: [],
+          status: "succeeded",
+          error: ""
+        }
+      }
+    });
+
+    expect(getAnnouncements).not.toHaveBeenCalled();
+  });
+
   test("renders announcement banner when Hygraph has published announcements", async () => {
     const mockAnnouncements: Announcement[] = [
       {
