@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { mockPersonalDetails } from "../../mock-data/trainee-profile";
+import { LtftDto } from "../../models/LtftTypes";
 import {
   findLatestSubmissionDate,
   hasLegacyStartDateData,
@@ -55,28 +56,42 @@ describe("mapLtftObjToDto", () => {
     expect(mappedDto.change.altStartDate).toBeNull();
   });
 
-  it("maps the No path (canGiveCompliantStartDate false) to isExceptional true", () => {
+  it("maps the No path (canGiveCompliantStartDate false) to exceptional true", () => {
     const noPath = {
       ...mockLtftDraftUpdatedPmFormObjNoSave,
       canGiveCompliantStartDate: false
     };
-    expect(mapLtftObjToDto(noPath).change.isExceptional).toBe(true);
+    expect(mapLtftObjToDto(noPath).exceptionalReasons.exceptional).toBe(true);
   });
 
-  it("maps the Yes path (canGiveCompliantStartDate true) to isExceptional false", () => {
+  it("maps the Yes path (canGiveCompliantStartDate true) to exceptional false", () => {
     const yesPath = {
       ...mockLtftDraftUpdatedPmFormObjNoSave,
       canGiveCompliantStartDate: true
     };
-    expect(mapLtftObjToDto(yesPath).change.isExceptional).toBe(false);
+    expect(mapLtftObjToDto(yesPath).exceptionalReasons.exceptional).toBe(false);
   });
 
-  it("maps a legacy null through to isExceptional null (no inversion)", () => {
+  it("maps a legacy null through to exceptional null (no inversion)", () => {
     const legacy = {
       ...mockLtftDraftUpdatedPmFormObjNoSave,
       canGiveCompliantStartDate: null
     };
-    expect(mapLtftObjToDto(legacy).change.isExceptional).toBeNull();
+    expect(mapLtftObjToDto(legacy).exceptionalReasons.exceptional).toBeNull();
+  });
+
+  it("maps the exceptional reasons text and date into the nested sub-object", () => {
+    const noPath = {
+      ...mockLtftDraftUpdatedPmFormObjNoSave,
+      canGiveCompliantStartDate: false,
+      exceptionalReasons: "Sudden disability",
+      exceptionalReasonsDate: "2026-03-01"
+    };
+    expect(mapLtftObjToDto(noPath).exceptionalReasons).toEqual({
+      exceptional: true,
+      supportingInformation: "Sudden disability",
+      startDate: "2026-03-01"
+    });
   });
 });
 
@@ -86,33 +101,56 @@ describe("mapDtoToLtftObj", () => {
     expect(ltftObj).toEqual(mockLtftFormObjAfterFirstSave);
   });
 
-  it("maps isExceptional true back to canGiveCompliantStartDate false (No path)", () => {
+  it("maps exceptional true back to canGiveCompliantStartDate false (No path)", () => {
     const dto = {
       ...mockLtftDraftFirstSuccessSaveResponseDto,
-      change: {
-        ...mockLtftDraftFirstSuccessSaveResponseDto.change,
-        isExceptional: true
+      exceptionalReasons: {
+        ...mockLtftDraftFirstSuccessSaveResponseDto.exceptionalReasons,
+        exceptional: true
       }
     };
     expect(mapLtftDtoToObj(dto).canGiveCompliantStartDate).toBe(false);
   });
 
-  it("maps isExceptional false back to canGiveCompliantStartDate true (Yes path)", () => {
+  it("maps exceptional false back to canGiveCompliantStartDate true (Yes path)", () => {
     const dto = {
       ...mockLtftDraftFirstSuccessSaveResponseDto,
-      change: {
-        ...mockLtftDraftFirstSuccessSaveResponseDto.change,
-        isExceptional: false
+      exceptionalReasons: {
+        ...mockLtftDraftFirstSuccessSaveResponseDto.exceptionalReasons,
+        exceptional: false
       }
     };
     expect(mapLtftDtoToObj(dto).canGiveCompliantStartDate).toBe(true);
   });
 
-  it("maps a missing/null isExceptional to canGiveCompliantStartDate null (legacy)", () => {
+  it("maps a missing/null exceptional to canGiveCompliantStartDate null (legacy)", () => {
     expect(
       mapLtftDtoToObj(mockLtftDraftFirstSuccessSaveResponseDto)
         .canGiveCompliantStartDate
     ).toBeNull();
+  });
+
+  it("maps the nested sub-object back onto the flat FE fields", () => {
+    const dto = {
+      ...mockLtftDraftFirstSuccessSaveResponseDto,
+      exceptionalReasons: {
+        exceptional: true,
+        supportingInformation: "Sudden disability",
+        startDate: "2026-03-01"
+      }
+    };
+    const ltftObj = mapLtftDtoToObj(dto);
+    expect(ltftObj.exceptionalReasons).toBe("Sudden disability");
+    expect(ltftObj.exceptionalReasonsDate).toBe("2026-03-01");
+  });
+
+  it("survives the BE omitting the exceptionalReasons sub-object entirely", () => {
+    const { exceptionalReasons: _omitted, ...dtoWithout } =
+      mockLtftDraftFirstSuccessSaveResponseDto;
+    const ltftObj = mapLtftDtoToObj(dtoWithout as LtftDto);
+    expect(ltftObj.canGiveCompliantStartDate).toBeNull();
+    expect(ltftObj.exceptionalReasons).toBeNull();
+    expect(ltftObj.exceptionalReasonsDate).toBeNull();
   });
 });
 

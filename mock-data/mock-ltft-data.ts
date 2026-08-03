@@ -213,11 +213,8 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   name: null,
   change: {
     type: "LTFT",
-    isExceptional: null,
     startDate: null,
     altStartDate: null,
-    exceptionalReasons: null,
-    exceptionalReasonsDate: null,
     wte: 0,
     id: null
   },
@@ -249,6 +246,11 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
     managingDeanery: "East of England"
   },
   reasons: { selected: [], otherDetail: "", supportingInformation: null },
+  exceptionalReasons: {
+    exceptional: null,
+    supportingInformation: null,
+    startDate: null
+  },
   status: {
     current: {
       state: "DRAFT",
@@ -313,6 +315,11 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
     selected: [],
     otherDetail: "",
     supportingInformation: null
+  },
+  exceptionalReasons: {
+    exceptional: null,
+    supportingInformation: null,
+    startDate: null
   },
   tpdEmailStatus: null,
   status: {

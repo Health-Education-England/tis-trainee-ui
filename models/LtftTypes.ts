@@ -16,11 +16,14 @@ export type LtftChange = {
   type: CctType;
   startDate: Date | string | null;
   altStartDate?: Date | string | null;
-  isExceptional?: boolean | null;
-  exceptionalReasons?: string | null;
-  exceptionalReasonsDate?: Date | string | null;
   endDate?: Date | string | null;
   wte: number;
+};
+
+export type LtftExceptionalReasons = {
+  exceptional: boolean | null;
+  supportingInformation: string | null;
+  startDate: Date | string | null;
 };
 
 export type LtftDeclarations = {
@@ -184,6 +187,7 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
+  exceptionalReasons: LtftExceptionalReasons;
   tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;

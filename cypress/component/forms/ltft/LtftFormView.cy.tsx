@@ -88,9 +88,12 @@ describe("LTFT Form View - new flow: Yes path (>= 16 weeks' notice)", () => {
         ...mockLtftDraftFirstSuccessSaveResponseDto,
         change: {
           ...mockLtftDraftFirstSuccessSaveResponseDto.change,
-          isExceptional: false,
           startDate: draftStartDate,
           cctDate: new Date()
+        },
+        exceptionalReasons: {
+          ...mockLtftDraftFirstSuccessSaveResponseDto.exceptionalReasons,
+          exceptional: false
         }
       }
     };
@@ -316,9 +319,12 @@ describe("LTFT Form View - new flow: No path (exceptional)", () => {
         ...mockLtftDraftFirstSuccessSaveResponseDto,
         change: {
           ...mockLtftDraftFirstSuccessSaveResponseDto.change,
-          isExceptional: true,
           startDate: null,
           cctDate: new Date()
+        },
+        exceptionalReasons: {
+          ...mockLtftDraftFirstSuccessSaveResponseDto.exceptionalReasons,
+          exceptional: true
         }
       }
     };

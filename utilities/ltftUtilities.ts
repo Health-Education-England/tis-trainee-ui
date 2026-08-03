@@ -81,14 +81,8 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
     name: ltftObj.name ?? null,
     change: {
       type: "LTFT",
-      isExceptional:
-        ltftObj.canGiveCompliantStartDate == null
-          ? null
-          : !ltftObj.canGiveCompliantStartDate, // Note: the persisted DTO field is the inverse (isExceptional). 'No' -> true.
       startDate: ltftObj.startDate,
       altStartDate: ltftObj.altStartDate ? ltftObj.altStartDate : null,
-      exceptionalReasons: ltftObj.exceptionalReasons ?? null,
-      exceptionalReasonsDate: ltftObj.exceptionalReasonsDate ?? null,
       wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
       id: null
     },
@@ -132,6 +126,15 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       selected: ltftObj.reasonsSelected || [],
       otherDetail: ltftObj.reasonsOtherDetail ?? "",
       supportingInformation: ltftObj.supportingInformation ?? null
+    },
+    exceptionalReasons: {
+      // Note: the persisted DTO field is the inverse (exceptional). 'No' -> true.
+      exceptional:
+        ltftObj.canGiveCompliantStartDate == null
+          ? null
+          : !ltftObj.canGiveCompliantStartDate,
+      supportingInformation: ltftObj.exceptionalReasons ?? null,
+      startDate: ltftObj.exceptionalReasonsDate ?? null
     },
     status: {
       current: {
@@ -183,13 +186,14 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     managingDeanery: ltftDto.programmeMembership.managingDeanery ?? "",
     type: ltftDto.change.type,
     canGiveCompliantStartDate:
-      ltftDto.change.isExceptional == null
+      ltftDto.exceptionalReasons?.exceptional == null
         ? null
-        : !ltftDto.change.isExceptional,
+        : !ltftDto.exceptionalReasons.exceptional,
     startDate: ltftDto.change.startDate,
     altStartDate: ltftDto.change.altStartDate ?? null,
-    exceptionalReasons: ltftDto.change.exceptionalReasons ?? null,
-    exceptionalReasonsDate: ltftDto.change.exceptionalReasonsDate ?? null,
+    exceptionalReasons:
+      ltftDto.exceptionalReasons?.supportingInformation ?? null,
+    exceptionalReasonsDate: ltftDto.exceptionalReasons?.startDate ?? null,
     wteBeforeChange: ltftDto.programmeMembership.wte
       ? Math.round(ltftDto.programmeMembership.wte * 100)
       : null,
