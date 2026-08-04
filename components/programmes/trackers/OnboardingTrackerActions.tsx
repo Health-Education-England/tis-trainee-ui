@@ -39,7 +39,7 @@ const getTrackerSections = (userFeatures: UserFeaturesType) => [
         .isSameOrBefore(dayjs().add(16, "weeks").startOf("day")),
     actions: [
       "WELCOME_EMAIL",
-      "WELCOME", // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
+      "WELCOME", // this is for ROYAL_COLLEGE_REGISTRATION details within the welcome notification
       "REVIEW_PROGRAMME",
       userFeatures.details.programmes.conditionsOfJoining.enabled && "SIGN_COJ",
       userFeatures.forms.formr.enabled && "SIGN_FORM_R_PART_A",

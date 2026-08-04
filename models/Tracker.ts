@@ -1,6 +1,6 @@
 export type TrackerActionType =
   | "WELCOME_EMAIL"
-  | "WELCOME" // this is for ROYAL_SOCIETY_REGISTRATION details within the welcome notification
+  | "WELCOME" // this is for ROYAL_COLLEGE_REGISTRATION details within the welcome notification
   | "REVIEW_PROGRAMME"
   | "SIGN_COJ"
   | "SIGN_FORM_R_PART_A"
