@@ -384,7 +384,7 @@ export const strDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 // Onboarding Tracker Actions
 const welcomeEmailText =
   "Receive 'Welcome' email 16 weeks prior to starting in post";
-const royalSocietyText = "Register with Royal College / Faculty";
+const royalCollegeText = "Register with Royal College / Faculty";
 const reviewProgrammeText = "Review your Programme data";
 const signCojText = "Sign Conditions of Joining (CoJ) Agreement";
 const formRPartAText = "Submit Form R (Part A)";
@@ -422,10 +422,10 @@ export const onboardingTrackerAction: Record<
     faIcon: faEnvelope
   },
   WELCOME: {
-    actionText: royalSocietyText,
+    actionText: royalCollegeText,
     faIcon: faUserFriends,
     textLink: {
-      text: "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/",
+      text: "https://tis-support.hee.nhs.uk/trainees/royal-college-and-faculties-contacts/",
       isInternal: false
     }
   },

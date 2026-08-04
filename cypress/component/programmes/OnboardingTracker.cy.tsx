@@ -96,7 +96,7 @@ describe("OnboardingTracker", () => {
       .should(
         "have.attr",
         "href",
-        "https://tis-support.hee.nhs.uk/trainees/royal-college-faculties-contact-information/"
+        "https://tis-support.hee.nhs.uk/trainees/royal-college-and-faculties-contacts/"
       );
     cy.get(
       ":nth-child(1) > :nth-child(2) > .action-card > .action-card-contents > .fa-circle-info > path"
