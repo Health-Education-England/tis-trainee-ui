@@ -19,13 +19,11 @@ import {
 import history from "../navigation/history";
 import { useTraineeActionsRefresh } from "../../utilities/hooks/useTraineeActionsRefresh";
 import Routes from "./Routes";
-import { isLocalAuthBypassEnabled } from "../../utilities/localAuth";
 
 const appVersion = packageJson.version;
 
 export const Main = () => {
   const dispatch = useAppDispatch();
-  const localAuthBypassEnabled = isLocalAuthBypassEnabled();
   const [authActionsDispatched, setAuthActionsDispatched] = useState(false);
   const { isCriticalLoading, isCriticalSuccess, hasCriticalError } =
     useCriticalDataLoader();
@@ -59,7 +57,6 @@ export const Main = () => {
     );
   if (
     authActionsDispatched &&
-    !localAuthBypassEnabled &&
     (preferredMfa === "NOMFA" || preferredMfa === "SMS") &&
     !window.location.pathname.startsWith("/mfa")
   ) {

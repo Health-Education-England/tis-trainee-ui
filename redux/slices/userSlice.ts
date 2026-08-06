@@ -28,20 +28,14 @@ export interface IUser {
 
 const LOCAL_BYPASS_DEFAULT_MFA: MFAType = "EMAIL";
 
-const getDefaultPreferredMfa = (): MFAType =>
-  isLocalAuthBypassEnabled() ? LOCAL_BYPASS_DEFAULT_MFA : "NOMFA";
-
-const getDefaultEnabledMfa = (): MFAType[] =>
-  isLocalAuthBypassEnabled() ? [LOCAL_BYPASS_DEFAULT_MFA] : [];
-
 const initialState: IUser = {
   status: "idle",
   tempMfa: "NOMFA",
   smsSection: 1,
   totpSection: 1,
   error: "",
-  preferredMfa: getDefaultPreferredMfa(),
-  enabledMfa: getDefaultEnabledMfa(),
+  preferredMfa: "NOMFA",
+  enabledMfa: [],
   username: "",
   features: {
     actions: {
@@ -190,8 +184,8 @@ const userSlice = createSlice({
       })
       .addCase(getPreferredMfa.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.preferredMfa = action.payload.preferred ?? getDefaultPreferredMfa();
-        state.enabledMfa = action.payload.enabled ??  getDefaultEnabledMfa();
+        state.preferredMfa = action.payload.preferred ?? "NOMFA";
+        state.enabledMfa = action.payload.enabled ?? [];
       })
       .addCase(getPreferredMfa.rejected, (state, action) => {
         state.status = "failed";

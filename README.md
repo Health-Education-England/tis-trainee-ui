@@ -41,14 +41,33 @@ Note: To populate the form with data, you will need to run the Docker containers
 
 ### Local auth bypass (development only)
 
-You can start the app with local auth bypass enabled via `npm run dev:local-user`.
+`npm run dev:local-user` starts the app with the Amplify (Cognito) sign-in screen skipped, so you
+can work on the app without going through the login and MFA flow.
 
-To bypass Amplify login locally and use a JWT supplied by your local nginx proxy, set:
+It depends on the local nginx proxy from the
+[dev-handbook environment setup](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service/environment-setup),
+which must be running. That proxy:
+
+- injects an `Authorization` header into every request it forwards to the back-end services, so the
+  app itself never sends a token in local mode; and
+- serves the same token as `{"token":"<jwt>"}` from `/local-user/token`, which the app reads once on
+  startup to populate the user's feature flags.
+
+The flag is read at build time from these env vars:
 
 - `NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED="true"`
 - `NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT="/local-user/token"` (optional override)
 
-When enabled, the app fetches the JWT from the configured endpoint and uses it for API authorization headers and local session bootstrap.
+Both are declared in [.env](.env), with the bypass defaulting to `"false"`. `npm run dev:local-user`
+overrides the first to `true` for that command only, so you never need to edit `.env` directly.
+
+The bypass is additionally guarded on `NODE_ENV !== "production"`, so it cannot be enabled in a
+production build regardless of the env vars.
+
+Note: the local user's feature flags come from `initialization/user/local-user-claims.json` in the
+dev-handbook repo, not from this repo. If you add a new feature flag here, add it there too —
+otherwise it will silently fall back to the defaults in
+[userSlice.ts](redux/slices/userSlice.ts) when running locally.
 
 ## Testing with BrowserStack
 

@@ -1,9 +1,5 @@
 import * as Sentry from "@sentry/browser";
 import { fetchAuthSession } from "aws-amplify/auth";
-import {
-  fetchLocalAuthToken,
-  isLocalAuthBypassEnabled
-} from "../utilities/localAuth";
 
 export type ApiResponseType = "blob" | "json" | "text";
 
@@ -133,14 +129,8 @@ export class ApiService {
   private async getRequestHeaders(
     configHeaders: ApiHeaders = {}
   ): Promise<ApiHeaders> {
-    let idToken: string | undefined;
-
-    if (isLocalAuthBypassEnabled()) {
-      idToken = await fetchLocalAuthToken();
-    } else {
-      const session = await fetchAuthSession();
-      idToken = session.tokens?.idToken?.toString();
-    }
+    const session = await fetchAuthSession();
+    const idToken = session.tokens?.idToken?.toString();
 
     return {
       ...DEFAULT_HEADERS,

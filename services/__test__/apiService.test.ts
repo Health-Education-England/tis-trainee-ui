@@ -9,17 +9,13 @@ jest.mock("aws-amplify/auth", () => ({
 
 describe("ApiService", () => {
   let originalFetch: typeof globalThis.fetch;
-  const originalEnv = process.env;
 
   beforeEach(() => {
-    jest.clearAllMocks();
     originalFetch = globalThis.fetch;
-    process.env = { ...originalEnv };
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
-    process.env = originalEnv;
 
     if (originalFetch === undefined) {
       Reflect.deleteProperty(globalThis, "fetch");
@@ -45,7 +41,6 @@ describe("ApiService", () => {
     const mockedFetchAuthSession = fetchAuthSession as jest.MockedFunction<
       typeof fetchAuthSession
     >;
-    mockedFetchAuthSession.mockReset();
     mockedFetchAuthSession.mockResolvedValue({} as never);
 
     const mockResponse = {
@@ -114,60 +109,6 @@ describe("ApiService", () => {
     expect(requestInit.method).toBe("POST");
     expect(requestInit.body).toBe(JSON.stringify(requestBody));
     expect(requestHeaders.authorization).toBe("Bearer token-123");
-  });
-
-  it("should fetch local auth token when bypass is enabled", async () => {
-    process.env.NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED = "true";
-    process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT = "/local-user/token";
-
-    const mockedFetchAuthSession = fetchAuthSession as jest.MockedFunction<
-      typeof fetchAuthSession
-    >;
-    mockedFetchAuthSession.mockResolvedValue({} as never);
-
-    const fetchMock = jest
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        statusText: "OK",
-        headers: new Headers(),
-        text: jest.fn().mockResolvedValue("local-token-123"),
-        blob: jest.fn()
-      } as unknown as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        statusText: "OK",
-        headers: new Headers(),
-        text: jest.fn().mockResolvedValue("{}"),
-        blob: jest.fn()
-      } as unknown as Response);
-
-    Object.defineProperty(globalThis, "fetch", {
-      value: fetchMock,
-      writable: true,
-      configurable: true
-    });
-
-    const service = new ApiService("https://example.test");
-
-    await service.get("/trainees");
-
-    expect(mockedFetchAuthSession).not.toHaveBeenCalled();
-    expect(fetchMock).toHaveBeenNthCalledWith(
-      1,
-      "/local-user/token",
-      expect.objectContaining({
-        method: "GET"
-      })
-    );
-
-    const apiRequestInit = fetchMock.mock.calls[1][1] as RequestInit;
-    const apiRequestHeaders = apiRequestInit.headers as Record<string, string>;
-
-    expect(apiRequestHeaders.authorization).toBeDefined();
-    expect(typeof apiRequestHeaders.authorization).toBe("string");
   });
 
   it("should call PUT and DELETE with expected HTTP methods", async () => {

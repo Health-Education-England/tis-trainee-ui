@@ -102,6 +102,8 @@ function CRAEntryPoint() {
     }
   };
 
+  // const hideSignUpDependingOnEnv = process.env.REACT_APP_ENV !== "production";
+
   const appContent = (
     <Router history={history}>
       <>
@@ -136,7 +138,7 @@ function CRAEntryPoint() {
         }
       }}
     >
-      {() => <>{appContent}</>}
+      {() => appContent}
     </Authenticator>
   );
 }

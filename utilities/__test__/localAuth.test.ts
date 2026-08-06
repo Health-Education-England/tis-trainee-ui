@@ -39,6 +39,12 @@ describe("localAuth utilities", () => {
     expect(isLocalAuthBypassEnabled()).toBe(true);
   });
 
+  it("should return false in a production build even when env is true", () => {
+    process.env.NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED = "true";
+    (process.env as { NODE_ENV?: string }).NODE_ENV = "production";
+    expect(isLocalAuthBypassEnabled()).toBe(false);
+  });
+
   it("should resolve configured local auth endpoint", () => {
     process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT = "/custom/token";
     expect(getLocalAuthTokenEndpoint()).toBe("/custom/token");
@@ -48,7 +54,7 @@ describe("localAuth utilities", () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      text: jest.fn().mockResolvedValue(" token-123 ")
+      json: jest.fn().mockResolvedValue({ token: " token-123 " })
     } as unknown as Response);
 
     Object.defineProperty(globalThis, "fetch", {
@@ -70,7 +76,7 @@ describe("localAuth utilities", () => {
     const fetchMock = jest.fn().mockResolvedValue({
       ok: false,
       status: 500,
-      text: jest.fn()
+      json: jest.fn()
     } as unknown as Response);
 
     Object.defineProperty(globalThis, "fetch", {
@@ -81,6 +87,24 @@ describe("localAuth utilities", () => {
 
     await expect(fetchLocalAuthToken()).rejects.toThrow(
       "Local auth token request failed with status 500."
+    );
+  });
+
+  it("should throw when the local auth token response has no token", async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: jest.fn().mockResolvedValue({})
+    } as unknown as Response);
+
+    Object.defineProperty(globalThis, "fetch", {
+      value: fetchMock,
+      writable: true,
+      configurable: true
+    });
+
+    await expect(fetchLocalAuthToken()).rejects.toThrow(
+      "Local auth token response was empty."
     );
   });
 

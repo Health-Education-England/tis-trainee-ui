@@ -26,11 +26,14 @@ const decodeBase64UrlToJson = (encodedValue: string): string => {
   return decodeURIComponent(percentEncodedUtf8);
 };
 
+// Note: Both checks are inlined at build time, so a production build can never enable the bypass and the bundler drops the code below from the shipped output.
 export const isLocalAuthBypassEnabled = (): boolean =>
+  process.env.NODE_ENV !== "production" &&
   process.env.NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED?.toLowerCase() === "true";
 
 export const getLocalAuthTokenEndpoint = (): string =>
-  process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT ?? DEFAULT_LOCAL_AUTH_TOKEN_ENDPOINT;
+  process.env.NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT ??
+  DEFAULT_LOCAL_AUTH_TOKEN_ENDPOINT;
 
 export const fetchLocalAuthToken = async (): Promise<string> => {
   const response = await fetch(getLocalAuthTokenEndpoint(), {
@@ -46,17 +49,15 @@ export const fetchLocalAuthToken = async (): Promise<string> => {
     );
   }
 
-  const rawToken = (await response.json().then(data => data.token)).trim();
+  // The local nginx proxy serves `{"token":"<jwt>"}` (see dev-handbook).
+  const { token } = await response.json();
+  const trimmedToken = token?.trim();
 
-  if (!rawToken) {
+  if (!trimmedToken) {
     throw new Error("Local auth token response was empty.");
   }
 
-  if (rawToken.startsWith('"') && rawToken.endsWith('"')) {
-    return rawToken.slice(1, -1);
-  }
-
-  return rawToken;
+  return trimmedToken;
 };
 
 export const decodeJwtPayload = <TPayload extends Record<string, unknown>>(
