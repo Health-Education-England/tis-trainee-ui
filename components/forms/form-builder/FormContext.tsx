@@ -7,10 +7,10 @@ import React, {
 } from "react";
 import { Field, Form, FormData, ReturnedWidthData } from "./FormBuilder";
 import {
+  clearHiddenFieldValues,
   determineCurrentValue,
   getFieldWarningMsgs,
   setTextFieldWidth,
-  showFormField,
   sumFieldValues
 } from "../../../utilities/FormBuilderUtilities";
 import useFormAutosave from "../../../utilities/hooks/useFormAutosave";
@@ -170,18 +170,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   }, [formData, currentPageFields]);
 
   useEffect(() => {
-    // remove child field value when depending parent field is unchecked
-    setFormData(prevFormData => {
-      let changed = false;
-      const cleaned = currentPageFields.reduce((acc, field) => {
-        if (!showFormField(field, acc) && acc[field.name] != null) {
-          changed = true;
-          return { ...acc, [field.name]: null };
-        }
-        return acc;
-      }, prevFormData);
-      return changed ? cleaned : prevFormData;
-    });
+    // Note: remove a field's value when it is no longer shown, e.g. a child field whose parent was unchecked, or the stamped startDate from a previous submission when trainee revisits the UNSUBMITTED form Start date page to edit it.
+    setFormData(prevFormData =>
+      clearHiddenFieldValues(currentPageFields, prevFormData)
+    );
   }, [formData, currentPageFields]);
 
   const handleChange = useCallback(

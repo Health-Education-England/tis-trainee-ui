@@ -332,6 +332,9 @@ describe("ltftSlice - loadSavedLtft thunk", () => {
     (ltftUtilities.mapLtftDtoToObj as jest.Mock).mockReturnValue(
       mockMappedLtft
     );
+    (ltftUtilities.resetLegacyStartDateSection as jest.Mock).mockImplementation(
+      (obj: LtftObjNew) => obj
+    );
   });
 
   test("should handle successful form loading", async () => {

@@ -11,6 +11,7 @@ import store from "../../redux/store/store";
 import {
   BtnLocation,
   checkPush,
+  clearHiddenFieldValues,
   getDraftFormId,
   handleSaveRedirect,
   isDateWithin16WeeksOfFirstDate,
@@ -20,6 +21,7 @@ import {
   transformReferenceData
 } from "../FormBuilderUtilities";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
+import ltftJson from "../../components/forms/ltft/ltft.json";
 import { formANew } from "../../mock-data/draft-formr-parta";
 import {
   Field,
@@ -368,6 +370,77 @@ describe("showFormField", () => {
       expect(showFormField(field, { startDate: "" })).toBe(false);
       expect(showFormField(field, { startDate: null })).toBe(false);
       expect(showFormField(field, {})).toBe(false);
+    });
+  });
+});
+
+describe("clearHiddenFieldValues", () => {
+  const makeField = (overrides: Partial<Field>): Field => ({
+    name: "fieldUnderTest",
+    type: "text",
+    visible: false,
+    ...overrides
+  });
+
+  const otherDetailField = makeField({
+    name: "reasonsOtherDetail",
+    visibleIf: {
+      matcher: "valueInList",
+      field: "reasonsSelected",
+      values: ["other"]
+    }
+  });
+
+  it("nulls a field that is no longer shown but still holds a value", () => {
+    const result = clearHiddenFieldValues([otherDetailField], {
+      reasonsSelected: "caring",
+      reasonsOtherDetail: "stale detail"
+    });
+    expect(result.reasonsOtherDetail).toBeNull();
+  });
+
+  it("keeps the value of a field that is still shown", () => {
+    const formData = {
+      reasonsSelected: "other",
+      reasonsOtherDetail: "keep me"
+    };
+    expect(clearHiddenFieldValues([otherDetailField], formData)).toEqual(
+      formData
+    );
+  });
+
+  it("returns the same object reference when nothing needs clearing", () => {
+    const formData = { reasonsSelected: "caring", reasonsOtherDetail: null };
+    expect(clearHiddenFieldValues([otherDetailField], formData)).toBe(formData);
+  });
+
+  describe("LTFT No-path startDate (clear-on-edit)", () => {
+    const startDatePage = (ltftJson as Form).pages.find(
+      page => page.pageName === "Start date"
+    );
+    const startDateFields = startDatePage
+      ? startDatePage.sections.flatMap(section => section.fields)
+      : [];
+
+    it("clears a stamped startDate when a No-path form revisits the Start date page", () => {
+      const stamped = dayjs().add(16, "week").format("YYYY-MM-DD");
+      const result = clearHiddenFieldValues(startDateFields, {
+        canGiveCompliantStartDate: false,
+        startDate: stamped,
+        exceptionalReasonsDate: dayjs().add(8, "week").format("YYYY-MM-DD")
+      });
+      expect(result.startDate).toBeNull();
+      // the No-path answers the trainee is actually editing are left in place
+      expect(result.exceptionalReasonsDate).not.toBeNull();
+    });
+
+    it("keeps startDate on the Yes path, where its visibleIf passes", () => {
+      const entered = dayjs().add(20, "week").format("YYYY-MM-DD");
+      const result = clearHiddenFieldValues(startDateFields, {
+        canGiveCompliantStartDate: true,
+        startDate: entered
+      });
+      expect(result.startDate).toBe(entered);
     });
   });
 });

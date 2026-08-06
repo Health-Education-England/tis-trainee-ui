@@ -31,6 +31,8 @@ import { ExpanderMsg, ExpanderNameType } from "../../common/ExpanderMsg";
 import { FormFieldBuilder } from "./FormFieldBuilder";
 import { useFormContext } from "./FormContext";
 import { SaveAndExitButton } from "../SaveAndExitButton";
+import { getPageGate, PageGateName } from "../../../utilities/pageGates";
+import { PageGateModal } from "../../common/PageGateModal";
 
 export type FieldType =
   | "text"
@@ -41,7 +43,8 @@ export type FieldType =
   | "phone"
   | "checkbox"
   | "array"
-  | "dto";
+  | "dto"
+  | "info";
 
 export type VisibilityMatcherName = "valueInList" | "lessThan16WeeksTest";
 
@@ -50,6 +53,8 @@ export type VisibilityCondition = {
   matcher: VisibilityMatcherName;
   values?: unknown[];
 };
+
+export type ComputedValueName = "ltft16WeeksNoticeDate";
 
 export type Field = {
   name: string;
@@ -62,12 +67,14 @@ export type Field = {
   placeholder?: string;
   warnings?: Warning[];
   canGrow?: boolean;
-  viewWhenEmpty?: boolean;
+  hideInViewWhenEmpty?: boolean; // Note: stops the "not provided" showing in view if the field is empty.
+  showInViewWhenPopulated?: boolean; // Note: overrides the input-form visibleIf to show the field in the read-only view if it has a value.
   objectFields?: Field[];
   width?: number;
   isNumberField?: boolean;
   contributesToTotal?: string;
   readOnly?: boolean;
+  computedValue?: ComputedValueName; // Note: e.g. derived LTFT 16-week start date
   rows?: number;
   isMultiSelect?: boolean;
   hint?: string;
@@ -82,6 +89,7 @@ type Page = {
   pageName: string;
   importantTxtName?: string;
   expanderLinkName?: string;
+  gatedIf?: PageGateName; // Note: warn (and offer to skip) before this page can be navigated to.
   sections: Section[];
 };
 type Section = {
@@ -135,6 +143,7 @@ export default function FormBuilder({
 }: Readonly<FormBuilderProps>) {
   const {
     formData,
+    setFormData,
     isFormDirty,
     setIsFormDirty,
     currentPageFields,
@@ -156,6 +165,7 @@ export default function FormBuilder({
   const [currentPage, setCurrentPage] = useState(initialPageValue);
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingGatePage, setPendingGatePage] = useState<number | null>(null);
   const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
   const location = useLocation<LocationState>();
 
@@ -180,6 +190,37 @@ export default function FormBuilder({
     }
   }, [formData, currentPageFields, validationSchema, isFormDirty]);
 
+  // Note: all main form page nav goes through here so a gated page cannot be entered without the trainee being warned first.
+  const goToPage = (targetPage: number) => {
+    if (targetPage < 0 || targetPage > lastPage) return;
+    const gate = getPageGate(pages[targetPage].gatedIf);
+    if (gate?.shouldGate(formData)) {
+      setPendingGatePage(targetPage);
+      return;
+    }
+    setCurrentPage(targetPage);
+  };
+
+  const handleGateProceed = () => {
+    if (pendingGatePage === null) return;
+    const gate = getPageGate(pages[pendingGatePage].gatedIf);
+    if (gate) setFormData(prevFormData => gate.onProceed(prevFormData));
+    const targetPage = pendingGatePage;
+    setPendingGatePage(null);
+    setCurrentPage(targetPage);
+  };
+
+  // Note: step over the gated page in the direction the trainee wants to navigate
+  const handleGateSkip = () => {
+    if (pendingGatePage === null) return;
+    const step = pendingGatePage > currentPage ? 1 : -1;
+    const targetPage = pendingGatePage + step;
+    setPendingGatePage(null);
+    goToPage(targetPage);
+  };
+
+  const handleGateCancel = () => setPendingGatePage(null);
+
   const handlePageChange = (
     e: { preventDefault: () => void },
     isShortcut?: boolean
@@ -199,7 +240,7 @@ export default function FormBuilder({
           );
           continueToConfirm(jsonFormName, formData);
         } else {
-          setCurrentPage(currentPage + 1);
+          goToPage(currentPage + 1);
         }
       })
       .catch((err: { inner: { path: string; message: string }[] }) => {
@@ -286,7 +327,7 @@ export default function FormBuilder({
                 onClick={() => {
                   setIsFormDirty(false);
                   setFormErrors({});
-                  setCurrentPage(currentPage - 1);
+                  goToPage(currentPage - 1);
                 }}
                 data-cy="navPrevious"
               >
@@ -357,6 +398,17 @@ export default function FormBuilder({
           ) : null}
         </Row>
       </Container>
+      <PageGateModal
+        isOpen={pendingGatePage !== null}
+        gate={
+          pendingGatePage !== null
+            ? getPageGate(pages[pendingGatePage].gatedIf)
+            : undefined
+        }
+        onProceed={handleGateProceed}
+        onSkip={handleGateSkip}
+        onCancel={handleGateCancel}
+      />
     </form>
   );
 }

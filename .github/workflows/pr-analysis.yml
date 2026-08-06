@@ -32,6 +32,15 @@ jobs:
       - name: Test & code coverage report (Jest and Cypress CT)
         run: npm run coverage
 
+      - name: Create coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: coverage-report
+          path: |
+            coverage
+            .nyc_output
+
       - name: Get modified files
         id: changed-files
         uses: Ana06/get-changed-files@v2.2.0

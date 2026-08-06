@@ -290,9 +290,12 @@ export const ExpanderMsg = ({
               funding.
             </li>
             <li>
-              <strong>Late Applications</strong> may be declined or delayed,
-              though exceptional circumstances (e.g. sudden disability,
-              significant life changes) are reviewed on a case-by-case basis.
+              <strong>
+                Applications giving less than 16 weeks&apos; notice
+              </strong>{" "}
+              may be declined or delayed, though exceptional circumstances (e.g.
+              sudden disability, significant life changes) are reviewed on a
+              case-by-case basis.
             </li>
             <li>
               <strong>Check with your region</strong> for any specific

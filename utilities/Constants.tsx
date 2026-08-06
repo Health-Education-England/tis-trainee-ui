@@ -604,15 +604,15 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
     ),
     PLACEMENT_CONFIRMATION: (
       <p>
-        The 'Placement Confirmation' email is sent to the email address you use
-        to sign in to TIS Self-Service.
+        The &apos;Placement Confirmation&apos; email is sent to the email
+        address you use to sign in to TIS Self-Service.
       </p>
     ),
     REVIEW_PLACEMENT: (
       <>
         <p>
-          When you receive the 'Placement Confirmation' email 12 weeks before
-          your start date, your Placement should be in{" "}
+          When you receive the &apos;Placement Confirmation&apos; email 12 weeks
+          before your start date, your Placement should be in{" "}
           <Link to="/placements">Upcoming Placements</Link> for you to review.
         </p>
         <p>
@@ -624,8 +624,8 @@ export const onboardingTrackerInfoText: Record<TrackerActionType, JSX.Element> =
     ),
     DAY_ONE_EMAIL: (
       <p>
-        The 'Day One' email is sent to email address you use to sign in to TIS
-        Self-Service.
+        The &apos;Day One&apos; email is sent to email address you use to sign
+        in to TIS Self-Service.
       </p>
     ),
     DAY_ONE: (
@@ -649,8 +649,8 @@ export const failedEmailInfoText: Record<string, any> = {
   ),
   "Bounce: Permanent - General": (
     <p>
-      The email couldn't be delivered to your address due to a permanent issue.
-      Please check that your email address is correct or contact{" "}
+      The email couldn&apos;t be delivered to your address due to a permanent
+      issue. Please check that your email address is correct or contact{" "}
       <Link to="/support">Local Office support</Link> if you want to update your
       email.
     </p>
@@ -666,8 +666,8 @@ export const failedEmailInfoText: Record<string, any> = {
   ),
   "Bounce: Transient - MessageTooLarge": (
     <p>
-      The email was too large for your mail system. We're working to optimize
-      email sizes. Please contact{" "}
+      The email was too large for your mail system. We&apos;re working to
+      optimize email sizes. Please contact{" "}
       <Link to="/support">Local Office support</Link> if this issue persists.
     </p>
   ),
@@ -680,14 +680,14 @@ export const failedEmailInfoText: Record<string, any> = {
   "Complaint: abuse": (
     <p>
       The email was flagged as spam or abuse by your email system. If you want
-      to receive our emails, please check your spam folder and mark us as 'Not
-      Spam', or contact your Local Office support team.
+      to receive our emails, please check your spam folder and mark us as
+      &apos;Not Spam&apos;, or contact your Local Office support team.
     </p>
   ),
   "No email address available.": (
     <p>
-      We couldn't send an email because there was no valid address found. Please
-      check that your email address is correct or contact{" "}
+      We couldn&apos;t send an email because there was no valid address found.
+      Please check that your email address is correct or contact{" "}
       <Link to="/support">Local Office support</Link> if you want to update your
       email.
     </p>
@@ -790,11 +790,17 @@ export const ltft16WeeksNotice = (
   </>
 );
 
-export const ltft16WeeksWarningText =
-  "Warning: Giving less than 16 weeks notice to change your working hours is classed as a late application and will only be considered on an exceptional basis.";
-
 export const ltft16WeeksWarningTextSubmitted =
   "This application was submitted within 16 weeks of the intended Start date. Late applications are only considered on an exceptional basis.";
+
+export const ltftLegacyStartDateGateLabel = "Start date page has been updated";
+export const ltftLegacyStartDateGateText =
+  "Since you submitted this application, the Start date page has been reworked. If you proceed, your start date information will be reset and you will need to complete this page again.";
+export const ltftLegacyStartDateGateProceedBtn = "Proceed";
+export const ltftLegacyStartDateGateSkipBtn = "Skip";
+export const ltftLegacyStartDateGateSkipHint =
+  "Skipping the Start date page keeps your original start date information intact for re-submission.";
+export const ltftLegacyStartDateGateCancelBtn = "Stay on this page";
 
 export const tier2SkilledWorkerVisaInfo = (
   <>

@@ -13,6 +13,7 @@ import {
 } from "../redux/slices/formASlice";
 import store from "../redux/store/store";
 import type {
+  ComputedValueName,
   Field,
   Form,
   FormData,
@@ -399,10 +400,7 @@ export interface DraftFormProps {
 }
 
 export function setDraftFormRProps(forms: IFormR[]): DraftFormProps | null {
-  if (
-    forms.length === 0 ||
-    forms.every(form => form.lifecycleState === LifeCycleState.Submitted)
-  )
+  if (forms.every(form => form.lifecycleState === LifeCycleState.Submitted))
     return null;
 
   const unsubmittedForm = forms.find(
@@ -676,6 +674,8 @@ export function validateFields(
   let finalValidationSchema = Yup.object().shape({});
   finalValidationSchema = fields.reduce((schema, field) => {
     const fieldSchema = validationSchema.fields[field.name];
+    // info-type (and other schema-less) fields have nothing to validate
+    if (!fieldSchema) return schema;
     const isVisible = showFormField(field, values);
     if (isVisible) {
       if (field.type === "array" && values[field.name]?.length > 0) {
@@ -752,6 +752,27 @@ export function showFormField(field: Field, formData: FormData) {
   if (!matcher) return false;
   return matcher(formData[field.visibleIf.field], field.visibleIf);
 }
+
+export function clearHiddenFieldValues(
+  fields: Field[],
+  formData: FormData
+): FormData {
+  const valsToClear = fields.filter(
+    field => !showFormField(field, formData) && formData[field.name] != null
+  );
+  if (valsToClear.length === 0) return formData;
+
+  const cleaned = { ...formData };
+  for (const field of valsToClear) {
+    cleaned[field.name] = null;
+  }
+  return cleaned;
+}
+
+export const computedValueGenerators: Record<ComputedValueName, () => string> =
+  {
+    ltft16WeeksNoticeDate: () => dayjs().add(16, "week").format("YYYY-MM-DD")
+  };
 
 // Bug fix to also reset the option to empty string where no match against filtered curriculum data e.g. programmeSpecialty field.
 export function isValidOption(

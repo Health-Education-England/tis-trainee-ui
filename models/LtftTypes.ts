@@ -20,6 +20,12 @@ export type LtftChange = {
   wte: number;
 };
 
+export type LtftExceptionalReasons = {
+  exceptional: boolean | null;
+  supportingInformation: string | null;
+  startDate: Date | string | null;
+};
+
 export type LtftDeclarations = {
   discussedWithTpd: boolean | null;
   informationIsCorrect: boolean | null;
@@ -93,8 +99,11 @@ export type LtftObjNew = {
 
   // change: LtftChange
   type: CctType;
+  canGiveCompliantStartDate: boolean | null;
   startDate: Date | string | null;
   altStartDate: Date | string | null;
+  exceptionalReasons: string | null;
+  exceptionalReasonsDate: Date | string | null;
   wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use
   wte: number | null;
 
@@ -178,6 +187,7 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
+  exceptionalReasons: LtftExceptionalReasons | null;
   tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;

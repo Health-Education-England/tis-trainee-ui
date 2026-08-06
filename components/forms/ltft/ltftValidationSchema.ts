@@ -10,6 +10,10 @@ import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUt
 export const LtftVisaError =
   "Please select Yes or No for Skilled Worker visa status";
 export const ltftReasonsError = "At least one reason is required";
+export const ltftNoticeError =
+  "Please select Yes or No for whether you will provide a start date at least 16 weeks from today";
+export const ltftExceptionalReasonsError =
+  "Please give your exceptional reason(s) for not being able to give 16 weeks' notice to change your working hours";
 
 const emailValidation = yup
   .string()
@@ -45,7 +49,7 @@ const isOnOrBeforeProgrammeEnd = (
 
 const changeStartDateValidation = yup
   .date()
-  .typeError("Start Date is not a valid date")
+  .typeError("Please provide a valid Start Date")
   .required("Start Date is required")
   .test(
     "is-on-or-after-today",
@@ -65,24 +69,34 @@ const changeStartDateValidation = yup
     function (value) {
       return isOnOrBeforeProgrammeEnd(value, this.parent.pmId);
     }
-  );
-
-const altStartDateValidation = yup
-  .date()
-  .nullable()
-  .transform((value, originalValue) => (originalValue === "" ? null : value))
-  .typeError("Alternative start date is not a valid date")
-  .test(
-    "alt-at-least-16-weeks",
-    "Alternative start date must be at least 16 weeks from today",
-    value => !value || !isDateWithin16WeeksOfFirstDate(value)
   )
   .test(
-    "alt-before-programme-end",
-    "Alternative start date cannot be after the programme end date",
+    "is-at-least-16-weeks",
+    "Change cannot begin less than 16 weeks from today",
     function (value) {
-      return isOnOrBeforeProgrammeEnd(value, this.parent.pmId);
+      if (!value || this.parent.canGiveCompliantStartDate !== true) return true;
+      return !isDateWithin16WeeksOfFirstDate(value);
     }
+  );
+
+const exceptionalReasonsDateValidation = yup
+  .date()
+  .typeError("Please provide a valid date")
+  .required("Please provide the date you would like this change to begin")
+  .test(
+    "exceptional-on-or-after-today",
+    "The date cannot be before today",
+    function (value) {
+      if (!value) return true;
+      const exceptionalDate = dayjs(value).startOf("day");
+      const today = dayjs().startOf("day");
+      return exceptionalDate.isSame(today) || exceptionalDate.isAfter(today);
+    }
+  )
+  .test(
+    "exceptional-less-than-16-weeks",
+    "The date must be less than 16 weeks from today",
+    value => !value || isDateWithin16WeeksOfFirstDate(value)
   );
 
 const DiscussionsValidationSchema = yup.object().shape({
@@ -130,8 +144,17 @@ export const ltftValidationSchema = yup.object({
     .required(ltftReasonsError)
     .nullable(),
   personalDetails: personalDetailsDtoValidationSchema,
+  canGiveCompliantStartDate: yup
+    .boolean()
+    .typeError(ltftNoticeError)
+    .required(ltftNoticeError)
+    .nullable(),
   startDate: changeStartDateValidation,
-  altStartDate: altStartDateValidation,
+  exceptionalReasons: yup
+    .string()
+    .required(ltftExceptionalReasonsError)
+    .nullable(),
+  exceptionalReasonsDate: exceptionalReasonsDateValidation,
   skilledWorkerVisaHolder: yup
     .boolean()
     .typeError(LtftVisaError)

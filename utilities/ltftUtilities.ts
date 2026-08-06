@@ -6,7 +6,7 @@ import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { unsubmitLtftForm, withdrawLtftForm } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
 import { ACTION_REASONS } from "./Constants";
-import { isFormDeleted } from "./FormBuilderUtilities";
+import { computedValueGenerators, isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 
 export function populateLtftDraftNew(
@@ -22,8 +22,11 @@ export function populateLtftDraftNew(
     designatedBodyCode: "",
     managingDeanery: "",
     type: "LTFT",
+    canGiveCompliantStartDate: null,
     startDate: null,
     altStartDate: null,
+    exceptionalReasons: null,
+    exceptionalReasonsDate: null,
     wteBeforeChange: null,
     wte: null,
     declarations: {
@@ -124,6 +127,15 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       otherDetail: ltftObj.reasonsOtherDetail ?? "",
       supportingInformation: ltftObj.supportingInformation ?? null
     },
+    exceptionalReasons: {
+      // Note: the persisted DTO field is the inverse (exceptional). 'No' -> true.
+      exceptional:
+        ltftObj.canGiveCompliantStartDate == null
+          ? null
+          : !ltftObj.canGiveCompliantStartDate,
+      supportingInformation: ltftObj.exceptionalReasons ?? null,
+      startDate: ltftObj.exceptionalReasonsDate ?? null
+    },
     status: {
       current: {
         state: ltftObj.status.current.state,
@@ -173,8 +185,15 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
     managingDeanery: ltftDto.programmeMembership.managingDeanery ?? "",
     type: ltftDto.change.type,
+    canGiveCompliantStartDate:
+      ltftDto.exceptionalReasons?.exceptional == null
+        ? null
+        : !ltftDto.exceptionalReasons.exceptional,
     startDate: ltftDto.change.startDate,
     altStartDate: ltftDto.change.altStartDate ?? null,
+    exceptionalReasons:
+      ltftDto.exceptionalReasons?.supportingInformation ?? null,
+    exceptionalReasonsDate: ltftDto.exceptionalReasons?.startDate ?? null,
     wteBeforeChange: ltftDto.programmeMembership.wte
       ? Math.round(ltftDto.programmeMembership.wte * 100)
       : null,
@@ -240,6 +259,29 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     created: ltftDto.created,
     lastModified: ltftDto.lastModified
   };
+};
+
+// Note: canGiveCompliantStartDate is the trigger
+export const clearStartDateSection = (ltftObj: LtftObjNew): LtftObjNew => ({
+  ...ltftObj,
+  startDate: null,
+  altStartDate: null,
+  exceptionalReasons: null,
+  exceptionalReasonsDate: null
+});
+
+export const hasLegacyStartDateData = (ltftObj: LtftObjNew): boolean =>
+  ltftObj.canGiveCompliantStartDate === null &&
+  (ltftObj.startDate != null || ltftObj.altStartDate != null);
+
+// Note: legacy DRAFT, canGiveCompliantStartDate is null. Its old start date answers no longer fit the new start date flow, so clear and make trainee complete that page from scratch. ('New' drafts that haven't answered the question yet already have these fields null).
+export const resetLegacyStartDateSection = (
+  ltftObj: LtftObjNew
+): LtftObjNew => {
+  const isLegacyDraft =
+    ltftObj.status?.current?.state === "DRAFT" &&
+    ltftObj.canGiveCompliantStartDate === null;
+  return isLegacyDraft ? clearStartDateSection(ltftObj) : ltftObj;
 };
 
 export async function handleLtftSummaryModalSub(
@@ -310,6 +352,17 @@ export function makeValidProgrammeOptions(
   }, [] as { value: string; label: string }[]);
 
   return programmeOptions;
+}
+
+// Note: A date stamped by a previous submission is kept and only cleared if the trainee revisits Start date page while editing unsubmitted.
+export function stampLtftStartDateOnSubmit(formData: LtftObjNew): LtftObjNew {
+  if (formData.canGiveCompliantStartDate !== false || formData.startDate) {
+    return formData;
+  }
+  return {
+    ...formData,
+    startDate: computedValueGenerators.ltft16WeeksNoticeDate()
+  };
 }
 
 export function findLatestSubmissionDate(formData: LtftObjNew): string | null {
