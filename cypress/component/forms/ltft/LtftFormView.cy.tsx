@@ -351,7 +351,7 @@ describe("LTFT Form View - new flow: No path (exceptional)", () => {
     cy.get('[data-cy="informationIsCorrect"]').check();
     cy.get('[data-cy="notGuaranteed"]').check();
     cy.get('[data-cy="name"]').type("my submitted ltft application");
-    cy.get('[data-cy="BtnSubmit').click();
+    cy.get('[data-cy="BtnSubmit"]').click();
     // Note: pre-modal draft save persists the form as-is (startDate still null).
     cy.get("@updateLtftStub").should("have.been.called");
 

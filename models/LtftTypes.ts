@@ -187,7 +187,7 @@ export type LtftDto = {
     otherDetail?: string;
     supportingInformation: string | null;
   };
-  exceptionalReasons: LtftExceptionalReasons;
+  exceptionalReasons: LtftExceptionalReasons | null;
   tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;
