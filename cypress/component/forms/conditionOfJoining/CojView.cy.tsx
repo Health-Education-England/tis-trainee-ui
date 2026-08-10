@@ -36,7 +36,7 @@ const commonCheckboxes = [
   "isDeclareEngage"
 ];
 
-const gg10Checkboxes = [...commonCheckboxes, "isDeclareContacted"];
+const gg10And11Checkboxes = [...commonCheckboxes, "isDeclareContacted"];
 
 const testCheckboxes = (
   checkboxes: string[],
@@ -56,7 +56,7 @@ const testCheckboxes = (
 };
 
 const testUnsignedForm = (version: CojVersionType) => {
-  const checkboxes = version === "GG10" ? gg10Checkboxes : commonCheckboxes;
+  const checkboxes = version === "GG9" ? commonCheckboxes : gg10And11Checkboxes;
 
   cy.get('[data-cy="cojSignedOn"]').should("not.exist");
   cy.get('[data-cy="cojSignBtn"]').should("exist").should("be.disabled");
@@ -66,7 +66,7 @@ const testUnsignedForm = (version: CojVersionType) => {
 };
 
 const testSignedForm = (version: CojVersionType) => {
-  const checkboxes = version === "GG10" ? gg10Checkboxes : commonCheckboxes;
+  const checkboxes = version === "GG9" ? commonCheckboxes : gg10And11Checkboxes;
 
   cy.get(`[data-cy="cojHeading-${version.toLowerCase()}"]`).should("exist");
   cy.get('[data-cy="cojSignedOn"]').should(
@@ -171,6 +171,18 @@ describe("Conditions of Joining View - signed", () => {
     testPDFSaveButton();
     testSignedForm("GG10");
   });
+
+  it("renders the readonly GG11 to view if matching PM, start date is after COJ epoch, and it has been signed", () => {
+    mount(
+      <MockCojView
+        {...mockProps}
+        conditionsOfJoiningVersion={"GG11" as CojVersionType}
+      />
+    );
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
+    testPDFSaveButton();
+    testSignedForm("GG11");
+  });
 });
 
 describe("Conditions of Joining View - unsigned", () => {
@@ -192,5 +204,17 @@ describe("Conditions of Joining View - unsigned", () => {
     );
     cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
     testUnsignedForm("GG10");
+  });
+
+  it("renders the GG11 to sign if matching PM, start date is after COJ epoch, and it has not been signed", () => {
+    mount(
+      <MockCojView
+        {...mockProps}
+        conditionsOfJoiningSignedAtDate={null}
+        conditionsOfJoiningVersion={"GG11" as CojVersionType}
+      />
+    );
+    cy.get('[data-cy="phNonMedic-info-message-container"]').should("exist");
+    testUnsignedForm("GG11");
   });
 });

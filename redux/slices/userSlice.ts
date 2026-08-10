@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchMFAPreference, fetchAuthSession } from "aws-amplify/auth";
 import { UserFeaturesType } from "../../models/FeatureFlags";
 
-export type CojVersionType = "GG9" | "GG10";
+export type CojVersionType = "GG9" | "GG10" | "GG11";
 
 export type MFAType = "TOTP" | "SMS" | "EMAIL" | "NOMFA";
 
