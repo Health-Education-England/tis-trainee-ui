@@ -173,6 +173,9 @@ export const COJ_DECLARATIONS_11 = [
 export const NO_MATCHING_PM_ERROR_MESSAGE =
   "There was a problem displaying the Conditions of Joining information for this Programme.";
 
+export const UNKNOWN_COJ_VERSION_ERROR_MESSAGE =
+  "There was a problem displaying the Conditions of Joining Agreement for this Programme. Please contact your Local Office.";
+
 export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
   "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
 

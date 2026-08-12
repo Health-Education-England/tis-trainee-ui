@@ -5,7 +5,8 @@ import { mount } from "cypress/react";
 import { mockTraineeProfile, mockTraineeProfilePhNonMedic } from "../../../../mock-data/trainee-profile";
 import {
   COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE,
-  NO_MATCHING_PM_ERROR_MESSAGE
+  NO_MATCHING_PM_ERROR_MESSAGE,
+  UNKNOWN_COJ_VERSION_ERROR_MESSAGE
 } from "../../../../utilities/Constants";
 import { CojVersionType } from "../../../../redux/slices/userSlice";
 import { Provider } from "react-redux";
@@ -144,6 +145,21 @@ describe("Conditions of Joining View - errors", () => {
       "have.text",
       COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE
     );
+  });
+
+  it("renders the error message if the CoJ version is not recognised", () => {
+    mount(
+      <MockCojView
+        {...mockProps}
+        conditionsOfJoiningVersion={"GG12" as CojVersionType}
+      />
+    );
+
+    cy.get('[data-cy="error-message-text"]').should(
+      "have.text",
+      UNKNOWN_COJ_VERSION_ERROR_MESSAGE
+    );
+    cy.get('[data-cy="cojSignBtn"]').should("not.exist");
   });
 });
 

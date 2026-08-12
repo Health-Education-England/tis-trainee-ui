@@ -5,7 +5,8 @@ import {
   COJ_DECLARATIONS_9,
   COJ_EPOCH,
   COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE,
-  NO_MATCHING_PM_ERROR_MESSAGE
+  NO_MATCHING_PM_ERROR_MESSAGE,
+  UNKNOWN_COJ_VERSION_ERROR_MESSAGE
 } from "../../../utilities/Constants";
 import FormSavePDF from "../FormSavePDF";
 import CojGg10 from "./CojGg10";
@@ -42,6 +43,9 @@ export default function CojView() {
       GG10: COJ_DECLARATIONS_10,
       GG11: COJ_DECLARATIONS_11
     }[cojVersion];
+    if (!CojFormVersion || !cojDeclarations) {
+      return <ErrorPage message={UNKNOWN_COJ_VERSION_ERROR_MESSAGE} />;
+    }
     const signedDate = matchedPm.conditionsOfJoining.signedAt
       ? new Date(matchedPm.conditionsOfJoining.signedAt)
       : null;
