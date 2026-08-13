@@ -127,8 +127,54 @@ export const COJ_DECLARATIONS_10 = [
   }
 ];
 
+export const COJ_DECLARATIONS_11 = [
+  {
+    name: "isDeclareProvisional",
+    label:
+      "I understand that programme and post allocations are provisional, and are subject to change until confirmed by NHSE WTE/PSD Scotland/HEIW/NIMDTA and/or my employing organisation."
+  },
+  {
+    name: "isDeclareSatisfy",
+    label:
+      "I understand that I will need to satisfy all requirements of the programme and curriculum to enable satisfactory sign off, and that this may require a specific time commitment."
+  },
+  {
+    name: "isDeclareProvide",
+    label:
+      "I will obtain a professional email address, and will provide this to my training programme and NHSE WTE/PSD Scotland/HEIW/NIMDTA."
+  },
+  {
+    name: "isDeclareInform",
+    label:
+      "I will inform my training programme and NHSE WTE/PSD Scotland/HEIW/NIMDTA of any change to my personal contact details and/or personal circumstances that may affect my training programme arrangements."
+  },
+  {
+    name: "isDeclareUpToDate",
+    label:
+      "I will keep myself up to date with the latest information available via NHSE WTE/PSD Scotland/HEIW/NIMDTA as well as via the relevant educational and regulatory websites."
+  },
+  {
+    name: "isDeclareAttend",
+    label:
+      "I will attend the minimum number of formal teaching days as required by my training programme."
+  },
+  {
+    name: "isDeclareContacted",
+    label:
+      "I understand that I will be contacted by NHSE WTE/PSD Scotland/HEIW/NIMDTA about matters that are relevant to my teaching, training or personal development."
+  },
+  {
+    name: "isDeclareEngage",
+    label:
+      "Where applicable, I will fully engage with immigration and employer requirements relating to skilled worker visas (formerly Tier 2 and Tier 4 UK visas)."
+  }
+];
+
 export const NO_MATCHING_PM_ERROR_MESSAGE =
   "There was a problem displaying the Conditions of Joining information for this Programme.";
+
+export const UNKNOWN_COJ_VERSION_ERROR_MESSAGE =
+  "There was a problem displaying the Conditions of Joining Agreement for this Programme. Please contact your Local Office.";
 
 export const COJ_START_DATE_BEFORE_EPOCH_ERROR_MESSAGE =
   "Please follow the existing Local Office process to sign your Conditions of Joining Agreement for this Programme.";
