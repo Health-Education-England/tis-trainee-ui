@@ -14,7 +14,8 @@ import {
   mockPlacementSubSpecialtyPostAllows,
   mockPlacemenSubSpecialtyPostNotAllows,
   mockPlacementNoSubSpecialtyPostAllows,
-  mockPlacementNoSubSpecialtyPostNotAllows
+  mockPlacementNoSubSpecialtyPostNotAllows,
+  mockPlacementNoSite
 } from "../../../mock-data/trainee-profile";
 import history from "../../../components/navigation/history";
 import { MFAType, updatedPreferredMfa } from "../../../redux/slices/userSlice";
@@ -224,6 +225,18 @@ describe("Placements with MFA set up", () => {
       .find('[data-cy="notAssignedplacements"]')
       .should("exist")
       .should("contain.text", "You are not assigned to any placements");
+  });
+
+  it("should render a placement that has no site", () => {
+    mountPlacementsWithMockData([mockPlacementNoSite], "SMS", "succeeded");
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get("[class*='panelHeader']")
+      .first()
+      .should("exist")
+      .should("contain.text", "None provided");
+    cy.get('[data-cy="specialty0Val"]')
+      .first()
+      .should("contain.text", "Dermatology");
   });
 
   it("should not show non-templated placement properties", () => {

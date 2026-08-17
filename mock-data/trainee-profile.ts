@@ -653,6 +653,23 @@ export const mockPlacementNoOtherSites = {
   wholeTimeEquivalent: "0.5"
 };
 
+export const mockPlacementNoSite = {
+  endDate: new Date("2020-12-31"),
+  grade: "ST1",
+  tisId: "315",
+  placementType: "OOPC",
+  otherSites: [],
+  specialty: "Dermatology",
+  subSpecialty: "sub specialty",
+  otherSpecialties: null,
+  postAllowsSubspecialty: true,
+  startDate: new Date("2019-01-01"),
+  status: Status.Current,
+  employingBody: "Employing body",
+  trainingBody: "Training body",
+  wholeTimeEquivalent: "1"
+};
+
 export const mockPlacementSubSpecialtyPostAllows: Placement = {
   endDate: new Date("2020-12-31"),
   grade: "ST1",
