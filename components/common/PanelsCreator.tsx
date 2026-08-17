@@ -65,9 +65,9 @@ export function PanelsCreator({
   const panelsTitle = PANEL_KEYS[panelsName];
 
   const getPanelTitle = (panel: ProfileType): string =>
-    panelsName === TraineeProfileName.Programmes
+    (panelsName === TraineeProfileName.Programmes
       ? (panel as ProgrammeMembership).programmeName
-      : (panel as Placement).site;
+      : (panel as Placement).site) ?? "None provided";
 
   const makePanelId = (panel: ProfileType) =>
     `panel-${getPanelTitle(panel).toLowerCase()}`;

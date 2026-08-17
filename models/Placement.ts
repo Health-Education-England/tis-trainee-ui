@@ -2,9 +2,9 @@ import { Status } from "./Status";
 import { ProfilePanelDefaults, Signature } from "./TraineeProfile";
 
 export type Placement = ProfilePanelDefaults & {
-  site: string;
-  siteLocation: string;
-  siteKnownAs: string;
+  site?: string;
+  siteLocation?: string;
+  siteKnownAs?: string;
   otherSites: Site[];
   wholeTimeEquivalent: string;
   specialty: string;
