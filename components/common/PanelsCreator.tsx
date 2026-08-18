@@ -64,10 +64,14 @@ export function PanelsCreator({
   const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
   const panelsTitle = PANEL_KEYS[panelsName];
 
-  const getPanelTitle = (panel: ProfileType): string =>
-    (panelsName === TraineeProfileName.Programmes
-      ? (panel as ProgrammeMembership).programmeName
-      : (panel as Placement).site) ?? "None provided";
+  const getPanelTitle = (panel: ProfileType): string => {
+    if (panelsName === TraineeProfileName.Programmes) {
+      return (panel as ProgrammeMembership).programmeName ?? "None provided";
+    }
+    // Note: Non-training placements (e.g. OOPC) have no site, so fallback is placement type with 'None provided' as a last resort!
+    const { site, placementType } = panel as Placement;
+    return site || placementType || "None provided";
+  };
 
   const makePanelId = (panel: ProfileType) =>
     `panel-${getPanelTitle(panel).toLowerCase()}`;
@@ -312,7 +316,7 @@ export async function downloadPmConfirmation(programmeId: string) {
 }
 
 export function displayListVal<T extends Date | string>(val: T, k: string) {
-  if (val === null || val === "") {
+  if (val == null || val === "") {
     return "None provided";
   }
   const transformations: Record<string, (value: Date | string) => string> = {

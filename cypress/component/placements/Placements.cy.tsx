@@ -233,7 +233,16 @@ describe("Placements with MFA set up", () => {
     cy.get("[class*='panelHeader']")
       .first()
       .should("exist")
-      .should("contain.text", "None provided");
+      .should("contain.text", "OOPC");
+    cy.get('[data-cy="site0Val"]').should("contain.text", "None provided");
+    cy.get('[data-cy="siteLocation0Val"]').should(
+      "contain.text",
+      "None provided"
+    );
+    cy.get('[data-cy="siteKnownAs0Val"]').should(
+      "contain.text",
+      "None provided"
+    );
     cy.get('[data-cy="specialty0Val"]')
       .first()
       .should("contain.text", "Dermatology");
