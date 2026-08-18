@@ -64,8 +64,18 @@ const panelSchemaValidation = yup.object().shape({
 const WorkValidationSchema = yup.object().shape({
   typeOfWork: StringValidationSchema("Type of Work"),
   trainingPost: StringValidationSchema("Training Post"),
-  site: StringValidationSchema("Site Name"),
-  siteLocation: StringValidationSchema("Site Location"),
+  // Note: optional for non-training posts (e.g. OOPC)
+  site: StringValidationSchemaOptional("Site Name").when("trainingPost", {
+    is: "Yes",
+    then: StringValidationSchema("Site Name")
+  }),
+  siteLocation: StringValidationSchemaOptional("Site Location").when(
+    "trainingPost",
+    {
+      is: "Yes",
+      then: StringValidationSchema("Site Location")
+    }
+  ),
   siteKnownAs: StringValidationSchemaOptional("Site Known As"),
   startDate: yup
     .date()

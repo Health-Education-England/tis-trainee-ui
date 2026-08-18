@@ -316,7 +316,7 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
   cy.get('[data-cy="cctSpecialty1-label"]').should("be.visible");
   cy.get(
     '[data-cy="cctSpecialty1"] > .autocomplete-select > .react-select__control > .react-select__value-container'
-  ).should("not.have.value");  
+  ).should("not.have.value");
   cy.clickSelect('[data-cy="cctSpecialty1"]', "ana", true);
 
   // hidden fields should not be validated
@@ -562,23 +562,28 @@ Cypress.Commands.add("checkAndFillSection2", () => {
   cy.get("#work-0-trainingPost--input-error").should("exist");
   cy.get("#work-0-startDate--input-error").should("exist");
   cy.get("#work-0-endDate--input-error").should("exist");
-  cy.get("#work-0-site--input-error").should("exist");
-  cy.get("#work-0-siteLocation--input-error").should("exist");
+  // site details aren't required until Training Post is answered "Yes"
+  cy.get("#work-0-site--input-error").should("not.exist");
+  cy.get("#work-0-siteLocation--input-error").should("not.exist");
   cy.get("#work-0-siteKnownAs--input-error").should("not.exist");
 
   // check the error summary
-
   cy.get(".nhsuk-error-summary").contains("Work 1");
   cy.checkElement("error-txt-Type of Work is required");
   cy.checkElement("error-txt-Training Post is required");
   cy.checkElement("error-txt-Start date must be a valid date");
   cy.checkElement("error-txt-End date must be a valid date");
-  cy.checkElement("error-txt-Site Location is required");
-  cy.checkElement("error-txt-Site Name is required");
 
   // fill in the panel 1
   cy.clearAndType('[data-cy="typeOfWork-input"]', "Some Work 1");
   cy.clickSelect('[data-cy="trainingPost"]');
+
+  // ...but a training post does need them
+  cy.get("#work-0-site--input-error").should("exist");
+  cy.get("#work-0-siteLocation--input-error").should("exist");
+  cy.checkElement("error-txt-Site Name is required");
+  cy.checkElement("error-txt-Site Location is required");
+
   cy.clearAndType('[data-cy="startDate-input"]', workStartDate1);
   cy.clearAndType('[data-cy="endDate-input"]', workEndDate1);
   cy.clearAndType('[data-cy="site-input"]', "some site 1");
@@ -1047,8 +1052,8 @@ Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
 Cypress.Commands.add("checkAndFillPhGmcGdc", () => {
   // shows both checkboxes and hides GMC/GDC fields by default
   cy.get('[data-cy="hasGmcNumber-checkbox"]')
-      .should("exist")
-      .should("not.be.checked");
+    .should("exist")
+    .should("not.be.checked");
   cy.get('[data-cy="hasGdcNumber-checkbox"]')
     .should("exist")
     .should("not.be.checked");
