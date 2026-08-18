@@ -233,10 +233,39 @@ describe("Placements with MFA set up", () => {
     cy.get("[class*='panelHeader']")
       .first()
       .should("exist")
-      .should("contain.text", "None provided");
+      .should("contain.text", "OOPC");
+    cy.get('[data-cy="site0Val"]').should("contain.text", "None provided");
+    cy.get('[data-cy="siteLocation0Val"]').should(
+      "contain.text",
+      "None provided"
+    );
+    cy.get('[data-cy="siteKnownAs0Val"]').should(
+      "contain.text",
+      "None provided"
+    );
     cy.get('[data-cy="specialty0Val"]')
       .first()
       .should("contain.text", "Dermatology");
+  });
+
+  it("should give placements sharing a title unique panel ids", () => {
+    mountPlacementsWithMockData(
+      [
+        { ...mockPlacementNoSite, tisId: "315" },
+        { ...mockPlacementNoSite, tisId: "316" }
+      ],
+      "SMS",
+      "succeeded"
+    );
+    cy.get('[data-cy="currentExpand"]').click();
+    cy.get("#panel-placements-315").should("exist").and("contain.text", "OOPC");
+    cy.get("#panel-placements-316").should("exist").and("contain.text", "OOPC");
+    cy.get('[data-cy="programmeContents"] a')
+      .first()
+      .should("have.attr", "href", "#panel-placements-315");
+    cy.get('[data-cy="programmeContents"] a')
+      .last()
+      .should("have.attr", "href", "#panel-placements-316");
   });
 
   it("should not show non-templated placement properties", () => {

@@ -117,13 +117,13 @@ describe("Programmes with MFA set up", () => {
     cy.contains('[data-cy="programmeContents"] a', "Cardiology").should(
       "have.attr",
       "href",
-      "#panel-cardiology"
+      `#panel-programmeMemberships-${mockProgrammeMemberships[0].tisId}`
     );
 
     cy.contains('[data-cy="programmeContents"] a', "General Practice").should(
       "have.attr",
       "href",
-      "#panel-general practice"
+      `#panel-programmeMemberships-${mockProgrammeMemberships[1].tisId}`
     );
   });
 

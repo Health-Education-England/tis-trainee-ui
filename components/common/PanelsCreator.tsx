@@ -64,13 +64,17 @@ export function PanelsCreator({
   const keysToDisplay = getKeysToDisplay(panelsName, userFeatures);
   const panelsTitle = PANEL_KEYS[panelsName];
 
-  const getPanelTitle = (panel: ProfileType): string =>
-    (panelsName === TraineeProfileName.Programmes
-      ? (panel as ProgrammeMembership).programmeName
-      : (panel as Placement).site) ?? "None provided";
+  const getPanelTitle = (panel: ProfileType): string => {
+    if (panelsName === TraineeProfileName.Programmes) {
+      return (panel as ProgrammeMembership).programmeName ?? "None provided";
+    }
+    // Note: Non-training placements (e.g. OOPC) have no site, so fallback is placement type with 'None provided' as a last resort!
+    const { site, placementType } = panel as Placement;
+    return site || placementType || "None provided";
+  };
 
-  const makePanelId = (panel: ProfileType) =>
-    `panel-${getPanelTitle(panel).toLowerCase()}`;
+  const makePanelId = (panel: ProfileType, index: number) =>
+    `panel-${panelsName}-${panel.tisId ?? index}`;
 
   return (
     <Card.Group className={style.panelsWrapper}>
@@ -79,16 +83,20 @@ export function PanelsCreator({
           className={style.contentsList}
           data-cy="programmeContents"
         >
-          {panelsArr.map((panel: ProfileType, index: number) => (
-            <ContentsListItem href={`#${makePanelId(panel)}`} key={index}>
-              {getPanelTitle(panel)}
-            </ContentsListItem>
-          ))}
+          {panelsArr.map((panel: ProfileType, index: number) => {
+            const panelId = makePanelId(panel, index);
+            return (
+              <ContentsListItem href={`#${panelId}`} key={panelId}>
+                {getPanelTitle(panel)}
+              </ContentsListItem>
+            );
+          })}
         </ContentsList>
       )}
       {panelsArr.length > 0 ? (
         panelsArr.map((panel: ProfileType, index: number) => {
           const panelTitle = getPanelTitle(panel);
+          const panelId = makePanelId(panel, index);
 
           const currentAction = unreviewedActions.filter(
             action =>
@@ -96,7 +104,7 @@ export function PanelsCreator({
               action.type === "REVIEW_DATA"
           );
           return (
-            <Card.GroupItem key={index} width="full">
+            <Card.GroupItem key={panelId} width="full">
               <Card
                 className={
                   currentAction.length > 0
@@ -104,7 +112,7 @@ export function PanelsCreator({
                     : style.panelDiv
                 }
               >
-                <p id={makePanelId(panel)} className={style.panelHeader}>
+                <p id={panelId} className={style.panelHeader}>
                   {panelTitle}
                 </p>
                 <SummaryList>
@@ -195,8 +203,8 @@ export function PanelsCreator({
                   >
                     Details
                   </p>
-                  {keysToDisplay.map((panelProp, _index) => (
-                    <SummaryList.Row key={_index}>
+                  {keysToDisplay.map(panelProp => (
+                    <SummaryList.Row key={panelProp}>
                       <SummaryList.Key data-cy={`${panelProp}${index}Key`}>
                         {panelProp === "conditionsOfJoining" ? (
                           <>
@@ -312,7 +320,7 @@ export async function downloadPmConfirmation(programmeId: string) {
 }
 
 export function displayListVal<T extends Date | string>(val: T, k: string) {
-  if (val === null || val === "") {
+  if (val == null || val === "") {
     return "None provided";
   }
   const transformations: Record<string, (value: Date | string) => string> = {
