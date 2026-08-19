@@ -981,13 +981,6 @@ dialog::backdrop {
   padding: 1rem;
 }
 
-// form linker
-.form-linker_summary {
-  border: solid 1px black;
-  padding: 0.5rem;
-  margin: 1rem 0;
-}
-
 // Form Linker Modal
 html:has(dialog[data-cy="formLinkerModal"][open]) {
   overflow: hidden;

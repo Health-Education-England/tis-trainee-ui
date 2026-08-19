@@ -12,6 +12,7 @@ import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../models/LifeCycleState";
+import { StringUtilities } from "../../utilities/StringUtilities";
 interface IFormA {
   formAList: IFormR[];
   formData: FormRPartA;
@@ -54,8 +55,14 @@ export const loadSavedFormA = createAsyncThunk(
     linkedFormRData?: LinkedFormRDataType;
   }): Promise<FormRPartA> => {
     const formsService = new FormsService();
-    const fetchedForm = (await formsService.getTraineeFormRPartAByFormId(id))
+    const savedForm = (await formsService.getTraineeFormRPartAByFormId(id))
       .data;
+    const fetchedForm = {
+      ...savedForm,
+      wholeTimeEquivalent: StringUtilities.RoundTo2Dp(
+        savedForm.wholeTimeEquivalent
+      )
+    };
     if (linkedFormRData) {
       return {
         ...fetchedForm,
