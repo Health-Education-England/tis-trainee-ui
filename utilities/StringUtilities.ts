@@ -1,9 +1,15 @@
 import { VALUE_NOT_GIVEN } from "./Constants";
 
 export class StringUtilities {
+  public static RoundTo2Dp(str: string) {
+    if (!str) return str;
+    const num = Number(str);
+    return Number.isNaN(num) ? str : Number(num.toFixed(2)).toString();
+  }
+
   public static TrimZeros(str: string) {
     if (str) {
-      const numStr = Number(str).toString();
+      const numStr = StringUtilities.RoundTo2Dp(str);
       if (numStr !== "0") {
         return numStr;
       }

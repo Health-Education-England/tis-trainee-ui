@@ -21,9 +21,31 @@ describe("StringUtilities", () => {
     const wte = "0.1200";
     expect(StringUtilities.TrimZeros(wte)).toEqual("0.12");
   });
+  it("should round an over-precise no. to 2 d.p.", () => {
+    expect(StringUtilities.TrimZeros("0.750000012")).toEqual("0.75");
+  });
+  it("should round an over-precise no. to 1 d.p. when the 2nd d.p. is zero", () => {
+    expect(StringUtilities.TrimZeros("0.600000024")).toEqual("0.6");
+  });
   it("should return 'value not given' for zero plus trailing zero", () => {
     const wte = "0.0";
     expect(StringUtilities.TrimZeros(wte)).toEqual("Value not given");
+  });
+  it("should round to a max of 2 d.p., dropping any trailing zero", () => {
+    expect(StringUtilities.RoundTo2Dp("0.600000024")).toEqual("0.6");
+    expect(StringUtilities.RoundTo2Dp("0.750000012")).toEqual("0.75");
+    expect(StringUtilities.RoundTo2Dp("1.000")).toEqual("1");
+    expect(StringUtilities.RoundTo2Dp("0.69")).toEqual("0.69");
+  });
+  it("should return the original string if it is not a number", () => {
+    expect(StringUtilities.RoundTo2Dp("not a number")).toEqual("not a number");
+  });
+  it("should not turn a cleared field into zero", () => {
+    expect(StringUtilities.RoundTo2Dp("")).toEqual("");
+    expect(StringUtilities.RoundTo2Dp(null as unknown as string)).toBeNull();
+    expect(
+      StringUtilities.RoundTo2Dp(undefined as unknown as string)
+    ).toBeUndefined();
   });
   it("should concat to a single string without the null args", () => {
     const pType = "Placement Type";
