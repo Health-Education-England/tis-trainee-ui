@@ -10,11 +10,7 @@ import {
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import {
-  FormRUtilities,
-  makeWarningText,
-  processLinkedFormData
-} from "../../../../utilities/FormRUtilities";
+import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 import {
   saveDraftForm,
   createErrorObject,
@@ -23,13 +19,9 @@ import {
 import { StartOverButton } from "../../StartOverButton";
 import { Form, FormData, FormErrors } from "../FormBuilder";
 import Declarations from "../../Declarations";
-import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
-import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
-import { FormLinkerSummary } from "../../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../../models/FormRPartA";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import { StringUtilities } from "../../../../utilities/StringUtilities";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
@@ -125,8 +117,6 @@ const FormRReviewView = ({
     formData?.lifecycleState === LifeCycleState.New ||
     formData?.lifecycleState === LifeCycleState.Unsubmitted;
 
-  const [formKey, setFormKey] = useState(Date.now());
-  const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
@@ -136,10 +126,6 @@ const FormRReviewView = ({
       page.sections.flatMap(section => section.fields)
     );
   }, [formJson.pages]);
-
-  const progMems = useAppSelector(
-    state => state.traineeProfile.traineeProfileData.programmeMemberships
-  );
 
   useEffect(() => {
     if (canEdit && !isSubmitting) {
@@ -157,38 +143,6 @@ const FormRReviewView = ({
     canEdit
   ]);
 
-  const linkedFormData: LinkedFormRDataType = {
-    isArcp: StringUtilities.convertToBool(formData.isArcp),
-    programmeMembershipId: formData.programmeMembershipId,
-    localOfficeName: formData.localOfficeName
-  };
-
-  const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    setIsSubmitting(true);
-    const processedFormData = processLinkedFormData(data, progMems);
-
-    const updatedFormData = {
-      ...formData,
-      isArcp: processedFormData.isArcp,
-      programmeMembershipId: processedFormData.programmeMembershipId,
-      localOfficeName: processedFormData.localOfficeName,
-      programmeSpecialty: processedFormData.linkedProgramme?.programmeName,
-      programmeName: processedFormData.linkedProgramme?.programmeName
-    } as FormRPartA | FormRPartB;
-
-    setShowModal(false);
-    saveDraftForm(formJson, updatedFormData, false, true);
-    setIsSubmitting(false);
-  };
-
-  const handleModalFormClose = () => {
-    setShowModal(false);
-    setIsSubmitting(false);
-    setFormKey(Date.now());
-  };
-
-  const warningText = makeWarningText("preSub");
-
   return (
     <>
       <ScrollTo />
@@ -200,8 +154,6 @@ const FormRReviewView = ({
           formData.submissionDate,
           "submissionDateTop"
         )}
-
-      {!canEdit && <FormLinkerSummary {...linkedFormData} />}
 
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
 
@@ -225,7 +177,6 @@ const FormRReviewView = ({
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
-                setShowModal(true);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
@@ -271,14 +222,6 @@ const FormRReviewView = ({
           formData.submissionDate,
           "submissionDate"
         )}
-      <FormLinkerModal
-        key={formKey}
-        onSubmit={handleModalFormSubmit}
-        isOpen={showModal}
-        onClose={handleModalFormClose}
-        warningText={warningText}
-        linkedFormData={linkedFormData}
-      />
     </>
   );
 };
