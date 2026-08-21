@@ -465,7 +465,25 @@ export function setFormRDataForSubmit(
     return fd;
   }, {} as FormRPartA | FormRPartB);
 
-  return { ...newFormData, ...myPreciousFormDataFields };
+  const formDataToSubmit = { ...newFormData, ...myPreciousFormDataFields };
+
+  return jsonForm.name === "formB"
+    ? setBlankWorkSitesToNull(formDataToSubmit as FormRPartB)
+    : formDataToSubmit;
+}
+
+function setBlankWorkSitesToNull(formData: FormRPartB): FormRPartB {
+  if (!Array.isArray(formData.work)) return formData;
+  const blankToNull = (value: string | null) => (value?.trim() ? value : null);
+  return {
+    ...formData,
+    work: formData.work.map(workPanel => ({
+      ...workPanel,
+      site: blankToNull(workPanel.site),
+      siteLocation: blankToNull(workPanel.siteLocation),
+      siteKnownAs: blankToNull(workPanel.siteKnownAs)
+    }))
+  };
 }
 
 function prepFormRData(

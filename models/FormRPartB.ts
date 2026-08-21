@@ -62,9 +62,9 @@ export interface Work {
   startDate: Date | string;
   endDate: Date | string;
   trainingPost: string;
-  site: string;
-  siteLocation: string;
-  siteKnownAs: string;
+  site: string | null;
+  siteLocation: string | null;
+  siteKnownAs: string | null;
 }
 
 export interface CovidDeclaration {
