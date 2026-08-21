@@ -21,8 +21,10 @@ import {
   transformReferenceData
 } from "../FormBuilderUtilities";
 import formAJson from "../../components/forms/form-builder/form-r/part-a/formA.json";
+import formBJson from "../../components/forms/form-builder/form-r/part-b/formB.json";
 import ltftJson from "../../components/forms/ltft/ltft.json";
 import { formANew } from "../../mock-data/draft-formr-parta";
+import { draftFormRPartB } from "../../mock-data/draft-formr-partb";
 import {
   Field,
   Form,
@@ -89,6 +91,40 @@ describe("Set formData for submit", () => {
     );
     expect((result as FormRPartA).cctSpecialty1).toBeNull();
     expect((result as FormRPartA).cctSpecialty2).toBeNull();
+  });
+});
+
+describe("For submission, set blank work site data to null", () => {
+  const formBWithBlankSites: FormRPartB = {
+    ...draftFormRPartB,
+    work: [
+      {
+        ...draftFormRPartB.work[0],
+        trainingPost: "No",
+        site: "",
+        siteLocation: "   ",
+        siteKnownAs: ""
+      },
+      draftFormRPartB.work[1]
+    ]
+  };
+
+  it("should set blank site details to null before submission", () => {
+    const result = setFormRDataForSubmit(
+      formBJson as Form,
+      formBWithBlankSites
+    ) as FormRPartB;
+    expect(result.work[0].site).toBeNull();
+    expect(result.work[0].siteLocation).toBeNull();
+    expect(result.work[0].siteKnownAs).toBeNull();
+  });
+
+  it("should leave non-blank site details untouched before submit", () => {
+    const result = setFormRDataForSubmit(
+      formBJson as Form,
+      formBWithBlankSites
+    ) as FormRPartB;
+    expect(result.work[1]).toEqual(draftFormRPartB.work[1]);
   });
 });
 
