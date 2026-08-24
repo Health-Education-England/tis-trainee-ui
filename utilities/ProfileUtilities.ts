@@ -142,6 +142,13 @@ export class ProfileUtilities {
   };
 }
 
+export function findLinkedProgramme(
+  id: string | null,
+  progs: ProgrammeMembership[]
+) {
+  return progs.find(prog => prog.tisId === id);
+}
+
 export function matchPlacementActionsToProgrammes(
   actions: any[],
   profile: TraineeProfile
