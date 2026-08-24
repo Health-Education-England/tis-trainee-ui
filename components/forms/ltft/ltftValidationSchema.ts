@@ -4,7 +4,7 @@ import { StringValidationSchema } from "../StringValidationSchema";
 import { CHECK_PHONE_REGEX } from "../../../utilities/Constants";
 import store from "../../../redux/store/store";
 import { isPastIt } from "../../../utilities/DateUtilities";
-import { findLinkedProgramme } from "../../../utilities/CctUtilities";
+import { findLinkedProgramme } from "../../../utilities/ProfileUtilities";
 import { isDateWithin16WeeksOfFirstDate } from "../../../utilities/FormBuilderUtilities";
 
 export const LtftVisaError =
