@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CctCalculation } from "./cctSlice";
+import { CctCalculation } from "../../models/CctTypes";
 import {
   mapLtftDtoToObj,
   mapLtftObjToDto,

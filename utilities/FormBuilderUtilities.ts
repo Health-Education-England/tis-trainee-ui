@@ -53,7 +53,7 @@ import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
-import { findLinkedProgramme } from "./CctUtilities";
+import { findLinkedProgramme } from "./ProfileUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;

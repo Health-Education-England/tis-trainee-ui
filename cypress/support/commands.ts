@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import dayjs from "dayjs";
-import { cctCalcWarningsMsgs } from "../../utilities/CctConstants";
 
 const currentDate = dayjs().format("YYYY-MM-DD");
 const currRevalDate = dayjs().add(3, "month").format("YYYY-MM-DD");
@@ -962,91 +961,6 @@ Cypress.Commands.add("checkFlags", (name: string) => {
       expect(data.length).to.eq(1);
       return data[0].enabled;
     });
-});
-
-Cypress.Commands.add("checkAndFillNewCctCalcForm", () => {
-  const { shortNoticeMsg, wteCustomMsg, wteIncreaseMsg } = cctCalcWarningsMsgs;
-  cy.get('[data-cy="backLink-to-back-to-cct-home"]').should("exist");
-  cy.url().should("include", "/cct");
-  cy.get('[data-cy="cct-calc-warning"]')
-    .should("exist")
-    .contains("Please note");
-  cy.get('[data-cy="cct-calc-warning"] > p > a')
-    .last()
-    .should("include.text", "contact your Local Office support");
-  cy.get('[data-cy="cct-calc-header"]')
-    .should("exist")
-    .contains("CCT Calculator");
-  cy.get('[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text')
-    .should("exist")
-    .contains("Are you a Skilled Worker visa holder?");
-
-  cy.get(
-    '[data-cy="skilledVisaWorkerSummary"] > .nhsuk-details__summary-text'
-  ).click();
-
-  cy.get('[data-cy="skilledVisaWorkerText"]').should(
-    "contain",
-    "Please be aware that there are minimum requirements"
-  );
-
-  // prog modal
-  cy.get('[data-cy="show-prog-modal-btn"]').should("be.visible").click();
-  cy.get('[data-cy="dialogModal"]').should("exist");
-  cy.get('[data-cy="dialogModal"] > div > h2').first().contains("Programmes");
-  cy.get('[data-cy="dialogModal"] > div > h2').last().contains("Placements");
-  cy.get('[data-cy="currentExpand"]').first().should("exist").click();
-  cy.get('[data-cy="subheaderOnboarding"]').should("not.exist");
-  cy.get('[data-cy="modal-cancel-btn"]').should("exist").click();
-  cy.get('[data-cy="dialogModal"]').should("not.be.visible");
-
-  //main form - header
-  cy.get('[data-cy="cct-calc-form"]').should("exist");
-  cy.get('[data-cy="cct-calc-btn"]').should("not.exist");
-  cy.get('[data-cy="linked-prog-header"]').contains("Linked Programme");
-  cy.get('[data-cy="linked-prog-table"]').should("not.exist");
-
-  // - linked prog
-  cy.clickSelect('[data-cy="programmeMembership.id"]', null, true);
-  cy.get('[data-cy="programmeMembership.id"]').should("exist");
-  cy.get('[data-cy="table-header-linked-prog-name"]').contains(
-    "Linked Programme"
-  );
-  cy.get('[data-cy="table-data-linked-prog-name"]').contains("Cardiology");
-  // - linked prog - clear
-  cy.get(
-    '[data-cy="programmeMembership.id"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
-  ).click();
-  cy.get('[data-cy="linked-prog-table"]').should("not.exist");
-  cy.clickSelect('[data-cy="programmeMembership.id"]', null, true);
-
-  // - current WTE
-  cy.clickSelect('[data-cy="programmeMembership.wte"]', null, true);
-  cy.get('[data-cy="changes[0].type"]').contains("LTFT");
-  cy.get(".nhsuk-error-message").first().contains("Please enter a start date");
-  cy.get('[data-cy="changes[0].startDate"]').type("2022-01-01");
-  cy.get(".nhsuk-error-message")
-    .first()
-    .contains("Change date cannot be before today.");
-  cy.get('[data-cy="start-short-notice-warn"]').should("not.exist");
-  cy.get('[data-cy="changes[0].startDate"]').type(dayjs().format("YYYY-MM-DD"));
-  cy.get('[data-cy="start-short-notice-warn"]')
-    .should("exist")
-    .contains(shortNoticeMsg);
-  cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Please enter a proposed percentage"
-  );
-  cy.clickSelect('[data-cy="changes[0].wte"]', null, true);
-  cy.get('[data-cy="changes[0].wte"] > .nhsuk-error-message').contains(
-    "Before and after percentages must be different"
-  );
-  cy.clickSelect('[data-cy="programmeMembership.wte"]', "80%", false);
-  cy.clickSelect('[data-cy="changes[0].wte"]', "90%", false);
-  cy.get('[data-cy="wte-increase-return-warn"]')
-    .should("exist")
-    .contains(wteIncreaseMsg);
-  cy.get('[data-cy="wte-custom-warn"]').should("exist").contains(wteCustomMsg);
-  cy.get('[data-cy="cct-calc-btn"]').should("exist").click();
 });
 
 Cypress.Commands.add("checkAndFillPhGmcGdc", () => {

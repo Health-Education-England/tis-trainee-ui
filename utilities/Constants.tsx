@@ -300,7 +300,6 @@ export const PANEL_KEYS: any = {
   curricula: "Curricula",
   conditionsOfJoining: "Conditions of Joining"
 };
-const cct = "CCT calculation";
 const dodgyConnection = "Please check your internet connection and try again.";
 const formA = "Form R (Part A)";
 const formB = "Form R (Part B)";
@@ -314,7 +313,6 @@ const noUnsubmit = "Couldn't unsubmit your ";
 const noWithdraw = "Couldn't withdraw your ";
 
 export const toastErrText = {
-  deleteCct: `${noDel}${cct}.`,
   deleteFormA: `${noDel}${formA}.`,
   deleteFormB: `${noDel}${formB}.`,
   deleteLtft: `${noDel}${ltft}.`,
@@ -348,10 +346,6 @@ export const toastErrText = {
   markNotificationAsUnread: `Couldn't save this message as unread. ${dodgyConnection}`,
   archiveNotification: `Couldn't archive this message. ${dodgyConnection}`,
   fetchNotificationMessage: `Couldn't load this message. ${dodgyConnection}`,
-  loadCctSummaryListMessage: `Couldn't load your list of saved calculations. ${dodgyConnection}`,
-  loadSavedCctCalcMessage: `Couldn't load your saved calculation. ${dodgyConnection}`,
-  saveCctCalcMessage: `Couldn't save your CCT calculation. ${dodgyConnection}`,
-  updateCctCalcMessage: `Couldn't update your CCT calculation. ${dodgyConnection}`,
   loadLtftSummaryListMessage: `Couldn't load your list of saved Less than full-time (LTFT) forms. ${dodgyConnection}`
 };
 
@@ -363,7 +357,6 @@ const isUnsubmit = "has been unsubmitted.";
 const isWithdraw = "has been withdrawn.";
 
 export const toastSuccessText = {
-  deleteCct: `Your ${cct} ${isDel}`,
   deleteFormA: `Your draft ${formA} ${isDel}`,
   deleteFormB: `Your draft ${formB} ${isDel}`,
   deleteLtft: `Your draft ${ltft} ${isDel}`,
@@ -386,9 +379,7 @@ export const toastSuccessText = {
     "Email MFA is now set up. You will be asked for a new 6-digit code (sent to your email) when you next sign in.",
 
   signCoj: "Your Conditions of Joining has been signed.",
-  completeTraineeAction: "Your Outstanding Action has been updated.",
-  saveCctCalcMessage: "Your CCT calculation has been saved.",
-  updateCctCalcMessage: "Your CCT calculation has been updated."
+  completeTraineeAction: "Your Outstanding Action has been updated."
 };
 
 export const supportCatOptions = [

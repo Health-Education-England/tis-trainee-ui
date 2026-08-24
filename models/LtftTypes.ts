@@ -1,5 +1,5 @@
 import { SaveStatusProps } from "../components/forms/AutosaveMessage";
-import { CctCalculation, CctType } from "../redux/slices/cctSlice";
+import { CctCalculation, CctType } from "./CctTypes";
 import { ProfileSType } from "../utilities/ProfileUtilities";
 
 export type LtftFormStatus =
@@ -12,8 +12,8 @@ export type LtftFormStatus =
 
 export type LtftChange = {
   id?: string | null;
-  calculationId?: string | null;
-  type: CctType;
+  calculationId?: string | null; // TODO: check if still needed
+  type: CctType; //TODO: Check if still needed
   startDate: Date | string | null;
   altStartDate?: Date | string | null;
   endDate?: Date | string | null;
