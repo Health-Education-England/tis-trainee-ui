@@ -17,6 +17,7 @@ type VisibleFieldProps = {
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
+  options?: any;
 };
 
 function VisibleField({
@@ -25,7 +26,8 @@ function VisibleField({
   formErrors,
   pageIndex,
   jsonFormName,
-  canEdit
+  canEdit,
+  options
 }: Readonly<VisibleFieldProps>) {
   const viewState = getFieldViewState(field, formData);
   // Note: info fields are UI-only to help form completion
@@ -44,6 +46,7 @@ function VisibleField({
             pageIndex={pageIndex}
             jsonFormName={jsonFormName}
             canEdit={canEdit}
+            options={options}
           />
         ))}
       </>
@@ -86,9 +89,7 @@ function VisibleField({
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
           {formatEntryValue(
-            field.altDisplayVal
-              ? formData[field.altDisplayVal]
-              : formData[field.name],
+            resolveDisplayValue(field, formData, options),
             field.type
           )}
         </SummaryList.Value>
@@ -105,6 +106,19 @@ function VisibleField({
       </SummaryList.Row>
     </SummaryList>
   );
+}
+
+function resolveDisplayValue(field: Field, formData: FormData, options?: any) {
+  if (field.altDisplayVal) return formData[field.altDisplayVal];
+  const raw = formData[field.name];
+  const fieldOptions = field.optionsKey ? options?.[field.optionsKey] : null;
+  if (Array.isArray(fieldOptions)) {
+    const match = fieldOptions.find(
+      (o: any) => String(o.value) === String(raw)
+    );
+    if (match) return match.label;
+  }
+  return raw;
 }
 
 type FieldViewState = "hidden" | "editable" | "readOnly";
@@ -131,6 +145,7 @@ type FormViewBuilder = {
   formData: FormData;
   canEdit: boolean;
   formErrors: FormErrorsType;
+  options?: any;
   pageNotices?: Record<string, React.ReactNode>;
 };
 
@@ -139,6 +154,7 @@ export default function FormViewBuilder({
   formData,
   canEdit,
   formErrors,
+  options,
   pageNotices
 }: Readonly<FormViewBuilder>) {
   return (
@@ -163,6 +179,7 @@ export default function FormViewBuilder({
                     pageIndex={pageIndex}
                     jsonFormName={jsonForm.name}
                     canEdit={canEdit}
+                    options={options}
                   />
                 ))}
               </div>

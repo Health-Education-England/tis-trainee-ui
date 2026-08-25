@@ -2,6 +2,31 @@
   "name": "formB",
   "pages": [
     {
+      "pageName": "Programme Linkage",
+      "sections": [
+        {
+          "sectionHeader": "Link this form to a programme",
+          "fields": [
+            {
+              "name": "isArcp",
+              "label": "Why are you submitting your Form R?",
+              "type": "radio",
+              "optionsKey": "arcpOptions",
+              "visible": true,
+              "dependencies": ["programmeMembershipId"]
+            },
+            {
+              "name": "programmeMembershipId",
+              "label": "What programme will this form link to?",
+              "type": "select",
+              "visible": true,
+              "optionsKey": "linkedProgrammeOptions"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "pageName": "Personal Details",
       "importantTxtName": "formBImportantNotice",
       "expanderLinkName": "dataSource",

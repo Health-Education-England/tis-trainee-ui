@@ -12,10 +12,12 @@ import { formAValidationSchema as formAValidationSchemaPH } from "../../componen
 import formBJsonPH from "../../components/forms/form-builder/form-r/part-b-ph/formB.json";
 import { getFormBValidationSchema as getFormBValidationSchemaPH } from "../../components/forms/form-builder/form-r/part-b-ph/formBValidationSchema";
 import { useIsPhNonMedic } from "./useIsPhNonMedic";
+import { useLinkageOptions } from "./useLinkageOptions";
 
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const isPHnonMed = useIsPhNonMedic();
+  const formOptions = useLinkageOptions();
 
   let formJson: Form;
   let validationSchemaForView: any;
@@ -48,6 +50,7 @@ export const useFormRViewConfig = (formType: "A" | "B") => {
   return {
     formData,
     formJson,
-    validationSchemaForView
+    validationSchemaForView,
+    formOptions
   };
 };
