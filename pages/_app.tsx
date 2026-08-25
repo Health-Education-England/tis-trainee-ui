@@ -5,7 +5,8 @@ import React from "react";
 import { Provider } from "react-redux";
 import store from "../redux/store/store";
 import { Amplify } from "aws-amplify";
-import { I18n } from "aws-amplify/utils";
+import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
+import { I18n, sessionStorage } from "aws-amplify/utils";
 import config from "../aws-amplify/config";
 // The styles.css import below is needed for Authenticator default theme https://ui.docs.amplify.aws/components/authenticator
 import "@aws-amplify/ui-react/styles.css";
@@ -51,6 +52,9 @@ Amplify.configure({
     }
   }
 });
+
+// Store auth tokens in sessionStorage instead of the Amplify default (localStorage)
+cognitoUserPoolsTokenProvider.setKeyValueStorage(sessionStorage);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

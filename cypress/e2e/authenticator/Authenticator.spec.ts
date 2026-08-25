@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-const getPasswordStrengthItem = (index: number) =>
-  cy.get(`#amplify-id-\\:rg\\: > :nth-child(${index})`);
+const getPasswordStrengthItem = (text: string) =>
+  cy.get('input[name="password"]').last().closest("form").contains(text);
 
 const fillSignUpForm = ({
   username,
@@ -15,11 +15,11 @@ const fillSignUpForm = ({
   email: string;
   password: string;
 }) => {
-  cy.get("#amplify-id-\\:r0\\:-tab-signUp").click();
-  cy.get("#amplify-id-\\:r8\\:").type(username);
-  cy.get("#amplify-id-\\:rb\\:").type(familyName);
-  cy.get("#amplify-id-\\:re\\:").type(email);
-  cy.get("#amplify-id-\\:rh\\:").type(password).blur();
+  cy.contains('button[role="tab"]', "Create Account").click();
+  cy.get('input[name="given_name"]').type(username);
+  cy.get('input[name="family_name"]').type(familyName);
+  cy.get('input[name="email"]').last().type(email);
+  cy.get('input[name="password"]').last().type(password).blur();
 };
 
 const assertFooterLinks = (elNo: number, elNo2: number, elHref: string) => {
@@ -76,19 +76,23 @@ describe("Authenticator sign up", () => {
       "Password must have lower case letters",
       "Password must have numbers",
       "Password must have special characters"
-    ].forEach((text, idx) => {
-      getPasswordStrengthItem(idx + 1).should("contain.text", text);
+    ].forEach(text => {
+      getPasswordStrengthItem(text).should("be.visible");
     });
 
     // password matching
-    cy.get("#amplify-id-\\:rh\\:").clear().type("Neverguess123!");
-    cy.get("#amplify-id-\\:rk\\:").type("Different123!").blur();
-    cy.get("#amplify-id-\\:rj\\: > .amplify-text").should(
-      "contain.text",
-      "Your passwords must match"
+    cy.get('input[name="password"]').last().clear().type("Neverguess123!");
+    cy.get('input[name="confirm_password"]').type("Different123!").blur();
+    cy.contains(".amplify-text", "Your passwords must match").should(
+      "be.visible"
     );
-    cy.get("#amplify-id-\\:rk\\:").clear().type("Neverguess123!").blur();
-    cy.get("#amplify-id-\\:rj\\: > .amplify-text").should("not.exist");
+    cy.get('input[name="confirm_password"]')
+      .clear()
+      .type("Neverguess123!")
+      .blur();
+    cy.contains(".amplify-text", "Your passwords must match").should(
+      "not.exist"
+    );
 
     // checkboxes
     cy.get('div[data-cy="checkboxPrivacy"]').click();
@@ -99,6 +103,28 @@ describe("Authenticator sign up", () => {
 
     // footer links
     assertFooterLinks(1, 2, "when-i-sign-up");
+  });
+});
+
+describe("Authenticated session", () => {
+  before(() => {
+    cy.signInToTss(30000);
+  });
+
+  it("should store auth tokens in sessionStorage", () => {
+    cy.window().then(win => {
+      const sessionKeys = Object.keys(win.sessionStorage);
+      const localKeys = Object.keys(win.localStorage);
+
+      expect(
+        sessionKeys.some(key =>
+          key.startsWith("CognitoIdentityServiceProvider")
+        )
+      ).to.eq(true);
+      expect(
+        localKeys.some(key => key.startsWith("CognitoIdentityServiceProvider"))
+      ).to.eq(false);
+    });
   });
 });
 
