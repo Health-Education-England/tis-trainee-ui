@@ -26,16 +26,6 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("checkForFormLinkerAndComplete", () => {
-  cy.get("dialog").then($dialog => {
-    if ($dialog.is(":visible")) {
-      cy.get('[data-cy="isArcp1"]').click();
-      cy.clickSelect('[data-cy="programmeMembershipId"]');
-      cy.get('[data-cy="form-linker-submit-btn"]').click();
-    }
-  });
-});
-
 Cypress.Commands.add("startOver", () => {
   cy.get('[data-cy="startOverButton"]').should("exist").click();
   cy.get(".MuiDialogContentText-root").should(
