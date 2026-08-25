@@ -28,7 +28,6 @@ declare global {
         text: string | number | null = null,
         shouldExist: boolean = true
       ): Chainable<Element>;
-      checkForFormLinkerAndComplete(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       checkViewFields(fields: string[][]): Chainable<Element>;
