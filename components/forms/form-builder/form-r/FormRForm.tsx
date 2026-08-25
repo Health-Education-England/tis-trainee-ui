@@ -11,6 +11,7 @@ import { loadSavedFormA } from "../../../../redux/slices/formASlice";
 import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
+import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 type FormRParams = {
   id: string | undefined;
@@ -36,8 +37,25 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     formType === "A" ? state.formA.newFormId : state.formB.newFormId
   );
 
+  const traineeProfileData = useAppSelector(
+    state => state.traineeProfile.traineeProfileData
+  );
+
   const loadedFormIdRef = useRef(initialData?.id);
   loadedFormIdRef.current = initialData?.id;
+
+  const isInitialisedRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      isNewForm &&
+      !isInitialisedRef.current &&
+      traineeProfileData?.traineeTisId
+    ) {
+      isInitialisedRef.current = true;
+      FormRUtilities.loadNewForm(basePath, traineeProfileData);
+    }
+  }, [isNewForm, basePath, traineeProfileData]);
 
   useEffect(() => {
     if (isNewForm && newFormId) {
@@ -74,7 +92,9 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     );
   }
 
-  if (initialData?.lifecycleState === LifeCycleState.New) {
+  if (isNewForm && !initialData?.traineeTisId) return <Loading />;
+
+  if (!isNewForm && initialData?.lifecycleState === LifeCycleState.New) {
     return (
       <ErrorPage
         message={`Please return to the Form R Part ${formType} home page and try again.`}

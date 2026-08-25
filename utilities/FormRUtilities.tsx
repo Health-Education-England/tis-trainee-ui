@@ -7,7 +7,6 @@ import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBI
 import { DateType, DateUtilities, isWithinRange } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 
 export class FormRUtilities {
@@ -28,20 +27,15 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    traineeProfileData: TraineeProfile,
-    linkedFormRData: LinkedFormRDataType
+    traineeProfileData: TraineeProfile
   ) {
     if (pathName === "/formr-a") {
-      const formAInitialValues = ProfileToFormRPartAInitialValues(
-        traineeProfileData,
-        linkedFormRData
-      );
+      const formAInitialValues =
+        ProfileToFormRPartAInitialValues(traineeProfileData);
       store.dispatch(updatedFormA(formAInitialValues));
     } else if (pathName === "/formr-b") {
-      const formBInitialValues = ProfileToFormRPartBInitialValues(
-        traineeProfileData,
-        linkedFormRData
-      );
+      const formBInitialValues =
+        ProfileToFormRPartBInitialValues(traineeProfileData);
       store.dispatch(updatedFormB(formBInitialValues));
     }
   }
