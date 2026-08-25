@@ -15,7 +15,7 @@ jest.mock("aws-amplify/utils", () => ({
   sessionStorage: sessionStorageMock
 }));
 
-jest.mock("../../aws-amplify/config", () => ({
+jest.mock("../aws-amplify/config", () => ({
   USER_POOL_ID: "user-pool-id",
   APP_CLIENT_ID: "app-client-id",
   IDENTITY_POOL_ID: "identity-pool-id"
@@ -27,7 +27,7 @@ describe("_app", () => {
     jest.resetModules();
 
     jest.isolateModules(() => {
-      require("../_app");
+      require("../pages/_app");
     });
   });
 
