@@ -112,6 +112,7 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
+      <LinkedProgrammeSync />
       <FormBuilder options={formOptions} validationSchema={validationSchema} />
     </FormProvider>
   );

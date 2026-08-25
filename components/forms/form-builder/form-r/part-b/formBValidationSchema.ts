@@ -149,7 +149,25 @@ const covid19ValidationSchema = yup.object().shape({
 });
 
 export const formBValidationSchemaDefaultJson = {
-  // Personal details - section 1
+  // Programme linkage - section 1
+  isArcp: yup
+    .mixed()
+    .nullable()
+    .test(
+      "isArcp",
+      "Please select an option",
+      value =>
+        value === true ||
+        value === false ||
+        value === "true" ||
+        value === "false"
+    ),
+  programmeMembershipId: yup
+    .string()
+    .nullable()
+    .required("Please select a programme."),
+
+  // Personal details - section 2
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),
@@ -184,13 +202,13 @@ export const formBValidationSchemaDefaultJson = {
     ),
   dualSpecialty: yup.string(),
 
-  // Work - section 2
+  // Work - section 3
   work: yup
     .array()
     .of(WorkValidationSchema)
     .min(1, "At least one Type of Work is required"),
 
-  // TOOT - section 3
+  // TOOT - section 4
   sicknessAbsence: leaveValidation("Short and Long-term sickness absence"),
   parentalLeave: leaveValidation(
     "Parental leave (incl Maternity / Paternity leave)"
@@ -207,7 +225,7 @@ export const formBValidationSchemaDefaultJson = {
   otherLeave: leaveValidation("Other"),
   totalLeave: leaveTotalValidation("Total leave"),
 
-  // Declarations relating to Good Medical Practice - section 4
+  // Declarations relating to Good Medical Practice - section 5
   isHonest: booleanValidationSchema(honestValidationString),
   isHealthy: booleanValidationSchema(healthyValidationString),
   isWarned: yup
@@ -215,7 +233,7 @@ export const formBValidationSchemaDefaultJson = {
     .typeError(warningsValidationString)
     .required(warningsValidationString),
   isComplying: booleanValidationSchema(complyingValidationString),
-  // Summary of previous resolved/unresolved Form R Declarations - section 5/6
+  // Summary of previous resolved/unresolved Form R Declarations - section 6/7
   havePreviousDeclarations: yup
     .boolean()
     .typeError(havePreviousDeclarationsString)
@@ -234,7 +252,7 @@ export const formBValidationSchemaDefaultJson = {
     4096
   ),
 
-  // Summary of current resolved/ unresolved Form R Declarations - section 7/8
+  // Summary of current resolved/ unresolved Form R Declarations - section 8/9
   haveCurrentDeclarations: yup
     .boolean()
     .typeError(haveCurrentDeclarationsString)

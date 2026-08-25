@@ -23,6 +23,7 @@ import {
 } from "../Constants";
 import { ProfileUtilities } from "../ProfileUtilities";
 import { useIsPhNonMedic } from "./useIsPhNonMedic";
+import { useLinkageOptions } from "./useLinkageOptions";
 
 export const useFormRConfig = (formType: "A" | "B") => {
   const formName: FormName = formType === "A" ? "formA" : "formB";
@@ -30,6 +31,12 @@ export const useFormRConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const rawReferenceData = useAppSelector(selectAllReference);
   const isPHnonMed = useIsPhNonMedic();
+  const linkageOptions = useLinkageOptions();
+
+  const isArcpForForm =
+    formData?.isArcp === null || formData?.isArcp === undefined
+      ? formData?.isArcp
+      : String(formData.isArcp);
 
   let formJson: Form;
   let validationSchema: any;
@@ -47,9 +54,14 @@ export const useFormRConfig = (formType: "A" | "B") => {
     );
     formOptions = {
       ...referenceData,
-      programmeDeclarationOptions
+      programmeDeclarationOptions,
+      ...linkageOptions
     };
-    initialData = formData;
+
+    initialData = {
+      ...formData,
+      isArcp: isArcpForForm
+    };
   } else {
     const baseFormJson = isPHnonMed
       ? (formBJsonPH as Form)
@@ -82,16 +94,20 @@ export const useFormRConfig = (formType: "A" | "B") => {
     ];
     const covidProgressSelfRate = COVID_RESULT_DECLARATIONS;
 
-    formOptions = transformReferenceData({
-      ...rawReferenceData,
-      dbcInternal,
-      dbcExternal,
-      yesNo,
-      covidProgressSelfRate
-    });
+    formOptions = {
+      ...transformReferenceData({
+        ...rawReferenceData,
+        dbcInternal,
+        dbcExternal,
+        yesNo,
+        covidProgressSelfRate
+      }),
+      ...linkageOptions
+    };
 
     initialData = {
       ...formData,
+      isArcp: isArcpForForm,
       work: ProfileUtilities.sortWorkDesc((formData as FormRPartB)?.work)
     };
   }

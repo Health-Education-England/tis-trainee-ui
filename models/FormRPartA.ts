@@ -38,7 +38,7 @@ export interface FormRPartA extends IFormR {
   wholeTimeEquivalent: string;
   declarationType: string;
   otherImmigrationStatus: string;
-  isArcp?: boolean | null;
+  isArcp?: boolean | string | null;
   programmeMembershipId?: string | null;
   programmeName?: string | null;
 }
