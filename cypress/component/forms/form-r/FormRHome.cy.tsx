@@ -42,13 +42,6 @@ describe("FormRHome", () => {
 
     cy.wait("@getFormAs");
 
-    cy.get('[data-cy="formr-migration-warning"]')
-      .should("be.visible")
-      .and("contain", "Form-R Migration in Progress");
-    cy.get('[data-cy="formr-migration-warning-text2"]').should(
-      "contain",
-      "some existing form submissions may not be visible"
-    );
     cy.contains("Edit unsubmitted form").should("exist");
     cy.get("table").should("exist");
     cy.get('[data-cy="formr-previous-header"]').should("exist");
