@@ -6,19 +6,12 @@ import { FormProvider } from "../FormContext";
 import FormBuilder from "../FormBuilder";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
-import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
-import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import {
-  FormRUtilities,
-  makeWarningText,
-  processLinkedFormData
-} from "../../../../utilities/FormRUtilities";
-import { selectAllSubmittedforms } from "../../../../redux/slices/formsSlice";
 import { loadSavedFormA } from "../../../../redux/slices/formASlice";
 import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
+import { FormRUtilities } from "../../../../utilities/FormRUtilities";
 
 type FormRParams = {
   id: string | undefined;
@@ -48,16 +41,21 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     state => state.traineeProfile.traineeProfileData
   );
 
-  const submittedForms = useAppSelector(selectAllSubmittedforms);
-
-  const latestSubDate = submittedForms?.length
-    ? submittedForms[0].submissionDate
-    : null;
-
-  const showLinkerModal = isNewForm && initialData?.isArcp === undefined;
-
   const loadedFormIdRef = useRef(initialData?.id);
   loadedFormIdRef.current = initialData?.id;
+
+  const isInitialisedRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      isNewForm &&
+      !isInitialisedRef.current &&
+      traineeProfileData?.traineeTisId
+    ) {
+      isInitialisedRef.current = true;
+      FormRUtilities.loadNewForm(basePath, traineeProfileData);
+    }
+  }, [isNewForm, basePath, traineeProfileData]);
 
   useEffect(() => {
     if (isNewForm && newFormId) {
@@ -75,23 +73,6 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, formType]);
-
-  const handleModalSubmit = (data: LinkedFormRDataType) => {
-    const processedFormRData = processLinkedFormData(
-      data,
-      traineeProfileData.programmeMemberships
-    );
-
-    FormRUtilities.loadNewForm(
-      basePath,
-      traineeProfileData,
-      processedFormRData
-    );
-  };
-
-  const handleModalClose = () => {
-    history.push(basePath);
-  };
 
   if (formLoadStatus === "loading") return <Loading />;
 
@@ -111,22 +92,12 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     );
   }
 
-  if (initialData?.lifecycleState === LifeCycleState.New) {
+  if (isNewForm && !initialData?.traineeTisId) return <Loading />;
+
+  if (!isNewForm && initialData?.lifecycleState === LifeCycleState.New) {
     return (
       <ErrorPage
         message={`Please return to the Form R Part ${formType} home page and try again.`}
-      />
-    );
-  }
-
-  if (showLinkerModal) {
-    return (
-      <FormLinkerModal
-        isOpen={true}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
-        warningText={makeWarningText("new", latestSubDate)}
-        linkedFormData={{ isArcp: null, programmeMembershipId: null }}
       />
     );
   }

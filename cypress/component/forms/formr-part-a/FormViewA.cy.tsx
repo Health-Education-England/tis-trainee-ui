@@ -43,7 +43,6 @@ describe("FormRView (Part A)", () => {
     cy.contains("Review & submit").should("not.exist");
     cy.contains("Save a copy as a PDF").should("exist");
     cy.get('[data-cy="submissionDateTop"]').should("exist");
-    cy.get(".form-linker_summary").should("exist");
 
     // Check some formData fields are rendered
     cy.contains(submittedForm.forename as string).should("exist");
