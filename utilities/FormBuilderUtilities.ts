@@ -54,6 +54,7 @@ import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSl
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
 import { findLinkedProgramme } from "./CctUtilities";
+import { StringUtilities } from "./StringUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -437,7 +438,7 @@ export function setFormRDataForSubmit(
     lastModifiedDate: new Date(),
     submissionDate: new Date(),
     traineeTisId: formData.traineeTisId as string,
-    isArcp: formData.isArcp as boolean,
+    isArcp: StringUtilities.convertToBool(formData.isArcp),
     programmeMembershipId: formData.programmeMembershipId as string,
     programmeName: formData.programmeName as string,
     localOfficeName: formData.localOfficeName as string
