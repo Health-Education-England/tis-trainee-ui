@@ -178,9 +178,16 @@ const FormRReviewView = ({
           />
           {canEdit && (
             <Button
-              onClick={(e: { preventDefault: () => void }) => {
+              onClick={async (e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setIsSubmitting(true);
+                await saveDraftForm(
+                  formJson,
+                  formData as FormRPartA | FormRPartB,
+                  false,
+                  true
+                );
+                setIsSubmitting(false);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
