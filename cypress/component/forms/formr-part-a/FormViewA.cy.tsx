@@ -104,7 +104,9 @@ describe("FormRView (Part A)", () => {
     const draftForm = {
       ...formASavedDraft,
       programmeSpecialty: "some specialty",
-      completionDate: "2030-12-31"
+      completionDate: "2030-12-31",
+      isArcp: false,
+      programmeMembershipId: "pm-id-123"
     };
     const formId = draftForm.id;
 
