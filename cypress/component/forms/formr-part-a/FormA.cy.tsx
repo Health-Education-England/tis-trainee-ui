@@ -52,7 +52,7 @@ describe("FormRForm (Part A) - new form /new/create", () => {
 
     cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
       "have.text",
-      "Part 1 of 3 - Personal Details"
+      "Part 1 of 4 - Programme Linkage"
     );
   });
 });
@@ -84,6 +84,10 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
     cy.get('[data-cy="progress-header"]').should("exist");
   });
   it("shows check GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
+    cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+    cy.get("@firstArcpOption").click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.navNext();
     cy.checkAndFillPhGmcGdc();
   });
 });

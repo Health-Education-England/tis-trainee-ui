@@ -54,10 +54,8 @@ describe("FormRForm (Part B) - new form /new/create", () => {
 
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
-      "Part 1 of 10 - Personal Details"
+      "Part 1 of 11 - Programme Linkage"
     );
-    cy.get('[data-cy="forename-input"]').should("contain.value", "Billy");
-    cy.get('[data-cy="surname-input"]').should("contain.value", "Ocean");
   });
 
   it("allows a null prevRevalDate but errors when the date is before the UNIX epoch", () => {
@@ -72,6 +70,11 @@ describe("FormRForm (Part B) - new form /new/create", () => {
         </MemoryRouter>
       </Provider>
     );
+
+    cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+    cy.get("@firstArcpOption").click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.navNext();
 
     cy.get('[data-cy="prevRevalDate-input"]').should(
       "contain.value",
@@ -114,9 +117,14 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
       </Provider>
     );
 
+    cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+    cy.get("@firstArcpOption").click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.navNext();
+
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
-      "Part 1 of 10 - Personal Details"
+      "Part 2 of 11 - Personal Details"
     );
   });
 
