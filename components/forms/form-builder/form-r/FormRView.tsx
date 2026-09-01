@@ -47,7 +47,7 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   const dispatch = useAppDispatch();
   const fromCreate = location.state?.fromFormCreate;
 
-  const { formData, formJson, validationSchemaForView } =
+  const { formData, formJson, validationSchemaForView, formOptions } =
     useFormRViewConfig(formType);
 
   const formLoadStatus = useAppSelector(state =>
@@ -97,6 +97,7 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
       formData={formData}
       formJson={formJson}
       validationSchemaForView={validationSchemaForView}
+      formOptions={formOptions}
     />
   );
 }
@@ -105,12 +106,14 @@ type FormReviewViewProps = {
   formData: FormData;
   formJson: Form;
   validationSchemaForView?: any;
+  formOptions?: any;
 };
 
 const FormRReviewView = ({
   formData,
   formJson,
-  validationSchemaForView
+  validationSchemaForView,
+  formOptions
 }: FormReviewViewProps) => {
   const canEdit =
     formData?.lifecycleState === LifeCycleState.Draft ||
@@ -162,6 +165,7 @@ const FormRReviewView = ({
         formData={formData}
         canEdit={canEdit}
         formErrors={errors}
+        options={formOptions}
       />
 
       <WarningCallout>
