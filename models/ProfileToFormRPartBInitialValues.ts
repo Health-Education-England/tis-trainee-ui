@@ -3,11 +3,9 @@ import { FormRPartB, Work } from "./FormRPartB";
 import { LifeCycleState } from "./LifeCycleState";
 import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import { StringUtilities } from "../utilities/StringUtilities";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function ProfileToFormRPartBInitialValues(
-  traineeProfileData: TraineeProfile,
-  linkedFormRData?: LinkedFormRDataType
+  traineeProfileData: TraineeProfile
 ): FormRPartB {
   const pd = traineeProfileData.personalDetails;
   const work = traineeProfileData.placements.map<Work>(placement => ({
@@ -35,12 +33,12 @@ export function ProfileToFormRPartBInitialValues(
     gdcNumber: pd?.gdcNumber,
     publicHealthNumber: pd?.publicHealthNumber,
     email: "",
-    localOfficeName: linkedFormRData?.localOfficeName,
+    localOfficeName: "",
     prevRevalBody: pd?.prevRevalBody,
     prevRevalBodyOther: pd?.prevRevalBodyOther,
     currRevalDate: pd?.currRevalDate,
     prevRevalDate: pd?.prevRevalDate,
-    programmeSpecialty: linkedFormRData?.linkedProgramme?.programmeName,
+    programmeSpecialty: "",
     dualSpecialty: "",
     traineeTisId: traineeProfileData.traineeTisId,
     work: workFilteredSorted,
