@@ -11,7 +11,6 @@ import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
 import { RootState } from "../store/store";
-import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../models/LifeCycleState";
 interface IFormB {
   formBList: IFormR[];
@@ -78,11 +77,9 @@ export const loadSavedFormB = createAsyncThunk(
   "formB/fetchFormB",
   async (
     {
-      id,
-      linkedFormRData
+      id
     }: {
       id: string;
-      linkedFormRData?: LinkedFormRDataType;
     },
     { getState }
   ): Promise<ReturnedLoadSavedFormB> => {
@@ -93,15 +90,6 @@ export const loadSavedFormB = createAsyncThunk(
     const fetchedForm = (await formsService.getTraineeFormRPartBByFormId(id))
       .data;
     let finalForm: FormRPartB = fetchedForm;
-    if (linkedFormRData) {
-      finalForm = {
-        ...fetchedForm,
-        isArcp: linkedFormRData.isArcp,
-        programmeMembershipId: linkedFormRData.programmeMembershipId,
-        localOfficeName: linkedFormRData.localOfficeName,
-        programmeSpecialty: linkedFormRData.linkedProgramme?.programmeName
-      };
-    }
     return {
       finalForm,
       covidFlagStatus

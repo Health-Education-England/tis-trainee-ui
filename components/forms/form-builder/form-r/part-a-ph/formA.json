@@ -229,10 +229,9 @@
             {
               "name": "programmeSpecialty",
               "label": "Programme Specialty",
-              "type": "text",
-              "visible": true,
-              "readOnly": true,
-              "hint": "This field is pre-populated from your linked Programme."
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
             },
             {
               "name": "cctSpecialty1",

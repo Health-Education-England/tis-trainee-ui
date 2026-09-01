@@ -37,7 +37,6 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
 import {
   deleteLtft,
@@ -72,13 +71,12 @@ export function mapItemToNewFormat(item: KeyValue): {
 export async function loadTheSavedForm(
   pathName: string,
   id: string,
-  history: any,
-  linkedFormRData?: LinkedFormRDataType
+  history: any
 ) {
   if (pathName === "/formr-a") {
-    await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
+    await store.dispatch(loadSavedFormA({ id }));
   } else if (pathName === "/formr-b") {
-    await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
+    await store.dispatch(loadSavedFormB({ id }));
   } else if (pathName === "/ltft" || pathName === "/ltft/confirm") {
     await store.dispatch(loadSavedLtft(id));
   }

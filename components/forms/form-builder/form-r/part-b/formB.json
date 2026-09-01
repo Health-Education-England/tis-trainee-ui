@@ -105,11 +105,10 @@
             },
             {
               "name": "programmeSpecialty",
-              "label": "Programme/Training Specialty",
-              "type": "text",
-              "visible": true,
-              "readOnly": true,
-              "hint": "This field is pre-populated from your linked Programme."
+              "label": "Programme Specialty",
+              "type": "select",
+              "optionsKey": "curriculum",
+              "visible": true
             },
             {
               "name": "dualSpecialty",

@@ -5,11 +5,9 @@ import { ProfileUtilities } from "../utilities/ProfileUtilities";
 import store from "../redux/store/store";
 import { isValidOption } from "../utilities/FormBuilderUtilities";
 import { CombinedReferenceData } from "./CombinedReferenceData";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 
 export function ProfileToFormRPartAInitialValues(
-  traineeProfileData: TraineeProfile,
-  linkedFormRData?: LinkedFormRDataType
+  traineeProfileData: TraineeProfile
 ): FormRPartA {
   const refData: CombinedReferenceData = store.getState().reference.combinedRef;
   const pd = traineeProfileData.personalDetails;
@@ -27,7 +25,8 @@ export function ProfileToFormRPartAInitialValues(
     gmcNumber: pd?.gmcNumber,
     gdcNumber: pd?.gdcNumber,
     publicHealthNumber: pd?.publicHealthNumber,
-    localOfficeName: linkedFormRData?.localOfficeName,
+    // Note: derived from the linked programme once one is selected (TIS21-9015)
+    localOfficeName: "",
     dateOfBirth: pd?.dateOfBirth ?? null,
     gender: isValidOption("gender", pd?.gender, refData),
     immigrationStatus: "",
@@ -43,7 +42,7 @@ export function ProfileToFormRPartAInitialValues(
     mobileNumber: pd?.mobileNumber,
     email: "",
     isLeadingToCct: false,
-    programmeSpecialty: linkedFormRData?.linkedProgramme?.programmeName,
+    programmeSpecialty: "",
     cctSpecialty1: isValidOption("curriculum", curriculum?.curriculumName),
     cctSpecialty2: "",
     college: "",
@@ -58,7 +57,7 @@ export function ProfileToFormRPartAInitialValues(
     lifecycleState: LifeCycleState.Draft,
     submissionDate: null,
     lastModifiedDate: null,
-    isArcp: linkedFormRData?.isArcp,
-    programmeMembershipId: linkedFormRData?.programmeMembershipId
+    isArcp: null,
+    programmeMembershipId: null
   };
 }
