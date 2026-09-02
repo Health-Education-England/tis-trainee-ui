@@ -1,5 +1,5 @@
 import { SaveStatusProps } from "../components/forms/AutosaveMessage";
-import { CctCalculation, CctType } from "./CctTypes";
+import { CctCalculationNew } from "./CctTypes";
 import { ProfileSType } from "../utilities/ProfileUtilities";
 
 export type LtftFormStatus =
@@ -10,14 +10,21 @@ export type LtftFormStatus =
   | "APPROVED"
   | "REJECTED";
 
+// Note: used literal as `type` as it's always LTFT
+// The old `calculationId` replaced by LtftCctSnapshot below.
 export type LtftChange = {
   id?: string | null;
-  calculationId?: string | null; // TODO: check if still needed
-  type: CctType; //TODO: Check if still needed
+  type: "LTFT";
   startDate: Date | string | null;
   altStartDate?: Date | string | null;
   endDate?: Date | string | null;
   wte: number;
+};
+
+export type LtftCctSnapshot = {
+  calculationId: string;
+  snapshotTakenAt: string;
+  calculation: CctCalculationNew;
 };
 
 export type LtftExceptionalReasons = {
@@ -98,7 +105,7 @@ export type LtftObjNew = {
   managingDeanery: string;
 
   // change: LtftChange
-  type: CctType;
+  type: "LTFT";
   canGiveCompliantStartDate: boolean | null;
   startDate: Date | string | null;
   altStartDate: Date | string | null;
@@ -125,11 +132,14 @@ export type LtftObjNew = {
 
   // skilledWorkerVisaHolder moved to separate field
   skilledWorkerVisaHolder: boolean | null;
+
+  // null until the trainee links one
+  cctSnapshot: LtftCctSnapshot | null;
 };
 
+// Note: makes sense to move snapshot to formData
 export type LtftState = {
   formData: LtftObjNew;
-  LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
   canEdit: boolean;
@@ -188,6 +198,8 @@ export type LtftDto = {
     supportingInformation: string | null;
   };
   exceptionalReasons: LtftExceptionalReasons | null;
+
+  cctSnapshot?: LtftCctSnapshot | null; // optional: for old forms before this change
   tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;

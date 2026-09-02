@@ -49,6 +49,7 @@ export function populateLtftDraftNew(
       publicHealthNumber: personalDetails?.publicHealthNumber ?? null
     },
     skilledWorkerVisaHolder: null,
+    cctSnapshot: null,
     reasonsSelected: null,
     reasonsOtherDetail: null,
     supportingInformation: null,
@@ -136,6 +137,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       supportingInformation: ltftObj.exceptionalReasons ?? null,
       startDate: ltftObj.exceptionalReasonsDate ?? null
     },
+    cctSnapshot: ltftObj.cctSnapshot ?? null,
     status: {
       current: {
         state: ltftObj.status.current.state,
@@ -223,6 +225,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     },
     skilledWorkerVisaHolder:
       ltftDto.personalDetails.skilledWorkerVisaHolder ?? null,
+    // Note: no snapshot on applications submitted before the linkage feature.
+    cctSnapshot: ltftDto.cctSnapshot ?? null,
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     supportingInformation: ltftDto.reasons.supportingInformation ?? null,
