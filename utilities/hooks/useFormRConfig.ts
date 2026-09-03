@@ -33,11 +33,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
   const isPHnonMed = useIsPhNonMedic();
   const linkageOptions = useLinkageOptions();
 
-  const isArcpForForm =
-    formData?.isArcp === null || formData?.isArcp === undefined
-      ? formData?.isArcp
-      : String(formData.isArcp);
-
   let formJson: Form;
   let validationSchema: any;
   let formOptions: any;
@@ -59,8 +54,7 @@ export const useFormRConfig = (formType: "A" | "B") => {
     };
 
     initialData = {
-      ...formData,
-      isArcp: isArcpForForm
+      ...formData
     };
   } else {
     const baseFormJson = isPHnonMed
@@ -107,7 +101,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
 
     initialData = {
       ...formData,
-      isArcp: isArcpForForm,
       work: ProfileUtilities.sortWorkDesc((formData as FormRPartB)?.work)
     };
   }

@@ -70,7 +70,7 @@ export function ProfileToFormRPartBInitialValues(
     lastModifiedDate: null,
     isDeclarationAccepted: false,
     isConsentAccepted: false,
-    isArcp: linkedFormRData?.isArcp,
-    programmeMembershipId: linkedFormRData?.programmeMembershipId
+    isArcp: null,
+    programmeMembershipId: ""
   };
 }

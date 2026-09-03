@@ -53,7 +53,7 @@ import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSl
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
 import { findLinkedProgramme } from "./CctUtilities";
-import { StringUtilities } from "./StringUtilities";
+import { processLinkedFormData } from "./FormRUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -431,15 +431,24 @@ export function setFormRDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {
+  const { programmeMemberships } =
+    store.getState().traineeProfile.traineeProfileData;
+  const { linkedProgramme, localOfficeName } = processLinkedFormData(
+    {
+      isArcp: formData.isArcp as boolean,
+      programmeMembershipId: formData.programmeMembershipId as string
+    },
+    programmeMemberships
+  );
   const preciousFormDataBoth = {
     lifecycleState: LifeCycleState.Submitted,
     lastModifiedDate: new Date(),
     submissionDate: new Date(),
     traineeTisId: formData.traineeTisId as string,
-    isArcp: StringUtilities.convertToBool(formData.isArcp),
+    isArcp: formData.isArcp as boolean,
     programmeMembershipId: formData.programmeMembershipId as string,
-    programmeName: formData.programmeName as string,
-    localOfficeName: formData.localOfficeName as string
+    programmeName: linkedProgramme?.programmeName as string,
+    localOfficeName: localOfficeName as string
   };
 
   // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA
