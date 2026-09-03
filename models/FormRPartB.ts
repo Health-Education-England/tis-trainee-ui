@@ -45,7 +45,7 @@ export interface FormRPartB extends IFormR {
   covidDeclarationDto: CovidDeclaration | null;
   isDeclarationAccepted?: boolean;
   isConsentAccepted?: boolean;
-  isArcp?: boolean | string | null;
+  isArcp?: boolean | null;
   programmeMembershipId?: string | null;
   programmeName?: string | null;
 }

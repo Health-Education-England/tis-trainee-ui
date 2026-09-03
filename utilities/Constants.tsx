@@ -22,8 +22,8 @@ export const YES_NO_OPTIONS = [
 ];
 
 export const ARCP_OPTIONS = [
-  { label: "ARCP/Annual Submission", value: "true" },
-  { label: "New Starter", value: "false" }
+  { label: "ARCP/Annual Submission", value: "Yes" },
+  { label: "New Starter", value: "No" }
 ];
 
 type MFAOptionsType = {

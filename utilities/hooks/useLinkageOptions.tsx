@@ -25,10 +25,7 @@ export const useLinkageOptions = () => {
   }));
 
   return {
-    arcpOptions: ARCP_OPTIONS.map(opt => ({
-      ...opt,
-      value: String(opt.value)
-    })),
+    arcpOptions: ARCP_OPTIONS,
     linkedProgrammeOptions
   };
 };

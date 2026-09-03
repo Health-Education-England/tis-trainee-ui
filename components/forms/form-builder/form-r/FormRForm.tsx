@@ -12,7 +12,6 @@ import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
 import { FormRUtilities } from "../../../../utilities/FormRUtilities";
-import { LinkedProgrammeSync } from "../LinkedProgrammeSync";
 
 type FormRParams = {
   id: string | undefined;
@@ -113,7 +112,6 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
-      <LinkedProgrammeSync />
       <FormBuilder options={formOptions} validationSchema={validationSchema} />
     </FormProvider>
   );

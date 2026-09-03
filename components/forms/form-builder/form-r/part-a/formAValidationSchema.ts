@@ -14,17 +14,10 @@ const dateValidationSchema = (fieldName: string) =>
 
 export const formAValidationSchemaDefault = {
   isArcp: yup
-    .mixed()
-    .nullable()
-    .test(
-      "isArcp",
-      "Please select an option",
-      value =>
-        value === true ||
-        value === false ||
-        value === "true" ||
-        value === "false"
-    ),
+    .boolean()
+    .typeError("Please select an option")
+    .required("Please select an option")
+    .nullable(),
   programmeMembershipId: yup
     .string()
     .nullable()
