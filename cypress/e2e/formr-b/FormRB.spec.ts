@@ -31,6 +31,8 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
       .should("exist")
       .should("contain.text", "Autosave status: Waiting for new changes...");
     cy.get('[data-cy="startOverButton"]').should("not.exist");
+    cy.completeProgrammeLinkage();
+    cy.navNext();
     cy.get('[data-cy="forename-input"]').clear();
     cy.get("#forename-error").should("exist");
     cy.clearAndType('[data-cy="email-input"]', "test.reset@hee.nhs.uk");
@@ -42,6 +44,7 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
     cy.get(".nhsuk-header__menu-toggle").click();
     cy.get('[data-cy="Form R (B)"]').should("exist").click();
     cy.checkElement("btn-Edit saved draft form").click();
+    cy.navNext();
     cy.log(
       "No error message should be displayed until new changes or navigation"
     );
@@ -64,8 +67,9 @@ describe("Form R (Part B) - Submit a new form pt1", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form").click();
     cy.checkElement("homeLink");
+    cy.completeProgrammeLinkage();
     cy.navNext();
-    cy.checkElement("progress-header", "Part 1 of 10 - Personal Details");
+    cy.checkElement("progress-header", "Part 2 of 11 - Personal Details");
     cy.checkAndFillSection1();
     cy.checkElement("startOverButton", "Start over");
     cy.navNext();
@@ -86,7 +90,7 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
     cy.signInToTss(10000, "/formr-b");
     cy.checkElement("btn-Edit saved draft form").click();
     cy.checkElement("BtnShortcutToConfirm", null, false);
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       cy.navNext();
     }
     cy.checkAndFillSection6();
@@ -120,7 +124,6 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();
     cy.checkElement("BtnSubmit", "Submit Form").click();
-    cy.get('[data-cy="form-linker-submit-btn"]').click();
   });
 });
 

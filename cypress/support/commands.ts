@@ -125,6 +125,12 @@ Cypress.Commands.add("navNext", (forceClick?: boolean) => {
   cy.get('[data-cy="navNext"]').click({ force: forceClick });
 });
 
+Cypress.Commands.add("completeProgrammeLinkage", () => {
+  cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+  cy.get("@firstArcpOption").click();
+  cy.clickSelect('[data-cy="programmeMembershipId"]');
+});
+
 Cypress.Commands.add("clickRadioCheck", (selector: string) => {
   cy.get(selector).click();
 });
@@ -325,10 +331,6 @@ Cypress.Commands.add("checkAndFillFormASection2", () => {
     "have.text",
     "This field is pre-populated from your linked Programme."
   );
-  cy.get('[data-cy="programmeSpecialty-input"]').should(
-    "have.attr",
-    "readonly"
-  );
 
   cy.get("#college-error").should("exist");
   cy.get(".nhsuk-error-summary").should("exist");
@@ -440,10 +442,6 @@ Cypress.Commands.add("checkAndFillSection1", () => {
     .should("have.text", "Saving...");
 
   cy.get('[data-cy="currRevalDate-input"]').clear();
-  cy.get('[data-cy="programmeSpecialty-input"]').should(
-    "have.attr",
-    "readonly"
-  );
   cy.clickSelect('[data-cy="dualSpecialty"]', null, true);
   cy.get(
     '[data-cy="dualSpecialty"] > .autocomplete-select > .react-select__control > .react-select__indicators > .react-select__clear-indicator'
