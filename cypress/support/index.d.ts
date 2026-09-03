@@ -42,6 +42,7 @@ declare global {
       confirmCookie(): Chainable<Element>;
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
+      completeProgrammeLinkage(): Chainable<any>;
       signIn(): Chainable<Element>;
       signInToTss(
         waitTimeMs?: number,

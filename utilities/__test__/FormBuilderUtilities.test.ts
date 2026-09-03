@@ -93,13 +93,25 @@ describe("Set formData for submit", () => {
 });
 
 describe("Set formData programmeName for submit", () => {
-  it("should set programme name before submit", () => {
+  beforeEach(() => {
+    store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
+  });
+
+  it("should derive programme name and local office from the linked programme before submit", () => {
+    const linkedProgramme = mockTraineeProfile.programmeMemberships[0];
     const result = setFormRDataForSubmit(
       formAJson as Form,
-      formANew as FormRPartA
+      {
+        ...formANew,
+        programmeMembershipId: linkedProgramme.tisId
+      } as FormRPartA
     );
+
     expect((result as FormRPartA).programmeName).toEqual(
-      formANew.programmeName
+      linkedProgramme.programmeName
+    );
+    expect((result as FormRPartA).localOfficeName).toEqual(
+      linkedProgramme.managingDeanery
     );
   });
 });
