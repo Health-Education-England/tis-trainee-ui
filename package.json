@@ -83,6 +83,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:local-user": "cross-env NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED=true next dev",
     "build": "bash build.sh",
     "start": "next start",
     "lint": "next lint",
@@ -113,5 +114,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }
