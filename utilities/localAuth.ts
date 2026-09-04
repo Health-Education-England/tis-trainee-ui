@@ -56,17 +56,13 @@ export const fetchLocalAuthToken = async (): Promise<string> => {
     );
   }
 
-  const rawToken = (await response.json().then(data => data.token)).trim();
+  const rawToken = await response.json().then(data => data.token);
 
-  if (!rawToken) {
+  if (typeof rawToken !== "string" || !rawToken.trim()) {
     throw new Error("Local auth token response was empty.");
   }
 
-  if (rawToken.startsWith('"') && rawToken.endsWith('"')) {
-    return rawToken.slice(1, -1);
-  }
-
-  return rawToken;
+  return rawToken.trim();
 };
 
 export const decodeJwtPayload = <TPayload extends Record<string, unknown>>(

@@ -2,9 +2,9 @@ import {
   createLocalAuthTokenProvider,
   decodeJwtPayload,
   fetchLocalAuthToken,
+  getLocalAuthMfaPreference,
   getLocalAuthTokenEndpoint,
-  isLocalAuthBypassEnabled,
-  getLocalAuthMfaPreference
+  isLocalAuthBypassEnabled
 } from "../localAuth";
 
 const buildToken = (payload: Record<string, unknown>) => {
@@ -102,6 +102,21 @@ describe("localAuth utilities", () => {
       "Local auth token request failed with status 500."
     );
   });
+
+  it.each(["", "   ", undefined, null, 123])(
+    "should throw on an invalid local auth token value: %s",
+    async token => {
+      mockFetch({
+        ok: true,
+        status: 200,
+        json: jest.fn().mockResolvedValue({ token })
+      } as unknown as Response);
+
+      await expect(fetchLocalAuthToken()).rejects.toThrow(
+        "Local auth token response was empty."
+      );
+    }
+  );
 
   it("should decode JWT payload", () => {
     const payload = { sub: "abc", features: { actions: { enabled: true } } };
