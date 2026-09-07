@@ -39,6 +39,27 @@ You will also see any lint errors in the console.
 Note: To populate the form with data, you will need to run the Docker containers to start the back-end services. See
 [dev-handbook](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service) for more details on these services.
 
+### Local auth bypass (development only)
+
+`npm run dev:local-user` starts the app with the Amplify (Cognito) sign-in screen skipped, so you can work on the app without going through the login and MFA flow.
+
+It depends on the local nginx proxy from the
+[dev-handbook environment setup](https://github.com/Health-Education-England/dev-handbook/tree/main/tis-self-service/environment-setup),
+which must be running.
+
+To bypass Amplify login locally and use a JWT supplied by your local nginx proxy, set:
+
+- `NEXT_PUBLIC_LOCAL_AUTH_BYPASS_ENABLED="true"`
+- `NEXT_PUBLIC_LOCAL_AUTH_TOKEN_ENDPOINT="/local-user/token"` (optional override)
+
+Both are declared in [.env](.env), with the bypass defaulting to `"false"`. `npm run dev:local-user`
+overrides the first to `true` for that command only, so you never need to edit `.env` directly.
+
+Note: the local user's feature flags come from `initialization/user/local-user-claims.json` in the
+dev-handbook repo, not from this repo. If you add a new feature flag here, add it there too, 
+otherwise it will silently fall back to the defaults in
+[userSlice.ts](redux/slices/userSlice.ts) when running locally.
+
 ## Testing with BrowserStack
 
 Sign in [BrowserStack](https://www.browserstack.com/users/sign_in) with your work email. Start a web testing session by clicking `Live` on the menu bar. You can enter the URL of TSS Preprod/Prod for testing.<br />

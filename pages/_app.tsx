@@ -8,6 +8,10 @@ import { Amplify } from "aws-amplify";
 import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 import { I18n, sessionStorage } from "aws-amplify/utils";
 import config from "../aws-amplify/config";
+import {
+  createLocalAuthTokenProvider,
+  isLocalAuthBypassEnabled
+} from "../utilities/localAuth";
 // The styles.css import below is needed for Authenticator default theme https://ui.docs.amplify.aws/components/authenticator
 import "@aws-amplify/ui-react/styles.css";
 import Script from "next/script";
@@ -26,7 +30,7 @@ I18n.putVocabularies({
   }
 });
 
-Amplify.configure({
+const authConfig = {
   Auth: {
     Cognito: {
       userPoolId: config.USER_POOL_ID ?? "",
@@ -35,7 +39,7 @@ Amplify.configure({
       loginWith: {
         email: true
       },
-      signUpVerificationMethod: "code",
+      signUpVerificationMethod: "code" as const,
       userAttributes: {
         email: {
           required: true
@@ -51,10 +55,19 @@ Amplify.configure({
       }
     }
   }
-});
+};
 
-// Store auth tokens in sessionStorage instead of the Amplify default (localStorage)
-cognitoUserPoolsTokenProvider.setKeyValueStorage(sessionStorage);
+if (isLocalAuthBypassEnabled()) {
+  // Swap out Amplify's Cognito token provider so auth data never leaves the local token endpoint.
+  Amplify.configure(authConfig, {
+    Auth: { tokenProvider: createLocalAuthTokenProvider() }
+  });
+} else {
+  Amplify.configure(authConfig);
+
+  // Store auth tokens in sessionStorage instead of the Amplify default (localStorage)
+  cognitoUserPoolsTokenProvider.setKeyValueStorage(sessionStorage);
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

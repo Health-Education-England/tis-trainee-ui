@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchMFAPreference, fetchAuthSession } from "aws-amplify/auth";
 import { UserFeaturesType } from "../../models/FeatureFlags";
+import {
+  getLocalAuthMfaPreference,
+  isLocalAuthBypassEnabled
+} from "../../utilities/localAuth";
 
 export type CojVersionType = "GG9" | "GG10" | "GG11";
 
@@ -89,7 +93,10 @@ export const fetchUserSession = createAsyncThunk(
 export const getPreferredMfa = createAsyncThunk(
   "user/getPreferredMfa",
   async () => {
-    const mfaPreference = await fetchMFAPreference();
+    const mfaPreference = isLocalAuthBypassEnabled()
+      ? getLocalAuthMfaPreference()
+      : await fetchMFAPreference();
+
     return {
       preferred: mfaPreference.preferred,
       enabled: mfaPreference.enabled
