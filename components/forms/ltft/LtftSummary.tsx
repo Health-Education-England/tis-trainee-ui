@@ -35,6 +35,7 @@ import {
 import { Label } from "nhsuk-react-components";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftFormStatus, LtftSummaryObj } from "../../../models/LtftTypes";
+import { StringUtilities } from "../../../utilities/StringUtilities";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
@@ -164,7 +165,9 @@ const LtftSummary = ({
   }) => {
     return (
       <>
-        {props.row.original.status.replace(/_/g, " ")}
+        {StringUtilities.replaceUnderscoresWithSpaces(
+          props.row.original.status
+        )}
         {props.row.original.status === "UNSUBMITTED" &&
         props.row.original.modifiedByRole ? (
           <>
@@ -259,10 +262,8 @@ const LtftSummary = ({
           {props.row.original.status === "DRAFT" ? (
             <>{renderActionButton("Delete")}</>
           ) : null}
-          {props.row.original.status === "UNSUBMITTED" ? (
-            <>{renderActionButton("Withdraw")}</>
-          ) : null}
-          {props.row.original.status === "UNDER_REVIEW" ? (
+          {props.row.original.status === "UNSUBMITTED" ||
+          props.row.original.status === "UNDER_REVIEW" ? (
             <>{renderActionButton("Withdraw")}</>
           ) : null}
         </>
@@ -344,7 +345,7 @@ const LtftSummary = ({
                 data-cy={`filter${status}Ltft`}
                 name={`yesToShow${status}`}
                 value="yes"
-                label={status.replace(/_/g, " ")}
+                label={StringUtilities.replaceUnderscoresWithSpaces(status)}
                 checked={visibleStatuses[status]}
                 onChange={() => toggleStatus(status)}
               />

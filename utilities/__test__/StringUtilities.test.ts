@@ -90,3 +90,60 @@ it("should handle case-insensitive 'true' strings", () => {
   expect(StringUtilities.convertToBool("True")).toBe(true);
   expect(StringUtilities.convertToBool("tRuE")).toBe(true);
 });
+
+describe("capitalize", () => {
+  it("should capitalize the first letter and lowercase the rest", () => {
+    expect(StringUtilities.capitalize("SUBMITTED")).toEqual("Submitted");
+  });
+  it("should leave underscores untouched", () => {
+    expect(StringUtilities.capitalize("UNDER_REVIEW")).toEqual(
+      "Under_review"
+    );
+  });
+  it("should return the original value if blank", () => {
+    expect(StringUtilities.capitalize("")).toEqual("");
+    expect(StringUtilities.capitalize(undefined as unknown as string)).toEqual(
+      undefined
+    );
+  });
+});
+
+describe("replaceUnderscoresWithSpaces", () => {
+  it("should replace underscores with spaces", () => {
+    expect(StringUtilities.replaceUnderscoresWithSpaces("UNDER_REVIEW")).toEqual(
+      "UNDER REVIEW"
+    );
+  });
+  it("should leave case untouched", () => {
+    expect(StringUtilities.replaceUnderscoresWithSpaces("submitted")).toEqual(
+      "submitted"
+    );
+  });
+  it("should return the original value if blank", () => {
+    expect(StringUtilities.replaceUnderscoresWithSpaces("")).toEqual("");
+    expect(
+      StringUtilities.replaceUnderscoresWithSpaces(undefined as unknown as string)
+    ).toEqual(undefined);
+  });
+});
+
+describe("capitalizeAndReplaceUnderscores", () => {
+  it("should capitalize the first letter and lowercase the rest", () => {
+    expect(StringUtilities.capitalizeAndReplaceUnderscores("SUBMITTED")).toEqual(
+      "Submitted"
+    );
+  });
+  it("should replace underscores with spaces", () => {
+    expect(
+      StringUtilities.capitalizeAndReplaceUnderscores("UNDER_REVIEW")
+    ).toEqual("Under review");
+  });
+  it("should return the original value if blank", () => {
+    expect(StringUtilities.capitalizeAndReplaceUnderscores("")).toEqual("");
+    expect(
+      StringUtilities.capitalizeAndReplaceUnderscores(
+        undefined as unknown as string
+      )
+    ).toEqual(undefined);
+  });
+});

@@ -38,8 +38,19 @@ export class StringUtilities {
 
   public static capitalize(str: string): string {
     if (!str) return str;
-    const spaced = str.replace(/_/g, " ");
-    return spaced.charAt(0).toUpperCase() + spaced.slice(1).toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  public static replaceUnderscoresWithSpaces(str: string): string {
+    if (!str) return str;
+    return str.replace(/_/g, " ");
+  }
+
+  public static capitalizeAndReplaceUnderscores(str: string): string {
+    if (!str) return str;
+    return StringUtilities.capitalize(
+      StringUtilities.replaceUnderscoresWithSpaces(str)
+    );
   }
 
   public static convertToBool(
