@@ -23,7 +23,6 @@ import {
 } from "../Constants";
 import { ProfileUtilities } from "../ProfileUtilities";
 import { useIsPhNonMedic } from "./useIsPhNonMedic";
-import { useLinkageOptions } from "./useLinkageOptions";
 
 export const useFormRConfig = (formType: "A" | "B") => {
   const formName: FormName = formType === "A" ? "formA" : "formB";
@@ -31,7 +30,6 @@ export const useFormRConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const rawReferenceData = useAppSelector(selectAllReference);
   const isPHnonMed = useIsPhNonMedic();
-  const linkageOptions = useLinkageOptions();
 
   let formJson: Form;
   let validationSchema: any;
@@ -49,8 +47,7 @@ export const useFormRConfig = (formType: "A" | "B") => {
     );
     formOptions = {
       ...referenceData,
-      programmeDeclarationOptions,
-      ...linkageOptions
+      programmeDeclarationOptions
     };
 
     initialData = {
@@ -88,16 +85,13 @@ export const useFormRConfig = (formType: "A" | "B") => {
     ];
     const covidProgressSelfRate = COVID_RESULT_DECLARATIONS;
 
-    formOptions = {
-      ...transformReferenceData({
-        ...rawReferenceData,
-        dbcInternal,
-        dbcExternal,
-        yesNo,
-        covidProgressSelfRate
-      }),
-      ...linkageOptions
-    };
+    formOptions = transformReferenceData({
+      ...rawReferenceData,
+      dbcInternal,
+      dbcExternal,
+      yesNo,
+      covidProgressSelfRate
+    });
 
     initialData = {
       ...formData,

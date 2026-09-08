@@ -17,7 +17,6 @@ import { useLinkageOptions } from "./useLinkageOptions";
 export const useFormRViewConfig = (formType: "A" | "B") => {
   const activeCovid = useAppSelector(state => state.formB.displayCovid);
   const isPHnonMed = useIsPhNonMedic();
-  const formOptions = useLinkageOptions();
 
   let formJson: Form;
   let validationSchemaForView: any;
@@ -46,6 +45,7 @@ export const useFormRViewConfig = (formType: "A" | "B") => {
   }
 
   const formData = useSelectFormData(formJson.name) as FormRPartA | FormRPartB;
+  const formOptions = useLinkageOptions(formData?.isArcp);
 
   return {
     formData,

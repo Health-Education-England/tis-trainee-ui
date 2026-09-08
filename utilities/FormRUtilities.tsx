@@ -120,6 +120,23 @@ export function getLinkedProgrammeDetails(
   if (!programMembershipId || !programMemberships) return;
   return programMemberships.find(prog => prog.tisId === programMembershipId);
 }
+// Note: this keeps the chosen prog id and the other linkage fields together as a  set. If trainee changes mind or prog no longer valid, then the set is cleared.
+export function resolveLinkedProgrammeFields(
+  programmes: ProgrammeMembership[] | undefined,
+  isArcp: boolean,
+  programmeMembershipId: string | null | undefined
+) {
+  const linkedProgramme = filterProgrammesForLinker(
+    programmes ?? [],
+    isArcp
+  ).find(programme => programme.tisId === programmeMembershipId);
+
+  return {
+    programmeMembershipId: linkedProgramme?.tisId ?? "",
+    programmeName: linkedProgramme?.programmeName ?? "",
+    localOfficeName: linkedProgramme?.managingDeanery ?? ""
+  };
+}
 
 type ProcessedFormData = {
   isArcp: boolean | null;

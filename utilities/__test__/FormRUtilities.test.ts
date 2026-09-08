@@ -10,6 +10,7 @@ import {
   isFoundationProgramme,
   makeWarningText,
   processLinkedFormData,
+  resolveLinkedProgrammeFields,
   sortProgrammesForLinker
 } from "../FormRUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
@@ -110,6 +111,58 @@ describe("FormRUtilities - sortedProgrammesForLinker", () => {
       endDate: `${dayjs().year()}-12-31`,
       tisId: "2"
     });
+  });
+});
+
+describe("FormRUtilities - resolveLinkedProgrammeFields", () => {
+  const emptySet = {
+    programmeMembershipId: "",
+    programmeName: "",
+    localOfficeName: ""
+  };
+
+  it("should return the linked programme's details when it is valid", () => {
+    expect(
+      resolveLinkedProgrammeFields(mockProgrammesForLinkerTest, true, "3")
+    ).toEqual({
+      programmeMembershipId: "3",
+      programmeName: "Acute medicine",
+      localOfficeName: "East of England"
+    });
+  });
+
+  it("should empty set when isArcp choice no longer includes the linked programme", () => {
+    expect(
+      resolveLinkedProgrammeFields(mockProgrammesForLinkerTest, false, "3")
+    ).toEqual(emptySet);
+    expect(
+      resolveLinkedProgrammeFields(mockProgrammesForLinkerTest, true, "5")
+    ).toEqual(emptySet);
+  });
+
+  it("should empty the set when the prog is no longer in their profile", () => {
+    expect(
+      resolveLinkedProgrammeFields(
+        mockProgrammesForLinkerTest,
+        true,
+        "disappearedProgId"
+      )
+    ).toEqual(emptySet);
+  });
+
+  it("should return the empty set if yet to link prog", () => {
+    expect(
+      resolveLinkedProgrammeFields(mockProgrammesForLinkerTest, true, null)
+    ).toEqual(emptySet);
+    expect(
+      resolveLinkedProgrammeFields(mockProgrammesForLinkerTest, true, "")
+    ).toEqual(emptySet);
+  });
+
+  it("should return the empty set when no progs in the profile", () => {
+    expect(resolveLinkedProgrammeFields(undefined, true, "3")).toEqual(
+      emptySet
+    );
   });
 });
 
@@ -232,9 +285,7 @@ describe("FormRUtilities - isFoundationProgramme", () => {
   });
 
   it("should return true when a curriculum has the foundation subtype", () => {
-    const result = isFoundationProgramme(
-      mockProgrammeMembershipFoundation
-    );
+    const result = isFoundationProgramme(mockProgrammeMembershipFoundation);
     expect(result).toEqual(true);
   });
 

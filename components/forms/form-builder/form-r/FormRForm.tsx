@@ -3,7 +3,7 @@ import store from "../../../../redux/store/store";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { FormProvider } from "../FormContext";
-import FormBuilder from "../FormBuilder";
+import { FormRBuilder } from "./FormRBuilder";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
@@ -112,7 +112,7 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
-      <FormBuilder options={formOptions} validationSchema={validationSchema} />
+      <FormRBuilder options={formOptions} validationSchema={validationSchema} />
     </FormProvider>
   );
 }
