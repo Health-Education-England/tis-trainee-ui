@@ -38,7 +38,8 @@ export class StringUtilities {
 
   public static capitalize(str: string): string {
     if (!str) return str;
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    const spaced = str.replace(/_/g, " ");
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1).toLowerCase();
   }
 
   public static convertToBool(

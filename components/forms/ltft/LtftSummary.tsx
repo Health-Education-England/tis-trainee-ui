@@ -38,7 +38,13 @@ import { LtftFormStatus, LtftSummaryObj } from "../../../models/LtftTypes";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
-  "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED" | "REJECTED"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "WITHDRAWN"
+  | "DRAFT"
+  | "UNSUBMITTED"
+  | "REJECTED"
 >;
 
 type LtftSummaryType = "CURRENT" | "PREVIOUS";
@@ -62,6 +68,7 @@ const LtftSummary = ({
     Record<LtftFormStatusSub, boolean>
   >({
     SUBMITTED: true,
+    UNDER_REVIEW: true,
     APPROVED: true,
     WITHDRAWN: true,
     DRAFT: true,
@@ -157,7 +164,7 @@ const LtftSummary = ({
   }) => {
     return (
       <>
-        {props.row.original.status}
+        {props.row.original.status.replace(/_/g, " ")}
         {props.row.original.status === "UNSUBMITTED" &&
         props.row.original.modifiedByRole ? (
           <>
@@ -255,6 +262,9 @@ const LtftSummary = ({
           {props.row.original.status === "UNSUBMITTED" ? (
             <>{renderActionButton("Withdraw")}</>
           ) : null}
+          {props.row.original.status === "UNDER_REVIEW" ? (
+            <>{renderActionButton("Withdraw")}</>
+          ) : null}
         </>
       );
     };
@@ -312,7 +322,13 @@ const LtftSummary = ({
   if (ltftSummaryType === "CURRENT") {
     statusFilters = ["DRAFT", "UNSUBMITTED"];
   } else if (ltftSummaryType === "PREVIOUS") {
-    statusFilters = ["APPROVED", "REJECTED", "SUBMITTED", "WITHDRAWN"];
+    statusFilters = [
+      "APPROVED",
+      "REJECTED",
+      "SUBMITTED",
+      "UNDER_REVIEW",
+      "WITHDRAWN"
+    ];
   }
 
   let content: JSX.Element = <></>;
@@ -328,7 +344,7 @@ const LtftSummary = ({
                 data-cy={`filter${status}Ltft`}
                 name={`yesToShow${status}`}
                 value="yes"
-                label={status}
+                label={status.replace(/_/g, " ")}
                 checked={visibleStatuses[status]}
                 onChange={() => toggleStatus(status)}
               />
