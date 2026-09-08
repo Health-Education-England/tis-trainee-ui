@@ -46,7 +46,7 @@ export class StringUtilities {
     return str.replace(/_/g, " ");
   }
 
-  public static capitalizeAndReplaceUnderscores(str: string): string {
+  public static toSentenceCase(str: string): string {
     if (!str) return str;
     return StringUtilities.capitalize(
       StringUtilities.replaceUnderscoresWithSpaces(str)

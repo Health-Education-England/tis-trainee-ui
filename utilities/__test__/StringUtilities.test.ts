@@ -127,23 +127,19 @@ describe("replaceUnderscoresWithSpaces", () => {
   });
 });
 
-describe("capitalizeAndReplaceUnderscores", () => {
+describe("toSentenceCase", () => {
   it("should capitalize the first letter and lowercase the rest", () => {
-    expect(StringUtilities.capitalizeAndReplaceUnderscores("SUBMITTED")).toEqual(
-      "Submitted"
-    );
+    expect(StringUtilities.toSentenceCase("SUBMITTED")).toEqual("Submitted");
   });
   it("should replace underscores with spaces", () => {
-    expect(
-      StringUtilities.capitalizeAndReplaceUnderscores("UNDER_REVIEW")
-    ).toEqual("Under review");
+    expect(StringUtilities.toSentenceCase("UNDER_REVIEW")).toEqual(
+      "Under review"
+    );
   });
   it("should return the original value if blank", () => {
-    expect(StringUtilities.capitalizeAndReplaceUnderscores("")).toEqual("");
+    expect(StringUtilities.toSentenceCase("")).toEqual("");
     expect(
-      StringUtilities.capitalizeAndReplaceUnderscores(
-        undefined as unknown as string
-      )
+      StringUtilities.toSentenceCase(undefined as unknown as string)
     ).toEqual(undefined);
   });
 });
