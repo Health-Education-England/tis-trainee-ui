@@ -145,6 +145,11 @@ describe("FormRView (Part A)", () => {
     cy.get('[data-cy="edit-programmeSpecialty"]').should("not.exist");
     cy.get('[data-cy="edit-completionDate"]').should("exist");
     cy.get('[data-cy="isArcp-value"]').should("contain.text", "New Starter");
+    cy.get('[data-cy="localOfficeName-value"]').should(
+      "contain.text",
+      "Thames Valley"
+    );
+    cy.get('[data-cy="edit-localOfficeName"]').should("not.exist");
   });
 
   it("should fetch data and show loading when refreshing page (fromCreate=true persisted on first refresh, but store yet to be populated with fetched formData)", () => {

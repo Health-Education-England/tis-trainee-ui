@@ -291,6 +291,14 @@ export default function FormBuilder({
                 {section.fields.map((field: Field) => {
                   if (conditionalChildNames.has(field.name)) return null;
 
+                  const fieldValue = formData[field.name];
+                  // Note: this is to hide empty read-only field
+                  const isEmptyReadOnly =
+                    !!field.readOnly &&
+                    (fieldValue === null ||
+                      fieldValue === undefined ||
+                      fieldValue === "");
+
                   const fieldComponent = (
                     <FormFieldBuilder
                       field={field}
@@ -302,7 +310,9 @@ export default function FormBuilder({
                   );
                   return (
                     <div key={field.name} className="nhsuk-form-group">
-                      {showFormField(field, formData) ? fieldComponent : null}
+                      {showFormField(field, formData) && !isEmptyReadOnly
+                        ? fieldComponent
+                        : null}
                     </div>
                   );
                 })}

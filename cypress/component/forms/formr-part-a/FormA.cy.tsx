@@ -57,6 +57,31 @@ describe("FormRForm (Part A) - new form /new/create", () => {
   });
 });
 
+describe("FormRForm (Part A) - linked programme fields", () => {
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedFormALifecycleState(LifeCycleState.Draft));
+    store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/formr-a/new/create"]}>
+          <FormRForm formType="A" />
+        </MemoryRouter>
+      </Provider>
+    );
+  });
+
+  it("shows the local office only once a programme is linked", () => {
+    cy.get('[data-cy="localOfficeName-input"]').should("not.exist");
+    cy.get('[data-cy="isArcp-radios"] input').first().click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.get('[data-cy="localOfficeName-input"]')
+      .should("have.value", "East of England")
+      .and("have.attr", "readonly");
+  });
+});
+
 describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health Non-Medic", () => {
   beforeEach(() => {
     store.dispatch(resetToInitFormA());

@@ -21,6 +21,14 @@
               "type": "select",
               "visible": true,
               "optionsKey": "linkedProgrammeOptions"
+            },
+            {
+              "name": "localOfficeName",
+              "label": "Managing Deanery / Local Office",
+              "type": "text",
+              "visible": true,
+              "readOnly": true,
+              "hint": "This field is pre-populated from your linked Programme."
             }
           ]
         }
