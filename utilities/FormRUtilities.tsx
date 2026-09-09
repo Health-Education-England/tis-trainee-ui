@@ -134,7 +134,8 @@ export function resolveLinkedProgrammeFields(
   return {
     programmeMembershipId: linkedProgramme?.tisId ?? "",
     programmeName: linkedProgramme?.programmeName ?? "",
-    localOfficeName: linkedProgramme?.managingDeanery ?? ""
+    localOfficeName: linkedProgramme?.managingDeanery ?? "",
+    programmeSpecialty: linkedProgramme?.programmeName ?? ""
   };
 }
 

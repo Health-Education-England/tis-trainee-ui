@@ -118,7 +118,8 @@ describe("FormRUtilities - resolveLinkedProgrammeFields", () => {
   const emptySet = {
     programmeMembershipId: "",
     programmeName: "",
-    localOfficeName: ""
+    localOfficeName: "",
+    programmeSpecialty: ""
   };
 
   it("should return the linked programme's details when it is valid", () => {
@@ -127,7 +128,8 @@ describe("FormRUtilities - resolveLinkedProgrammeFields", () => {
     ).toEqual({
       programmeMembershipId: "3",
       programmeName: "Acute medicine",
-      localOfficeName: "East of England"
+      localOfficeName: "East of England",
+      programmeSpecialty: "Acute medicine"
     });
   });
 

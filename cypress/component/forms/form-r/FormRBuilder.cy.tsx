@@ -44,6 +44,9 @@ function LinkageDataDisplay() {
       <dd data-cy="linkage-data-display-localOfficeName">
         {String(formData.localOfficeName)}
       </dd>
+      <dd data-cy="linkage-data-display-programmeSpecialty">
+        {String(formData.programmeSpecialty)}
+      </dd>
     </dl>
   );
 }
@@ -99,6 +102,10 @@ describe("FormRBuilder - programme linkage", () => {
       "have.text",
       "Acute medicine"
     );
+    cy.get("[data-cy=linkage-data-display-programmeSpecialty]").should(
+      "have.text",
+      "Acute medicine"
+    );
 
     cy.get(newStarterRadio).click();
 
@@ -115,6 +122,10 @@ describe("FormRBuilder - programme linkage", () => {
       "have.text",
       ""
     );
+    cy.get("[data-cy=linkage-data-display-programmeSpecialty]").should(
+      "have.text",
+      ""
+    );
     cy.get(`${progSelect} .react-select__single-value`).should("not.exist");
 
     // ...and as agreed, always clear val for new select
@@ -127,12 +138,17 @@ describe("FormRBuilder - programme linkage", () => {
       isArcp: true,
       programmeMembershipId: acuteMedicineNow,
       programmeName: "Acute medicine",
-      localOfficeName: "East of England"
+      localOfficeName: "East of England",
+      programmeSpecialty: "Acute medicine"
     });
 
     cy.get("[data-cy=linkage-data-display-programmeMembershipId]").should(
       "have.text",
       acuteMedicineNow
+    );
+    cy.get("[data-cy=linkage-data-display-programmeSpecialty]").should(
+      "have.text",
+      "Acute medicine"
     );
     cy.get(`${progSelect} .react-select__single-value`).should(
       "contain.text",
@@ -145,7 +161,8 @@ describe("FormRBuilder - programme linkage", () => {
       isArcp: true,
       programmeMembershipId: newStarterOnlyProgramme,
       programmeName: "Adult psychiatry",
-      localOfficeName: "East of England"
+      localOfficeName: "East of England",
+      programmeSpecialty: "Adult psychiatry"
     });
 
     cy.get("[data-cy=linkage-data-display-programmeMembershipId]").should(
@@ -157,6 +174,10 @@ describe("FormRBuilder - programme linkage", () => {
       ""
     );
     cy.get("[data-cy=linkage-data-display-localOfficeName]").should(
+      "have.text",
+      ""
+    );
+    cy.get("[data-cy=linkage-data-display-programmeSpecialty]").should(
       "have.text",
       ""
     );
