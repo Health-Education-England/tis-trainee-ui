@@ -132,7 +132,7 @@ function getFieldViewState(field: Field, formData: FormData): FieldViewState {
     return "hidden";
   }
   if (showFormField(field, formData)) {
-    return "editable";
+    return field.readOnly ? "readOnly" : "editable";
   }
   if (field.showInViewWhenPopulated && isPopulated) {
     return "readOnly"; // Note: field flagged showInViewWhenPopulated e.g. a startDate stamped at submission on the "No" path, which is not editable, so no change link is rendered.

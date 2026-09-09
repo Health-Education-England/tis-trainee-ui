@@ -136,6 +136,14 @@ describe("FormRView (Part A)", () => {
 
     cy.contains(draftForm.forename).should("exist");
     cy.contains(draftForm.surname).should("exist");
+
+    // readonly so no change link
+    cy.get('[data-cy="programmeSpecialty-value"]').should(
+      "contain.text",
+      "some specialty"
+    );
+    cy.get('[data-cy="edit-programmeSpecialty"]').should("not.exist");
+    cy.get('[data-cy="edit-completionDate"]').should("exist");
   });
 
   it("should fetch data and show loading when refreshing page (fromCreate=true persisted on first refresh, but store yet to be populated with fetched formData)", () => {
