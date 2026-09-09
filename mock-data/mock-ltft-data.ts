@@ -134,6 +134,18 @@ export const mockLtftsList1 = [
     statusReason: "Rejected Reason",
     statusMessage: "Rejected Message",
     modifiedByRole: ""
+  },
+  {
+    id: "123e4567-e89b-12d3-a456-426614174001",
+    name: "Programme hours reduction 6",
+    programmeMembershipId: "2861fb68-6c08-4af5-a3a1-6f561a37b406",
+    status: "UNDER_REVIEW",
+    created: "2024-08-10T14:50:36.941Z",
+    lastModified: "2024-08-10T15:50:36.941Z",
+    formRef: "ltft_-1_007",
+    statusReason: "",
+    statusMessage: "",
+    modifiedByRole: ""
   }
 ];
 

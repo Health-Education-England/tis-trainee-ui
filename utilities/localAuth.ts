@@ -23,7 +23,7 @@ const decodeBase64UrlToJson = (encodedValue: string): string => {
   );
   const binaryValue = decodeBase64(paddedValue);
   const percentEncodedUtf8 = Array.from(binaryValue)
-    .map(char => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`)
+    .map(char => `%${(char.codePointAt(0) ?? 0).toString(16).padStart(2, "0")}`)
     .join("");
 
   return decodeURIComponent(percentEncodedUtf8);
@@ -105,12 +105,10 @@ export const createLocalAuthTokenProvider = (): LocalAuthTokenProvider => {
 
   return {
     getTokens: async () => {
-      if (!cachedTokenPromise) {
-        cachedTokenPromise = fetchLocalAuthToken().catch(() => {
-          cachedTokenPromise = undefined;
-          throw new Error("Failed to fetch local auth token.");
-        });
-      }
+      cachedTokenPromise ??= fetchLocalAuthToken().catch(() => {
+        cachedTokenPromise = undefined;
+        throw new Error("Failed to fetch local auth token.");
+      });
 
       const token = await cachedTokenPromise;
       const jwt = toJWT(token);

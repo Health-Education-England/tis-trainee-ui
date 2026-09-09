@@ -5,6 +5,7 @@ import { ProfileSType } from "../utilities/ProfileUtilities";
 export type LtftFormStatus =
   | "DRAFT"
   | "SUBMITTED"
+  | "UNDER_REVIEW"
   | "UNSUBMITTED"
   | "WITHDRAWN"
   | "APPROVED"

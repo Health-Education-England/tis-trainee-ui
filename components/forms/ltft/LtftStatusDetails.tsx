@@ -9,7 +9,7 @@ export const LtftStatusDetails = (formData: LtftObjNew) => {
   return (
     <>
       <h3 data-cy={`${currentState}-header`}>
-        {StringUtilities.capitalize(currentState)} application
+        {StringUtilities.toSentenceCase(currentState)} application
       </h3>
       <SummaryList>
         <SummaryList.Row>
@@ -26,7 +26,7 @@ export const LtftStatusDetails = (formData: LtftObjNew) => {
         </SummaryList.Row>
         <SummaryList.Row>
           <SummaryList.Key>
-            {StringUtilities.capitalize(currentState)} date
+            {StringUtilities.toSentenceCase(currentState)} date
           </SummaryList.Key>
           <SummaryList.Value data-cy="ltftModified">
             {dayjs(formData.lastModified).toString()}
@@ -38,7 +38,7 @@ export const LtftStatusDetails = (formData: LtftObjNew) => {
           <>
             <SummaryList.Row>
               <SummaryList.Key>
-                {StringUtilities.capitalize(currentState)} by
+                {StringUtilities.toSentenceCase(currentState)} by
               </SummaryList.Key>
               <SummaryList.Value data-cy="ltftModifiedBy">
                 {formData.status.current.modifiedBy.role === "TRAINEE"

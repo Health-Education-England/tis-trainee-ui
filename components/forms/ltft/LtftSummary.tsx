@@ -35,10 +35,17 @@ import {
 import { Label } from "nhsuk-react-components";
 import InfoTooltip from "../../common/InfoTooltip";
 import { LtftFormStatus, LtftSummaryObj } from "../../../models/LtftTypes";
+import { StringUtilities } from "../../../utilities/StringUtilities";
 
 type LtftFormStatusSub = Extract<
   LtftFormStatus,
-  "SUBMITTED" | "APPROVED" | "WITHDRAWN" | "DRAFT" | "UNSUBMITTED" | "REJECTED"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "WITHDRAWN"
+  | "DRAFT"
+  | "UNSUBMITTED"
+  | "REJECTED"
 >;
 
 type LtftSummaryType = "CURRENT" | "PREVIOUS";
@@ -62,6 +69,7 @@ const LtftSummary = ({
     Record<LtftFormStatusSub, boolean>
   >({
     SUBMITTED: true,
+    UNDER_REVIEW: true,
     APPROVED: true,
     WITHDRAWN: true,
     DRAFT: true,
@@ -157,7 +165,9 @@ const LtftSummary = ({
   }) => {
     return (
       <>
-        {props.row.original.status}
+        {StringUtilities.replaceUnderscoresWithSpaces(
+          props.row.original.status
+        )}
         {props.row.original.status === "UNSUBMITTED" &&
         props.row.original.modifiedByRole ? (
           <>
@@ -252,7 +262,8 @@ const LtftSummary = ({
           {props.row.original.status === "DRAFT" ? (
             <>{renderActionButton("Delete")}</>
           ) : null}
-          {props.row.original.status === "UNSUBMITTED" ? (
+          {props.row.original.status === "UNSUBMITTED" ||
+          props.row.original.status === "UNDER_REVIEW" ? (
             <>{renderActionButton("Withdraw")}</>
           ) : null}
         </>
@@ -312,7 +323,13 @@ const LtftSummary = ({
   if (ltftSummaryType === "CURRENT") {
     statusFilters = ["DRAFT", "UNSUBMITTED"];
   } else if (ltftSummaryType === "PREVIOUS") {
-    statusFilters = ["APPROVED", "REJECTED", "SUBMITTED", "WITHDRAWN"];
+    statusFilters = [
+      "APPROVED",
+      "REJECTED",
+      "SUBMITTED",
+      "UNDER_REVIEW",
+      "WITHDRAWN"
+    ];
   }
 
   let content: JSX.Element = <></>;
@@ -328,7 +345,7 @@ const LtftSummary = ({
                 data-cy={`filter${status}Ltft`}
                 name={`yesToShow${status}`}
                 value="yes"
-                label={status}
+                label={StringUtilities.replaceUnderscoresWithSpaces(status)}
                 checked={visibleStatuses[status]}
                 onChange={() => toggleStatus(status)}
               />

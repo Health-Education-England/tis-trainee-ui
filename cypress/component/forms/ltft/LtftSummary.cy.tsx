@@ -117,10 +117,11 @@ describe("LtftSummary Component", () => {
       );
     });
 
-    it("should display APPROVED, REJECTED, SUBMITTED, and WITHDRAWN filters", () => {
+    it("should display APPROVED, REJECTED, SUBMITTED, UNDER_REVIEW, and WITHDRAWN filters", () => {
       cy.get('[data-cy="filterAPPROVEDLtft"]').should("exist");
       cy.get('[data-cy="filterREJECTEDLtft"]').should("exist");
       cy.get('[data-cy="filterSUBMITTEDLtft"]').should("exist");
+      cy.get('[data-cy="filterUNDER_REVIEWLtft"]').should("exist");
       cy.get('[data-cy="filterWITHDRAWNLtft"]').should("exist");
       cy.get('[data-cy="filterDRAFTLtft"]').should("not.exist");
       cy.get('[data-cy="filterUNSUBMITTEDLtft"]').should("not.exist");
@@ -147,10 +148,23 @@ describe("LtftSummary Component", () => {
       cy.contains("Programme hours reduction 4").should("not.exist");
     });
 
+    it("should filter table when toggling UNDER_REVIEW status", () => {
+      cy.get('[data-cy="filterUNDER_REVIEWLtft"]').click();
+      cy.contains("Programme hours reduction 6").should("not.exist");
+    });
+
+    it("should only show a Withdraw button (not Unsubmit) for an UNDER_REVIEW application", () => {
+      cy.get('[data-cy="ltft-row-6"]').within(() => {
+        cy.get('[data-cy="withdrawLtftBtnLink"]').should("exist");
+        cy.get('[data-cy="unsubmitLtftBtnLink"]').should("not.exist");
+      });
+    });
+
     it("should show only relevant rows when multiple filters are combined", () => {
       cy.get('[data-cy="filterREJECTEDLtft"]').click();
       cy.get('[data-cy="filterSUBMITTEDLtft"]').click();
       cy.get('[data-cy="filterWITHDRAWNLtft"]').click();
+      cy.get('[data-cy="filterUNDER_REVIEWLtft"]').click();
       cy.get('[data-cy^="ltft-row-"]').should("have.length", 2);
       cy.get('[data-cy^="ltft-row-"]')
         .last()

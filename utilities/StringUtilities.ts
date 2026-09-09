@@ -41,6 +41,18 @@ export class StringUtilities {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
+  public static replaceUnderscoresWithSpaces(str: string): string {
+    if (!str) return str;
+    return str.replace(/_/g, " ");
+  }
+
+  public static toSentenceCase(str: string): string {
+    if (!str) return str;
+    return StringUtilities.capitalize(
+      StringUtilities.replaceUnderscoresWithSpaces(str)
+    );
+  }
+
   public static convertToBool(
     val: string | boolean | null | undefined
   ): boolean {
