@@ -113,9 +113,9 @@ function resolveDisplayValue(field: Field, formData: FormData, options?: any) {
   const raw = formData[field.name];
   const fieldOptions = field.optionsKey ? options?.[field.optionsKey] : null;
   if (Array.isArray(fieldOptions)) {
-    const match = fieldOptions.find(
-      (o: any) => String(o.value) === String(raw)
-    );
+    let rawKey = String(raw);
+    if (typeof raw === "boolean") rawKey = raw ? "Yes" : "No";
+    const match = fieldOptions.find((o: any) => String(o.value) === rawKey);
     if (match) return match.label;
   }
   return raw;
