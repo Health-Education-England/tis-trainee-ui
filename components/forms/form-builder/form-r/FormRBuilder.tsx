@@ -3,7 +3,10 @@ import FormBuilder from "../FormBuilder";
 import { useFormContext } from "../FormContext";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../../../redux/slices/traineeProfileSlice";
-import { resolveLinkedProgrammeFields } from "../../../../utilities/FormRUtilities";
+import {
+  hasStaleLinkage,
+  resolveLinkedProgrammeFields
+} from "../../../../utilities/FormRUtilities";
 import { useLinkageOptions } from "../../../../utilities/hooks/useLinkageOptions";
 
 type FormRBuilderProps = {
@@ -22,6 +25,7 @@ export function FormRBuilder({
 
   const isArcp = formData.isArcp;
   const programmeMembershipId = formData.programmeMembershipId;
+  const lifecycleState = formData.lifecycleState;
   const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(isArcp);
 
   //Note: prevIsArcpRef used to 'remember' the previous value (something the useEffect doesn't), so we can clear the programme linkage fields when use changes the isArcp  radio choice.
@@ -32,6 +36,7 @@ export function FormRBuilder({
     const previousIsArcp = prevIsArcpRef.current;
     prevIsArcpRef.current = isArcp;
     if (typeof isArcp !== "boolean") return;
+    if (hasStaleLinkage(lifecycleState, isArcp, programmeMembershipId)) return;
 
     const isArcpChanged =
       typeof previousIsArcp === "boolean" && previousIsArcp !== isArcp;
@@ -51,7 +56,13 @@ export function FormRBuilder({
         ? { ...prevFormData, ...resolvedProgFields }
         : prevFormData;
     });
-  }, [isArcp, programmeMembershipId, programmesArr, setFormData]);
+  }, [
+    isArcp,
+    programmeMembershipId,
+    lifecycleState,
+    programmesArr,
+    setFormData
+  ]);
 
   return (
     <FormBuilder

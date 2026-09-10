@@ -848,6 +848,18 @@ export const ltftLegacyStartDateGateSkipHint =
   "Skipping the Start date page keeps your original start date information intact for re-submission.";
 export const ltftLegacyStartDateGateCancelBtn = "Stay on this page";
 
+export const formRStaleLinkageGateLabel =
+  "Your linked Programme is no longer available";
+export const formRStaleLinkageGateText =
+  "Since you submitted this form, the linked programme you chose is no longer available. If you proceed then this linkage will be removed and you will need to re-link to one of the available programmes in the list.";
+export const formRStaleLinkageGateProceedBtn = "Proceed";
+export const formRStaleLinkageGateSkipBtn = "Skip";
+export const formRStaleLinkageGateSkipHint =
+  "If you skip this Programme Linkage page then the saved linkage will be re-submitted intact.";
+export const formRStaleLinkageGateCancelBtn = "Stay on this page";
+export const formRStaleLinkageNoticeText =
+  "When you first submitted this application, the linked programme was a valid choice. This is no longer the case but this linkage will be preserved as is unless you decide to edit the Programme Linkage section - where you will then need to choose a new programme from the current list of available options.";
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

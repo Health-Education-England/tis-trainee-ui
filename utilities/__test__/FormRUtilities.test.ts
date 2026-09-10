@@ -6,7 +6,9 @@ import {
   mockProgrammesForLinkerTestWithFoundation
 } from "../../mock-data/trainee-profile";
 import {
+  clearLinkageSection,
   filterProgrammesForLinker,
+  hasStaleLinkage,
   isFoundationProgramme,
   makeWarningText,
   processLinkedFormData,
@@ -14,9 +16,12 @@ import {
   sortProgrammesForLinker
 } from "../FormRUtilities";
 import { ProgrammeMembership } from "../../models/ProgrammeMembership";
+import { LifeCycleState } from "../../models/LifeCycleState";
+import store from "../../redux/store/store";
 
 jest.mock("../../redux/store/store", () => ({
-  dispatch: jest.fn()
+  dispatch: jest.fn(),
+  getState: jest.fn()
 }));
 
 jest.mock("../../redux/slices/formASlice", () => ({
@@ -266,6 +271,74 @@ describe("FormRUtilities - processLinkedFormData", () => {
     );
 
     expect(result.linkedProgramme).toBeUndefined();
+  });
+});
+
+describe("FormRUtilities - clearLinkageSection", () => {
+  it("should clear the linkage set and leave everything else alone", () => {
+    expect(
+      clearLinkageSection({
+        forename: "Anthony",
+        isArcp: true,
+        programmeMembershipId: "4",
+        programmeName: "Acute medicine",
+        localOfficeName: "East of England",
+        programmeSpecialty: "Acute medicine"
+      })
+    ).toEqual({
+      forename: "Anthony",
+      isArcp: true,
+      programmeMembershipId: "",
+      programmeName: "",
+      localOfficeName: "",
+      programmeSpecialty: ""
+    });
+  });
+});
+
+describe("FormRUtilities - hasStaleLinkage", () => {
+  const mockedGetState = store.getState as unknown as jest.Mock;
+
+  beforeEach(() => {
+    mockedGetState.mockReturnValue({
+      traineeProfile: {
+        traineeProfileData: {
+          programmeMemberships: mockProgrammesForLinkerTest
+        }
+      }
+    });
+  });
+
+  it("should be true for an UNSUBMITTED form whose linked programme is no longer offered", () => {
+    expect(hasStaleLinkage(LifeCycleState.Unsubmitted, true, "4")).toEqual(
+      true
+    );
+  });
+
+  it("should be false when the linked programme is still offered", () => {
+    expect(hasStaleLinkage(LifeCycleState.Unsubmitted, true, "1")).toEqual(
+      false
+    );
+  });
+
+  it("should be false for any lifecycle state other than UNSUBMITTED", () => {
+    expect(hasStaleLinkage(LifeCycleState.Draft, true, "4")).toEqual(false);
+    expect(hasStaleLinkage(LifeCycleState.Submitted, true, "4")).toEqual(false);
+  });
+
+  it("should be false when there is no linkage to preserve", () => {
+    expect(hasStaleLinkage(LifeCycleState.Unsubmitted, true, "")).toEqual(
+      false
+    );
+    expect(hasStaleLinkage(LifeCycleState.Unsubmitted, true, null)).toEqual(
+      false
+    );
+  });
+
+  it("should be false when isArcp has not been answered", () => {
+    expect(hasStaleLinkage(LifeCycleState.Unsubmitted, null, "4")).toEqual(
+      false
+    );
   });
 });
 

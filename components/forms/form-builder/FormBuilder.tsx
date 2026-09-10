@@ -162,10 +162,21 @@ export default function FormBuilder({
   const pages = jsonForm.pages;
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);
-  const [currentPage, setCurrentPage] = useState(initialPageValue);
+  const gatedInitialPage = () =>
+    getPageGate(pages[initialPageValue]?.gatedIf)?.shouldGate(formData)
+      ? initialPageValue
+      : null;
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (gatedInitialPage() === null) return initialPageValue;
+    return initialPageValue === lastPage
+      ? initialPageValue - 1
+      : initialPageValue + 1;
+  });
   const [formErrors, setFormErrors] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pendingGatePage, setPendingGatePage] = useState<number | null>(null);
+  const [pendingGatePage, setPendingGatePage] = useState<number | null>(
+    gatedInitialPage
+  );
   const canEditStatusLtft = useAppSelector(state => state.ltft.canEdit);
   const location = useLocation<LocationState>();
 

@@ -1,10 +1,16 @@
 import { mount } from "cypress/react";
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter, Route, Router, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
+import history from "../../../../components/navigation/history";
 import { FormRView } from "../../../../components/forms/form-builder/form-r/FormRView";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
 import { formASavedDraft } from "../../../../mock-data/draft-formr-parta";
+import {
+  mockPersonalDetails,
+  mockProgrammesForLinkerTest
+} from "../../../../mock-data/trainee-profile";
+import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
 import {
   resetToInitFormA,
   updatedFormA
@@ -222,5 +228,98 @@ describe("FormRView (Part A)", () => {
     cy.contains("Please return to Form R Part A home and try again.").should(
       "exist"
     );
+  });
+});
+
+describe("FormRView (Part A) - stale linkage on an UNSUBMITTED form", () => {
+  const unsubmittedStaleForm = {
+    ...formASavedDraft,
+    lifecycleState: LifeCycleState.Unsubmitted,
+    programmeSpecialty: "Acute medicine",
+    completionDate: "2030-12-31",
+    isArcp: true,
+    programmeMembershipId: "4",
+    programmeName: "Acute medicine",
+    localOfficeName: "East of England"
+  };
+
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(
+      updatedTraineeProfileData({
+        traineeTisId: "testid",
+        personalDetails: mockPersonalDetails,
+        programmeMemberships: mockProgrammesForLinkerTest,
+        placements: [],
+        qualifications: []
+      })
+    );
+    store.dispatch(updatedFormA(unsubmittedStaleForm));
+    cy.intercept(
+      "GET",
+      `/api/forms/formr-parta/${unsubmittedStaleForm.id}`,
+      unsubmittedStaleForm
+    ).as("getUnsubmittedForm");
+    history.push(`/formr-a/${unsubmittedStaleForm.id}/view`);
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Switch>
+            <Route exact path="/formr-a/:id/view">
+              <FormRView formType="A" />
+            </Route>
+            <Route path="/formr-a/:id/create">
+              <div data-cy="linkage-form-page">Form Page</div>
+            </Route>
+          </Switch>
+        </Router>
+      </Provider>
+    );
+
+    cy.wait("@getUnsubmittedForm");
+  });
+
+  it("shows the preserved linkage with a notice instead of change links", () => {
+    cy.get('[data-cy="staleLinkageNote"]').should("exist");
+    cy.get('[data-cy="updateStaleLinkage"]').should("exist");
+    cy.get('[data-cy="programmeMembershipId-value"]').should(
+      "contain.text",
+      "Acute medicine"
+    );
+    cy.get('[data-cy="edit-programmeMembershipId"]').should("not.exist");
+    cy.get('[data-cy="edit-isArcp"]').should("not.exist");
+    cy.get('[data-cy="edit-completionDate"]').should("exist");
+  });
+
+  it("keeps the linkage when the trainee cancels the update", () => {
+    cy.get('[data-cy="updateStaleLinkage"]').click();
+    cy.get('[data-cy="actionModalWarning"]').should("exist");
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="linkage-form-page"]').should("not.exist");
+    cy.get('[data-cy="programmeMembershipId-value"]').should(
+      "contain.text",
+      "Acute medicine"
+    );
+  });
+
+  it("clears the linkage and opens the form when the trainee confirms", () => {
+    cy.get('[data-cy="updateStaleLinkage"]').click();
+    cy.get('[data-cy="actionModalWarning"]').should(
+      "contain.text",
+      "the linked programme you chose is no longer available"
+    );
+    cy.contains("button", "Confirm & Continue").click();
+    cy.get('[data-cy="linkage-form-page"]')
+      .should("exist")
+      .then(() => {
+        const savedForm = store.getState().formA.formData;
+        expect(savedForm.programmeMembershipId).to.equal("");
+        expect(savedForm.programmeName).to.equal("");
+        expect(savedForm.localOfficeName).to.equal("");
+        expect(savedForm.programmeSpecialty).to.equal("");
+        expect(savedForm.isArcp).to.equal(true);
+        expect(store.getState().formA.editPageNumber).to.equal(0);
+      });
   });
 });

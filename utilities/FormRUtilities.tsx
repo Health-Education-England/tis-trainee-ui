@@ -8,6 +8,8 @@ import { DateType, DateUtilities, isWithinRange } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { LifeCycleState } from "../models/LifeCycleState";
+import type { FormData } from "../components/forms/form-builder/FormBuilder";
 
 export type LinkedFormRDataType = {
   isArcp: null | boolean;
@@ -137,6 +139,30 @@ export function resolveLinkedProgrammeFields(
     localOfficeName: linkedProgramme?.managingDeanery ?? "",
     programmeSpecialty: linkedProgramme?.programmeName ?? ""
   };
+}
+
+export const clearLinkageSection = (formData: FormData): FormData => ({
+  ...formData,
+  programmeMembershipId: "",
+  programmeName: "",
+  localOfficeName: "",
+  programmeSpecialty: ""
+});
+
+export function hasStaleLinkage(
+  lifecycleState: LifeCycleState | undefined,
+  isArcp: boolean | null | undefined,
+  programmeMembershipId: string | null | undefined
+): boolean {
+  if (lifecycleState !== LifeCycleState.Unsubmitted) return false;
+  if (!programmeMembershipId || typeof isArcp !== "boolean") return false;
+
+  const { programmeMemberships } =
+    store.getState().traineeProfile.traineeProfileData;
+
+  return !filterProgrammesForLinker(programmeMemberships ?? [], isArcp).some(
+    programme => programme.tisId === programmeMembershipId
+  );
 }
 
 type ProcessedFormData = {

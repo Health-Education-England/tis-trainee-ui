@@ -19,7 +19,11 @@ const FormRListBtn = ({ pathName }: FormsListBtnType) => {
 
   const handleBtnClick = () => {
     if (draftFormProps?.id) {
-      history.push(`${pathName}/${draftFormProps.id}/create`);
+      const routeEnd =
+        draftFormProps.lifecycleState === LifeCycleState.Unsubmitted
+          ? "view"
+          : "create";
+      history.push(`${pathName}/${draftFormProps.id}/${routeEnd}`);
     } else {
       formName === "formA"
         ? dispatch(updatedFormALifecycleState(LifeCycleState.Draft))

@@ -3,6 +3,7 @@
   "pages": [
     {
       "pageName": "Programme Linkage",
+      "gatedIf": "formRStaleLinkage",
       "sections": [
         {
           "sectionHeader": "Link this form to a programme",
@@ -20,7 +21,8 @@
               "label": "What programme will this form link to?",
               "type": "select",
               "visible": true,
-              "optionsKey": "linkedProgrammeOptions"
+              "optionsKey": "linkedProgrammeOptions",
+              "altDisplayVal": "programmeName"
             },
             {
               "name": "localOfficeName",

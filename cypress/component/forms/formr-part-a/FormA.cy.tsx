@@ -57,6 +57,83 @@ describe("FormRForm (Part A) - new form /new/create", () => {
   });
 });
 
+describe("FormR Part A - UNSUBMITTED form with stale prog linkage", () => {
+  const unsubmittedStaleForm = {
+    ...formASavedDraft,
+    lifecycleState: LifeCycleState.Unsubmitted,
+    isArcp: true,
+    programmeMembershipId: "4",
+    programmeName: "Acute medicine",
+    localOfficeName: "East of England",
+    programmeSpecialty: "Acute medicine"
+  };
+
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
+    store.dispatch(updatedFormA(unsubmittedStaleForm));
+    mount(
+      <Provider store={store}>
+        <MemoryRouter
+          initialEntries={[`/formr-a/${unsubmittedStaleForm.id}/create`]}
+        >
+          <Route path="/formr-a/:id/create">
+            <FormRForm formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+  });
+
+  it("should show warning before allowign Programme Linkage page edit", () => {
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+    cy.get('[data-cy="pageGateText"]').should(
+      "contain.text",
+      "the linked programme you chose is no longer available"
+    );
+  });
+
+  it("prevents access to gated page until warning is actioned", () => {
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "not.have.text",
+      "Part 1 of 4 - Programme Linkage"
+    );
+    cy.get('[data-cy="programmeMembershipId"]').should("not.exist");
+  });
+
+  it("prevents access to gated page when the warning is cancelled", () => {
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "have.text",
+      "Part 2 of 4 - Personal Details"
+    );
+    cy.get('[data-cy="localOfficeName-input"]').should("not.exist");
+  });
+
+  it("keeps the linkage as is and steps over the gated page when 'skip' is chosen", () => {
+    cy.get('[data-cy="gateSkipBtn"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "have.text",
+      "Part 2 of 4 - Personal Details"
+    );
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("exist");
+  });
+
+  it("clears the programme linkage when 'proceed' is chosen", () => {
+    cy.get('[data-cy="gateProceedBtn"]').click();
+    cy.get('[data-cy="pageGateWarning"]').should("not.exist");
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "have.text",
+      "Part 1 of 4 - Programme Linkage"
+    );
+    cy.get('[data-cy="localOfficeName-input"]').should("not.exist");
+  });
+});
+
 describe("FormRForm (Part A) - linked programme fields", () => {
   beforeEach(() => {
     store.dispatch(resetToInitFormA());

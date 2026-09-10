@@ -7,15 +7,29 @@ import {
   Button,
   Col,
   Container,
+  InsetText,
   Row,
   WarningCallout
 } from "nhsuk-react-components";
-import { FormRUtilities } from "../../../../utilities/FormRUtilities";
+import {
+  clearLinkageSection,
+  FormRUtilities,
+  hasStaleLinkage
+} from "../../../../utilities/FormRUtilities";
+import {
+  formRStaleLinkageGateLabel,
+  formRStaleLinkageGateText,
+  formRStaleLinkageNoticeText
+} from "../../../../utilities/Constants";
 import {
   saveDraftForm,
   createErrorObject,
+  getEditPageLocation,
+  setEditPageNumber,
   validateFields
 } from "../../../../utilities/FormBuilderUtilities";
+import { ActionModal } from "../../../common/ActionModal";
+import history from "../../../navigation/history";
 import { StartOverButton } from "../../StartOverButton";
 import { Form, FormData, FormErrors } from "../FormBuilder";
 import Declarations from "../../Declarations";
@@ -25,8 +39,14 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
-import { loadSavedFormA } from "../../../../redux/slices/formASlice";
-import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
+import {
+  loadSavedFormA,
+  updatedFormA
+} from "../../../../redux/slices/formASlice";
+import {
+  loadSavedFormB,
+  updatedFormB
+} from "../../../../redux/slices/formBSlice";
 import { useFormRViewConfig } from "../../../../utilities/hooks/useFormRViewConfig";
 
 type FormRParams = {
@@ -40,6 +60,8 @@ type LocationState = {
 type UnifiedFormRViewProps = {
   formType: "A" | "B";
 };
+
+const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
 export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   const { id } = useParams<FormRParams>();
@@ -120,9 +142,38 @@ const FormRReviewView = ({
     formData?.lifecycleState === LifeCycleState.New ||
     formData?.lifecycleState === LifeCycleState.Unsubmitted;
 
+  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
+  const [showStaleLinkageModal, setShowStaleLinkageModal] = useState(false);
+
+  const showStaleLinkageNotice =
+    canEdit &&
+    hasStaleLinkage(
+      formData?.lifecycleState,
+      formData?.isArcp,
+      formData?.programmeMembershipId
+    );
+
+  const goToLinkagePage = () => {
+    setEditPageNumber(
+      formJson.name,
+      formJson.pages.findIndex(page => page.pageName === PROG_LINK_PAGE_NAME)
+    );
+    history.push(getEditPageLocation(formJson.name, "programmeMembershipId"));
+  };
+
+  const handleStaleLinkageEditConfirm = () => {
+    const clearedFormData = clearLinkageSection(formData);
+    if (formJson.name === "formA") {
+      dispatch(updatedFormA(clearedFormData as FormRPartA));
+    } else {
+      dispatch(updatedFormB(clearedFormData as FormRPartB));
+    }
+    setShowStaleLinkageModal(false);
+    goToLinkagePage();
+  };
 
   const allPagesFields = useMemo(() => {
     return formJson.pages.flatMap(page =>
@@ -166,6 +217,22 @@ const FormRReviewView = ({
         canEdit={canEdit}
         formErrors={errors}
         options={formOptions}
+        pageNotices={
+          showStaleLinkageNotice
+            ? {
+                [PROG_LINK_PAGE_NAME]: (
+                  <StaleLinkageNotice
+                    onEditClick={() => setShowStaleLinkageModal(true)}
+                  />
+                )
+              }
+            : undefined
+        }
+        lockedFields={
+          showStaleLinkageNotice
+            ? new Set(["isArcp", "programmeMembershipId"])
+            : undefined
+        }
       />
 
       <WarningCallout>
@@ -233,6 +300,29 @@ const FormRReviewView = ({
           formData.submissionDate,
           "submissionDate"
         )}
+      <ActionModal
+        onSubmit={handleStaleLinkageEditConfirm}
+        isOpen={showStaleLinkageModal}
+        onClose={() => setShowStaleLinkageModal(false)}
+        cancelBtnText="Cancel"
+        warningLabel={formRStaleLinkageGateLabel}
+        warningText={formRStaleLinkageGateText}
+        submittingBtnText=""
+        isSubmitting={false}
+      />
     </>
   );
 };
+
+function StaleLinkageNotice({
+  onEditClick
+}: Readonly<{ onEditClick: () => void }>) {
+  return (
+    <InsetText data-cy="staleLinkageNote">
+      <p>{formRStaleLinkageNoticeText}</p>
+      <Button type="button" data-cy="updateStaleLinkage" onClick={onEditClick}>
+        Update programme linkage
+      </Button>
+    </InsetText>
+  );
+}

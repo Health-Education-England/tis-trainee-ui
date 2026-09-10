@@ -18,6 +18,7 @@ type VisibleFieldProps = {
   jsonFormName: FormName;
   canEdit: boolean;
   options?: any;
+  lockedFields?: Set<string>;
 };
 
 function VisibleField({
@@ -27,7 +28,8 @@ function VisibleField({
   pageIndex,
   jsonFormName,
   canEdit,
-  options
+  options,
+  lockedFields
 }: Readonly<VisibleFieldProps>) {
   const viewState = getFieldViewState(field, formData);
   // Note: info fields are UI-only to help form completion
@@ -47,6 +49,7 @@ function VisibleField({
             jsonFormName={jsonFormName}
             canEdit={canEdit}
             options={options}
+            lockedFields={lockedFields}
           />
         ))}
       </>
@@ -93,16 +96,18 @@ function VisibleField({
             field.type
           )}
         </SummaryList.Value>
-        {canEdit && viewState === "editable" && (
-          <SummaryList.Action asElement="span">
-            <ChangeLink
-              targetField={field.name}
-              label={field.label ?? ""}
-              jsonFormName={jsonFormName}
-              pageIndex={pageIndex}
-            />
-          </SummaryList.Action>
-        )}
+        {canEdit &&
+          viewState === "editable" &&
+          !lockedFields?.has(field.name) && (
+            <SummaryList.Action asElement="span">
+              <ChangeLink
+                targetField={field.name}
+                label={field.label ?? ""}
+                jsonFormName={jsonFormName}
+                pageIndex={pageIndex}
+              />
+            </SummaryList.Action>
+          )}
       </SummaryList.Row>
     </SummaryList>
   );
@@ -147,6 +152,7 @@ type FormViewBuilder = {
   formErrors: FormErrorsType;
   options?: any;
   pageNotices?: Record<string, React.ReactNode>;
+  lockedFields?: Set<string>;
 };
 
 export default function FormViewBuilder({
@@ -155,7 +161,8 @@ export default function FormViewBuilder({
   canEdit,
   formErrors,
   options,
-  pageNotices
+  pageNotices,
+  lockedFields
 }: Readonly<FormViewBuilder>) {
   return (
     <div>
@@ -180,6 +187,7 @@ export default function FormViewBuilder({
                     jsonFormName={jsonForm.name}
                     canEdit={canEdit}
                     options={options}
+                    lockedFields={lockedFields}
                   />
                 ))}
               </div>
