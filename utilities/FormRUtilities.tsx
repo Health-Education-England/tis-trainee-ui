@@ -11,7 +11,7 @@ import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { LifeCycleState } from "../models/LifeCycleState";
 import type { FormData } from "../components/forms/form-builder/FormBuilder";
 
-export type LinkedFormRDataType = {
+type LinkedFormRDataType = {
   isArcp: null | boolean;
   programmeMembershipId: null | string;
   linkedProgramme?: ProgrammeMembership;
@@ -165,17 +165,10 @@ export function hasStaleLinkage(
   );
 }
 
-type ProcessedFormData = {
-  isArcp: boolean | null;
-  programmeMembershipId: string | null;
-  localOfficeName?: string;
-  linkedProgramme?: ProgrammeMembership;
-};
-
 export function processLinkedFormData(
   data: LinkedFormRDataType,
   programmeMemberships: ProgrammeMembership[]
-): ProcessedFormData {
+): LinkedFormRDataType {
   const { isArcp, programmeMembershipId } = data;
 
   const localOfficeName = filterManagingDeanery(
