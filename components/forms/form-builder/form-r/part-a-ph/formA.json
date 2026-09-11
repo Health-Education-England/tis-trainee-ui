@@ -30,7 +30,8 @@
               "type": "text",
               "visible": true,
               "readOnly": true,
-              "hint": "This field is pre-populated from your linked Programme."
+              "hint": "This field is pre-populated from your linked Programme.",
+              "hideInViewWhenEmpty": true
             }
           ]
         }

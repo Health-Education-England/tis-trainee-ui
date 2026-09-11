@@ -159,6 +159,42 @@ describe("FormRView (Part A)", () => {
     cy.get('[data-cy="edit-localOfficeName"]').should("not.exist");
   });
 
+  it("should show the programmeSpecialty but not the readonly deanery in form linkage view when nothing is linked", () => {
+    const unlinkedDraft = {
+      ...formASavedDraft,
+      isArcp: false,
+      programmeMembershipId: "",
+      localOfficeName: "",
+      programmeSpecialty: ""
+    };
+    const formId = unlinkedDraft.id;
+
+    cy.intercept("GET", `/api/forms/formr-parta/${formId}`, unlinkedDraft).as(
+      "getDraftForm"
+    );
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/formr-a/${formId}/view`]}>
+          <Route path="/formr-a/:id/view">
+            <FormRView formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    cy.wait("@getDraftForm");
+
+    cy.get('[data-cy="localOfficeName-value"]').should("not.exist");
+    cy.get('[data-cy="programmeSpecialty-value"]').should(
+      "contain.text",
+      "Not provided"
+    );
+    cy.get('[data-cy="error-txt-Programme specialty is required"]').should(
+      "exist"
+    );
+  });
+
   it("should fetch data and show loading when refreshing page (fromCreate=true persisted on first refresh, but store yet to be populated with fetched formData)", () => {
     const draftForm = formASavedDraft;
     const formId = draftForm.id;

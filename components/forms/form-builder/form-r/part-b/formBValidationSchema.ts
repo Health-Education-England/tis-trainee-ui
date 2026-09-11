@@ -151,17 +151,10 @@ const covid19ValidationSchema = yup.object().shape({
 export const formBValidationSchemaDefaultJson = {
   // Programme linkage - section 1
   isArcp: yup
-    .mixed()
-    .nullable()
-    .test(
-      "isArcp",
-      "Please select an option",
-      value =>
-        value === true ||
-        value === false ||
-        value === "true" ||
-        value === "false"
-    ),
+    .boolean()
+    .typeError("Please select an option")
+    .required("Please select an option")
+    .nullable(),
   programmeMembershipId: yup
     .string()
     .nullable()
