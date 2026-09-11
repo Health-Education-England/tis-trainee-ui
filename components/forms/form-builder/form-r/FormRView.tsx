@@ -18,6 +18,7 @@ import {
   makeWarningText
 } from "../../../../utilities/FormRUtilities";
 import {
+  formRLegacyLinkageNotice,
   formRStaleLinkageGateLabel,
   formRStaleLinkageGateText,
   formRStaleLinkageNoticeText
@@ -158,6 +159,9 @@ const FormRReviewView = ({
       formData?.programmeMembershipId
     );
 
+  const showLegacyLinkageNotice =
+    !canEdit && typeof formData?.isArcp !== "boolean";
+
   const goToLinkagePage = () => {
     setEditPageNumber(
       formJson.name,
@@ -211,6 +215,25 @@ const FormRReviewView = ({
     canEdit
   ]);
 
+  let linkagePageNotice;
+  if (showStaleLinkageNotice) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <StaleLinkageNotice
+          onEditClick={() => setShowStaleLinkageModal(true)}
+        />
+      )
+    };
+  } else if (showLegacyLinkageNotice) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <InsetText data-cy="legacyLinkageNote">
+          {formRLegacyLinkageNotice}
+        </InsetText>
+      )
+    };
+  }
+
   return (
     <>
       <ScrollTo />
@@ -231,19 +254,14 @@ const FormRReviewView = ({
         canEdit={canEdit}
         formErrors={errors}
         options={formOptions}
-        pageNotices={
-          showStaleLinkageNotice
-            ? {
-                [PROG_LINK_PAGE_NAME]: (
-                  <StaleLinkageNotice
-                    onEditClick={() => setShowStaleLinkageModal(true)}
-                  />
-                )
-              }
-            : undefined
-        }
+        pageNotices={linkagePageNotice}
         lockedFields={
           showStaleLinkageNotice
+            ? new Set(["isArcp", "programmeMembershipId"])
+            : undefined
+        }
+        hiddenFields={
+          showLegacyLinkageNotice
             ? new Set(["isArcp", "programmeMembershipId"])
             : undefined
         }

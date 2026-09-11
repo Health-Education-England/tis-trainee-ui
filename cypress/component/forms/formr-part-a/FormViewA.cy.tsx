@@ -56,6 +56,40 @@ describe("FormRView (Part A)", () => {
     cy.contains(submittedForm.surname as string).should("exist");
   });
 
+  it("should explain the missing prgramme linkage on a legacy submitted form", () => {
+    const legacyForm = submittedFormRPartAs[0];
+    const formId = legacyForm.id;
+
+    cy.intercept("GET", `/api/forms/formr-parta/${formId}`, legacyForm).as(
+      "getLegacyForm"
+    );
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/formr-a/${formId}/view`]}>
+          <Route path="/formr-a/:id/view">
+            <FormRView formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    cy.wait("@getLegacyForm");
+
+    cy.get('[data-cy="legacyLinkageNote"]')
+      .should(
+        "contain.text",
+        "not linked to a programme because when it was submitted this functionality was not available"
+      )
+      .and("contain.text", "may no longer appear in the list to choose from");
+    cy.get('[data-cy="isArcp-value"]').should("not.exist");
+    cy.get('[data-cy="programmeMembershipId-value"]').should("not.exist");
+    cy.get('[data-cy="localOfficeName-value"]').should(
+      "contain.text",
+      "Thames Valley"
+    );
+  });
+
   it("should render a draft form (incomplete) in edit mode", () => {
     const draftForm = formASavedDraft;
     const formId = draftForm.id;

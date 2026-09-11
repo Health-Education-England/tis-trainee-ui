@@ -860,6 +860,22 @@ export const formRStaleLinkageGateCancelBtn = "Stay on this page";
 export const formRStaleLinkageNoticeText =
   "When you first submitted this application, the linked programme was a valid choice. This is no longer the case but this linkage will be preserved as is unless you decide to edit the Programme Linkage section - where you will then need to choose a new programme from the current list of available options.";
 
+export const formRLegacyLinkageNotice = (
+  <>
+    <p>
+      This form is not linked to a programme because when it was submitted this
+      functionality was not available.
+    </p>
+    <p>
+      To link this form to a programme you will need to contact your Local
+      Office via the <b>Support</b> link to have the form unsubmitted. You can
+      then link and re-submit the form. Please note: only &apos;active&apos;
+      programmes can be linked to your form i.e. a programme that ended some
+      time ago may no longer appear in the list to choose from.
+    </p>
+  </>
+);
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

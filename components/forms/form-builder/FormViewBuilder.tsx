@@ -19,6 +19,7 @@ type VisibleFieldProps = {
   canEdit: boolean;
   options?: any;
   lockedFields?: Set<string>;
+  hiddenFields?: Set<string>;
 };
 
 function VisibleField({
@@ -29,11 +30,15 @@ function VisibleField({
   jsonFormName,
   canEdit,
   options,
-  lockedFields
+  lockedFields,
+  hiddenFields
 }: Readonly<VisibleFieldProps>) {
   const viewState = getFieldViewState(field, formData);
   // Note: info fields are UI-only to help form completion
   if (viewState === "hidden" || field.type === "info") {
+    return null;
+  }
+  if (hiddenFields?.has(field.name)) {
     return null;
   }
   if (field.type === "dto") {
@@ -50,6 +55,7 @@ function VisibleField({
             canEdit={canEdit}
             options={options}
             lockedFields={lockedFields}
+            hiddenFields={hiddenFields}
           />
         ))}
       </>
@@ -153,6 +159,7 @@ type FormViewBuilder = {
   options?: any;
   pageNotices?: Record<string, React.ReactNode>;
   lockedFields?: Set<string>;
+  hiddenFields?: Set<string>;
 };
 
 export default function FormViewBuilder({
@@ -162,7 +169,8 @@ export default function FormViewBuilder({
   formErrors,
   options,
   pageNotices,
-  lockedFields
+  lockedFields,
+  hiddenFields
 }: Readonly<FormViewBuilder>) {
   return (
     <div>
@@ -188,6 +196,7 @@ export default function FormViewBuilder({
                     canEdit={canEdit}
                     options={options}
                     lockedFields={lockedFields}
+                    hiddenFields={hiddenFields}
                   />
                 ))}
               </div>
