@@ -1,24 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import store from "../../../../redux/store/store";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { FormProvider } from "../FormContext";
-import FormBuilder from "../FormBuilder";
+import { FormRBuilder } from "./FormRBuilder";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
-import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
-import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
-import {
-  FormRUtilities,
-  makeWarningText,
-  processLinkedFormData
-} from "../../../../utilities/FormRUtilities";
-import { selectAllSubmittedforms } from "../../../../redux/slices/formsSlice";
 import { loadSavedFormA } from "../../../../redux/slices/formASlice";
 import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
+import {
+  FormRUtilities,
+  makeWarningText
+} from "../../../../utilities/FormRUtilities";
+import { selectAllSubmittedforms } from "../../../../redux/slices/formsSlice";
+import { ActionModal } from "../../../common/ActionModal";
 
 type FormRParams = {
   id: string | undefined;
@@ -54,10 +52,31 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     ? submittedForms[0].submissionDate
     : null;
 
-  const showLinkerModal = isNewForm && initialData?.isArcp === undefined;
+  const [hasConfirmedNewForm, setHasConfirmedNewForm] = useState(false);
+
+  const recentSubmissionWarning = isNewForm
+    ? makeWarningText("new", latestSubDate)
+    : null;
+
+  const showRecentSubmissionModal =
+    !!recentSubmissionWarning && !hasConfirmedNewForm;
 
   const loadedFormIdRef = useRef(initialData?.id);
   loadedFormIdRef.current = initialData?.id;
+
+  const isInitialisedRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      isNewForm &&
+      !showRecentSubmissionModal &&
+      !isInitialisedRef.current &&
+      traineeProfileData?.traineeTisId
+    ) {
+      isInitialisedRef.current = true;
+      FormRUtilities.loadNewForm(basePath, traineeProfileData);
+    }
+  }, [isNewForm, basePath, traineeProfileData, showRecentSubmissionModal]);
 
   useEffect(() => {
     if (isNewForm && newFormId) {
@@ -75,23 +94,6 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, formType]);
-
-  const handleModalSubmit = (data: LinkedFormRDataType) => {
-    const processedFormRData = processLinkedFormData(
-      data,
-      traineeProfileData.programmeMemberships
-    );
-
-    FormRUtilities.loadNewForm(
-      basePath,
-      traineeProfileData,
-      processedFormRData
-    );
-  };
-
-  const handleModalClose = () => {
-    history.push(basePath);
-  };
 
   if (formLoadStatus === "loading") return <Loading />;
 
@@ -111,22 +113,27 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     );
   }
 
-  if (initialData?.lifecycleState === LifeCycleState.New) {
+  if (showRecentSubmissionModal) {
     return (
-      <ErrorPage
-        message={`Please return to the Form R Part ${formType} home page and try again.`}
+      <ActionModal
+        onSubmit={() => setHasConfirmedNewForm(true)}
+        isOpen={true}
+        onClose={() => history.push(basePath)}
+        cancelBtnText="Cancel"
+        warningLabel="Important"
+        warningText={recentSubmissionWarning}
+        submittingBtnText=""
+        isSubmitting={false}
       />
     );
   }
 
-  if (showLinkerModal) {
+  if (isNewForm && !initialData?.traineeTisId) return <Loading />;
+
+  if (!isNewForm && initialData?.lifecycleState === LifeCycleState.New) {
     return (
-      <FormLinkerModal
-        isOpen={true}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
-        warningText={makeWarningText("new", latestSubDate)}
-        linkedFormData={{ isArcp: null, programmeMembershipId: null }}
+      <ErrorPage
+        message={`Please return to the Form R Part ${formType} home page and try again.`}
       />
     );
   }
@@ -141,7 +148,7 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
-      <FormBuilder options={formOptions} validationSchema={validationSchema} />
+      <FormRBuilder options={formOptions} validationSchema={validationSchema} />
     </FormProvider>
   );
 }

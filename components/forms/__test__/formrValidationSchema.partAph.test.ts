@@ -27,7 +27,9 @@ describe("formAValidationSchema - identifier validation", () => {
     wholeTimeEquivalent: "1",
     gmcNumber: "",
     gdcNumber: "",
-    publicHealthNumber: ""
+    publicHealthNumber: "",
+    isArcp: false,
+    programmeMembershipId: "pm-id-123"
   };
 
   it("fails if all identifiers are blank", async () => {

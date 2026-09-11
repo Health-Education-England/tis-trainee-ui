@@ -13,6 +13,15 @@ const dateValidationSchema = (fieldName: string) =>
     .required(`${fieldName} is required`);
 
 export const formAValidationSchemaDefault = {
+  isArcp: yup
+    .boolean()
+    .typeError("Please select an option")
+    .required("Please select an option")
+    .nullable(),
+  programmeMembershipId: yup
+    .string()
+    .nullable()
+    .required("Please select a programme."),
   forename: StringValidationSchema("Forename"),
   surname: StringValidationSchema("Surname"),
   gmcNumber: StringValidationSchema("GMC number", 20),

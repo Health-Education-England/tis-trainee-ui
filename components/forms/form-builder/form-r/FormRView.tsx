@@ -7,34 +7,48 @@ import {
   Button,
   Col,
   Container,
+  InsetText,
   Row,
   WarningCallout
 } from "nhsuk-react-components";
 import {
+  clearLinkageSection,
   FormRUtilities,
-  makeWarningText,
-  processLinkedFormData
+  hasStaleLinkage,
+  makeWarningText
 } from "../../../../utilities/FormRUtilities";
+import {
+  formRLegacyLinkageNotice,
+  formRStaleLinkageGateLabel,
+  formRStaleLinkageGateText,
+  formRStaleLinkageNoticeText
+} from "../../../../utilities/Constants";
 import {
   saveDraftForm,
   createErrorObject,
+  getEditPageLocation,
+  setEditPageNumber,
   validateFields
 } from "../../../../utilities/FormBuilderUtilities";
+import { ActionModal } from "../../../common/ActionModal";
+import history from "../../../navigation/history";
 import { StartOverButton } from "../../StartOverButton";
 import { Form, FormData, FormErrors } from "../FormBuilder";
 import Declarations from "../../Declarations";
-import { FormLinkerModal } from "../../form-linker/FormLinkerModal";
-import { LinkedFormRDataType } from "../../form-linker/FormLinkerForm";
-import { FormLinkerSummary } from "../../form-linker/FormLinkerSummary";
 import { FormRPartA } from "../../../../models/FormRPartA";
 import { FormRPartB } from "../../../../models/FormRPartB";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks/hooks";
-import { StringUtilities } from "../../../../utilities/StringUtilities";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import Loading from "../../../common/Loading";
 import ErrorPage from "../../../common/ErrorPage";
-import { loadSavedFormA } from "../../../../redux/slices/formASlice";
-import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
+import {
+  loadSavedFormA,
+  updatedFormA
+} from "../../../../redux/slices/formASlice";
+import {
+  loadSavedFormB,
+  updatedFormB
+} from "../../../../redux/slices/formBSlice";
 import { useFormRViewConfig } from "../../../../utilities/hooks/useFormRViewConfig";
 
 type FormRParams = {
@@ -49,13 +63,15 @@ type UnifiedFormRViewProps = {
   formType: "A" | "B";
 };
 
+const PROG_LINK_PAGE_NAME = "Programme Linkage";
+
 export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   const { id } = useParams<FormRParams>();
   const location = useLocation<LocationState>();
   const dispatch = useAppDispatch();
   const fromCreate = location.state?.fromFormCreate;
 
-  const { formData, formJson, validationSchemaForView } =
+  const { formData, formJson, validationSchemaForView, formOptions } =
     useFormRViewConfig(formType);
 
   const formLoadStatus = useAppSelector(state =>
@@ -105,6 +121,7 @@ export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
       formData={formData}
       formJson={formJson}
       validationSchemaForView={validationSchemaForView}
+      formOptions={formOptions}
     />
   );
 }
@@ -113,33 +130,74 @@ type FormReviewViewProps = {
   formData: FormData;
   formJson: Form;
   validationSchemaForView?: any;
+  formOptions?: any;
 };
 
 const FormRReviewView = ({
   formData,
   formJson,
-  validationSchemaForView
+  validationSchemaForView,
+  formOptions
 }: FormReviewViewProps) => {
   const canEdit =
     formData?.lifecycleState === LifeCycleState.Draft ||
     formData?.lifecycleState === LifeCycleState.New ||
     formData?.lifecycleState === LifeCycleState.Unsubmitted;
 
-  const [formKey, setFormKey] = useState(Date.now());
-  const [showModal, setShowModal] = useState(false);
+  const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
+  const [showStaleLinkageModal, setShowStaleLinkageModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+
+  const showStaleLinkageNotice =
+    canEdit &&
+    hasStaleLinkage(
+      formData?.lifecycleState,
+      formData?.isArcp,
+      formData?.programmeMembershipId
+    );
+
+  const showLegacyLinkageNotice =
+    !canEdit && typeof formData?.isArcp !== "boolean";
+
+  const goToLinkagePage = () => {
+    setEditPageNumber(
+      formJson.name,
+      formJson.pages.findIndex(page => page.pageName === PROG_LINK_PAGE_NAME)
+    );
+    history.push(getEditPageLocation(formJson.name, "programmeMembershipId"));
+  };
+
+  const handleStaleLinkageEditConfirm = () => {
+    const clearedFormData = clearLinkageSection(formData);
+    if (formJson.name === "formA") {
+      dispatch(updatedFormA(clearedFormData as FormRPartA));
+    } else {
+      dispatch(updatedFormB(clearedFormData as FormRPartB));
+    }
+    setShowStaleLinkageModal(false);
+    goToLinkagePage();
+  };
+
+  const handleSubmitConfirm = async () => {
+    setIsSubmitting(true);
+    await saveDraftForm(
+      formJson,
+      formData as FormRPartA | FormRPartB,
+      false,
+      true
+    );
+    setIsSubmitting(false);
+    setShowSubmitModal(false);
+  };
 
   const allPagesFields = useMemo(() => {
     return formJson.pages.flatMap(page =>
       page.sections.flatMap(section => section.fields)
     );
   }, [formJson.pages]);
-
-  const progMems = useAppSelector(
-    state => state.traineeProfile.traineeProfileData.programmeMemberships
-  );
 
   useEffect(() => {
     if (canEdit && !isSubmitting) {
@@ -157,37 +215,24 @@ const FormRReviewView = ({
     canEdit
   ]);
 
-  const linkedFormData: LinkedFormRDataType = {
-    isArcp: StringUtilities.convertToBool(formData.isArcp),
-    programmeMembershipId: formData.programmeMembershipId,
-    localOfficeName: formData.localOfficeName
-  };
-
-  const handleModalFormSubmit = (data: LinkedFormRDataType) => {
-    setIsSubmitting(true);
-    const processedFormData = processLinkedFormData(data, progMems);
-
-    const updatedFormData = {
-      ...formData,
-      isArcp: processedFormData.isArcp,
-      programmeMembershipId: processedFormData.programmeMembershipId,
-      localOfficeName: processedFormData.localOfficeName,
-      programmeSpecialty: processedFormData.linkedProgramme?.programmeName,
-      programmeName: processedFormData.linkedProgramme?.programmeName
-    } as FormRPartA | FormRPartB;
-
-    setShowModal(false);
-    saveDraftForm(formJson, updatedFormData, false, true);
-    setIsSubmitting(false);
-  };
-
-  const handleModalFormClose = () => {
-    setShowModal(false);
-    setIsSubmitting(false);
-    setFormKey(Date.now());
-  };
-
-  const warningText = makeWarningText("preSub");
+  let linkagePageNotice;
+  if (showStaleLinkageNotice) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <StaleLinkageNotice
+          onEditClick={() => setShowStaleLinkageModal(true)}
+        />
+      )
+    };
+  } else if (showLegacyLinkageNotice) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <InsetText data-cy="legacyLinkageNote">
+          {formRLegacyLinkageNotice}
+        </InsetText>
+      )
+    };
+  }
 
   return (
     <>
@@ -201,8 +246,6 @@ const FormRReviewView = ({
           "submissionDateTop"
         )}
 
-      {!canEdit && <FormLinkerSummary {...linkedFormData} />}
-
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
 
       <FormViewBuilder
@@ -210,6 +253,18 @@ const FormRReviewView = ({
         formData={formData}
         canEdit={canEdit}
         formErrors={errors}
+        options={formOptions}
+        pageNotices={linkagePageNotice}
+        lockedFields={
+          showStaleLinkageNotice
+            ? new Set(["isArcp", "programmeMembershipId"])
+            : undefined
+        }
+        hiddenFields={
+          showLegacyLinkageNotice
+            ? new Set(["isArcp", "programmeMembershipId"])
+            : undefined
+        }
       />
 
       <WarningCallout>
@@ -224,8 +279,7 @@ const FormRReviewView = ({
             <Button
               onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
-                setIsSubmitting(true);
-                setShowModal(true);
+                setShowSubmitModal(true);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
@@ -271,14 +325,39 @@ const FormRReviewView = ({
           formData.submissionDate,
           "submissionDate"
         )}
-      <FormLinkerModal
-        key={formKey}
-        onSubmit={handleModalFormSubmit}
-        isOpen={showModal}
-        onClose={handleModalFormClose}
-        warningText={warningText}
-        linkedFormData={linkedFormData}
+      <ActionModal
+        onSubmit={handleSubmitConfirm}
+        isOpen={showSubmitModal}
+        onClose={() => setShowSubmitModal(false)}
+        cancelBtnText="Cancel"
+        warningLabel="Submit"
+        warningText={makeWarningText("preSub") ?? ""}
+        submittingBtnText="Submitting"
+        isSubmitting={isSubmitting}
+      />
+      <ActionModal
+        onSubmit={handleStaleLinkageEditConfirm}
+        isOpen={showStaleLinkageModal}
+        onClose={() => setShowStaleLinkageModal(false)}
+        cancelBtnText="Cancel"
+        warningLabel={formRStaleLinkageGateLabel}
+        warningText={formRStaleLinkageGateText}
+        submittingBtnText=""
+        isSubmitting={false}
       />
     </>
   );
 };
+
+function StaleLinkageNotice({
+  onEditClick
+}: Readonly<{ onEditClick: () => void }>) {
+  return (
+    <InsetText data-cy="staleLinkageNote">
+      <p>{formRStaleLinkageNoticeText}</p>
+      <Button type="button" data-cy="updateStaleLinkage" onClick={onEditClick}>
+        Update programme linkage
+      </Button>
+    </InsetText>
+  );
+}

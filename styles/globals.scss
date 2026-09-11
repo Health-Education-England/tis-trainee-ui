@@ -981,16 +981,6 @@ dialog::backdrop {
   padding: 1rem;
 }
 
-// Form Linker Modal
-html:has(dialog[data-cy="formLinkerModal"][open]) {
-  overflow: hidden;
-}
-
-.modal-content {
-  text-align: left;
-  white-space: normal;
-}
-
 // onboarding tracker
 .tracker-section_node {
   min-width: 40px;

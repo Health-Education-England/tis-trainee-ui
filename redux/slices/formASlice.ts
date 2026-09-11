@@ -10,7 +10,6 @@ import { toastErrText, toastSuccessText } from "../../utilities/Constants";
 import { ToastType, showToast } from "../../components/common/ToastMessage";
 import { SaveStatusProps } from "../../components/forms/AutosaveMessage";
 import { DateUtilities } from "../../utilities/DateUtilities";
-import { LinkedFormRDataType } from "../../components/forms/form-linker/FormLinkerForm";
 import { LifeCycleState } from "../../models/LifeCycleState";
 import { StringUtilities } from "../../utilities/StringUtilities";
 interface IFormA {
@@ -47,13 +46,7 @@ export const loadFormAList = createAsyncThunk(
 
 export const loadSavedFormA = createAsyncThunk(
   "formA/fetchFormA",
-  async ({
-    id,
-    linkedFormRData
-  }: {
-    id: string;
-    linkedFormRData?: LinkedFormRDataType;
-  }): Promise<FormRPartA> => {
+  async ({ id }: { id: string }): Promise<FormRPartA> => {
     const formsService = new FormsService();
     const savedForm = (await formsService.getTraineeFormRPartAByFormId(id))
       .data;
@@ -63,15 +56,6 @@ export const loadSavedFormA = createAsyncThunk(
         savedForm.wholeTimeEquivalent
       )
     };
-    if (linkedFormRData) {
-      return {
-        ...fetchedForm,
-        isArcp: linkedFormRData.isArcp,
-        programmeMembershipId: linkedFormRData.programmeMembershipId,
-        localOfficeName: linkedFormRData.localOfficeName,
-        programmeSpecialty: linkedFormRData.linkedProgramme?.programmeName
-      };
-    }
     return fetchedForm;
   }
 );

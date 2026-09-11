@@ -26,16 +26,6 @@ Cypress.Commands.add(
   }
 );
 
-Cypress.Commands.add("checkForFormLinkerAndComplete", () => {
-  cy.get("dialog").then($dialog => {
-    if ($dialog.is(":visible")) {
-      cy.get('[data-cy="isArcp1"]').click();
-      cy.clickSelect('[data-cy="programmeMembershipId"]');
-      cy.get('[data-cy="form-linker-submit-btn"]').click();
-    }
-  });
-});
-
 Cypress.Commands.add("startOver", () => {
   cy.get('[data-cy="startOverButton"]').should("exist").click();
   cy.get(".MuiDialogContentText-root").should(
@@ -133,6 +123,23 @@ Cypress.Commands.add("navigateBackToConfirm", (steps: number) => {
 
 Cypress.Commands.add("navNext", (forceClick?: boolean) => {
   cy.get('[data-cy="navNext"]').click({ force: forceClick });
+});
+
+Cypress.Commands.add("completeProgrammeLinkage", () => {
+  cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+  cy.get("@firstArcpOption").click();
+  cy.clickSelect('[data-cy="programmeMembershipId"]');
+});
+
+Cypress.Commands.add("confirmNewFormIfWarned", () => {
+  cy.get('[data-cy="submitBtn-Important"], [data-cy="progress-header"]').should(
+    "exist"
+  );
+  cy.get("body").then($body => {
+    if ($body.find('[data-cy="submitBtn-Important"]').length) {
+      cy.get('[data-cy="submitBtn-Important"]').click();
+    }
+  });
 });
 
 Cypress.Commands.add("clickRadioCheck", (selector: string) => {

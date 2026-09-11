@@ -28,7 +28,6 @@ declare global {
         text: string | number | null = null,
         shouldExist: boolean = true
       ): Chainable<Element>;
-      checkForFormLinkerAndComplete(): Chainable<Element>;
       addWorkPanel(startDate: string, endDate: string): Chainable<Element>;
       checkFlags(name: string): Chainable<Element>;
       checkViewFields(fields: string[][]): Chainable<Element>;
@@ -43,6 +42,8 @@ declare global {
       confirmCookie(): Chainable<Element>;
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
+      completeProgrammeLinkage(): Chainable<any>;
+      confirmNewFormIfWarned(): Chainable<any>;
       signIn(): Chainable<Element>;
       signInToTss(
         waitTimeMs?: number,

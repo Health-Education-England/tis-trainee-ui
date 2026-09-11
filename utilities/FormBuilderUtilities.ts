@@ -37,7 +37,6 @@ import { LifeCycleState } from "../models/LifeCycleState";
 import { CurriculumKeyValue } from "../models/CurriculumKeyValue";
 import { IFormR } from "../models/IFormR";
 import dayjs from "dayjs";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import history from "../components/navigation/history";
 import {
   deleteLtft,
@@ -54,6 +53,7 @@ import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSl
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
 import { findLinkedProgramme } from "./CctUtilities";
+import { processLinkedFormData } from "./FormRUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -71,13 +71,12 @@ export function mapItemToNewFormat(item: KeyValue): {
 export async function loadTheSavedForm(
   pathName: string,
   id: string,
-  history: any,
-  linkedFormRData?: LinkedFormRDataType
+  history: any
 ) {
   if (pathName === "/formr-a") {
-    await store.dispatch(loadSavedFormA({ id, linkedFormRData }));
+    await store.dispatch(loadSavedFormA({ id }));
   } else if (pathName === "/formr-b") {
-    await store.dispatch(loadSavedFormB({ id, linkedFormRData }));
+    await store.dispatch(loadSavedFormB({ id }));
   } else if (pathName === "/ltft" || pathName === "/ltft/confirm") {
     await store.dispatch(loadSavedLtft(id));
   }
@@ -432,6 +431,15 @@ export function setFormRDataForSubmit(
   jsonForm: Form,
   formData: FormRPartA | FormRPartB
 ): FormRPartA | FormRPartB {
+  const { programmeMemberships } =
+    store.getState().traineeProfile.traineeProfileData;
+  const { linkedProgramme, localOfficeName } = processLinkedFormData(
+    {
+      isArcp: formData.isArcp as boolean,
+      programmeMembershipId: formData.programmeMembershipId as string
+    },
+    programmeMemberships
+  );
   const preciousFormDataBoth = {
     lifecycleState: LifeCycleState.Submitted,
     lastModifiedDate: new Date(),
@@ -439,8 +447,8 @@ export function setFormRDataForSubmit(
     traineeTisId: formData.traineeTisId as string,
     isArcp: formData.isArcp as boolean,
     programmeMembershipId: formData.programmeMembershipId as string,
-    programmeName: formData.programmeName as string,
-    localOfficeName: formData.localOfficeName as string
+    programmeName: linkedProgramme?.programmeName as string,
+    localOfficeName: localOfficeName as string
   };
 
   // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA
