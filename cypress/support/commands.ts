@@ -131,6 +131,17 @@ Cypress.Commands.add("completeProgrammeLinkage", () => {
   cy.clickSelect('[data-cy="programmeMembershipId"]');
 });
 
+Cypress.Commands.add("confirmNewFormIfWarned", () => {
+  cy.get('[data-cy="submitBtn-Important"], [data-cy="progress-header"]').should(
+    "exist"
+  );
+  cy.get("body").then($body => {
+    if ($body.find('[data-cy="submitBtn-Important"]').length) {
+      cy.get('[data-cy="submitBtn-Important"]').click();
+    }
+  });
+});
+
 Cypress.Commands.add("clickRadioCheck", (selector: string) => {
   cy.get(selector).click();
 });

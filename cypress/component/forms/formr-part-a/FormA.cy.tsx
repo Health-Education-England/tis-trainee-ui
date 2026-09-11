@@ -2,7 +2,8 @@
 /// <reference path="../../../../cypress/support/index.d.ts" />
 
 import { mount } from "cypress/react";
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter, Route, Router, Switch } from "react-router-dom";
+import dayjs from "dayjs";
 import { Provider } from "react-redux";
 import store from "../../../../redux/store/store";
 import { FormRForm } from "../../../../components/forms/form-builder/form-r/FormRForm";
@@ -20,6 +21,9 @@ import {
 } from "../../../../redux/slices/formASlice";
 import { formASavedDraft } from "../../../../mock-data/draft-formr-parta";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
+import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
+import { fetchForms } from "../../../../redux/slices/formsSlice";
+import history from "../../../../components/navigation/history";
 
 const defaultProfileTestData = {
   traineeTisId: "testid",
@@ -191,5 +195,71 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
     cy.clickSelect('[data-cy="programmeMembershipId"]');
     cy.navNext();
     cy.checkAndFillPhGmcGdc();
+  });
+});
+
+describe("Form R part A - recent submit -> new form", () => {
+  const mountNewForm = (latestSubDate: string) => {
+    cy.intercept("GET", "/api/forms/formr-partas", [
+      { ...submittedFormRPartAs[0], submissionDate: latestSubDate }
+    ]).as("getForms");
+    cy.then(() => store.dispatch(fetchForms("/formr-a")));
+    cy.wait("@getForms");
+
+    history.push("/formr-a/new/create");
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Switch>
+            <Route exact path="/formr-a/new/create">
+              <FormRForm formType="A" />
+            </Route>
+            <Route exact path="/formr-a">
+              <div data-cy="formr-a-home">Form R Part A home</div>
+            </Route>
+          </Switch>
+        </Router>
+      </Provider>
+    );
+  };
+
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
+    store.dispatch(updatedFormALifecycleState(LifeCycleState.Draft));
+  });
+
+  it("should show warning if starting new form with recent submit", () => {
+    mountNewForm(dayjs().subtract(5, "day").toISOString());
+    cy.get('[data-cy="warningText-Important"]').should(
+      "contain.text",
+      "Are you sure you want to submit another?"
+    );
+    cy.get('[data-cy="progress-header"]').should("not.exist");
+  });
+
+  it("should open new form on confirm", () => {
+    mountNewForm(dayjs().subtract(5, "day").toISOString());
+    cy.get('[data-cy="submitBtn-Important"]').click();
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "have.text",
+      "Part 1 of 4 - Programme Linkage"
+    );
+  });
+
+  it("should stay on page if trainee cancels", () => {
+    mountNewForm(dayjs().subtract(5, "day").toISOString());
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="formr-a-home"]').should("exist");
+  });
+
+  it("should not show warning if no recent submit", () => {
+    mountNewForm(dayjs().subtract(60, "day").toISOString());
+    cy.get('[data-cy="warningText-Important"]').should("not.exist");
+    cy.get('[data-cy="progress-header"] > :nth-child(1)').should(
+      "have.text",
+      "Part 1 of 4 - Programme Linkage"
+    );
   });
 });

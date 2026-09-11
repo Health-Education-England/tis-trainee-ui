@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import store from "../../../../redux/store/store";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
@@ -11,7 +11,12 @@ import { loadSavedFormA } from "../../../../redux/slices/formASlice";
 import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
-import { FormRUtilities } from "../../../../utilities/FormRUtilities";
+import {
+  FormRUtilities,
+  makeWarningText
+} from "../../../../utilities/FormRUtilities";
+import { selectAllSubmittedforms } from "../../../../redux/slices/formsSlice";
+import { ActionModal } from "../../../common/ActionModal";
 
 type FormRParams = {
   id: string | undefined;
@@ -41,6 +46,21 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     state => state.traineeProfile.traineeProfileData
   );
 
+  const submittedForms = useAppSelector(selectAllSubmittedforms);
+
+  const latestSubDate = submittedForms?.length
+    ? submittedForms[0].submissionDate
+    : null;
+
+  const [hasConfirmedNewForm, setHasConfirmedNewForm] = useState(false);
+
+  const recentSubmissionWarning = isNewForm
+    ? makeWarningText("new", latestSubDate)
+    : null;
+
+  const showRecentSubmissionModal =
+    !!recentSubmissionWarning && !hasConfirmedNewForm;
+
   const loadedFormIdRef = useRef(initialData?.id);
   loadedFormIdRef.current = initialData?.id;
 
@@ -49,13 +69,14 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
   useEffect(() => {
     if (
       isNewForm &&
+      !showRecentSubmissionModal &&
       !isInitialisedRef.current &&
       traineeProfileData?.traineeTisId
     ) {
       isInitialisedRef.current = true;
       FormRUtilities.loadNewForm(basePath, traineeProfileData);
     }
-  }, [isNewForm, basePath, traineeProfileData]);
+  }, [isNewForm, basePath, traineeProfileData, showRecentSubmissionModal]);
 
   useEffect(() => {
     if (isNewForm && newFormId) {
@@ -88,6 +109,21 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
     return (
       <ErrorPage
         message={`This Form R Part ${formType} has already been submitted and cannot be edited.`}
+      />
+    );
+  }
+
+  if (showRecentSubmissionModal) {
+    return (
+      <ActionModal
+        onSubmit={() => setHasConfirmedNewForm(true)}
+        isOpen={true}
+        onClose={() => history.push(basePath)}
+        cancelBtnText="Cancel"
+        warningLabel="Important"
+        warningText={recentSubmissionWarning}
+        submittingBtnText=""
+        isSubmitting={false}
       />
     );
   }

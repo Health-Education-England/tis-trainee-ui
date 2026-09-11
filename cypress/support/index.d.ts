@@ -43,6 +43,7 @@ declare global {
       navigateBackToConfirm(steps: number): Chainable<Element>;
       navNext(forceClick?: boolean): Chainable<Element>;
       completeProgrammeLinkage(): Chainable<any>;
+      confirmNewFormIfWarned(): Chainable<any>;
       signIn(): Chainable<Element>;
       signInToTss(
         waitTimeMs?: number,

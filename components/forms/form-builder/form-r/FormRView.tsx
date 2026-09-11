@@ -14,7 +14,8 @@ import {
 import {
   clearLinkageSection,
   FormRUtilities,
-  hasStaleLinkage
+  hasStaleLinkage,
+  makeWarningText
 } from "../../../../utilities/FormRUtilities";
 import {
   formRStaleLinkageGateLabel,
@@ -147,6 +148,7 @@ const FormRReviewView = ({
   const [errors, setErrors] = useState({});
   const [canSubmit, setCanSubmit] = useState(false);
   const [showStaleLinkageModal, setShowStaleLinkageModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   const showStaleLinkageNotice =
     canEdit &&
@@ -173,6 +175,18 @@ const FormRReviewView = ({
     }
     setShowStaleLinkageModal(false);
     goToLinkagePage();
+  };
+
+  const handleSubmitConfirm = async () => {
+    setIsSubmitting(true);
+    await saveDraftForm(
+      formJson,
+      formData as FormRPartA | FormRPartB,
+      false,
+      true
+    );
+    setIsSubmitting(false);
+    setShowSubmitModal(false);
   };
 
   const allPagesFields = useMemo(() => {
@@ -245,16 +259,9 @@ const FormRReviewView = ({
           />
           {canEdit && (
             <Button
-              onClick={async (e: { preventDefault: () => void }) => {
+              onClick={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
-                setIsSubmitting(true);
-                await saveDraftForm(
-                  formJson,
-                  formData as FormRPartA | FormRPartB,
-                  false,
-                  true
-                );
-                setIsSubmitting(false);
+                setShowSubmitModal(true);
               }}
               disabled={
                 !canSubmit || isSubmitting || Object.keys(errors).length > 0
@@ -300,6 +307,16 @@ const FormRReviewView = ({
           formData.submissionDate,
           "submissionDate"
         )}
+      <ActionModal
+        onSubmit={handleSubmitConfirm}
+        isOpen={showSubmitModal}
+        onClose={() => setShowSubmitModal(false)}
+        cancelBtnText="Cancel"
+        warningLabel="Submit"
+        warningText={makeWarningText("preSub") ?? ""}
+        submittingBtnText="Submitting"
+        isSubmitting={isSubmitting}
+      />
       <ActionModal
         onSubmit={handleStaleLinkageEditConfirm}
         isOpen={showStaleLinkageModal}

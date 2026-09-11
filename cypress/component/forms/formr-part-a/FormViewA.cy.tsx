@@ -16,6 +16,7 @@ import {
   updatedFormA
 } from "../../../../redux/slices/formASlice";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
+import { formRStaleLinkageGateLabel } from "../../../../utilities/Constants";
 
 describe("FormRView (Part A)", () => {
   beforeEach(() => {
@@ -231,6 +232,65 @@ describe("FormRView (Part A)", () => {
   });
 });
 
+describe("FormR View (part A) confirm modal on submit", () => {
+  const completeDraft = {
+    ...formASavedDraft,
+    programmeSpecialty: "my specialty",
+    completionDate: "2030-12-31",
+    isArcp: false,
+    programmeMembershipId: "pm-id-123"
+  };
+
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    cy.intercept(
+      "GET",
+      `/api/forms/formr-parta/${completeDraft.id}`,
+      completeDraft
+    ).as("getDraftForm");
+    cy.intercept("PUT", "/api/forms/formr-parta", { statusCode: 200 }).as(
+      "submitForm"
+    );
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/formr-a/${completeDraft.id}/view`]}>
+          <Route path="/formr-a/:id/view">
+            <FormRView formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+
+    cy.wait("@getDraftForm");
+    cy.get('[data-cy="isCorrect"]').check().should("be.checked");
+    cy.get('[data-cy="willKeepInformed"]').check().should("be.checked");
+  });
+
+  it("should confirm before submit", () => {
+    cy.get('[data-cy="BtnSubmit"]').click();
+    cy.get('[data-cy="warningText-Submit"]')
+      .should("be.visible")
+      .and("contain.text", "please think carefully before submitting");
+    cy.get("@submitForm.all").should("have.length", 0);
+  });
+
+  it("should not submit and remain on form view if trainee cancels", () => {
+    cy.get('[data-cy="BtnSubmit"]').click();
+    cy.get('[data-cy="modal-cancel-btn"]:visible').click();
+    cy.get('[data-cy="warningText-Submit"]').should("not.be.visible");
+    cy.get("@submitForm.all").should("have.length", 0);
+  });
+
+  it("should submit on confirm", () => {
+    cy.get('[data-cy="BtnSubmit"]').click();
+    cy.get('[data-cy="submitBtn-Submit"]').click();
+    cy.wait("@submitForm")
+      .its("request.body.lifecycleState")
+      .should("equal", "SUBMITTED");
+  });
+});
+
 describe("FormRView (Part A) - stale linkage on an UNSUBMITTED form", () => {
   const unsubmittedStaleForm = {
     ...formASavedDraft,
@@ -294,8 +354,10 @@ describe("FormRView (Part A) - stale linkage on an UNSUBMITTED form", () => {
 
   it("keeps the linkage when the trainee cancels the update", () => {
     cy.get('[data-cy="updateStaleLinkage"]').click();
-    cy.get('[data-cy="actionModalWarning"]').should("exist");
-    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get(`[data-cy="warningText-${formRStaleLinkageGateLabel}"]`).should(
+      "be.visible"
+    );
+    cy.get('[data-cy="modal-cancel-btn"]:visible').click();
     cy.get('[data-cy="linkage-form-page"]').should("not.exist");
     cy.get('[data-cy="programmeMembershipId-value"]').should(
       "contain.text",
@@ -305,11 +367,11 @@ describe("FormRView (Part A) - stale linkage on an UNSUBMITTED form", () => {
 
   it("clears the linkage and opens the form when the trainee confirms", () => {
     cy.get('[data-cy="updateStaleLinkage"]').click();
-    cy.get('[data-cy="actionModalWarning"]').should(
+    cy.get(`[data-cy="warningText-${formRStaleLinkageGateLabel}"]`).should(
       "contain.text",
       "the linked programme you chose is no longer available"
     );
-    cy.contains("button", "Confirm & Continue").click();
+    cy.get(`[data-cy="submitBtn-${formRStaleLinkageGateLabel}"]`).click();
     cy.get('[data-cy="linkage-form-page"]')
       .should("exist")
       .then(() => {

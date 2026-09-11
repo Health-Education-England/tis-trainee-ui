@@ -18,12 +18,14 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
   it("Should save a new draft form then delete it", () => {
     cy.signInToTss(30000, "/formr-b", "iphone-6");
     cy.get("#btnOpenForm").should("exist").click();
+    cy.confirmNewFormIfWarned();
 
     cy.log("No autosave if no changes made");
     cy.get('[data-cy="homeLink"]').should("exist").click();
     cy.get(".nhsuk-header__menu-toggle").click();
     cy.get('[data-cy="Form R (B)"]').click();
     cy.get('[data-cy="Submit new form"]').scrollIntoView().click();
+    cy.confirmNewFormIfWarned();
 
     cy.log("Autosave if navigate away after editing");
     cy.get('[data-cy="autosaveNote"]').should("exist");
@@ -66,6 +68,7 @@ describe("Form R (Part B) - Submit a new form pt1", () => {
   it("should complete part of a new Form R Part B and save draft.", () => {
     cy.signInToTss(30000, "/formr-b");
     cy.checkElement("Submit new form").click();
+    cy.confirmNewFormIfWarned();
     cy.checkElement("homeLink");
     cy.completeProgrammeLinkage();
     cy.navNext();
@@ -124,6 +127,7 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
     cy.get('[data-cy="isDeclarationAccepted"]').click();
     cy.get('[data-cy="isConsentAccepted"]').click();
     cy.checkElement("BtnSubmit", "Submit Form").click();
+    cy.get('[data-cy="submitBtn-Submit"]').click();
   });
 });
 

@@ -15,6 +15,7 @@ describe("Form R Part A - Draft form", () => {
     cy.log("################ Check autosave functionality ###################");
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
+    cy.confirmNewFormIfWarned();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
       "Part 1 of 4 - Programme Linkage"
