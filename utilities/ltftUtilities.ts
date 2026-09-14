@@ -17,6 +17,7 @@ export function populateLtftDraftNew(
     traineeTisId: traineeTisId,
     pmId: "",
     pmName: "",
+    pmNumber: "",
     pmStartDate: "",
     pmEndDate: "",
     designatedBodyCode: "",
@@ -116,6 +117,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
     programmeMembership: {
       id: ltftObj.pmId ?? null,
       name: ltftObj.pmName ?? null,
+      programmeNumber: ltftObj.pmNumber ?? null,
       startDate: ltftObj.pmStartDate ?? null,
       endDate: ltftObj.pmEndDate ?? null,
       wte: ltftObj.wteBeforeChange ? ltftObj.wteBeforeChange / 100 : 0,
@@ -180,6 +182,7 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     name: ltftDto.name ?? "",
     pmId: ltftDto.programmeMembership.id ?? "",
     pmName: ltftDto.programmeMembership.name ?? "",
+    pmNumber: ltftDto.programmeMembership.programmeNumber ?? "",
     pmStartDate: ltftDto.programmeMembership.startDate ?? null,
     pmEndDate: ltftDto.programmeMembership.endDate ?? "",
     designatedBodyCode: ltftDto.programmeMembership.designatedBodyCode ?? "",
@@ -345,11 +348,19 @@ export function makeValidProgrammeOptions(
         value: prog.tisId,
         label: `${prog.programmeName} (${dayjs(prog.startDate).format(
           "DD/MM/YYYY"
-        )} to ${dayjs(prog.endDate).format("DD/MM/YYYY")})`
+        )} to ${dayjs(prog.endDate).format("DD/MM/YYYY")})`,
+        programmeName: prog.programmeName,
+        programmeNumber: prog.programmeNumber
       });
     }
     return progOptions;
-  }, [] as { value: string; label: string }[]);
+  },
+  [] as {
+    value: string;
+    label: string;
+    programmeName: string;
+    programmeNumber: string;
+  }[]);
 
   return programmeOptions;
 }
