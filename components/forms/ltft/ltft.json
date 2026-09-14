@@ -15,7 +15,11 @@
               "label": "Which programme will your proposed change in working hours affect?",
               "optionsKey": "pmOptions",
               "visible": true,
-              "altDisplayVal": "pmName"
+              "altDisplayVal": "pmName",
+              "selectedOptionFields": {
+                "pmName": "programmeName",
+                "pmNumber": "programmeNumber"
+              }
             }
           ]
         }

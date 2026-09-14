@@ -79,6 +79,7 @@ export type Field = {
   isMultiSelect?: boolean;
   hint?: string;
   altDisplayVal?: string;
+  selectedOptionFields?: Record<string, string>;
   maxDigits?: number;
   conditionalField?: string;
 };

@@ -196,6 +196,20 @@ export const FormProvider: React.FC<FormProviderProps> = ({
 
       updateFormData(name, currentValue, arrayIndex, arrayName, dtoName);
 
+      if (selectedOption && primaryField?.selectedOptionFields) {
+        Object.entries(primaryField.selectedOptionFields).forEach(
+          ([fieldName, optionProperty]) => {
+            updateFormData(
+              fieldName,
+              selectedOption[optionProperty] ?? "",
+              arrayIndex,
+              arrayName,
+              dtoName
+            );
+          }
+        );
+      }
+
       if (primaryField?.type === "text" && primaryField?.canGrow) {
         const newWidth = setTextFieldWidth(currentValue.length);
         setFieldWidthData({ fieldName: primaryField.name, width: newWidth });
