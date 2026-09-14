@@ -150,6 +150,23 @@ describe("Set formData programmeName for submit", () => {
       linkedProgramme.managingDeanery
     );
   });
+
+  it("should fall back to the saved prog name and local office if the profile no longer has the prog used for the original linkage.", () => {
+    const result = setFormRDataForSubmit(
+      formAJson as Form,
+      {
+        ...formANew,
+        programmeMembershipId: "no-longer-in-the-profile-data",
+        programmeName: "saved prog name",
+        localOfficeName: "saved local office"
+      } as FormRPartA
+    );
+
+    expect((result as FormRPartA).programmeName).toEqual("saved prog name");
+    expect((result as FormRPartA).localOfficeName).toEqual(
+      "saved local office"
+    );
+  });
 });
 
 describe("getDraftFormId", () => {

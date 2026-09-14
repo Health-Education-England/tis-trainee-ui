@@ -435,8 +435,8 @@ export function setFormRDataForSubmit(
     store.getState().traineeProfile.traineeProfileData;
   const { linkedProgramme, localOfficeName } = processLinkedFormData(
     {
-      isArcp: formData.isArcp as boolean,
-      programmeMembershipId: formData.programmeMembershipId as string
+      isArcp: formData.isArcp ?? null,
+      programmeMembershipId: formData.programmeMembershipId ?? null
     },
     programmeMemberships
   );
@@ -444,11 +444,11 @@ export function setFormRDataForSubmit(
     lifecycleState: LifeCycleState.Submitted,
     lastModifiedDate: new Date(),
     submissionDate: new Date(),
-    traineeTisId: formData.traineeTisId as string,
-    isArcp: formData.isArcp as boolean,
-    programmeMembershipId: formData.programmeMembershipId as string,
-    programmeName: linkedProgramme?.programmeName as string,
-    localOfficeName: localOfficeName as string
+    traineeTisId: formData.traineeTisId,
+    isArcp: formData.isArcp,
+    programmeMembershipId: formData.programmeMembershipId,
+    programmeName: linkedProgramme?.programmeName ?? formData.programmeName,
+    localOfficeName: localOfficeName ?? formData.localOfficeName
   };
 
   // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA
