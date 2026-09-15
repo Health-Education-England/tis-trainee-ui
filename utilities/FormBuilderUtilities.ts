@@ -448,7 +448,9 @@ export function setFormRDataForSubmit(
     isArcp: formData.isArcp,
     programmeMembershipId: formData.programmeMembershipId,
     programmeName: linkedProgramme?.programmeName ?? formData.programmeName,
-    localOfficeName: localOfficeName ?? formData.localOfficeName
+    localOfficeName: localOfficeName ?? formData.localOfficeName,
+    programmeSpecialty:
+      linkedProgramme?.programmeName ?? formData.programmeSpecialty
   };
 
   // NOTE: Have to account for the seemingly useless isLeadingToCct field in formA

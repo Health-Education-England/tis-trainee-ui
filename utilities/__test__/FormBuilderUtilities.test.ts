@@ -149,6 +149,9 @@ describe("Set formData programmeName for submit", () => {
     expect((result as FormRPartA).localOfficeName).toEqual(
       linkedProgramme.managingDeanery
     );
+    expect((result as FormRPartA).programmeSpecialty).toEqual(
+      linkedProgramme.programmeName
+    );
   });
 
   it("should fall back to the saved prog name and local office if the profile no longer has the prog used for the original linkage.", () => {
@@ -158,13 +161,17 @@ describe("Set formData programmeName for submit", () => {
         ...formANew,
         programmeMembershipId: "no-longer-in-the-profile-data",
         programmeName: "saved prog name",
-        localOfficeName: "saved local office"
+        localOfficeName: "saved local office",
+        programmeSpecialty: "saved prog specialty"
       } as FormRPartA
     );
 
     expect((result as FormRPartA).programmeName).toEqual("saved prog name");
     expect((result as FormRPartA).localOfficeName).toEqual(
       "saved local office"
+    );
+    expect((result as FormRPartA).programmeSpecialty).toEqual(
+      "saved prog specialty"
     );
   });
 });
