@@ -70,7 +70,9 @@ describe("formBValidationSchema - identifier and currentRevalDate validation", (
       changeCircumstances: "Circumstance",
       changeCircumstanceOther: "Other",
       howPlacementAdjusted: "Adjusted"
-    }
+    },
+    isArcp: false,
+    programmeMembershipId: "pm-id-123"
   };
   const schema = getFormBValidationSchema(true);
 

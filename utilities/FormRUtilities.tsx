@@ -7,8 +7,16 @@ import { ProfileToFormRPartBInitialValues } from "../models/ProfileToFormRPartBI
 import { DateType, DateUtilities, isWithinRange } from "./DateUtilities";
 import { Label } from "nhsuk-react-components";
 import dayjs from "dayjs";
-import { LinkedFormRDataType } from "../components/forms/form-linker/FormLinkerForm";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
+import { LifeCycleState } from "../models/LifeCycleState";
+import type { FormData } from "../components/forms/form-builder/FormBuilder";
+
+type LinkedFormRDataType = {
+  isArcp: null | boolean;
+  programmeMembershipId: null | string;
+  linkedProgramme?: ProgrammeMembership;
+  localOfficeName?: string;
+};
 
 export class FormRUtilities {
   public static showMsgIfEmpty(
@@ -28,20 +36,15 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    traineeProfileData: TraineeProfile,
-    linkedFormRData: LinkedFormRDataType
+    traineeProfileData: TraineeProfile
   ) {
     if (pathName === "/formr-a") {
-      const formAInitialValues = ProfileToFormRPartAInitialValues(
-        traineeProfileData,
-        linkedFormRData
-      );
+      const formAInitialValues =
+        ProfileToFormRPartAInitialValues(traineeProfileData);
       store.dispatch(updatedFormA(formAInitialValues));
     } else if (pathName === "/formr-b") {
-      const formBInitialValues = ProfileToFormRPartBInitialValues(
-        traineeProfileData,
-        linkedFormRData
-      );
+      const formBInitialValues =
+        ProfileToFormRPartBInitialValues(traineeProfileData);
       store.dispatch(updatedFormB(formBInitialValues));
     }
   }
@@ -119,18 +122,53 @@ export function getLinkedProgrammeDetails(
   if (!programMembershipId || !programMemberships) return;
   return programMemberships.find(prog => prog.tisId === programMembershipId);
 }
+// Note: this keeps the chosen prog id and the other linkage fields together as a  set. If trainee changes mind or prog no longer valid, then the set is cleared.
+export function resolveLinkedProgrammeFields(
+  programmes: ProgrammeMembership[] | undefined,
+  isArcp: boolean,
+  programmeMembershipId: string | null | undefined
+) {
+  const linkedProgramme = filterProgrammesForLinker(
+    programmes ?? [],
+    isArcp
+  ).find(programme => programme.tisId === programmeMembershipId);
 
-type ProcessedFormData = {
-  isArcp: boolean | null;
-  programmeMembershipId: string | null;
-  localOfficeName?: string;
-  linkedProgramme?: ProgrammeMembership;
-};
+  return {
+    programmeMembershipId: linkedProgramme?.tisId ?? "",
+    programmeName: linkedProgramme?.programmeName ?? "",
+    localOfficeName: linkedProgramme?.managingDeanery ?? "",
+    programmeSpecialty: linkedProgramme?.programmeName ?? ""
+  };
+}
+
+export const clearLinkageSection = (formData: FormData): FormData => ({
+  ...formData,
+  programmeMembershipId: "",
+  programmeName: "",
+  localOfficeName: "",
+  programmeSpecialty: ""
+});
+
+export function hasStaleLinkage(
+  lifecycleState: LifeCycleState | undefined,
+  isArcp: boolean | null | undefined,
+  programmeMembershipId: string | null | undefined
+): boolean {
+  if (lifecycleState !== LifeCycleState.Unsubmitted) return false;
+  if (!programmeMembershipId || typeof isArcp !== "boolean") return false;
+
+  const { programmeMemberships } =
+    store.getState().traineeProfile.traineeProfileData;
+
+  return !filterProgrammesForLinker(programmeMemberships ?? [], isArcp).some(
+    programme => programme.tisId === programmeMembershipId
+  );
+}
 
 export function processLinkedFormData(
   data: LinkedFormRDataType,
   programmeMemberships: ProgrammeMembership[]
-): ProcessedFormData {
+): LinkedFormRDataType {
   const { isArcp, programmeMembershipId } = data;
 
   const localOfficeName = filterManagingDeanery(

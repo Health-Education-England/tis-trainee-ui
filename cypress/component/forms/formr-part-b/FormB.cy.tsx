@@ -39,62 +39,6 @@ describe("FormRForm (Part B) - new form /new/create", () => {
     store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
   });
 
-  it("first renders the FormLinkerModal before the main form", () => {
-    store.dispatch(updatedFormBLifecycleState(LifeCycleState.Draft));
-    mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/formr-b/new/create"]}>
-          <FormRForm formType="B" />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    // Note: more detailed modal tests in FormLinkerModal.cy.tsx
-    cy.get("dialog").should("be.visible");
-    cy.get('[data-cy="isArcp0"]').should("exist").click();
-    cy.get('button[data-cy="form-linker-submit-btn"]').should("be.disabled");
-    cy.clickSelect('[data-cy="programmeMembershipId"]');
-
-    cy.get('button[data-cy="form-linker-submit-btn"]')
-      .should("not.be.disabled")
-      .click();
-
-    cy.get('[data-cy="progress-header"] > h3').should(
-      "contain.text",
-      "Part 1 of 10 - Personal Details"
-    );
-
-    cy.checkAndFillSection1();
-    cy.navNext();
-
-    cy.checkAndFillSection2();
-    cy.navNext();
-
-    cy.checkAndFillSection3();
-    cy.navNext();
-
-    cy.checkAndFillSection4();
-    cy.navNext();
-
-    cy.checkAndFillSection5();
-    cy.navNext();
-
-    cy.checkAndFillSection6();
-    cy.navNext();
-
-    cy.checkAndFillSection7();
-    cy.navNext();
-
-    cy.checkAndFillSection8();
-    cy.navNext();
-
-    cy.checkAndFillSection9();
-    cy.get('[data-cy="navNext"]').contains("Compliments").click();
-
-    cy.checkAndFillSection10();
-    cy.get('[data-cy="navNext"]').contains("Review & submit").click();
-  });
-
   it("Allows direct navigation to draft form", () => {
     store.dispatch(updatedFormB(draftFormRPartBWithNullCareerBreak));
 
@@ -110,10 +54,8 @@ describe("FormRForm (Part B) - new form /new/create", () => {
 
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
-      "Part 1 of 10 - Personal Details"
+      "Part 1 of 11 - Programme Linkage"
     );
-    cy.get('[data-cy="forename-input"]').should("contain.value", "Billy");
-    cy.get('[data-cy="surname-input"]').should("contain.value", "Ocean");
   });
 
   it("allows a null prevRevalDate but errors when the date is before the UNIX epoch", () => {
@@ -128,6 +70,11 @@ describe("FormRForm (Part B) - new form /new/create", () => {
         </MemoryRouter>
       </Provider>
     );
+
+    cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+    cy.get("@firstArcpOption").click();
+    cy.clickSelect('[data-cy="programmeMembershipId"]');
+    cy.navNext();
 
     cy.get('[data-cy="prevRevalDate-input"]').should(
       "contain.value",
@@ -170,18 +117,14 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
       </Provider>
     );
 
-    cy.get("dialog").should("be.visible");
-    cy.get('[data-cy="isArcp0"]').should("exist").click();
-    cy.get('button[data-cy="form-linker-submit-btn"]').should("be.disabled");
+    cy.get('[data-cy="isArcp-radios"] input').first().as("firstArcpOption");
+    cy.get("@firstArcpOption").click();
     cy.clickSelect('[data-cy="programmeMembershipId"]');
-
-    cy.get('button[data-cy="form-linker-submit-btn"]')
-      .should("not.be.disabled")
-      .click();
+    cy.navNext();
 
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
-      "Part 1 of 10 - Personal Details"
+      "Part 2 of 11 - Personal Details"
     );
   });
 

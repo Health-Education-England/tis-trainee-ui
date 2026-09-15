@@ -49,7 +49,10 @@ export const useFormRConfig = (formType: "A" | "B") => {
       ...referenceData,
       programmeDeclarationOptions
     };
-    initialData = formData;
+
+    initialData = {
+      ...formData
+    };
   } else {
     const baseFormJson = isPHnonMed
       ? (formBJsonPH as Form)

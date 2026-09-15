@@ -15,10 +15,16 @@ describe("Form R Part A - Draft form", () => {
     cy.log("################ Check autosave functionality ###################");
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
-    cy.checkForFormLinkerAndComplete();
+    cy.confirmNewFormIfWarned();
     cy.get('[data-cy="progress-header"] > h3').should(
       "contain.text",
-      "Part 1 of 3 - Personal Details"
+      "Part 1 of 4 - Programme Linkage"
+    );
+    cy.completeProgrammeLinkage();
+    cy.navNext();
+    cy.get('[data-cy="progress-header"] > h3').should(
+      "contain.text",
+      "Part 2 of 4 - Personal Details"
     );
     cy.get('[data-cy="WarningCallout-formAImportantNotice-label"]').contains(
       "Important"
@@ -38,6 +44,8 @@ describe("Form R Part A - Draft form", () => {
       "################ Refresh page and check it reloads the form page with saved data ###################"
     );
     cy.reload();
+    cy.completeProgrammeLinkage();
+    cy.navNext();
     cy.get('[data-cy="immigrationStatus"] ').contains(immigrationTxt);
 
     cy.log(

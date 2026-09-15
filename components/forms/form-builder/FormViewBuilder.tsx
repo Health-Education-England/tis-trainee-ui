@@ -17,6 +17,9 @@ type VisibleFieldProps = {
   pageIndex: number;
   jsonFormName: FormName;
   canEdit: boolean;
+  options?: any;
+  lockedFields?: Set<string>;
+  hiddenFields?: Set<string>;
 };
 
 function VisibleField({
@@ -25,11 +28,17 @@ function VisibleField({
   formErrors,
   pageIndex,
   jsonFormName,
-  canEdit
+  canEdit,
+  options,
+  lockedFields,
+  hiddenFields
 }: Readonly<VisibleFieldProps>) {
   const viewState = getFieldViewState(field, formData);
   // Note: info fields are UI-only to help form completion
   if (viewState === "hidden" || field.type === "info") {
+    return null;
+  }
+  if (hiddenFields?.has(field.name)) {
     return null;
   }
   if (field.type === "dto") {
@@ -44,6 +53,9 @@ function VisibleField({
             pageIndex={pageIndex}
             jsonFormName={jsonFormName}
             canEdit={canEdit}
+            options={options}
+            lockedFields={lockedFields}
+            hiddenFields={hiddenFields}
           />
         ))}
       </>
@@ -86,25 +98,38 @@ function VisibleField({
         </SummaryList.Key>
         <SummaryList.Value data-cy={`${field.name}-value`}>
           {formatEntryValue(
-            field.altDisplayVal
-              ? formData[field.altDisplayVal]
-              : formData[field.name],
+            resolveDisplayValue(field, formData, options),
             field.type
           )}
         </SummaryList.Value>
-        {canEdit && viewState === "editable" && (
-          <SummaryList.Action asElement="span">
-            <ChangeLink
-              targetField={field.name}
-              label={field.label ?? ""}
-              jsonFormName={jsonFormName}
-              pageIndex={pageIndex}
-            />
-          </SummaryList.Action>
-        )}
+        {canEdit &&
+          viewState === "editable" &&
+          !lockedFields?.has(field.name) && (
+            <SummaryList.Action asElement="span">
+              <ChangeLink
+                targetField={field.name}
+                label={field.label ?? ""}
+                jsonFormName={jsonFormName}
+                pageIndex={pageIndex}
+              />
+            </SummaryList.Action>
+          )}
       </SummaryList.Row>
     </SummaryList>
   );
+}
+
+function resolveDisplayValue(field: Field, formData: FormData, options?: any) {
+  if (field.altDisplayVal) return formData[field.altDisplayVal];
+  const raw = formData[field.name];
+  const fieldOptions = field.optionsKey ? options?.[field.optionsKey] : null;
+  if (Array.isArray(fieldOptions)) {
+    let rawKey = String(raw);
+    if (typeof raw === "boolean") rawKey = raw ? "Yes" : "No";
+    const match = fieldOptions.find((o: any) => String(o.value) === rawKey);
+    if (match) return match.label;
+  }
+  return raw;
 }
 
 type FieldViewState = "hidden" | "editable" | "readOnly";
@@ -118,7 +143,7 @@ function getFieldViewState(field: Field, formData: FormData): FieldViewState {
     return "hidden";
   }
   if (showFormField(field, formData)) {
-    return "editable";
+    return field.readOnly ? "readOnly" : "editable";
   }
   if (field.showInViewWhenPopulated && isPopulated) {
     return "readOnly"; // Note: field flagged showInViewWhenPopulated e.g. a startDate stamped at submission on the "No" path, which is not editable, so no change link is rendered.
@@ -131,7 +156,10 @@ type FormViewBuilder = {
   formData: FormData;
   canEdit: boolean;
   formErrors: FormErrorsType;
+  options?: any;
   pageNotices?: Record<string, React.ReactNode>;
+  lockedFields?: Set<string>;
+  hiddenFields?: Set<string>;
 };
 
 export default function FormViewBuilder({
@@ -139,7 +167,10 @@ export default function FormViewBuilder({
   formData,
   canEdit,
   formErrors,
-  pageNotices
+  options,
+  pageNotices,
+  lockedFields,
+  hiddenFields
 }: Readonly<FormViewBuilder>) {
   return (
     <div>
@@ -163,6 +194,9 @@ export default function FormViewBuilder({
                     pageIndex={pageIndex}
                     jsonFormName={jsonForm.name}
                     canEdit={canEdit}
+                    options={options}
+                    lockedFields={lockedFields}
+                    hiddenFields={hiddenFields}
                   />
                 ))}
               </div>

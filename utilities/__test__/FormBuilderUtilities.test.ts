@@ -129,13 +129,49 @@ describe("For submission, set blank work site data to null", () => {
 });
 
 describe("Set formData programmeName for submit", () => {
-  it("should set programme name before submit", () => {
+  beforeEach(() => {
+    store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
+  });
+
+  it("should derive programme name and local office from the linked programme before submit", () => {
+    const linkedProgramme = mockTraineeProfile.programmeMemberships[0];
     const result = setFormRDataForSubmit(
       formAJson as Form,
-      formANew as FormRPartA
+      {
+        ...formANew,
+        programmeMembershipId: linkedProgramme.tisId
+      } as FormRPartA
     );
+
     expect((result as FormRPartA).programmeName).toEqual(
-      formANew.programmeName
+      linkedProgramme.programmeName
+    );
+    expect((result as FormRPartA).localOfficeName).toEqual(
+      linkedProgramme.managingDeanery
+    );
+    expect((result as FormRPartA).programmeSpecialty).toEqual(
+      linkedProgramme.programmeName
+    );
+  });
+
+  it("should fall back to the saved prog name and local office if the profile no longer has the prog used for the original linkage.", () => {
+    const result = setFormRDataForSubmit(
+      formAJson as Form,
+      {
+        ...formANew,
+        programmeMembershipId: "no-longer-in-the-profile-data",
+        programmeName: "saved prog name",
+        localOfficeName: "saved local office",
+        programmeSpecialty: "saved prog specialty"
+      } as FormRPartA
+    );
+
+    expect((result as FormRPartA).programmeName).toEqual("saved prog name");
+    expect((result as FormRPartA).localOfficeName).toEqual(
+      "saved local office"
+    );
+    expect((result as FormRPartA).programmeSpecialty).toEqual(
+      "saved prog specialty"
     );
   });
 });

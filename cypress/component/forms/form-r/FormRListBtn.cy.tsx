@@ -124,6 +124,35 @@ describe("FormRListBtn", () => {
     cy.get("button").should("contain.text", "Edit unsubmitted form");
   });
 
+  it("should open the review page when clicking 'Edit unsubmitted form'", () => {
+    store.dispatch(
+      updatedDraftFormProps({
+        id: "unsubmitted-id-456",
+        lifecycleState: LifeCycleState.Unsubmitted
+      })
+    );
+    history.push("/formr-a");
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Switch>
+            <Route exact path="/formr-a">
+              <FormRListBtn pathName="/formr-a" />
+            </Route>
+            <Route path="/formr-a/unsubmitted-id-456/view">
+              <div data-cy="unsubmitted-form-view-page">Form View Page</div>
+            </Route>
+          </Switch>
+        </Router>
+      </Provider>
+    );
+
+    cy.get("button").click();
+    cy.get('[data-cy="unsubmitted-form-view-page"]').should("exist");
+    cy.url().should("include", "/formr-a/unsubmitted-id-456/view");
+  });
+
   it("should be disabled when form status is 'deleting'", () => {
     store.dispatch(updatedFormAStatus("deleting"));
 
