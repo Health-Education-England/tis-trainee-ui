@@ -876,6 +876,23 @@ export const formRLegacyLinkageNotice = (
   </>
 );
 
+export const formRNoProgrammesNotice = (
+  <p>
+    Your TIS Self-Service profile has no programmes that can be linked to this
+    form. Please contact your Local Office via the <b>Support</b> page.
+  </p>
+);
+
+export const formRNoLinkageOptionsNotice = (
+  <p>
+    No programmes are available to link to your chosen reason. If you think
+    there should be then please contact your Local Office via the <b>Support</b>{" "}
+    page.
+  </p>
+);
+
+export const PROG_LINK_PAGE_NAME = "Programme Linkage";
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

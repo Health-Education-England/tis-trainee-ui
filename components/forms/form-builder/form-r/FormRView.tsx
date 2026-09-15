@@ -21,7 +21,8 @@ import {
   formRLegacyLinkageNotice,
   formRStaleLinkageGateLabel,
   formRStaleLinkageGateText,
-  formRStaleLinkageNoticeText
+  formRStaleLinkageNoticeText,
+  PROG_LINK_PAGE_NAME
 } from "../../../../utilities/Constants";
 import {
   saveDraftForm,
@@ -62,8 +63,6 @@ type LocationState = {
 type UnifiedFormRViewProps = {
   formType: "A" | "B";
 };
-
-const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
 export function FormRView({ formType }: Readonly<UnifiedFormRViewProps>) {
   const { id } = useParams<FormRParams>();

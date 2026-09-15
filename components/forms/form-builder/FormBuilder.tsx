@@ -110,6 +110,7 @@ export type Form = {
 type FormBuilderProps = {
   options: any;
   validationSchema: any;
+  pageNotices?: Record<string, React.ReactNode>;
 };
 export type MatcherName =
   | "prevDateTest"
@@ -139,7 +140,8 @@ type LocationState = {
 
 export default function FormBuilder({
   options,
-  validationSchema
+  validationSchema,
+  pageNotices
 }: Readonly<FormBuilderProps>) {
   const {
     formData,
@@ -330,6 +332,7 @@ export default function FormBuilder({
               </Card>
             </React.Fragment>
           ))}
+          {pageNotices?.[pages[currentPage].pageName]}
         </div>
       )}
       <AutosaveMessage formName={jsonFormName} />

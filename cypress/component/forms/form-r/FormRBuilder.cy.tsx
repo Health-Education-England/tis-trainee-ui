@@ -18,6 +18,7 @@ import { formAValidationSchema } from "../../../../components/forms/form-builder
 import { FormsService } from "../../../../services/FormsService";
 import {
   mockProgrammesForLinkerTest,
+  mockProgrammesForLinkerTestOutsideArcp,
   mockTraineeProfile
 } from "../../../../mock-data/trainee-profile";
 
@@ -54,11 +55,14 @@ function LinkageDataDisplay() {
 const acuteMedicineNow = "1";
 const newStarterOnlyProgramme = "5";
 
-const mountLinkage = (initialData: FormData) => {
+const mountLinkage = (
+  initialData: FormData,
+  programmeMemberships = mockProgrammesForLinkerTest
+) => {
   store.dispatch(
     updatedTraineeProfileData({
       ...mockTraineeProfile,
-      programmeMemberships: mockProgrammesForLinkerTest
+      programmeMemberships
     })
   );
 
@@ -154,6 +158,35 @@ describe("FormRBuilder - programme linkage", () => {
       "contain.text",
       "Acute medicine"
     );
+  });
+
+  it("should display 'no progs' msg straight away when the profile has zero progs", () => {
+    mountLinkage({ isArcp: null, programmeMembershipId: null }, []);
+
+    cy.get("[data-cy=noProgrammesNote]").should(
+      "contain.text",
+      "Your TIS Self-Service profile has no programmes"
+    );
+    cy.get("[data-cy=noLinkageOptionsNote]").should("not.exist");
+  });
+
+  it("should display 'no progs' msg if no progs to link to after isArcp choice", () => {
+    mountLinkage(
+      { isArcp: null, programmeMembershipId: null },
+      mockProgrammesForLinkerTestOutsideArcp
+    );
+
+    cy.get("[data-cy=noLinkageOptionsNote]").should("not.exist");
+
+    cy.get(arcpRadio).click();
+    cy.get("[data-cy=noLinkageOptionsNote]").should(
+      "contain.text",
+      "No programmes are available to link to your chosen reason."
+    );
+    cy.get("[data-cy=noProgrammesNote]").should("not.exist");
+
+    cy.get(newStarterRadio).click();
+    cy.get("[data-cy=noLinkageOptionsNote]").should("not.exist");
   });
 
   it("should clear a reopened draft whose saved programme is no longer offered", () => {

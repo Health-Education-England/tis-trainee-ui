@@ -8,6 +8,12 @@ import {
   resolveLinkedProgrammeFields
 } from "../../../../utilities/FormRUtilities";
 import { useLinkageOptions } from "../../../../utilities/hooks/useLinkageOptions";
+import { InsetText } from "nhsuk-react-components";
+import {
+  formRNoLinkageOptionsNotice,
+  formRNoProgrammesNotice,
+  PROG_LINK_PAGE_NAME
+} from "../../../../utilities/Constants";
 
 type FormRBuilderProps = {
   options: any;
@@ -64,10 +70,33 @@ export function FormRBuilder({
     setFormData
   ]);
 
+  let linkagePageNotice;
+  if (!programmesArr?.length) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <InsetText data-cy="noProgrammesNote">
+          {formRNoProgrammesNotice}
+        </InsetText>
+      )
+    };
+  } else if (
+    typeof isArcp === "boolean" &&
+    linkedProgrammeOptions.length === 0
+  ) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <InsetText data-cy="noLinkageOptionsNote">
+          {formRNoLinkageOptionsNotice}
+        </InsetText>
+      )
+    };
+  }
+
   return (
     <FormBuilder
       options={{ ...options, arcpOptions, linkedProgrammeOptions }}
       validationSchema={validationSchema}
+      pageNotices={linkagePageNotice}
     />
   );
 }
