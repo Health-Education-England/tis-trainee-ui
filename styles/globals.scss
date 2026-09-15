@@ -981,6 +981,11 @@ dialog::backdrop {
   padding: 1rem;
 }
 
+.modal-content {
+  text-align: left;
+  white-space: normal;
+}
+
 // onboarding tracker
 .tracker-section_node {
   min-width: 40px;
