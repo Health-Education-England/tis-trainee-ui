@@ -48,12 +48,15 @@ import {
   updatedLtft,
   updateLtft
 } from "../redux/slices/ltftSlice";
-import { updatedFormsRefreshNeeded } from "../redux/slices/formsSlice";
+import {
+  fetchForms,
+  updatedFormsRefreshNeeded
+} from "../redux/slices/formsSlice";
 import { updatedLtftFormsRefreshNeeded } from "../redux/slices/ltftSummaryListSlice";
 import { LtftObjNew } from "../models/LtftTypes";
 import { isPastIt } from "./DateUtilities";
 import { findLinkedProgramme } from "./CctUtilities";
-import { processLinkedFormData } from "./FormRUtilities";
+import { buildFormRPrefill, processLinkedFormData } from "./FormRUtilities";
 
 export function mapItemToNewFormat(item: KeyValue): {
   value: string;
@@ -424,6 +427,29 @@ export function setDraftFormRProps(forms: IFormR[]): DraftFormProps | null {
       programmeMembershipId: draftForm.programmeMembershipId
     };
   }
+  return null;
+}
+
+export async function openPrefilledFormR(
+  formType: "A" | "B",
+  programmeMembershipId: string
+): Promise<DraftFormProps | null> {
+  const basePath = formType === "A" ? "/formr-a" : "/formr-b";
+  const formName: FormName = formType === "A" ? "formA" : "formB";
+
+  const forms = await store.dispatch(fetchForms(basePath)).unwrap();
+  const formInProgress = setDraftFormRProps(forms);
+  if (formInProgress) return formInProgress;
+
+  const { programmeMemberships } =
+    store.getState().traineeProfile.traineeProfileData;
+  const prefill = buildFormRPrefill(
+    programmeMemberships,
+    programmeMembershipId
+  );
+
+  resetForm(formName);
+  history.push(`${basePath}/new/create`, prefill ? { prefill } : undefined);
   return null;
 }
 // NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission

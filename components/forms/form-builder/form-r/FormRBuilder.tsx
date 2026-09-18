@@ -12,8 +12,10 @@ import { InsetText } from "nhsuk-react-components";
 import {
   formRNoLinkageOptionsNotice,
   formRNoProgrammesNotice,
+  formRPrefillNotice,
   PROG_LINK_PAGE_NAME
 } from "../../../../utilities/Constants";
+import { useLocation } from "react-router-dom";
 
 type FormRBuilderProps = {
   options: any;
@@ -33,6 +35,7 @@ export function FormRBuilder({
   const programmeMembershipId = formData.programmeMembershipId;
   const lifecycleState = formData.lifecycleState;
   const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(isArcp);
+  const isPrefilled = !!useLocation<{ prefill?: unknown }>().state?.prefill;
 
   //Note: prevIsArcpRef used to 'remember' the previous value (something the useEffect doesn't), so we can clear the programme linkage fields when use changes the isArcp  radio choice.
   // Note: this won't clear a linkage via a reloaded draft - resolveLinkedProgrammeFields does his later on if no matching id i.e. prog no longer valid since form save.
@@ -88,6 +91,12 @@ export function FormRBuilder({
         <InsetText data-cy="noLinkageOptionsNote">
           {formRNoLinkageOptionsNotice}
         </InsetText>
+      )
+    };
+  } else if (isPrefilled) {
+    linkagePageNotice = {
+      [PROG_LINK_PAGE_NAME]: (
+        <InsetText data-cy="prefillNote">{formRPrefillNotice}</InsetText>
       )
     };
   }

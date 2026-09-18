@@ -6,8 +6,10 @@ import {
   mockProgrammesForLinkerTestWithFoundation
 } from "../../mock-data/trainee-profile";
 import {
+  buildFormRPrefill,
   clearLinkageSection,
   filterProgrammesForLinker,
+  inferIsArcp,
   hasStaleLinkage,
   isFoundationProgramme,
   makeWarningText,
@@ -367,5 +369,47 @@ describe("FormRUtilities - isFoundationProgramme", () => {
   it("should return false for a non-foundation programme", () => {
     const result = isFoundationProgramme(mockProgrammesForLinkerTest[0]);
     expect(result).toEqual(false);
+  });
+});
+
+describe("FormRUtilities - inferIsArcp", () => {
+  it("should infer 'new starter' for a programme that has not started yet", () => {
+    expect(inferIsArcp(mockProgrammesForLinkerTest, "5")).toEqual(false);
+  });
+
+  it("should infer 'ARCP' for a programme that ended within the last year", () => {
+    expect(inferIsArcp(mockProgrammesForLinkerTest, "3")).toEqual(true);
+  });
+
+  it("should infer 'new starter' for a current programme linkable either way", () => {
+    expect(inferIsArcp(mockProgrammesForLinkerTest, "1")).toEqual(false);
+  });
+
+  it("should return null for a programme that is linkable neither way", () => {
+    expect(inferIsArcp(mockProgrammesForLinkerTest, "4")).toBeNull();
+  });
+
+  it("should return null when the trainee has no programmes", () => {
+    expect(inferIsArcp(undefined, "1")).toBeNull();
+  });
+});
+
+describe("FormRUtilities - buildFormRPrefill", () => {
+  it("should build the full linkage field set with the inferred isArcp", () => {
+    expect(buildFormRPrefill(mockProgrammesForLinkerTest, "3")).toEqual({
+      isArcp: true,
+      programmeMembershipId: "3",
+      programmeName: "Acute medicine",
+      localOfficeName: mockProgrammesForLinkerTest[2].managingDeanery,
+      programmeSpecialty: "Acute medicine"
+    });
+  });
+
+  it("should return null for a programme that cannot be linked", () => {
+    expect(buildFormRPrefill(mockProgrammesForLinkerTest, "4")).toBeNull();
+  });
+
+  it("should return null for a programme id not in the profile", () => {
+    expect(buildFormRPrefill(mockProgrammesForLinkerTest, "nope")).toBeNull();
   });
 });

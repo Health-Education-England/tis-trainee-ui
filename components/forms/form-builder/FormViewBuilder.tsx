@@ -183,6 +183,7 @@ export default function FormViewBuilder({
             >
               {page.pageName}
             </Card.Heading>
+            {pageNotices?.[page.pageName]}
             {page.sections.map((section, _sectionIndex) => (
               <div key={section.sectionHeader}>
                 {section.fields.map(field => (
@@ -201,7 +202,6 @@ export default function FormViewBuilder({
                 ))}
               </div>
             ))}
-            {pageNotices?.[page.pageName]}
           </Card>
         </div>
       ))}

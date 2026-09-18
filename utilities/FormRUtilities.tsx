@@ -36,16 +36,17 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    traineeProfileData: TraineeProfile
+    traineeProfileData: TraineeProfile,
+    prefill?: FormRPrefill
   ) {
     if (pathName === "/formr-a") {
       const formAInitialValues =
         ProfileToFormRPartAInitialValues(traineeProfileData);
-      store.dispatch(updatedFormA(formAInitialValues));
+      store.dispatch(updatedFormA({ ...formAInitialValues, ...prefill }));
     } else if (pathName === "/formr-b") {
       const formBInitialValues =
         ProfileToFormRPartBInitialValues(traineeProfileData);
-      store.dispatch(updatedFormB(formBInitialValues));
+      store.dispatch(updatedFormB({ ...formBInitialValues, ...prefill }));
     }
   }
 }
@@ -139,6 +140,48 @@ export function resolveLinkedProgrammeFields(
     localOfficeName: linkedProgramme?.managingDeanery ?? "",
     programmeSpecialty: linkedProgramme?.programmeName ?? ""
   };
+}
+
+export type FormRPrefill = {
+  isArcp: boolean;
+  programmeMembershipId: string;
+  programmeName: string;
+  localOfficeName: string;
+  programmeSpecialty: string;
+};
+
+export function inferIsArcp(
+  programmes: ProgrammeMembership[] | undefined,
+  programmeMembershipId: string
+): boolean | null {
+  const isLinkable = (isArcp: boolean) =>
+    filterProgrammesForLinker(programmes ?? [], isArcp).some(
+      programme => programme.tisId === programmeMembershipId
+    );
+
+  const linkableAsNewStarter = isLinkable(false);
+  const linkableAsArcp = isLinkable(true);
+
+  if (linkableAsNewStarter) return false;
+  if (linkableAsArcp) return true;
+  return null;
+}
+
+export function buildFormRPrefill(
+  programmes: ProgrammeMembership[] | undefined,
+  programmeMembershipId: string
+): FormRPrefill | null {
+  const isArcp = inferIsArcp(programmes, programmeMembershipId);
+  if (isArcp === null) return null;
+
+  const linkageFields = resolveLinkedProgrammeFields(
+    programmes,
+    isArcp,
+    programmeMembershipId
+  );
+  if (!linkageFields.programmeMembershipId) return null;
+
+  return { isArcp, ...linkageFields };
 }
 
 export const clearLinkageSection = (formData: FormData): FormData => ({

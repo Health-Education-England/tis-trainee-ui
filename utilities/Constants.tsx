@@ -891,6 +891,25 @@ export const formRNoLinkageOptionsNotice = (
   </p>
 );
 
+export const formRPrefillNotice = (
+  <p>
+    Your reason for submitting this form and the linked programme have been
+    pre-filled based on the action you have just clicked. Please change if they
+    are not correct.
+  </p>
+);
+
+export const formRInProgressWarningLabel =
+  "You already have a form in progress";
+
+export const formRInProgressWarningText = (
+  formType: "A" | "B",
+  isUnsubmitted: boolean
+) =>
+  `You cannot begin a new Form R Part ${formType} because there is  already ${
+    isUnsubmitted ? "an unsubmitted" : "a draft"
+  } form in progress.`;
+
 export const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
 export const tier2SkilledWorkerVisaInfo = (

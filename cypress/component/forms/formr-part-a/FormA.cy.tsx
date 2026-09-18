@@ -268,3 +268,49 @@ describe("Form R part A - recent submit -> new form", () => {
     );
   });
 });
+
+describe("FormRForm (Part A) - prefilled from an action link", () => {
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
+
+    history.push("/formr-a/new/create", {
+      prefill: {
+        isArcp: true,
+        programmeMembershipId: "3",
+        programmeName: "Acute medicine",
+        localOfficeName: "East of England",
+        programmeSpecialty: "Acute medicine"
+      }
+    });
+
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <Route exact path="/formr-a/new/create">
+            <FormRForm formType="A" />
+          </Route>
+        </Router>
+      </Provider>
+    );
+  });
+
+  it("should open the form with the reason and linked programme already chosen", () => {
+    cy.get('[data-cy="isArcp-ARCP/Annual Submission-input"]').should(
+      "be.checked"
+    );
+    cy.get('[data-cy="programmeMembershipId"]').should(
+      "contain.text",
+      "Acute medicine"
+    );
+    cy.get('[data-cy="localOfficeName-input"]').should(
+      "have.value",
+      "East of England"
+    );
+  });
+
+  it("should explain that the linkage was pre-selected", () => {
+    cy.get('[data-cy="prefillNote"]').should("exist");
+  });
+});
