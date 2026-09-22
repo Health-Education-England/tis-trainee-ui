@@ -95,9 +95,9 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
 
   useEffect(() => {
     if (isNewForm && newFormId) {
-      history.replace(`${basePath}/${newFormId}/create`);
+      history.replace(`${basePath}/${newFormId}/create`, { prefillResult });
     }
-  }, [isNewForm, newFormId, basePath]);
+  }, [isNewForm, newFormId, basePath, prefillResult]);
 
   useEffect(() => {
     if (id && loadedFormIdRef.current !== id) {
@@ -163,7 +163,11 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
-      <FormRBuilder options={formOptions} validationSchema={validationSchema} />
+      <FormRBuilder
+        options={formOptions}
+        validationSchema={validationSchema}
+        prefillResult={prefillResult}
+      />
     </FormProvider>
   );
 }

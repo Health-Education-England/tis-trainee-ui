@@ -10,7 +10,9 @@ import history from "../../../navigation/history";
 import { Modal } from "../../../common/Modal";
 import {
   formRInProgressWarningLabel,
-  formRInProgressWarningText
+  formRInProgressWarningText,
+  formRLoadErrorWarningLabel,
+  formRLoadErrorWarningText
 } from "../../../../utilities/Constants";
 
 type FormRPrefillLinkProps = {
@@ -25,6 +27,7 @@ export function FormRPrefillLink({
   label
 }: Readonly<FormRPrefillLinkProps>) {
   const [isChecking, setIsChecking] = useState(false);
+  const [hasLoadError, setHasLoadError] = useState(false);
   const [formInProgress, setFormInProgress] = useState<DraftFormProps | null>(
     null
   );
@@ -33,21 +36,55 @@ export function FormRPrefillLink({
   const isUnsubmitted =
     formInProgress?.lifecycleState === LifeCycleState.Unsubmitted;
 
-  const handleClick = async (event: React.MouseEvent) => {
-    event.preventDefault();
+  const checkForFormInProgress = async () => {
     if (isChecking) return;
     setIsChecking(true);
+    setHasLoadError(false);
 
     try {
       setFormInProgress(
         await openPrefilledFormR(formType, programmeMembershipId)
       );
     } catch {
-      history.push(basePath);
+      setHasLoadError(true);
     } finally {
       setIsChecking(false);
     }
   };
+
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    checkForFormInProgress();
+  };
+
+  const modalContent = formInProgress ? (
+    <ModalWarning
+      name="formRInProgress"
+      label={formRInProgressWarningLabel}
+      text={formRInProgressWarningText(formType, isUnsubmitted)}
+      btnDataCy="goToFormInProgressBtn"
+      btnText={
+        isUnsubmitted ? "Edit unsubmitted form" : "Edit saved draft form"
+      }
+      onBtnClick={() =>
+        history.push(
+          `${basePath}/${formInProgress.id}/${
+            isUnsubmitted ? "view" : "create"
+          }`
+        )
+      }
+    />
+  ) : (
+    <ModalWarning
+      name="formRLoadError"
+      label={formRLoadErrorWarningLabel}
+      text={formRLoadErrorWarningText}
+      btnDataCy="retryFormRCheckBtn"
+      btnText="Try again"
+      isBtnDisabled={isChecking}
+      onBtnClick={checkForFormInProgress}
+    />
+  );
 
   return (
     <>
@@ -58,42 +95,59 @@ export function FormRPrefillLink({
       >
         {label}
       </Link>
-      {formInProgress && (
+      {(formInProgress || hasLoadError) && (
         <Modal
           isOpen={true}
-          onClose={() => setFormInProgress(null)}
+          onClose={() => {
+            setFormInProgress(null);
+            setHasLoadError(false);
+          }}
           cancelBtnText="Close"
         >
-          <WarningCallout data-cy="formRInProgressWarning">
-            <WarningCallout.Heading
-              visuallyHiddenText=""
-              data-cy="formRInProgressLabel"
-            >
-              {formRInProgressWarningLabel}
-            </WarningCallout.Heading>
-            <p data-cy="formRInProgressText">
-              {formRInProgressWarningText(formType, isUnsubmitted)}
-            </p>
-          </WarningCallout>
-          <div className="nhsuk-button-group">
-            <Button
-              type="button"
-              data-cy="goToFormInProgressBtn"
-              onClick={() =>
-                history.push(
-                  `${basePath}/${formInProgress.id}/${
-                    isUnsubmitted ? "view" : "create"
-                  }`
-                )
-              }
-            >
-              {isUnsubmitted
-                ? "Edit unsubmitted form"
-                : "Edit saved draft form"}
-            </Button>
-          </div>
+          {modalContent}
         </Modal>
       )}
+    </>
+  );
+}
+
+type ModalWarningProps = {
+  name: string;
+  label: string;
+  text: string;
+  btnDataCy: string;
+  btnText: string;
+  isBtnDisabled?: boolean;
+  onBtnClick: () => void;
+};
+
+function ModalWarning({
+  name,
+  label,
+  text,
+  btnDataCy,
+  btnText,
+  isBtnDisabled,
+  onBtnClick
+}: Readonly<ModalWarningProps>) {
+  return (
+    <>
+      <WarningCallout data-cy={`${name}Warning`}>
+        <WarningCallout.Heading visuallyHiddenText="" data-cy={`${name}Label`}>
+          {label}
+        </WarningCallout.Heading>
+        <p data-cy={`${name}Text`}>{text}</p>
+      </WarningCallout>
+      <div className="nhsuk-button-group">
+        <Button
+          type="button"
+          data-cy={btnDataCy}
+          disabled={isBtnDisabled}
+          onClick={onBtnClick}
+        >
+          {btnText}
+        </Button>
+      </div>
     </>
   );
 }

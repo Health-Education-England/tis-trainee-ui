@@ -78,18 +78,17 @@ export default function ActionSummary() {
                   if (!action.type) return null;
                   const actionInfo = getActionTypeInfo(action);
                   if (!actionInfo) return null;
-                  const { label, link, formType } = actionInfo;
                   return (
                     <Table.Row key={action.id}>
                       <Table.Cell>
-                        {formType ? (
+                        {"formType" in actionInfo ? (
                           <FormRPrefillLink
-                            formType={formType}
+                            formType={actionInfo.formType}
                             programmeMembershipId={group["Programme ID"]}
-                            label={label}
+                            label={actionInfo.label}
                           />
                         ) : (
-                          <Link to={link}>{label}</Link>
+                          <Link to={actionInfo.link}>{actionInfo.label}</Link>
                         )}
                       </Table.Cell>
                       <Table.Cell>
@@ -128,11 +127,9 @@ export default function ActionSummary() {
   );
 }
 
-type ActionTypeInfo = {
-  label: string;
-  link: string;
-  formType?: "A" | "B";
-};
+type ActionTypeInfo =
+  | { label: string; link: string }
+  | { label: string; formType: "A" | "B" };
 
 function getActionTypeInfo(action: TraineeAction): ActionTypeInfo | null {
   if (action.type === "REVIEW_DATA") {
@@ -158,12 +155,10 @@ function getActionTypeInfo(action: TraineeAction): ActionTypeInfo | null {
     },
     SIGN_FORM_R_PART_A: {
       label: "Submit a new Form R Part A",
-      link: "/formr-a",
       formType: "A"
     },
     SIGN_FORM_R_PART_B: {
       label: "Submit a new Form R Part B",
-      link: "/formr-b",
       formType: "B"
     }
   };

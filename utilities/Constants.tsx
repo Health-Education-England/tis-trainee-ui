@@ -891,6 +891,32 @@ export const formRNoLinkageOptionsNotice = (
   </p>
 );
 
+export const formRPrefillAllNotice = (
+  <p>
+    Your reason for submitting this form and the linked programme have been
+    pre-selected based on the link you followed. Please change them if they are
+    not correct.
+  </p>
+);
+
+export const formRPrefillProgrammeOnlyNotice = (
+  <p>
+    The linked programme has been pre-selected based on the link you followed
+    but you still need to give the reason for submitting this form as it was not
+    clear enough to pre-select. Please change the programme too if it&apos;s not
+    correct.
+  </p>
+);
+
+// Note: this is for stale programme linkages/URL-navigated tracker links
+export const formRPrefillUnavailableNotice = (
+  <p>
+    Neither the reason nor linked programme has been pre-selected because the
+    programme behind the link you followed is no longer available to link to.
+    Please choose from the available options.
+  </p>
+);
+
 export const formRInProgressWarningLabel =
   "You already have a form in progress";
 
@@ -901,6 +927,11 @@ export const formRInProgressWarningText = (
   `You cannot begin a new Form R Part ${formType} because there is already ${
     isUnsubmitted ? "an unsubmitted" : "a draft"
   } form in progress.`;
+
+export const formRLoadErrorWarningLabel = "Unable to start a new form";
+
+export const formRLoadErrorWarningText =
+  "Before you can start a new form, you need to submit any in-progress forms. We tried unsuccessfully to load your saved forms to check for any in-progress. Please try again.";
 
 export const PROG_LINK_PAGE_NAME = "Programme Linkage";
 

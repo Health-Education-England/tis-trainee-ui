@@ -162,6 +162,34 @@ describe("FormRPrefillLink", () => {
     cy.get('[data-cy="formr-a-draft"]').should("exist");
   });
 
+  it("should explain the failure instead of navigating when the forms cannot be loaded", () => {
+    mountLink({ statusCode: 500, body: {} });
+    cy.get('[data-cy="formRPrefillLink-A"]').click();
+    cy.wait("@getForms");
+
+    cy.get('[data-cy="formRLoadErrorText"]').should(
+      "contain.text",
+      "We tried unsuccessfully to load your saved forms"
+    );
+    cy.get('[data-cy="formr-a-create"]').should("not.exist");
+    cy.get('[data-cy="formRPrefillLink-A"]').should("exist");
+  });
+
+  it("should open the new form when the trainee retries after a failure", () => {
+    mountLink({ statusCode: 500, body: {} });
+    cy.get('[data-cy="formRPrefillLink-A"]').click();
+    cy.wait("@getForms");
+    cy.get('[data-cy="formRLoadErrorWarning"]').should("exist");
+
+    cy.intercept("GET", "/api/forms/formr-partas", allSubmittedForms).as(
+      "getFormsRetry"
+    );
+    cy.get('[data-cy="retryFormRCheckBtn"]').click();
+    cy.wait("@getFormsRetry");
+
+    cy.get('[data-cy="formr-a-create"]').should("exist");
+  });
+
   it("should send the trainee to the view page when the form is unsubmitted", () => {
     mountLink([
       { ...formASavedDraft, lifecycleState: LifeCycleState.Unsubmitted }

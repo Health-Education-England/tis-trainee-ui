@@ -17,6 +17,10 @@ import formAJson from "../../../../components/forms/form-builder/form-r/part-a/f
 import { formAValidationSchema } from "../../../../components/forms/form-builder/form-r/part-a/formAValidationSchema";
 import { FormsService } from "../../../../services/FormsService";
 import {
+  buildFormRPrefill,
+  FormRPrefillResult
+} from "../../../../utilities/FormRUtilities";
+import {
   mockProgrammesForLinkerTest,
   mockProgrammesForLinkerTestOutsideArcp,
   mockTraineeProfile
@@ -53,12 +57,14 @@ function LinkageDataDisplay() {
 }
 
 const acuteMedicineNow = "1";
+const arcpOnlyProgramme = "3";
 const outsideBothWindowsProgramme = "4";
 const newStarterOnlyProgramme = "5";
 
 const mountLinkage = (
   initialData: FormData,
-  programmeMemberships = mockProgrammesForLinkerTest
+  programmeMemberships = mockProgrammesForLinkerTest,
+  prefillResult?: FormRPrefillResult
 ) => {
   store.dispatch(
     updatedTraineeProfileData({
@@ -76,23 +82,50 @@ const mountLinkage = (
           jsonForm={formJson}
         >
           <LinkageDataDisplay />
-          <FormRBuilder options={{}} validationSchema={formAValidationSchema} />
+          <FormRBuilder
+            options={{}}
+            validationSchema={formAValidationSchema}
+            prefillResult={prefillResult}
+          />
         </FormProvider>
       </Router>
     </Provider>
   );
 };
 
-describe("FormRBuilder - programme linkage", () => {
-  beforeEach(() => {
-    // Note: stubs to keep autosave network calls quiet
-    cy.stub(FormsService.prototype, "saveTraineeFormRPartA").resolves({
-      data: { id: "draft-1" }
-    });
-    cy.stub(FormsService.prototype, "updateTraineeFormRPartA").resolves({
-      data: {}
-    });
+const prefillFor = (programmeMembershipId: string) =>
+  buildFormRPrefill(mockProgrammesForLinkerTest, programmeMembershipId);
+
+const mountPrefilled = (
+  programmeMembershipId: string,
+  programmeMemberships = mockProgrammesForLinkerTest
+) => {
+  const prefillResult = prefillFor(programmeMembershipId);
+  mountLinkage(
+    prefillResult.outcome === "prefilled"
+      ? { ...prefillResult.prefill }
+      : { isArcp: null, programmeMembershipId: null },
+    programmeMemberships,
+    prefillResult
+  );
+};
+
+const allNote = "[data-cy=prefillAllNote]";
+const programmeOnlyNote = "[data-cy=prefillProgrammeOnlyNote]";
+const unavailableNote = "[data-cy=prefillUnavailableNote]";
+
+// Note: stubs to keep autosave network calls quiet
+const stubAutosave = () => {
+  cy.stub(FormsService.prototype, "saveTraineeFormRPartA").resolves({
+    data: { id: "draft-1" }
   });
+  cy.stub(FormsService.prototype, "updateTraineeFormRPartA").resolves({
+    data: {}
+  });
+};
+
+describe("FormRBuilder - programme linkage", () => {
+  beforeEach(stubAutosave);
 
   it("should clear the linked programme when the trainee changes their isArcp answer", () => {
     mountLinkage({ isArcp: null, programmeMembershipId: null });
@@ -266,5 +299,78 @@ describe("FormRBuilder - programme linkage", () => {
       "have.text",
       ""
     );
+  });
+});
+
+describe("FormRBuilder - prefill notices", () => {
+  beforeEach(stubAutosave);
+
+  it("should show no prefill notice when the trainee arrived without a link", () => {
+    mountLinkage({ isArcp: null, programmeMembershipId: null });
+
+    cy.get(allNote).should("not.exist");
+    cy.get(programmeOnlyNote).should("not.exist");
+    cy.get(unavailableNote).should("not.exist");
+  });
+
+  it("should say both fields were pre-selected when the reason was worked out", () => {
+    mountPrefilled(arcpOnlyProgramme);
+
+    cy.get(allNote).should(
+      "contain.text",
+      "Your reason for submitting this form and the linked programme have been pre-selected"
+    );
+    cy.get(programmeOnlyNote).should("not.exist");
+    cy.get(unavailableNote).should("not.exist");
+  });
+
+  it("should ask for a reason when only the programme was pre-selected", () => {
+    mountPrefilled(acuteMedicineNow);
+
+    cy.get(programmeOnlyNote).should(
+      "contain.text",
+      "you still need to give the reason for submitting this form"
+    );
+    cy.get(allNote).should("not.exist");
+    cy.get(unavailableNote).should("not.exist");
+  });
+
+  it("should keep the programme-only notice after the trainee picks a reason", () => {
+    mountPrefilled(acuteMedicineNow);
+
+    cy.get(arcpRadio).click();
+    cy.get(programmeOnlyNote).should("exist");
+  });
+
+  it("should explain why nothing could be pre-selected", () => {
+    mountPrefilled(outsideBothWindowsProgramme);
+
+    cy.get(unavailableNote).should(
+      "contain.text",
+      "Neither the reason nor linked programme has been pre-selected"
+    );
+    cy.get(allNote).should("not.exist");
+    cy.get(programmeOnlyNote).should("not.exist");
+  });
+
+  it("should prefer the 'no progs' msg over a prefill notice", () => {
+    mountPrefilled(outsideBothWindowsProgramme, []);
+
+    cy.get("[data-cy=noProgrammesNote]").should("exist");
+    cy.get(unavailableNote).should("not.exist");
+  });
+
+  it("should prefer the 'no linkage options' msg once a reason is chosen", () => {
+    mountLinkage(
+      { isArcp: null, programmeMembershipId: null },
+      mockProgrammesForLinkerTestOutsideArcp,
+      { outcome: "unavailable" }
+    );
+
+    cy.get(unavailableNote).should("exist");
+
+    cy.get(arcpRadio).click();
+    cy.get("[data-cy=noLinkageOptionsNote]").should("exist");
+    cy.get(unavailableNote).should("not.exist");
   });
 });

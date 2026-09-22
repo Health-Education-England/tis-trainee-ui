@@ -298,6 +298,7 @@ export default function FormBuilder({
             />
           )}
           <AutosaveNote />
+          {pageNotices?.[pages[currentPage].pageName]}
           {pages[currentPage]?.sections.map((section: Section) => (
             <React.Fragment key={section.sectionHeader}>
               <Card feature>
@@ -333,7 +334,6 @@ export default function FormBuilder({
               </Card>
             </React.Fragment>
           ))}
-          {pageNotices?.[pages[currentPage].pageName]}
         </div>
       )}
       <AutosaveMessage formName={jsonFormName} />
