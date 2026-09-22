@@ -69,24 +69,36 @@ export function makeWarningText(
   return null;
 }
 
-export function filterProgrammesForLinker(
-  programmes: ProgrammeMembership[],
-  isArcp: boolean
-) {
+function getLinkerWindows(programme: ProgrammeMembership) {
   const now = dayjs().startOf("day");
   const nextYear = dayjs(now).add(1, "year").startOf("day");
   const lastYear = dayjs(now).subtract(1, "year").startOf("day");
 
+  const startDate = dayjs(programme.startDate).startOf("day");
+  const endDate = dayjs(programme.endDate).startOf("day");
+
+  return {
+    currentProgramme: startDate <= now && endDate >= now,
+    programmeStartsInNextYear: startDate <= nextYear && startDate >= now,
+    programmeEndsInLastYear: endDate >= lastYear && endDate <= now
+  };
+}
+
+export function filterProgrammesForLinker(
+  programmes: ProgrammeMembership[],
+  isArcp: boolean
+) {
   return programmes.filter(programme => {
     if (isFoundationProgramme(programme)) {
       return false;
     }
 
-    const startDate = dayjs(programme.startDate).startOf("day");
-    const endDate = dayjs(programme.endDate).startOf("day");
-    const currentProgramme = startDate <= now && endDate >= now;
-    const programmeStartsInNextYear = startDate <= nextYear && startDate >= now;
-    const programmeEndsInLastYear = endDate >= lastYear && endDate <= now;
+    const {
+      currentProgramme,
+      programmeStartsInNextYear,
+      programmeEndsInLastYear
+    } = getLinkerWindows(programme);
+
     return (
       currentProgramme ||
       (isArcp ? programmeEndsInLastYear : programmeStartsInNextYear)
@@ -122,22 +134,66 @@ export function getLinkedProgrammeDetails(
   if (!programMembershipId || !programMemberships) return;
   return programMemberships.find(prog => prog.tisId === programMembershipId);
 }
+
+const toLinkageFields = (programme: ProgrammeMembership | undefined) => ({
+  programmeMembershipId: programme?.tisId ?? "",
+  programmeName: programme?.programmeName ?? "",
+  localOfficeName: programme?.managingDeanery ?? "",
+  programmeSpecialty: programme?.programmeName ?? ""
+});
+
 // Note: this keeps the chosen prog id and the other linkage fields together as a  set. If trainee changes mind or prog no longer valid, then the set is cleared.
 export function resolveLinkedProgrammeFields(
   programmes: ProgrammeMembership[] | undefined,
   isArcp: boolean,
   programmeMembershipId: string | null | undefined
 ) {
-  const linkedProgramme = filterProgrammesForLinker(
-    programmes ?? [],
-    isArcp
-  ).find(programme => programme.tisId === programmeMembershipId);
+  return toLinkageFields(
+    filterProgrammesForLinker(programmes ?? [], isArcp).find(
+      programme => programme.tisId === programmeMembershipId
+    )
+  );
+}
+
+export type FormRPrefill = {
+  isArcp: boolean | null;
+} & ReturnType<typeof toLinkageFields>;
+
+export type FormRPrefillResult =
+  | { outcome: "prefilled"; prefill: FormRPrefill }
+  | { outcome: "unavailable" };
+
+export function buildFormRPrefill(
+  programmes: ProgrammeMembership[] | undefined,
+  programmeMembershipId: string | null | undefined
+): FormRPrefillResult {
+  const programme = programmeMembershipId
+    ? programmes?.find(prog => prog.tisId === programmeMembershipId)
+    : undefined;
+  if (!programme || isFoundationProgramme(programme)) {
+    return { outcome: "unavailable" };
+  }
+
+  const {
+    currentProgramme,
+    programmeStartsInNextYear,
+    programmeEndsInLastYear
+  } = getLinkerWindows(programme);
+
+  let isArcp: boolean | null;
+  if (currentProgramme) {
+    isArcp = null;
+  } else if (programmeStartsInNextYear) {
+    isArcp = false;
+  } else if (programmeEndsInLastYear) {
+    isArcp = true;
+  } else {
+    return { outcome: "unavailable" };
+  }
 
   return {
-    programmeMembershipId: linkedProgramme?.tisId ?? "",
-    programmeName: linkedProgramme?.programmeName ?? "",
-    localOfficeName: linkedProgramme?.managingDeanery ?? "",
-    programmeSpecialty: linkedProgramme?.programmeName ?? ""
+    outcome: "prefilled",
+    prefill: { isArcp, ...toLinkageFields(programme) }
   };
 }
 
