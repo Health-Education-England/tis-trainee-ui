@@ -36,16 +36,17 @@ export class FormRUtilities {
 
   public static loadNewForm(
     pathName: string,
-    traineeProfileData: TraineeProfile
+    traineeProfileData: TraineeProfile,
+    prefill?: FormRPrefill
   ) {
     if (pathName === "/formr-a") {
       const formAInitialValues =
         ProfileToFormRPartAInitialValues(traineeProfileData);
-      store.dispatch(updatedFormA(formAInitialValues));
+      store.dispatch(updatedFormA({ ...formAInitialValues, ...prefill }));
     } else if (pathName === "/formr-b") {
       const formBInitialValues =
         ProfileToFormRPartBInitialValues(traineeProfileData);
-      store.dispatch(updatedFormB(formBInitialValues));
+      store.dispatch(updatedFormB({ ...formBInitialValues, ...prefill }));
     }
   }
 }

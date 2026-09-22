@@ -891,6 +891,17 @@ export const formRNoLinkageOptionsNotice = (
   </p>
 );
 
+export const formRInProgressWarningLabel =
+  "You already have a form in progress";
+
+export const formRInProgressWarningText = (
+  formType: "A" | "B",
+  isUnsubmitted: boolean
+) =>
+  `You cannot begin a new Form R Part ${formType} because there is already ${
+    isUnsubmitted ? "an unsubmitted" : "a draft"
+  } form in progress.`;
+
 export const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
 export const tier2SkilledWorkerVisaInfo = (
