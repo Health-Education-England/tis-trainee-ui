@@ -53,6 +53,7 @@ function LinkageDataDisplay() {
 }
 
 const acuteMedicineNow = "1";
+const outsideBothWindowsProgramme = "4";
 const newStarterOnlyProgramme = "5";
 
 const mountLinkage = (
@@ -187,6 +188,57 @@ describe("FormRBuilder - programme linkage", () => {
 
     cy.get(newStarterRadio).click();
     cy.get("[data-cy=noLinkageOptionsNote]").should("not.exist");
+  });
+
+  it("should offer no programmes before the trainee picks a reason", () => {
+    mountLinkage({ isArcp: null, programmeMembershipId: null });
+
+    cy.get(`${progSelect} .react-select__control`).click();
+    cy.get(".react-select__menu").should("contain.text", "No options");
+  });
+
+  it("should show a pre-filled programme while the reason is still blank", () => {
+    mountLinkage({
+      isArcp: null,
+      programmeMembershipId: acuteMedicineNow,
+      programmeName: "Acute medicine",
+      localOfficeName: "East of England",
+      programmeSpecialty: "Acute medicine"
+    });
+
+    cy.get(`${progSelect} .react-select__single-value`).should(
+      "contain.text",
+      "Acute medicine"
+    );
+    cy.get("[data-cy=linkage-data-display-programmeMembershipId]").should(
+      "have.text",
+      acuteMedicineNow
+    );
+
+    // Note: the pre-selected programme remains whatever isArcp reason is chosen
+    cy.get(arcpRadio).click();
+    cy.get("[data-cy=linkage-data-display-programmeMembershipId]").should(
+      "have.text",
+      acuteMedicineNow
+    );
+    cy.get(`${progSelect} .react-select__single-value`).should(
+      "contain.text",
+      "Acute medicine"
+    );
+  });
+
+  it("should not offer a blank-reason programme that is outside both windows", () => {
+    mountLinkage({
+      isArcp: null,
+      programmeMembershipId: outsideBothWindowsProgramme,
+      programmeName: "Acute medicine",
+      localOfficeName: "East of England",
+      programmeSpecialty: "Acute medicine"
+    });
+
+    cy.get(`${progSelect} .react-select__single-value`).should("not.exist");
+    cy.get(`${progSelect} .react-select__control`).click();
+    cy.get(".react-select__menu").should("contain.text", "No options");
   });
 
   it("should clear a reopened draft whose saved programme is no longer offered", () => {

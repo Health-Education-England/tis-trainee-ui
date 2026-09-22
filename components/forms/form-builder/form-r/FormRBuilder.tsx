@@ -32,7 +32,10 @@ export function FormRBuilder({
   const isArcp = formData.isArcp;
   const programmeMembershipId = formData.programmeMembershipId;
   const lifecycleState = formData.lifecycleState;
-  const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(isArcp);
+  const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(
+    isArcp,
+    programmeMembershipId
+  );
 
   //Note: prevIsArcpRef used to 'remember' the previous value (something the useEffect doesn't), so we can clear the programme linkage fields when use changes the isArcp  radio choice.
   // Note: this won't clear a linkage via a reloaded draft - resolveLinkedProgrammeFields does his later on if no matching id i.e. prog no longer valid since form save.
