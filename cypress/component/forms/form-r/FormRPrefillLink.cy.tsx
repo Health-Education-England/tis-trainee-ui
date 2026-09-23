@@ -11,8 +11,13 @@ import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfi
 import { updatedReference } from "../../../../redux/slices/referenceSlice";
 import { mockedCombinedReference } from "../../../../mock-data/combinedReferenceData";
 import { resetToInitFormA } from "../../../../redux/slices/formASlice";
+import { resetToInitFormB } from "../../../../redux/slices/formBSlice";
 import { formASavedDraft } from "../../../../mock-data/draft-formr-parta";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
+import {
+  submittedFormRPartBs,
+  submittedFormRPartBsWithDraft
+} from "../../../../mock-data/submitted-formr-partb";
 import { LifeCycleState } from "../../../../models/LifeCycleState";
 import history from "../../../../components/navigation/history";
 
@@ -20,8 +25,15 @@ const allSubmittedForms = submittedFormRPartAs.filter(
   form => form.lifecycleState === LifeCycleState.Submitted
 );
 
-const mountLink = (formsResponse: any, programmeMembershipId = "3") => {
-  cy.intercept("GET", "/api/forms/formr-partas", formsResponse).as("getForms");
+const mountLink = (
+  formsResponse: any,
+  programmeMembershipId = "3",
+  formType: "A" | "B" = "A"
+) => {
+  const basePath = formType === "A" ? "/formr-a" : "/formr-b";
+  const endpoint =
+    formType === "A" ? "/api/forms/formr-partas" : "/api/forms/formr-partbs";
+  cy.intercept("GET", endpoint, formsResponse).as("getForms");
 
   history.push("/action-summary");
   mount(
@@ -30,19 +42,19 @@ const mountLink = (formsResponse: any, programmeMembershipId = "3") => {
         <Switch>
           <Route exact path="/action-summary">
             <FormRPrefillLink
-              formType="A"
+              formType={formType}
               programmeMembershipId={programmeMembershipId}
-              label="Submit a new Form R Part A"
+              label={`Submit a new Form R Part ${formType}`}
             />
           </Route>
-          <Route exact path="/formr-a/new/create">
-            <div data-cy="formr-a-create">Form R Part A create</div>
+          <Route exact path={`${basePath}/new/create`}>
+            <div data-cy="formr-create">Form R create</div>
           </Route>
-          <Route exact path="/formr-a/:id/create">
-            <div data-cy="formr-a-draft">Form R Part A draft</div>
+          <Route exact path={`${basePath}/:id/create`}>
+            <div data-cy="formr-draft">Form R draft</div>
           </Route>
-          <Route exact path="/formr-a/:id/view">
-            <div data-cy="formr-a-view">Form R Part A view</div>
+          <Route exact path={`${basePath}/:id/view`}>
+            <div data-cy="formr-view">Form R view</div>
           </Route>
         </Switch>
       </Router>
@@ -52,17 +64,19 @@ const mountLink = (formsResponse: any, programmeMembershipId = "3") => {
 
 const clickAndLandOnNewForm = (
   formsResponse: any,
-  programmeMembershipId: string
+  programmeMembershipId: string,
+  formType: "A" | "B" = "A"
 ) => {
-  mountLink(formsResponse, programmeMembershipId);
-  cy.get('[data-cy="formRPrefillLink-A"]').click();
+  mountLink(formsResponse, programmeMembershipId, formType);
+  cy.get(`[data-cy="formRPrefillLink-${formType}"]`).click();
   cy.wait("@getForms");
-  cy.get('[data-cy="formr-a-create"]').should("exist");
+  cy.get('[data-cy="formr-create"]').should("exist");
 };
 
 describe("FormRPrefillLink", () => {
   beforeEach(() => {
     store.dispatch(resetToInitFormA());
+    store.dispatch(resetToInitFormB());
     store.dispatch(updatedReference(mockedCombinedReference));
     store.dispatch(
       updatedTraineeProfileData({
@@ -90,6 +104,9 @@ describe("FormRPrefillLink", () => {
           }
         }
       });
+      expect(store.getState().formA.formData.lifecycleState).to.equal(
+        LifeCycleState.Draft
+      );
     });
   });
 
@@ -148,7 +165,7 @@ describe("FormRPrefillLink", () => {
       "contain.text",
       "there is already a draft form in progress"
     );
-    cy.get('[data-cy="formr-a-create"]').should("not.exist");
+    cy.get('[data-cy="formr-create"]').should("not.exist");
   });
 
   it("should send the trainee to their saved draft from the warning", () => {
@@ -159,7 +176,7 @@ describe("FormRPrefillLink", () => {
     cy.get('[data-cy="goToFormInProgressBtn"]')
       .should("have.text", "Edit saved draft form")
       .click();
-    cy.get('[data-cy="formr-a-draft"]').should("exist");
+    cy.get('[data-cy="formr-draft"]').should("exist");
   });
 
   it("should explain the failure instead of navigating when the forms cannot be loaded", () => {
@@ -171,7 +188,7 @@ describe("FormRPrefillLink", () => {
       "contain.text",
       "We tried unsuccessfully to load your saved forms"
     );
-    cy.get('[data-cy="formr-a-create"]').should("not.exist");
+    cy.get('[data-cy="formr-create"]').should("not.exist");
     cy.get('[data-cy="formRPrefillLink-A"]').should("exist");
   });
 
@@ -187,7 +204,7 @@ describe("FormRPrefillLink", () => {
     cy.get('[data-cy="retryFormRCheckBtn"]').click();
     cy.wait("@getFormsRetry");
 
-    cy.get('[data-cy="formr-a-create"]').should("exist");
+    cy.get('[data-cy="formr-create"]').should("exist");
   });
 
   it("should send the trainee to the view page when the form is unsubmitted", () => {
@@ -204,6 +221,44 @@ describe("FormRPrefillLink", () => {
     cy.get('[data-cy="goToFormInProgressBtn"]')
       .should("have.text", "Edit unsubmitted form")
       .click();
-    cy.get('[data-cy="formr-a-view"]').should("exist");
+    cy.get('[data-cy="formr-view"]').should("exist");
+  });
+
+  it("should pre-select the programme when opening a new Part B", () => {
+    clickAndLandOnNewForm(submittedFormRPartBs, "3", "B");
+    cy.then(() => {
+      expect(history.location.state).to.deep.equal({
+        prefillResult: {
+          outcome: "prefilled",
+          prefill: {
+            isArcp: true,
+            programmeMembershipId: "3",
+            programmeName: "Acute medicine",
+            localOfficeName: mockProgrammesForLinkerTest[2].managingDeanery,
+            programmeSpecialty: "Acute medicine"
+          }
+        }
+      });
+      expect(store.getState().formB.formData.lifecycleState).to.equal(
+        LifeCycleState.Draft
+      );
+    });
+  });
+
+  it("should warn instead of opening a new Part B when a draft is in progress", () => {
+    mountLink(submittedFormRPartBsWithDraft, "3", "B");
+    cy.get('[data-cy="formRPrefillLink-B"]').click();
+    cy.wait("@getForms");
+
+    cy.get('[data-cy="formRInProgressText"]').should(
+      "contain.text",
+      "You cannot begin a new Form R Part B"
+    );
+    cy.get('[data-cy="formr-create"]').should("not.exist");
+
+    cy.get('[data-cy="goToFormInProgressBtn"]')
+      .should("have.text", "Edit saved draft form")
+      .click();
+    cy.get('[data-cy="formr-draft"]').should("exist");
   });
 });

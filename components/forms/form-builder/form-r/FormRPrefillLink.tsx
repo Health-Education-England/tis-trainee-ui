@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, WarningCallout } from "nhsuk-react-components";
 import {
   DraftFormProps,
@@ -52,11 +51,6 @@ export function FormRPrefillLink({
     }
   };
 
-  const handleClick = (event: React.MouseEvent) => {
-    event.preventDefault();
-    checkForFormInProgress();
-  };
-
   const modalContent = formInProgress ? (
     <ModalWarning
       name="formRInProgress"
@@ -88,13 +82,14 @@ export function FormRPrefillLink({
 
   return (
     <>
-      <Link
-        to={basePath}
-        onClick={handleClick}
+      <button
+        type="button"
+        className="link-button"
+        onClick={checkForFormInProgress}
         data-cy={`formRPrefillLink-${formType}`}
       >
         {label}
-      </Link>
+      </button>
       {(formInProgress || hasLoadError) && (
         <Modal
           isOpen={true}
