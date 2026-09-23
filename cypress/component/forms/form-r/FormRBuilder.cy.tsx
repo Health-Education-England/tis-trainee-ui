@@ -347,7 +347,7 @@ describe("FormRBuilder - prefill notices", () => {
 
     cy.get(unavailableNote).should(
       "contain.text",
-      "Neither the reason nor linked programme has been pre-selected"
+      "can no longer be linked to this form"
     );
     cy.get(allNote).should("not.exist");
     cy.get(programmeOnlyNote).should("not.exist");

@@ -911,9 +911,9 @@ export const formRPrefillProgrammeOnlyNotice = (
 // Note: this is for stale programme linkages/URL-navigated tracker links
 export const formRPrefillUnavailableNotice = (
   <p>
-    Neither the reason nor linked programme has been pre-selected because the
-    programme behind the link you followed is no longer available to link to.
-    Please choose from the available options.
+    We couldn&apos;t pre-select a reason or programme because the programme from
+    the link you followed can no longer be linked to this form. Please choose
+    from the available options.
   </p>
 );
 
