@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import {
+  mockProgrammeMembershipAft,
   mockProgrammeMembershipFoundation,
   mockProgrammeMemberships,
   mockProgrammesForLinkerTest,
@@ -84,9 +85,13 @@ describe("FormRUtilities - filterProgrammesForLinker", () => {
   it("should exclude Foundation programmes even when they fall within the current date range", () => {
     const programmes = mockProgrammesForLinkerTestWithFoundation;
     const filteredProgrammes = filterProgrammesForLinker(programmes, false);
+    const excludedIds = [
+      mockProgrammeMembershipFoundation.tisId,
+      mockProgrammeMembershipAft.tisId
+    ];
     expect(
-      filteredProgrammes.some(
-        programme => programme.tisId === mockProgrammeMembershipFoundation.tisId
+      filteredProgrammes.some(programme =>
+        excludedIds.includes(programme.tisId)
       )
     ).toBe(false);
   });
@@ -363,8 +368,13 @@ describe("FormRUtilities - isFoundationProgramme", () => {
     expect(result).toEqual(false);
   });
 
-  it("should return true when a curriculum has the foundation subtype", () => {
+  it("should return true when a curriculum has the foundation specialty", () => {
     const result = isFoundationProgramme(mockProgrammeMembershipFoundation);
+    expect(result).toEqual(true);
+  });
+
+  it("should return true when a curriculum has the AFT subtype", () => {
+    const result = isFoundationProgramme(mockProgrammeMembershipAft);
     expect(result).toEqual(true);
   });
 

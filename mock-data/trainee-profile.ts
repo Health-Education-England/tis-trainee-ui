@@ -533,7 +533,27 @@ export const mockProgrammeMembershipFoundation: ProgrammeMembership = {
       curriculumName: "F1",
       curriculumSpecialty: "Foundation",
       curriculumSpecialtyCode: "F001",
-      curriculumSubType: "FOUNDATION",
+      curriculumSubType: "MEDICAL_CURRICULUM",
+      curriculumStartDate: new Date("2020-01-01"),
+      curriculumEndDate: new Date("2023-01-01")
+    }
+  ]
+};
+
+export const mockProgrammeMembershipAft: ProgrammeMembership = {
+  ...mockProgrammeMemberships[0],
+  programmeName: "Academic Foundation Programme",
+  startDate: dayjs().format("YYYY-MM-DD"),
+  endDate: dayjs().format("YYYY-MM-DD"),
+  tisId: "8",
+  curricula: [
+    {
+      curriculumTisId: "8",
+      curriculumMembershipId: "455011",
+      curriculumName: "Academic Foundation Training",
+      curriculumSpecialty: "Academic",
+      curriculumSpecialtyCode: "F002",
+      curriculumSubType: "AFT",
       curriculumStartDate: new Date("2020-01-01"),
       curriculumEndDate: new Date("2023-01-01")
     }
@@ -1060,7 +1080,11 @@ export const mockProgrammesForLinkerTestOutsideNewStarter: ProgrammeMembership[]
   [mockProgrammesForLinkerTest[2], mockProgrammesForLinkerTest[5]];
 
 export const mockProgrammesForLinkerTestWithFoundation: ProgrammeMembership[] =
-  [...mockProgrammesForLinkerTest, mockProgrammeMembershipFoundation];
+  [
+    ...mockProgrammesForLinkerTest,
+    mockProgrammeMembershipFoundation,
+    mockProgrammeMembershipAft
+  ];
 
 export const mockUserFeaturesNone: UserFeaturesType = {
   actions: {

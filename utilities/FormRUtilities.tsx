@@ -247,7 +247,7 @@ export function processLinkedFormData(
 }
 
 export function isFoundationProgramme(programme: ProgrammeMembership): boolean {
-  const FOUNDATION_CURRICULUM_SUBTYPE = "FOUNDATION";
+  const FOUNDATION_CURRICULUM_SUBTYPE = "AFT";
   const FOUNDATION_SPECIALTY = "Foundation";
 
   if (!programme?.curricula) {
