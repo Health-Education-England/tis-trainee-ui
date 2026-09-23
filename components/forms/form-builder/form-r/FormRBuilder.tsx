@@ -4,6 +4,7 @@ import { useFormContext } from "../FormContext";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../../../redux/slices/traineeProfileSlice";
 import {
+  FormRPrefillResult,
   hasStaleLinkage,
   resolveLinkedProgrammeFields
 } from "../../../../utilities/FormRUtilities";
@@ -12,18 +13,23 @@ import { InsetText } from "nhsuk-react-components";
 import {
   formRNoLinkageOptionsNotice,
   formRNoProgrammesNotice,
+  formRPrefillAllNotice,
+  formRPrefillProgrammeOnlyNotice,
+  formRPrefillUnavailableNotice,
   PROG_LINK_PAGE_NAME
 } from "../../../../utilities/Constants";
 
 type FormRBuilderProps = {
   options: any;
   validationSchema: any;
+  prefillResult?: FormRPrefillResult;
 };
 
 // Note: moved linkage options logic here so the filtered programme options can react to the change in isArcp i.e. options built in useFormRConfig won't see the latest formData.
 export function FormRBuilder({
   options,
-  validationSchema
+  validationSchema,
+  prefillResult
 }: Readonly<FormRBuilderProps>) {
   const { formData, setFormData } = useFormContext();
   const programmesArr =
@@ -32,7 +38,10 @@ export function FormRBuilder({
   const isArcp = formData.isArcp;
   const programmeMembershipId = formData.programmeMembershipId;
   const lifecycleState = formData.lifecycleState;
-  const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(isArcp);
+  const { arcpOptions, linkedProgrammeOptions } = useLinkageOptions(
+    isArcp,
+    programmeMembershipId
+  );
 
   //Note: prevIsArcpRef used to 'remember' the previous value (something the useEffect doesn't), so we can clear the programme linkage fields when use changes the isArcp  radio choice.
   // Note: this won't clear a linkage via a reloaded draft - resolveLinkedProgrammeFields does his later on if no matching id i.e. prog no longer valid since form save.
@@ -70,33 +79,59 @@ export function FormRBuilder({
     setFormData
   ]);
 
-  let linkagePageNotice;
-  if (!programmesArr?.length) {
-    linkagePageNotice = {
-      [PROG_LINK_PAGE_NAME]: (
-        <InsetText data-cy="noProgrammesNote">
-          {formRNoProgrammesNotice}
-        </InsetText>
-      )
-    };
-  } else if (
-    typeof isArcp === "boolean" &&
-    linkedProgrammeOptions.length === 0
-  ) {
-    linkagePageNotice = {
-      [PROG_LINK_PAGE_NAME]: (
-        <InsetText data-cy="noLinkageOptionsNote">
-          {formRNoLinkageOptionsNotice}
-        </InsetText>
-      )
-    };
-  }
+  const linkageNotice = selectLinkageNotice(
+    !!programmesArr?.length,
+    linkedProgrammeOptions.length > 0,
+    isArcp,
+    prefillResult
+  );
 
   return (
     <FormBuilder
       options={{ ...options, arcpOptions, linkedProgrammeOptions }}
       validationSchema={validationSchema}
-      pageNotices={linkagePageNotice}
+      pageNotices={{ [PROG_LINK_PAGE_NAME]: linkageNotice }}
     />
+  );
+}
+
+function selectLinkageNotice(
+  hasProgrammes: boolean,
+  hasLinkageOptions: boolean,
+  isArcp: boolean | null | undefined,
+  prefillResult: FormRPrefillResult | undefined
+) {
+  if (!hasProgrammes) {
+    return (
+      <InsetText data-cy="noProgrammesNote">
+        {formRNoProgrammesNotice}
+      </InsetText>
+    );
+  }
+
+  if (typeof isArcp === "boolean" && !hasLinkageOptions) {
+    return (
+      <InsetText data-cy="noLinkageOptionsNote">
+        {formRNoLinkageOptionsNotice}
+      </InsetText>
+    );
+  }
+
+  if (!prefillResult) return null;
+
+  if (prefillResult.outcome === "unavailable") {
+    return (
+      <InsetText data-cy="prefillUnavailableNote">
+        {formRPrefillUnavailableNotice}
+      </InsetText>
+    );
+  }
+
+  return prefillResult.prefill.isArcp === null ? (
+    <InsetText data-cy="prefillProgrammeOnlyNote">
+      {formRPrefillProgrammeOnlyNotice}
+    </InsetText>
+  ) : (
+    <InsetText data-cy="prefillAllNote">{formRPrefillAllNotice}</InsetText>
   );
 }

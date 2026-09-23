@@ -551,6 +551,22 @@ ol[type="a"] {
   text-decoration-color: #fff;
 }
 
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: $nhsBlue;
+  text-decoration: underline;
+  cursor: pointer;
+  &:hover {
+    text-decoration: none;
+  }
+  &:focus {
+    @include nhsuk-focused-text;
+  }
+}
+
 .whats-new-header {
   font-size: 2rem;
   font-weight: bold;

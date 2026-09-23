@@ -13,6 +13,7 @@ import { resetMfaJourney } from "../../redux/slices/userSlice";
 import { TraineeAction } from "../../models/TraineeAction";
 import { useTraineeActions } from "../../utilities/hooks/useTraineeActions";
 import { setActionsRefreshNeeded } from "../../redux/slices/traineeActionsSlice";
+import { FormRPrefillLink } from "../forms/form-builder/form-r/FormRPrefillLink";
 
 export default function ActionSummary() {
   const dispatch = useAppDispatch();
@@ -77,11 +78,18 @@ export default function ActionSummary() {
                   if (!action.type) return null;
                   const actionInfo = getActionTypeInfo(action);
                   if (!actionInfo) return null;
-                  const { label, link } = actionInfo;
                   return (
                     <Table.Row key={action.id}>
                       <Table.Cell>
-                        <Link to={link}>{label}</Link>
+                        {"formType" in actionInfo ? (
+                          <FormRPrefillLink
+                            formType={actionInfo.formType}
+                            programmeMembershipId={group["Programme ID"]}
+                            label={actionInfo.label}
+                          />
+                        ) : (
+                          <Link to={actionInfo.link}>{actionInfo.label}</Link>
+                        )}
                       </Table.Cell>
                       <Table.Cell>
                         {dayjs(action.dueBy).format("DD/MM/YYYY")}
@@ -119,7 +127,11 @@ export default function ActionSummary() {
   );
 }
 
-function getActionTypeInfo(action: TraineeAction) {
+type ActionTypeInfo =
+  | { label: string; link: string }
+  | { label: string; formType: "A" | "B" };
+
+function getActionTypeInfo(action: TraineeAction): ActionTypeInfo | null {
   if (action.type === "REVIEW_DATA") {
     const referenceType = action.tisReferenceInfo?.type;
 
@@ -136,18 +148,18 @@ function getActionTypeInfo(action: TraineeAction) {
     }
   }
 
-  const actionTypeMap: Record<string, { label: string; link: string }> = {
+  const actionTypeMap: Record<string, ActionTypeInfo> = {
     SIGN_COJ: {
       label: "Sign your Conditions of Joining",
       link: `/programmes/${action.tisReferenceInfo.id}/sign-coj`
     },
     SIGN_FORM_R_PART_A: {
       label: "Submit a new Form R Part A",
-      link: "/formr-a"
+      formType: "A"
     },
     SIGN_FORM_R_PART_B: {
       label: "Submit a new Form R Part B",
-      link: "/formr-b"
+      formType: "B"
     }
   };
 
@@ -157,8 +169,5 @@ function getActionTypeInfo(action: TraineeAction) {
     return null;
   }
 
-  return {
-    label: typeInfo.label,
-    link: typeInfo.link
-  };
+  return typeInfo;
 }

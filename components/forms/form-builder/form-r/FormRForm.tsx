@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import store from "../../../../redux/store/store";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useAppSelector } from "../../../../redux/hooks/hooks";
 import { FormProvider } from "../FormContext";
 import { FormRBuilder } from "./FormRBuilder";
@@ -12,6 +12,7 @@ import { loadSavedFormB } from "../../../../redux/slices/formBSlice";
 import history from "../../../navigation/history";
 import { useFormRConfig } from "../../../../utilities/hooks/useFormRConfig";
 import {
+  FormRPrefillResult,
   FormRUtilities,
   makeWarningText
 } from "../../../../utilities/FormRUtilities";
@@ -30,6 +31,8 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
   const { id } = useParams<FormRParams>();
   const isNewForm = id === undefined;
   const basePath = formType === "A" ? "/formr-a" : "/formr-b";
+  const prefillResult = useLocation<{ prefillResult?: FormRPrefillResult }>()
+    .state?.prefillResult;
 
   const { formJson, validationSchema, formOptions, initialData } =
     useFormRConfig(formType);
@@ -74,15 +77,27 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       traineeProfileData?.traineeTisId
     ) {
       isInitialisedRef.current = true;
-      FormRUtilities.loadNewForm(basePath, traineeProfileData);
+      FormRUtilities.loadNewForm(
+        basePath,
+        traineeProfileData,
+        prefillResult?.outcome === "prefilled"
+          ? prefillResult.prefill
+          : undefined
+      );
     }
-  }, [isNewForm, basePath, traineeProfileData, showRecentSubmissionModal]);
+  }, [
+    isNewForm,
+    basePath,
+    traineeProfileData,
+    showRecentSubmissionModal,
+    prefillResult
+  ]);
 
   useEffect(() => {
     if (isNewForm && newFormId) {
-      history.replace(`${basePath}/${newFormId}/create`);
+      history.replace(`${basePath}/${newFormId}/create`, { prefillResult });
     }
-  }, [isNewForm, newFormId, basePath]);
+  }, [isNewForm, newFormId, basePath, prefillResult]);
 
   useEffect(() => {
     if (id && loadedFormIdRef.current !== id) {
@@ -148,7 +163,11 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       initialPageFields={initialPageFields}
       jsonForm={formJson}
     >
-      <FormRBuilder options={formOptions} validationSchema={validationSchema} />
+      <FormRBuilder
+        options={formOptions}
+        validationSchema={validationSchema}
+        prefillResult={prefillResult}
+      />
     </FormProvider>
   );
 }

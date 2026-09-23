@@ -144,20 +144,18 @@ describe("ActionSummary", () => {
     );
   });
 
-  test("renders correct links for each action type", () => {
+  test("renders correct links and buttons for each action type", () => {
     mockUseTraineeActions.mockReturnValue(multiplePmActionTypeData);
 
     const { container } = renderWithProviders(<ActionSummary />);
 
-    const formRPartALink = screen
-      .getByText("Submit a new Form R Part A")
-      .closest("a");
-    expect(formRPartALink).toHaveAttribute("href", "/formr-a");
+    expect(
+      screen.getByRole("button", { name: "Submit a new Form R Part A" })
+    ).toBeInTheDocument();
 
-    const formRPartBLinks = screen.getAllByText("Submit a new Form R Part B");
-    formRPartBLinks.forEach(link => {
-      expect(link.closest("a")).toHaveAttribute("href", "/formr-b");
-    });
+    expect(
+      screen.getAllByRole("button", { name: "Submit a new Form R Part B" })
+    ).toHaveLength(2);
 
     const cojLink = screen
       .getByText("Sign your Conditions of Joining")
