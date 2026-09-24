@@ -102,7 +102,8 @@ describe("FormRPrefillLink", () => {
             localOfficeName: mockProgrammesForLinkerTest[2].managingDeanery,
             programmeSpecialty: "Acute medicine"
           }
-        }
+        },
+        returnPath: "/action-summary"
       });
       expect(store.getState().formA.formData.lifecycleState).to.equal(
         LifeCycleState.Draft
@@ -123,7 +124,8 @@ describe("FormRPrefillLink", () => {
             localOfficeName: mockProgrammesForLinkerTest[4].managingDeanery,
             programmeSpecialty: "Adult psychiatry"
           }
-        }
+        },
+        returnPath: "/action-summary"
       });
     });
   });
@@ -141,7 +143,8 @@ describe("FormRPrefillLink", () => {
             localOfficeName: mockProgrammesForLinkerTest[0].managingDeanery,
             programmeSpecialty: "Acute medicine"
           }
-        }
+        },
+        returnPath: "/action-summary"
       });
     });
   });
@@ -150,7 +153,8 @@ describe("FormRPrefillLink", () => {
     clickAndLandOnNewForm(allSubmittedForms, "4");
     cy.then(() => {
       expect(history.location.state).to.deep.equal({
-        prefillResult: { outcome: "unavailable" }
+        prefillResult: { outcome: "unavailable" },
+        returnPath: "/action-summary"
       });
     });
   });
@@ -237,7 +241,8 @@ describe("FormRPrefillLink", () => {
             localOfficeName: mockProgrammesForLinkerTest[2].managingDeanery,
             programmeSpecialty: "Acute medicine"
           }
-        }
+        },
+        returnPath: "/action-summary"
       });
       expect(store.getState().formB.formData.lifecycleState).to.equal(
         LifeCycleState.Draft

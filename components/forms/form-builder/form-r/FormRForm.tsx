@@ -31,8 +31,12 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
   const { id } = useParams<FormRParams>();
   const isNewForm = id === undefined;
   const basePath = formType === "A" ? "/formr-a" : "/formr-b";
-  const prefillResult = useLocation<{ prefillResult?: FormRPrefillResult }>()
-    .state?.prefillResult;
+  const locationState = useLocation<{
+    prefillResult?: FormRPrefillResult;
+    returnPath?: string;
+  }>().state;
+  const prefillResult = locationState?.prefillResult;
+  const returnPath = locationState?.returnPath ?? basePath;
 
   const { formJson, validationSchema, formOptions, initialData } =
     useFormRConfig(formType);
@@ -133,7 +137,7 @@ export function FormRForm({ formType }: Readonly<UnifiedFormRFormProps>) {
       <ActionModal
         onSubmit={() => setHasConfirmedNewForm(true)}
         isOpen={true}
-        onClose={() => history.push(basePath)}
+        onClose={() => history.push(returnPath)}
         cancelBtnText="Cancel"
         warningLabel="Important"
         warningText={recentSubmissionWarning}
