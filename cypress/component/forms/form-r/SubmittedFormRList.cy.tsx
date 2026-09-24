@@ -36,6 +36,13 @@ const formRList: IFormR[] = [
     lifecycleState: LifeCycleState.Submitted,
     submissionDate: "2022-03-01",
     lastModifiedDate: "2022-03-01"
+  },
+  {
+    id: "legacy-form-with-specialty",
+    lifecycleState: LifeCycleState.Submitted,
+    submissionDate: "2021-03-01",
+    lastModifiedDate: "2021-03-01",
+    programmeName: "Public health medicine"
   }
 ];
 
@@ -79,5 +86,11 @@ describe("SubmittedFormRList - linked programme column", () => {
     mountList();
 
     cy.get(pmCell(2)).should("have.text", "Linked programme not set.");
+  });
+
+  it("should not show the specialty of a form submitted before linkage existed", () => {
+    mountList();
+
+    cy.get(pmCell(3)).should("have.text", "Linked programme not set.");
   });
 });
