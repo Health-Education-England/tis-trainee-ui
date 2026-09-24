@@ -204,14 +204,17 @@ describe("FormRForm (Part A) - GMC/GDC conditional checkboxes for Public Health 
 });
 
 describe("Form R part A - recent submit -> new form", () => {
-  const mountNewForm = (latestSubDate: string) => {
+  const mountNewForm = (latestSubDate: string, returnPath?: string) => {
     cy.intercept("GET", "/api/forms/formr-partas", [
       { ...submittedFormRPartAs[0], submissionDate: latestSubDate }
     ]).as("getForms");
     cy.then(() => store.dispatch(fetchForms("/formr-a")));
     cy.wait("@getForms");
 
-    history.push("/formr-a/new/create");
+    history.push(
+      "/formr-a/new/create",
+      returnPath ? { returnPath } : undefined
+    );
     mount(
       <Provider store={store}>
         <Router history={history}>
@@ -221,6 +224,9 @@ describe("Form R part A - recent submit -> new form", () => {
             </Route>
             <Route exact path="/formr-a">
               <div data-cy="formr-a-home">Form R Part A home</div>
+            </Route>
+            <Route exact path="/action-summary">
+              <div data-cy="action-summary">Action summary</div>
             </Route>
           </Switch>
         </Router>
@@ -253,10 +259,16 @@ describe("Form R part A - recent submit -> new form", () => {
     );
   });
 
-  it("should stay on page if trainee cancels", () => {
+  it("should fall back to the Form R home page if trainee cancels", () => {
     mountNewForm(dayjs().subtract(5, "day").toISOString());
     cy.get('[data-cy="modal-cancel-btn"]').click();
     cy.get('[data-cy="formr-a-home"]').should("exist");
+  });
+
+  it("should go back to where the trainee started if they cancel", () => {
+    mountNewForm(dayjs().subtract(5, "day").toISOString(), "/action-summary");
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="action-summary"]').should("exist");
   });
 
   it("should not show warning if no recent submit", () => {

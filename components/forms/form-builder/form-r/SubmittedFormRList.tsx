@@ -83,10 +83,16 @@ const SubmittedFormRList = ({
   const progMems = useAppSelector(
     state => state.traineeProfile.traineeProfileData.programmeMemberships
   );
-  const renderPmValue = (props: { renderValue: () => ReactNode }) => (
+  const renderPmValue = (
+    props: CellContext<IFormR, string | null | undefined>
+  ) => (
     <>
-      {getLinkedProgrammeDetails(progMems, props.renderValue() as string)
-        ?.programmeName ?? "Linked programme not set."}
+      {props.renderValue() ||
+        getLinkedProgrammeDetails(
+          progMems,
+          props.row.original.programmeMembershipId
+        )?.programmeName ||
+        "Linked programme not set."}
     </>
   );
 
@@ -96,8 +102,8 @@ const SubmittedFormRList = ({
       header: renderIdHeader,
       cell: renderValue
     }),
-    columnHelper.accessor("programmeMembershipId", {
-      id: "programmeMembershipId",
+    columnHelper.accessor("programmeName", {
+      id: "programmeName",
       header: renderPmHeader,
       cell: renderPmValue
     }),

@@ -440,6 +440,7 @@ export async function openPrefilledFormR(
 ): Promise<DraftFormProps | null> {
   const basePath = formType === "A" ? "/formr-a" : "/formr-b";
   const formName: FormName = formType === "A" ? "formA" : "formB";
+  const returnPath = history.location.pathname;
 
   const forms = await store.dispatch(fetchForms(basePath)).unwrap();
   const formInProgress = setDraftFormRProps(forms);
@@ -458,7 +459,7 @@ export async function openPrefilledFormR(
       ? updatedFormALifecycleState(LifeCycleState.Draft)
       : updatedFormBLifecycleState(LifeCycleState.Draft)
   );
-  history.push(`${basePath}/new/create`, { prefillResult });
+  history.push(`${basePath}/new/create`, { prefillResult, returnPath });
   return null;
 }
 // NOTE: This function sets the hidden form fields to null whilst retaining the precious formData for submission
