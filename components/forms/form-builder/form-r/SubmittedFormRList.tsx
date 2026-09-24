@@ -102,11 +102,14 @@ const SubmittedFormRList = ({
       header: renderIdHeader,
       cell: renderValue
     }),
-    columnHelper.accessor("programmeName", {
-      id: "programmeName",
-      header: renderPmHeader,
-      cell: renderPmValue
-    }),
+    columnHelper.accessor(
+      row => (row.programmeMembershipId ? row.programmeName : null),
+      {
+        id: "programmeName",
+        header: renderPmHeader,
+        cell: renderPmValue
+      }
+    ),
     columnHelper.accessor("submissionDate", {
       id: "submissionDate",
       header: renderSubmitDateHeader,
