@@ -117,8 +117,5 @@
   },
   "devDependencies": {
     "cross-env": "^10.1.0"
-  },
-  "overrides": {
-    "mocha": "^11.7.5"
   }
 }
