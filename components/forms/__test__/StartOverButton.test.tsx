@@ -1,4 +1,4 @@
-import { render, fireEvent, act } from "@testing-library/react";
+import { render, fireEvent, act, screen } from "@testing-library/react";
 import store from "../../../redux/store/store";
 import { StartOverButton } from "../StartOverButton";
 import { Provider } from "react-redux";
@@ -23,15 +23,19 @@ jest.mock("react-router-dom", () => ({
   useLocation: jest.fn()
 }));
 
-jest.mock("material-ui-confirm", () => ({
-  useConfirm: () => {
-    return () => {
-      return new Promise((resolve: any, _reject) => {
-        // Simulate the user clicking "OK" on the confirm modal
-        resolve();
-      });
-    };
-  }
+jest.mock("../../common/ActionModal", () => ({
+  ActionModal: ({
+    isOpen,
+    onSubmit
+  }: {
+    isOpen: boolean;
+    onSubmit: () => void;
+  }) =>
+    isOpen ? (
+      <button data-testid="confirmStartOver" onClick={() => onSubmit()}>
+        Confirm &amp; Continue
+      </button>
+    ) : null
 }));
 
 jest.mock("../../../utilities/FormBuilderUtilities", () => ({
@@ -77,6 +81,15 @@ describe("StartOverButton Component", () => {
         <StartOverButton formName="formA" btnLocation="form" {...props} />
       </Provider>
     );
+  };
+
+  const clickStartOverAndConfirm = async (startOverButton: HTMLElement) => {
+    await act(async () => {
+      fireEvent.click(startOverButton);
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("confirmStartOver"));
+    });
   };
 
   beforeEach(() => {
@@ -134,9 +147,7 @@ describe("StartOverButton Component", () => {
     });
     expect(startOverButton).toBeInTheDocument();
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
 
     expect(
       require("../../../utilities/FormBuilderUtilities").isFormDeleted
@@ -154,9 +165,7 @@ describe("StartOverButton Component", () => {
     });
     expect(startOverButton).toBeInTheDocument();
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
 
     expect(
       require("../../../utilities/FormBuilderUtilities").isFormDeleted
@@ -175,9 +184,7 @@ describe("StartOverButton Component", () => {
     });
     expect(startOverButton).toBeInTheDocument();
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
 
     expect(
       require("../../../utilities/FormBuilderUtilities").isFormDeleted
@@ -185,12 +192,15 @@ describe("StartOverButton Component", () => {
     expect(console.log).toHaveBeenCalledWith("startover failed");
   });
 
-  it("should call resetForm with the correct formName", () => {
+  it("should call resetForm with the correct formName", async () => {
+    require("../../../utilities/FormBuilderUtilities").isFormDeleted.mockResolvedValue(
+      true
+    );
     const { queryByRole } = renderStartOverButton();
     const startOverButton = queryByRole("button", {
       name: "Start over"
     });
-    fireEvent.click(startOverButton as HTMLElement);
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
 
     expect(
       require("../../../utilities/FormBuilderUtilities").resetForm
@@ -211,9 +221,7 @@ describe("StartOverButton Component", () => {
       name: "Start over"
     });
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
     expect(mockIsFormDeleted).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledWith(updatedFormsRefreshNeeded(true));
     mockIsFormDeleted.mockReset();
@@ -235,9 +243,7 @@ describe("StartOverButton Component", () => {
       name: "Start over"
     });
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
     expect(mockIsFormDeleted).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledWith(
       updatedLtftFormsRefreshNeeded(true)
@@ -260,9 +266,7 @@ describe("StartOverButton Component", () => {
       name: "Start over"
     });
 
-    await act(async () => {
-      fireEvent.click(startOverButton as HTMLElement);
-    });
+    await clickStartOverAndConfirm(startOverButton as HTMLElement);
     expect(mockIsFormDeleted).toHaveBeenCalled();
     expect(history.push).toHaveBeenCalledWith("/formr-a");
     mockIsFormDeleted.mockReset();

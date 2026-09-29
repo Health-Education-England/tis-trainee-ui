@@ -28,11 +28,11 @@ Cypress.Commands.add(
 
 Cypress.Commands.add("startOver", () => {
   cy.get('[data-cy="startOverButton"]').should("exist").click();
-  cy.get(".MuiDialogContentText-root").should(
+  cy.get('[data-cy="warningText-Start over"]').should(
     "include.text",
     "This action will delete all the changes you have made to this form. Are you sure you want to continue?"
   );
-  cy.get(".MuiDialogActions-root > :nth-child(2)").click();
+  cy.get('[data-cy="submitBtn-Start over"]').click();
 });
 
 Cypress.Commands.add("testDataSourceLink", () => {
