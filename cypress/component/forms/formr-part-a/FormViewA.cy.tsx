@@ -318,9 +318,10 @@ describe("FormR View (part A) confirm modal on submit", () => {
       `/api/forms/formr-parta/${completeDraft.id}`,
       completeDraft
     ).as("getDraftForm");
-    cy.intercept("PUT", "/api/forms/formr-parta", { statusCode: 200 }).as(
-      "submitForm"
-    );
+    cy.intercept("PUT", "/api/forms/formr-parta", {
+      statusCode: 200,
+      body: { ...completeDraft, lifecycleState: LifeCycleState.Submitted }
+    }).as("submitForm");
 
     mount(
       <Provider store={store}>
