@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   WarningCallout
 } from "nhsuk-react-components";
 import { ACTION_REASONS } from "../../utilities/Constants";
+import { handleKeyDown } from "../../utilities/FormBuilderUtilities";
 
 export type ActionType = "Save" | "Submit" | "Unsubmit" | "Withdraw" | "Delete";
 
@@ -44,6 +45,13 @@ export function ActionModal({
   const [reason, setReason] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    if (isOpen) {
+      setReason("");
+      setMessage("");
+    }
+  }, [isOpen]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} cancelBtnText={cancelBtnText}>
       <WarningCallout data-cy="actionModalWarning">
@@ -59,11 +67,7 @@ export function ActionModal({
       <div>
         {hasReason && (
           <>
-            <div
-              data-jest="reason"
-              data-cy="reason"
-              className="nhsuk-form-group"
-            >
+            <div className="nhsuk-form-group">
               <p className="nhsuk-body-m nhsuk-u-margin-bottom-1">
                 {`Please choose the primary reason for the ${actionType.toLowerCase()}`}
               </p>
@@ -90,6 +94,7 @@ export function ActionModal({
                 name="message"
                 id="message"
                 data-cy="message"
+                onKeyDown={handleKeyDown}
                 label="Please provide any supplementary information if needed"
                 placeholder="Enter details here..."
                 rows={3}

@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { mount } from "cypress/react";
-import { ActionModal } from "../../../components/common/ActionModal";
+import {
+  ActionModal,
+  ActionType
+} from "../../../components/common/ActionModal";
 import { sureText, ACTION_CONFIG } from "../../../utilities/Constants";
 
 const baseProps = {
@@ -68,6 +72,7 @@ describe("ActionModal", () => {
     it("keeps Confirm disabled until a reason is chosen", () => {
       mountActionModal(reasonProps);
 
+      cy.get('[data-cy="reason"]').should("have.length", 1);
       cy.get('[data-cy="submitBtn-Unsubmit"]').should("be.disabled");
       cy.get("#reason-2--label").click();
       cy.get('[data-cy="submitBtn-Unsubmit"]').should("not.be.disabled");
@@ -113,6 +118,63 @@ describe("ActionModal", () => {
         reason: "changeOfCircs",
         message: ""
       });
+    });
+
+    it("does not allow line breaks in the message", () => {
+      mountActionModal(reasonProps);
+
+      cy.get("#reason-3--label").click();
+      cy.get('[data-cy="message"]').type("First line{enter}second line");
+      cy.get('[data-cy="submitBtn-Unsubmit"]').click();
+
+      cy.get("@onSubmitHandler").should("have.been.calledOnceWith", {
+        reason: "other",
+        message: "First linesecond line"
+      });
+    });
+
+    it("clears a cancelled reason and message when reopened for another action", () => {
+      const onSubmit = cy.stub();
+      cy.wrap(onSubmit).as("onSubmitHandler");
+
+      function ReopenHarness() {
+        const [openAs, setOpenAs] = useState<ActionType | undefined>(undefined);
+        return (
+          <>
+            <button
+              data-cy="openUnsubmit"
+              onClick={() => setOpenAs("Unsubmit")}
+            >
+              Unsubmit
+            </button>
+            <button
+              data-cy="openWithdraw"
+              onClick={() => setOpenAs("Withdraw")}
+            >
+              Withdraw
+            </button>
+            <ActionModal
+              {...baseProps}
+              warningLabel="Action"
+              isOpen={!!openAs}
+              actionType={openAs}
+              onClose={() => setOpenAs(undefined)}
+              onSubmit={onSubmit}
+            />
+          </>
+        );
+      }
+
+      mount(<ReopenHarness />);
+
+      cy.get('[data-cy="openUnsubmit"]').click();
+      cy.get("#reason-2--label").click();
+      cy.get('[data-cy="message"]').type("Pushing my start date back a month");
+      cy.get('[data-cy="modal-cancel-btn"]').click();
+
+      cy.get('[data-cy="openWithdraw"]').click();
+      cy.get('[data-cy="message"]').should("have.value", "");
+      cy.get('[data-cy="submitBtn-Action"]').should("be.disabled");
     });
 
     it("does not render the reason fields for an action type without reasons", () => {
