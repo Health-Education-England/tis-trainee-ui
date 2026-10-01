@@ -24,7 +24,6 @@ const MultiChoiceInputField: React.FC<Props> = props => {
     props.type === "radios" ? Radios.Item : Checkboxes.Item;
   return (
     <div
-      data-jest={props.name}
       data-cy={props.name}
       className={
         error ? "nhsuk-form-group nhsuk-form-group--error" : "nhsuk-form-group"

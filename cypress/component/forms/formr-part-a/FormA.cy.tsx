@@ -24,6 +24,7 @@ import { LifeCycleState } from "../../../../models/LifeCycleState";
 import { submittedFormRPartAs } from "../../../../mock-data/submitted-formr-parta";
 import { fetchForms } from "../../../../redux/slices/formsSlice";
 import history from "../../../../components/navigation/history";
+import { FormsService } from "../../../../services/FormsService";
 
 const defaultProfileTestData = {
   traineeTisId: "testid",
@@ -278,5 +279,50 @@ describe("Form R part A - recent submit -> new form", () => {
       "have.text",
       "Part 1 of 4 - Programme Linkage"
     );
+  });
+});
+
+describe("FormRForm (Part A) - Start over from inside the form builder", () => {
+  beforeEach(() => {
+    store.dispatch(resetToInitFormA());
+    store.dispatch(updatedReference(mockedCombinedReference));
+    store.dispatch(updatedTraineeProfileData(defaultProfileTestData));
+    store.dispatch(updatedFormA(formASavedDraft));
+
+    const deleteDraftStub = cy
+      .stub(FormsService.prototype, "deleteTraineeFormRPartA")
+      .resolves({ data: {} });
+    cy.wrap(deleteDraftStub).as("deleteDraft");
+
+    mount(
+      <Provider store={store}>
+        <MemoryRouter
+          initialEntries={[`/formr-a/${formASavedDraft.id}/create`]}
+        >
+          <Route path="/formr-a/:id/create">
+            <FormRForm formType="A" />
+          </Route>
+        </MemoryRouter>
+      </Provider>
+    );
+  });
+
+  it("deletes the draft when the confirmation is accepted", () => {
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get('[data-cy="warningLabel-Start over"]').should("exist");
+    cy.get('[data-cy="submitBtn-Start over"]').click();
+
+    cy.get("@deleteDraft").should(
+      "have.been.calledOnceWith",
+      formASavedDraft.id
+    );
+  });
+
+  it("does not delete the draft when the confirmation is cancelled", () => {
+    cy.get('[data-cy="startOverButton"]').should("exist").click();
+    cy.get('[data-cy="modal-cancel-btn"]:visible').click();
+
+    cy.get("@deleteDraft").should("not.have.been.called");
+    cy.get('[data-cy="startOverButton"]').should("exist");
   });
 });

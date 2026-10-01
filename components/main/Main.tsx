@@ -2,7 +2,6 @@ import { Redirect } from "react-router-dom";
 import PageTitle from "../common/PageTitle";
 import TSSFooter from "../navigation/TSSFooter";
 import Loading from "../common/Loading";
-import { ConfirmProvider } from "material-ui-confirm";
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
 import { GlobalAlert } from "./GlobalAlert";
 import TSSHeader from "../navigation/TSSHeader";
@@ -65,7 +64,7 @@ export const Main = () => {
   }
   if (isCriticalSuccess && authActionsDispatched)
     return (
-      <ConfirmProvider>
+      <>
         <GlobalAlert />
         <PageTitle />
         <TSSHeader />
@@ -74,7 +73,7 @@ export const Main = () => {
           <Routes />
         </main>
         <TSSFooter appVersion={appVersion} />
-      </ConfirmProvider>
+      </>
     );
   return null;
 };
