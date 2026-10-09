@@ -5,7 +5,8 @@ import { PersonalDetails } from "../models/PersonalDetails";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { unsubmitLtftForm, withdrawLtftForm } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
-import { ACTION_REASONS } from "./Constants";
+import { ACTION_REASONS, LTFT_ROTATION_WINDOW_URLS } from "./Constants";
+import { findLinkedProgramme } from "./CctUtilities";
 import { computedValueGenerators, isFormDeleted } from "./FormBuilderUtilities";
 import { ActionState } from "./hooks/useActionState";
 
@@ -355,6 +356,17 @@ export function makeValidProgrammeOptions(
   }, [] as { value: string; label: string }[]);
 
   return programmeOptions;
+}
+
+export function findLtftRotationWindowUrl(
+  pmId: string | null,
+  pms: ProgrammeMembership[]
+): string | undefined {
+  const managingDeanery = findLinkedProgramme(pmId, pms)?.managingDeanery;
+  if (!managingDeanery) return undefined;
+  return Object.entries(LTFT_ROTATION_WINDOW_URLS).find(([deanery]) =>
+    managingDeanery.includes(deanery)
+  )?.[1];
 }
 
 // Note: A date stamped by a previous submission is kept and only cleared if the trainee revisits Start date page while editing unsubmitted.

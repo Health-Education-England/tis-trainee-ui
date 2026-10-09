@@ -935,6 +935,22 @@ export const formRLoadErrorWarningText =
 
 export const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
+export const LTFT_PROGRAMME_PAGE_NAME = "Your Programme";
+
+export const LTFT_ROTATION_WINDOW_URLS: Record<string, string> = {
+  London:
+    "https://lasepgmdesupport.hee.nhs.uk/support/solutions/articles/7000018502",
+  Midlands:
+    "https://nhs-help.freshdesk.com/support/solutions/articles/203000067353-2026-and-2027-ltft-windows",
+  Wessex:
+    "https://wessex.hee.nhs.uk/wp-content/uploads/sites/6/2026/04/Rotation-Dates-LTFT-26-27.pdf"
+};
+
+export const ltftRotationWindowNoticeText =
+  "The Local Office for your chosen programme manages LTFT applications within set rotation windows. Unless your exceptional circumstances are accepted, your proposed change to working hours should start within one of these windows. Please check the published rotation dates before continuing.";
+
+export const ltftRotationWindowLinkText = "View the LTFT rotation windows";
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

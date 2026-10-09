@@ -1,7 +1,12 @@
 import dayjs from "dayjs";
-import { mockPersonalDetails } from "../../mock-data/trainee-profile";
+import {
+  mockPersonalDetails,
+  mockProgrammeMemberships
+} from "../../mock-data/trainee-profile";
+import { LTFT_ROTATION_WINDOW_URLS } from "../Constants";
 import {
   findLatestSubmissionDate,
+  findLtftRotationWindowUrl,
   hasLegacyStartDateData,
   mapLtftDtoToObj,
   mapLtftObjToDto,
@@ -330,5 +335,59 @@ describe("findLatestSubmissionDate", () => {
     expect(findLatestSubmissionDate(mockLtftWithCurrentSubmission)).toEqual(
       "2026-01-25T10:00:00.000Z"
     );
+  });
+});
+
+describe("findLtftRotationWindowUrl", () => {
+  const pmId = "test-pm-id";
+  const makePms = (managingDeanery: string) => [
+    { ...mockProgrammeMemberships[0], tisId: pmId, managingDeanery }
+  ];
+
+  it.each([
+    ["North Central and East London", LTFT_ROTATION_WINDOW_URLS.London],
+    ["North West London", LTFT_ROTATION_WINDOW_URLS.London],
+    ["South London", LTFT_ROTATION_WINDOW_URLS.London],
+    ["London LETBs", LTFT_ROTATION_WINDOW_URLS.London],
+    ["East Midlands", LTFT_ROTATION_WINDOW_URLS.Midlands],
+    ["West Midlands", LTFT_ROTATION_WINDOW_URLS.Midlands],
+    ["Wessex", LTFT_ROTATION_WINDOW_URLS.Wessex]
+  ])("returns the rotation window url for '%s'", (deanery, expectedUrl) => {
+    expect(findLtftRotationWindowUrl(pmId, makePms(deanery))).toEqual(
+      expectedUrl
+    );
+  });
+
+  it.each([
+    "East of England",
+    "Kent, Surrey and Sussex",
+    "North East",
+    "North West",
+    "South West",
+    "Thames Valley",
+    "Yorkshire and the Humber",
+    "Defence Postgraduate Medical Deanery"
+  ])("returns undefined for '%s' (no rotation window)", deanery => {
+    expect(findLtftRotationWindowUrl(pmId, makePms(deanery))).toBeUndefined();
+  });
+
+  it("returns undefined when the programme has no managing deanery", () => {
+    expect(findLtftRotationWindowUrl(pmId, makePms(""))).toBeUndefined();
+  });
+
+  it("returns undefined when no programme matches the id", () => {
+    expect(
+      findLtftRotationWindowUrl("unknown-id", makePms("South London"))
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when no programme is selected", () => {
+    expect(
+      findLtftRotationWindowUrl(null, makePms("South London"))
+    ).toBeUndefined();
+  });
+
+  it("returns undefined when there are no programmes", () => {
+    expect(findLtftRotationWindowUrl(pmId, [])).toBeUndefined();
   });
 });
