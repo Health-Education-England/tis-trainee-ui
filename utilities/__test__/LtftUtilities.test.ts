@@ -350,8 +350,7 @@ describe("findLtftRotationWindowUrl", () => {
     ["South London", LTFT_ROTATION_WINDOW_URLS.London],
     ["London LETBs", LTFT_ROTATION_WINDOW_URLS.London],
     ["East Midlands", LTFT_ROTATION_WINDOW_URLS.Midlands],
-    ["West Midlands", LTFT_ROTATION_WINDOW_URLS.Midlands],
-    ["Wessex", LTFT_ROTATION_WINDOW_URLS.Wessex]
+    ["West Midlands", LTFT_ROTATION_WINDOW_URLS.Midlands]
   ])("returns the rotation window url for '%s'", (deanery, expectedUrl) => {
     expect(findLtftRotationWindowUrl(pmId, makePms(deanery))).toEqual(
       expectedUrl
@@ -365,6 +364,7 @@ describe("findLtftRotationWindowUrl", () => {
     "North West",
     "South West",
     "Thames Valley",
+    "Wessex",
     "Yorkshire and the Humber",
     "Defence Postgraduate Medical Deanery"
   ])("returns undefined for '%s' (no rotation window)", deanery => {
