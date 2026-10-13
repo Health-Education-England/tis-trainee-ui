@@ -1,9 +1,10 @@
 import { LtftObjNew } from "../../../models/LtftTypes";
 import { useSelectFormData } from "../../../utilities/hooks/useSelectFormData";
 import ErrorPage from "../../common/ErrorPage";
-import FormBuilder, { Form, FormName } from "../form-builder/FormBuilder";
+import { Form, FormName } from "../form-builder/FormBuilder";
 import { FormProvider } from "../form-builder/FormContext";
 import ltftJson from "./ltft.json";
+import { LtftFormBuilder } from "./LtftFormBuilder";
 import { ltftValidationSchema } from "./ltftValidationSchema";
 
 type LtftFormProps = {
@@ -59,7 +60,7 @@ export function LtftForm({ pmOptions }: LtftFormProps) {
         initialPageFields={initialPageFields}
         jsonForm={ltftJson as Form}
       >
-        <FormBuilder
+        <LtftFormBuilder
           options={{ yesNo, ltftReasons, ltftRoles, pmOptions }}
           validationSchema={ltftValidationSchema}
         />
