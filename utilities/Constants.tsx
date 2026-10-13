@@ -935,6 +935,20 @@ export const formRLoadErrorWarningText =
 
 export const PROG_LINK_PAGE_NAME = "Programme Linkage";
 
+export const LTFT_PROGRAMME_PAGE_NAME = "Your Programme";
+
+export const LTFT_ROTATION_WINDOW_URLS: Record<string, string> = {
+  London:
+    "https://lasepgmdesupport.hee.nhs.uk/support/solutions/articles/7000018502",
+  Midlands:
+    "https://nhs-help.freshdesk.com/support/solutions/articles/203000067353-2026-and-2027-ltft-windows"
+};
+
+export const ltftRotationWindowNoticeText =
+  "Your Local Office uses set rotation windows for LTFT changes. Your change should start in one of these windows unless you have exceptional circumstances. Check the dates before you continue.";
+
+export const ltftRotationWindowLinkText = "View the LTFT rotation windows";
+
 export const tier2SkilledWorkerVisaInfo = (
   <>
     Please be aware that there are minimum requirements and conditions attached

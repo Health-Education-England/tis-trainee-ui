@@ -239,12 +239,6 @@ export const ExpanderMsg = ({
               sudden disability, significant life changes) are reviewed on a
               case-by-case basis.
             </li>
-            <li>
-              <strong>Check with your region</strong> for any specific
-              application windows and deadlines (e.g. September rotations) as
-              these can vary slightly by region (Local Office) and training
-              specialty.
-            </li>
             <p>
               <Link to="/support">Contact your Local Office support</Link> for
               further details.
