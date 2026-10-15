@@ -1,0 +1,60 @@
+$cctTableRule: #4c6272;
+$cctProjectionHighlight: #fff8ba;
+$cctAssumedBackground: #f0f4f5;
+
+.changesTable {
+  td,
+  th {
+    vertical-align: top;
+  }
+}
+
+.assumedRow {
+  background-color: $cctAssumedBackground;
+
+  td:first-child {
+    font-weight: 600;
+  }
+}
+
+.totalRow {
+  td {
+    border-top: 3px solid $cctTableRule;
+    border-bottom: 3px solid $cctTableRule;
+  }
+}
+
+.totalRow + .totalRow td {
+  border-top: 0;
+}
+
+.projectionRow {
+  background-color: $cctProjectionHighlight;
+
+  td {
+    border-top: 3px solid $cctTableRule;
+  }
+}
+
+.actions {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+
+  :global(.nhsuk-button) {
+    margin: 0;
+    white-space: nowrap;
+  }
+}
+
+// Note: a totals row has nothing in most columns, so when the table stacks below 768px those cells would otherwise read as a list of bare column labels.
+@media (max-width: 48.0525em) {
+  .emptyCell {
+    display: none;
+  }
+
+  .totalRow td:first-child :global(.nhsuk-table-responsive__heading),
+  .projectionRow td:first-child :global(.nhsuk-table-responsive__heading) {
+    display: none;
+  }
+}

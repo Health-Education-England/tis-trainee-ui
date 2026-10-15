@@ -1,5 +1,6 @@
 import { Fieldset, Legend } from "nhsuk-react-components";
 import style from "../../Common.module.scss";
+import { CctForm } from "./CctForm";
 
 export function Cct() {
   return (
@@ -14,7 +15,7 @@ export function Cct() {
           Certificate of Completion of Training (CCT)
         </Legend>
       </Fieldset>
-      <p>CCT was here</p>
+      <CctForm />
     </>
   );
 }

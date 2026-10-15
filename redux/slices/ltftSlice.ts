@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CctCalculation } from "../../models/CctTypes";
 import {
   mapLtftDtoToObj,
   mapLtftObjToDto,
@@ -15,7 +14,6 @@ import { LtftObjNew, LtftState } from "../../models/LtftTypes";
 
 export const initialState: LtftState = {
   formData: {} as LtftObjNew,
-  LtftCctSnapshot: {} as CctCalculation,
   status: "idle",
   error: "",
   canEdit: false,

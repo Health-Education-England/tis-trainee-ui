@@ -161,8 +161,10 @@ export default function FormBuilder({
       .map(field => field.conditionalField as string)
   );
 
-  const jsonFormName = jsonForm.name;
-  const pages = jsonForm.pages;
+  // Note: only a form with no draft-save endpoint (e.g. CCT) provides no jsonForm, and such a form does not use this engine.
+  const builderForm = jsonForm as Form;
+  const jsonFormName = builderForm.name;
+  const pages = builderForm.pages;
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);
   const gatedInitialPage = () =>
@@ -245,7 +247,7 @@ export default function FormBuilder({
       .then(() => {
         if (currentPage === lastPage || isShortcut) {
           saveDraftForm(
-            jsonForm,
+            builderForm,
             formData as FormDataType,
             true,
             false,
@@ -267,7 +269,7 @@ export default function FormBuilder({
 
   const handleSaveBtnClick = async () => {
     setIsSubmitting(true);
-    await saveDraftForm(jsonForm, formData as FormDataType);
+    await saveDraftForm(builderForm, formData as FormDataType);
     setIsSubmitting(false);
   };
 
