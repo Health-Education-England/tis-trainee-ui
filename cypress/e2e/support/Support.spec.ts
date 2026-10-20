@@ -1,6 +1,6 @@
 describe("Support", () => {
   before(() => {
-    cy.signInToTss(30000, undefined, "iphone-6");
+    cy.signInToTss(undefined, "iphone-6");
   });
 
   it("should contact support", () => {

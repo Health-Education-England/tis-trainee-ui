@@ -54,29 +54,19 @@ Cypress.Commands.add("testDataSourceLink", () => {
 
 Cypress.Commands.add(
   "signInToTss",
-  (
-    waitTimeMs?: number,
-    visitUrl?: string,
-    viewport?: Cypress.ViewportPreset
-  ) => {
-    cy.session(Cypress.env("username"), () => {
-      if (waitTimeMs && waitTimeMs === 30000) {
-        cy.log(
-          "*** Note: The 30s wait is to allow the MFA TOTP token to refresh (from a previous spec) ***"
-        );
-        cy.wait(waitTimeMs);
-      }
+  (visitUrl?: string, viewport?: Cypress.ViewportPreset) => {
+    cy.session(
+      Cypress.env("username"),
+      () => {
+        cy.visit("/", { failOnStatusCode: false, timeout: 60000 });
+        cy.signIn();
+        cy.get('[data-cy="signOutBtn"]').should("exist");
+      },
+      { cacheAcrossSpecs: true }
+    );
 
-      cy.visit("/", { failOnStatusCode: false, timeout: 60000 });
-      if (viewport) cy.viewport(viewport);
-      cy.signIn();
-      cy.get('[data-cy="signOutBtn"]').should("exist");
-    });
-
-    cy.then(() => {
-      const urlString = visitUrl ?? "/";
-      cy.visit(urlString, { failOnStatusCode: false, timeout: 60000 });
-    });
+    if (viewport) cy.viewport(viewport);
+    cy.visit(visitUrl ?? "/", { failOnStatusCode: false, timeout: 60000 });
   }
 );
 
@@ -164,7 +154,7 @@ Cypress.Commands.add("signIn", () => {
   cy.get('[type="email"]').click().clear().type(Cypress.env("username"));
   cy.get('[type="password"]').clear().type(Cypress.env("password"));
   cy.get(".amplify-button--primary").click();
-  cy.task("generateOTP").then(token => {
+  cy.task("generateOTP", Cypress.env("secret"), { log: false }).then(token => {
     cy.get('input[name="confirmation_code"]').type(`${token}{enter}`);
   });
 });

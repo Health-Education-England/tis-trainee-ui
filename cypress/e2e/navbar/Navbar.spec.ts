@@ -3,7 +3,7 @@
 
 describe("TSS header", () => {
   beforeEach(() => {
-    cy.signInToTss(30000);
+    cy.signInToTss();
   });
 
   it("should show the service name, account items and core nav links on desktop", () => {
@@ -48,6 +48,8 @@ describe("TSS header", () => {
     cy.viewport("macbook-15");
     cy.get('[data-cy="signOutBtn"]').click();
     cy.get('[type="email"]').should("be.visible");
+    // Sign-out revokes the tokens held in the cached session.
+    cy.then(() => Cypress.session.clearAllSavedSessions());
   });
 });
 

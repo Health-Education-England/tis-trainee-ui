@@ -18,7 +18,6 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        continue-on-error: true
         env:
           CYPRESS_baseUrl: https://stage.trainee.tis.nhs.uk
           CYPRESS_username: ${{ secrets.E2E_TEST_USER }}
@@ -27,14 +26,10 @@ jobs:
         with:
           browser: chrome
 
-      - name: Merge test results into one
-        run: npm run report:merge
-
-      - name: Generate HTML report
-        run: npm run report:generate
-
+      # cypress-mochawesome-reporter writes the merged HTML report itself.
       - name: Create report artifact
         uses: actions/upload-artifact@v5
+        if: always()
         with:
           name: cypress-reports
           path: cypress/reports
@@ -58,6 +53,7 @@ jobs:
   backup-artifacts:
     name: Backup build artifacts
     needs: cypress-e2e
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
 
     steps:

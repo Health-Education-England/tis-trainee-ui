@@ -46,7 +46,6 @@ declare global {
       confirmNewFormIfWarned(): Chainable<any>;
       signIn(): Chainable<Element>;
       signInToTss(
-        waitTimeMs?: number,
         visitUrl?: string,
         viewport?: Cypress.ViewportPreset
       ): Chainable<Element>;

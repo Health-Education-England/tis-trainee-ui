@@ -11,7 +11,7 @@ const startDate = dayjs()
 
 describe("Form R Part A - Draft form", () => {
   it("should create and delete draft form", () => {
-    cy.signInToTss(30000, "/formr-a");
+    cy.signInToTss("/formr-a");
     cy.log("################ Check autosave functionality ###################");
     cy.wait(5000);
     cy.get("#btnOpenForm").should("exist").click();
@@ -74,7 +74,7 @@ describe("Form R Part A - Draft form", () => {
 
 // describe("Form R Part A - Submit a new form", () => {
 //   it("should complete and submit a form", () => {
-//     cy.signInToTss(30000, "/formr-a");
+//     cy.signInToTss("/formr-a");
 //     cy.get("#btnOpenForm").should("exist").click();
 //     cy.checkForFormLinkerAndComplete();
 //     cy.log("################ complete form sections 1-3 ###################");
@@ -115,7 +115,7 @@ describe("Form R Part A - Draft form", () => {
 
 // describe("Form R Part A - check latest submitted form", () => {
 //   it("should show the submitted form in the list", () => {
-//     cy.signInToTss(30000, "/formr-a");
+//     cy.signInToTss("/formr-a");
 //     cy.get('[data-cy="0_id"]').click();
 //     cy.wait(5000);
 //     cy.get('[data-cy="email-value"]').should(
@@ -134,7 +134,7 @@ describe("Form R Part A - Draft form", () => {
 
 // describe("Form R Part A - JSON form fields visibility status checks", () => {
 //   it("should persist the updated dependent field visibility status to trigger any expected validation when a draft form is re-opened.", () => {
-//     cy.signInToTss(30000, "/", "iphone-6");
+//     cy.signInToTss("/", "iphone-6");
 //     cy.contains("Form R (Part A)").click({ force: true });
 //     cy.wait(5000);
 //     cy.get("#btnOpenForm").should("exist").click();
@@ -193,7 +193,7 @@ describe("Form R Part A - Draft form", () => {
 
 // describe("Form R Part A - 'save form' toast messages", () => {
 //   beforeEach(() => {
-//     cy.signInToTss(30000);
+//     cy.signInToTss();
 //   });
 //   it("should display a error toast message when the form is submitted unsuccessfully.", () => {
 //     cy.intercept("POST", /\/api\/forms\/formr-parta/, {
@@ -232,7 +232,7 @@ describe("Form R Part A - Draft form", () => {
 
 // describe("Form R Part A - 'delete form' toast messages", () => {
 //   beforeEach(() => {
-//     cy.signInToTss(30000);
+//     cy.signInToTss();
 //   });
 //   it("should display a error toast message when the form is deleted unsuccessfully.", () => {
 //     cy.intercept("DELETE", /\/api\/forms\/formr-parta/, {

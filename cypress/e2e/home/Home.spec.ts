@@ -12,7 +12,7 @@ const homeArr = [
 
 describe("Home", () => {
   beforeEach(() => {
-    cy.signInToTss(30000, "/home");
+    cy.signInToTss("/home");
   });
 
   it("should find profile button and click in to the profile section", () => {
