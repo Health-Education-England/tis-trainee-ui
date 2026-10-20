@@ -3,7 +3,7 @@
 
 describe("Notifications", () => {
   beforeEach(() => {
-    cy.signInToTss(30000, "/notifications");
+    cy.signInToTss("/notifications");
   });
 
   it("should load notifications table", () => {

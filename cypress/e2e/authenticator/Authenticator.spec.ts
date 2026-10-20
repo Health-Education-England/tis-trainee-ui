@@ -108,7 +108,7 @@ describe("Authenticator sign up", () => {
 
 describe("Authenticated session", () => {
   before(() => {
-    cy.signInToTss(30000);
+    cy.signInToTss();
   });
 
   it("should store auth tokens in sessionStorage", () => {

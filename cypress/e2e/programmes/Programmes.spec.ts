@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 describe("Programmes", () => {
   beforeEach(() => {
-    cy.signInToTss(30000, "/programmes");
+    cy.signInToTss("/programmes");
   });
 
   it("should display and populate programme section", () => {

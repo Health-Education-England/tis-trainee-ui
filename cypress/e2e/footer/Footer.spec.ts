@@ -3,7 +3,7 @@
 
 describe("Footer", () => {
   before(() => {
-    cy.signInToTss(30000);
+    cy.signInToTss();
   });
 
   it("should link to Support, About, and Privacy & Cookies pages", () => {

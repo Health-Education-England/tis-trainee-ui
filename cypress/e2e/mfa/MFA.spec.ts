@@ -1,6 +1,6 @@
 describe("MFA set-up", () => {
   before(() => {
-    cy.signInToTss(30000, "/mfa");
+    cy.signInToTss("/mfa");
   });
   it("should render the Choose MFA page", () => {
     cy.get(`[data-cy="mfaAlreadyWarning"]`)

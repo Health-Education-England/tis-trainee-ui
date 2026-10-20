@@ -3,7 +3,7 @@
 
 describe("Placements", () => {
   beforeEach(() => {
-    cy.signInToTss(30000, "/placements");
+    cy.signInToTss("/placements");
   });
 
   it("should show the correct text for each placement ", () => {

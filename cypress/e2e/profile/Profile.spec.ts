@@ -6,7 +6,7 @@ describe("Profile", () => {
   const newGmc1 = "1234567";
   const newEmail = "bob@bob.com";
   beforeEach(() => {
-    cy.signInToTss(30000, "/profile");
+    cy.signInToTss("/profile");
   });
 
   it("should render and populate profile section", () => {

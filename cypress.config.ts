@@ -2,6 +2,18 @@ import { defineConfig } from "cypress";
 import cypressOtp from "cypress-otp";
 import codeCoverageTask from "@cypress/code-coverage/task";
 
+// Cognito rejects a reused TOTP code, so wait for the next one if needed.
+let lastOtp: string | undefined;
+const generateUniqueOtp = async (secret: string) => {
+  let token = cypressOtp(secret);
+  while (token === lastOtp) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    token = cypressOtp(secret);
+  }
+  lastOtp = token;
+  return token;
+};
+
 export default defineConfig({
   reporter: "cypress-mochawesome-reporter",
   reporterOptions: {
@@ -31,7 +43,7 @@ export default defineConfig({
     defaultCommandTimeout: 60000,
     setupNodeEvents(on, config) {
       // implement node event listeners here
-      on("task", { generateOTP: cypressOtp });
+      on("task", { generateOTP: generateUniqueOtp });
       codeCoverageTask(on, config);
       require("cypress-mochawesome-reporter/plugin")(on);
       require("cypress-localstorage-commands/plugin")(on, config);

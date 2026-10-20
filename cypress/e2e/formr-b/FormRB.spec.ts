@@ -16,7 +16,7 @@ const today = dayjs();
 
 describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
   it("Should save a new draft form then delete it", () => {
-    cy.signInToTss(30000, "/formr-b", "iphone-6");
+    cy.signInToTss("/formr-b", "iphone-6");
     cy.get("#btnOpenForm").should("exist").click();
     cy.confirmNewFormIfWarned();
 
@@ -66,7 +66,7 @@ describe("Form R (Part B) - Draft form deletion, autosave, start over", () => {
 
 describe("Form R (Part B) - Submit a new form pt1", () => {
   it("should complete part of a new Form R Part B and save draft.", () => {
-    cy.signInToTss(30000, "/formr-b");
+    cy.signInToTss("/formr-b");
     cy.checkElement("Submit new form").click();
     cy.confirmNewFormIfWarned();
     cy.checkElement("homeLink");
@@ -90,7 +90,7 @@ describe("Form R (Part B) - Submit a new form pt1", () => {
 
 describe("Form R (Part B) - Submit a new form pt2", () => {
   it("should re-open and complete the rest of the Form R Part B and submit.", () => {
-    cy.signInToTss(10000, "/formr-b");
+    cy.signInToTss("/formr-b");
     cy.checkElement("btn-Edit saved draft form").click();
     cy.checkElement("BtnShortcutToConfirm", null, false);
     for (let i = 0; i < 6; i++) {
@@ -135,7 +135,7 @@ describe("Form R (Part B) - Submit a new form pt2", () => {
 
 // describe("Form R (Part B) - check latest submitted form", () => {
 //   it("Should show the submitted form in the list", () => {
-//     cy.signInToTss(30000, "/formr-b");
+//     cy.signInToTss("/formr-b");
 //     cy.checkElement("Submit new form");
 //     cy.get('[data-cy="formsListWarning"] > :nth-child(2)').should("exist");
 //     cy.contains("Submitted forms").should("exist");
