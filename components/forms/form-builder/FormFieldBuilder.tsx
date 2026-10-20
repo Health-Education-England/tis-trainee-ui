@@ -46,6 +46,7 @@ export function FormFieldBuilder({
     isMultiSelect,
     hint,
     maxDigits,
+    maxLength,
     conditionalField,
     computedValue
   } = field;
@@ -103,6 +104,7 @@ export function FormFieldBuilder({
           arrayName={arrayName}
           dtoName={dtoName}
           rows={rows}
+          maxLength={maxLength}
         />
       );
 
