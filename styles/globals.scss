@@ -1,4 +1,6 @@
-@use "nhsuk-frontend" as *;
+@use "nhsuk-frontend" as * with (
+  $nhsuk-page-width: 1100px
+);
 
 $nhsFont: “Frutiger W01”, Arial, sans-serif;
 $nhsBlue: #005eb8;
@@ -19,10 +21,6 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.nhsuk-width-container {
-  max-width: 990px;
 }
 
 .no-wrap {
@@ -69,7 +67,7 @@ body {
     margin-top: 60px;
     margin-bottom: -40px;
   }
-  @media (min-width: 768px) and (orientation: landscape) {
+  @include nhsuk-media-query($from: desktop, $and: "(orientation: landscape)") {
     [data-amplify-authenticator-signin]
       .amplify-button[data-variation="primary"],
     [data-amplify-authenticator-signup]
@@ -78,7 +76,10 @@ body {
       margin-bottom: -40px;
     }
   }
-  @media (max-width: 768px) and (min-width: 478px) and (orientation: landscape) {
+  @include nhsuk-media-query(
+    $until: desktop,
+    $and: "(min-width: 478px) and (orientation: landscape)"
+  ) {
     [data-amplify-authenticator-signin]
       .amplify-button[data-variation="primary"],
     [data-amplify-authenticator-signup]
@@ -507,7 +508,7 @@ ol[type="a"] {
 }
 
 // Home header section
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .header-wrapper {
     padding: 1.5rem 0;
   }
@@ -517,7 +518,7 @@ ol[type="a"] {
   padding: 56px 16px;
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .tss-update-column {
     padding-top: 0;
   }
@@ -568,14 +569,14 @@ ol[type="a"] {
   color: black !important;
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .whats-new-header {
     font-size: 1.25rem;
     font-weight: normal;
   }
 }
 
-@media (min-width: 990px) {
+@include nhsuk-media-query($from: large-desktop) {
   .mobile-only-nav {
     display: none;
   }
@@ -587,7 +588,7 @@ ol[type="a"] {
   box-shadow: 0 1px 0 #00401e;
 }
 
-@media (max-width: 989px) {
+@include nhsuk-media-query($until: large-desktop) {
   .sign-out-btn {
     margin: 1rem 0 1rem 1rem;
     color: white;
@@ -601,7 +602,7 @@ ol[type="a"] {
   margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .tss-name {
     font-size: 1.25rem;
   }
@@ -637,7 +638,7 @@ ol[type="a"] {
   margin-left: -2em;
 }
 
-@media (max-width: 640px) {
+@include nhsuk-media-query($until: tablet) {
   .error-summary_li {
     list-style-type: none;
     margin-left: -2.5em;
@@ -669,13 +670,13 @@ ol[type="a"] {
 
 // mobile notifications
 
-@media (max-width: 989px) {
+@include nhsuk-media-query($until: large-desktop) {
   .notification-btn {
     margin: 0.3rem 1rem 0 1rem;
   }
 }
 
-@media (max-width: 640px) {
+@include nhsuk-media-query($until: tablet) {
   .notification-badge {
     padding: 1% 16%;
   }
@@ -687,7 +688,7 @@ ol[type="a"] {
   justify-content: right;
 }
 
-@media (min-width: 989px) {
+@include nhsuk-media-query($from: large-desktop) {
   .mobile-header {
     display: none;
   }
@@ -821,7 +822,7 @@ td {
   flex: 1 0 20%;
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .pagination-container {
     flex-wrap: wrap;
   }
@@ -978,7 +979,7 @@ dialog::backdrop {
   backdrop-filter: blur(4px);
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   dialog {
     min-width: 90%;
     max-width: 90%;
@@ -1047,7 +1048,7 @@ dialog::backdrop {
   border-left: 16px solid var(--circle-colour);
 }
 
-@media (max-width: 768px) {
+@include nhsuk-media-query($until: desktop) {
   .arrow-right,
   .arrow-right_tip {
     display: none;
