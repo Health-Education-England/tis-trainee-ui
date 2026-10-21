@@ -331,10 +331,10 @@ describe("Desktop Header with MFA set up", () => {
     it("should not display any unexpected links", () => {
       cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
-        .should("eq", navLinksLtftPilot.length - 3);
+        .should("eq", navLinksLtftPilot.length - 4);
       cy.get(".nhsuk-header__navigation-item:hidden")
         .its("length")
-        .should("eq", 3);
+        .should("eq", 4);
       cy.get("#toggle-menu").should("exist").click();
       cy.get(".nhsuk-header__navigation-item:visible")
         .its("length")
