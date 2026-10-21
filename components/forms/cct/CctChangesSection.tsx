@@ -31,8 +31,8 @@ import {
   sumCctMonths
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
+import { CctCalculationError } from "./CctCalculationError";
 import { CctChangeForm } from "./CctChangeForm";
-import { findInvalidCctChangeMessage } from "./cctValidationSchema";
 import style from "./CctChanges.module.scss";
 
 type CctChangesSectionProps = {
@@ -40,8 +40,14 @@ type CctChangesSectionProps = {
   changes: CctChange[];
   projection: CctProjection | null;
   result: CctResult | null;
+  cctDate: string | null;
+  invalidChanges: CctInvalidChange[];
   calculationStatus: CctCalculationStatus;
+  isRetrying: boolean;
+  isFormOpen: boolean;
+  onRetry: () => void;
   onChange: (changes: CctChange[]) => void;
+  onFormOpenChange: (isFormOpen: boolean) => void;
 };
 
 type CctInvalidChange = {
@@ -62,22 +68,18 @@ export function CctChangesSection({
   changes,
   projection,
   result,
+  cctDate,
+  invalidChanges,
   calculationStatus,
-  onChange
+  isRetrying,
+  isFormOpen,
+  onRetry,
+  onChange,
+  onFormOpenChange
 }: Readonly<CctChangesSectionProps>) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const cctDate =
-    calculationStatus === "succeeded" ? result?.cctDate ?? null : null;
-  const invalidChanges = changes.flatMap(change => {
-    const message = findInvalidCctChangeMessage(
-      change,
-      changes,
-      programmeDetails,
-      cctDate
-    );
-    return message ? [{ change, message }] : [];
-  });
+  const noResultText =
+    calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
 
   useEffect(() => {
     if (!isFormOpen) return;
@@ -92,7 +94,7 @@ export function CctChangesSection({
 
   const closeForm = () => {
     setEditingId(null);
-    setIsFormOpen(false);
+    onFormOpenChange(false);
   };
 
   const handleSubmit = (formData: FormData) => {
@@ -138,17 +140,21 @@ export function CctChangesSection({
         isFormOpen={isFormOpen}
         onEdit={id => {
           setEditingId(id);
-          setIsFormOpen(true);
+          onFormOpenChange(true);
         }}
         onRemove={id => onChange(changes.filter(change => change.id !== id))}
       />
+
+      {calculationStatus === "failed" && (
+        <CctCalculationError isRetrying={isRetrying} onRetry={onRetry} />
+      )}
 
       {/* Note: the completion date is engine output. Do not derive it from the programme end date */}
       <div className="nhsuk-inset-text nhsuk-u-margin-top-2">
         <p className="nhsuk-u-margin-bottom-0" data-cy="cct-projected-cct-date">
           Projected Completion of Training Date:{" "}
           <strong>
-            {result ? formatCctDate(result.cctDate) : CCT_NOT_CALCULATED}
+            {result ? formatCctDate(result.cctDate) : noResultText}
           </strong>
           {!hasChanges && " (no changes added yet)"}
         </p>
@@ -180,7 +186,7 @@ export function CctChangesSection({
         <Button
           secondary
           type="button"
-          onClick={() => setIsFormOpen(true)}
+          onClick={() => onFormOpenChange(true)}
           data-cy="cct-add-change"
         >
           Add change

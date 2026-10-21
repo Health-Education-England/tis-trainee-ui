@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 type CctFormShellProps = {
   pageNames: string[];
   currentPage: number;
+  canGoNext: boolean;
   onNavigate: (targetPage: number) => void;
   children: React.ReactNode;
 };
@@ -13,6 +14,7 @@ type CctFormShellProps = {
 export function CctFormShell({
   pageNames,
   currentPage,
+  canGoNext,
   onNavigate,
   children
 }: Readonly<CctFormShellProps>) {
@@ -48,7 +50,7 @@ export function CctFormShell({
             )}
           </li>
           <li className="nhsuk-pagination-item--next">
-            {currentPage < lastPage && (
+            {currentPage < lastPage && canGoNext && (
               <Link
                 to="#"
                 className="nhsuk-pagination__link nhsuk-pagination__link--next"

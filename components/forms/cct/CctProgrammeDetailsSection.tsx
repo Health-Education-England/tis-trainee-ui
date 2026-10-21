@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Button, Card, InsetText, SummaryList } from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
 import { CctProgrammeDetails, CctResult } from "../../../models/CctTypes";
 import {
+  CCT_NO_VALUE,
   CCT_NOT_CALCULATED,
   findCctSpecialty
 } from "../../../utilities/CctConstants";
@@ -13,24 +13,34 @@ import {
   mapFormDataToProgrammeDetails,
   mapProgrammeDetailsToFormData
 } from "../../../utilities/CctUtilities";
+import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
+import { CctCalculationError } from "./CctCalculationError";
 import { CctProgrammeDetailsForm } from "./CctProgrammeDetailsForm";
 
 type CctProgrammeDetailsSectionProps = {
   programmeDetails: CctProgrammeDetails | null;
+  isEditing: boolean;
   result: CctResult | null;
+  calculationStatus: CctCalculationStatus;
+  isRetrying: boolean;
+  onRetry: () => void;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
+  onEditingChange: (isEditing: boolean) => void;
 };
 
 export function CctProgrammeDetailsSection({
   programmeDetails,
+  isEditing,
   result,
-  onChange
+  calculationStatus,
+  isRetrying,
+  onRetry,
+  onChange,
+  onEditingChange
 }: Readonly<CctProgrammeDetailsSectionProps>) {
-  const [isEditing, setIsEditing] = useState(programmeDetails === null);
-
   const handleSubmit = (formData: FormData) => {
     onChange(mapFormDataToProgrammeDetails(formData));
-    setIsEditing(false);
+    onEditingChange(false);
   };
 
   return (
@@ -39,22 +49,28 @@ export function CctProgrammeDetailsSection({
       {isEditing || !programmeDetails ? (
         <CctProgrammeDetailsForm
           initialData={mapProgrammeDetailsToFormData(programmeDetails)}
-          submitLabel={
-            programmeDetails ? "Save programme details" : "Save and continue"
-          }
+          submitLabel="Save programme details"
           onSubmit={handleSubmit}
-          onCancel={programmeDetails ? () => setIsEditing(false) : undefined}
+          onCancel={programmeDetails ? () => onEditingChange(false) : undefined}
         />
       ) : (
         <>
+          {calculationStatus === "failed" && (
+            <CctCalculationError
+              isRetrying={isRetrying}
+              onRetry={onRetry}
+              message="We could not calculate your programme end date."
+            />
+          )}
           <CctProgrammeDetailsSummary
             programmeDetails={programmeDetails}
             result={result}
+            calculationStatus={calculationStatus}
           />
           <Button
             secondary
             type="button"
-            onClick={() => setIsEditing(true)}
+            onClick={() => onEditingChange(true)}
             data-cy="cct-edit-programme-details"
           >
             Edit programme details
@@ -76,44 +92,40 @@ export function CctProgrammeDetailsInset({
   result,
   onEdit
 }: Readonly<CctProgrammeDetailsInsetProps>) {
+  if (!programmeDetails) return null;
+
   return (
     <InsetText data-cy="cct-programme-details-inset">
-      {programmeDetails ? (
-        <p>
-          <strong>{programmeDetails.specialty}</strong>
-          {`, ${deriveCctAdjustedLengthMonths(programmeDetails)} months`}
-          {isCctLengthAdjusted(programmeDetails) && (
-            <>
-              <br />
-              {`(${[
-                `${programmeDetails.lengthMonths} months`,
-                programmeDetails.additionalMonths > 0 &&
-                  `+${programmeDetails.additionalMonths} additional`,
-                programmeDetails.acceleratedMonths > 0 &&
-                  `-${programmeDetails.acceleratedMonths} accelerated`
-              ]
-                .filter(Boolean)
-                .join(", ")})`}
-            </>
-          )}
-          <br />
-          {`Start date ${formatCctDate(
-            programmeDetails.startDate
-          )}, start grade ${programmeDetails.startGrade}`}
-          {result?.adjustedProgrammeEndDate && (
-            <>
-              <br />
-              {`End date ${formatCctDate(
-                result.adjustedProgrammeEndDate
-              )} (before changes)`}
-            </>
-          )}
-        </p>
-      ) : (
-        <p>
-          <em>No programme details added yet.</em>
-        </p>
-      )}
+      <p>
+        <strong>{programmeDetails.specialty}</strong>
+        {`, ${deriveCctAdjustedLengthMonths(programmeDetails)} months`}
+        {isCctLengthAdjusted(programmeDetails) && (
+          <>
+            <br />
+            {`(${[
+              `${programmeDetails.lengthMonths} months`,
+              programmeDetails.additionalMonths > 0 &&
+                `+${programmeDetails.additionalMonths} additional`,
+              programmeDetails.acceleratedMonths > 0 &&
+                `-${programmeDetails.acceleratedMonths} accelerated`
+            ]
+              .filter(Boolean)
+              .join(", ")})`}
+          </>
+        )}
+        <br />
+        {`Start date ${formatCctDate(
+          programmeDetails.startDate
+        )}, start grade ${programmeDetails.startGrade}`}
+        {result?.adjustedProgrammeEndDate && (
+          <>
+            <br />
+            {`End date ${formatCctDate(
+              result.adjustedProgrammeEndDate
+            )} (before changes)`}
+          </>
+        )}
+      </p>
       <p>
         <button
           type="button"
@@ -121,9 +133,7 @@ export function CctProgrammeDetailsInset({
           onClick={onEdit}
           data-cy="cct-programme-details-inset-link"
         >
-          {programmeDetails
-            ? "Change programme details"
-            : "Add programme details"}
+          Change programme details
         </button>
       </p>
     </InsetText>
@@ -133,12 +143,16 @@ export function CctProgrammeDetailsInset({
 type CctProgrammeDetailsSummaryProps = {
   programmeDetails: CctProgrammeDetails;
   result: CctResult | null;
+  calculationStatus: CctCalculationStatus;
 };
 
 export function CctProgrammeDetailsSummary({
   programmeDetails,
-  result
+  result,
+  calculationStatus
 }: Readonly<CctProgrammeDetailsSummaryProps>) {
+  const noResultText =
+    calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
   const specialtyDefault = findCctSpecialty(programmeDetails.specialty);
   const isGradeOverridden =
     !!specialtyDefault &&
@@ -169,7 +183,7 @@ export function CctProgrammeDetailsSummary({
         <SummaryList.Value>
           {result
             ? formatCctDate(result.originalProgrammeEndDate)
-            : CCT_NOT_CALCULATED}
+            : noResultText}
         </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
@@ -228,7 +242,7 @@ export function CctProgrammeDetailsSummary({
           <SummaryList.Value>
             {result
               ? formatCctDate(result.adjustedProgrammeEndDate)
-              : CCT_NOT_CALCULATED}
+              : noResultText}
             <span className="nhsuk-hint nhsuk-u-margin-left-2">
               (based on programme length and training-time adjustments only)
             </span>

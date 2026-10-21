@@ -3,6 +3,8 @@ import { MemoryRouter } from "react-router-dom";
 import { mount } from "cypress/react";
 import store from "../../../../redux/store/store";
 import { Cct } from "../../../../components/forms/cct/Cct";
+import { calculateCctResult } from "../../../../mock-data/mock-cct-engine";
+import { CctCalculateRequest } from "../../../../services/CctService";
 
 const mountCct = () => {
   mount(
@@ -36,7 +38,21 @@ const addParentalLeaveChange = () => {
   cy.get('[data-cy="cct-change-form-submit"]').click();
 };
 
+// Note: temporary - switch to a fixture when the mock engine is deleted.
+const calculateWithMockEngine = (request: CctCalculateRequest) =>
+  calculateCctResult(
+    request.programmeDetails,
+    request.changes,
+    request.projection
+  );
+
 describe("Cct", () => {
+  beforeEach(() => {
+    cy.intercept("POST", "/api/cct/calculate", req =>
+      req.reply(calculateWithMockEngine(req.body))
+    );
+  });
+
   it("starts on part 1 with the programme details form open", () => {
     mountCct();
 
@@ -47,7 +63,7 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-programme-details-form"]').should("exist");
     cy.get('[data-cy="navPrevious"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="navNext"]').should("not.exist");
   });
 
   it("reveals the rest of the form and defaults length and grade from the specialty", () => {
@@ -69,9 +85,14 @@ describe("Cct", () => {
       .and("contain.text", "84 months")
       .and("contain.text", "02/08/2023");
     cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("exist");
 
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="cct-programme-details-form"]').should("exist");
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-programme-details-cancel"]').click();
+    cy.get('[data-cy="navNext"]').should("exist");
   });
 
   it("asks for a reason as soon as the start grade differs from the specialty default", () => {
@@ -104,6 +125,37 @@ describe("Cct", () => {
     cy.get("#startGradeOverrideNotes").should("not.exist");
   });
 
+  it("keeps the error box up and Next hidden until a retry succeeds", () => {
+    cy.intercept("POST", "/api/cct/calculate", { statusCode: 500, body: {} });
+    mountCct();
+    saveProgrammeDetails();
+
+    cy.get('[data-cy="cct-calculation-error"] button').should("have.length", 1);
+    cy.get('[data-cy="cct-programme-details-summary"]').should(
+      "contain.text",
+      "—"
+    );
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.intercept("POST", "/api/cct/calculate", req =>
+      req.reply({ body: calculateWithMockEngine(req.body), delay: 1500 })
+    );
+    cy.get('[data-cy="cct-calculation-retry"]').click();
+    cy.get('[data-cy="cct-calculation-retry"]').should(
+      "have.text",
+      "Trying again…"
+    );
+    cy.focused().should("have.attr", "data-cy", "cct-calculation-retry");
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-calculation-error"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Part 2 of 3 - Changes"
+    );
+  });
+
   it("holds the table back until the first change is added", () => {
     mountCct();
     saveProgrammeDetails();
@@ -117,7 +169,7 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
     cy.get('[data-cy="cct-hide-assumed-periods"]').should("not.exist");
     cy.get('[data-cy="cct-projected-cct-date"]')
-      .should("contain.text", "Not yet calculated")
+      .should("contain.text", "29/07/2030")
       .and("contain.text", "no changes added yet");
     cy.get('[data-cy="cct-add-change"]').should("exist");
 
@@ -415,7 +467,74 @@ describe("Cct", () => {
     });
   });
 
-  it("shows the summary with the calculation flagged as unavailable", () => {
+  it("hides Next on the changes page while a change form is open", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Part 2 of 3 - Changes"
+    );
+    cy.get('[data-cy="navNext"]').should("exist");
+
+    cy.get('[data-cy="cct-add-change"]').click();
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-change-form-cancel"]').click();
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
+  it("hides Next on the changes page while the calculation fails, until the rejected change is removed", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+
+    cy.intercept("POST", "/api/cct/calculate", req => {
+      if (req.body.changes.length > 0) {
+        req.reply({ statusCode: 400, body: {} });
+      } else {
+        req.reply(calculateWithMockEngine(req.body));
+      }
+    });
+    addParentalLeaveChange();
+    cy.get('[data-cy="cct-calculation-error"]').should("exist");
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="cct-calculation-error"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
+  it("hides Next on the changes page while a saved change is invalid", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    addParentalLeaveChange();
+    cy.get('[data-cy="navNext"]').should("exist");
+
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="startDate-input"]').clear();
+    cy.get('[data-cy="startDate-input"]').type("2024-03-01");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should(
+      "contain.text",
+      "26/02/2031"
+    );
+    cy.get('[data-cy="navNext"]').click();
+
+    cy.get('[data-cy="cct-invalid-changes-summary"]').should(
+      "contain.text",
+      "Start date cannot be before programme start"
+    );
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="cct-invalid-changes-summary"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
+  it("shows the summary with the calculated completion date", () => {
     mountCct();
     saveProgrammeDetails();
     cy.get('[data-cy="navNext"]').click();
@@ -425,10 +544,9 @@ describe("Cct", () => {
       "contain.text",
       "Part 3 of 3 - Summary"
     );
-    cy.get('[data-cy="cct-no-result-warning"]').should("exist");
     cy.get('[data-cy="cct-result-summary"]').should(
       "contain.text",
-      "Not yet calculated"
+      "29/07/2030"
     );
     cy.get('[data-cy="cct-summary-no-changes"]').should("exist");
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");

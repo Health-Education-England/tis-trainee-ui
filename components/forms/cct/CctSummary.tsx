@@ -1,20 +1,20 @@
-import {
-  Card,
-  SummaryList,
-  Table,
-  WarningCallout
-} from "nhsuk-react-components";
+import { Card, SummaryList, Table } from "nhsuk-react-components";
 import {
   CctChange,
   CctProgrammeDetails,
   CctProjection,
   CctResult
 } from "../../../models/CctTypes";
-import { CCT_NOT_CALCULATED } from "../../../utilities/CctConstants";
+import {
+  CCT_NO_VALUE,
+  CCT_NOT_CALCULATED
+} from "../../../utilities/CctConstants";
 import {
   formatCctDate,
   formatCctMonths
 } from "../../../utilities/CctUtilities";
+import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
+import { CctCalculationError } from "./CctCalculationError";
 import { CctChangesTable } from "./CctChangesSection";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 
@@ -23,28 +23,29 @@ type CctSummaryProps = {
   changes: CctChange[];
   projection: CctProjection | null;
   result: CctResult | null;
+  calculationStatus: CctCalculationStatus;
+  isRetrying: boolean;
+  onRetry: () => void;
 };
 
 export function CctSummary({
   programmeDetails,
   changes,
   projection,
-  result
+  result,
+  calculationStatus,
+  isRetrying,
+  onRetry
 }: Readonly<CctSummaryProps>) {
+  const noResultText =
+    calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
+
   return (
     <>
       <Card feature>
         <Card.Heading>Your indicative completion date</Card.Heading>
-        {!result && (
-          <WarningCallout data-cy="cct-no-result-warning">
-            <WarningCallout.Heading visuallyHiddenText="">
-              Important
-            </WarningCallout.Heading>
-            <p>
-              The calculation is not available yet. Your dates and grade
-              progression will appear here once the calculator is connected.
-            </p>
-          </WarningCallout>
+        {calculationStatus === "failed" && (
+          <CctCalculationError isRetrying={isRetrying} onRetry={onRetry} />
         )}
         <SummaryList data-cy="cct-result-summary">
           <SummaryList.Row>
@@ -53,7 +54,7 @@ export function CctSummary({
             </SummaryList.Key>
             <SummaryList.Value>
               <strong>
-                {result ? formatCctDate(result.cctDate) : CCT_NOT_CALCULATED}
+                {result ? formatCctDate(result.cctDate) : noResultText}
               </strong>
             </SummaryList.Value>
           </SummaryList.Row>
@@ -74,15 +75,12 @@ export function CctSummary({
 
       <Card feature>
         <Card.Heading>Programme details</Card.Heading>
-        {programmeDetails ? (
+        {programmeDetails && (
           <CctProgrammeDetailsSummary
             programmeDetails={programmeDetails}
             result={result}
+            calculationStatus={calculationStatus}
           />
-        ) : (
-          <p data-cy="cct-summary-no-programme-details">
-            <em>No programme details added yet.</em>
-          </p>
         )}
       </Card>
 

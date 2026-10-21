@@ -17,6 +17,8 @@ export function useCctCalculation(
 ) {
   const [result, setResult] = useState<CctResult | null>(null);
   const [status, setStatus] = useState<CctCalculationStatus>("idle");
+  const [attempt, setAttempt] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   const projection = deriveCctProjection(programmeDetails, changes);
   const requestKey =
@@ -36,7 +38,9 @@ export function useCctCalculation(
     }
 
     let isStale = false;
-    setStatus("loading");
+    setStatus(previousStatus =>
+      previousStatus === "failed" ? "failed" : "loading"
+    );
 
     cctService
       .calculate(JSON.parse(requestKey) as CctCalculateRequest)
@@ -44,17 +48,24 @@ export function useCctCalculation(
         if (isStale) return;
         setResult(calculated);
         setStatus("succeeded");
+        setIsRetrying(false);
       })
       .catch(() => {
         if (isStale) return;
         setResult(null);
         setStatus("failed");
+        setIsRetrying(false);
       });
 
     return () => {
       isStale = true;
     };
-  }, [requestKey]);
+  }, [requestKey, attempt]);
 
-  return { result, status };
+  const retry = () => {
+    setIsRetrying(true);
+    setAttempt(previousAttempt => previousAttempt + 1);
+  };
+
+  return { result, status, isRetrying, retry };
 }
