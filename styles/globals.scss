@@ -2,7 +2,7 @@
   $nhsuk-page-width: 1100px
 );
 
-$nhsFont: “Frutiger W01”, Arial, sans-serif;
+$nhsFont: "Frutiger W01", Arial, sans-serif;
 $nhsBlue: #005eb8;
 $nhsSuccess: #006400;
 $nhsError: #a7171a;
@@ -14,7 +14,6 @@ $nhsTracker3: #002d88;
 
 html {
   background-color: inherit;
-  font-family: $nhsFont !important;
 }
 
 body {
