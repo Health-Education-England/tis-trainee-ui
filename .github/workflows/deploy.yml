@@ -23,7 +23,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: npm
 
       - name: Configure AWS Credentials
@@ -70,7 +70,7 @@ jobs:
     name: Run Cypress E2E tests
     runs-on: ubuntu-latest
     container:
-      image: cypress/browsers:node-24.21.0-chrome-153.0.8010.36-1-ff-156.0-edge-153.0.4234.32-1
+      image: cypress/browsers:node-24.22.1-chrome-156.0.8078.47-1-ff-158.0.1-edge-155.0.4283.62-1
       options: --user 1001
 
     steps:
@@ -204,7 +204,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24.21.0
+          node-version: 24.22.1
           cache: npm
 
       - name: Configure AWS Credentials
