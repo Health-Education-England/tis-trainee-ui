@@ -3,7 +3,7 @@ import { CctCalculation, CctResult } from "../models/CctTypes";
 
 export type CctCalculateRequest = Pick<
   CctCalculation,
-  "programmeDetails" | "changes" | "projection"
+  "programmeDetails" | "changes"
 >;
 
 const STUB_LATENCY_MS = 250;
@@ -23,11 +23,7 @@ export class CctService extends ApiService {
         "../mock-data/mock-cct-engine"
       );
       await new Promise(resolve => setTimeout(resolve, STUB_LATENCY_MS));
-      return calculateCctResult(
-        request.programmeDetails,
-        request.changes,
-        request.projection
-      );
+      return calculateCctResult(request.programmeDetails, request.changes);
     }
 
     const { data } = await this.post<CctResult, CctCalculateRequest>(

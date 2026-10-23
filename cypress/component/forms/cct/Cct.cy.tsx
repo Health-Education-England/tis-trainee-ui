@@ -40,11 +40,7 @@ const addParentalLeaveChange = () => {
 
 // Note: temporary - switch to a fixture when the mock engine is deleted.
 const calculateWithMockEngine = (request: CctCalculateRequest) =>
-  calculateCctResult(
-    request.programmeDetails,
-    request.changes,
-    request.projection
-  );
+  calculateCctResult(request.programmeDetails, request.changes);
 
 describe("Cct", () => {
   beforeEach(() => {

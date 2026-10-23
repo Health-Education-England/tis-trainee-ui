@@ -31,7 +31,9 @@ export function CctForm() {
   );
 
   // Note: the projection is just a function of the changes - no persistence (storing it would only let the them disagree).
-  const projection = deriveCctProjection(programmeDetails, changes);
+  const projection = programmeDetails
+    ? deriveCctProjection(programmeDetails, changes)
+    : null;
   const cctDate = status === "succeeded" ? result?.cctDate ?? null : null;
   const invalidChanges = changes.flatMap(change => {
     const message = findInvalidCctChangeMessage(

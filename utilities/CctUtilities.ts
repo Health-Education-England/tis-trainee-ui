@@ -69,7 +69,10 @@ export const sortCctChanges = (changes: CctChange[]): CctChange[] =>
   [...changes].sort((a, b) => a.startDate.localeCompare(b.startDate));
 
 export const toCctChangeDtos = (changes: CctChange[]): CctChangeDto[] =>
-  changes.map(({ id: _id, ...change }) => change);
+  changes.map(({ id: _id, ...change }) => ({
+    ...change,
+    endDate: change.endDate || null
+  }));
 
 export function pickCctPeriods(
   result: CctResult | null,
@@ -196,7 +199,7 @@ export function mapChangeToFormData(change: CctChange | null): FormData {
 export const isOpenLtftChange = (change: CctChangeDto) =>
   change.type === "LTFT" && !change.endDate;
 
-export const findProjectingChange = (changes: CctChange[]) =>
+export const findProjectingChange = <T extends CctChangeDto>(changes: T[]) =>
   changes.find(isOpenLtftChange) ?? null;
 
 const datedChanges = <T extends CctChangeDto>(changes: T[]) =>
@@ -204,11 +207,9 @@ const datedChanges = <T extends CctChangeDto>(changes: T[]) =>
 
 // Note: mirrors the POC's deriveQuickProjection - an open LTFT change projects at its own WTE, otherwise the projection is full time from the day after the last change ends.
 export function deriveCctProjection(
-  programmeDetails: CctProgrammeDetails | null,
-  changes: CctChange[]
-): CctProjection | null {
-  if (!programmeDetails) return null;
-
+  programmeDetails: CctProgrammeDetails,
+  changes: CctChangeDto[]
+): CctProjection {
   const projectingChange = findProjectingChange(changes);
   if (projectingChange)
     return {

@@ -31,7 +31,9 @@ export type CctChange = {
   notes?: string;
 };
 
-export type CctChangeDto = Omit<CctChange, "id">;
+export type CctChangeDto = Omit<CctChange, "id" | "endDate"> & {
+  endDate: string | null;
+};
 
 export type CctProjection = {
   startDate: string;
@@ -109,7 +111,6 @@ export type CctCalculation = {
   programmeMembership: PmType; // unchanged for now
   programmeDetails: CctProgrammeDetails;
   changes: CctChangeDto[];
-  projection: CctProjection;
   result: CctResult;
   created?: Date | string; // server-assigned
   lastModified?: Date | string; // server-assigned

@@ -14,11 +14,11 @@ import {
   CctChangeDto,
   CctPeriod,
   CctProgrammeDetails,
-  CctProjection,
   CctResult
 } from "../models/CctTypes";
 import {
   deriveCctAssumedPeriods,
+  deriveCctProjection,
   isOpenLtftChange
 } from "../utilities/CctUtilities";
 
@@ -38,9 +38,7 @@ export const wteFractionFor = (change: CctChangeDto) => {
 };
 
 export const calendarMonthsFor = (change: CctChangeDto) =>
-  isOpenLtftChange(change)
-    ? 0
-    : completedMonths(change.startDate, change.endDate);
+  change.endDate ? completedMonths(change.startDate, change.endDate) : 0;
 
 export const wteMonthsFor = (change: CctChangeDto) =>
   calendarMonthsFor(change) * wteFractionFor(change);
@@ -57,9 +55,9 @@ const dateAfterMonths = (startDate: string, months: number) =>
 
 export function calculateCctResult(
   programmeDetails: CctProgrammeDetails,
-  changes: CctChangeDto[],
-  projection: CctProjection
+  changes: CctChangeDto[]
 ): CctResult {
+  const projection = deriveCctProjection(programmeDetails, changes);
   const datedChanges = changes.filter(change => !isOpenLtftChange(change));
 
   const calendarMonthsBeforeProjection =

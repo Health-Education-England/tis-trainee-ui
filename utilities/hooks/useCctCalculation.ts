@@ -5,7 +5,7 @@ import {
   CctResult
 } from "../../models/CctTypes";
 import { CctCalculateRequest, CctService } from "../../services/CctService";
-import { deriveCctProjection, toCctChangeDtos } from "../CctUtilities";
+import { toCctChangeDtos } from "../CctUtilities";
 
 export type CctCalculationStatus = "idle" | "loading" | "succeeded" | "failed";
 
@@ -20,15 +20,12 @@ export function useCctCalculation(
   const [attempt, setAttempt] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  const projection = deriveCctProjection(programmeDetails, changes);
-  const requestKey =
-    programmeDetails && projection
-      ? JSON.stringify({
-          programmeDetails,
-          changes: toCctChangeDtos(changes),
-          projection
-        })
-      : "";
+  const requestKey = programmeDetails
+    ? JSON.stringify({
+        programmeDetails,
+        changes: toCctChangeDtos(changes)
+      })
+    : "";
 
   useEffect(() => {
     if (!requestKey) {

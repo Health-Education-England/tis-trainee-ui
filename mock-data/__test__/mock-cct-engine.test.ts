@@ -17,10 +17,8 @@ const longProgramme: CctProgrammeDetails = {
   skippedGradeNotes: ""
 };
 
-const nextPostStart = "2024-01-01";
-
 describe("mock CCT engine (stub port of the POC)", () => {
-  it("matches the POC for a long LTFT history projected full time", () => {
+  it("projects full time from the day after the last change ends", () => {
     const changes: CctChangeDto[] = [
       {
         type: "LTFT",
@@ -31,16 +29,14 @@ describe("mock CCT engine (stub port of the POC)", () => {
       }
     ];
 
-    const result = calculateCctResult(longProgramme, changes, {
-      startDate: nextPostStart,
-      wte: 1
-    });
+    const result = calculateCctResult(longProgramme, changes);
 
-    expect(result.totalWteMonthsCompleted).toBeCloseTo(42.0164383562, 9);
+    expect(result.totalWteMonthsCompleted).toBeCloseTo(30.0164383562, 9);
+    expect(result.periods?.at(-1)?.startDate).toBe("2023-01-01");
     expect(result.cctDate).toBe("2030-06-28");
   });
 
-  it("matches the POC for an uncounted absence projected at 50% LTFT", () => {
+  it("matches the POC for an uncounted absence then an open LTFT change at 50%", () => {
     const changes: CctChangeDto[] = [
       {
         type: "OOPC",
@@ -48,13 +44,17 @@ describe("mock CCT engine (stub port of the POC)", () => {
         endDate: "2022-12-31",
         wte: null,
         countsTowardsCompletion: false
+      },
+      {
+        type: "LTFT",
+        startDate: "2024-01-01",
+        endDate: null,
+        wte: 0.5,
+        countsTowardsCompletion: true
       }
     ];
 
-    const result = calculateCctResult(longProgramme, changes, {
-      startDate: nextPostStart,
-      wte: 0.5
-    });
+    const result = calculateCctResult(longProgramme, changes);
 
     expect(result.totalWteMonthsCompleted).toBeCloseTo(36, 9);
     expect(result.cctDate).toBe("2037-12-25");
@@ -88,8 +88,7 @@ describe("mock CCT engine (stub port of the POC)", () => {
   it("leaves the whole adjusted length remaining when there are no changes", () => {
     const result = calculateCctResult(
       { ...longProgramme, additionalMonths: 6, acceleratedMonths: 3 },
-      [],
-      { startDate: longProgramme.startDate, wte: 1 }
+      []
     );
 
     expect(result.totalWteMonthsCompleted).toBe(0);
@@ -111,8 +110,7 @@ describe("mock CCT engine (stub port of the POC)", () => {
 
     const result = calculateCctResult(
       { ...longProgramme, startDate: "2023-08-02", lengthMonths: 96 },
-      changes,
-      { startDate: "2024-08-02", wte: 1 }
+      changes
     );
 
     expect(result.periods?.map(period => period.kind)).toEqual([

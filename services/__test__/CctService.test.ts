@@ -17,8 +17,7 @@ const request: CctCalculateRequest = {
     skippedGrade: null,
     skippedGradeNotes: ""
   },
-  changes: [],
-  projection: { startDate: "2023-08-02", wte: 1 }
+  changes: []
 };
 
 describe("CctService", () => {

@@ -32,6 +32,15 @@ const parentalLeave: CctChange = {
   countsTowardsCompletion: false
 };
 
+const openLtft: CctChange = {
+  id: "open-ltft",
+  type: "LTFT",
+  startDate: "2025-02-01",
+  endDate: "",
+  wte: 0.6,
+  countsTowardsCompletion: true
+};
+
 const resultFor = (cctDate: string): CctResult => ({ cctDate });
 
 describe("useCctCalculation", () => {
@@ -78,6 +87,19 @@ describe("useCctCalculation", () => {
     const sent = calculateSpy.mock.calls[0][0] as CctCalculateRequest;
     expect(sent.changes[0]).not.toHaveProperty("id");
     expect(sent.changes[0].type).toBe("PARENTAL");
+  });
+
+  it("sends an open LTFT change with a null end date and no projection", async () => {
+    calculateSpy.mockResolvedValue(resultFor("2031-07-29"));
+
+    const { result } = renderHook(() =>
+      useCctCalculation(programmeDetails, [openLtft])
+    );
+
+    await waitFor(() => expect(result.current.status).toBe("succeeded"));
+    const sent = calculateSpy.mock.calls[0][0] as CctCalculateRequest;
+    expect(sent.changes[0].endDate).toBeNull();
+    expect(sent).not.toHaveProperty("projection");
   });
 
   it("reports a failure and holds no result when the call rejects", async () => {
