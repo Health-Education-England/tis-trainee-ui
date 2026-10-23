@@ -24,6 +24,7 @@ import {
 
 const DAYS_PER_MONTH = 30.4;
 const COMPLETED_PERIOD_DAYS_PER_MONTH = 365 / 12;
+const FLOOR_TOLERANCE_DAYS = 1e-9;
 
 const inclusiveDays = (start: string, end: string) =>
   day(end).diff(day(start), "day") + 1;
@@ -50,8 +51,10 @@ const adjustedLengthMonths = (programmeDetails: CctProgrammeDetails) =>
 
 const dateAfterMonths = (startDate: string, months: number) =>
   day(startDate)
-    .add(Math.floor(months * DAYS_PER_MONTH), "day")
+    .add(Math.floor(months * DAYS_PER_MONTH + FLOOR_TOLERANCE_DAYS), "day")
     .format("YYYY-MM-DD");
+
+const roundToTwoDecimals = (months: number) => Math.round(months * 100) / 100;
 
 export function calculateCctResult(
   programmeDetails: CctProgrammeDetails,
@@ -74,8 +77,9 @@ export function calculateCctResult(
   const totalWteMonthsCompleted =
     datedChanges.reduce((sum, change) => sum + wteMonthsFor(change), 0) +
     gapCalendarMonths;
-  const monthsRemaining =
-    adjustedLengthMonths(programmeDetails) - totalWteMonthsCompleted;
+  const monthsRemaining = roundToTwoDecimals(
+    adjustedLengthMonths(programmeDetails) - totalWteMonthsCompleted
+  );
 
   const calendarMonthsToCompletion = monthsRemaining / projection.wte;
   const cctDate = dateAfterMonths(

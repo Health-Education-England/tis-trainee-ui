@@ -123,4 +123,66 @@ describe("mock CCT engine (stub port of the POC)", () => {
     expect(result.periods?.[1].endDate).toBe("2024-01-31");
     expect(result.periods?.[2].endDate).toBe(result.cctDate);
   });
+
+  it("rounds the months remaining to 2 dp before projecting the date, as Excel's I15 does", () => {
+    const changes: CctChangeDto[] = [
+      {
+        type: "LTFT",
+        startDate: "2023-11-21",
+        endDate: "2025-11-09",
+        wte: 0.5,
+        countsTowardsCompletion: true
+      }
+    ];
+
+    const result = calculateCctResult(
+      { ...longProgramme, startDate: "2023-08-02", lengthMonths: 84 },
+      changes
+    );
+
+    expect(result.monthsRemaining).toBe(68.52);
+    expect(result.periods?.at(-1)?.wteMonths).toBe(68.52);
+    expect(result.cctDate).toBe("2031-07-25");
+  });
+
+  it("projects the rounded months remaining at the open LTFT wte, which can pull the date a day earlier", () => {
+    const changes: CctChangeDto[] = [
+      {
+        type: "LTFT",
+        startDate: "2024-02-01",
+        endDate: null,
+        wte: 0.6,
+        countsTowardsCompletion: true
+      }
+    ];
+
+    const result = calculateCctResult(
+      { ...longProgramme, startDate: "2023-08-02", lengthMonths: 84 },
+      changes
+    );
+
+    expect(result.monthsRemaining).toBe(77.98);
+    expect(result.periods?.at(-1)?.calendarMonths).toBeCloseTo(77.98 / 0.6, 9);
+    expect(result.cctDate).toBe("2034-11-25");
+  });
+
+  it("floors a date that is exactly a whole number of days to that day, even when floating-point noise leaves it just short", () => {
+    const changes: CctChangeDto[] = [
+      {
+        type: "LTFT",
+        startDate: "2023-08-02",
+        endDate: null,
+        wte: 0.56,
+        countsTowardsCompletion: true
+      }
+    ];
+
+    const result = calculateCctResult(
+      { ...longProgramme, startDate: "2023-08-02", lengthMonths: 84 },
+      changes
+    );
+
+    expect(result.monthsRemaining).toBe(84);
+    expect(result.cctDate).toBe("2036-01-26");
+  });
 });
