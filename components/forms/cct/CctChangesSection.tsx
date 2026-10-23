@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import day from "dayjs";
 import { Button, Card, ErrorSummary, Table, Tag } from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
 import {
@@ -91,6 +92,10 @@ export function CctChangesSection({
 
   const editingChange = changes.find(change => change.id === editingId) ?? null;
   const hasChanges = changes.length > 0;
+  const isProjectionInvalid =
+    !!cctDate &&
+    !!projection &&
+    day(projection.startDate).diff(cctDate, "day") > 1;
 
   const closeForm = () => {
     setEditingId(null);
@@ -136,6 +141,7 @@ export function CctChangesSection({
         projection={projection}
         result={result}
         invalidChangeIds={invalidChanges.map(({ change }) => change.id)}
+        isProjectionInvalid={isProjectionInvalid}
         editingId={editingId}
         isFormOpen={isFormOpen}
         onEdit={id => {
@@ -245,6 +251,7 @@ type CctChangesTableProps = {
   projection: CctProjection | null;
   result: CctResult | null;
   invalidChangeIds?: string[];
+  isProjectionInvalid?: boolean;
   editingId?: string | null;
   isFormOpen?: boolean;
   onEdit?: (id: string) => void;
@@ -264,6 +271,7 @@ export function CctChangesTable({
   projection,
   result,
   invalidChangeIds,
+  isProjectionInvalid,
   editingId,
   isFormOpen,
   onEdit,
@@ -486,6 +494,14 @@ export function CctChangesTable({
                         ? "LTFT projection"
                         : "Full-time projection"}
                     </strong>
+                    {isProjectionInvalid && (
+                      <>
+                        {" "}
+                        <Tag modifier="red" data-cy="cct-invalid-projection">
+                          Invalid
+                        </Tag>
+                      </>
+                    )}
                   </Table.Cell>
                   <Table.Cell>Projects to completion</Table.Cell>
                   <Table.Cell>{formatCctDate(projection.startDate)}</Table.Cell>

@@ -185,4 +185,48 @@ describe("mock CCT engine (stub port of the POC)", () => {
     expect(result.monthsRemaining).toBe(84);
     expect(result.cctDate).toBe("2036-01-26");
   });
+
+  it("gives the day training completes when a change runs past it, not a date projected back from the change's end", () => {
+    const changes: CctChangeDto[] = [
+      {
+        type: "LTFT",
+        startDate: "2030-01-01",
+        endDate: "2032-12-31",
+        wte: 0.5,
+        countsTowardsCompletion: true
+      }
+    ];
+
+    const result = calculateCctResult(
+      { ...longProgramme, startDate: "2023-08-02", lengthMonths: 84 },
+      changes
+    );
+
+    expect(result.monthsRemaining).toBe(-11.08);
+    expect(result.cctDate).toBe("2031-02-26");
+    expect(result.periods?.at(-1)?.startDate).toBe("2033-01-01");
+    expect(result.periods?.at(-1)?.endDate).toBe("2031-02-26");
+  });
+
+  it("gives the change's last day, not the day after, when the change ends on the day training completes", () => {
+    const changes: CctChangeDto[] = [
+      {
+        type: "LTFT",
+        startDate: "2030-01-01",
+        endDate: "2031-02-26",
+        wte: 0.5,
+        countsTowardsCompletion: true
+      }
+    ];
+
+    const result = calculateCctResult(
+      { ...longProgramme, startDate: "2023-08-02", lengthMonths: 84 },
+      changes
+    );
+
+    expect(result.monthsRemaining).toBeCloseTo(0, 9);
+    expect(result.cctDate).toBe("2031-02-26");
+    expect(result.periods?.at(-1)?.startDate).toBe("2031-02-27");
+    expect(result.periods?.at(-1)?.wteMonths).toBeCloseTo(0, 9);
+  });
 });

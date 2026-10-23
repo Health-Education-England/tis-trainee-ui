@@ -56,6 +56,27 @@ const dateAfterMonths = (startDate: string, months: number) =>
 
 const roundToTwoDecimals = (months: number) => Math.round(months * 100) / 100;
 
+const findCompletionDate = (lengthMonths: number, periods: CctPeriod[]) => {
+  let monthsCompleted = 0;
+  for (const { startDate, endDate, wteMonths } of [...periods].sort((a, b) =>
+    a.startDate.localeCompare(b.startDate)
+  )) {
+    if (!endDate || !wteMonths) continue;
+    const days = inclusiveDays(startDate, endDate);
+    for (let daysIn = 1; daysIn <= days; daysIn++)
+      if (
+        roundToTwoDecimals(
+          lengthMonths - monthsCompleted - (wteMonths * daysIn) / days
+        ) <= 0
+      )
+        return day(startDate)
+          .add(daysIn - 1, "day")
+          .format("YYYY-MM-DD");
+    monthsCompleted += wteMonths;
+  }
+  return null;
+};
+
 export function calculateCctResult(
   programmeDetails: CctProgrammeDetails,
   changes: CctChangeDto[]
@@ -82,10 +103,6 @@ export function calculateCctResult(
   );
 
   const calendarMonthsToCompletion = monthsRemaining / projection.wte;
-  const cctDate = dateAfterMonths(
-    projection.startDate,
-    calendarMonthsToCompletion
-  );
 
   const changePeriods: CctPeriod[] = changes.map(change => {
     const isOpen = isOpenLtftChange(change);
@@ -109,6 +126,12 @@ export function calculateCctResult(
     calendarMonths: completedMonths(period.startDate, period.endDate),
     wteMonths: completedMonths(period.startDate, period.endDate)
   }));
+
+  const cctDate =
+    findCompletionDate(adjustedLengthMonths(programmeDetails), [
+      ...changePeriods,
+      ...assumedPeriods
+    ]) ?? dateAfterMonths(projection.startDate, calendarMonthsToCompletion);
 
   const projectionPeriod: CctPeriod = {
     kind: "PROJECTION",

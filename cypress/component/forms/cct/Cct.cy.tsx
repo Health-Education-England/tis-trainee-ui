@@ -530,6 +530,40 @@ describe("Cct", () => {
     cy.get('[data-cy="navNext"]').should("exist");
   });
 
+  it("flags the projection row as invalid while a change runs past completion, until the change ends on the date quoted", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+
+    cy.get('[data-cy="cct-add-change"]').click();
+    selectOption("type", "Less than full time (LTFT)");
+    cy.get("#wtePercent").type("50");
+    cy.get('[data-cy="startDate-input"]').type("2030-01-01");
+    cy.get('[data-cy="ltftDuration-It ends on a specific date-input"]').click();
+    cy.get('[data-cy="endDate-input"]').type("2032-12-31");
+    cy.get('[data-cy="cct-change-form-submit"]').click();
+
+    cy.get('[data-cy="cct-invalid-changes-summary"]').should(
+      "contain.text",
+      "End date cannot be after the current projected Completion of Training Date (26/02/2031)."
+    );
+    cy.get(
+      '[data-cy="cct-projection-row"] [data-cy="cct-invalid-projection"]'
+    ).should("contain.text", "Invalid");
+
+    cy.get('[data-cy^="cct-edit-change-"]').click();
+    cy.get('[data-cy="endDate-input"]').clear();
+    cy.get('[data-cy="endDate-input"]').type("2031-02-26");
+    cy.get('[data-cy="cct-change-form-submit"]').click();
+
+    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-invalid-changes-summary"]').should("not.exist");
+    cy.get('[data-cy="cct-invalid-projection"]').should("not.exist");
+    cy.get('[data-cy="cct-projection-row"]')
+      .should("contain.text", "27/02/2031")
+      .and("contain.text", "26/02/2031");
+  });
+
   it("shows the summary with the calculated completion date", () => {
     mountCct();
     saveProgrammeDetails();
