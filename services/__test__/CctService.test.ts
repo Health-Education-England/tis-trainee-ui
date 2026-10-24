@@ -64,5 +64,23 @@ describe("CctService", () => {
       expect(result.monthsRemaining).toBe(96);
       Reflect.deleteProperty(globalThis, "fetch");
     });
+
+    it("rejects with a 400 problem detail when the stub finds a violation", async () => {
+      process.env.NEXT_PUBLIC_ENVIRONMENT_NAME = "local";
+      process.env.NEXT_PUBLIC_CCT_CALCULATE_STUB_ENABLED = "true";
+
+      await expect(
+        new CctService().calculate({
+          ...request,
+          programmeDetails: { ...request.programmeDetails, lengthMonths: 0 }
+        })
+      ).rejects.toMatchObject({
+        status: 400,
+        data: {
+          title: "Validation failure",
+          errors: [{ pointer: "#/programmeDetails/lengthMonths" }]
+        }
+      });
+    });
   });
 });

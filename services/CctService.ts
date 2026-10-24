@@ -1,4 +1,4 @@
-import ApiService from "./apiService";
+import ApiService, { ApiError } from "./apiService";
 import { CctCalculation, CctResult } from "../models/CctTypes";
 
 export type CctCalculateRequest = Pick<
@@ -19,11 +19,21 @@ export class CctService extends ApiService {
 
   async calculate(request: CctCalculateRequest): Promise<CctResult> {
     if (isCctCalculateStubEnabled()) {
-      const { calculateCctResult } = await import(
-        "../mock-data/mock-cct-engine"
-      );
+      const { mockCctCalculate } = await import("../mock-data/mock-cct-api");
       await new Promise(resolve => setTimeout(resolve, STUB_LATENCY_MS));
-      return calculateCctResult(request.programmeDetails, request.changes);
+      const response = mockCctCalculate(
+        request.programmeDetails,
+        request.changes
+      );
+      if (response.status === 400)
+        throw new ApiError({
+          data: response.body,
+          status: response.status,
+          statusText: "Bad Request",
+          headers: {},
+          config: {}
+        });
+      return response.body;
     }
 
     const { data } = await this.post<CctResult, CctCalculateRequest>(

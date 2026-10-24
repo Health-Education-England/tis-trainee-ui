@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { mount } from "cypress/react";
 import store from "../../../../redux/store/store";
 import { Cct } from "../../../../components/forms/cct/Cct";
-import { calculateCctResult } from "../../../../mock-data/mock-cct-engine";
+import { mockCctCalculate } from "../../../../mock-data/mock-cct-api";
 import { CctCalculateRequest } from "../../../../services/CctService";
 
 const mountCct = () => {
@@ -39,13 +39,18 @@ const addParentalLeaveChange = () => {
 };
 
 // Note: temporary - switch to a fixture when the mock engine is deleted.
-const calculateWithMockEngine = (request: CctCalculateRequest) =>
-  calculateCctResult(request.programmeDetails, request.changes);
+const calculateWithMockBackend = (request: CctCalculateRequest) => {
+  const { status, body } = mockCctCalculate(
+    request.programmeDetails,
+    request.changes
+  );
+  return { statusCode: status, body };
+};
 
 describe("Cct", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/cct/calculate", req =>
-      req.reply(calculateWithMockEngine(req.body))
+      req.reply(calculateWithMockBackend(req.body))
     );
   });
 
@@ -134,7 +139,7 @@ describe("Cct", () => {
     cy.get('[data-cy="navNext"]').should("not.exist");
 
     cy.intercept("POST", "/api/cct/calculate", req =>
-      req.reply({ body: calculateWithMockEngine(req.body), delay: 1500 })
+      req.reply({ ...calculateWithMockBackend(req.body), delay: 1500 })
     );
     cy.get('[data-cy="cct-calculation-retry"]').click();
     cy.get('[data-cy="cct-calculation-retry"]').should(
@@ -368,6 +373,35 @@ describe("Cct", () => {
     cy.get("#wtePercent").should("exist");
   });
 
+  it("sends no credit for an OOPR change once its credit is unticked", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-add-change"]').click();
+    selectOption("type", "Out of programme - research (OOPR)");
+    cy.get('[data-cy="startDate-input"]').type("2024-02-01");
+    cy.get('[data-cy="endDate-input"]').type("2024-08-01");
+    cy.get('[data-cy="countsTowardsCompletion-checkbox"]').check();
+    cy.get("#wtePercent").type("50");
+    cy.get('[data-cy="countsTowardsCompletion-checkbox"]').uncheck();
+
+    cy.intercept("POST", "/api/cct/calculate", req =>
+      req.reply(calculateWithMockBackend(req.body))
+    ).as("calculate");
+    cy.get('[data-cy="cct-change-form-submit"]').click();
+
+    cy.wait("@calculate").then(({ request, response }) => {
+      expect(request.body.changes[0]).to.deep.include({
+        type: "OOPR",
+        wte: null,
+        countsTowardsCompletion: false
+      });
+      expect(response?.statusCode).to.eq(200);
+    });
+    cy.get('[data-cy="cct-calculation-error"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
   it("asks for an end date only once the answers so far call for one", () => {
     mountCct();
     saveProgrammeDetails();
@@ -489,7 +523,7 @@ describe("Cct", () => {
       if (req.body.changes.length > 0) {
         req.reply({ statusCode: 400, body: {} });
       } else {
-        req.reply(calculateWithMockEngine(req.body));
+        req.reply(calculateWithMockBackend(req.body));
       }
     });
     addParentalLeaveChange();
