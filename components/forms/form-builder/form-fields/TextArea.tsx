@@ -1,5 +1,5 @@
 import React from "react";
-import { Textarea } from "nhsuk-react-components";
+import { CharacterCount, Textarea } from "nhsuk-react-components";
 import { handleKeyDown } from "../../../../utilities/FormBuilderUtilities";
 import FieldWarningMsg from "../../FieldWarningMsg";
 import { useFormContext } from "../FormContext";
@@ -16,6 +16,7 @@ type TextAreaProps = {
   arrayName?: string;
   rows?: number;
   dtoName?: string;
+  maxLength?: number;
 };
 
 export const TextArea: React.FC<TextAreaProps> = ({
@@ -28,10 +29,12 @@ export const TextArea: React.FC<TextAreaProps> = ({
   arrayIndex,
   arrayName,
   rows,
-  dtoName
+  dtoName,
+  maxLength
 }) => {
   const { handleBlur, handleChange, fieldWarningMsgs } = useFormContext();
   const warningMsgs = fieldWarningMsgs[name] ?? [];
+  const TextareaElement = maxLength ? CharacterCount : Textarea;
 
   return (
     <FieldWrapper
@@ -44,7 +47,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
     >
       {({ inputId, errorId }) => (
         <>
-          <Textarea
+          <TextareaElement
             id={inputId}
             data-cy={`${name}-text-area-input`}
             onKeyDown={handleKeyDown}
@@ -66,6 +69,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
             spellCheck
             aria-describedby={fieldError ? errorId : undefined}
             className={fieldError ? "nhsuk-textarea--error" : ""}
+            maxLength={maxLength}
           />
           {warningMsgs.length > 0 && !fieldError && (
             <FieldWarningMsg warningMsgs={warningMsgs} />
