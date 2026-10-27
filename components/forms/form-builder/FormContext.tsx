@@ -41,7 +41,7 @@ type FormContextType = {
   setIsFormDirty: React.Dispatch<React.SetStateAction<boolean>>;
   currentPageFields: Field[];
   setCurrentPageFields: React.Dispatch<React.SetStateAction<Field[]>>;
-  jsonForm: Form;
+  jsonForm?: Form;
   fieldWarningMsgs: Record<string, string[]>;
   fieldWidthData: ReturnedWidthData | null;
   setFieldWidthData: React.Dispatch<
@@ -65,7 +65,9 @@ export const useFormContext = () => {
 type FormProviderProps = {
   initialData: FormData;
   initialPageFields: Field[];
-  jsonForm: Form;
+  // Note: a form with no draft-save endpoint (e.g. CCT) provides neither, and uses the fields without the FormBuilder engine.
+  jsonForm?: Form;
+  autosave?: boolean;
   children: React.ReactNode;
 };
 
@@ -73,7 +75,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   children,
   initialData,
   initialPageFields,
-  jsonForm
+  jsonForm,
+  autosave = true
 }) => {
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isFormDirty, setIsFormDirty] = useState<boolean>(false);
@@ -89,7 +92,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({
   useFormAutosave(
     jsonForm,
     formData as FormRPartA | FormRPartB | LtftObjNew,
-    setIsAutosaving
+    setIsAutosaving,
+    autosave
   );
 
   const updateFormData = (
