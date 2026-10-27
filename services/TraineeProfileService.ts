@@ -5,7 +5,6 @@ import {
   PersonalDetails,
   initialPersonalDetails
 } from "../models/PersonalDetails";
-import { CctCalculation } from "../redux/slices/cctSlice";
 
 export class TraineeProfileService extends ApiService {
   constructor() {
@@ -48,29 +47,5 @@ export class TraineeProfileService extends ApiService {
   async updateEmail(email: string): Promise<ApiResponse<void>> {
     let emailDetails = { ...initialPersonalDetails, email };
     return this.put<void>("/basic-details/email-address", emailDetails);
-  }
-
-  async getCctCalculations(): Promise<ApiResponse<CctCalculation[]>> {
-    return this.get("/cct/calculation");
-  }
-
-  async getCctCalculation(cctId: string): Promise<ApiResponse<CctCalculation>> {
-    return this.get<CctCalculation>(`/cct/calculation/${cctId}`);
-  }
-
-  async saveCctCalculation(
-    cctCalc: CctCalculation
-  ): Promise<ApiResponse<CctCalculation>> {
-    return this.post<CctCalculation>("/cct/calculation", cctCalc);
-  }
-
-  async updateCctCalculation(
-    cctCalc: CctCalculation
-  ): Promise<ApiResponse<CctCalculation>> {
-    return this.put<CctCalculation>(`/cct/calculation/${cctCalc.id}`, cctCalc);
-  }
-
-  async deleteCctCalculation(cctId: string): Promise<ApiResponse> {
-    return this.delete(`/cct/calculation/${cctId}`);
   }
 }

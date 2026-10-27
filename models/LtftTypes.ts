@@ -1,5 +1,5 @@
 import { SaveStatusProps } from "../components/forms/AutosaveMessage";
-import { CctCalculation, CctType } from "../redux/slices/cctSlice";
+import { CctCalculation } from "./CctTypes";
 import { ProfileSType } from "../utilities/ProfileUtilities";
 
 export type LtftFormStatus =
@@ -11,14 +11,22 @@ export type LtftFormStatus =
   | "APPROVED"
   | "REJECTED";
 
+// Note: used literal as `type` as it's always LTFT
+// The old `calculationId` replaced by LtftCctSnapshot below.
+// Old submitted LTFTs still have a non-null `change.calculationId` pointing at a legacy calculation that will be deleted - never read (check on the BE before the legacy data is deleted).
 export type LtftChange = {
   id?: string | null;
-  calculationId?: string | null;
-  type: CctType;
+  type: "LTFT";
   startDate: Date | string | null;
   altStartDate?: Date | string | null;
   endDate?: Date | string | null;
   wte: number;
+};
+
+export type LtftCctSnapshot = {
+  calculationId: string;
+  snapshotTakenAt: string;
+  calculation: CctCalculation;
 };
 
 export type LtftExceptionalReasons = {
@@ -100,7 +108,7 @@ export type LtftObjNew = {
   managingDeanery: string;
 
   // change: LtftChange
-  type: CctType;
+  type: "LTFT";
   canGiveCompliantStartDate: boolean | null;
   startDate: Date | string | null;
   altStartDate: Date | string | null;
@@ -127,11 +135,14 @@ export type LtftObjNew = {
 
   // skilledWorkerVisaHolder moved to separate field
   skilledWorkerVisaHolder: boolean | null;
+
+  // null until the trainee links one
+  cctSnapshot: LtftCctSnapshot | null;
 };
 
+// Note: makes sense to move snapshot to formData
 export type LtftState = {
   formData: LtftObjNew;
-  LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
   canEdit: boolean;
@@ -191,6 +202,8 @@ export type LtftDto = {
     supportingInformation: string | null;
   };
   exceptionalReasons: LtftExceptionalReasons | null;
+
+  cctSnapshot?: LtftCctSnapshot | null; // optional: for old forms before this change
   tpdEmailStatus?: unknown;
   status: {
     current: StatusInfo;
