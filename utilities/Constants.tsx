@@ -779,7 +779,7 @@ export const ACTION_CONFIG: Record<
     warning: "Have you checked the details carefully before submitting?",
     submitting: "Submitting",
     additionalInfo:
-      "Your application will be sent to your Local Office. You will receive an update on your application progress in the next two weeks. A notification will also be sent to the pre-approver you listed in your application."
+      "Your application will be sent to your Local Office. You will receive an update on your application progress within the next two weeks, or in line with your region's application window timelines where applicable. A notification will also be sent to the pre-approver you listed in your application."
   },
   delete: {
     warning: `${sureText}`,
