@@ -71,6 +71,16 @@ export function CctProgrammeDetailsSection({
               message="We could not load the list of specialties."
             />
           )}
+          {specialtiesStatus !== "succeeded" && programmeDetails && (
+            <Button
+              secondary
+              type="button"
+              onClick={() => onEditingChange(false)}
+              data-cy="cct-programme-details-cancel"
+            >
+              Cancel
+            </Button>
+          )}
           {specialtiesStatus === "succeeded" && (
             <CctProgrammeDetailsForm
               initialData={mapProgrammeDetailsToFormData(

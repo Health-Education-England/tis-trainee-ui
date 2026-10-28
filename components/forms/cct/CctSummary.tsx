@@ -1,4 +1,4 @@
-import { Card, SummaryList, Table } from "nhsuk-react-components";
+import { Button, Card, SummaryList, Table } from "nhsuk-react-components";
 import {
   CctCalculatedChange,
   CctChange,
@@ -30,6 +30,9 @@ type CctSummaryProps = {
   calculationStatus: CctCalculationStatus;
   isRetrying: boolean;
   onRetry: () => void;
+  hasInvalidChanges: boolean;
+  onGoToChanges: () => void;
+  savedName: string;
   saveStatus: CctSaveStatus;
   onSave: (name: string) => void;
 };
@@ -43,6 +46,9 @@ export function CctSummary({
   calculationStatus,
   isRetrying,
   onRetry,
+  hasInvalidChanges,
+  onGoToChanges,
+  savedName,
   saveStatus,
   onSave
 }: Readonly<CctSummaryProps>) {
@@ -116,10 +122,33 @@ export function CctSummary({
         <CctGradeProgressionTable result={result} />
       </Card>
 
-      <Card feature>
-        <Card.Heading>Save your calculation</Card.Heading>
-        <CctSaveForm saveStatus={saveStatus} onSave={onSave} />
-      </Card>
+      {calculationStatus === "succeeded" && (
+        <Card feature>
+          <Card.Heading>Save your calculation</Card.Heading>
+          {hasInvalidChanges ? (
+            <>
+              <p data-cy="cct-save-blocked">
+                There is a problem with your changes. You need to fix it before
+                you can save this calculation.
+              </p>
+              <Button
+                secondary
+                type="button"
+                onClick={onGoToChanges}
+                data-cy="cct-go-to-changes"
+              >
+                Go to changes
+              </Button>
+            </>
+          ) : (
+            <CctSaveForm
+              savedName={savedName}
+              saveStatus={saveStatus}
+              onSave={onSave}
+            />
+          )}
+        </Card>
+      )}
     </>
   );
 }

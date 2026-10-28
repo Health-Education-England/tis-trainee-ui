@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { CctChange, CctProgrammeDetails } from "../../../models/CctTypes";
+import {
+  CctCalculation,
+  CctChange,
+  CctProgrammeDetails
+} from "../../../models/CctTypes";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
   saveCctCalculation,
@@ -7,6 +11,7 @@ import {
 } from "../../../redux/slices/cctSlice";
 import {
   cctChangeIndexFromPointer,
+  fromCctChangeDtos,
   sortCctChanges,
   toCctChangeDtos
 } from "../../../utilities/CctUtilities";
@@ -23,13 +28,24 @@ import { CctSummary } from "./CctSummary";
 
 const CCT_PAGE_NAMES = ["Programme details", "Changes", "Summary"];
 
-export function CctForm() {
-  const [currentPage, setCurrentPage] = useState(0);
+type CctFormProps = {
+  savedCalculation?: CctCalculation;
+};
+
+export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
+  const [currentPage, setCurrentPage] = useState(
+    savedCalculation ? CCT_PAGE_NAMES.length - 1 : 0
+  );
   const [programmeDetails, setProgrammeDetails] =
-    useState<CctProgrammeDetails | null>(null);
-  const [isEditingProgrammeDetails, setIsEditingProgrammeDetails] =
-    useState(true);
-  const [changes, setChanges] = useState<CctChange[]>([]);
+    useState<CctProgrammeDetails | null>(
+      savedCalculation?.programmeDetails ?? null
+    );
+  const [isEditingProgrammeDetails, setIsEditingProgrammeDetails] = useState(
+    !savedCalculation
+  );
+  const [changes, setChanges] = useState<CctChange[]>(() =>
+    fromCctChangeDtos(savedCalculation?.changes ?? [])
+  );
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
 
   const { result, calculatedChanges, errors, status, isRetrying, retry } =
@@ -76,13 +92,16 @@ export function CctForm() {
     if (!programmeDetails) return;
     const action = await dispatch(
       saveCctCalculation({
+        id: savedCalculation?.id,
         name,
         programmeDetails,
         changes: toCctChangeDtos(changes)
       })
     );
     if (saveCctCalculation.fulfilled.match(action) && isMountedRef.current) {
-      history.replace("/cct", { savedCalculationName: action.payload.name });
+      history.replace("/cct", {
+        savedCalculation: { id: action.payload.id, name: action.payload.name }
+      });
     }
   };
 
@@ -142,6 +161,9 @@ export function CctForm() {
           calculationStatus={status}
           isRetrying={isRetrying}
           onRetry={retry}
+          hasInvalidChanges={invalidChanges.length > 0}
+          onGoToChanges={() => goToPage(1)}
+          savedName={savedCalculation?.name ?? ""}
           saveStatus={saveStatus}
           onSave={handleSave}
         />

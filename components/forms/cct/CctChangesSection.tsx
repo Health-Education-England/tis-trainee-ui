@@ -25,6 +25,7 @@ import {
   isOpenLtftChange,
   mapChangeToFormData,
   mapFormDataToChange,
+  newCctChangeId,
   pickCctCalculatedChanges,
   sumCctMonths
 } from "../../../utilities/CctUtilities";
@@ -55,12 +56,6 @@ type CctInvalidChange = {
 };
 
 const editButtonId = (changeId: string) => `cct-edit-change-${changeId}`;
-
-let lastChangeId = 0;
-const newChangeId = () => {
-  lastChangeId += 1;
-  return `cct-change-${lastChangeId}`;
-};
 
 export function CctChangesSection({
   programmeDetails,
@@ -101,7 +96,7 @@ export function CctChangesSection({
   };
 
   const handleSubmit = (formData: FormData) => {
-    const change = mapFormDataToChange(formData, editingId ?? newChangeId());
+    const change = mapFormDataToChange(formData, editingId ?? newCctChangeId());
     onChange(
       editingChange
         ? changes.map(existing =>
