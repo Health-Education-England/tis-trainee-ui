@@ -15,9 +15,11 @@ import {
   formatCctMonths
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
+import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctChangesTable } from "./CctChangesSection";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
+import { CctSaveForm } from "./CctSaveForm";
 
 type CctSummaryProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -28,6 +30,8 @@ type CctSummaryProps = {
   calculationStatus: CctCalculationStatus;
   isRetrying: boolean;
   onRetry: () => void;
+  saveStatus: CctSaveStatus;
+  onSave: (name: string) => void;
 };
 
 export function CctSummary({
@@ -38,7 +42,9 @@ export function CctSummary({
   result,
   calculationStatus,
   isRetrying,
-  onRetry
+  onRetry,
+  saveStatus,
+  onSave
 }: Readonly<CctSummaryProps>) {
   const noResultText =
     calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
@@ -108,6 +114,11 @@ export function CctSummary({
       <Card feature>
         <Card.Heading>Grade progression</Card.Heading>
         <CctGradeProgressionTable result={result} />
+      </Card>
+
+      <Card feature>
+        <Card.Heading>Save your calculation</Card.Heading>
+        <CctSaveForm saveStatus={saveStatus} onSave={onSave} />
       </Card>
     </>
   );

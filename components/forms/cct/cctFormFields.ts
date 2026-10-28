@@ -238,6 +238,16 @@ export const cctChangeFields: Field[] = [
   }
 ];
 
+export const cctSaveFields: Field[] = [
+  {
+    name: "calculationName",
+    label: "Name this calculation",
+    type: "text",
+    visible: true,
+    width: 30
+  }
+];
+
 export const cctFieldOptions = {
   trainingGrades: CCT_TRAINING_GRADES.map(grade => ({
     value: grade,

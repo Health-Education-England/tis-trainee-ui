@@ -78,7 +78,7 @@ export function CctProgrammeDetailsSection({
                 specialties
               )}
               specialties={specialties}
-              submitLabel="Save programme details"
+              submitLabel="Confirm programme details"
               onSubmit={handleSubmit}
               onCancel={
                 programmeDetails ? () => onEditingChange(false) : undefined

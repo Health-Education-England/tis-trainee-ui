@@ -1,13 +1,3 @@
-export type PmType = {
-  id: string;
-  name: string;
-  startDate: Date | string;
-  endDate: Date | string;
-  wte: number | null;
-  designatedBodyCode: string | null;
-  managingDeanery: string | null;
-};
-
 export type CctType =
   | "LTFT"
   | "OOPC"
@@ -126,13 +116,11 @@ export type CctCalculateResponse = {
 };
 
 export type CctCalculation = {
-  id?: string; // server-assigned
-  traineeTisId?: string; // server-assigned
+  id: string;
   name: string;
-  programmeMembership: PmType; // unchanged for now
   programmeDetails: CctProgrammeDetails;
-  changes: CctChangeDto[];
+  changes: CctCalculatedChange[];
   result: CctResult;
-  created?: Date | string; // server-assigned
-  lastModified?: Date | string; // server-assigned
+  created: string;
+  lastModified: string;
 };
