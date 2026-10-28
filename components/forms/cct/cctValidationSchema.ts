@@ -106,6 +106,10 @@ export const cctProgrammeDetailsValidationSchema = yup.object({
   )
 });
 
+export const cctSaveValidationSchema = yup.object({
+  calculationName: requiredText("Please enter a name for your calculation.")
+});
+
 export type CctChangeValidationContext = {
   programmeDetails: CctProgrammeDetails | null;
   otherChanges: CctChangeDto[];

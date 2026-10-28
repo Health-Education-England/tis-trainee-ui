@@ -1,22 +1,30 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { mount } from "cypress/react";
 import cctReferenceReducer from "../../../../redux/slices/cctReferenceSlice";
+import cctReducer from "../../../../redux/slices/cctSlice";
 import { Cct } from "../../../../components/forms/cct/Cct";
+import history from "../../../../components/navigation/history";
 import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calculate-responses";
 import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
-import { CctCalculateRequest } from "../../../../services/CctService";
+import {
+  CctCalculateRequest,
+  CctCalculationSaveRequest
+} from "../../../../services/CctService";
 
 const createStore = () =>
-  configureStore({ reducer: { cctReference: cctReferenceReducer } });
+  configureStore({
+    reducer: { cctReference: cctReferenceReducer, cct: cctReducer }
+  });
 
 const mountCct = () => {
+  history.push("/cct/create");
   mount(
     <Provider store={createStore()}>
-      <MemoryRouter initialEntries={["/cct"]}>
+      <Router history={history}>
         <Cct />
-      </MemoryRouter>
+      </Router>
     </Provider>
   );
 };
@@ -57,6 +65,27 @@ const calculateWithMockBackend = ({
   const body = mockCctCalculateResponses[key];
   if (!body) throw new Error(`No mock /calculate response for "${key}"`);
   return { statusCode: 200, body };
+};
+
+const saveWithMockBackend = (request: CctCalculationSaveRequest) => {
+  const { body } = calculateWithMockBackend(request);
+  return {
+    statusCode: 201,
+    body: {
+      id: "5f0c9a3e-8a4d-4c55-9a51-0f6a2f1d7c11",
+      name: request.name,
+      programmeDetails: request.programmeDetails,
+      changes: body.changes,
+      result: body.result,
+      created: "2026-10-28T12:00:00Z",
+      lastModified: "2026-10-28T12:00:00Z"
+    }
+  };
+};
+
+const goToSummary = () => {
+  cy.get('[data-cy="navNext"]').click();
+  cy.get('[data-cy="navNext"]').click();
 };
 
 describe("Cct", () => {
@@ -699,6 +728,109 @@ describe("Cct", () => {
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
       "Part 2 of 3 - Changes"
+    );
+  });
+
+  it("saves the named calculation, then shows the home page with a success banner", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply({ ...saveWithMockBackend(req.body), delay: 500 })
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    addParentalLeaveChange();
+    cy.get('[data-cy="navNext"]').click();
+
+    cy.get('[data-cy="calculationName-input"]').type(
+      "  Parental leave in 2024  "
+    );
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-save-submit"]')
+      .should("be.disabled")
+      .and("contain.text", "Saving…");
+
+    cy.wait("@save").then(({ request }) => {
+      expect(request.body).to.not.have.property("id");
+      expect(request.body.name).to.equal("Parental leave in 2024");
+      expect(request.body.programmeDetails).to.deep.include({
+        specialty: "Paediatrics",
+        startDate: "2023-08-02"
+      });
+      expect(request.body.changes).to.have.length(1);
+      expect(request.body.changes[0]).to.not.have.property("id");
+      expect(request.body.changes[0]).to.deep.include({
+        type: "PARENTAL",
+        startDate: "2024-02-01",
+        endDate: "2024-08-01"
+      });
+    });
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Parental leave in 2024' has been saved"
+    );
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
+    });
+  });
+
+  it("asks for a name and sends nothing until one is given", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply(saveWithMockBackend(req.body))
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+
+    cy.get('[data-cy="calculationName-input"]').type("   ");
+    cy.get('[data-cy="cct-save-submit"]').click();
+
+    cy.get('[data-cy="errorSummary"]').should(
+      "contain.text",
+      "Please enter a name for your calculation."
+    );
+    cy.get('[data-cy="cct-save-form"] .nhsuk-error-message').should(
+      "contain.text",
+      "Please enter a name for your calculation."
+    );
+    cy.get("@save.all").should("have.length", 0);
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+  });
+
+  it("keeps the summary and shows an error when saving fails, then saves on the next try", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", {
+      statusCode: 500,
+      body: {}
+    }).as("failedSave");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+
+    cy.get('[data-cy="calculationName-input"]').type("Full time");
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.wait("@failedSave");
+
+    cy.get('[data-cy="cct-save-error"]').should(
+      "contain.text",
+      "We could not save your calculation."
+    );
+    cy.get('[data-cy="cct-save-submit"]')
+      .should("not.be.disabled")
+      .and("contain.text", "Save calculation");
+    cy.get('[data-cy="calculationName-input"]').should(
+      "have.value",
+      "Full time"
+    );
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+    cy.get('[data-cy="cct-saved-banner"]').should("not.exist");
+
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply(saveWithMockBackend(req.body))
+    );
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Full time' has been saved"
     );
   });
 });

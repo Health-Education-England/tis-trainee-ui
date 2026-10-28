@@ -176,7 +176,7 @@ export function CctChangesSection({
           key={editingId ?? "new-change"}
           heading={editingChange ? "Edit change" : "Add a change"}
           initialData={mapChangeToFormData(editingChange)}
-          submitLabel={editingChange ? "Save change" : "Add change"}
+          submitLabel={editingChange ? "Confirm change" : "Add change"}
           validationContext={{
             programmeDetails,
             otherChanges: changes.filter(change => change.id !== editingId),
