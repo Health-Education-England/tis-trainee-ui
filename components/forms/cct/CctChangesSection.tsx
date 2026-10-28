@@ -50,6 +50,7 @@ type CctChangesSectionProps = {
 
 type CctInvalidChange = {
   change: CctChange;
+  pointer: string;
   message: string;
 };
 
@@ -211,9 +212,9 @@ function CctInvalidChangesSummary({
         There is a problem with your changes
       </ErrorSummary.Title>
       <ErrorSummary.List>
-        {invalidChanges.map(({ change, message }) => (
+        {invalidChanges.map(({ change, pointer, message }) => (
           <ErrorSummary.ListItem
-            key={change.id}
+            key={`${change.id}-${pointer}`}
             href={`#${editButtonId(change.id)}`}
             onClick={e => {
               e.preventDefault();

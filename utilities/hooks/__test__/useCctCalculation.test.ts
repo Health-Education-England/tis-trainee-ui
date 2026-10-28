@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import {
+  CctBodyValidationError,
   CctCalculateResponse,
   CctChange,
   CctProgrammeDetails
@@ -56,8 +57,19 @@ const responseFor = (cctDate: string): CctCalculateResponse => ({
       calendarMonths: 78,
       wteMonths: 78
     }
-  }
+  },
+  errors: []
 });
+
+const laterStartProgrammeDetails: CctProgrammeDetails = {
+  ...programmeDetails,
+  startDate: "2024-03-01"
+};
+
+const startDateError: CctBodyValidationError = {
+  pointer: "#/changes[0]/startDate",
+  detail: "Start date cannot be before programme start (01/03/2024)."
+};
 
 describe("useCctCalculation", () => {
   let calculateSpy: jest.SpyInstance;
@@ -171,5 +183,52 @@ describe("useCctCalculation", () => {
 
     expect(result.current.result?.cctDate).toBe("2032-01-01");
     expect(result.current.status).toBe("succeeded");
+  });
+
+  it("returns the errors that come back with the result", async () => {
+    calculateSpy.mockResolvedValue({
+      ...responseFor("2031-07-29"),
+      errors: [startDateError]
+    });
+
+    const { result } = renderHook(() =>
+      useCctCalculation(laterStartProgrammeDetails, [parentalLeave])
+    );
+
+    await waitFor(() => expect(result.current.status).toBe("succeeded"));
+    expect(result.current.errors).toEqual([startDateError]);
+  });
+
+  it("drops the last response's errors from the first render with new changes, but keeps its result until the next one lands", async () => {
+    calculateSpy
+      .mockResolvedValueOnce({
+        ...responseFor("2031-07-29"),
+        errors: [startDateError]
+      })
+      .mockReturnValueOnce(new Promise<CctCalculateResponse>(() => {}));
+    const errorsByRender: CctBodyValidationError[][] = [];
+
+    const { result, rerender } = renderHook(
+      ({ changes }: { changes: CctChange[] }) => {
+        const calculation = useCctCalculation(
+          laterStartProgrammeDetails,
+          changes
+        );
+        errorsByRender.push(calculation.errors);
+        return calculation;
+      },
+      { initialProps: { changes: [parentalLeave, openLtft] } }
+    );
+    await waitFor(() =>
+      expect(result.current.errors).toEqual([startDateError])
+    );
+
+    errorsByRender.length = 0;
+    rerender({ changes: [openLtft] });
+
+    expect(errorsByRender.length).toBeGreaterThan(0);
+    expect(errorsByRender.flat()).toEqual([]);
+    expect(result.current.status).toBe("loading");
+    expect(result.current.result?.cctDate).toBe("2031-07-29");
   });
 });
