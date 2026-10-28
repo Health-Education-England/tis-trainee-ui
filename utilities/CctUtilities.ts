@@ -70,6 +70,27 @@ export const toCctChangeDtos = (changes: CctChange[]): CctChangeDto[] =>
     endDate: change.endDate || null
   }));
 
+let lastCctChangeId = 0;
+export const newCctChangeId = () => {
+  lastCctChangeId += 1;
+  return `cct-change-${lastCctChangeId}`;
+};
+
+export const fromCctChangeDtos = (
+  changes: CctCalculatedChange[]
+): CctChange[] =>
+  changes.map(
+    ({
+      calendarMonths: _calendarMonths,
+      wteMonths: _wteMonths,
+      ...change
+    }) => ({
+      ...change,
+      id: newCctChangeId(),
+      endDate: change.endDate ?? ""
+    })
+  );
+
 export const cctChangeIndexFromPointer = (pointer: string) => {
   const index = /^#\/changes\[(\d+)\]\//.exec(pointer)?.[1];
   return index === undefined ? null : Number(index);
@@ -80,7 +101,7 @@ export function pickCctCalculatedChanges(
   expectedCount: number
 ): (CctCalculatedChange | null)[] {
   if (calculatedChanges.length !== expectedCount)
-    return Array(expectedCount).fill(null) as null[];
+    return new Array<null>(expectedCount).fill(null);
   return calculatedChanges;
 }
 

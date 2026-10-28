@@ -8,17 +8,21 @@ import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
 
 type CctSaveFormProps = {
+  savedName: string;
   saveStatus: CctSaveStatus;
   onSave: (name: string) => void;
 };
 
+type CctSaveFormBodyProps = Omit<CctSaveFormProps, "savedName">;
+
 export function CctSaveForm({
+  savedName,
   saveStatus,
   onSave
 }: Readonly<CctSaveFormProps>) {
   return (
     <FormProvider
-      initialData={{ calculationName: "" }}
+      initialData={{ calculationName: savedName }}
       initialPageFields={cctSaveFields}
       autosave={false}
     >
@@ -27,7 +31,10 @@ export function CctSaveForm({
   );
 }
 
-function CctSaveFormBody({ saveStatus, onSave }: Readonly<CctSaveFormProps>) {
+function CctSaveFormBody({
+  saveStatus,
+  onSave
+}: Readonly<CctSaveFormBodyProps>) {
   const { formData } = useFormContext();
   const { errors, isValidOnSubmit } = useCctFormErrors(
     cctSaveFields,

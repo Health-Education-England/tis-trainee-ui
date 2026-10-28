@@ -13,6 +13,7 @@ export type CctCalculateRequest = {
 };
 
 export type CctCalculationSaveRequest = CctCalculateRequest & {
+  id?: string;
   name: string;
 };
 
@@ -39,6 +40,22 @@ export class CctService extends ApiService {
   ): Promise<CctCalculation> {
     const { data } = await this.post<CctCalculation, CctCalculationSaveRequest>(
       "/cct/calculation",
+      request
+    );
+    return data;
+  }
+
+  async getCalculation(id: string): Promise<CctCalculation> {
+    const { data } = await this.get<CctCalculation>(`/cct/calculation/${id}`);
+    return data;
+  }
+
+  async updateCalculation(
+    id: string,
+    request: CctCalculationSaveRequest
+  ): Promise<CctCalculation> {
+    const { data } = await this.put<CctCalculation, CctCalculationSaveRequest>(
+      `/cct/calculation/${id}`,
       request
     );
     return data;

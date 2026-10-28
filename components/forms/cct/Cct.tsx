@@ -1,25 +1,36 @@
 import { Fieldset, Legend, NotificationBanner } from "nhsuk-react-components";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { Link, Route, Switch, useLocation } from "react-router-dom";
 import style from "../../Common.module.scss";
 import PageNotFound from "../../common/PageNotFound";
+import { CctCalculation } from "../../../models/CctTypes";
 import { CctForm } from "./CctForm";
 import { CctHome } from "./CctHome";
+import { CctSavedCalculation } from "./CctSavedCalculation";
 
 type LocationState = {
-  savedCalculationName?: string;
+  savedCalculation?: Pick<CctCalculation, "id" | "name">;
 };
 
 export function Cct() {
   const location = useLocation<LocationState>();
-  const savedCalculationName = location.state?.savedCalculationName;
+  const savedCalculation = location.state?.savedCalculation;
 
   return (
     <>
-      {savedCalculationName && (
+      {savedCalculation && (
         <NotificationBanner success data-cy="cct-saved-banner">
           <NotificationBanner.Heading>
-            {`Your calculation '${savedCalculationName}' has been saved`}
+            {`Your calculation '${savedCalculation.name}' has been saved`}
           </NotificationBanner.Heading>
+          <p className="nhsuk-body">
+            <NotificationBanner.Link
+              asElement={Link}
+              to={`/cct/${savedCalculation.id}`}
+              data-cy="cct-saved-banner-link"
+            >
+              View or change your calculation
+            </NotificationBanner.Link>
+          </p>
         </NotificationBanner>
       )}
       <Fieldset>
@@ -35,6 +46,7 @@ export function Cct() {
       <Switch>
         <Route exact path="/cct" component={CctHome} />
         <Route exact path="/cct/create" component={CctForm} />
+        <Route exact path="/cct/:id" component={CctSavedCalculation} />
         <Route path="/cct/*" component={PageNotFound} />
       </Switch>
     </>
