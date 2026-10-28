@@ -114,9 +114,15 @@ export type CctResult = {
   gradeProgression?: CctGradeYear[];
 };
 
+export type CctBodyValidationError = {
+  pointer: string;
+  detail: string;
+};
+
 export type CctCalculateResponse = {
   changes: CctCalculatedChange[];
   result: CctResult;
+  errors: CctBodyValidationError[];
 };
 
 export type CctCalculation = {

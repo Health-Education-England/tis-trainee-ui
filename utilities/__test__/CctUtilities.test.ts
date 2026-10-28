@@ -5,6 +5,7 @@ import {
   CctSpecialty
 } from "../../models/CctTypes";
 import {
+  cctChangeIndexFromPointer,
   isCctStartGradeOverridden,
   mapProgrammeDetailsToFormData,
   pickCctCalculatedChanges,
@@ -79,6 +80,20 @@ describe("toCctChangeDtos", () => {
     toCctChangeDtos(changes);
 
     expect(changes[0].id).toBe("one");
+  });
+});
+
+describe("cctChangeIndexFromPointer", () => {
+  it("reads the change's index from a pointer to one of its fields", () => {
+    expect(cctChangeIndexFromPointer("#/changes[0]/startDate")).toBe(0);
+    expect(cctChangeIndexFromPointer("#/changes[12]/endDate")).toBe(12);
+  });
+
+  it("is null for a pointer to anything but a change", () => {
+    expect(
+      cctChangeIndexFromPointer("#/programmeDetails/startDate")
+    ).toBeNull();
+    expect(cctChangeIndexFromPointer("#/changes")).toBeNull();
   });
 });
 
