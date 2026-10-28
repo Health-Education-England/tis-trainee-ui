@@ -6,8 +6,10 @@ import {
 } from "../../models/CctTypes";
 import {
   cctChangeIndexFromPointer,
+  fromCctChangeDtos,
   isCctStartGradeOverridden,
   mapProgrammeDetailsToFormData,
+  newCctChangeId,
   pickCctCalculatedChanges,
   sortCctChanges,
   toCctChangeDtos
@@ -80,6 +82,61 @@ describe("toCctChangeDtos", () => {
     toCctChangeDtos(changes);
 
     expect(changes[0].id).toBe("one");
+  });
+});
+
+describe("fromCctChangeDtos", () => {
+  it("gives every change a fresh id that no other change has, loaded or newly added", () => {
+    const firstLoad = fromCctChangeDtos([
+      calculatedChange("2024-02-01"),
+      calculatedChange("2025-01-01")
+    ]);
+    const secondLoad = fromCctChangeDtos([calculatedChange("2024-02-01")]);
+    const ids = [
+      ...firstLoad.map(c => c.id),
+      ...secondLoad.map(c => c.id),
+      newCctChangeId()
+    ];
+
+    expect(new Set(ids).size).toBe(4);
+  });
+
+  it("drops the figures the engine worked out", () => {
+    const [loaded] = fromCctChangeDtos([calculatedChange("2024-02-01")]);
+
+    expect(loaded).toEqual({
+      id: expect.any(String),
+      type: "PARENTAL",
+      startDate: "2024-02-01",
+      endDate: "2024-08-01",
+      wte: null,
+      countsTowardsCompletion: false
+    });
+  });
+
+  it("blanks an open-ended change's end date for the form, and sends it back out as null", () => {
+    const openEnded: CctCalculatedChange = {
+      type: "LTFT",
+      startDate: "2025-01-01",
+      endDate: null,
+      wte: 0.6,
+      countsTowardsCompletion: true,
+      calendarMonths: null,
+      wteMonths: null
+    };
+
+    const loaded = fromCctChangeDtos([openEnded]);
+
+    expect(loaded[0].endDate).toBe("");
+    expect(toCctChangeDtos(loaded)).toEqual([
+      {
+        type: "LTFT",
+        startDate: "2025-01-01",
+        endDate: null,
+        wte: 0.6,
+        countsTowardsCompletion: true
+      }
+    ]);
   });
 });
 
