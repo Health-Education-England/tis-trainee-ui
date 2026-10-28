@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CctChange, CctProgrammeDetails } from "../../../models/CctTypes";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import {
+  saveCctCalculation,
+  updatedCctSaveStatus
+} from "../../../redux/slices/cctSlice";
 import {
   cctChangeIndexFromPointer,
-  sortCctChanges
+  sortCctChanges,
+  toCctChangeDtos
 } from "../../../utilities/CctUtilities";
 import { useCctCalculation } from "../../../utilities/hooks/useCctCalculation";
 import { useCctSpecialties } from "../../../utilities/hooks/useCctSpecialties";
+import history from "../../navigation/history";
 import { CctChangesSection } from "./CctChangesSection";
 import { CctFormShell } from "./CctFormShell";
 import {
@@ -33,6 +40,20 @@ export function CctForm() {
     isRetrying: isRetryingSpecialties,
     retry: retrySpecialties
   } = useCctSpecialties();
+  const dispatch = useAppDispatch();
+  const saveStatus = useAppSelector(state => state.cct.saveStatus);
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    dispatch(updatedCctSaveStatus("idle"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const cctDate = status === "succeeded" ? result?.cctDate ?? null : null;
   const invalidChanges = changes.flatMap((change, index) =>
@@ -49,6 +70,20 @@ export function CctForm() {
     setCurrentPage(targetPage);
     setIsChangeFormOpen(false);
     window.scrollTo({ top: 0 });
+  };
+
+  const handleSave = async (name: string) => {
+    if (!programmeDetails) return;
+    const action = await dispatch(
+      saveCctCalculation({
+        name,
+        programmeDetails,
+        changes: toCctChangeDtos(changes)
+      })
+    );
+    if (saveCctCalculation.fulfilled.match(action) && isMountedRef.current) {
+      history.replace("/cct", { savedCalculationName: action.payload.name });
+    }
   };
 
   return (
@@ -107,6 +142,8 @@ export function CctForm() {
           calculationStatus={status}
           isRetrying={isRetrying}
           onRetry={retry}
+          saveStatus={saveStatus}
+          onSave={handleSave}
         />
       )}
     </CctFormShell>
