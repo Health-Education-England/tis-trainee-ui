@@ -48,7 +48,8 @@ describe("CctService", () => {
             calendarMonths: 96,
             wteMonths: 96
           }
-        }
+        },
+        errors: []
       };
       const service = new CctService();
       jest.spyOn(service, "post").mockResolvedValue(okResponse(body));

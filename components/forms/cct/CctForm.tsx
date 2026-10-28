@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { CctChange, CctProgrammeDetails } from "../../../models/CctTypes";
-import { sortCctChanges } from "../../../utilities/CctUtilities";
+import {
+  cctChangeIndexFromPointer,
+  sortCctChanges
+} from "../../../utilities/CctUtilities";
 import { useCctCalculation } from "../../../utilities/hooks/useCctCalculation";
 import { useCctSpecialties } from "../../../utilities/hooks/useCctSpecialties";
 import { CctChangesSection } from "./CctChangesSection";
@@ -10,7 +13,6 @@ import {
   CctProgrammeDetailsSection
 } from "./CctProgrammeDetailsSection";
 import { CctSummary } from "./CctSummary";
-import { findInvalidCctChangeMessage } from "./cctValidationSchema";
 
 const CCT_PAGE_NAMES = ["Programme details", "Changes", "Summary"];
 
@@ -23,7 +25,7 @@ export function CctForm() {
   const [changes, setChanges] = useState<CctChange[]>([]);
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
 
-  const { result, calculatedChanges, status, isRetrying, retry } =
+  const { result, calculatedChanges, errors, status, isRetrying, retry } =
     useCctCalculation(programmeDetails, changes);
   const {
     specialties,
@@ -33,15 +35,11 @@ export function CctForm() {
   } = useCctSpecialties();
 
   const cctDate = status === "succeeded" ? result?.cctDate ?? null : null;
-  const invalidChanges = changes.flatMap(change => {
-    const message = findInvalidCctChangeMessage(
-      change,
-      changes,
-      programmeDetails,
-      cctDate
-    );
-    return message ? [{ change, message }] : [];
-  });
+  const invalidChanges = changes.flatMap((change, index) =>
+    errors
+      .filter(({ pointer }) => cctChangeIndexFromPointer(pointer) === index)
+      .map(({ pointer, detail }) => ({ change, pointer, message: detail }))
+  );
   const isProgrammeDetailsDone = !isEditingProgrammeDetails && result !== null;
   const isChangesDone =
     !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;

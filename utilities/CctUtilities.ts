@@ -70,6 +70,11 @@ export const toCctChangeDtos = (changes: CctChange[]): CctChangeDto[] =>
     endDate: change.endDate || null
   }));
 
+export const cctChangeIndexFromPointer = (pointer: string) => {
+  const index = /^#\/changes\[(\d+)\]\//.exec(pointer)?.[1];
+  return index === undefined ? null : Number(index);
+};
+
 export function pickCctCalculatedChanges(
   calculatedChanges: CctCalculatedChange[],
   expectedCount: number

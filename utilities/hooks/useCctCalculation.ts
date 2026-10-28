@@ -15,7 +15,10 @@ export function useCctCalculation(
   programmeDetails: CctProgrammeDetails | null,
   changes: CctChange[]
 ) {
-  const [response, setResponse] = useState<CctCalculateResponse | null>(null);
+  const [response, setResponse] = useState<{
+    requestKey: string;
+    body: CctCalculateResponse;
+  } | null>(null);
   const [status, setStatus] = useState<CctCalculationStatus>("idle");
   const [attempt, setAttempt] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
@@ -43,7 +46,7 @@ export function useCctCalculation(
       .calculate(JSON.parse(requestKey) as CctCalculateRequest)
       .then(calculated => {
         if (isStale) return;
-        setResponse(calculated);
+        setResponse({ requestKey, body: calculated });
         setStatus("succeeded");
         setIsRetrying(false);
       })
@@ -65,8 +68,9 @@ export function useCctCalculation(
   };
 
   return {
-    result: response?.result ?? null,
-    calculatedChanges: response?.changes ?? [],
+    result: response?.body.result ?? null,
+    calculatedChanges: response?.body.changes ?? [],
+    errors: response?.requestKey === requestKey ? response.body.errors : [],
     status,
     isRetrying,
     retry

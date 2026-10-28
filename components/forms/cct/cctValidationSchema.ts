@@ -5,11 +5,7 @@ import {
   createErrorObject,
   showFormField
 } from "../../../utilities/FormBuilderUtilities";
-import {
-  CctChange,
-  CctChangeDto,
-  CctProgrammeDetails
-} from "../../../models/CctTypes";
+import { CctChangeDto, CctProgrammeDetails } from "../../../models/CctTypes";
 import {
   CCT_NOTES_MAX_LENGTH,
   CCT_NOTES_TOO_LONG_ERROR
@@ -186,31 +182,6 @@ function findCctChangeIssues(
         ? "Change not added as you already have a projected change that covers the remainder of your training."
         : undefined
   };
-}
-
-export function findInvalidCctChangeMessage(
-  change: CctChange,
-  changes: CctChange[],
-  programmeDetails: CctProgrammeDetails | null,
-  cctDate: string | null
-): string | null {
-  const issues = findCctChangeIssues(
-    {
-      startDate: change.startDate,
-      endDate: change.endDate,
-      isOpen: isOpenLtftChange(change)
-    },
-    {
-      programmeDetails,
-      otherChanges: changes.filter(other => other.id !== change.id),
-      cctDate
-    }
-  );
-  const message = issues.startDate ?? issues.ltftDuration ?? issues.endDate;
-  if (message) return message;
-  if (cctDate && change.endDate && day(change.endDate).isAfter(cctDate))
-    return cctDateLimitMessage("End date", cctDate);
-  return null;
 }
 
 const toCandidate = (formData: FormData): CctChangeCandidate => ({

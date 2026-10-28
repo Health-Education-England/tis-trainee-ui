@@ -16,7 +16,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 84,
         wteMonths: 84
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + PARENTAL 2024-02-01 2024-08-01 null false": {
     changes: [
@@ -50,7 +51,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 77.98,
         wteMonths: 77.98
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + LTFT 2025-02-01 null 0.6 true": {
     changes: [
@@ -84,7 +86,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 109.91666666666667,
         wteMonths: 65.95
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + LTFT 2025-02-01 2025-08-01 0.6 true": {
     changes: [
@@ -118,7 +121,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 62.36,
         wteMonths: 62.36
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + LTFT 2024-02-01 2024-08-01 0.6 true": {
     changes: [
@@ -152,7 +156,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 74.37,
         wteMonths: 74.37
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + OOPR 2024-02-01 2024-08-01 null false": {
     changes: [
@@ -186,7 +191,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 77.98,
         wteMonths: 77.98
       }
-    }
+    },
+    errors: []
   },
   "2023-08-02 + LTFT 2030-01-01 2032-12-31 0.5 true": {
     changes: [
@@ -220,7 +226,14 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: -11.08,
         wteMonths: -11.08
       }
-    }
+    },
+    errors: [
+      {
+        pointer: "#/changes[0]/endDate",
+        detail:
+          "End date cannot be after the current projected Completion of Training Date (26/02/2031)."
+      }
+    ]
   },
   "2023-08-02 + LTFT 2030-01-01 2031-02-26 0.5 true": {
     changes: [
@@ -254,7 +267,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 0,
         wteMonths: 0
       }
-    }
+    },
+    errors: []
   },
   "2024-03-01": {
     changes: [],
@@ -271,7 +285,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 84,
         wteMonths: 84
       }
-    }
+    },
+    errors: []
   },
   "2024-03-01 + PARENTAL 2024-02-01 2024-08-01 null false": {
     changes: [
@@ -299,6 +314,12 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 84,
         wteMonths: 84
       }
-    }
+    },
+    errors: [
+      {
+        pointer: "#/changes[0]/startDate",
+        detail: "Start date cannot be before programme start (01/03/2024)."
+      }
+    ]
   }
 };
