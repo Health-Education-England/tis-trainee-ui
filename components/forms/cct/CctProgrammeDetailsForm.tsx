@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button, SummaryList } from "nhsuk-react-components";
 import { FormData, FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
@@ -78,21 +78,28 @@ function CctProgrammeDetailsFormBody({
     cctProgrammeDetailsValidationSchema
   );
 
+  const lastSpecialtyRef = useRef(specialty);
+
   // Note: prog length and start grade are both defaulted from the specialty, so they are reconciled together in one effect.
   useEffect(() => {
+    const isSpecialtyChanged = specialty !== lastSpecialtyRef.current;
+    lastSpecialtyRef.current = specialty;
     const matchedSpecialty = findCctSpecialty(specialties, specialty);
     if (!matchedSpecialty) return;
     setFormData(prevFormData => {
       const lengthMonths = String(matchedSpecialty.lengthMonths);
+      const defaultedStartGrade = isSpecialtyChanged
+        ? matchedSpecialty.entryGrade
+        : prevFormData.startGrade;
       if (
         prevFormData.lengthMonths === lengthMonths &&
-        prevFormData.startGrade === matchedSpecialty.entryGrade
+        prevFormData.startGrade === defaultedStartGrade
       )
         return prevFormData;
       return {
         ...prevFormData,
         lengthMonths,
-        startGrade: matchedSpecialty.entryGrade
+        startGrade: defaultedStartGrade
       };
     });
   }, [specialties, specialty, setFormData]);
