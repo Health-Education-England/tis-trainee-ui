@@ -17,6 +17,7 @@ import {
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctChangesTable } from "./CctChangesSection";
+import { CctDeleteButton } from "./CctDeleteButton";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
 import { CctSaveForm } from "./CctSaveForm";
@@ -32,6 +33,7 @@ type CctSummaryProps = {
   onRetry: () => void;
   hasInvalidChanges: boolean;
   onGoToChanges: () => void;
+  savedCalculationId?: string;
   savedName: string;
   saveStatus: CctSaveStatus;
   onSave: (name: string) => void;
@@ -48,6 +50,7 @@ export function CctSummary({
   onRetry,
   hasInvalidChanges,
   onGoToChanges,
+  savedCalculationId,
   savedName,
   saveStatus,
   onSave
@@ -148,6 +151,12 @@ export function CctSummary({
             />
           )}
         </Card>
+      )}
+
+      {savedCalculationId && (
+        <CctDeleteButton id={savedCalculationId} name={savedName}>
+          Delete this calculation
+        </CctDeleteButton>
       )}
     </>
   );

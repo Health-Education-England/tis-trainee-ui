@@ -6,6 +6,7 @@ import {
   CctService
 } from "../../../services/CctService";
 import cctReducer, {
+  deleteCctCalculation,
   fetchCctCalculations,
   loadSavedCctCalculation,
   resetCctCalculation,
@@ -171,6 +172,44 @@ describe("cctSlice", () => {
       store.dispatch(resetCctCalculations());
 
       expect(store.getState().cct).toEqual(initial);
+    });
+  });
+
+  describe("deleteCctCalculation", () => {
+    const other = {
+      ...calculation,
+      id: "7a1e9f20-5b3c-4d6e-8f70-1a2b3c4d5e6f"
+    };
+
+    it("drops the deleted calculation from the list", async () => {
+      jest
+        .spyOn(CctService.prototype, "getCalculations")
+        .mockResolvedValue([calculation, other]);
+      const deleteSpy = jest
+        .spyOn(CctService.prototype, "deleteCalculation")
+        .mockResolvedValue();
+      const store = makeStore();
+      await store.dispatch(fetchCctCalculations());
+
+      await store.dispatch(deleteCctCalculation(calculation.id));
+
+      expect(deleteSpy).toHaveBeenCalledWith(calculation.id);
+      expect(store.getState().cct.calculations).toEqual([other]);
+    });
+
+    it("keeps the list when the delete fails", async () => {
+      jest
+        .spyOn(CctService.prototype, "getCalculations")
+        .mockResolvedValue([calculation, other]);
+      jest
+        .spyOn(CctService.prototype, "deleteCalculation")
+        .mockRejectedValue(new TypeError("Failed to fetch"));
+      const store = makeStore();
+      await store.dispatch(fetchCctCalculations());
+
+      await store.dispatch(deleteCctCalculation(calculation.id));
+
+      expect(store.getState().cct.calculations).toEqual([calculation, other]);
     });
   });
 

@@ -9,14 +9,23 @@ import { CctSavedCalculation } from "./CctSavedCalculation";
 
 type LocationState = {
   savedCalculation?: Pick<CctCalculation, "id" | "name">;
+  deletedCalculation?: Pick<CctCalculation, "name">;
 };
 
 export function Cct() {
   const location = useLocation<LocationState>();
   const savedCalculation = location.state?.savedCalculation;
+  const deletedCalculation = location.state?.deletedCalculation;
 
   return (
     <>
+      {deletedCalculation && (
+        <NotificationBanner success data-cy="cct-deleted-banner">
+          <NotificationBanner.Heading>
+            {`Your calculation '${deletedCalculation.name}' has been deleted`}
+          </NotificationBanner.Heading>
+        </NotificationBanner>
+      )}
       {savedCalculation && (
         <NotificationBanner success data-cy="cct-saved-banner">
           <NotificationBanner.Heading>
