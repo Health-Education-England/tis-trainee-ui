@@ -45,6 +45,11 @@ export class CctService extends ApiService {
     return data;
   }
 
+  async getCalculations(): Promise<CctCalculation[]> {
+    const { data } = await this.get<CctCalculation[]>("/cct/calculation");
+    return data;
+  }
+
   async getCalculation(id: string): Promise<CctCalculation> {
     const { data } = await this.get<CctCalculation>(`/cct/calculation/${id}`);
     return data;
