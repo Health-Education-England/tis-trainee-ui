@@ -14,14 +14,26 @@ interface ICct {
   calculation: CctCalculation | null;
   loadStatus: CctLoadStatus;
   loadErrorStatus: number | null;
+  calculations: CctCalculation[];
+  listStatus: CctLoadStatus;
 }
 
 const initialState: ICct = {
   saveStatus: "idle",
   calculation: null,
   loadStatus: "idle",
-  loadErrorStatus: null
+  loadErrorStatus: null,
+  calculations: [],
+  listStatus: "idle"
 };
+
+export const fetchCctCalculations = createAsyncThunk(
+  "cct/fetchCalculations",
+  async () => {
+    const cctService = new CctService();
+    return cctService.getCalculations();
+  }
+);
 
 export const saveCctCalculation = createAsyncThunk(
   "cct/saveCalculation",
@@ -57,6 +69,10 @@ const cctSlice = createSlice({
       state.calculation = null;
       state.loadStatus = "idle";
       state.loadErrorStatus = null;
+    },
+    resetCctCalculations(state) {
+      state.calculations = [];
+      state.listStatus = "idle";
     }
   },
   extraReducers(builder) {
@@ -81,10 +97,24 @@ const cctSlice = createSlice({
       .addCase(loadSavedCctCalculation.rejected, (state, action) => {
         state.loadStatus = "failed";
         state.loadErrorStatus = action.payload ?? null;
+      })
+      .addCase(fetchCctCalculations.pending, state => {
+        state.listStatus = "loading";
+      })
+      .addCase(fetchCctCalculations.fulfilled, (state, action) => {
+        state.listStatus = "succeeded";
+        state.calculations = action.payload;
+      })
+      .addCase(fetchCctCalculations.rejected, state => {
+        state.listStatus = "failed";
       });
   }
 });
 
-export const { updatedCctSaveStatus, resetCctCalculation } = cctSlice.actions;
+export const {
+  updatedCctSaveStatus,
+  resetCctCalculation,
+  resetCctCalculations
+} = cctSlice.actions;
 
 export default cctSlice.reducer;

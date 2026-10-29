@@ -6,8 +6,10 @@ import {
   CctService
 } from "../../../services/CctService";
 import cctReducer, {
+  fetchCctCalculations,
   loadSavedCctCalculation,
   resetCctCalculation,
+  resetCctCalculations,
   saveCctCalculation
 } from "../cctSlice";
 
@@ -124,6 +126,49 @@ describe("cctSlice", () => {
       await store.dispatch(loadSavedCctCalculation(calculation.id));
 
       store.dispatch(resetCctCalculation());
+
+      expect(store.getState().cct).toEqual(initial);
+    });
+  });
+
+  describe("fetchCctCalculations", () => {
+    it("holds the saved calculations once they load", async () => {
+      jest
+        .spyOn(CctService.prototype, "getCalculations")
+        .mockResolvedValue([calculation]);
+      const store = makeStore();
+
+      await store.dispatch(fetchCctCalculations());
+
+      expect(store.getState().cct).toEqual({
+        ...initial,
+        calculations: [calculation],
+        listStatus: "succeeded"
+      });
+    });
+
+    it("records the failure when the calculations fail to load", async () => {
+      jest
+        .spyOn(CctService.prototype, "getCalculations")
+        .mockRejectedValue(new TypeError("Failed to fetch"));
+      const store = makeStore();
+
+      await store.dispatch(fetchCctCalculations());
+
+      expect(store.getState().cct).toEqual({
+        ...initial,
+        listStatus: "failed"
+      });
+    });
+
+    it("forgets the calculations when reset", async () => {
+      jest
+        .spyOn(CctService.prototype, "getCalculations")
+        .mockResolvedValue([calculation]);
+      const store = makeStore();
+      await store.dispatch(fetchCctCalculations());
+
+      store.dispatch(resetCctCalculations());
 
       expect(store.getState().cct).toEqual(initial);
     });

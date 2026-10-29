@@ -165,7 +165,7 @@ function CctGradeProgressionTable({
   if (gradeProgression.length === 0) {
     return (
       <p data-cy="cct-no-grade-progression">
-        <em>{CCT_NOT_CALCULATED}</em>
+        <em>This feature is coming soon.</em>
       </p>
     );
   }
