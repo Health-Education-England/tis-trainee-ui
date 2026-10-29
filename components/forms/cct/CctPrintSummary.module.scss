@@ -1,0 +1,60 @@
+$cctPrintRule: #4c6272;
+
+@media screen {
+  .printSummary {
+    display: none;
+  }
+}
+
+.changesTable {
+  table-layout: fixed;
+  page-break-inside: auto;
+  break-inside: auto;
+
+  th,
+  td {
+    padding: 4pt 6pt 4pt 0;
+    font-size: 11pt;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  tbody {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .rowWithNotes td {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .notesCell {
+    padding-top: 2pt;
+  }
+}
+
+.typeColumn {
+  width: 22%;
+}
+
+.dateColumn {
+  width: 15%;
+}
+
+.wteColumn {
+  width: 9%;
+}
+
+.countsColumn {
+  width: 15%;
+}
+
+.monthsColumn {
+  width: 12%;
+}
+
+.totalRow td,
+.projectionRow td {
+  border-top: 2px solid $cctPrintRule;
+}

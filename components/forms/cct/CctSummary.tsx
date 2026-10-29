@@ -7,6 +7,7 @@ import {
   CctSpecialty
 } from "../../../models/CctTypes";
 import {
+  CCT_NO_CHANGES_TEXT,
   CCT_NO_VALUE,
   CCT_NOT_CALCULATED
 } from "../../../utilities/CctConstants";
@@ -18,6 +19,7 @@ import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation
 import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctChangesTable } from "./CctChangesSection";
 import { CctDeleteButton } from "./CctDeleteButton";
+import { CctPrintSummary } from "./CctPrintSummary";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
 import { CctSaveForm } from "./CctSaveForm";
@@ -59,107 +61,131 @@ export function CctSummary({
 }: Readonly<CctSummaryProps>) {
   const noResultText =
     calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
+  const canPrint = calculationStatus === "succeeded" && !hasInvalidChanges;
 
   return (
     <>
-      <Card feature>
-        <Card.Heading>Your indicative completion date</Card.Heading>
-        {calculationStatus === "failed" && (
-          <CctRequestError isRetrying={isRetrying} onRetry={onRetry} />
-        )}
-        <SummaryList data-cy="cct-result-summary">
-          <SummaryList.Row>
-            <SummaryList.Key>
-              Projected Completion of Training Date
-            </SummaryList.Key>
-            <SummaryList.Value>
-              <strong>
-                {result ? formatCctDate(result.cctDate) : noResultText}
-              </strong>
-            </SummaryList.Value>
-          </SummaryList.Row>
-          <SummaryList.Row>
-            <SummaryList.Key>Total WTE completed (months)</SummaryList.Key>
-            <SummaryList.Value>
-              {formatCctMonths(result?.totalWteMonthsCompleted)}
-            </SummaryList.Value>
-          </SummaryList.Row>
-          <SummaryList.Row>
-            <SummaryList.Key>Training remaining (months)</SummaryList.Key>
-            <SummaryList.Value>
-              {formatCctMonths(result?.monthsRemaining)}
-            </SummaryList.Value>
-          </SummaryList.Row>
-        </SummaryList>
-      </Card>
-
-      <Card feature>
-        <Card.Heading>Programme details</Card.Heading>
-        {programmeDetails && (
-          <CctProgrammeDetailsSummary
-            programmeDetails={programmeDetails}
-            specialties={specialties}
-            result={result}
-            calculationStatus={calculationStatus}
-          />
-        )}
-      </Card>
-
-      <Card feature>
-        <Card.Heading>Changes</Card.Heading>
-        {changes.length === 0 && (
-          <p data-cy="cct-summary-no-changes">
-            <em>
-              No changes recorded, so your whole programme is treated as full
-              time at 100% WTE.
-            </em>
-          </p>
-        )}
-        <CctChangesTable
-          changes={changes}
-          calculatedChanges={calculatedChanges}
-          result={result}
-        />
-      </Card>
-
-      <Card feature>
-        <Card.Heading>Grade progression</Card.Heading>
-        <CctGradeProgressionTable result={result} />
-      </Card>
-
-      {calculationStatus === "succeeded" && (
+      <div className={canPrint ? "hide-from-print" : undefined}>
         <Card feature>
-          <Card.Heading>Save your calculation</Card.Heading>
-          {hasInvalidChanges ? (
-            <>
-              <p data-cy="cct-save-blocked">
-                There is a problem with your changes. You need to fix it before
-                you can save this calculation.
-              </p>
-              <Button
-                secondary
-                type="button"
-                onClick={onGoToChanges}
-                data-cy="cct-go-to-changes"
-              >
-                Go to changes
-              </Button>
-            </>
-          ) : (
-            <CctSaveForm
-              savedName={savedName}
-              saveStatus={saveStatus}
-              onSave={onSave}
-              onDirtyChange={onDirtyChange}
+          <Card.Heading>Your indicative completion date</Card.Heading>
+          {calculationStatus === "failed" && (
+            <CctRequestError isRetrying={isRetrying} onRetry={onRetry} />
+          )}
+          <SummaryList data-cy="cct-result-summary">
+            <SummaryList.Row>
+              <SummaryList.Key>
+                Projected Completion of Training Date
+              </SummaryList.Key>
+              <SummaryList.Value>
+                <strong>
+                  {result ? formatCctDate(result.cctDate) : noResultText}
+                </strong>
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Key>Total WTE completed (months)</SummaryList.Key>
+              <SummaryList.Value>
+                {formatCctMonths(result?.totalWteMonthsCompleted)}
+              </SummaryList.Value>
+            </SummaryList.Row>
+            <SummaryList.Row>
+              <SummaryList.Key>Training remaining (months)</SummaryList.Key>
+              <SummaryList.Value>
+                {formatCctMonths(result?.monthsRemaining)}
+              </SummaryList.Value>
+            </SummaryList.Row>
+          </SummaryList>
+        </Card>
+
+        <Card feature>
+          <Card.Heading>Programme details</Card.Heading>
+          {programmeDetails && (
+            <CctProgrammeDetailsSummary
+              programmeDetails={programmeDetails}
+              specialties={specialties}
+              result={result}
+              calculationStatus={calculationStatus}
             />
           )}
         </Card>
-      )}
 
-      {savedCalculationId && (
-        <CctDeleteButton id={savedCalculationId} name={savedName}>
-          Delete this calculation
-        </CctDeleteButton>
+        <Card feature>
+          <Card.Heading>Changes</Card.Heading>
+          {changes.length === 0 && (
+            <p data-cy="cct-summary-no-changes">
+              <em>{CCT_NO_CHANGES_TEXT}</em>
+            </p>
+          )}
+          <CctChangesTable
+            changes={changes}
+            calculatedChanges={calculatedChanges}
+            result={result}
+          />
+        </Card>
+
+        <Card feature>
+          <Card.Heading>Grade progression</Card.Heading>
+          <CctGradeProgressionTable result={result} />
+        </Card>
+
+        {calculationStatus === "succeeded" && (
+          <Card feature>
+            <Card.Heading>Save your calculation</Card.Heading>
+            {hasInvalidChanges ? (
+              <>
+                <p data-cy="cct-save-blocked">
+                  There is a problem with your changes. You need to fix it
+                  before you can save this calculation.
+                </p>
+                <Button
+                  secondary
+                  type="button"
+                  onClick={onGoToChanges}
+                  data-cy="cct-go-to-changes"
+                >
+                  Go to changes
+                </Button>
+              </>
+            ) : (
+              <CctSaveForm
+                savedName={savedName}
+                saveStatus={saveStatus}
+                onSave={onSave}
+                onDirtyChange={onDirtyChange}
+              />
+            )}
+          </Card>
+        )}
+
+        <div className="nhsuk-button-group">
+          {canPrint && (
+            <Button
+              secondary
+              type="button"
+              onClick={() => globalThis.print()}
+              data-cy="cct-save-pdf"
+            >
+              Save a copy as a PDF
+            </Button>
+          )}
+
+          {savedCalculationId && (
+            <CctDeleteButton id={savedCalculationId} name={savedName}>
+              Delete this calculation
+            </CctDeleteButton>
+          )}
+        </div>
+      </div>
+
+      {canPrint && programmeDetails && result && (
+        <CctPrintSummary
+          programmeDetails={programmeDetails}
+          specialties={specialties}
+          changes={changes}
+          calculatedChanges={calculatedChanges}
+          result={result}
+          savedName={savedName}
+        />
       )}
     </>
   );
