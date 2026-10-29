@@ -10,6 +10,7 @@ import {
 } from "./cctValidationSchema";
 import { isCctWteShown } from "../../../utilities/CctUtilities";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
+import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 
 type CctChangeFormProps = {
   heading: string;
@@ -18,6 +19,7 @@ type CctChangeFormProps = {
   validationContext: CctChangeValidationContext;
   onSubmit: (formData: FormData) => void;
   onCancel: () => void;
+  onDirtyChange: (isDirty: boolean) => void;
 };
 
 export function CctChangeForm({
@@ -26,7 +28,8 @@ export function CctChangeForm({
   submitLabel,
   validationContext,
   onSubmit,
-  onCancel
+  onCancel,
+  onDirtyChange
 }: Readonly<CctChangeFormProps>) {
   return (
     <FormProvider
@@ -40,6 +43,7 @@ export function CctChangeForm({
         validationContext={validationContext}
         onSubmit={onSubmit}
         onCancel={onCancel}
+        onDirtyChange={onDirtyChange}
       />
     </FormProvider>
   );
@@ -52,7 +56,8 @@ function CctChangeFormBody({
   submitLabel,
   validationContext,
   onSubmit,
-  onCancel
+  onCancel,
+  onDirtyChange
 }: Readonly<CctChangeFormBodyProps>) {
   const { formData, setFormData } = useFormContext();
   const { type, ltftDuration, countsTowardsCompletion } = formData;
@@ -60,6 +65,7 @@ function CctChangeFormBody({
     cctChangeFields,
     buildCctChangeValidationSchema(validationContext)
   );
+  useReportCctFormDirty(onDirtyChange);
 
   // Note: Once a type is chosen, end date is shown, unless the LTFT change runs to completion - whihc then becomes the projection, which has no end!
   useEffect(() => {

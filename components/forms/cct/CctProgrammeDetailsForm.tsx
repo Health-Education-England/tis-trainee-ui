@@ -11,6 +11,7 @@ import {
   mapFormDataToProgrammeDetails
 } from "../../../utilities/CctUtilities";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
+import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 import { CctFields } from "./CctFields";
 import {
   cctFieldOptions,
@@ -27,6 +28,7 @@ type CctProgrammeDetailsFormProps = {
   submitLabel: string;
   onSubmit: (formData: FormData) => void;
   onCancel?: () => void;
+  onDirtyChange: (isDirty: boolean) => void;
 };
 
 export function CctProgrammeDetailsForm({
@@ -34,7 +36,8 @@ export function CctProgrammeDetailsForm({
   specialties,
   submitLabel,
   onSubmit,
-  onCancel
+  onCancel,
+  onDirtyChange
 }: Readonly<CctProgrammeDetailsFormProps>) {
   return (
     <FormProvider
@@ -47,6 +50,7 @@ export function CctProgrammeDetailsForm({
         submitLabel={submitLabel}
         onSubmit={onSubmit}
         onCancel={onCancel}
+        onDirtyChange={onDirtyChange}
       />
     </FormProvider>
   );
@@ -61,7 +65,8 @@ function CctProgrammeDetailsFormBody({
   specialties,
   submitLabel,
   onSubmit,
-  onCancel
+  onCancel,
+  onDirtyChange
 }: Readonly<CctProgrammeDetailsFormBodyProps>) {
   const { formData, setFormData } = useFormContext();
   const { specialty, startGrade } = formData;
@@ -77,6 +82,7 @@ function CctProgrammeDetailsFormBody({
     selectedSpecialty ? cctProgrammeDetailsFields : cctSpecialtyFields,
     cctProgrammeDetailsValidationSchema
   );
+  useReportCctFormDirty(onDirtyChange);
 
   const lastSpecialtyRef = useRef(specialty);
 

@@ -29,6 +29,7 @@ type ActionModalProps = {
   isSubmitting: boolean;
   additionalInfo?: string;
   errorText?: string;
+  confirmBtnText?: string;
 };
 
 export function ActionModal({
@@ -42,7 +43,8 @@ export function ActionModal({
   actionType,
   isSubmitting = false,
   additionalInfo,
-  errorText
+  errorText,
+  confirmBtnText = "Confirm & Continue"
 }: Readonly<ActionModalProps>) {
   const hasReason = actionType === "Unsubmit" || actionType === "Withdraw";
   const [reason, setReason] = useState("");
@@ -122,7 +124,7 @@ export function ActionModal({
           disabled={isSubmitting || (hasReason && !reason)}
           data-cy={`submitBtn-${warningLabel}`}
         >
-          {isSubmitting ? `${submittingBtnText}...` : "Confirm & Continue"}
+          {isSubmitting ? `${submittingBtnText}...` : confirmBtnText}
         </Button>
       </div>
     </Modal>
