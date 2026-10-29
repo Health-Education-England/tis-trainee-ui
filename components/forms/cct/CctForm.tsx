@@ -163,6 +163,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           onRetry={retry}
           hasInvalidChanges={invalidChanges.length > 0}
           onGoToChanges={() => goToPage(1)}
+          savedCalculationId={savedCalculation?.id}
           savedName={savedCalculation?.name ?? ""}
           saveStatus={saveStatus}
           onSave={handleSave}

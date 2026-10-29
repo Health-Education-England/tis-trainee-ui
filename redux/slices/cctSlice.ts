@@ -45,6 +45,14 @@ export const saveCctCalculation = createAsyncThunk(
   }
 );
 
+export const deleteCctCalculation = createAsyncThunk(
+  "cct/deleteCalculation",
+  async (id: string) => {
+    const cctService = new CctService();
+    await cctService.deleteCalculation(id);
+  }
+);
+
 export const loadSavedCctCalculation = createAsyncThunk<
   CctCalculation,
   string,
@@ -107,6 +115,11 @@ const cctSlice = createSlice({
       })
       .addCase(fetchCctCalculations.rejected, state => {
         state.listStatus = "failed";
+      })
+      .addCase(deleteCctCalculation.fulfilled, (state, action) => {
+        state.calculations = state.calculations.filter(
+          calculation => calculation.id !== action.meta.arg
+        );
       });
   }
 });

@@ -10,6 +10,7 @@ import {
 import { CctCalculation } from "../../../models/CctTypes";
 import { formatCctDate } from "../../../utilities/CctUtilities";
 import Loading from "../../common/Loading";
+import { CctDeleteButton } from "./CctDeleteButton";
 import { CctRequestError } from "./CctRequestError";
 
 export function CctHome() {
@@ -83,6 +84,7 @@ function CctCalculationsTable({
           <Table.Cell>Specialty</Table.Cell>
           <Table.Cell>Completion date</Table.Cell>
           <Table.Cell>Last saved</Table.Cell>
+          <Table.Cell>Action</Table.Cell>
         </Table.Row>
       </Table.Head>
       <Table.Body>
@@ -99,6 +101,18 @@ function CctCalculationsTable({
             <Table.Cell>{calculation.programmeDetails.specialty}</Table.Cell>
             <Table.Cell>{formatCctDate(calculation.result.cctDate)}</Table.Cell>
             <Table.Cell>{formatCctDate(calculation.lastModified)}</Table.Cell>
+            <Table.Cell>
+              <CctDeleteButton
+                id={calculation.id}
+                name={calculation.name}
+                small
+              >
+                {"Delete"}
+                <span className="nhsuk-u-visually-hidden">
+                  {` ${calculation.name}`}
+                </span>
+              </CctDeleteButton>
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
