@@ -47,6 +47,7 @@ type CctChangesSectionProps = {
   onRetry: () => void;
   onChange: (changes: CctChange[]) => void;
   onFormOpenChange: (isFormOpen: boolean) => void;
+  onDirtyChange: (isDirty: boolean) => void;
 };
 
 type CctInvalidChange = {
@@ -69,7 +70,8 @@ export function CctChangesSection({
   isFormOpen,
   onRetry,
   onChange,
-  onFormOpenChange
+  onFormOpenChange,
+  onDirtyChange
 }: Readonly<CctChangesSectionProps>) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const noResultText =
@@ -179,6 +181,7 @@ export function CctChangesSection({
           }}
           onSubmit={handleSubmit}
           onCancel={closeForm}
+          onDirtyChange={onDirtyChange}
         />
       ) : (
         <Button

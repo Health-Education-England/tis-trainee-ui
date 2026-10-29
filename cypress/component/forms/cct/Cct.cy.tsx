@@ -1274,4 +1274,205 @@ describe("Cct", () => {
       .and("be.disabled");
     cy.get('[data-cy="cct-deleted-banner"]').should("exist");
   });
+
+  it("lets a new calculation be left before anything is entered", () => {
+    mountCct();
+    cy.get('[data-cy="cct-programme-details-form"]').should("exist");
+
+    cy.then(() => history.push("/home"));
+    cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/home");
+    });
+  });
+
+  it("warns before leaving unsaved changes, but not on moving between parts, and stays on request", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+
+    cy.then(() => history.push("/home"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should(
+      "have.text",
+      "If you leave this page, your changes will be lost."
+    );
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').should(
+      "have.text",
+      "Leave without saving"
+    );
+    cy.get('[data-cy="modal-cancel-btn"]')
+      .should("have.text", "Stay on this page")
+      .click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="cct-edit-programme-details"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
+  });
+
+  it("leaves without saving once confirmed, including from the browser's back button", () => {
+    mountCct("/cct");
+    cy.get('[data-cy="cct-new-calculation"]').click();
+    selectOption("specialty", "Paediatrics");
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+
+    cy.then(() => history.goBack());
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').should("exist");
+    cy.location("pathname").should("equal", "/cct/create");
+
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').click();
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.location("pathname").should("equal", "/cct");
+  });
+
+  it("lets an opened calculation be looked through and left without a warning", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy^="cct-edit-change-"]').click();
+    cy.get('[data-cy="cct-change-form-cancel"]').click();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("warns before leaving an opened calculation once a change is removed", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal(`/cct/${savedCalculationId}`);
+    });
+  });
+
+  it("deletes an opened calculation with unsaved changes without warning about them", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { body: true });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+
+    cy.get('[data-cy="cct-delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="cct-deleted-banner"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("warns before leaving when only a dropdown option has been picked", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+
+    cy.then(() => history.push("/home"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
+  });
+
+  it("warns before leaving part-way through adding a change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-add-change"]').click();
+    selectOption("type", "Parental leave");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+  });
+
+  it("warns before leaving once an opened calculation's name is edited", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+  });
+
+  it("doesn't count hiding the assumed full-time periods as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-hide-assumed-periods"]').check();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't count programme details confirmed without a change as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't count an overridden start grade confirmed without a change as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: saveWithMockBackend({
+        name: "Entered at ST4",
+        programmeDetails: {
+          ...paediatricsProgrammeDetails("2023-08-02"),
+          startGrade: "ST4",
+          startGradeOverrideNotes: "Entered at ST4"
+        },
+        changes: [parentalLeaveChange]
+      }).body
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should(
+      "contain.text",
+      "ST4"
+    );
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("stops warning once a removed change is added back as it was", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    addParentalLeaveChange();
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
 });
