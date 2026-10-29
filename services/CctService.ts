@@ -65,4 +65,8 @@ export class CctService extends ApiService {
     );
     return data;
   }
+
+  async deleteCalculation(id: string): Promise<void> {
+    await this.delete(`/cct/calculation/${id}`);
+  }
 }

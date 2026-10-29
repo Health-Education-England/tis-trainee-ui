@@ -773,6 +773,7 @@ describe("Cct", () => {
       "have.text",
       "This feature is coming soon."
     );
+    cy.get('[data-cy="cct-delete"]').should("not.exist");
     cy.get('[data-cy="navNext"]').should("not.exist");
     cy.get('[data-cy="navPrevious"]').click();
     cy.get('[data-cy="progress-header"]').should(
@@ -1162,5 +1163,93 @@ describe("Cct", () => {
       "Parental leave in 2024"
     );
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
+  });
+
+  it("deletes a saved calculation from its row only once confirmed, and says so", () => {
+    cy.intercept("GET", calculationsUrl, {
+      body: [
+        listedCalculation(
+          "7a1e9f20-5b3c-4d6e-8f70-1a2b3c4d5e6f",
+          "Older",
+          "2026-10-25T12:00:00Z"
+        ),
+        listedCalculation(savedCalculationId, "Newest", "2026-10-28T12:00:00Z")
+      ]
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { body: true }).as("delete");
+    mountCct("/cct");
+
+    cy.get('[data-cy="cct-delete"]')
+      .first()
+      .should("contain.text", "Delete Newest")
+      .click();
+    cy.get('[data-cy="warningText-Delete"]').should(
+      "have.text",
+      "Are you sure you want to delete 'Newest'? You cannot undo this."
+    );
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="cct-calculation-row"]').should("have.length", 2);
+    cy.get("@delete.all").should("have.length", 0);
+
+    cy.get('[data-cy="cct-delete"]').first().click();
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+
+    cy.wait("@delete");
+    cy.get('[data-cy="cct-deleted-banner"]').should(
+      "contain.text",
+      "Your calculation 'Newest' has been deleted"
+    );
+    cy.get('[data-cy="cct-calculation-link"]').should("have.text", "Older");
+  });
+
+  it("deletes an opened calculation from its summary and returns to the list", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { body: true }).as("delete");
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-delete"]')
+      .should("have.text", "Delete this calculation")
+      .click();
+    cy.get('[data-cy="warningText-Delete"]').should(
+      "contain.text",
+      "'Parental leave in 2024'"
+    );
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+
+    cy.wait("@delete");
+    cy.get('[data-cy="cct-deleted-banner"]').should(
+      "contain.text",
+      "Your calculation 'Parental leave in 2024' has been deleted"
+    );
+    cy.get('[data-cy="cct-no-calculations"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
+    });
+  });
+
+  it("keeps the confirmation open with an error when a delete fails, then deletes on retry", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { statusCode: 500, body: {} });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="actionModalError"]').should(
+      "contain.text",
+      "We could not delete your calculation. Try again."
+    );
+    cy.get('[data-cy="cct-deleted-banner"]').should("not.exist");
+
+    cy.intercept("DELETE", savedCalculationUrl, { body: true, delay: 1000 });
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]')
+      .should("contain.text", "Deleting...")
+      .and("be.disabled");
+    cy.get('[data-cy="cct-deleted-banner"]').should("exist");
   });
 });
