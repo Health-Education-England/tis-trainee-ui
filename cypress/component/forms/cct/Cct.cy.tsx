@@ -4,6 +4,7 @@ import { Router } from "react-router-dom";
 import { mount } from "cypress/react";
 import cctReferenceReducer from "../../../../redux/slices/cctReferenceSlice";
 import cctReducer from "../../../../redux/slices/cctSlice";
+import traineeProfileReducer from "../../../../redux/slices/traineeProfileSlice";
 import { Cct } from "../../../../components/forms/cct/Cct";
 import history from "../../../../components/navigation/history";
 import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calculate-responses";
@@ -16,7 +17,11 @@ import {
 
 const createStore = () =>
   configureStore({
-    reducer: { cctReference: cctReferenceReducer, cct: cctReducer }
+    reducer: {
+      cctReference: cctReferenceReducer,
+      cct: cctReducer,
+      traineeProfile: traineeProfileReducer
+    }
   });
 
 const mountCct = (path = "/cct/create") => {

@@ -60,6 +60,9 @@ export const CCT_NO_VALUE = "—";
 // Note: the POC shows a dash rather than a figure where a month total is not applicable, as opposed to not yet known.
 export const CCT_NOT_APPLICABLE = "-";
 
+export const CCT_NO_CHANGES_TEXT =
+  "No changes recorded, so your whole programme is treated as full time at 100% WTE.";
+
 export const CCT_NOTES_MAX_LENGTH = 1000;
 export const CCT_NOTES_PREVIEW_LENGTH = 80;
 export const CCT_NOTES_TOO_LONG_ERROR = `Notes must be ${CCT_NOTES_MAX_LENGTH} characters or less`;
