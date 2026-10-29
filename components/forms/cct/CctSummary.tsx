@@ -37,6 +37,7 @@ type CctSummaryProps = {
   savedName: string;
   saveStatus: CctSaveStatus;
   onSave: (name: string) => void;
+  onDirtyChange: (isDirty: boolean) => void;
 };
 
 export function CctSummary({
@@ -53,7 +54,8 @@ export function CctSummary({
   savedCalculationId,
   savedName,
   saveStatus,
-  onSave
+  onSave,
+  onDirtyChange
 }: Readonly<CctSummaryProps>) {
   const noResultText =
     calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
@@ -148,6 +150,7 @@ export function CctSummary({
               savedName={savedName}
               saveStatus={saveStatus}
               onSave={onSave}
+              onDirtyChange={onDirtyChange}
             />
           )}
         </Card>

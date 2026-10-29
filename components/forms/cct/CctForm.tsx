@@ -15,9 +15,11 @@ import {
   sortCctChanges,
   toCctChangeDtos
 } from "../../../utilities/CctUtilities";
+import { isDeepEqual } from "../../../utilities/ObjectUtilities";
 import { useCctCalculation } from "../../../utilities/hooks/useCctCalculation";
 import { useCctSpecialties } from "../../../utilities/hooks/useCctSpecialties";
 import history from "../../navigation/history";
+import { LeavePageGuard } from "../../common/LeavePageGuard";
 import { CctChangesSection } from "./CctChangesSection";
 import { CctFormShell } from "./CctFormShell";
 import {
@@ -47,6 +49,8 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     fromCctChangeDtos(savedCalculation?.changes ?? [])
   );
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
+  const [isSubFormDirty, setIsSubFormDirty] = useState(false);
+  const openedRef = useRef({ programmeDetails, changes });
 
   const { result, calculatedChanges, errors, status, isRetrying, retry } =
     useCctCalculation(programmeDetails, changes);
@@ -80,6 +84,13 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
   const isProgrammeDetailsDone = !isEditingProgrammeDetails && result !== null;
   const isChangesDone =
     !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;
+  const hasUnsavedChanges =
+    isSubFormDirty ||
+    !isDeepEqual(programmeDetails, openedRef.current.programmeDetails) ||
+    !isDeepEqual(
+      toCctChangeDtos(changes),
+      toCctChangeDtos(openedRef.current.changes)
+    );
 
   const goToPage = (targetPage: number) => {
     if (targetPage < 0 || targetPage > CCT_PAGE_NAMES.length - 1) return;
@@ -126,6 +137,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           onRetryCalculation={retry}
           onChange={setProgrammeDetails}
           onEditingChange={setIsEditingProgrammeDetails}
+          onDirtyChange={setIsSubFormDirty}
         />
       )}
       {currentPage === 1 && (
@@ -148,6 +160,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
             onRetry={retry}
             onChange={next => setChanges(sortCctChanges(next))}
             onFormOpenChange={setIsChangeFormOpen}
+            onDirtyChange={setIsSubFormDirty}
           />
         </>
       )}
@@ -167,8 +180,10 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           savedName={savedCalculation?.name ?? ""}
           saveStatus={saveStatus}
           onSave={handleSave}
+          onDirtyChange={setIsSubFormDirty}
         />
       )}
+      <LeavePageGuard hasUnsavedChanges={hasUnsavedChanges} />
     </CctFormShell>
   );
 }

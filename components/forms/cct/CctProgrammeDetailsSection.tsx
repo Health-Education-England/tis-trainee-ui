@@ -37,6 +37,7 @@ type CctProgrammeDetailsSectionProps = {
   onRetryCalculation: () => void;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onEditingChange: (isEditing: boolean) => void;
+  onDirtyChange: (isDirty: boolean) => void;
 };
 
 export function CctProgrammeDetailsSection({
@@ -51,7 +52,8 @@ export function CctProgrammeDetailsSection({
   isRetryingCalculation,
   onRetryCalculation,
   onChange,
-  onEditingChange
+  onEditingChange,
+  onDirtyChange
 }: Readonly<CctProgrammeDetailsSectionProps>) {
   const handleSubmit = (formData: FormData) => {
     onChange(mapFormDataToProgrammeDetails(formData));
@@ -93,6 +95,7 @@ export function CctProgrammeDetailsSection({
               onCancel={
                 programmeDetails ? () => onEditingChange(false) : undefined
               }
+              onDirtyChange={onDirtyChange}
             />
           )}
         </>
