@@ -23,7 +23,7 @@ export function CctFormShell({
   return (
     <>
       <div data-cy="progress-header">
-        <h3>
+        <h3 className="hide-from-print">
           {`Part ${currentPage + 1} of ${pageNames.length} - ${
             pageNames[currentPage]
           }`}

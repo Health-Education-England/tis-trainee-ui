@@ -1,9 +1,11 @@
 import { FormData } from "../components/forms/form-builder/FormBuilder";
 import {
+  CctAssumedFullTimePeriod,
   CctCalculatedChange,
   CctChange,
   CctChangeDto,
   CctProgrammeDetails,
+  CctResult,
   CctSpecialty,
   CctTrainingGrade,
   CctType
@@ -121,6 +123,57 @@ export function sumCctMonths(
       0
     ),
     wteMonths: known.reduce((sum, period) => sum + (period.wteMonths ?? 0), 0)
+  };
+}
+
+export type CctChangesTableRow =
+  | {
+      kind: "change";
+      change: CctChange;
+      calculated: CctCalculatedChange | null;
+    }
+  | { kind: "assumed"; period: CctAssumedFullTimePeriod };
+
+const rowStartDate = (row: CctChangesTableRow) =>
+  row.kind === "change" ? row.change.startDate : row.period.startDate;
+
+export function deriveCctChangesTable(
+  changes: CctChange[],
+  calculatedChanges: CctCalculatedChange[],
+  result: CctResult | null
+) {
+  const pickedChanges = pickCctCalculatedChanges(
+    calculatedChanges,
+    changes.length
+  );
+  const assumedPeriods = result?.assumedFullTimePeriods ?? [];
+  const assumedMonths = assumedPeriods.map(({ months }) => ({
+    calendarMonths: months,
+    wteMonths: months
+  }));
+
+  const rows = [
+    ...changes.map(
+      (change, index): CctChangesTableRow => ({
+        kind: "change",
+        change,
+        calculated: pickedChanges[index]
+      })
+    ),
+    ...assumedPeriods.map(
+      (period): CctChangesTableRow => ({ kind: "assumed", period })
+    )
+  ].sort((a, b) => rowStartDate(a).localeCompare(rowStartDate(b)));
+
+  return {
+    rows,
+    enteredTotals: sumCctMonths(pickedChanges),
+    allTotals: sumCctMonths([...pickedChanges, ...assumedMonths]),
+    completionTotals: sumCctMonths([
+      ...pickedChanges,
+      ...assumedMonths,
+      result?.projection ?? null
+    ])
   };
 }
 

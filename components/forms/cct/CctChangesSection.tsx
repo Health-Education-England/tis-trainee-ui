@@ -3,7 +3,6 @@ import day from "dayjs";
 import { Button, Card, ErrorSummary, Table, Tag } from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
 import {
-  CctAssumedFullTimePeriod,
   CctCalculatedChange,
   CctChange,
   CctProgrammeDetails,
@@ -16,6 +15,7 @@ import {
 } from "../../../utilities/CctConstants";
 import {
   CctMonthTotals,
+  deriveCctChangesTable,
   findCctNotesPreviewEnd,
   findProjectingChange,
   formatCctDate,
@@ -25,9 +25,7 @@ import {
   isOpenLtftChange,
   mapChangeToFormData,
   mapFormDataToChange,
-  newCctChangeId,
-  pickCctCalculatedChanges,
-  sumCctMonths
+  newCctChangeId
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctChangeForm } from "./CctChangeForm";
@@ -252,17 +250,6 @@ type CctChangesTableProps = {
   onRemove?: (id: string) => void;
 };
 
-type ChangeRow =
-  | {
-      kind: "change";
-      change: CctChange;
-      calculated: CctCalculatedChange | null;
-    }
-  | { kind: "assumed"; period: CctAssumedFullTimePeriod };
-
-const rowStartDate = (row: ChangeRow) =>
-  row.kind === "change" ? row.change.startDate : row.period.startDate;
-
 export function CctChangesTable({
   changes,
   calculatedChanges,
@@ -306,40 +293,12 @@ export function CctChangesTable({
   if (changes.length === 0) return null;
 
   const projectingChange = findProjectingChange(calculatedChanges);
-
-  const pickedChanges = pickCctCalculatedChanges(
-    calculatedChanges,
-    changes.length
-  );
-  const assumedPeriods = result?.assumedFullTimePeriods ?? [];
-  const assumedMonths = assumedPeriods.map(({ months }) => ({
-    calendarMonths: months,
-    wteMonths: months
-  }));
-
-  const changeRows: ChangeRow[] = changes.map((change, index) => ({
-    kind: "change",
-    change,
-    calculated: pickedChanges[index]
-  }));
-  const rows = (
-    hideAssumedPeriods
-      ? changeRows
-      : [
-          ...changeRows,
-          ...assumedPeriods.map(
-            (period): ChangeRow => ({ kind: "assumed", period })
-          )
-        ]
-  ).sort((a, b) => rowStartDate(a).localeCompare(rowStartDate(b)));
-
-  const enteredTotals = sumCctMonths(pickedChanges);
-  const allTotals = sumCctMonths([...pickedChanges, ...assumedMonths]);
-  const completionTotals = sumCctMonths([
-    ...pickedChanges,
-    ...assumedMonths,
-    result?.projection ?? null
-  ]);
+  const { rows, enteredTotals, allTotals, completionTotals } =
+    deriveCctChangesTable(changes, calculatedChanges, result);
+  const hasAssumedPeriods = rows.some(row => row.kind === "assumed");
+  const visibleRows = hideAssumedPeriods
+    ? rows.filter(row => row.kind === "change")
+    : rows;
 
   const totalsRow = (
     label: string,
@@ -365,7 +324,7 @@ export function CctChangesTable({
 
   return (
     <>
-      {assumedPeriods.length > 0 && (
+      {hasAssumedPeriods && (
         <div className="nhsuk-checkboxes nhsuk-u-margin-bottom-3">
           <div className="nhsuk-checkboxes__item">
             <input
@@ -420,7 +379,7 @@ export function CctChangesTable({
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {rows.map(row =>
+              {visibleRows.map(row =>
                 row.kind === "assumed" ? (
                   <Table.Row
                     key={`assumed-${row.period.startDate}`}
@@ -466,7 +425,7 @@ export function CctChangesTable({
                   )
                 : totalsRow("Total", "cct-total-row", allTotals)}
               {hideAssumedPeriods &&
-                assumedPeriods.length > 0 &&
+                hasAssumedPeriods &&
                 totalsRow(
                   "Including assumed full-time total (hidden)",
                   "cct-assumed-total-row",

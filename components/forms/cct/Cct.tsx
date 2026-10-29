@@ -42,7 +42,7 @@ export function Cct() {
           </p>
         </NotificationBanner>
       )}
-      <Fieldset>
+      <Fieldset className="hide-from-print">
         <Legend
           isPageHeading
           className={style.fieldLegHeader}
