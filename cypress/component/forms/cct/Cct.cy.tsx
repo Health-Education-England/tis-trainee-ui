@@ -217,6 +217,28 @@ describe("Cct", () => {
     cy.get("#startGradeOverrideNotes").should("not.exist");
   });
 
+  it("keeps an overridden start grade when the programme details are reopened, until the specialty changes", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+    selectOption("startGrade", "ST4");
+    cy.get("#startGradeOverrideNotes").type("Entered at ST4");
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should(
+      "contain.text",
+      "ST4"
+    );
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    selectedValue("startGrade").should("contain.text", "ST4");
+    cy.get("#startGradeOverrideNotes").should("have.value", "Entered at ST4");
+
+    selectOption("specialty", "Haematology");
+    selectedValue("startGrade").should("contain.text", "ST3");
+    selectOption("specialty", "Paediatrics");
+    selectedValue("startGrade").should("contain.text", "ST1");
+  });
+
   it("keeps the error box up and Next hidden until a retry succeeds", () => {
     cy.intercept("POST", "/api/trainee/cct/calculate", {
       statusCode: 500,
