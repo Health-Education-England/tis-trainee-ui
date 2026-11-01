@@ -92,7 +92,7 @@ $cctFocusTextColour: #212b32;
 }
 
 .notesHeader {
-  min-width: 13em;
+  min-width: 10em;
 }
 
 .notesCell {
@@ -109,8 +109,8 @@ $cctFocusTextColour: #212b32;
 
 .actions {
   display: inline-flex;
-  flex-wrap: nowrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
 
   :global(.nhsuk-button) {
     margin: 0;
@@ -120,8 +120,8 @@ $cctFocusTextColour: #212b32;
 
 // Note: a totals row has nothing in most columns, so when the table stacks below 768px those cells would otherwise read as a list of bare column labels.
 @media (max-width: 48.0525em) {
-  .emptyCell {
-    display: none !important;
+  .changesTable :global(.nhsuk-table__body) .totalRow td.emptyCell {
+    display: none;
   }
 
   .totalRow td:first-child :global(.nhsuk-table-responsive__heading),
@@ -132,5 +132,9 @@ $cctFocusTextColour: #212b32;
   .changesTable th:first-child,
   .changesTable td:first-child {
     box-shadow: none;
+  }
+
+  .actions {
+    flex-direction: row;
   }
 }
