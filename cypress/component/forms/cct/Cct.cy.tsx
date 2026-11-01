@@ -431,6 +431,7 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-projection-row"]')
       .find(".nhsuk-table-responsive__heading")
       .should("contain.text", "WTE");
+    cy.get('[data-cy="cct-total-row"] td:visible').should("have.length", 3);
   });
 
   it("keeps an LTFT change that runs to completion as its own row and projects from it", () => {
@@ -461,6 +462,7 @@ describe("Cct", () => {
       .and("contain.text", "Read only");
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
     cy.get('[data-cy="cct-projected-cct-date"]').should(
       "contain.text",
@@ -713,6 +715,7 @@ describe("Cct", () => {
     cy.get('[data-cy="navNext"]').should("not.exist");
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
     cy.get('[data-cy="navNext"]').should("exist");
   });
@@ -742,6 +745,7 @@ describe("Cct", () => {
     cy.get('[data-cy="navNext"]').should("not.exist");
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy="cct-invalid-changes-summary"]').should("not.exist");
     cy.get('[data-cy="navNext"]').should("exist");
   });
@@ -995,6 +999,13 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-change-form-cancel"]').click();
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+    cy.get('[data-cy^="cct-remove-change-"]').should("have.focus");
+
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy^="cct-change-row-"]').should("not.exist");
     addParentalLeaveChange();
     cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
@@ -1216,6 +1227,7 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="modal-cancel-btn"]').click();
     cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="cct-delete"]').first().should("have.focus");
     cy.get('[data-cy="cct-calculation-row"]').should("have.length", 2);
     cy.get("@delete.all").should("have.length", 0);
 
@@ -1354,6 +1366,7 @@ describe("Cct", () => {
     mountCct(`/cct/${savedCalculationId}`);
     cy.get('[data-cy="navPrevious"]').click();
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
 
     cy.then(() => history.push("/cct"));
     cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
@@ -1473,6 +1486,7 @@ describe("Cct", () => {
     mountCct(`/cct/${savedCalculationId}`);
     cy.get('[data-cy="navPrevious"]').click();
     cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
     addParentalLeaveChange();
     cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
 
