@@ -1,4 +1,5 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Button } from "nhsuk-react-components";
 import history from "../../navigation/history";
 import { useAppDispatch } from "../../../redux/hooks/hooks";
@@ -22,10 +23,14 @@ export function CctDeleteButton({
   const [isConfirming, setIsConfirming] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
   const close = () => {
-    setIsConfirming(false);
-    setHasFailed(false);
+    flushSync(() => {
+      setIsConfirming(false);
+      setHasFailed(false);
+    });
+    deleteButtonRef.current?.focus();
   };
 
   const handleDelete = async () => {
@@ -42,6 +47,7 @@ export function CctDeleteButton({
   return (
     <>
       <Button
+        ref={deleteButtonRef}
         warning
         small={small}
         type="button"

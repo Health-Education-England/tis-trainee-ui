@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import day from "dayjs";
 import { Button, Card, ErrorSummary, Table, Tag } from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
@@ -31,6 +32,7 @@ import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation
 import { CctChangeForm } from "./CctChangeForm";
 import style from "./CctChanges.module.scss";
 import { CctRequestError } from "./CctRequestError";
+import { ActionModal } from "../../common/ActionModal";
 
 type CctChangesSectionProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -309,7 +311,7 @@ export function CctChangesTable({
       <Table.Cell>
         <strong>{label}</strong>
       </Table.Cell>
-      {[1, 2, 3, 4, 5].map(column => (
+      {[1, 2, 3].map(column => (
         <Table.Cell key={column} className={style.emptyCell} />
       ))}
       <Table.Cell>
@@ -318,6 +320,7 @@ export function CctChangesTable({
       <Table.Cell>
         <strong>{formatCctMonths(totals.wteMonths)}</strong>
       </Table.Cell>
+      <Table.Cell className={style.emptyCell} />
       {!isReadOnly && <Table.Cell className={style.emptyCell} />}
     </Table.Row>
   );
@@ -368,13 +371,12 @@ export function CctChangesTable({
             <Table.Head>
               <Table.Row>
                 <Table.Cell>Type</Table.Cell>
-                <Table.Cell className={style.notesHeader}>Notes</Table.Cell>
                 <Table.Cell>Start</Table.Cell>
                 <Table.Cell>End</Table.Cell>
                 <Table.Cell>WTE %</Table.Cell>
-                <Table.Cell>Counted as training?</Table.Cell>
                 <Table.Cell>Calendar months</Table.Cell>
                 <Table.Cell>WTE months</Table.Cell>
+                <Table.Cell className={style.notesHeader}>Notes</Table.Cell>
                 {!isReadOnly && <Table.Cell aria-label="Actions" />}
               </Table.Row>
             </Table.Head>
@@ -387,19 +389,18 @@ export function CctChangesTable({
                     data-cy="cct-assumed-row"
                   >
                     <Table.Cell>Assumed full-time</Table.Cell>
-                    <Table.Cell>Not added by you</Table.Cell>
                     <Table.Cell>
                       {formatCctDate(row.period.startDate)}
                     </Table.Cell>
                     <Table.Cell>{formatCctDate(row.period.endDate)}</Table.Cell>
                     <Table.Cell>100%</Table.Cell>
-                    <Table.Cell>Yes</Table.Cell>
                     <Table.Cell>
                       {formatCctMonths(row.period.months)}
                     </Table.Cell>
                     <Table.Cell>
                       {formatCctMonths(row.period.months)}
                     </Table.Cell>
+                    <Table.Cell>Not added by you</Table.Cell>
                     {!isReadOnly && <Table.Cell>Read only</Table.Cell>}
                   </Table.Row>
                 ) : (
@@ -452,7 +453,6 @@ export function CctChangesTable({
                       </>
                     )}
                   </Table.Cell>
-                  <Table.Cell>Projects to completion</Table.Cell>
                   <Table.Cell>
                     {formatCctDate(result.projection.startDate)}
                   </Table.Cell>
@@ -460,13 +460,13 @@ export function CctChangesTable({
                     <strong>{formatCctDate(result.cctDate)}</strong>
                   </Table.Cell>
                   <Table.Cell>{formatCctWte(result.projection.wte)}</Table.Cell>
-                  <Table.Cell>Yes</Table.Cell>
                   <Table.Cell>
                     {formatCctMonths(result.projection.calendarMonths)}
                   </Table.Cell>
                   <Table.Cell>
                     {formatCctMonths(result.projection.wteMonths)}
                   </Table.Cell>
+                  <Table.Cell>Projects to completion</Table.Cell>
                   {/* Note: the projection is always derived, so there is nothing to edit here - the only way to alter it is to add, edit or remove a change. */}
                   {!isReadOnly && <Table.Cell>Read only</Table.Cell>}
                 </Table.Row>
@@ -508,6 +508,11 @@ function CctChangeRow({
 }: Readonly<CctChangeRowProps>) {
   // Note: an open LTFT change has no end of its own and accrues nothing - the projection row below the table reports both on its behalf.
   const isOpen = isOpenLtftChange(change);
+  const [isConfirmingRemove, setIsConfirmingRemove] = useState(false);
+  const removeButtonRef = useRef<HTMLButtonElement>(null);
+  const rowLabel = `${getCctChangeTypeShortLabel(
+    change.type
+  )} starting ${formatCctDate(change.startDate)}`;
 
   return (
     <Table.Row data-cy={`cct-change-row-${change.id}`}>
@@ -521,18 +526,11 @@ function CctChangeRow({
             </Tag>
           </>
         )}
-      </Table.Cell>
-      <Table.Cell className={style.notesCell}>
-        {change.notes ? (
-          <CctNotes
-            notes={change.notes}
-            rowLabel={`${getCctChangeTypeShortLabel(
-              change.type
-            )} starting ${formatCctDate(change.startDate)}`}
-            toggleCy={`cct-notes-toggle-${change.id}`}
-          />
-        ) : (
-          CCT_NO_VALUE
+        {!change.countsTowardsCompletion && (
+          <>
+            <br />
+            (not training)
+          </>
         )}
       </Table.Cell>
       <Table.Cell>{formatCctDate(change.startDate)}</Table.Cell>
@@ -540,7 +538,6 @@ function CctChangeRow({
         {isOpen ? "For remainder of training" : formatCctDate(change.endDate)}
       </Table.Cell>
       <Table.Cell>{formatCctWte(change.wte)}</Table.Cell>
-      <Table.Cell>{change.countsTowardsCompletion ? "Yes" : "No"}</Table.Cell>
       <Table.Cell>
         {isOpen
           ? CCT_NOT_APPLICABLE
@@ -548,6 +545,17 @@ function CctChangeRow({
       </Table.Cell>
       <Table.Cell>
         {isOpen ? CCT_NOT_APPLICABLE : formatCctMonths(calculated?.wteMonths)}
+      </Table.Cell>
+      <Table.Cell className={style.notesCell}>
+        {change.notes ? (
+          <CctNotes
+            notes={change.notes}
+            rowLabel={rowLabel}
+            toggleCy={`cct-notes-toggle-${change.id}`}
+          />
+        ) : (
+          CCT_NO_VALUE
+        )}
       </Table.Cell>
       {!isReadOnly && (
         <Table.Cell>
@@ -567,17 +575,33 @@ function CctChangeRow({
             )}
             {onRemove && (
               <Button
-                secondary
+                ref={removeButtonRef}
+                warning
                 small
                 type="button"
                 disabled={!!isFormOpen}
-                onClick={() => onRemove(change.id)}
+                onClick={() => setIsConfirmingRemove(true)}
                 data-cy={`cct-remove-change-${change.id}`}
               >
                 Remove
               </Button>
             )}
           </div>
+          {isConfirmingRemove && onRemove && (
+            <ActionModal
+              onSubmit={() => onRemove(change.id)}
+              isOpen={isConfirmingRemove}
+              onClose={() => {
+                flushSync(() => setIsConfirmingRemove(false));
+                removeButtonRef.current?.focus();
+              }}
+              cancelBtnText="Cancel"
+              warningLabel="Remove"
+              warningText={`Are you sure you want to remove '${rowLabel}'? You cannot undo this.`}
+              submittingBtnText="Removing"
+              isSubmitting={false}
+            />
+          )}
         </Table.Cell>
       )}
     </Table.Row>
