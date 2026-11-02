@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { ReasonMsgObj } from "../components/common/ActionModal";
-import { LtftDto, LtftObjNew } from "../models/LtftTypes";
+import { CctCalculation } from "../models/CctTypes";
+import { LtftCctSnapshot, LtftDto, LtftObjNew } from "../models/LtftTypes";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { unsubmitLtftForm, withdrawLtftForm } from "../redux/slices/ltftSlice";
@@ -382,6 +383,37 @@ export function stampLtftStartDateOnSubmit(formData: LtftObjNew): LtftObjNew {
     ...formData,
     startDate: computedValueGenerators.ltft16WeeksNoticeDate()
   };
+}
+
+export function buildLtftCctSnapshot(
+  calculation: CctCalculation
+): LtftCctSnapshot {
+  return {
+    calculationId: calculation.id,
+    snapshotTakenAt: new Date().toISOString(),
+    calculation
+  };
+}
+
+export function findAttachedCctCalculation(
+  snapshot: LtftCctSnapshot,
+  calculations: CctCalculation[]
+): CctCalculation | null {
+  return (
+    calculations.find(
+      calculation => calculation.id === snapshot.calculationId
+    ) ?? null
+  );
+}
+
+export function hasAttachedCctCalculationChanged(
+  snapshot: LtftCctSnapshot,
+  savedCalculation: CctCalculation | null
+): boolean {
+  return (
+    !!savedCalculation &&
+    savedCalculation.lastModified !== snapshot.calculation.lastModified
+  );
 }
 
 export function findLatestSubmissionDate(formData: LtftObjNew): string | null {
