@@ -11,7 +11,14 @@ import {
 } from "../../../../redux/slices/ltftSlice";
 import { LtftFormView } from "../../../../components/forms/ltft/LtftFormView";
 import { LtftForm } from "../../../../components/forms/ltft/LtftForm";
-import { makeValidProgrammeOptions } from "../../../../utilities/ltftUtilities";
+import {
+  buildLtftCctSnapshot,
+  makeValidProgrammeOptions
+} from "../../../../utilities/ltftUtilities";
+import { resetCctCalculations } from "../../../../redux/slices/cctSlice";
+import { CctCalculation } from "../../../../models/CctTypes";
+import { mockCctCalculation } from "../../../../mock-data/mock-cct-calculations";
+import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
 import { updatedUserFeatures } from "../../../../redux/slices/userSlice";
 import { LtftObjNew } from "../../../../models/LtftTypes";
 import {
@@ -678,5 +685,484 @@ describe("LTFT Form View - incomplete Start date section", () => {
     cy.get('[data-cy="legacyStartDateNote"]').should("not.exist");
     cy.get('[data-cy="incompleteStartDateNote"]').should("not.exist");
     cy.get('[data-cy="BtnSubmit"]').should("not.exist");
+  });
+});
+
+describe("LTFT Form View - CCT calculation snapshot", () => {
+  const cctCalculationsUrl = "/api/trainee/cct/calculation";
+  const cctSpecialtiesUrl = "/api/trainee/cct/specialties";
+
+  const interceptCctList = (
+    response: Parameters<typeof cy.intercept>[2] = { body: [] }
+  ) => {
+    cy.intercept("GET", cctSpecialtiesUrl, { body: mockCctSpecialties });
+    cy.intercept("GET", cctCalculationsUrl, response).as("getCctCalculations");
+  };
+
+  const mountEditable = (
+    cctSnapshot: LtftObjNew["cctSnapshot"],
+    calculations: CctCalculation[] = []
+  ) => {
+    interceptCctList({ body: calculations });
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({ ...mockLtftUnsubmittedFormObj, cctSnapshot });
+  };
+
+  const mountReadOnly = (cctSnapshot: LtftObjNew["cctSnapshot"]) => {
+    interceptCctList();
+    store.dispatch(updatedLtftStatus("succeeded"));
+    store.dispatch(updatedCanEditLtft(false));
+    mountLtftViewWithMockData({ ...mockLtftSubmittedFormObj, cctSnapshot });
+  };
+
+  const stubDraftSave = () => {
+    const updateLtftStub = cy
+      .stub(FormsService.prototype, "updateLtft")
+      .resolves({ data: mockLtftDraftFirstSuccessSaveResponseDto });
+    cy.wrap(updateLtftStub).as("updateLtftStub");
+  };
+
+  // Note: newest first by index, so calc-0 is the most recently saved.
+  const manyCalculations = (count: number): CctCalculation[] =>
+    new Array<number>(count).fill(0).map((_, index) => {
+      const savedOn = String(20 - index).padStart(2, "0");
+      return mockCctCalculation({
+        id: `calc-${index}`,
+        name: `Calculation ${index}`,
+        lastModified: `2026-10-${savedOn}T12:00:00Z`
+      });
+    });
+
+  beforeEach(() => {
+    store.dispatch(resetCctCalculations());
+  });
+
+  it("offers the calculator in a new tab when there are no saved calculations", () => {
+    mountEditable(null, []);
+
+    cy.get('[data-cy="cctSnapshotHeading"]').should(
+      "contain.text",
+      "CCT calculation"
+    );
+    cy.get('[data-cy="cctSnapshotIntro"]').should(
+      "contain.text",
+      "This is optional"
+    );
+    cy.get('[data-cy="cctSnapshotNoCalculations"]').should(
+      "contain.text",
+      "You have no saved CCT calculations"
+    );
+    cy.get('[data-cy="cctSnapshotCalculatorLink"]')
+      .should("have.attr", "href", "/cct")
+      .and("have.attr", "target", "_blank");
+    cy.get('[data-cy="cctSnapshotOptions"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotAttach"]').should("not.exist");
+  });
+
+  it("attaches the chosen calculation and carries it into the saved application", () => {
+    const calculation = mockCctCalculation({
+      id: "calc-1",
+      name: "Dropping to 60%"
+    });
+    mountEditable(null, [calculation]);
+    stubDraftSave();
+
+    cy.get('[data-cy="cctSnapshotAttach"]').should("be.disabled");
+    cy.get('[data-cy="cctSnapshotOption-calc-1"]')
+      .should("not.be.checked")
+      .check();
+    cy.get('[data-cy="cctSnapshotAttach"]').should("not.be.disabled").click();
+
+    cy.get('[data-cy="cctSnapshotOptions"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotName"]').should(
+      "contain.text",
+      "Dropping to 60%"
+    );
+    cy.get('[data-cy="cctSnapshotCctDate"]').should(
+      "contain.text",
+      ddmmyyyy("2034-03-27")
+    );
+    cy.get('[data-cy="cctSnapshotTakenAt"]').should(
+      "contain.text",
+      ddmmyyyy(new Date())
+    );
+    cy.get('[data-cy="cctSnapshotFixedNote"]').should(
+      "contain.text",
+      "This is a copy of your calculation"
+    );
+    cy.get('[data-cy="cctSnapshotSaveHint"]').should(
+      "contain.text",
+      "Save & exit"
+    );
+
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get("@updateLtftStub").should("have.been.calledWithMatch", {
+      cctSnapshot: {
+        calculationId: "calc-1",
+        calculation: { name: "Dropping to 60%" }
+      }
+    });
+  });
+
+  it("shows the attached calculation's details in the expander", () => {
+    const calculation = mockCctCalculation({ id: "calc-1" });
+    mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
+
+    cy.get('[data-cy="cctSnapshotExpanderSummary"]').click();
+    cy.get('[data-cy="cctSnapshotResult"]').should(
+      "contain.text",
+      ddmmyyyy("2034-03-27")
+    );
+    cy.get('[data-cy="cctSnapshotNoChanges"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotExpanderText"]').should(
+      "contain.text",
+      "Agreed with my TPD"
+    );
+  });
+
+  it("swaps the attached copy when another calculation is chosen", () => {
+    const attached = mockCctCalculation({
+      id: "calc-1",
+      name: "Dropping to 60%"
+    });
+    const other = mockCctCalculation({
+      id: "calc-2",
+      name: "Dropping to 80%",
+      lastModified: "2026-10-29T12:00:00Z"
+    });
+    mountEditable(buildLtftCctSnapshot(attached), [attached, other]);
+    stubDraftSave();
+
+    cy.get('[data-cy="cctSnapshotName"]').should(
+      "contain.text",
+      "Dropping to 60%"
+    );
+    cy.get('[data-cy="cctSnapshotChange"]').click();
+
+    cy.get('[data-cy="cctSnapshotIntro"]').should(
+      "contain.text",
+      "Choose the calculation you want to attach instead"
+    );
+    cy.get('[data-cy="cctSnapshotOption-calc-1"]').should("be.checked");
+    cy.get('[data-cy="cctSnapshotOption-calc-2"]').check();
+    cy.get('[data-cy="cctSnapshotAttach"]').click();
+
+    cy.get('[data-cy="cctSnapshotName"]').should(
+      "contain.text",
+      "Dropping to 80%"
+    );
+
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get("@updateLtftStub").should("have.been.calledWithMatch", {
+      cctSnapshot: { calculationId: "calc-2" }
+    });
+  });
+
+  it("abandons a Change and keeps the attached copy when Cancel is used", () => {
+    const attached = mockCctCalculation({
+      id: "calc-1",
+      name: "Dropping to 60%"
+    });
+    const other = mockCctCalculation({ id: "calc-2", name: "Dropping to 80%" });
+    mountEditable(buildLtftCctSnapshot(attached), [attached, other]);
+
+    cy.get('[data-cy="cctSnapshotChange"]').click();
+    cy.get('[data-cy="cctSnapshotOption-calc-2"]').check();
+    cy.get('[data-cy="cctSnapshotCancel"]').click();
+
+    cy.get('[data-cy="cctSnapshotName"]').should(
+      "contain.text",
+      "Dropping to 60%"
+    );
+  });
+
+  it("sends a null snapshot once the attached copy is removed", () => {
+    const calculation = mockCctCalculation({ id: "calc-1" });
+    mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
+    stubDraftSave();
+
+    cy.get('[data-cy="cctSnapshotRemove"]').click();
+    cy.get('[data-cy="cctSnapshotSummary"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotOptions"]').should("exist");
+
+    cy.get('[data-cy="BtnSaveDraft"]').click();
+    cy.get("@updateLtftStub").should("have.been.calledWithMatch", {
+      cctSnapshot: null
+    });
+  });
+
+  it("sends the attached copy to the backend when the application is submitted", () => {
+    const calculation = mockCctCalculation({ id: "calc-1" });
+    const snapshot = buildLtftCctSnapshot(calculation);
+    mountEditable(snapshot, [calculation]);
+
+    // Note: the draft-save response replaces the store form, so it must echo the snapshot back.
+    const savedDto = {
+      ...mockLtftDraftFirstSuccessSaveResponseDto,
+      cctSnapshot: snapshot
+    };
+    const updateLtftStub = cy
+      .stub(FormsService.prototype, "updateLtft")
+      .resolves({ data: savedDto });
+    const submitLtftStub = cy
+      .stub(FormsService.prototype, "submitLtft")
+      .resolves({
+        data: {
+          ...savedDto,
+          status: {
+            ...savedDto.status,
+            current: { ...savedDto.status.current, state: "SUBMITTED" }
+          }
+        }
+      });
+    cy.wrap(updateLtftStub).as("updateLtftStub");
+    cy.wrap(submitLtftStub).as("submitLtftStub");
+
+    cy.get('[data-cy="informationIsCorrect"]').check();
+    cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="name"]').clear();
+    cy.get('[data-cy="name"]').type("my re-submitted ltft application");
+    cy.get('[data-cy="BtnSubmit"]').click();
+    cy.get("@updateLtftStub").should("have.been.called");
+
+    cy.get('[data-cy="submitBtn-Submit"]').click();
+    cy.get("@submitLtftStub").should("have.been.calledWithMatch", {
+      cctSnapshot: {
+        calculationId: "calc-1",
+        snapshotTakenAt: snapshot.snapshotTakenAt
+      }
+    });
+  });
+
+  it("keeps the attached copy, and says so, when the saved calculation has been deleted", () => {
+    const attached = mockCctCalculation({ id: "calc-1" });
+    mountEditable(buildLtftCctSnapshot(attached), [
+      mockCctCalculation({ id: "calc-2" })
+    ]);
+
+    cy.get('[data-cy="cctSnapshotDeletedNote"]')
+      .should("contain.text", "no longer in your saved CCT calculations")
+      .and("have.class", "nhsuk-inset-text");
+    cy.get('[data-cy="cctSnapshotSummary"]').should("exist");
+    cy.get('[data-cy="cctSnapshotChangedNote"]').should("not.exist");
+  });
+
+  it("warns when the saved calculation has changed since it was attached, and offers the latest", () => {
+    const attached = mockCctCalculation({
+      id: "calc-1",
+      lastModified: "2026-10-28T12:00:00Z"
+    });
+    const edited = mockCctCalculation({
+      id: "calc-1",
+      lastModified: "2026-10-30T08:15:00Z",
+      result: { ...attached.result, cctDate: "2035-06-01" }
+    });
+    mountEditable(buildLtftCctSnapshot(attached), [edited]);
+
+    cy.get('[data-cy="cctSnapshotChangedNote"]').should(
+      "contain.text",
+      "since you attached it"
+    );
+    cy.get('[data-cy="cctSnapshotDeletedNote"]').should("not.exist");
+    // Note: the attached copy still shows its own completion date, not the edited one.
+    cy.get('[data-cy="cctSnapshotCctDate"]').should(
+      "contain.text",
+      ddmmyyyy("2034-03-27")
+    );
+
+    cy.get('[data-cy="cctSnapshotAttachLatest"]').click();
+    cy.get('[data-cy="cctSnapshotChangedNote"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotCctDate"]').should(
+      "contain.text",
+      ddmmyyyy("2035-06-01")
+    );
+  });
+
+  it("does not block submission when the saved calculations cannot be loaded", () => {
+    interceptCctList({ statusCode: 500, body: {} });
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      cctSnapshot: null
+    });
+
+    cy.get('[data-cy="cct-request-error"]').should(
+      "contain.text",
+      "We could not load your saved CCT calculations"
+    );
+    cy.get('[data-cy="cct-request-retry"]').should("exist");
+    cy.get('[data-cy="cctSnapshotOptions"]').should("not.exist");
+
+    cy.get('[data-cy="informationIsCorrect"]').check();
+    cy.get('[data-cy="notGuaranteed"]').check();
+    cy.get('[data-cy="name"]').clear();
+    cy.get('[data-cy="name"]').type("my re-submitted ltft application");
+    cy.get('[data-cy="BtnSubmit"]').should("not.have.attr", "disabled");
+  });
+
+  it("reloads the saved calculations when the failed list is retried", () => {
+    interceptCctList({ statusCode: 500, body: {} });
+    store.dispatch(updatedLtftStatus("idle"));
+    store.dispatch(updatedCanEditLtft(true));
+    mountLtftViewWithMockData({
+      ...mockLtftUnsubmittedFormObj,
+      cctSnapshot: null
+    });
+
+    cy.get('[data-cy="cct-request-error"]').should("exist");
+    interceptCctList({ body: [mockCctCalculation({ id: "calc-1" })] });
+    cy.get('[data-cy="cct-request-retry"]').click();
+
+    cy.get('[data-cy="cct-request-error"]').should("not.exist");
+    cy.get('[data-cy="cctSnapshotOption-calc-1"]').should("exist");
+  });
+
+  describe("read-only (submitted application)", () => {
+    it("shows the attached copy with no attach controls and makes no request", () => {
+      const calculation = mockCctCalculation({ id: "calc-1" });
+      mountReadOnly(buildLtftCctSnapshot(calculation));
+
+      cy.get('[data-cy="cctSnapshotSummary"]').should("exist");
+      cy.get('[data-cy="cctSnapshotExpander"]').should("exist");
+      cy.get('[data-cy="cctSnapshotChange"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotRemove"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotSaveHint"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotDeletedNote"]').should("not.exist");
+      cy.get("@getCctCalculations.all").should("have.length", 0);
+    });
+
+    it("says no calculation was attached when the application has none", () => {
+      mountReadOnly(null);
+
+      cy.get('[data-cy="cctSnapshotNotAttached"]').should(
+        "contain.text",
+        "No calculation attached"
+      );
+      cy.get('[data-cy="cctSnapshotOptions"]').should("not.exist");
+    });
+  });
+
+  describe("the picker with many saved calculations", () => {
+    it("lists them all without a toggle at five calculations", () => {
+      mountEditable(null, manyCalculations(5));
+
+      cy.get('[data-cy^="cctSnapshotOption-"]').should("have.length", 5);
+      cy.get('[data-cy="cctSnapshotShowAllCalculations"]').should("not.exist");
+    });
+
+    it("shows the five most recent, newest first, behind a toggle", () => {
+      mountEditable(null, manyCalculations(6));
+
+      cy.get('[data-cy^="cctSnapshotOption-"]').should("have.length", 5);
+      cy.get('[data-cy="cctSnapshotOption-calc-5"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotOptions"]')
+        .find(".nhsuk-radios__label")
+        .first()
+        .should("contain.text", "Calculation 0");
+
+      cy.get('[data-cy="cctSnapshotShowAllCalculations"]')
+        .should("contain.text", "Show all 6 calculations")
+        .and("have.attr", "aria-expanded", "false")
+        .click();
+
+      cy.get('[data-cy^="cctSnapshotOption-"]').should("have.length", 6);
+      cy.get('[data-cy="cctSnapshotShowAllCalculations"]')
+        .should("contain.text", "Show fewer calculations")
+        .and("have.attr", "aria-expanded", "true")
+        .click();
+
+      cy.get('[data-cy^="cctSnapshotOption-"]').should("have.length", 5);
+    });
+
+    it("keeps an older attached calculation visible while the list is collapsed", () => {
+      mountEditable(null, manyCalculations(7));
+
+      cy.get('[data-cy="cctSnapshotShowAllCalculations"]').click();
+      cy.get('[data-cy="cctSnapshotOption-calc-6"]').check();
+      cy.get('[data-cy="cctSnapshotAttach"]').click();
+      cy.get('[data-cy="cctSnapshotName"]').should(
+        "contain.text",
+        "Calculation 6"
+      );
+
+      cy.get('[data-cy="cctSnapshotChange"]').click();
+
+      // Note: the picker reopens collapsed, so the selected one is kept on top of the five most recent.
+      cy.get('[data-cy="cctSnapshotShowAllCalculations"]').should(
+        "have.attr",
+        "aria-expanded",
+        "false"
+      );
+      cy.get('[data-cy^="cctSnapshotOption-"]').should("have.length", 6);
+      cy.get('[data-cy="cctSnapshotOption-calc-5"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotOption-calc-6"]').should("be.checked");
+      cy.get('[data-cy="cctSnapshotAttach"]').should("not.be.disabled");
+    });
+  });
+
+  describe("removing the attached copy", () => {
+    it("removes without confirming while the saved calculation still exists", () => {
+      const calculation = mockCctCalculation({ id: "calc-1" });
+      mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
+
+      cy.get('[data-cy="cctSnapshotRemove"]').click();
+
+      cy.get('[data-cy="warningText-Remove"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotSummary"]').should("not.exist");
+    });
+
+    it("confirms, warning it is the only copy, when the saved calculation has been deleted", () => {
+      const attached = mockCctCalculation({ id: "calc-1", name: "My plan" });
+      mountEditable(buildLtftCctSnapshot(attached), [
+        mockCctCalculation({ id: "calc-2" })
+      ]);
+
+      cy.get('[data-cy="cctSnapshotRemove"]').click();
+
+      cy.get('[data-cy="warningText-Remove"]')
+        .should("contain.text", "'My plan' is no longer in your saved CCT")
+        .and("contain.text", "You cannot undo this");
+      cy.get('[data-cy="cctSnapshotSummary"]').should("exist");
+
+      cy.get('[data-cy="submitBtn-Remove"]').click();
+      cy.get('[data-cy="cctSnapshotSummary"]').should("not.exist");
+    });
+
+    it("confirms, saying it could not check, when the saved calculations failed to load", () => {
+      const attached = mockCctCalculation({ id: "calc-1", name: "My plan" });
+      interceptCctList({ statusCode: 500, body: {} });
+      store.dispatch(updatedLtftStatus("idle"));
+      store.dispatch(updatedCanEditLtft(true));
+      mountLtftViewWithMockData({
+        ...mockLtftUnsubmittedFormObj,
+        cctSnapshot: buildLtftCctSnapshot(attached)
+      });
+
+      cy.get('[data-cy="cctSnapshotRemove"]').click();
+
+      cy.get('[data-cy="warningText-Remove"]')
+        .should("contain.text", "We could not check your saved CCT")
+        .and("contain.text", "you will not be able to get it back");
+      cy.get('[data-cy="cctSnapshotDeletedNote"]').should("not.exist");
+    });
+
+    it("puts focus back on Remove when the confirmation is cancelled", () => {
+      const attached = mockCctCalculation({ id: "calc-1" });
+      mountEditable(buildLtftCctSnapshot(attached), [
+        mockCctCalculation({ id: "calc-2" })
+      ]);
+
+      cy.get('[data-cy="cctSnapshotRemove"]').click();
+      cy.get('[data-cy="warningText-Remove"]')
+        .closest("dialog")
+        .find('[data-cy="modal-cancel-btn"]')
+        .click();
+
+      cy.get('[data-cy="warningText-Remove"]').should("not.exist");
+      cy.get('[data-cy="cctSnapshotSummary"]').should("exist");
+      cy.focused().should("have.attr", "data-cy", "cctSnapshotRemove");
+    });
   });
 });
