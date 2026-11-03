@@ -52,24 +52,21 @@ export function LoSupport({
           <SelectInputField
             data-cy="loSupportList"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue("localOffice", e.target.value, true);
+              void setFieldValue("localOffice", e.target.value, true);
               (e.target.value === "" ||
                 localOfficeContacts[e.target.value] ===
-                  "PGMDE support portal" ||
+                  "NHSE Freshdesk support portal" ||
                 localOfficeContacts[e.target.value] ===
                   "Freshdesk support portal") &&
-                setFieldValue("supportCats", "", true);
+                void setFieldValue("supportCats", [], true);
             }}
             options={filteredLocalOfficeOptions}
             name="localOffice"
             label=""
           />
           {localOfficeContacts[values.localOffice] ===
-            "PGMDE support portal" && (
-            <ActionLink
-              data-cy="pgdmeLink"
-              href="https://lasepgmdesupport.hee.nhs.uk/support/tickets/new?form_7=true"
-            >
+            "NHSE Freshdesk support portal" && (
+            <ActionLink data-cy="pgdmeLink" href="https://nhse.freshdesk.com/">
               Click here to email your support request via the PGMDE Support
               Portal
             </ActionLink>
@@ -85,7 +82,8 @@ export function LoSupport({
             </ActionLink>
           )}
 
-          {localOfficeContacts[values.localOffice] !== "PGMDE support portal" &&
+          {localOfficeContacts[values.localOffice] !==
+            "NHSE Freshdesk support portal" &&
             localOfficeContacts[values.localOffice] !==
               "Freshdesk support portal" &&
             localOfficeContacts[values.localOffice]?.length > 0 && (
