@@ -112,10 +112,12 @@ export function LtftCctSnapshotCard({
       <LtftCctSnapshotCardWrapper>
         <AttachedCctCalculation snapshot={snapshot} />
         {isOnlyCopy && (
-          <p data-cy="cctSnapshotDeletedNote">
-            This calculation is no longer in your saved calculations. The copy
-            attached here is kept.
-          </p>
+          <InsetText data-cy="cctSnapshotDeletedNote">
+            <p>
+              This calculation is no longer in your saved CCT calculations. The
+              copy attached here is kept.
+            </p>
+          </InsetText>
         )}
         {changedCalculation && (
           <InsetText data-cy="cctSnapshotChangedNote">
@@ -167,7 +169,7 @@ export function LtftCctSnapshotCard({
       <CctRequestError
         isRetrying={isRetrying}
         onRetry={retry}
-        message="We could not load your saved calculations."
+        message="We could not load your saved CCT calculations."
       />
     );
   } else if (listStatus !== "succeeded") {
@@ -185,7 +187,7 @@ export function LtftCctSnapshotCard({
           Open the CCT Calculator in a new tab
         </a>
         {
-          " to make one. Your saved calculations are reloaded when you come back to this page."
+          " to make one. Your saved CCT calculations are reloaded when you come back to this page."
         }
       </p>
     );
@@ -475,9 +477,9 @@ const findRemoveConfirmText = (
   savedCalculation: CctCalculation | null
 ): string | null => {
   if (!isListLoaded)
-    return `We could not check your saved calculations, so we cannot tell whether this is the only copy of '${name}'. If it is, you will not be able to get it back.`;
+    return `We could not check your saved CCT calculations, so we cannot tell whether this is the only copy of '${name}'. If it is, you will not be able to get it back.`;
   if (!savedCalculation)
-    return `'${name}' is no longer in your saved calculations, so this is the only copy. You cannot undo this.`;
+    return `'${name}' is no longer in your saved CCT calculations, so this is the only copy. You cannot undo this.`;
   return null;
 };
 
