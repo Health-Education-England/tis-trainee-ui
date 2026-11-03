@@ -66,10 +66,7 @@ export function LoSupport({
           />
           {localOfficeContacts[values.localOffice] ===
             "NHSE Freshdesk support portal" && (
-            <ActionLink
-              data-cy="pgdmeLink"
-              href="https://nhse.freshdesk.com/"
-            >
+            <ActionLink data-cy="pgdmeLink" href="https://nhse.freshdesk.com/">
               Click here to email your support request via the PGMDE Support
               Portal
             </ActionLink>
