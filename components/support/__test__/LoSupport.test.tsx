@@ -33,7 +33,7 @@ describe("LoSupport", () => {
     });
   };
 
-  it("should display the PGMDE support portal link when a Local Office that uses the PGMDE support portal is selected", async () => {
+  it("should display the NHSE Freshdesk support portal link when a Local Office that uses the NHSE Freshdesk support portal is selected", async () => {
     const { getAllByRole, getByRole } = renderLoSupport();
     const user = userEvent.setup();
 
@@ -48,7 +48,7 @@ describe("LoSupport", () => {
 
     expect(PgmdeSupportLink).toBeInTheDocument();
     expect(PgmdeSupportLink.getAttribute("href")).toBe(
-      "https://lasepgmdesupport.hee.nhs.uk/support/tickets/new?form_7=true"
+      "https://nhse.freshdesk.com/"
     );
   });
 
@@ -71,7 +71,7 @@ describe("LoSupport", () => {
     );
   });
 
-  it("should display the support categories and LO support link when a Non-PGMDE local office is selected", async () => {
+  it("should display the support categories and LO support link when a Local Office without a support portal is selected", async () => {
     const { getByRole, getAllByRole } = renderLoSupport();
     const user = userEvent.setup();
 
