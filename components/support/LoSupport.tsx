@@ -52,13 +52,13 @@ export function LoSupport({
           <SelectInputField
             data-cy="loSupportList"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue("localOffice", e.target.value, true);
+              void setFieldValue("localOffice", e.target.value, true);
               (e.target.value === "" ||
                 localOfficeContacts[e.target.value] ===
                   "NHSE Freshdesk support portal" ||
                 localOfficeContacts[e.target.value] ===
                   "Freshdesk support portal") &&
-                setFieldValue("supportCats", "", true);
+                void setFieldValue("supportCats", [], true);
             }}
             options={filteredLocalOfficeOptions}
             name="localOffice"
