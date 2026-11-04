@@ -15,6 +15,7 @@ import {
   findCctSpecialty,
   formatCctDate,
   isCctLengthAdjusted,
+  isCctLengthOverridden,
   isCctStartGradeOverridden,
   mapFormDataToProgrammeDetails,
   mapProgrammeDetailsToFormData
@@ -206,6 +207,10 @@ export function CctProgrammeDetailsSummary({
     specialties,
     programmeDetails.specialty
   );
+  const isLengthOverridden = isCctLengthOverridden(
+    specialtyDefault,
+    programmeDetails.lengthMonths
+  );
   const isGradeOverridden = isCctStartGradeOverridden(
     specialtyDefault,
     programmeDetails.startGrade
@@ -223,6 +228,16 @@ export function CctProgrammeDetailsSummary({
         <SummaryList.Key>Programme length</SummaryList.Key>
         <SummaryList.Value>
           {`${programmeDetails.lengthMonths} months`}
+          {isLengthOverridden && (
+            <span className="nhsuk-hint nhsuk-u-margin-left-2">
+              {`(default for this specialty is ${specialtyDefault?.lengthMonths} months)`}
+            </span>
+          )}
+          {isLengthOverridden && programmeDetails.lengthOverrideNotes && (
+            <div className="nhsuk-hint nhsuk-u-margin-top-1">
+              {programmeDetails.lengthOverrideNotes}
+            </div>
+          )}
         </SummaryList.Value>
       </SummaryList.Row>
       <SummaryList.Row>
