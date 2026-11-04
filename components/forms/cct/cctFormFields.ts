@@ -31,8 +31,20 @@ export const cctProgrammeRemainingFields: Field[] = [
     label: "Programme length (months)",
     type: "text",
     visible: true,
-    readOnly: true,
-    width: 3
+    isNumberField: true,
+    maxDigits: 3,
+    width: 3,
+    hint: "Defaulted from your specialty. Change it if your programme length is different (1-120 months)."
+  },
+  {
+    // Note: revealed by the derived lengthOverridden flag, not by a checkbox - see CctProgrammeDetailsForm.
+    name: "lengthOverrideNotes",
+    label: "Reason for a different programme length",
+    type: "text",
+    visible: false,
+    visibleIf: showWhenTrue("lengthOverridden"),
+    placeholder: "e.g. Programme length agreed with my local office",
+    width: 30
   },
   {
     name: "startDate",

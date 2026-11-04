@@ -7,6 +7,7 @@ import {
   deriveCctAdjustedLengthMonths,
   findCctSpecialty,
   isCctLengthAdjusted,
+  isCctLengthOverridden,
   isCctStartGradeOverridden,
   mapFormDataToProgrammeDetails
 } from "../../../utilities/CctUtilities";
@@ -69,7 +70,7 @@ function CctProgrammeDetailsFormBody({
   onDirtyChange
 }: Readonly<CctProgrammeDetailsFormBodyProps>) {
   const { formData, setFormData } = useFormContext();
-  const { specialty, startGrade } = formData;
+  const { specialty, lengthMonths, startGrade } = formData;
   const selectedSpecialty = findCctSpecialty(specialties, specialty);
   const options = {
     ...cctFieldOptions,
@@ -93,36 +94,46 @@ function CctProgrammeDetailsFormBody({
     const matchedSpecialty = findCctSpecialty(specialties, specialty);
     if (!matchedSpecialty) return;
     setFormData(prevFormData => {
-      const lengthMonths = String(matchedSpecialty.lengthMonths);
+      const defaultedLengthMonths =
+        isSpecialtyChanged || !prevFormData.lengthOverrideNotes
+          ? String(matchedSpecialty.lengthMonths)
+          : prevFormData.lengthMonths;
       const defaultedStartGrade = isSpecialtyChanged
         ? matchedSpecialty.entryGrade
         : prevFormData.startGrade;
       if (
-        prevFormData.lengthMonths === lengthMonths &&
+        prevFormData.lengthMonths === defaultedLengthMonths &&
         prevFormData.startGrade === defaultedStartGrade
       )
         return prevFormData;
       return {
         ...prevFormData,
-        lengthMonths,
+        lengthMonths: defaultedLengthMonths,
         startGrade: defaultedStartGrade
       };
     });
   }, [specialties, specialty, setFormData]);
 
-  // Note: this reveals the reason field by comparing the grade against the specialty default ie. there's no checkbox to leave unchecked to dodge it. Kept apart from the defaults effect above because that one must not react to startGrade.
+  // Note: this reveals the reason fields by comparing the length and grade against the specialty defaults ie. there's no checkbox to leave unchecked to dodge them. Kept apart from the defaults effect above because that one must not react to lengthMonths or startGrade.
   useEffect(() => {
     const matchedSpecialty = findCctSpecialty(specialties, specialty);
     setFormData(prevFormData => {
+      const lengthOverridden = isCctLengthOverridden(
+        matchedSpecialty,
+        lengthMonths
+      );
       const startGradeOverridden = isCctStartGradeOverridden(
         matchedSpecialty,
         startGrade
       );
-      if (prevFormData.startGradeOverridden === startGradeOverridden)
+      if (
+        prevFormData.lengthOverridden === lengthOverridden &&
+        prevFormData.startGradeOverridden === startGradeOverridden
+      )
         return prevFormData;
-      return { ...prevFormData, startGradeOverridden };
+      return { ...prevFormData, lengthOverridden, startGradeOverridden };
     });
-  }, [specialties, specialty, startGrade, setFormData]);
+  }, [specialties, specialty, lengthMonths, startGrade, setFormData]);
 
   return (
     <form

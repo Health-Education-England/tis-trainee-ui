@@ -98,6 +98,7 @@ const paediatricsProgrammeDetails = (
   specialty: "Paediatrics",
   startDate,
   lengthMonths: 84,
+  lengthOverrideNotes: "",
   startGrade: "ST1",
   startGradeOverrideNotes: "",
   additionalMonths: 0,
@@ -242,6 +243,78 @@ describe("Cct", () => {
     selectedValue("startGrade").should("contain.text", "ST3");
     selectOption("specialty", "Paediatrics");
     selectedValue("startGrade").should("contain.text", "ST1");
+  });
+
+  it("asks for a reason as soon as the programme length differs from the specialty default", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+
+    cy.get("#lengthMonths").should("have.value", "84");
+    cy.get("#lengthOverrideNotes").should("not.exist");
+
+    cy.get("#lengthMonths").clear().type("85");
+    cy.get("#lengthOverrideNotes").should("exist").type("Agreed locally");
+
+    // Note: back to the default, so the reason is no longer asked for - and the entry is cleared, not just hidden.
+    cy.get("#lengthMonths").type("{backspace}4");
+    cy.get("#lengthOverrideNotes").should("not.exist");
+    cy.get("#lengthMonths").type("{backspace}5");
+    cy.get("#lengthOverrideNotes").should("have.value", "");
+  });
+
+  it("re-defaults an overridden programme length when the specialty changes", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+    cy.get("#lengthMonths").clear().type("60");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+
+    selectOption("specialty", "Geriatric medicine");
+    cy.get("#lengthMonths").should("have.value", "48");
+    // Note: 48 is the default for this specialty, so the length is no longer an override.
+    cy.get("#lengthOverrideNotes").should("not.exist");
+  });
+
+  it("keeps an overridden programme length when the programme details are reopened", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+    cy.get("#lengthMonths").clear().type("60");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]')
+      .should("contain.text", "60 months")
+      .and("contain.text", "default for this specialty is 84 months")
+      .and("contain.text", "Agreed locally");
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get("#lengthMonths").should("have.value", "60");
+    cy.get("#lengthOverrideNotes").should("have.value", "Agreed locally");
+  });
+
+  it("rejects a programme length outside 1 to 120 months", () => {
+    const lengthError =
+      "Programme length must be a whole number of months between 1 and 120.";
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+
+    cy.get("#lengthMonths").clear();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should("contain.text", lengthError);
+
+    cy.get("#lengthMonths").type("0");
+    cy.get('[data-cy="errorSummary"]').should("contain.text", lengthError);
+
+    cy.get("#lengthMonths").clear().type("121");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should("contain.text", lengthError);
+    cy.get('[data-cy="cct-programme-details-summary"]').should("not.exist");
+
+    cy.get("#lengthMonths").clear().type("120");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should("not.exist");
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
   });
 
   it("keeps the error box up and Next hidden until a retry succeeds", () => {

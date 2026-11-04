@@ -7,7 +7,9 @@ import {
 import {
   cctChangeIndexFromPointer,
   fromCctChangeDtos,
+  isCctLengthOverridden,
   isCctStartGradeOverridden,
+  mapFormDataToProgrammeDetails,
   mapProgrammeDetailsToFormData,
   newCctChangeId,
   pickCctCalculatedChanges,
@@ -205,6 +207,48 @@ describe("isCctStartGradeOverridden", () => {
   });
 });
 
+describe("isCctLengthOverridden", () => {
+  const paediatrics: CctSpecialty = {
+    name: "Paediatrics",
+    lengthMonths: 84,
+    entryGrade: "ST1"
+  };
+
+  it("is true when the length differs from the specialty's default", () => {
+    expect(isCctLengthOverridden(paediatrics, "48")).toBe(true);
+    expect(isCctLengthOverridden(paediatrics, 48)).toBe(true);
+  });
+
+  it("is false when the length is the specialty's default", () => {
+    expect(isCctLengthOverridden(paediatrics, "84")).toBe(false);
+    expect(isCctLengthOverridden(paediatrics, 84)).toBe(false);
+  });
+
+  it("is false when the specialty is not in the list", () => {
+    expect(isCctLengthOverridden(undefined, "48")).toBe(false);
+  });
+
+  it("is false while no length has been entered", () => {
+    expect(isCctLengthOverridden(paediatrics, "")).toBe(false);
+    expect(isCctLengthOverridden(paediatrics, null)).toBe(false);
+    expect(isCctLengthOverridden(paediatrics, undefined)).toBe(false);
+  });
+});
+
+describe("mapFormDataToProgrammeDetails", () => {
+  it("carries the length and its override reason from the form", () => {
+    expect(
+      mapFormDataToProgrammeDetails({
+        lengthMonths: "48",
+        lengthOverrideNotes: "Agreed with my local office"
+      })
+    ).toMatchObject({
+      lengthMonths: 48,
+      lengthOverrideNotes: "Agreed with my local office"
+    });
+  });
+});
+
 describe("mapProgrammeDetailsToFormData", () => {
   const specialties: CctSpecialty[] = [
     { name: "Paediatrics", lengthMonths: 84, entryGrade: "ST1" }
@@ -213,6 +257,7 @@ describe("mapProgrammeDetailsToFormData", () => {
     specialty: "Paediatrics",
     startDate: "2023-08-02",
     lengthMonths: 84,
+    lengthOverrideNotes: "",
     startGrade: "ST1",
     startGradeOverrideNotes: "",
     additionalMonths: 0,
@@ -235,6 +280,19 @@ describe("mapProgrammeDetailsToFormData", () => {
     expect(
       mapProgrammeDetailsToFormData(programmeDetails, specialties)
         .startGradeOverridden
+    ).toBe(false);
+  });
+
+  it("marks the length as overridden when it differs from the specialty's default", () => {
+    expect(
+      mapProgrammeDetailsToFormData(
+        { ...programmeDetails, lengthMonths: 48 },
+        specialties
+      ).lengthOverridden
+    ).toBe(true);
+    expect(
+      mapProgrammeDetailsToFormData(programmeDetails, specialties)
+        .lengthOverridden
     ).toBe(false);
   });
 
