@@ -4,6 +4,7 @@ const paediatricsProgrammeDetails: CctProgrammeDetails = {
   specialty: "Paediatrics",
   startDate: "2023-08-02",
   lengthMonths: 84,
+  lengthOverrideNotes: "",
   startGrade: "ST1",
   startGradeOverrideNotes: "",
   additionalMonths: 0,

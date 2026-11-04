@@ -190,6 +190,7 @@ export function mapFormDataToProgrammeDetails(
     specialty: toText(formData.specialty),
     startDate: toText(formData.startDate),
     lengthMonths: toNumber(formData.lengthMonths),
+    lengthOverrideNotes: toText(formData.lengthOverrideNotes),
     startGrade: formData.startGrade as CctTrainingGrade,
     startGradeOverrideNotes: toText(formData.startGradeOverrideNotes),
     additionalMonths: toNumber(formData.additionalMonths),
@@ -213,6 +214,14 @@ export const isCctStartGradeOverridden = (
   startGrade: string | null | undefined
 ) => !!specialty && !!startGrade && startGrade !== specialty.entryGrade;
 
+export const isCctLengthOverridden = (
+  specialty: CctSpecialty | undefined,
+  lengthMonths: string | number | null | undefined
+) =>
+  !!specialty &&
+  !!lengthMonths &&
+  Number(lengthMonths) !== specialty.lengthMonths;
+
 export function mapProgrammeDetailsToFormData(
   programmeDetails: CctProgrammeDetails | null,
   specialties: CctSpecialty[]
@@ -231,6 +240,10 @@ export function mapProgrammeDetailsToFormData(
     acceleratedMonths: programmeDetails.acceleratedMonths
       ? String(programmeDetails.acceleratedMonths)
       : null,
+    lengthOverridden: isCctLengthOverridden(
+      specialtyDefault,
+      programmeDetails.lengthMonths
+    ),
     startGradeOverridden: isCctStartGradeOverridden(
       specialtyDefault,
       programmeDetails.startGrade

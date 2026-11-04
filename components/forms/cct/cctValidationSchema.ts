@@ -50,8 +50,23 @@ const trainingTimeMessage = (
   return null;
 };
 
+const lengthMessage = (value: unknown) => {
+  const months = Number(value);
+  const isWholeNumber = !isEmpty(value) && Number.isInteger(months);
+  return isWholeNumber && months >= 1 && months <= 120
+    ? null
+    : "Programme length must be a whole number of months between 1 and 120.";
+};
+
 export const cctProgrammeDetailsValidationSchema = yup.object({
   specialty: yup.string().nullable().required("Please choose a specialty."),
+  lengthMonths: yup
+    .mixed()
+    .nullable()
+    .test("length-months", "", messageTest(lengthMessage)),
+  lengthOverrideNotes: requiredText(
+    "Please enter a reason for a different programme length."
+  ),
   startDate: yup
     .string()
     .nullable()

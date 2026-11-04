@@ -64,7 +64,8 @@ export type CctSpecialty = {
 export type CctProgrammeDetails = {
   specialty: string; // from the specialties list (NW Excel doc)
   startDate: string;
-  lengthMonths: number; // 1-120, defaulted from the specialty list (NW Excel doc)
+  lengthMonths: number; // 1-120, defaulted from the specialty list (NW Excel doc); can be overridden
+  lengthOverrideNotes: string; // required when lengthMonths is overridden
   startGrade: CctTrainingGrade; // defaulted from the specialties list; can be overrided
   startGradeOverrideNotes: string; // required when startGrade is overridden
   additionalMonths: number; // 0-24, e.g. extra time after an ARCP outcome
