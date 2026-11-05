@@ -66,6 +66,10 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsNotBeforeUnixEpoch("1969-12-31")).toEqual(false);
   });
 
+  it("IsNotBeforeUnixEpoch should return false if date has a two-digit year", () => {
+    expect(DateUtilities.IsNotBeforeUnixEpoch("0099-01-01")).toEqual(false);
+  });
+
   it("IsPastDate should return true if date is null", () => {
     expect(DateUtilities.IsPastDate(null)).toEqual(true);
   });
