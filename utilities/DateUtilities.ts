@@ -114,8 +114,11 @@ export class DateUtilities {
   public static IsNotBeforeUnixEpoch(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
+      const hasTwoDigitYear = String(value).startsWith("00");
       return (
-        dayDate.isValid() && dayDate.isSameOrAfter(day("1970-01-01"), "day")
+        !hasTwoDigitYear &&
+        dayDate.isValid() &&
+        dayDate.isSameOrAfter(day("1970-01-01"), "day")
       );
     }
     return true;

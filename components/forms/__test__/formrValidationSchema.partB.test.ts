@@ -44,3 +44,13 @@ describe("formBValidationSchema - work site validation", () => {
     ).resolves.toBeUndefined();
   });
 });
+
+describe("formBValidationSchema - previous revalidation date", () => {
+  const schema = getFormBValidationSchema(false);
+
+  it("rejects a two-digit year, which would otherwise read as 19xx", async () => {
+    await expect(
+      schema.validateAt("prevRevalDate", { prevRevalDate: "0099-01-01" })
+    ).rejects.toThrow("The date cannot be before 01/01/1970");
+  });
+});

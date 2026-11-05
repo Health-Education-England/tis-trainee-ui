@@ -16,6 +16,7 @@ import {
   isOpenLtftChange,
   mapFormDataToProgrammeDetails
 } from "../../../utilities/CctUtilities";
+import { DateUtilities } from "../../../utilities/DateUtilities";
 
 type FindMessage = (
   value: unknown,
@@ -58,6 +59,14 @@ const lengthMessage = (value: unknown) => {
     : "Programme length must be a whole number of months between 1 and 120.";
 };
 
+const dateRangeMessage = (value: unknown) => {
+  const date = textOf(value);
+  return DateUtilities.IsNotBeforeUnixEpoch(date) &&
+    DateUtilities.IsLessThanMaxDate(date)
+    ? null
+    : "Date must be between 01/01/1970 and 50 years from today.";
+};
+
 export const cctProgrammeDetailsValidationSchema = yup.object({
   specialty: yup.string().nullable().required("Please choose a specialty."),
   lengthMonths: yup
@@ -70,7 +79,8 @@ export const cctProgrammeDetailsValidationSchema = yup.object({
   startDate: yup
     .string()
     .nullable()
-    .required("Please enter a programme start date."),
+    .required("Please enter a programme start date.")
+    .test("start-date", "", messageTest(dateRangeMessage)),
   startGrade: yup.string().nullable().required("Please choose a start grade."),
   startGradeOverrideNotes: requiredText(
     "Please enter a reason for overriding the default start grade."
@@ -247,6 +257,8 @@ export const buildCctChangeValidationSchema = (
         "",
         messageTest((value, formData) => {
           if (isEmpty(value)) return null;
+          const message = dateRangeMessage(value);
+          if (message) return message;
           const { endDate } = toCandidate(formData);
           if (endDate && day(textOf(value)).isAfter(endDate))
             return "Start date cannot be after end date.";
@@ -271,6 +283,8 @@ export const buildCctChangeValidationSchema = (
         "",
         messageTest((value, formData) => {
           if (isEmpty(value)) return null;
+          const message = dateRangeMessage(value);
+          if (message) return message;
           if (isOoptCreditOverTwelveMonths(formData))
             return "OOPT counted as training cannot be more than 12 months.";
           return issuesFor(formData).endDate;

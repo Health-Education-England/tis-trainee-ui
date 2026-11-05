@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { mount } from "cypress/react";
+import day from "dayjs";
 import cctReferenceReducer from "../../../../redux/slices/cctReferenceSlice";
 import cctReducer from "../../../../redux/slices/cctSlice";
 import traineeProfileReducer from "../../../../redux/slices/traineeProfileSlice";
@@ -42,6 +43,31 @@ const selectOption = (fieldName: string, optionLabel: string) => {
 
 const selectedValue = (fieldName: string) =>
   cy.get(`[data-cy="${fieldName}"] .react-select__single-value`);
+
+const dateLimitsError =
+  "Date must be between 01/01/1970 and 50 years from today.";
+const latestDate = day().add(50, "year").format("YYYY-MM-DD");
+const dayAfterLatestDate = day()
+  .add(50, "year")
+  .add(1, "day")
+  .format("YYYY-MM-DD");
+
+const typeDate = (fieldName: string, date: string) => {
+  cy.get(`[data-cy="${fieldName}-input"]`).clear();
+  cy.get(`[data-cy="${fieldName}-input"]`).type(date);
+};
+
+const enterTwoDigitYear = (fieldName: string) => {
+  cy.get(`[data-cy="${fieldName}-input"]`).then($input => {
+    const input = $input[0] as HTMLInputElement;
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value"
+    )?.set?.call(input, "0099-01-01");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  cy.get(`[data-cy="${fieldName}-input"]`).should("have.value", "0099-01-01");
+};
 
 const saveProgrammeDetails = () => {
   selectOption("specialty", "Paediatrics");
@@ -315,6 +341,59 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-programme-details-submit"]').click();
     cy.get('[data-cy="errorSummary"]').should("not.exist");
     cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+  });
+
+  it("rejects a programme start date outside the date limits", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+
+    typeDate("startDate", "1969-12-31");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    enterTwoDigitYear("startDate");
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    typeDate("startDate", dayAfterLatestDate);
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+    cy.get('[data-cy="cct-programme-details-summary"]').should("not.exist");
+
+    typeDate("startDate", "1970-01-01");
+    cy.get('[data-cy="errorSummary"]').should("not.exist");
+
+    typeDate("startDate", latestDate);
+    cy.get('[data-cy="errorSummary"]').should("not.exist");
+  });
+
+  it("rejects a change's dates outside the date limits", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-add-change"]').click();
+    selectOption("type", "Parental leave");
+
+    typeDate("startDate", "1969-12-31");
+    typeDate("endDate", "2024-08-01");
+    cy.get('[data-cy="cct-change-form-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    enterTwoDigitYear("startDate");
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    typeDate("startDate", dayAfterLatestDate);
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    typeDate("startDate", "2024-02-01");
+    cy.get('[data-cy="errorSummary"]').should("not.exist");
+
+    typeDate("endDate", dayAfterLatestDate);
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    enterTwoDigitYear("endDate");
+    cy.get('[data-cy="errorSummary"]').should("contain.text", dateLimitsError);
+
+    typeDate("endDate", latestDate);
+    cy.get('[data-cy="errorSummary"]').should("not.exist");
   });
 
   it("keeps the error box up and Next hidden until a retry succeeds", () => {
