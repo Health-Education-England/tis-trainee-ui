@@ -111,12 +111,15 @@ export class DateUtilities {
     return true;
   }
 
+  public static HasTwoDigitYear(value: DateType | undefined): boolean {
+    return String(value).startsWith("00");
+  }
+
   public static IsNotBeforeUnixEpoch(value: DateType | undefined): boolean {
     if (value) {
       const dayDate = day(value);
-      const hasTwoDigitYear = String(value).startsWith("00");
       return (
-        !hasTwoDigitYear &&
+        !DateUtilities.HasTwoDigitYear(value) &&
         dayDate.isValid() &&
         dayDate.isSameOrAfter(day("1970-01-01"), "day")
       );
