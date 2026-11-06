@@ -70,6 +70,18 @@ describe("DateUtilities", () => {
     expect(DateUtilities.IsNotBeforeUnixEpoch("0099-01-01")).toEqual(false);
   });
 
+  it("HasTwoDigitYear should return true if date has a two-digit year", () => {
+    expect(DateUtilities.HasTwoDigitYear("0099-01-01")).toEqual(true);
+  });
+
+  it("HasTwoDigitYear should return false if date has a four-digit year", () => {
+    expect(DateUtilities.HasTwoDigitYear("1999-01-01")).toEqual(false);
+  });
+
+  it("HasTwoDigitYear should return false if date is null", () => {
+    expect(DateUtilities.HasTwoDigitYear(null)).toEqual(false);
+  });
+
   it("IsPastDate should return true if date is null", () => {
     expect(DateUtilities.IsPastDate(null)).toEqual(true);
   });

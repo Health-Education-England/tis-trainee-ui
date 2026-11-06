@@ -144,3 +144,21 @@ describe("formAValidationSchema - identifier validation", () => {
     );
   });
 });
+
+describe("formAValidationSchema - two-digit years", () => {
+  it("rejects a Date of Birth with a two-digit year, which would otherwise read as 19xx", async () => {
+    await expect(
+      formAValidationSchema.validateAt("dateOfBirth", {
+        dateOfBirth: "0099-01-01"
+      })
+    ).rejects.toThrow("Date of Birth is before the minimum date allowed");
+  });
+
+  it("rejects a Date Awarded with a two-digit year, which would otherwise read as 19xx", async () => {
+    await expect(
+      formAValidationSchema.validateAt("dateAttained", {
+        dateAttained: "0099-01-01"
+      })
+    ).rejects.toThrow("Date awarded is before the minimum date allowed");
+  });
+});
