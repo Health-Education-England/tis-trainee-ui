@@ -125,7 +125,7 @@ export const mockCctSpecialties: CctSpecialty[] = [
     lengthMonths: 48,
     entryGrade: "ST1"
   },
-  { name: "Dental core training", lengthMonths: 12, entryGrade: "CT1" },
+  { name: "Dental core training", lengthMonths: 12, entryGrade: "DCT1" },
   { name: "Dental foundation training", lengthMonths: 12, entryGrade: "DFT" },
   { name: "Dental public health", lengthMonths: 48, entryGrade: "ST1" },
   { name: "Dermatology", lengthMonths: 48, entryGrade: "ST3" },

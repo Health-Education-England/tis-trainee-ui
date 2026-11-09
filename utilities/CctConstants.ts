@@ -16,7 +16,10 @@ export const CCT_TRAINING_GRADES: CctTrainingGrade[] = [
   "ST7",
   "ST8",
   "ST9",
-  "DFT"
+  "DFT",
+  "DCT1",
+  "DCT2",
+  "DCT3"
 ];
 
 export const CCT_CHANGE_TYPE_LABELS: Record<CctType, string> = {
