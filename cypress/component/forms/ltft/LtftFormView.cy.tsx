@@ -723,6 +723,13 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
     cy.wrap(updateLtftStub).as("updateLtftStub");
   };
 
+  const waitForCctList = () =>
+    cy
+      .wrap(store)
+      .invoke("getState")
+      .its("cct.listStatus")
+      .should("eq", "succeeded");
+
   // Note: newest first by index, so calc-0 is the most recently saved.
   const manyCalculations = (count: number): CctCalculation[] =>
     new Array<number>(count).fill(0).map((_, index) => {
@@ -882,6 +889,7 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
     mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
     stubDraftSave();
 
+    waitForCctList();
     cy.get('[data-cy="cctSnapshotRemove"]').click();
     cy.get('[data-cy="cctSnapshotSummary"]').should("not.exist");
     cy.get('[data-cy="cctSnapshotOptions"]').should("exist");
@@ -1107,6 +1115,7 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
       const calculation = mockCctCalculation({ id: "calc-1" });
       mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
 
+      waitForCctList();
       cy.get('[data-cy="cctSnapshotRemove"]').click();
 
       cy.get('[data-cy="warningText-Remove"]').should("not.exist");
@@ -1119,6 +1128,7 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
         mockCctCalculation({ id: "calc-2" })
       ]);
 
+      waitForCctList();
       cy.get('[data-cy="cctSnapshotRemove"]').click();
 
       cy.get('[data-cy="warningText-Remove"]')
