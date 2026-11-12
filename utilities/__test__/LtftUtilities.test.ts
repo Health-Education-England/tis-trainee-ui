@@ -354,16 +354,6 @@ describe("buildLtftCctSnapshot", () => {
 
     expect(buildLtftCctSnapshot(calculation).calculation).toEqual(calculation);
   });
-
-  it("stamps snapshotTakenAt with the current time as an ISO string", () => {
-    const before = Date.now();
-    const { snapshotTakenAt } = buildLtftCctSnapshot(mockCctCalculation());
-    const takenAt = Date.parse(snapshotTakenAt);
-
-    expect(takenAt).toBeGreaterThanOrEqual(before);
-    expect(takenAt).toBeLessThanOrEqual(Date.now());
-    expect(snapshotTakenAt).toBe(new Date(takenAt).toISOString());
-  });
 });
 
 describe("findAttachedCctCalculation", () => {

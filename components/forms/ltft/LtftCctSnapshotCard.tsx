@@ -255,7 +255,7 @@ function AttachedCctCalculation({
   snapshot
 }: Readonly<{ snapshot: LtftCctSnapshot }>) {
   const { calculation } = snapshot;
-  const attachedOn = formatCctDate(snapshot.snapshotTakenAt);
+  const lastSavedOn = formatCctDate(calculation.lastModified);
 
   return (
     <>
@@ -273,15 +273,15 @@ function AttachedCctCalculation({
           </SummaryList.Value>
         </SummaryList.Row>
         <SummaryList.Row>
-          <SummaryList.Key>Attached on</SummaryList.Key>
-          <SummaryList.Value data-cy="cctSnapshotTakenAt">
-            {attachedOn}
+          <SummaryList.Key>Last saved on</SummaryList.Key>
+          <SummaryList.Value data-cy="cctSnapshotLastSaved">
+            {lastSavedOn}
           </SummaryList.Value>
         </SummaryList.Row>
       </SummaryList>
       <InsetText data-cy="cctSnapshotFixedNote">
         <p>
-          {`This is a copy of your calculation as it was on ${attachedOn}. Changing or deleting your saved calculation will not change it. To share a newer version, attach it again.`}
+          {`This is a snapshot of your calculation as you last saved it on ${lastSavedOn}. Changing or deleting your saved calculation will not change it. To share a newer version, attach it again.`}
         </p>
         <p>
           The completion date is indicative; the official CCT date is agreed at

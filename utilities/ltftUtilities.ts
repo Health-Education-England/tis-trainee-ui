@@ -390,7 +390,6 @@ export function buildLtftCctSnapshot(
 ): LtftCctSnapshot {
   return {
     calculationId: calculation.id,
-    snapshotTakenAt: new Date().toISOString(),
     calculation
   };
 }

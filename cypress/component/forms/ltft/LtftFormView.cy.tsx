@@ -790,13 +790,13 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
       "contain.text",
       ddmmyyyy("2034-03-27")
     );
-    cy.get('[data-cy="cctSnapshotTakenAt"]').should(
+    cy.get('[data-cy="cctSnapshotLastSaved"]').should(
       "contain.text",
-      ddmmyyyy(new Date())
+      ddmmyyyy(calculation.lastModified)
     );
     cy.get('[data-cy="cctSnapshotFixedNote"]').should(
       "contain.text",
-      "This is a copy of your calculation"
+      "This is a snapshot of your calculation"
     );
     cy.get('[data-cy="cctSnapshotSaveHint"]').should(
       "contain.text",
@@ -938,7 +938,7 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
     cy.get("@submitLtftStub").should("have.been.calledWithMatch", {
       cctSnapshot: {
         calculationId: "calc-1",
-        snapshotTakenAt: snapshot.snapshotTakenAt
+        calculation: { lastModified: calculation.lastModified }
       }
     });
   });
