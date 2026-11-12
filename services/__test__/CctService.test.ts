@@ -40,6 +40,7 @@ describe("CctService", () => {
           cctDate: "2031-07-29",
           originalProgrammeEndDate: "2031-07-29",
           adjustedProgrammeEndDate: "2031-07-29",
+          totalCalendarMonthsCompleted: 0,
           totalWteMonthsCompleted: 0,
           monthsRemaining: 96,
           assumedFullTimePeriods: [],

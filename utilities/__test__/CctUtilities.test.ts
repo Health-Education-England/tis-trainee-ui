@@ -2,10 +2,12 @@ import {
   CctCalculatedChange,
   CctChange,
   CctProgrammeDetails,
+  CctResult,
   CctSpecialty
 } from "../../models/CctTypes";
 import {
   cctChangeIndexFromPointer,
+  deriveCctChangesTable,
   fromCctChangeDtos,
   isCctLengthOverridden,
   isCctStartGradeOverridden,
@@ -178,6 +180,68 @@ describe("pickCctCalculatedChanges", () => {
 
   it("returns all nulls when there is no result yet", () => {
     expect(pickCctCalculatedChanges([], 2)).toEqual([null, null]);
+  });
+});
+
+describe("deriveCctChangesTable", () => {
+  const changes = [change("one")];
+  const calculatedChanges = [calculatedChange("2024-02-01")];
+  const result: CctResult = {
+    cctDate: "2030-12-31",
+    originalProgrammeEndDate: "2030-07-29",
+    adjustedProgrammeEndDate: "2030-07-29",
+    totalCalendarMonthsCompleted: 20,
+    totalWteMonthsCompleted: 14,
+    monthsRemaining: 70,
+    assumedFullTimePeriods: [
+      { startDate: "2023-08-02", endDate: "2024-01-31", months: 6 }
+    ],
+    projection: {
+      startDate: "2024-08-02",
+      wte: 1,
+      calendarMonths: 70,
+      wteMonths: 70
+    }
+  };
+
+  it("takes the total from the engine's result rather than adding up the rows", () => {
+    const { allTotals } = deriveCctChangesTable(
+      changes,
+      calculatedChanges,
+      result
+    );
+
+    expect(allTotals).toEqual({ calendarMonths: 20, wteMonths: 14 });
+  });
+
+  it("adds the projection to the engine's total for the total to completion", () => {
+    const { completionTotals } = deriveCctChangesTable(
+      changes,
+      calculatedChanges,
+      result
+    );
+
+    expect(completionTotals).toEqual({ calendarMonths: 90, wteMonths: 84 });
+  });
+
+  it("adds up only the trainee's own changes for the entered total", () => {
+    const { enteredTotals } = deriveCctChangesTable(
+      changes,
+      calculatedChanges,
+      result
+    );
+
+    expect(enteredTotals).toEqual({ calendarMonths: 6, wteMonths: 0 });
+  });
+
+  it("has no totals before there is a result", () => {
+    const noTotals = { calendarMonths: null, wteMonths: null };
+
+    expect(deriveCctChangesTable(changes, [], null)).toMatchObject({
+      enteredTotals: noTotals,
+      allTotals: noTotals,
+      completionTotals: noTotals
+    });
   });
 });
 

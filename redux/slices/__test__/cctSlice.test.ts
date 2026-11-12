@@ -38,6 +38,7 @@ const calculation: CctCalculation = {
     cctDate: "2030-08-01",
     originalProgrammeEndDate: "2030-08-01",
     adjustedProgrammeEndDate: "2030-08-01",
+    totalCalendarMonthsCompleted: 0,
     totalWteMonthsCompleted: 0,
     monthsRemaining: 84,
     assumedFullTimePeriods: [],

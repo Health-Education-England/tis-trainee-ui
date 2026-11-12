@@ -7,6 +7,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2030-07-29",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 0,
       totalWteMonthsCompleted: 0,
       monthsRemaining: 84,
       assumedFullTimePeriods: [],
@@ -36,6 +37,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-01-28",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 12.032876712328767,
       totalWteMonthsCompleted: 6.016438356164383,
       monthsRemaining: 77.98,
       assumedFullTimePeriods: [
@@ -71,6 +73,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2034-03-27",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 18.04931506849315,
       totalWteMonthsCompleted: 18.04931506849315,
       monthsRemaining: 65.95,
       assumedFullTimePeriods: [
@@ -106,6 +109,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2030-10-10",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 24.032876712328765,
       totalWteMonthsCompleted: 21.63945205479452,
       monthsRemaining: 62.36,
       assumedFullTimePeriods: [
@@ -141,6 +145,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2030-10-10",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 12.032876712328767,
       totalWteMonthsCompleted: 9.626301369863013,
       monthsRemaining: 74.37,
       assumedFullTimePeriods: [
@@ -176,6 +181,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-01-28",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 12.032876712328767,
       totalWteMonthsCompleted: 6.016438356164383,
       monthsRemaining: 77.98,
       assumedFullTimePeriods: [
@@ -211,6 +217,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-02-26",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 113.0958904109589,
       totalWteMonthsCompleted: 95.07945205479452,
       monthsRemaining: -11.08,
       assumedFullTimePeriods: [
@@ -252,6 +259,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-02-26",
       originalProgrammeEndDate: "2030-07-29",
       adjustedProgrammeEndDate: "2030-07-29",
+      totalCalendarMonthsCompleted: 90.93698630136986,
       totalWteMonthsCompleted: 83.99999999999999,
       monthsRemaining: 0,
       assumedFullTimePeriods: [
@@ -276,6 +284,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-02-26",
       originalProgrammeEndDate: "2031-02-26",
       adjustedProgrammeEndDate: "2031-02-26",
+      totalCalendarMonthsCompleted: 0,
       totalWteMonthsCompleted: 0,
       monthsRemaining: 84,
       assumedFullTimePeriods: [],
@@ -305,6 +314,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-07-30",
       originalProgrammeEndDate: "2031-02-26",
       adjustedProgrammeEndDate: "2031-02-26",
+      totalCalendarMonthsCompleted: 6.016438356164383,
       totalWteMonthsCompleted: 0,
       monthsRemaining: 84,
       assumedFullTimePeriods: [],
