@@ -39,6 +39,7 @@ export const mockCctCalculation = (
     cctDate: "2034-03-27",
     originalProgrammeEndDate: "2030-07-29",
     adjustedProgrammeEndDate: "2030-07-29",
+    totalCalendarMonthsCompleted: 18.04931506849315,
     totalWteMonthsCompleted: 18.04931506849315,
     monthsRemaining: 65.95,
     assumedFullTimePeriods: [

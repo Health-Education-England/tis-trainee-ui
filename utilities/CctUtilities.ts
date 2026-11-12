@@ -147,10 +147,6 @@ export function deriveCctChangesTable(
     changes.length
   );
   const assumedPeriods = result?.assumedFullTimePeriods ?? [];
-  const assumedMonths = assumedPeriods.map(({ months }) => ({
-    calendarMonths: months,
-    wteMonths: months
-  }));
 
   const rows = [
     ...changes.map(
@@ -168,12 +164,18 @@ export function deriveCctChangesTable(
   return {
     rows,
     enteredTotals: sumCctMonths(pickedChanges),
-    allTotals: sumCctMonths([...pickedChanges, ...assumedMonths]),
-    completionTotals: sumCctMonths([
-      ...pickedChanges,
-      ...assumedMonths,
-      result?.projection ?? null
-    ])
+    allTotals: {
+      calendarMonths: result?.totalCalendarMonthsCompleted ?? null,
+      wteMonths: result?.totalWteMonthsCompleted ?? null
+    },
+    completionTotals: {
+      calendarMonths: result
+        ? result.totalCalendarMonthsCompleted + result.projection.calendarMonths
+        : null,
+      wteMonths: result
+        ? result.totalWteMonthsCompleted + result.projection.wteMonths
+        : null
+    }
   };
 }
 

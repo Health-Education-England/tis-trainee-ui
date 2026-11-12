@@ -49,6 +49,7 @@ const responseFor = (cctDate: string): CctCalculateResponse => ({
     cctDate,
     originalProgrammeEndDate: "2030-07-29",
     adjustedProgrammeEndDate: "2030-07-29",
+    totalCalendarMonthsCompleted: 6,
     totalWteMonthsCompleted: 6,
     monthsRemaining: 78,
     assumedFullTimePeriods: [],

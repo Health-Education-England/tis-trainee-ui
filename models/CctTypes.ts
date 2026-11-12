@@ -101,6 +101,7 @@ export type CctResult = {
   cctDate: string; // computed indicative end date
   originalProgrammeEndDate: string;
   adjustedProgrammeEndDate: string;
+  totalCalendarMonthsCompleted: number;
   totalWteMonthsCompleted: number;
   monthsRemaining: number; // could be negative if training is already complete
   assumedFullTimePeriods: CctAssumedFullTimePeriod[];
