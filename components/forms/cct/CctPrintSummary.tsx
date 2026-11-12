@@ -129,8 +129,6 @@ export function CctPrintSummary({
           result={result}
         />
       )}
-
-      {/* TODO: add the grade progression once /calculate returns it. The Summary's grade card says "This feature is coming soon." until then. */}
     </div>
   );
 }

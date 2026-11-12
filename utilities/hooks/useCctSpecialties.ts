@@ -24,12 +24,12 @@ export function useCctSpecialties() {
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchCctSpecialties());
+      void dispatch(fetchCctSpecialties());
     }
   }, [status, dispatch]);
 
   const retry = () => {
-    dispatch(fetchCctSpecialties());
+    void dispatch(fetchCctSpecialties());
   };
 
   return {
