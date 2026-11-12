@@ -81,6 +81,7 @@ export type Field = {
   hint?: string;
   altDisplayVal?: string;
   maxDigits?: number;
+  maxLength?: number;
   conditionalField?: string;
 };
 export type FormData = {
@@ -161,8 +162,10 @@ export default function FormBuilder({
       .map(field => field.conditionalField as string)
   );
 
-  const jsonFormName = jsonForm.name;
-  const pages = jsonForm.pages;
+  // Note: a form (e.g. CCT) with no draft-save endpoint provides no jsonForm so does not use the FormBuilder engine.
+  const builderForm = jsonForm as Form;
+  const jsonFormName = builderForm.name;
+  const pages = builderForm.pages;
   const lastPage = pages.length - 1;
   const initialPageValue = getEditPageNumber(jsonFormName);
   const gatedInitialPage = () =>
@@ -245,7 +248,7 @@ export default function FormBuilder({
       .then(() => {
         if (currentPage === lastPage || isShortcut) {
           saveDraftForm(
-            jsonForm,
+            builderForm,
             formData as FormDataType,
             true,
             false,
@@ -267,7 +270,7 @@ export default function FormBuilder({
 
   const handleSaveBtnClick = async () => {
     setIsSubmitting(true);
-    await saveDraftForm(jsonForm, formData as FormDataType);
+    await saveDraftForm(builderForm, formData as FormDataType);
     setIsSubmitting(false);
   };
 

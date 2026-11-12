@@ -36,6 +36,10 @@ jest.mock("../LtftStatusDetails", () => ({
   LtftStatusDetails: () => <div>Ltft Status Details</div>
 }));
 
+jest.mock("../LtftCctSnapshotCard", () => ({
+  LtftCctSnapshotCard: () => <div>Ltft Cct Snapshot Card</div>
+}));
+
 jest.mock("../../../forms/Declarations", () => {
   const React = require("react");
   const { useEffect } = React;

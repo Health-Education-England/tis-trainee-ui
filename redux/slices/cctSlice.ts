@@ -1,220 +1,133 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TraineeProfileService } from "../../services/TraineeProfileService";
-import { toastErrText, toastSuccessText } from "../../utilities/Constants";
-import { showToast, ToastType } from "../../components/common/ToastMessage";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { CctCalculation } from "../../models/CctTypes";
+import { ApiError } from "../../services/apiService";
+import {
+  CctCalculationSaveRequest,
+  CctService
+} from "../../services/CctService";
 
-export type CctType = "LTFT";
+export type CctSaveStatus = "idle" | "loading" | "succeeded" | "failed";
+type CctLoadStatus = "idle" | "loading" | "succeeded" | "failed";
 
-export type CctChangeType = {
-  id?: string;
-  type: CctType | null;
-  startDate: Date | string;
-  endDate?: Date | string;
-  wte: number | null;
+interface ICct {
+  saveStatus: CctSaveStatus;
+  calculation: CctCalculation | null;
+  loadStatus: CctLoadStatus;
+  loadErrorStatus: number | null;
+  calculations: CctCalculation[];
+  listStatus: CctLoadStatus;
+}
+
+const initialState: ICct = {
+  saveStatus: "idle",
+  calculation: null,
+  loadStatus: "idle",
+  loadErrorStatus: null,
+  calculations: [],
+  listStatus: "idle"
 };
 
-export type PmType = {
-  id: string;
-  name: string;
-  startDate: Date | string;
-  endDate: Date | string;
-  wte: number | null;
-  designatedBodyCode: string | null;
-  managingDeanery: string | null;
-};
-
-export type CctCalculation = {
-  id?: string;
-  traineeTisId?: string;
-  name?: string;
-  cctDate?: Date | string;
-  programmeMembership: PmType;
-  changes: CctChangeType[];
-  created?: Date | string;
-  lastModified?: Date | string;
-};
-
-export const defaultCctCalc: CctCalculation = {
-  programmeMembership: {
-    id: "",
-    name: "",
-    startDate: "",
-    endDate: "",
-    wte: null,
-    designatedBodyCode: null,
-    managingDeanery: null
-  },
-  changes: [
-    {
-      type: "LTFT",
-      startDate: "",
-      endDate: "",
-      wte: null
-    }
-  ]
-};
-
-type CctState = {
-  cctCalc: CctCalculation;
-  status: string;
-  error: any;
-  newCalcMade: boolean;
-  formSaveStatus: string | number;
-  formSaveError: any;
-  formDeleteStatus: string | number;
-  formDeleteError: any;
-};
-
-const initialState: CctState = {
-  cctCalc: defaultCctCalc,
-  status: "idle",
-  error: "",
-  newCalcMade: false,
-  formSaveStatus: "idle",
-  formSaveError: "",
-  formDeleteStatus: "idle",
-  formDeleteError: ""
-};
-
-export const loadSavedCctCalc = createAsyncThunk(
-  "cct/loadSavedCctCalc",
-  async (cctId: string) => {
-    const traineeProfileService = new TraineeProfileService();
-    const response = await traineeProfileService.getCctCalculation(cctId);
-    return response.data;
+export const fetchCctCalculations = createAsyncThunk(
+  "cct/fetchCalculations",
+  async () => {
+    const cctService = new CctService();
+    return cctService.getCalculations();
   }
 );
 
-export const saveCctCalc = createAsyncThunk(
-  "cct/saveCctCalc",
-  async (cctCalc: CctCalculation) => {
-    const traineeProfileService = new TraineeProfileService();
-    const response = await traineeProfileService.saveCctCalculation(cctCalc);
-    return response.data;
+export const saveCctCalculation = createAsyncThunk(
+  "cct/saveCalculation",
+  async (request: CctCalculationSaveRequest) => {
+    const cctService = new CctService();
+    return request.id
+      ? cctService.updateCalculation(request.id, request)
+      : cctService.saveCalculation(request);
   }
 );
 
-export const updateCctCalc = createAsyncThunk(
-  "cct/updateCctCalc",
-  async (cctCalc: CctCalculation) => {
-    const traineeProfileService = new TraineeProfileService();
-    const response = await traineeProfileService.updateCctCalculation(cctCalc);
-    return response.data;
+export const deleteCctCalculation = createAsyncThunk(
+  "cct/deleteCalculation",
+  async (id: string) => {
+    const cctService = new CctService();
+    await cctService.deleteCalculation(id);
   }
 );
 
-export const deleteCctCalc = createAsyncThunk(
-  "cct/deleteCctCalc",
-  async (cctId: string) => {
-    const traineeProfileService = new TraineeProfileService();
-    return await traineeProfileService.deleteCctCalculation(cctId);
+export const loadSavedCctCalculation = createAsyncThunk<
+  CctCalculation,
+  string,
+  { rejectValue: number | null }
+>("cct/loadSavedCalculation", async (id, { rejectWithValue }) => {
+  const cctService = new CctService();
+  try {
+    return await cctService.getCalculation(id);
+  } catch (error) {
+    return rejectWithValue(error instanceof ApiError ? error.status : null);
   }
-);
+});
 
 const cctSlice = createSlice({
   name: "cct",
   initialState,
   reducers: {
-    resetCctCalc() {
-      return initialState;
+    updatedCctSaveStatus(state, action: PayloadAction<CctSaveStatus>) {
+      state.saveStatus = action.payload;
     },
-    updatedCctCalc(state, action: PayloadAction<CctCalculation>) {
-      state.cctCalc = action.payload;
+    resetCctCalculation(state) {
+      state.calculation = null;
+      state.loadStatus = "idle";
+      state.loadErrorStatus = null;
     },
-    updatedNewCalcMade(state, action: PayloadAction<boolean>) {
-      state.newCalcMade = action.payload;
-    },
-    updatedCctStatus(state, action: PayloadAction<string>) {
-      state.status = action.payload;
-    },
-    updatedFormSaveStatus(state, action: PayloadAction<string>) {
-      state.formSaveStatus = action.payload;
-    },
-    updatedFormSaveError(state, action: PayloadAction<string>) {
-      state.error = action.payload;
+    resetCctCalculations(state) {
+      state.calculations = [];
+      state.listStatus = "idle";
     }
   },
-
   extraReducers(builder) {
     builder
-      .addCase(loadSavedCctCalc.pending, state => {
-        state.status = "loading";
+      .addCase(saveCctCalculation.pending, state => {
+        state.saveStatus = "loading";
       })
-      .addCase(loadSavedCctCalc.fulfilled, (state, { payload }) => {
-        state.status = "succeeded";
-        state.cctCalc = payload;
+      .addCase(saveCctCalculation.fulfilled, state => {
+        state.saveStatus = "succeeded";
       })
-      .addCase(loadSavedCctCalc.rejected, (state, { error }) => {
-        state.status = "failed";
-        state.error = error.message;
-        showToast(
-          toastErrText.loadSavedCctCalcMessage,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
+      .addCase(saveCctCalculation.rejected, state => {
+        state.saveStatus = "failed";
       })
-      .addCase(saveCctCalc.pending, state => {
-        state.formSaveStatus = "loading";
+      .addCase(loadSavedCctCalculation.pending, state => {
+        state.loadStatus = "loading";
+        state.loadErrorStatus = null;
       })
-      .addCase(saveCctCalc.fulfilled, (state, { payload }) => {
-        state.formSaveStatus = "succeeded";
-        state.cctCalc = payload;
-        state.newCalcMade = false;
-        showToast(toastSuccessText.saveCctCalcMessage, ToastType.SUCCESS);
+      .addCase(loadSavedCctCalculation.fulfilled, (state, action) => {
+        state.loadStatus = "succeeded";
+        state.calculation = action.payload;
       })
-      .addCase(saveCctCalc.rejected, (state, { error }) => {
-        state.formSaveStatus = "failed";
-        state.formSaveError = error.message;
-        showToast(
-          toastErrText.saveCctCalcMessage,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
+      .addCase(loadSavedCctCalculation.rejected, (state, action) => {
+        state.loadStatus = "failed";
+        state.loadErrorStatus = action.payload ?? null;
       })
-      .addCase(updateCctCalc.pending, state => {
-        state.formSaveStatus = "loading";
+      .addCase(fetchCctCalculations.pending, state => {
+        state.listStatus = "loading";
       })
-      .addCase(updateCctCalc.fulfilled, (state, { payload }) => {
-        state.formSaveStatus = "succeeded";
-        state.cctCalc = payload;
-        state.newCalcMade = false;
-        showToast(toastSuccessText.updateCctCalcMessage, ToastType.SUCCESS);
+      .addCase(fetchCctCalculations.fulfilled, (state, action) => {
+        state.listStatus = "succeeded";
+        state.calculations = action.payload;
       })
-      .addCase(updateCctCalc.rejected, (state, { error }) => {
-        state.formSaveStatus = "failed";
-        state.formSaveError = error.message;
-        showToast(
-          toastErrText.updateCctCalcMessage,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
-        );
+      .addCase(fetchCctCalculations.rejected, state => {
+        state.listStatus = "failed";
       })
-      .addCase(deleteCctCalc.pending, state => {
-        state.formDeleteStatus = "loading";
-      })
-      .addCase(deleteCctCalc.fulfilled, state => {
-        state.formDeleteStatus = "succeeded";
-        showToast(toastSuccessText.deleteCct, ToastType.SUCCESS);
-      })
-      .addCase(deleteCctCalc.rejected, (state, { error }) => {
-        state.formDeleteStatus = "failed";
-        state.formDeleteError = error.message;
-        showToast(
-          toastErrText.deleteCct,
-          ToastType.ERROR,
-          `${error.code}-${error.message}`
+      .addCase(deleteCctCalculation.fulfilled, (state, action) => {
+        state.calculations = state.calculations.filter(
+          calculation => calculation.id !== action.meta.arg
         );
       });
   }
 });
 
-export default cctSlice.reducer;
-
 export const {
-  resetCctCalc,
-  updatedCctCalc,
-  updatedCctStatus,
-  updatedNewCalcMade,
-  updatedFormSaveStatus,
-  updatedFormSaveError
+  updatedCctSaveStatus,
+  resetCctCalculation,
+  resetCctCalculations
 } = cctSlice.actions;
+
+export default cctSlice.reducer;

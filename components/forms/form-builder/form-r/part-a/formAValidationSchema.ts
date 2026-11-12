@@ -9,6 +9,11 @@ import {
 const dateValidationSchema = (fieldName: string) =>
   yup
     .date()
+    .transform((value, originalValue) =>
+      DateUtilities.HasTwoDigitYear(originalValue)
+        ? new Date(originalValue)
+        : value
+    )
     .typeError(`${fieldName} must be a valid date`)
     .required(`${fieldName} is required`);
 

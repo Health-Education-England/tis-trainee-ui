@@ -5,8 +5,11 @@ import {
 } from "../../mock-data/trainee-profile";
 import { LTFT_ROTATION_WINDOW_URLS } from "../Constants";
 import {
+  buildLtftCctSnapshot,
+  findAttachedCctCalculation,
   findLatestSubmissionDate,
   findLtftRotationWindowUrl,
+  hasAttachedCctCalculationChanged,
   hasLegacyStartDateData,
   mapLtftDtoToObj,
   mapLtftObjToDto,
@@ -14,6 +17,7 @@ import {
   resetLegacyStartDateSection,
   stampLtftStartDateOnSubmit
 } from "../ltftUtilities";
+import { mockCctCalculation } from "../../mock-data/mock-cct-calculations";
 import {
   mockLtftDraftFirstSuccessSaveResponseDto,
   mockLtftDraftUpdatedPmFormDtoFirstSavePayload,
@@ -335,6 +339,68 @@ describe("findLatestSubmissionDate", () => {
     expect(findLatestSubmissionDate(mockLtftWithCurrentSubmission)).toEqual(
       "2026-01-25T10:00:00.000Z"
     );
+  });
+});
+
+describe("buildLtftCctSnapshot", () => {
+  it("points the snapshot at the calculation it was taken from", () => {
+    const calculation = mockCctCalculation({ id: "abc-123" });
+
+    expect(buildLtftCctSnapshot(calculation).calculationId).toBe("abc-123");
+  });
+
+  it("embeds the whole calculation, so the copy survives the original being deleted", () => {
+    const calculation = mockCctCalculation();
+
+    expect(buildLtftCctSnapshot(calculation).calculation).toEqual(calculation);
+  });
+});
+
+describe("findAttachedCctCalculation", () => {
+  const attached = mockCctCalculation({ id: "attached-id" });
+  const snapshot = buildLtftCctSnapshot(attached);
+
+  it("finds the saved calculation the snapshot was taken from", () => {
+    const calculations = [mockCctCalculation({ id: "other-id" }), attached];
+
+    expect(findAttachedCctCalculation(snapshot, calculations)).toBe(attached);
+  });
+
+  it("returns null when the saved calculation has been deleted", () => {
+    const calculations = [mockCctCalculation({ id: "other-id" })];
+
+    expect(findAttachedCctCalculation(snapshot, calculations)).toBeNull();
+  });
+
+  it("returns null when there are no saved calculations", () => {
+    expect(findAttachedCctCalculation(snapshot, [])).toBeNull();
+  });
+});
+
+describe("hasAttachedCctCalculationChanged", () => {
+  const snapshot = buildLtftCctSnapshot(
+    mockCctCalculation({ lastModified: "2026-10-28T12:00:00Z" })
+  );
+
+  it("is true when the saved calculation was edited after it was attached", () => {
+    const edited = mockCctCalculation({
+      lastModified: "2026-10-30T08:15:00Z"
+    });
+
+    expect(hasAttachedCctCalculationChanged(snapshot, edited)).toBe(true);
+  });
+
+  it("is false when the saved calculation is untouched", () => {
+    const untouched = mockCctCalculation({
+      lastModified: "2026-10-28T12:00:00Z"
+    });
+
+    expect(hasAttachedCctCalculationChanged(snapshot, untouched)).toBe(false);
+  });
+
+  // Note: the deleted notice covers this case instead, so the two can't both show.
+  it("is false when the saved calculation has been deleted", () => {
+    expect(hasAttachedCctCalculationChanged(snapshot, null)).toBe(false);
   });
 });
 
