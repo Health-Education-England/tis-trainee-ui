@@ -25,7 +25,6 @@ export type LtftChange = {
 
 export type LtftCctSnapshot = {
   calculationId: string;
-  snapshotTakenAt: string;
   calculation: CctCalculation;
 };
 
