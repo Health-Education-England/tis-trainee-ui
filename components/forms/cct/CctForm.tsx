@@ -48,9 +48,10 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
   const [changes, setChanges] = useState<CctChange[]>(() =>
     fromCctChangeDtos(savedCalculation?.changes ?? [])
   );
+  const [name, setName] = useState(savedCalculation?.name ?? "");
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
   const [isSubFormDirty, setIsSubFormDirty] = useState(false);
-  const openedRef = useRef({ programmeDetails, changes });
+  const openedRef = useRef({ programmeDetails, changes, name });
 
   const { result, calculatedChanges, errors, status, isRetrying, retry } =
     useCctCalculation(programmeDetails, changes);
@@ -86,6 +87,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;
   const hasUnsavedChanges =
     isSubFormDirty ||
+    name.trim() !== openedRef.current.name ||
     !isDeepEqual(programmeDetails, openedRef.current.programmeDetails) ||
     !isDeepEqual(
       toCctChangeDtos(changes),
@@ -179,9 +181,10 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           onGoToChanges={() => goToPage(1)}
           savedCalculationId={savedCalculation?.id}
           savedName={savedCalculation?.name ?? ""}
+          name={name}
           saveStatus={saveStatus}
           onSave={handleSave}
-          onDirtyChange={setIsSubFormDirty}
+          onNameChange={setName}
         />
       )}
       <LeavePageGuard hasUnsavedChanges={hasUnsavedChanges} />

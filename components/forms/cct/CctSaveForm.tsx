@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button, ErrorSummary } from "nhsuk-react-components";
 import { FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
@@ -6,33 +7,32 @@ import { cctFieldOptions, cctSaveFields } from "./cctFormFields";
 import { cctSaveValidationSchema } from "./cctValidationSchema";
 import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
-import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 
 type CctSaveFormProps = {
-  savedName: string;
+  name: string;
   saveStatus: CctSaveStatus;
   onSave: (name: string) => void;
-  onDirtyChange: (isDirty: boolean) => void;
+  onNameChange: (name: string) => void;
 };
 
-type CctSaveFormBodyProps = Omit<CctSaveFormProps, "savedName">;
+type CctSaveFormBodyProps = Omit<CctSaveFormProps, "name">;
 
 export function CctSaveForm({
-  savedName,
+  name,
   saveStatus,
   onSave,
-  onDirtyChange
+  onNameChange
 }: Readonly<CctSaveFormProps>) {
   return (
     <FormProvider
-      initialData={{ calculationName: savedName }}
+      initialData={{ calculationName: name }}
       initialPageFields={cctSaveFields}
       autosave={false}
     >
       <CctSaveFormBody
         saveStatus={saveStatus}
         onSave={onSave}
-        onDirtyChange={onDirtyChange}
+        onNameChange={onNameChange}
       />
     </FormProvider>
   );
@@ -41,14 +41,17 @@ export function CctSaveForm({
 function CctSaveFormBody({
   saveStatus,
   onSave,
-  onDirtyChange
+  onNameChange
 }: Readonly<CctSaveFormBodyProps>) {
   const { formData } = useFormContext();
   const { errors, isValidOnSubmit } = useCctFormErrors(
     cctSaveFields,
     cctSaveValidationSchema
   );
-  useReportCctFormDirty(onDirtyChange);
+  const calculationName: string = formData.calculationName;
+  useEffect(() => {
+    onNameChange(calculationName);
+  }, [calculationName, onNameChange]);
   const hasErrors = Object.keys(errors).length > 0;
   const isSaving = saveStatus === "loading";
 
