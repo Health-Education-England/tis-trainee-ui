@@ -14,6 +14,7 @@ interface ICct {
   calculation: CctCalculation | null;
   loadStatus: CctLoadStatus;
   loadErrorStatus: number | null;
+  loadRequestId: string | null;
   calculations: CctCalculation[];
   listStatus: CctLoadStatus;
 }
@@ -23,6 +24,7 @@ const initialState: ICct = {
   calculation: null,
   loadStatus: "idle",
   loadErrorStatus: null,
+  loadRequestId: null,
   calculations: [],
   listStatus: "idle"
 };
@@ -77,6 +79,7 @@ const cctSlice = createSlice({
       state.calculation = null;
       state.loadStatus = "idle";
       state.loadErrorStatus = null;
+      state.loadRequestId = null;
     },
     resetCctCalculations(state) {
       state.calculations = [];
@@ -94,15 +97,20 @@ const cctSlice = createSlice({
       .addCase(saveCctCalculation.rejected, state => {
         state.saveStatus = "failed";
       })
-      .addCase(loadSavedCctCalculation.pending, state => {
+      .addCase(loadSavedCctCalculation.pending, (state, action) => {
         state.loadStatus = "loading";
         state.loadErrorStatus = null;
+        state.loadRequestId = action.meta.requestId;
       })
       .addCase(loadSavedCctCalculation.fulfilled, (state, action) => {
+        if (action.meta.requestId !== state.loadRequestId) return;
+        state.loadRequestId = null;
         state.loadStatus = "succeeded";
         state.calculation = action.payload;
       })
       .addCase(loadSavedCctCalculation.rejected, (state, action) => {
+        if (action.meta.requestId !== state.loadRequestId) return;
+        state.loadRequestId = null;
         state.loadStatus = "failed";
         state.loadErrorStatus = action.payload ?? null;
       })
