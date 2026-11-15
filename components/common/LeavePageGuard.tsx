@@ -1,56 +1,59 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Action, Location } from "history";
 import { ActionModal } from "./ActionModal";
+import { listenForLeaveConfirmation } from "../navigation/history";
 
 type LeavePageGuardProps = {
   hasUnsavedChanges: boolean;
 };
 
-type BlockedNavigation = {
-  location: Location;
-  action: Action;
-};
+const leaveWarning = "If you leave this page, your changes will be lost.";
 
 export function LeavePageGuard({
   hasUnsavedChanges
 }: Readonly<LeavePageGuardProps>) {
   const history = useHistory();
-  const [blockedNavigation, setBlockedNavigation] =
-    useState<BlockedNavigation | null>(null);
-  const unblockRef = useRef<() => void>();
+  const confirmRef = useRef<(ok: boolean) => void>();
+  const [isAsking, setIsAsking] = useState(false);
 
   useEffect(() => {
     if (!hasUnsavedChanges) return;
     const unblock = history.block((location, action) => {
       if (
-        action === "REPLACE" ||
-        location.pathname === history.location.pathname
+        !confirmRef.current &&
+        (action === "REPLACE" ||
+          location.pathname === history.location.pathname)
       )
         return undefined;
-      setBlockedNavigation({ location, action });
-      return false;
+      return leaveWarning;
     });
-    unblockRef.current = unblock;
-    return unblock;
+    const stopListening = listenForLeaveConfirmation(confirm => {
+      confirmRef.current = confirm;
+      setIsAsking(true);
+    });
+    return () => {
+      unblock();
+      stopListening();
+    };
   }, [hasUnsavedChanges, history]);
 
-  if (!blockedNavigation) return null;
+  if (!isAsking) return null;
 
-  const leave = () => {
-    unblockRef.current?.();
-    if (blockedNavigation.action === "POP") history.goBack();
-    else history.push(blockedNavigation.location);
+  const answer = (ok: boolean) => {
+    const confirm = confirmRef.current;
+    confirmRef.current = undefined;
+    setIsAsking(false);
+    confirm?.(ok);
   };
 
   return (
     <ActionModal
-      onSubmit={leave}
+      onSubmit={() => answer(true)}
       isOpen={true}
-      onClose={() => setBlockedNavigation(null)}
+      onClose={() => answer(false)}
       cancelBtnText="Stay on this page"
       warningLabel="You have unsaved changes"
-      warningText="If you leave this page, your changes will be lost."
+      warningText={leaveWarning}
       submittingBtnText=""
       isSubmitting={false}
       confirmBtnText="Leave without saving"

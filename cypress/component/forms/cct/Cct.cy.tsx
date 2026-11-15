@@ -1514,11 +1514,82 @@ describe("Cct", () => {
 
     cy.then(() => history.goBack());
     cy.get('[data-cy="submitBtn-You have unsaved changes"]').should("exist");
-    cy.location("pathname").should("equal", "/cct/create");
+    cy.location("pathname").should("equal", "/cct");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
 
     cy.get('[data-cy="submitBtn-You have unsaved changes"]').click();
     cy.get('[data-cy="cct-new-calculation"]').should("exist");
     cy.location("pathname").should("equal", "/cct");
+  });
+
+  it("leaves for the page the browser's forward button was going to", () => {
+    mountCct();
+    cy.get('[data-cy="cct-programme-details-form"]').should("exist");
+    cy.then(() => history.push("/home"));
+    cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
+    cy.then(() => history.goBack());
+    selectOption("specialty", "Paediatrics");
+
+    cy.then(() => history.goForward());
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').click();
+    cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
+    cy.location("pathname").should("equal", "/home");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/home");
+    });
+  });
+
+  it("leaves for the page a jump back through the browser's history was going to", () => {
+    history.push("/home");
+    mountCct("/cct");
+    cy.get('[data-cy="cct-new-calculation"]').click();
+    selectOption("specialty", "Paediatrics");
+
+    cy.then(() => history.go(-2));
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').click();
+    cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
+    cy.location("pathname").should("equal", "/home");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/home");
+    });
+  });
+
+  it("stays after the browser's back button on request, and puts the address back", () => {
+    mountCct("/cct");
+    cy.get('[data-cy="cct-new-calculation"]').click();
+    selectOption("specialty", "Paediatrics");
+
+    cy.then(() => history.goBack());
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.location("pathname").should("equal", "/cct/create");
+    selectedValue("specialty").should("have.text", "Paediatrics");
+
+    cy.then(() => history.goBack());
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+  });
+
+  it("keeps the page and the address in step when the browser moves again while the warning is open", () => {
+    mountCct("/cct");
+    cy.get('[data-cy="cct-new-calculation"]').click();
+    selectOption("specialty", "Paediatrics");
+
+    cy.then(() => history.goBack());
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.location("pathname").should("equal", "/cct");
+    cy.then(() => history.goForward());
+    cy.location("pathname").should("equal", "/cct/create");
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.location("pathname").should("equal", "/cct/create");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
+
+    cy.then(() => history.goBack());
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
   });
 
   it("lets an opened calculation be looked through and left without a warning", () => {
