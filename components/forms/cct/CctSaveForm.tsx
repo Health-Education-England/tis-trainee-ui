@@ -65,6 +65,7 @@ function CctSaveFormBody({
         fields={cctSaveFields}
         options={cctFieldOptions}
         errors={errors}
+        disabled={isSaving}
       />
       {hasErrors && <FormErrors formErrors={errors} />}
       {saveStatus === "failed" && !hasErrors && (

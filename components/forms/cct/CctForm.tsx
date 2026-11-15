@@ -93,6 +93,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     );
 
   const goToPage = (targetPage: number) => {
+    if (saveStatus === "loading") return;
     if (targetPage < 0 || targetPage > CCT_PAGE_NAMES.length - 1) return;
     setCurrentPage(targetPage);
     setIsChangeFormOpen(false);

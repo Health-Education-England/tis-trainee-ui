@@ -1008,6 +1008,31 @@ describe("Cct", () => {
     });
   });
 
+  it("disables the name and ignores Previous while the calculation saves, then shows the home page", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply({ ...saveWithMockBackend(req.body), delay: 1500 })
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+    cy.get('[data-cy="calculationName-input"]').type("Full time");
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-save-submit"]').should("contain.text", "Saving…");
+    cy.get('[data-cy="calculationName-input"]').should("be.disabled");
+
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Part 3 of 3 - Summary"
+    );
+
+    cy.wait("@save");
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Full time' has been saved"
+    );
+  });
+
   it("asks for a name and sends nothing until one is given", () => {
     cy.intercept("POST", "/api/trainee/cct/calculation", req =>
       req.reply(saveWithMockBackend(req.body))
@@ -1051,10 +1076,9 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-save-submit"]')
       .should("not.be.disabled")
       .and("contain.text", "Save calculation");
-    cy.get('[data-cy="calculationName-input"]').should(
-      "have.value",
-      "Full time"
-    );
+    cy.get('[data-cy="calculationName-input"]')
+      .should("have.value", "Full time")
+      .and("not.be.disabled");
     cy.get('[data-cy="cct-result-summary"]').should("exist");
     cy.get('[data-cy="cct-saved-banner"]').should("not.exist");
 
