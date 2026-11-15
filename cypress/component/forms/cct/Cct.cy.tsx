@@ -1600,6 +1600,37 @@ describe("Cct", () => {
     cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
   });
 
+  it("keeps an edited name when moving between parts, and warns before leaving it", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').clear();
+    cy.get('[data-cy="calculationName-input"]').type("Renamed");
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-save-form"]').should("not.exist");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="calculationName-input"]').should("have.value", "Renamed");
+  });
+
+  it("stops warning once an edited name is put back as it was", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+    cy.get('[data-cy="calculationName-input"]').clear();
+    cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
   it("doesn't count hiding the assumed full-time periods as an unsaved change", () => {
     cy.intercept("GET", savedCalculationUrl, {
       body: savedCalculation("Parental leave in 2024")
