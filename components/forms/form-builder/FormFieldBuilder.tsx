@@ -22,6 +22,7 @@ type FormFieldBuilderProps = {
   arrayDetails?: { arrayIndex: number; arrayName: string };
   dtoName?: string;
   formErrors?: FormErrorsType;
+  disabled?: boolean;
 };
 
 export function FormFieldBuilder({
@@ -31,7 +32,8 @@ export function FormFieldBuilder({
   options,
   arrayDetails,
   dtoName,
-  formErrors
+  formErrors,
+  disabled
 }: Readonly<FormFieldBuilderProps>) {
   const {
     name,
@@ -87,6 +89,7 @@ export function FormFieldBuilder({
           width={width}
           isNumberField={isNumberField}
           readOnly={readOnly}
+          disabled={disabled}
           hint={hint}
           maxDigits={maxDigits}
         />

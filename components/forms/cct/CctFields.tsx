@@ -7,13 +7,15 @@ type CctFieldsProps = {
   fields: Field[];
   options: any;
   errors?: Record<string, string>;
+  disabled?: boolean;
 };
 
 // Note: must be rendered inside a FormProvider - the form-builder field components all read it for their change handlers.
 export function CctFields({
   fields,
   options,
-  errors
+  errors,
+  disabled
 }: Readonly<CctFieldsProps>) {
   const { formData } = useFormContext();
 
@@ -35,6 +37,7 @@ export function CctFields({
               value={formData[field.name] ?? ""}
               error={errors?.[field.name] ?? ""}
               options={options}
+              disabled={disabled}
             />
           </div>
         );
