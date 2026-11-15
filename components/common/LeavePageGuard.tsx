@@ -9,6 +9,8 @@ type LeavePageGuardProps = {
 
 const leaveWarning = "If you leave this page, your changes will be lost.";
 
+const warnBeforeUnload = (event: BeforeUnloadEvent) => event.preventDefault();
+
 export function LeavePageGuard({
   hasUnsavedChanges
 }: Readonly<LeavePageGuardProps>) {
@@ -36,6 +38,12 @@ export function LeavePageGuard({
       stopListening();
     };
   }, [hasUnsavedChanges, history]);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    window.addEventListener("beforeunload", warnBeforeUnload);
+    return () => window.removeEventListener("beforeunload", warnBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   if (!isAsking) return null;
 
