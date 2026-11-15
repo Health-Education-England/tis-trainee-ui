@@ -132,6 +132,60 @@ describe("cctSlice", () => {
 
       expect(store.getState().cct).toEqual(initial);
     });
+
+    describe("when loads overlap", () => {
+      const later = {
+        ...calculation,
+        id: "9b2d4e6f-1a3c-4e5d-8f7a-2b4c6d8e0f13",
+        name: "Return to full time"
+      };
+
+      it("keeps the later calculation when an earlier load lands last", () => {
+        const store = makeStore();
+        store.dispatch(loadSavedCctCalculation.pending("A", calculation.id));
+        store.dispatch(loadSavedCctCalculation.pending("B", later.id));
+        store.dispatch(loadSavedCctCalculation.fulfilled(later, "B", later.id));
+
+        store.dispatch(
+          loadSavedCctCalculation.fulfilled(calculation, "A", calculation.id)
+        );
+
+        expect(store.getState().cct).toEqual({
+          ...initial,
+          calculation: later,
+          loadStatus: "succeeded"
+        });
+      });
+
+      it("keeps the later calculation when an earlier load fails last", () => {
+        const store = makeStore();
+        store.dispatch(loadSavedCctCalculation.pending("A", calculation.id));
+        store.dispatch(loadSavedCctCalculation.pending("B", later.id));
+        store.dispatch(loadSavedCctCalculation.fulfilled(later, "B", later.id));
+
+        store.dispatch(
+          loadSavedCctCalculation.rejected(null, "A", calculation.id, 404)
+        );
+
+        expect(store.getState().cct).toEqual({
+          ...initial,
+          calculation: later,
+          loadStatus: "succeeded"
+        });
+      });
+
+      it("ignores a load that lands after a reset", () => {
+        const store = makeStore();
+        store.dispatch(loadSavedCctCalculation.pending("A", calculation.id));
+        store.dispatch(resetCctCalculation());
+
+        store.dispatch(
+          loadSavedCctCalculation.fulfilled(calculation, "A", calculation.id)
+        );
+
+        expect(store.getState().cct).toEqual(initial);
+      });
+    });
   });
 
   describe("fetchCctCalculations", () => {
