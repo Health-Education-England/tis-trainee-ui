@@ -306,7 +306,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: null,
         countsTowardsCompletion: false,
         notes: "",
-        calendarMonths: 6.016438356164383,
+        calendarMonths: 5.063013698630137,
         wteMonths: 0
       }
     ],
@@ -314,7 +314,7 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
       cctDate: "2031-07-30",
       originalProgrammeEndDate: "2031-02-26",
       adjustedProgrammeEndDate: "2031-02-26",
-      totalCalendarMonthsCompleted: 6.016438356164383,
+      totalCalendarMonthsCompleted: 5.063013698630137,
       totalWteMonthsCompleted: 0,
       monthsRemaining: 84,
       assumedFullTimePeriods: [],

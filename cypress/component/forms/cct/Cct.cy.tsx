@@ -902,6 +902,33 @@ describe("Cct", () => {
     cy.get('[data-cy="navNext"]').should("exist");
   });
 
+  it("warns on the programme details page while new programme details make a change invalid", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="navNext"]').click();
+    addParentalLeaveChange();
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+    cy.get('[data-cy="cct-invalid-changes-notice"]').should("not.exist");
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="startDate-input"]').clear();
+    cy.get('[data-cy="startDate-input"]').type("2024-03-01");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-invalid-changes-notice"]').should(
+      "contain.text",
+      "Some of your changes no longer fit within your programme dates."
+    );
+    cy.get('[data-cy="navNext"]').should("exist");
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="startDate-input"]').clear();
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+    cy.get('[data-cy="cct-invalid-changes-notice"]').should("not.exist");
+  });
+
   it("flags the projection row as invalid while a change runs past completion, until the change ends on the date quoted", () => {
     mountCct();
     saveProgrammeDetails();
