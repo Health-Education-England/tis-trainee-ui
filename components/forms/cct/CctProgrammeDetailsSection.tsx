@@ -1,4 +1,10 @@
-import { Button, Card, InsetText, SummaryList } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  InsetText,
+  SummaryList,
+  WarningCallout
+} from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
 import {
   CctProgrammeDetails,
@@ -36,6 +42,7 @@ type CctProgrammeDetailsSectionProps = {
   calculationStatus: CctCalculationStatus;
   isRetryingCalculation: boolean;
   onRetryCalculation: () => void;
+  hasInvalidChanges: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onEditingChange: (isEditing: boolean) => void;
   onDirtyChange: (isDirty: boolean) => void;
@@ -52,6 +59,7 @@ export function CctProgrammeDetailsSection({
   calculationStatus,
   isRetryingCalculation,
   onRetryCalculation,
+  hasInvalidChanges,
   onChange,
   onEditingChange,
   onDirtyChange
@@ -108,6 +116,17 @@ export function CctProgrammeDetailsSection({
               onRetry={onRetryCalculation}
               message="We could not calculate your programme end date."
             />
+          )}
+          {hasInvalidChanges && (
+            <WarningCallout data-cy="cct-invalid-changes-notice">
+              <WarningCallout.Heading visuallyHiddenText="">
+                Important
+              </WarningCallout.Heading>
+              <p>
+                Some of your changes no longer fit within your programme dates.
+                Check them on the Changes page.
+              </p>
+            </WarningCallout>
           )}
           <CctProgrammeDetailsSummary
             programmeDetails={programmeDetails}

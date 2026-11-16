@@ -138,6 +138,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           calculationStatus={status}
           isRetryingCalculation={isRetrying}
           onRetryCalculation={retry}
+          hasInvalidChanges={invalidChanges.length > 0}
           onChange={setProgrammeDetails}
           onEditingChange={setIsEditingProgrammeDetails}
           onDirtyChange={setIsSubFormDirty}
