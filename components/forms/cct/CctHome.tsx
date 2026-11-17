@@ -8,6 +8,7 @@ import {
   resetCctCalculations
 } from "../../../redux/slices/cctSlice";
 import { CctCalculation } from "../../../models/CctTypes";
+import { CCT_INDICATIVE_DATE_TEXT } from "../../../utilities/CctConstants";
 import { formatCctDate } from "../../../utilities/CctUtilities";
 import { ExpanderMsg } from "../../common/ExpanderMsg";
 import Loading from "../../common/Loading";
@@ -53,12 +54,10 @@ export function CctHome() {
 
   return (
     <>
+      <h2 data-cy="cct-home-subheading">CCT Calculator</h2>
       <WarningCallout data-cy="cct-home-warning">
         <WarningCallout.Heading>Important</WarningCallout.Heading>
-        <p>
-          Your calculated completion date is an estimate. Your official CCT date
-          is agreed at your ARCP.
-        </p>
+        <p>{CCT_INDICATIVE_DATE_TEXT}</p>
       </WarningCallout>
       <ExpanderMsg expanderName="cctCalculator" />
       <Button

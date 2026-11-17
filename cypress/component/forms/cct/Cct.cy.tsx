@@ -11,6 +11,7 @@ import history from "../../../../components/navigation/history";
 import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calculate-responses";
 import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
 import { CctChangeDto, CctProgrammeDetails } from "../../../../models/CctTypes";
+import { CCT_INDICATIVE_DATE_TEXT } from "../../../../utilities/CctConstants";
 import {
   CctCalculateRequest,
   CctCalculationSaveRequest
@@ -977,6 +978,10 @@ describe("Cct", () => {
       "contain.text",
       "29/07/2030"
     );
+    cy.get('[data-cy="cct-summary-disclaimer"]').should(
+      "contain.text",
+      CCT_INDICATIVE_DATE_TEXT
+    );
     cy.get('[data-cy="cct-summary-no-changes"]').should("exist");
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
     cy.get('[data-cy="cct-no-grade-progression"]').should(
@@ -1269,6 +1274,30 @@ describe("Cct", () => {
     );
   });
 
+  it("hides the indicative date note on the summary until there is a result", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("POST", "/api/trainee/cct/calculate", {
+      statusCode: 500,
+      body: {}
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-result-summary"]').should("contain.text", "—");
+    cy.get('[data-cy="cct-summary-disclaimer"]').should("not.exist");
+
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithMockBackend(req.body))
+    );
+    cy.get('[data-cy="cct-request-retry"]').click();
+    cy.get('[data-cy="cct-result-summary"]').should(
+      "contain.text",
+      "28/01/2031"
+    );
+    cy.get('[data-cy="cct-summary-disclaimer"]').should("exist");
+  });
+
   it("points to the changes instead of saving when a saved change is no longer valid", () => {
     cy.intercept("GET", savedCalculationUrl, {
       body: savedCalculation("No longer valid", "2024-03-01")
@@ -1374,7 +1403,7 @@ describe("Cct", () => {
 
     cy.get('[data-cy="cct-home-warning"]').should(
       "contain.text",
-      "Your calculated completion date is an estimate. Your official CCT date is agreed at your ARCP."
+      CCT_INDICATIVE_DATE_TEXT
     );
     cy.get('[data-cy="cctCalculatorSummary"]').should(
       "contain.text",
@@ -1396,6 +1425,10 @@ describe("Cct", () => {
   it("says there are no saved calculations when there are none", () => {
     mountCct("/cct");
 
+    cy.get('[data-cy="cct-home-subheading"]').should(
+      "have.text",
+      "CCT Calculator"
+    );
     cy.get('[data-cy="cct-no-calculations"]').should(
       "contain.text",
       "You have no saved calculations."
