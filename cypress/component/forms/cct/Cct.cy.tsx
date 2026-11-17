@@ -10,8 +10,16 @@ import { Cct } from "../../../../components/forms/cct/Cct";
 import history from "../../../../components/navigation/history";
 import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calculate-responses";
 import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
-import { CctChangeDto, CctProgrammeDetails } from "../../../../models/CctTypes";
-import { CCT_INDICATIVE_DATE_TEXT } from "../../../../utilities/CctConstants";
+import { CctChangesSection } from "../../../../components/forms/cct/CctChangesSection";
+import {
+  CctChange,
+  CctChangeDto,
+  CctProgrammeDetails
+} from "../../../../models/CctTypes";
+import {
+  CCT_INDICATIVE_DATE_TEXT,
+  CCT_MAX_CHANGES
+} from "../../../../utilities/CctConstants";
 import {
   CctCalculateRequest,
   CctCalculationSaveRequest
@@ -1855,5 +1863,52 @@ describe("Cct", () => {
     cy.then(() => history.push("/cct"));
     cy.get('[data-cy="cct-new-calculation"]').should("exist");
     cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+});
+
+describe("CctChangesSection change cap", () => {
+  const mountWithChanges = (count: number) => {
+    const changes = new Array<CctChange>(count)
+      .fill({
+        id: "",
+        type: "PARENTAL",
+        startDate: "2024-01-01",
+        endDate: "2024-01-31",
+        wte: null,
+        countsTowardsCompletion: false
+      })
+      .map((change, index) => ({ ...change, id: `change-${index}` }));
+    mount(
+      <CctChangesSection
+        programmeDetails={null}
+        changes={changes}
+        calculatedChanges={[]}
+        result={null}
+        cctDate={null}
+        invalidChanges={[]}
+        calculationStatus="idle"
+        isRetrying={false}
+        isFormOpen={false}
+        onRetry={cy.stub()}
+        onChange={cy.stub()}
+        onFormOpenChange={cy.stub()}
+        onDirtyChange={cy.stub()}
+      />
+    );
+  };
+
+  it("offers another change below the maximum", () => {
+    mountWithChanges(CCT_MAX_CHANGES - 1);
+    cy.get('[data-cy="cct-add-change"]').should("exist");
+    cy.get('[data-cy="cct-max-changes"]').should("not.exist");
+  });
+
+  it("replaces Add change with the limit at the maximum", () => {
+    mountWithChanges(CCT_MAX_CHANGES);
+    cy.get('[data-cy="cct-add-change"]').should("not.exist");
+    cy.get('[data-cy="cct-max-changes"]').should(
+      "contain.text",
+      "You have reached the maximum of 50 changes."
+    );
   });
 });

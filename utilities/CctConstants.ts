@@ -57,6 +57,8 @@ export const CCT_OPTIONAL_CREDIT_TYPES: CctType[] = ["OOPT", "OOPR"];
 // Note: the types that carry a WTE (LTFT work pattern) or an approved CCT credit (OOPR).
 export const CCT_WTE_TYPES: CctType[] = ["LTFT", "OOPR"];
 
+export const CCT_MAX_CHANGES = 50;
+
 // Note: stands in for every value the calculate endpoint will supply.
 export const CCT_NOT_CALCULATED = "Not yet calculated";
 export const CCT_NO_VALUE = "—";

@@ -10,6 +10,7 @@ import {
   CctResult
 } from "../../../models/CctTypes";
 import {
+  CCT_MAX_CHANGES,
   CCT_NOT_APPLICABLE,
   CCT_NOT_CALCULATED,
   CCT_NO_VALUE
@@ -91,6 +92,25 @@ export function CctChangesSection({
     !!cctDate &&
     !!result &&
     day(result.projection.startDate).diff(cctDate, "day") > 1;
+
+  const addChangeControl =
+    changes.length >= CCT_MAX_CHANGES ? (
+      <div className="nhsuk-inset-text" data-cy="cct-max-changes">
+        <p>
+          You have reached the maximum of {CCT_MAX_CHANGES} changes. Edit or
+          remove a change to make room for another.
+        </p>
+      </div>
+    ) : (
+      <Button
+        secondary
+        type="button"
+        onClick={() => onFormOpenChange(true)}
+        data-cy="cct-add-change"
+      >
+        Add change
+      </Button>
+    );
 
   const closeForm = () => {
     setEditingId(null);
@@ -184,14 +204,7 @@ export function CctChangesSection({
           onDirtyChange={onDirtyChange}
         />
       ) : (
-        <Button
-          secondary
-          type="button"
-          onClick={() => onFormOpenChange(true)}
-          data-cy="cct-add-change"
-        >
-          Add change
-        </Button>
+        addChangeControl
       )}
     </Card>
   );
