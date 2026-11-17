@@ -9,6 +9,7 @@ import {
 import { useAppSelector } from "../../../redux/hooks/hooks";
 import { selectTraineeProfile } from "../../../redux/slices/traineeProfileSlice";
 import {
+  CCT_INDICATIVE_DATE_TEXT,
   CCT_NO_CHANGES_TEXT,
   CCT_NO_VALUE,
   CCT_NOT_APPLICABLE
@@ -104,10 +105,7 @@ export function CctPrintSummary({
       </SummaryList>
       <InsetText data-cy="cct-print-disclaimer">
         <p>
-          <strong>
-            The completion date is indicative; the official CCT date is agreed
-            at your next ARCP.
-          </strong>
+          <strong>{CCT_INDICATIVE_DATE_TEXT}</strong>
         </p>
       </InsetText>
 

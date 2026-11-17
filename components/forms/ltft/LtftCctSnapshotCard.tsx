@@ -20,7 +20,10 @@ import {
   fetchCctCalculations,
   resetCctCalculations
 } from "../../../redux/slices/cctSlice";
-import { CCT_NO_CHANGES_TEXT } from "../../../utilities/CctConstants";
+import {
+  CCT_INDICATIVE_DATE_TEXT,
+  CCT_NO_CHANGES_TEXT
+} from "../../../utilities/CctConstants";
 import {
   formatCctDate,
   formatCctMonths
@@ -283,10 +286,7 @@ function AttachedCctCalculation({
         <p>
           {`This is a snapshot of your calculation as you last saved it on ${lastSavedOn}. Changing or deleting your saved calculation will not change it. To share a newer version, attach it again.`}
         </p>
-        <p>
-          The completion date is indicative; the official CCT date is agreed at
-          your next ARCP.
-        </p>
+        <p>{CCT_INDICATIVE_DATE_TEXT}</p>
       </InsetText>
       <AttachedCctCalculationDetails calculation={calculation} />
     </>

@@ -1,4 +1,10 @@
-import { Button, Card, SummaryList, Table } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  InsetText,
+  SummaryList,
+  Table
+} from "nhsuk-react-components";
 import {
   CctCalculatedChange,
   CctChange,
@@ -7,6 +13,7 @@ import {
   CctSpecialty
 } from "../../../models/CctTypes";
 import {
+  CCT_INDICATIVE_DATE_TEXT,
   CCT_NO_CHANGES_TEXT,
   CCT_NO_VALUE,
   CCT_NOT_CALCULATED
@@ -97,6 +104,13 @@ export function CctSummary({
               </SummaryList.Value>
             </SummaryList.Row>
           </SummaryList>
+          {result && (
+            <InsetText data-cy="cct-summary-disclaimer">
+              <p>
+                <strong>{CCT_INDICATIVE_DATE_TEXT}</strong>
+              </p>
+            </InsetText>
+          )}
         </Card>
 
         <Card feature>

@@ -65,6 +65,8 @@ export const CCT_NOT_APPLICABLE = "-";
 
 export const CCT_NO_CHANGES_TEXT =
   "No changes recorded, so your whole programme is treated as full time at 100% WTE.";
+export const CCT_INDICATIVE_DATE_TEXT =
+  "The completion date is indicative; the official CCT date is agreed at your next ARCP.";
 
 export const CCT_NOTES_MAX_LENGTH = 1000;
 export const CCT_NOTES_PREVIEW_LENGTH = 80;
