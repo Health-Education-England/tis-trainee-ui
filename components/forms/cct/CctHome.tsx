@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Table } from "nhsuk-react-components";
+import { Button, Table, WarningCallout } from "nhsuk-react-components";
 import history from "../../navigation/history";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
 import {
@@ -9,6 +9,7 @@ import {
 } from "../../../redux/slices/cctSlice";
 import { CctCalculation } from "../../../models/CctTypes";
 import { formatCctDate } from "../../../utilities/CctUtilities";
+import { ExpanderMsg } from "../../common/ExpanderMsg";
 import Loading from "../../common/Loading";
 import { CctDeleteButton } from "./CctDeleteButton";
 import { CctRequestError } from "./CctRequestError";
@@ -52,6 +53,14 @@ export function CctHome() {
 
   return (
     <>
+      <WarningCallout data-cy="cct-home-warning">
+        <WarningCallout.Heading>Important</WarningCallout.Heading>
+        <p>
+          Your calculated completion date is an estimate. Your official CCT date
+          is agreed at your ARCP.
+        </p>
+      </WarningCallout>
+      <ExpanderMsg expanderName="cctCalculator" />
       <Button
         type="button"
         onClick={() => history.push("/cct/create")}

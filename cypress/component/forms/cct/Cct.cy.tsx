@@ -1369,6 +1369,30 @@ describe("Cct", () => {
     cy.get("@list.all").should("have.length", 2);
   });
 
+  it("shows the estimate warning and explains the calculator in a closed expander", () => {
+    mountCct("/cct");
+
+    cy.get('[data-cy="cct-home-warning"]').should(
+      "contain.text",
+      "Your calculated completion date is an estimate. Your official CCT date is agreed at your ARCP."
+    );
+    cy.get('[data-cy="cctCalculatorSummary"]').should(
+      "contain.text",
+      "What can I use the CCT calculator for?"
+    );
+    cy.get('[data-cy="cctCalculatorSummary"]')
+      .closest("details")
+      .should("not.have.attr", "open");
+
+    cy.get('[data-cy="cctCalculatorSummary"]').click();
+    cy.get('[data-cy="cctCalculatorSummary"]')
+      .closest("details")
+      .should("have.attr", "open");
+    cy.get('[data-cy="cctCalculatorText"]')
+      .should("contain.text", "'What if?' calculations")
+      .and("contain.text", "add a snapshot of a saved calculation");
+  });
+
   it("says there are no saved calculations when there are none", () => {
     mountCct("/cct");
 
