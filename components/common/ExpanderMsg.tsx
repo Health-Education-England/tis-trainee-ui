@@ -9,7 +9,8 @@ export type ExpanderNameType =
   | "skilledVisaWorker"
   | "whatIsLtft"
   | "preApproverInfo"
-  | "ltft16WeeksNotice";
+  | "ltft16WeeksNotice"
+  | "cctCalculator";
 
 export const ExpanderMsg = ({
   expanderName
@@ -239,6 +240,30 @@ export const ExpanderMsg = ({
               further details.
             </p>
           </ul>
+        </>
+      )
+    },
+    cctCalculator: {
+      summary: "What can I use the CCT calculator for?",
+      text: (
+        <>
+          <p>
+            This calculator allows you to estimate your programme completion
+            date following any changes to your training.
+          </p>
+          <p>
+            You can add multiple changes (e.g. LTFT, parental leave) to see the
+            effect on your completion date.
+          </p>
+          <p>
+            This calculator is useful for &apos;What if?&apos; calculations for
+            current and future programmes.
+          </p>
+          <p>
+            As part of your Less Than Full Time (LTFT) application, you also
+            have the option to add a snapshot of a saved calculation to share
+            with your Local Office.
+          </p>
         </>
       )
     }
