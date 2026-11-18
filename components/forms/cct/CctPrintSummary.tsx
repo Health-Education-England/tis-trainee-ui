@@ -25,7 +25,9 @@ import {
   isOpenLtftChange
 } from "../../../utilities/CctUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { CctGradeProgressionSummary } from "./CctGradeProgressionSection";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
+import { CctTrainingTimeSummary } from "./CctTrainingTimeSection";
 import style from "./CctPrintSummary.module.scss";
 
 type CctPrintSummaryProps = {
@@ -116,6 +118,18 @@ export function CctPrintSummary({
         result={result}
         calculationStatus="succeeded"
       />
+
+      <h2 className="nhsuk-heading-m">Training time adjustments</h2>
+      <CctTrainingTimeSummary
+        programmeDetails={programmeDetails}
+        result={result}
+        calculationStatus="succeeded"
+        headingLevel="h3"
+        isPrint
+      />
+
+      <h2 className="nhsuk-heading-m">Grade progression adjustments</h2>
+      <CctGradeProgressionSummary programmeDetails={programmeDetails} />
 
       <h2 className="nhsuk-heading-m">Changes</h2>
       {changes.length === 0 ? (

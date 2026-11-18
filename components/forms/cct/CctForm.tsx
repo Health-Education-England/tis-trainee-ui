@@ -50,6 +50,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
   );
   const [name, setName] = useState(savedCalculation?.name ?? "");
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
+  const [isAdjustmentFormOpen, setIsAdjustmentFormOpen] = useState(false);
   const [isSubFormDirty, setIsSubFormDirty] = useState(false);
   const openedRef = useRef({ programmeDetails, changes, name });
 
@@ -82,7 +83,8 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
       .filter(({ pointer }) => cctChangeIndexFromPointer(pointer) === index)
       .map(({ pointer, detail }) => ({ change, pointer, message: detail }))
   );
-  const isProgrammeDetailsDone = !isEditingProgrammeDetails && result !== null;
+  const isProgrammeDetailsDone =
+    !isEditingProgrammeDetails && !isAdjustmentFormOpen && result !== null;
   const isChangesDone =
     !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;
   const hasUnsavedChanges =
@@ -99,6 +101,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     if (targetPage < 0 || targetPage > CCT_PAGE_NAMES.length - 1) return;
     setCurrentPage(targetPage);
     setIsChangeFormOpen(false);
+    setIsAdjustmentFormOpen(false);
     window.scrollTo({ top: 0 });
   };
 
@@ -139,8 +142,10 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           isRetryingCalculation={isRetrying}
           onRetryCalculation={retry}
           hasInvalidChanges={invalidChanges.length > 0}
+          isAdjustmentFormOpen={isAdjustmentFormOpen}
           onChange={setProgrammeDetails}
           onEditingChange={setIsEditingProgrammeDetails}
+          onAdjustmentFormOpenChange={setIsAdjustmentFormOpen}
           onDirtyChange={setIsSubFormDirty}
         />
       )}

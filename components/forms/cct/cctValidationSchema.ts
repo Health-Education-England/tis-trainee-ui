@@ -5,8 +5,13 @@ import {
   createErrorObject,
   showFormField
 } from "../../../utilities/FormBuilderUtilities";
-import { CctChangeDto, CctProgrammeDetails } from "../../../models/CctTypes";
 import {
+  CctChangeDto,
+  CctProgrammeDetails,
+  CctTrainingTime
+} from "../../../models/CctTypes";
+import {
+  CCT_MAX_TRAINING_TIME_MONTHS,
   CCT_NOTES_MAX_LENGTH,
   CCT_NOTES_TOO_LONG_ERROR
 } from "../../../utilities/CctConstants";
@@ -14,9 +19,12 @@ import {
   deriveCctAdjustedLengthMonths,
   formatCctDate,
   isOpenLtftChange,
-  mapFormDataToProgrammeDetails
+  mapFormDataToProgrammeDetails,
+  mapFormDataToTrainingTime,
+  sumCctTrainingTime
 } from "../../../utilities/CctUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
+import { CctTrainingTimeKind } from "./cctTrainingTimeKinds";
 
 type FindMessage = (
   value: unknown,
@@ -37,26 +45,27 @@ const isEmpty = (value: unknown) =>
 const requiredText = (message: string) =>
   yup.string().nullable().trim().required(message);
 
-const trainingTimeMessage = (
-  value: unknown,
-  label: string,
-  maxMonths: number
-) => {
-  if (isEmpty(value))
-    return `Please enter ${label.toLowerCase()} training time in months.`;
+const ADJUSTED_LENGTH_ERROR =
+  "Adjusted training duration must be greater than zero.";
+
+const isWholeMonths = (value: unknown, maxMonths: number) => {
   const months = Number(value);
-  if (months <= 0) return `${label} training time must be greater than zero.`;
-  if (months > maxMonths)
-    return `${label} training time cannot be more than ${maxMonths} months.`;
-  return null;
+  return (
+    !isEmpty(value) &&
+    Number.isInteger(months) &&
+    months >= 1 &&
+    months <= maxMonths
+  );
 };
 
-const lengthMessage = (value: unknown) => {
-  const months = Number(value);
-  const isWholeNumber = !isEmpty(value) && Number.isInteger(months);
-  return isWholeNumber && months >= 1 && months <= 120
-    ? null
-    : "Programme length must be a whole number of months between 1 and 120.";
+const lengthMessage = (value: unknown, formData: FormData) => {
+  if (!isWholeMonths(value, 120))
+    return "Programme length must be a whole number of months between 1 and 120.";
+  return deriveCctAdjustedLengthMonths(
+    mapFormDataToProgrammeDetails(formData)
+  ) <= 0
+    ? ADJUSTED_LENGTH_ERROR
+    : null;
 };
 
 const dateRangeMessage = (value: unknown) => {
@@ -84,37 +93,10 @@ export const cctProgrammeDetailsValidationSchema = yup.object({
   startGrade: yup.string().nullable().required("Please choose a start grade."),
   startGradeOverrideNotes: requiredText(
     "Please enter a reason for overriding the default start grade."
-  ),
-  additionalMonths: yup
-    .mixed()
-    .nullable()
-    .test(
-      "additional-months",
-      "",
-      messageTest(value => trainingTimeMessage(value, "Additional", 24))
-    ),
-  additionalMonthsNotes: requiredText(
-    "Please enter a reason for additional training time."
-  ),
-  acceleratedMonths: yup
-    .mixed()
-    .nullable()
-    .test(
-      "accelerated-months",
-      "",
-      messageTest((value, formData) => {
-        const message = trainingTimeMessage(value, "Accelerated", 12);
-        if (message) return message;
-        return deriveCctAdjustedLengthMonths(
-          mapFormDataToProgrammeDetails(formData)
-        ) <= 0
-          ? "Adjusted training duration must be greater than zero."
-          : null;
-      })
-    ),
-  acceleratedMonthsNotes: requiredText(
-    "Please enter a reason for accelerated training time."
-  ),
+  )
+});
+
+export const cctGradeProgressionValidationSchema = yup.object({
   eighteenMonthFinalGrade: yup
     .string()
     .nullable()
@@ -130,6 +112,44 @@ export const cctProgrammeDetailsValidationSchema = yup.object({
     "Please enter a reason for skipping a grade year."
   )
 });
+
+export const buildCctTrainingTimeValidationSchema = (
+  { field, label, maxTotalMonths }: CctTrainingTimeKind,
+  programmeDetails: CctProgrammeDetails,
+  otherEntries: CctTrainingTime[]
+) =>
+  yup.object({
+    grade: yup.string().nullable().required("Please choose a grade."),
+    months: yup
+      .mixed()
+      .nullable()
+      .test(
+        "months",
+        "",
+        messageTest((value, formData) => {
+          if (!isWholeMonths(value, CCT_MAX_TRAINING_TIME_MONTHS))
+            return `Enter a whole number of months between 1 and ${CCT_MAX_TRAINING_TIME_MONTHS}.`;
+          const entries = [
+            ...otherEntries,
+            mapFormDataToTrainingTime(formData)
+          ];
+          if (sumCctTrainingTime(entries) > maxTotalMonths)
+            return `Total ${label} training time cannot be more than ${maxTotalMonths} months.`;
+          return deriveCctAdjustedLengthMonths({
+            ...programmeDetails,
+            [field]: entries
+          }) <= 0
+            ? ADJUSTED_LENGTH_ERROR
+            : null;
+        })
+      ),
+    notes: requiredText(
+      `Please enter a reason for ${label} training time.`
+    ).max(
+      CCT_NOTES_MAX_LENGTH,
+      `Reason must be ${CCT_NOTES_MAX_LENGTH} characters or less`
+    )
+  });
 
 export const cctSaveValidationSchema = yup.object({
   calculationName: requiredText("Please enter a name for your calculation.")

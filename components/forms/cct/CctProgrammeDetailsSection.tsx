@@ -24,12 +24,15 @@ import {
   isCctLengthOverridden,
   isCctStartGradeOverridden,
   mapFormDataToProgrammeDetails,
-  mapProgrammeDetailsToFormData
+  mapProgrammeDetailsToFormData,
+  sumCctTrainingTime
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctSpecialtiesStatus } from "../../../utilities/hooks/useCctSpecialties";
+import { CctGradeProgressionSection } from "./CctGradeProgressionSection";
 import { CctProgrammeDetailsForm } from "./CctProgrammeDetailsForm";
 import { CctRequestError } from "./CctRequestError";
+import { CctTrainingTimeSection } from "./CctTrainingTimeSection";
 
 type CctProgrammeDetailsSectionProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -43,8 +46,10 @@ type CctProgrammeDetailsSectionProps = {
   isRetryingCalculation: boolean;
   onRetryCalculation: () => void;
   hasInvalidChanges: boolean;
+  isAdjustmentFormOpen: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onEditingChange: (isEditing: boolean) => void;
+  onAdjustmentFormOpenChange: (isFormOpen: boolean) => void;
   onDirtyChange: (isDirty: boolean) => void;
 };
 
@@ -60,8 +65,10 @@ export function CctProgrammeDetailsSection({
   isRetryingCalculation,
   onRetryCalculation,
   hasInvalidChanges,
+  isAdjustmentFormOpen,
   onChange,
   onEditingChange,
+  onAdjustmentFormOpenChange,
   onDirtyChange
 }: Readonly<CctProgrammeDetailsSectionProps>) {
   const handleSubmit = (formData: FormData) => {
@@ -70,81 +77,105 @@ export function CctProgrammeDetailsSection({
   };
 
   return (
-    <Card feature>
-      <Card.Heading>Programme details</Card.Heading>
-      {isEditing || !programmeDetails ? (
-        <>
-          {specialtiesStatus === "loading" && <Loading />}
-          {specialtiesStatus === "failed" && (
-            <CctRequestError
-              isRetrying={isRetryingSpecialties}
-              onRetry={onRetrySpecialties}
-              message="We could not load the list of specialties."
+    <>
+      <Card feature>
+        <Card.Heading>Programme details</Card.Heading>
+        {isEditing || !programmeDetails ? (
+          <>
+            {specialtiesStatus === "loading" && <Loading />}
+            {specialtiesStatus === "failed" && (
+              <CctRequestError
+                isRetrying={isRetryingSpecialties}
+                onRetry={onRetrySpecialties}
+                message="We could not load the list of specialties."
+              />
+            )}
+            {specialtiesStatus !== "succeeded" && programmeDetails && (
+              <Button
+                secondary
+                type="button"
+                onClick={() => onEditingChange(false)}
+                data-cy="cct-programme-details-cancel"
+              >
+                Cancel
+              </Button>
+            )}
+            {specialtiesStatus === "succeeded" && (
+              <CctProgrammeDetailsForm
+                initialData={mapProgrammeDetailsToFormData(
+                  programmeDetails,
+                  specialties
+                )}
+                specialties={specialties}
+                submitLabel="Confirm programme details"
+                onSubmit={handleSubmit}
+                onCancel={
+                  programmeDetails ? () => onEditingChange(false) : undefined
+                }
+                onDirtyChange={onDirtyChange}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            {calculationStatus === "failed" && (
+              <CctRequestError
+                isRetrying={isRetryingCalculation}
+                onRetry={onRetryCalculation}
+                message="We could not calculate your programme end date."
+              />
+            )}
+            {hasInvalidChanges && (
+              <WarningCallout data-cy="cct-invalid-changes-notice">
+                <WarningCallout.Heading visuallyHiddenText="">
+                  Important
+                </WarningCallout.Heading>
+                <p>
+                  Some of your changes no longer fit within your programme
+                  dates. Check them on the Changes page.
+                </p>
+              </WarningCallout>
+            )}
+            <CctProgrammeDetailsSummary
+              programmeDetails={programmeDetails}
+              specialties={specialties}
+              result={result}
+              calculationStatus={calculationStatus}
             />
-          )}
-          {specialtiesStatus !== "succeeded" && programmeDetails && (
             <Button
               secondary
               type="button"
-              onClick={() => onEditingChange(false)}
-              data-cy="cct-programme-details-cancel"
+              disabled={isAdjustmentFormOpen}
+              onClick={() => onEditingChange(true)}
+              data-cy="cct-edit-programme-details"
             >
-              Cancel
+              Edit programme details
             </Button>
-          )}
-          {specialtiesStatus === "succeeded" && (
-            <CctProgrammeDetailsForm
-              initialData={mapProgrammeDetailsToFormData(
-                programmeDetails,
-                specialties
-              )}
-              specialties={specialties}
-              submitLabel="Confirm programme details"
-              onSubmit={handleSubmit}
-              onCancel={
-                programmeDetails ? () => onEditingChange(false) : undefined
-              }
-              onDirtyChange={onDirtyChange}
-            />
-          )}
-        </>
-      ) : (
+          </>
+        )}
+      </Card>
+      {programmeDetails && !isEditing && (
         <>
-          {calculationStatus === "failed" && (
-            <CctRequestError
-              isRetrying={isRetryingCalculation}
-              onRetry={onRetryCalculation}
-              message="We could not calculate your programme end date."
-            />
-          )}
-          {hasInvalidChanges && (
-            <WarningCallout data-cy="cct-invalid-changes-notice">
-              <WarningCallout.Heading visuallyHiddenText="">
-                Important
-              </WarningCallout.Heading>
-              <p>
-                Some of your changes no longer fit within your programme dates.
-                Check them on the Changes page.
-              </p>
-            </WarningCallout>
-          )}
-          <CctProgrammeDetailsSummary
+          <CctTrainingTimeSection
             programmeDetails={programmeDetails}
-            specialties={specialties}
             result={result}
             calculationStatus={calculationStatus}
+            isFormOpen={isAdjustmentFormOpen}
+            onChange={onChange}
+            onFormOpenChange={onAdjustmentFormOpenChange}
+            onDirtyChange={onDirtyChange}
           />
-          <Button
-            secondary
-            type="button"
-            onClick={() => onEditingChange(true)}
-            data-cy="cct-edit-programme-details"
-          >
-            Edit programme details
-          </Button>
+          <CctGradeProgressionSection
+            programmeDetails={programmeDetails}
+            specialties={specialties}
+            isFormOpen={isAdjustmentFormOpen}
+            onChange={onChange}
+            onFormOpenChange={onAdjustmentFormOpenChange}
+            onDirtyChange={onDirtyChange}
+          />
         </>
       )}
-    </Card>
+    </>
   );
 }
 
@@ -160,6 +191,12 @@ export function CctProgrammeDetailsInset({
   onEdit
 }: Readonly<CctProgrammeDetailsInsetProps>) {
   if (!programmeDetails) return null;
+  const additionalMonths = sumCctTrainingTime(
+    programmeDetails.additionalTrainingTime
+  );
+  const acceleratedMonths = sumCctTrainingTime(
+    programmeDetails.acceleratedTrainingTime
+  );
 
   return (
     <InsetText data-cy="cct-programme-details-inset">
@@ -171,10 +208,8 @@ export function CctProgrammeDetailsInset({
             <br />
             {`(${[
               `${programmeDetails.lengthMonths} months`,
-              programmeDetails.additionalMonths > 0 &&
-                `+${programmeDetails.additionalMonths} additional`,
-              programmeDetails.acceleratedMonths > 0 &&
-                `-${programmeDetails.acceleratedMonths} accelerated`
+              additionalMonths > 0 && `+${additionalMonths} additional`,
+              acceleratedMonths > 0 && `-${acceleratedMonths} accelerated`
             ]
               .filter(Boolean)
               .join(", ")})`}
@@ -234,9 +269,6 @@ export function CctProgrammeDetailsSummary({
     specialtyDefault,
     programmeDetails.startGrade
   );
-  const isLengthAdjusted = isCctLengthAdjusted(programmeDetails);
-  const adjustedLengthMonths = deriveCctAdjustedLengthMonths(programmeDetails);
-
   return (
     <SummaryList data-cy="cct-programme-details-summary">
       <SummaryList.Row>
@@ -289,79 +321,6 @@ export function CctProgrammeDetailsSummary({
           )}
         </SummaryList.Value>
       </SummaryList.Row>
-      {programmeDetails.additionalMonths > 0 && (
-        <SummaryList.Row>
-          <SummaryList.Key>Additional training time</SummaryList.Key>
-          <SummaryList.Value>
-            {`${programmeDetails.additionalMonths} months`}
-            {programmeDetails.additionalMonthsNotes && (
-              <div className="nhsuk-hint nhsuk-u-margin-top-1">
-                {programmeDetails.additionalMonthsNotes}
-              </div>
-            )}
-          </SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {programmeDetails.acceleratedMonths > 0 && (
-        <SummaryList.Row>
-          <SummaryList.Key>Accelerated training time</SummaryList.Key>
-          <SummaryList.Value>
-            {`${programmeDetails.acceleratedMonths} months`}
-            {programmeDetails.acceleratedMonthsNotes && (
-              <div className="nhsuk-hint nhsuk-u-margin-top-1">
-                {programmeDetails.acceleratedMonthsNotes}
-              </div>
-            )}
-          </SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {isLengthAdjusted && (
-        <SummaryList.Row>
-          <SummaryList.Key>Adjusted programme length</SummaryList.Key>
-          <SummaryList.Value>{`${adjustedLengthMonths} months`}</SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {isLengthAdjusted && (
-        <SummaryList.Row>
-          <SummaryList.Key>
-            Adjusted programme end date before changes
-          </SummaryList.Key>
-          <SummaryList.Value>
-            {result
-              ? formatCctDate(result.adjustedProgrammeEndDate)
-              : noResultText}
-            <span className="nhsuk-hint nhsuk-u-margin-left-2">
-              (based on programme length and training-time adjustments only)
-            </span>
-          </SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {programmeDetails.eighteenMonthFinalGrade && (
-        <SummaryList.Row>
-          <SummaryList.Key>18-month final year</SummaryList.Key>
-          <SummaryList.Value>
-            {programmeDetails.eighteenMonthFinalGrade}
-            {programmeDetails.eighteenMonthFinalGradeNotes && (
-              <div className="nhsuk-hint nhsuk-u-margin-top-1">
-                {programmeDetails.eighteenMonthFinalGradeNotes}
-              </div>
-            )}
-          </SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {programmeDetails.skippedGrade && (
-        <SummaryList.Row>
-          <SummaryList.Key>Skipped grade year</SummaryList.Key>
-          <SummaryList.Value>
-            {programmeDetails.skippedGrade}
-            {programmeDetails.skippedGradeNotes && (
-              <div className="nhsuk-hint nhsuk-u-margin-top-1">
-                {programmeDetails.skippedGradeNotes}
-              </div>
-            )}
-          </SummaryList.Value>
-        </SummaryList.Row>
-      )}
     </SummaryList>
   );
 }

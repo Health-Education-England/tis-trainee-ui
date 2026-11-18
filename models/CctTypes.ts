@@ -64,6 +64,12 @@ export type CctSpecialty = {
   entryGrade: CctTrainingGrade;
 };
 
+export type CctTrainingTime = {
+  grade: CctTrainingGrade;
+  months: number; // whole months (for now), 1-24
+  notes: string;
+};
+
 export type CctProgrammeDetails = {
   specialty: string; // from the specialties list (NW Excel doc)
   startDate: string;
@@ -71,10 +77,8 @@ export type CctProgrammeDetails = {
   lengthOverrideNotes: string; // required when lengthMonths is overridden
   startGrade: CctTrainingGrade; // defaulted from the specialties list; can be overrided
   startGradeOverrideNotes: string; // required when startGrade is overridden
-  additionalMonths: number; // 0-24, e.g. extra time after an ARCP outcome
-  additionalMonthsNotes: string; // required when > 0
-  acceleratedMonths: number; // 0-12, recognised prior learning
-  acceleratedMonthsNotes: string; // required when > 0
+  additionalTrainingTime: CctTrainingTime[]; // up to 24 months in total
+  acceleratedTrainingTime: CctTrainingTime[]; // up to 12 months in total
   eighteenMonthFinalGrade: CctTrainingGrade | null; // final year of 18 months rather than 12
   eighteenMonthFinalGradeNotes: string; // required when set
   skippedGrade: CctTrainingGrade | null; // grade year skipped in the progression
