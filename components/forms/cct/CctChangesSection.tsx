@@ -627,7 +627,11 @@ type CctNotesProps = {
   toggleCy: string;
 };
 
-function CctNotes({ notes, rowLabel, toggleCy }: Readonly<CctNotesProps>) {
+export function CctNotes({
+  notes,
+  rowLabel,
+  toggleCy
+}: Readonly<CctNotesProps>) {
   const [isExpanded, setIsExpanded] = useState(false);
   const previewEnd = findCctNotesPreviewEnd(notes);
   if (previewEnd === null) return <>{notes}</>;

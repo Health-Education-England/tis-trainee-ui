@@ -828,6 +828,27 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
     );
   });
 
+  it("shows the attached calculation's training time in the expander", () => {
+    const calculation = mockCctCalculation({ id: "calc-1" });
+    calculation.programmeDetails = {
+      ...calculation.programmeDetails,
+      additionalTrainingTime: [{ grade: "ST3", months: 6, notes: "Outcome 3" }]
+    };
+    mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
+
+    cy.get('[data-cy="cctSnapshotExpanderSummary"]').click();
+    cy.get('[data-cy="cct-additional-time-0-row"]')
+      .should("contain.text", "ST3")
+      .and("contain.text", "6 months")
+      .and("contain.text", "Outcome 3");
+    cy.get('[data-cy="cct-no-accelerated-time"]').should("exist");
+    cy.get('[data-cy="cct-adjusted-length-months"]').should(
+      "have.text",
+      "90 months"
+    );
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
   it("swaps the attached copy when another calculation is chosen", () => {
     const attached = mockCctCalculation({
       id: "calc-1",

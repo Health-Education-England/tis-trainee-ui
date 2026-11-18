@@ -26,10 +26,12 @@ import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation
 import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctChangesTable } from "./CctChangesSection";
 import { CctDeleteButton } from "./CctDeleteButton";
+import { CctGradeProgressionSummary } from "./CctGradeProgressionSection";
 import { CctPrintSummary } from "./CctPrintSummary";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
 import { CctSaveForm } from "./CctSaveForm";
+import { CctTrainingTimeSummary } from "./CctTrainingTimeSection";
 
 type CctSummaryProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -124,6 +126,24 @@ export function CctSummary({
             />
           )}
         </Card>
+
+        {programmeDetails && (
+          <>
+            <Card feature>
+              <Card.Heading>Training time adjustments</Card.Heading>
+              <CctTrainingTimeSummary
+                programmeDetails={programmeDetails}
+                result={result}
+                calculationStatus={calculationStatus}
+                headingLevel="h3"
+              />
+            </Card>
+            <Card feature>
+              <Card.Heading>Grade progression adjustments</Card.Heading>
+              <CctGradeProgressionSummary programmeDetails={programmeDetails} />
+            </Card>
+          </>
+        )}
 
         <Card feature>
           <Card.Heading>Changes</Card.Heading>

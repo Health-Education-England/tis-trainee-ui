@@ -5,6 +5,7 @@ import {
   CCT_OPTIONAL_CREDIT_TYPES,
   CCT_TRAINING_GRADES
 } from "../../../utilities/CctConstants";
+import { CctTrainingTimeKind } from "./cctTrainingTimeKinds";
 
 const showWhenTrue = (fieldName: string) => ({
   field: fieldName,
@@ -69,58 +70,43 @@ export const cctProgrammeRemainingFields: Field[] = [
     visibleIf: showWhenTrue("startGradeOverridden"),
     placeholder: "e.g. Entering programme at ST4",
     width: 30
+  }
+];
+
+export const buildCctTrainingTimeFields = ({
+  title,
+  label,
+  maxTotalMonths,
+  gradeHint,
+  reasonPlaceholder
+}: CctTrainingTimeKind): Field[] => [
+  {
+    name: "grade",
+    label: "Grade",
+    type: "select",
+    visible: true,
+    optionsKey: "trainingTimeGrades",
+    placeholder: "Select a grade",
+    hint: gradeHint
   },
   {
-    name: "hasAdditionalTraining",
-    label: "Add additional training time",
-    type: "checkbox",
-    visible: true
-  },
-  {
-    name: "additionalMonths",
-    label: "Additional training time (months)",
+    name: "months",
+    label: `${title} (months)`,
     type: "text",
-    visible: false,
-    visibleIf: showWhenTrue("hasAdditionalTraining"),
+    visible: true,
     isNumberField: true,
     maxDigits: 2,
     width: 3,
-    hint: "For example, additional time required following an ARCP outcome. Enter up to 24 months."
+    hint: `Whole months, up to ${maxTotalMonths} months in total across all grades.`
   },
   {
-    name: "additionalMonthsNotes",
-    label: "Reason for additional training time",
-    type: "text",
-    visible: false,
-    visibleIf: showWhenTrue("hasAdditionalTraining"),
-    placeholder: "e.g. Outcome 3 following ARCP",
-    width: 30
-  },
-  {
-    name: "hasAcceleratedTraining",
-    label: "Add accelerated training time (reduce programme length)",
-    type: "checkbox",
-    visible: true
-  },
-  {
-    name: "acceleratedMonths",
-    label: "Accelerated training time (months)",
-    type: "text",
-    visible: false,
-    visibleIf: showWhenTrue("hasAcceleratedTraining"),
-    isNumberField: true,
-    maxDigits: 2,
-    width: 3,
-    hint: "For example, recognised prior learning that reduces the remaining training requirement. Enter up to 12 months."
-  },
-  {
-    name: "acceleratedMonthsNotes",
-    label: "Reason for accelerated training time",
-    type: "text",
-    visible: false,
-    visibleIf: showWhenTrue("hasAcceleratedTraining"),
-    placeholder: "e.g. Recognised prior learning",
-    width: 30
+    name: "notes",
+    label: `Reason for ${label} training time`,
+    type: "textArea",
+    visible: true,
+    placeholder: reasonPlaceholder,
+    rows: 3,
+    maxLength: CCT_NOTES_MAX_LENGTH
   }
 ];
 
@@ -177,8 +163,7 @@ export const cctGradeProgressionFields: Field[] = [
 
 export const cctProgrammeDetailsFields: Field[] = [
   ...cctSpecialtyFields,
-  ...cctProgrammeRemainingFields,
-  ...cctGradeProgressionFields
+  ...cctProgrammeRemainingFields
 ];
 
 export const cctChangeFields: Field[] = [

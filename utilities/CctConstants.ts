@@ -59,6 +59,11 @@ export const CCT_WTE_TYPES: CctType[] = ["LTFT", "OOPR"];
 
 export const CCT_MAX_CHANGES = 50;
 
+export const CCT_MAX_TRAINING_TIME_ENTRIES = 20;
+export const CCT_MAX_TRAINING_TIME_MONTHS = 24;
+export const CCT_MAX_ADDITIONAL_MONTHS = 24;
+export const CCT_MAX_ACCELERATED_MONTHS = 12;
+
 // Note: stands in for every value the calculate endpoint will supply.
 export const CCT_NOT_CALCULATED = "Not yet calculated";
 export const CCT_NO_VALUE = "—";

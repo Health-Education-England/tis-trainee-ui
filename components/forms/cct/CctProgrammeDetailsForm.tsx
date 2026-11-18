@@ -1,22 +1,18 @@
 import { useEffect, useRef } from "react";
-import { Button, SummaryList } from "nhsuk-react-components";
+import { Button } from "nhsuk-react-components";
 import { FormData, FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
-import { CctProgrammeDetails, CctSpecialty } from "../../../models/CctTypes";
+import { CctSpecialty } from "../../../models/CctTypes";
 import {
-  deriveCctAdjustedLengthMonths,
   findCctSpecialty,
-  isCctLengthAdjusted,
   isCctLengthOverridden,
-  isCctStartGradeOverridden,
-  mapFormDataToProgrammeDetails
+  isCctStartGradeOverridden
 } from "../../../utilities/CctUtilities";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
 import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 import { CctFields } from "./CctFields";
 import {
   cctFieldOptions,
-  cctGradeProgressionFields,
   cctProgrammeDetailsFields,
   cctProgrammeRemainingFields,
   cctSpecialtyFields
@@ -151,21 +147,11 @@ function CctProgrammeDetailsFormBody({
         errors={errors}
       />
       {selectedSpecialty && (
-        <>
-          <CctFields
-            fields={cctProgrammeRemainingFields}
-            options={options}
-            errors={errors}
-          />
-          <CctLengthBreakdown
-            programmeDetails={mapFormDataToProgrammeDetails(formData)}
-          />
-          <CctFields
-            fields={cctGradeProgressionFields}
-            options={options}
-            errors={errors}
-          />
-        </>
+        <CctFields
+          fields={cctProgrammeRemainingFields}
+          options={options}
+          errors={errors}
+        />
       )}
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
       <div className="nhsuk-button-group">
@@ -188,44 +174,5 @@ function CctProgrammeDetailsFormBody({
         )}
       </div>
     </form>
-  );
-}
-
-type CctLengthBreakdownProps = {
-  programmeDetails: CctProgrammeDetails;
-};
-
-function CctLengthBreakdown({
-  programmeDetails
-}: Readonly<CctLengthBreakdownProps>) {
-  const { lengthMonths, additionalMonths, acceleratedMonths } =
-    programmeDetails;
-  if (!isCctLengthAdjusted(programmeDetails)) return null;
-
-  return (
-    <SummaryList data-cy="cct-length-breakdown">
-      <SummaryList.Row>
-        <SummaryList.Key>Initial programme length</SummaryList.Key>
-        <SummaryList.Value>{`${lengthMonths} months`}</SummaryList.Value>
-      </SummaryList.Row>
-      {additionalMonths > 0 && (
-        <SummaryList.Row>
-          <SummaryList.Key>Additional training time</SummaryList.Key>
-          <SummaryList.Value>{`${additionalMonths} months`}</SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      {acceleratedMonths > 0 && (
-        <SummaryList.Row>
-          <SummaryList.Key>Accelerated training time</SummaryList.Key>
-          <SummaryList.Value>{`-${acceleratedMonths} months`}</SummaryList.Value>
-        </SummaryList.Row>
-      )}
-      <SummaryList.Row>
-        <SummaryList.Key>Adjusted programme length</SummaryList.Key>
-        <SummaryList.Value>
-          {`${deriveCctAdjustedLengthMonths(programmeDetails)} months`}
-        </SummaryList.Value>
-      </SummaryList.Row>
-    </SummaryList>
   );
 }

@@ -8,6 +8,7 @@ import {
   CctResult,
   CctSpecialty,
   CctTrainingGrade,
+  CctTrainingTime,
   CctType
 } from "../models/CctTypes";
 import {
@@ -16,6 +17,7 @@ import {
   CCT_NO_VALUE,
   CCT_NOTES_PREVIEW_LENGTH,
   CCT_OPTIONAL_CREDIT_TYPES,
+  CCT_TRAINING_GRADES,
   CCT_WTE_TYPES
 } from "./CctConstants";
 import { DateUtilities } from "./DateUtilities";
@@ -29,6 +31,9 @@ const toText = (value: unknown) => (typeof value === "string" ? value : "");
 
 const toGrade = (value: unknown) =>
   value ? (value as CctTrainingGrade) : null;
+
+const toTrainingTime = (value: unknown) =>
+  Array.isArray(value) ? (value as CctTrainingTime[]) : [];
 
 // Note: the trainee enters whole percentages; every stored wte is a fraction of full time.
 export const wteFractionFromPercent = (percent: unknown) => {
@@ -52,16 +57,31 @@ export const formatCctMonths = (months: number | null | undefined) =>
     ? CCT_NO_VALUE
     : String(Number(months.toFixed(1)));
 
+export const sumCctTrainingTime = (entries: CctTrainingTime[]) =>
+  entries.reduce((sum, entry) => sum + entry.months, 0);
+
 export const isCctLengthAdjusted = ({
-  additionalMonths,
-  acceleratedMonths
-}: CctProgrammeDetails) => additionalMonths > 0 || acceleratedMonths > 0;
+  additionalTrainingTime,
+  acceleratedTrainingTime
+}: CctProgrammeDetails) =>
+  additionalTrainingTime.length > 0 || acceleratedTrainingTime.length > 0;
 
 export const deriveCctAdjustedLengthMonths = ({
   lengthMonths,
-  additionalMonths,
-  acceleratedMonths
-}: CctProgrammeDetails) => lengthMonths + additionalMonths - acceleratedMonths;
+  additionalTrainingTime,
+  acceleratedTrainingTime
+}: CctProgrammeDetails) =>
+  lengthMonths +
+  sumCctTrainingTime(additionalTrainingTime) -
+  sumCctTrainingTime(acceleratedTrainingTime);
+
+export const findCctTrainingTimeGrades = (startGrade: CctTrainingGrade) => {
+  const gradeKind = (grade: string) => grade.replace(/\d+$/, "");
+  const sameKindGrades = CCT_TRAINING_GRADES.filter(
+    grade => gradeKind(grade) === gradeKind(startGrade)
+  );
+  return sameKindGrades.slice(sameKindGrades.indexOf(startGrade));
+};
 
 export const sortCctChanges = (changes: CctChange[]): CctChange[] =>
   [...changes].sort((a, b) => a.startDate.localeCompare(b.startDate));
@@ -195,10 +215,8 @@ export function mapFormDataToProgrammeDetails(
     lengthOverrideNotes: toText(formData.lengthOverrideNotes),
     startGrade: formData.startGrade as CctTrainingGrade,
     startGradeOverrideNotes: toText(formData.startGradeOverrideNotes),
-    additionalMonths: toNumber(formData.additionalMonths),
-    additionalMonthsNotes: toText(formData.additionalMonthsNotes),
-    acceleratedMonths: toNumber(formData.acceleratedMonths),
-    acceleratedMonthsNotes: toText(formData.acceleratedMonthsNotes),
+    additionalTrainingTime: toTrainingTime(formData.additionalTrainingTime),
+    acceleratedTrainingTime: toTrainingTime(formData.acceleratedTrainingTime),
     eighteenMonthFinalGrade: toGrade(formData.eighteenMonthFinalGrade),
     eighteenMonthFinalGradeNotes: toText(formData.eighteenMonthFinalGradeNotes),
     skippedGrade: toGrade(formData.skippedGrade),
@@ -236,12 +254,6 @@ export function mapProgrammeDetailsToFormData(
   return {
     ...programmeDetails,
     lengthMonths: String(programmeDetails.lengthMonths),
-    additionalMonths: programmeDetails.additionalMonths
-      ? String(programmeDetails.additionalMonths)
-      : null,
-    acceleratedMonths: programmeDetails.acceleratedMonths
-      ? String(programmeDetails.acceleratedMonths)
-      : null,
     lengthOverridden: isCctLengthOverridden(
       specialtyDefault,
       programmeDetails.lengthMonths
@@ -250,8 +262,6 @@ export function mapProgrammeDetailsToFormData(
       specialtyDefault,
       programmeDetails.startGrade
     ),
-    hasAdditionalTraining: programmeDetails.additionalMonths > 0,
-    hasAcceleratedTraining: programmeDetails.acceleratedMonths > 0,
     hasEighteenMonthFinalYear: !!programmeDetails.eighteenMonthFinalGrade,
     hasSkippedGrade: !!programmeDetails.skippedGrade
   };
@@ -273,6 +283,18 @@ export function mapFormDataToChange(formData: FormData, id: string): CctChange {
     notes: toText(formData.notes).trim()
   };
 }
+
+export const mapFormDataToTrainingTime = (
+  formData: FormData
+): CctTrainingTime => ({
+  grade: formData.grade as CctTrainingGrade,
+  months: toNumber(formData.months),
+  notes: toText(formData.notes).trim()
+});
+
+export const mapTrainingTimeToFormData = (
+  entry: CctTrainingTime | null
+): FormData => (entry ? { ...entry, months: String(entry.months) } : {});
 
 export const isCctWteShown = (
   type: unknown,

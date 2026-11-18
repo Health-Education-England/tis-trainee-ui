@@ -3,16 +3,22 @@ import {
   CctChange,
   CctProgrammeDetails,
   CctResult,
-  CctSpecialty
+  CctSpecialty,
+  CctTrainingTime
 } from "../../models/CctTypes";
 import {
   cctChangeIndexFromPointer,
+  deriveCctAdjustedLengthMonths,
   deriveCctChangesTable,
+  findCctTrainingTimeGrades,
   fromCctChangeDtos,
+  isCctLengthAdjusted,
   isCctLengthOverridden,
   isCctStartGradeOverridden,
   mapFormDataToProgrammeDetails,
+  mapFormDataToTrainingTime,
   mapProgrammeDetailsToFormData,
+  mapTrainingTimeToFormData,
   newCctChangeId,
   pickCctCalculatedChanges,
   sortCctChanges,
@@ -311,6 +317,91 @@ describe("mapFormDataToProgrammeDetails", () => {
       lengthOverrideNotes: "Agreed with my local office"
     });
   });
+
+  it("carries the training time lists through the form untouched", () => {
+    const additionalTrainingTime: CctTrainingTime[] = [
+      { grade: "ST3", months: 6, notes: "Outcome 3" }
+    ];
+    expect(
+      mapFormDataToProgrammeDetails({ additionalTrainingTime })
+    ).toMatchObject({ additionalTrainingTime, acceleratedTrainingTime: [] });
+  });
+});
+
+describe("deriveCctAdjustedLengthMonths", () => {
+  it("adds every additional entry and takes off every accelerated entry, whatever the grade", () => {
+    const programmeDetails = {
+      lengthMonths: 84,
+      additionalTrainingTime: [
+        { grade: "ST2", months: 6, notes: "Outcome 3" },
+        { grade: "ST5", months: 4, notes: "Outcome 3" }
+      ],
+      acceleratedTrainingTime: [
+        { grade: "ST1", months: 3, notes: "Prior learning" }
+      ]
+    } as CctProgrammeDetails;
+
+    expect(deriveCctAdjustedLengthMonths(programmeDetails)).toBe(91);
+    expect(isCctLengthAdjusted(programmeDetails)).toBe(true);
+  });
+
+  it("is the programme length when there is no training time", () => {
+    const programmeDetails = {
+      lengthMonths: 84,
+      additionalTrainingTime: [],
+      acceleratedTrainingTime: []
+    } as unknown as CctProgrammeDetails;
+
+    expect(deriveCctAdjustedLengthMonths(programmeDetails)).toBe(84);
+    expect(isCctLengthAdjusted(programmeDetails)).toBe(false);
+  });
+});
+
+describe("findCctTrainingTimeGrades", () => {
+  it.each([
+    ["ST3", ["ST3", "ST4", "ST5", "ST6", "ST7", "ST8", "ST9"]],
+    ["CT2", ["CT2", "CT3", "CT4"]],
+    ["DCT1", ["DCT1", "DCT2", "DCT3"]],
+    ["F1", ["F1", "F2"]],
+    ["DFT", ["DFT"]]
+  ] as const)(
+    "offers %s and the later grades of its kind",
+    (startGrade, grades) => {
+      expect(findCctTrainingTimeGrades(startGrade)).toEqual(grades);
+    }
+  );
+});
+
+describe("mapFormDataToTrainingTime", () => {
+  it("reads the months as a number and trims the reason", () => {
+    expect(
+      mapFormDataToTrainingTime({
+        grade: "ST3",
+        months: "6",
+        notes: "  Outcome 3  "
+      })
+    ).toEqual({ grade: "ST3", months: 6, notes: "Outcome 3" });
+  });
+
+  it("round-trips an entry through the form", () => {
+    const entry: CctTrainingTime = {
+      grade: "ST3",
+      months: 6,
+      notes: "Outcome 3"
+    };
+    expect(mapTrainingTimeToFormData(entry)).toEqual({
+      grade: "ST3",
+      months: "6",
+      notes: "Outcome 3"
+    });
+    expect(mapFormDataToTrainingTime(mapTrainingTimeToFormData(entry))).toEqual(
+      entry
+    );
+  });
+
+  it("starts a new entry blank", () => {
+    expect(mapTrainingTimeToFormData(null)).toEqual({});
+  });
 });
 
 describe("mapProgrammeDetailsToFormData", () => {
@@ -324,10 +415,8 @@ describe("mapProgrammeDetailsToFormData", () => {
     lengthOverrideNotes: "",
     startGrade: "ST1",
     startGradeOverrideNotes: "",
-    additionalMonths: 0,
-    additionalMonthsNotes: "",
-    acceleratedMonths: 0,
-    acceleratedMonthsNotes: "",
+    additionalTrainingTime: [],
+    acceleratedTrainingTime: [],
     eighteenMonthFinalGrade: null,
     eighteenMonthFinalGradeNotes: "",
     skippedGrade: null,

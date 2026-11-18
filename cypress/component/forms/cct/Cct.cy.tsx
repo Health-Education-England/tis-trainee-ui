@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
@@ -11,14 +12,17 @@ import history from "../../../../components/navigation/history";
 import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calculate-responses";
 import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
 import { CctChangesSection } from "../../../../components/forms/cct/CctChangesSection";
+import { CctTrainingTimeSection } from "../../../../components/forms/cct/CctTrainingTimeSection";
 import {
   CctChange,
   CctChangeDto,
-  CctProgrammeDetails
+  CctProgrammeDetails,
+  CctTrainingTime
 } from "../../../../models/CctTypes";
 import {
   CCT_INDICATIVE_DATE_TEXT,
-  CCT_MAX_CHANGES
+  CCT_MAX_CHANGES,
+  CCT_MAX_TRAINING_TIME_ENTRIES
 } from "../../../../utilities/CctConstants";
 import {
   CctCalculateRequest,
@@ -92,6 +96,19 @@ const addParentalLeaveChange = () => {
   cy.get('[data-cy="cct-change-form-submit"]').click();
 };
 
+const addTrainingTime = (
+  kind: "additional" | "accelerated",
+  grade: string,
+  months: string,
+  reason: string
+) => {
+  cy.get(`[data-cy="cct-add-${kind}-time"]`).click();
+  selectOption("grade", grade);
+  cy.get("#months").type(months);
+  cy.get("#notes").type(reason);
+  cy.get('[data-cy="cct-training-time-form-submit"]').click();
+};
+
 const calculateWithMockBackend = ({
   programmeDetails,
   changes
@@ -136,10 +153,8 @@ const paediatricsProgrammeDetails = (
   lengthOverrideNotes: "",
   startGrade: "ST1",
   startGradeOverrideNotes: "",
-  additionalMonths: 0,
-  additionalMonthsNotes: "",
-  acceleratedMonths: 0,
-  acceleratedMonthsNotes: "",
+  additionalTrainingTime: [],
+  acceleratedTrainingTime: [],
   eighteenMonthFinalGrade: null,
   eighteenMonthFinalGradeNotes: "",
   skippedGrade: null,
@@ -1863,6 +1878,324 @@ describe("Cct", () => {
     cy.then(() => history.push("/cct"));
     cy.get('[data-cy="cct-new-calculation"]').should("exist");
     cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+});
+
+describe("Cct training time and grade progression adjustments", () => {
+  beforeEach(() => {
+    cy.intercept("GET", "/api/trainee/cct/specialties", {
+      body: mockCctSpecialties
+    });
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithMockBackend(req.body))
+    ).as("calculate");
+    cy.intercept("GET", calculationsUrl, { body: [] });
+  });
+
+  it("records none of either kind until some is added", () => {
+    mountCct();
+    saveProgrammeDetails();
+
+    cy.get('[data-cy="cct-no-additional-time"]').should("exist");
+    cy.get('[data-cy="cct-no-accelerated-time"]').should("exist");
+    cy.get('[data-cy="cct-adjusted-length"]').should("not.exist");
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
+  it("adds training time against a grade, sends it to the calculation and adjusts the length", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.wait("@calculate");
+
+    addTrainingTime("additional", "ST2", "6", "Outcome 3 following ARCP");
+
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", {
+        additionalTrainingTime: [
+          { grade: "ST2", months: 6, notes: "Outcome 3 following ARCP" }
+        ],
+        acceleratedTrainingTime: []
+      });
+    cy.get('[data-cy="cct-additional-time-0-row"]')
+      .should("contain.text", "ST2")
+      .and("contain.text", "6 months")
+      .and("contain.text", "Outcome 3 following ARCP");
+
+    addTrainingTime("additional", "ST4", "4", "Second outcome 3");
+    addTrainingTime("accelerated", "ST1", "3", "Recognised prior learning");
+
+    cy.get('[data-cy="cct-additional-time-total-row"]').should(
+      "contain.text",
+      "10 months"
+    );
+    cy.get('[data-cy="cct-accelerated-time-total-row"]').should(
+      "contain.text",
+      "3 months"
+    );
+    cy.get('[data-cy="cct-adjusted-length-months"]').should(
+      "have.text",
+      "91 months"
+    );
+  });
+
+  it("offers the start grade and the later grades of its kind", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-add-additional-time"]').click();
+
+    cy.get('[data-cy="grade"] .react-select__control').click();
+    cy.get(".react-select__menu")
+      .should("contain.text", "ST1")
+      .and("contain.text", "ST9")
+      .and("not.contain.text", "CT1")
+      .and("not.contain.text", "F2");
+  });
+
+  it("asks for a grade, whole months and a reason, and caps accelerated time at 12 months in total", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-add-accelerated-time"]').click();
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.get('[data-cy="errorSummary"]')
+      .should("contain.text", "Please choose a grade.")
+      .and("contain.text", "Enter a whole number of months between 1 and 24.")
+      .and(
+        "contain.text",
+        "Please enter a reason for accelerated training time."
+      );
+    cy.get('[data-cy="cct-training-time-form-cancel"]').click();
+
+    addTrainingTime("accelerated", "ST1", "8", "Prior learning");
+    addTrainingTime("accelerated", "ST2", "5", "More prior learning");
+    cy.get('[data-cy="errorSummary"]').should(
+      "contain.text",
+      "Total accelerated training time cannot be more than 12 months."
+    );
+
+    cy.get("#months").clear();
+    cy.get("#months").type("4");
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.get('[data-cy="cct-training-time-form"]').should("not.exist");
+    cy.get('[data-cy="cct-accelerated-time-total-row"]').should(
+      "contain.text",
+      "12 months"
+    );
+  });
+
+  it("edits an entry, and removes it only once confirmed", () => {
+    mountCct();
+    saveProgrammeDetails();
+    addTrainingTime("additional", "ST2", "6", "Outcome 3");
+
+    cy.get('[data-cy="cct-additional-time-0-edit"]').click();
+    cy.get("#months").should("have.value", "6");
+    cy.get("#months").clear();
+    cy.get("#months").type("3");
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.get('[data-cy="cct-additional-time-0-row"]').should(
+      "contain.text",
+      "3 months"
+    );
+
+    cy.get('[data-cy="cct-additional-time-0-remove"]').click();
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="cct-additional-time-0-row"]').should("exist");
+
+    cy.get('[data-cy="cct-additional-time-0-remove"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
+    cy.get('[data-cy="cct-no-additional-time"]').should("exist");
+    cy.get('[data-cy="cct-adjusted-length"]').should("not.exist");
+  });
+
+  it("puts focus back on the button that opened the form when it closes", () => {
+    mountCct();
+    saveProgrammeDetails();
+
+    cy.get('[data-cy="cct-add-additional-time"]').click();
+    cy.get('[data-cy="cct-training-time-form-cancel"]').click();
+    cy.focused().should("have.attr", "data-cy", "cct-add-additional-time");
+
+    addTrainingTime("additional", "ST2", "6", "Outcome 3");
+    cy.focused().should("have.attr", "data-cy", "cct-add-additional-time");
+
+    cy.get('[data-cy="cct-additional-time-0-edit"]').click();
+    cy.get('[data-cy="cct-training-time-form-cancel"]').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+
+    cy.get('[data-cy="cct-additional-time-0-edit"]').click();
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+  });
+
+  it("holds Next and the other edits back while a training time form is open", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-add-additional-time"]').click();
+
+    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-edit-programme-details"]').should("be.disabled");
+    cy.get('[data-cy="cct-add-accelerated-time"]').should("be.disabled");
+    cy.get('[data-cy="cct-edit-grade-progression"]').should("be.disabled");
+
+    cy.get('[data-cy="cct-training-time-form-cancel"]').click();
+    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-edit-programme-details"]').should("be.enabled");
+  });
+
+  it("hides the adjustments while the programme details are edited", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+
+    cy.get('[data-cy="cct-training-time-section"]').should("not.exist");
+    cy.get('[data-cy="cct-grade-progression-section"]').should("not.exist");
+  });
+
+  it("rejects a programme length the accelerated time would use up", () => {
+    mountCct();
+    saveProgrammeDetails();
+    addTrainingTime("accelerated", "ST1", "12", "Prior learning");
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get("#lengthMonths").clear();
+    cy.get("#lengthMonths").type("12");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="errorSummary"]').should(
+      "contain.text",
+      "Adjusted training duration must be greater than zero."
+    );
+  });
+
+  it("records the grade progression adjustments in their own section", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-edit-grade-progression"]')
+      .should("have.text", "Add grade progression adjustments")
+      .click();
+
+    cy.get('[data-cy="hasSkippedGrade-checkbox"]').check();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.get('[data-cy="errorSummary"]')
+      .should("contain.text", "Please choose the grade year to skip.")
+      .and("contain.text", "Please enter a reason for skipping a grade year.");
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    selectOption("skippedGrade", "ST2");
+    cy.get("#skippedGradeNotes").type("Core competencies");
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+
+    cy.get('[data-cy="cct-grade-progression-summary"]')
+      .should("contain.text", "Skipped grade year")
+      .and("contain.text", "ST2")
+      .and("contain.text", "Core competencies");
+    cy.get('[data-cy="cct-edit-grade-progression"]').should(
+      "have.text",
+      "Edit grade progression adjustments"
+    );
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
+  it("shows the adjustments read-only on the summary", () => {
+    mountCct();
+    saveProgrammeDetails();
+    addTrainingTime("additional", "ST2", "6", "Outcome 3");
+    goToSummary();
+
+    cy.get('[data-cy="cct-training-time-summary"]')
+      .first()
+      .within(() => {
+        cy.get('[data-cy="cct-additional-time-0-row"]')
+          .should("contain.text", "ST2")
+          .and("contain.text", "6 months")
+          .and("contain.text", "Outcome 3");
+        cy.get('[data-cy="cct-no-accelerated-time"]').should("exist");
+        cy.get('[data-cy="cct-adjusted-length-months"]').should(
+          "have.text",
+          "90 months"
+        );
+        cy.get("button").should("not.exist");
+      });
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+});
+
+describe("CctTrainingTimeSection entry cap", () => {
+  const mountWithEntries = (count: number) => {
+    const additionalTrainingTime = new Array<CctTrainingTime>(count).fill({
+      grade: "ST1",
+      months: 1,
+      notes: "Outcome 3"
+    });
+    mount(
+      <CctTrainingTimeSection
+        programmeDetails={{
+          ...paediatricsProgrammeDetails("2023-08-02"),
+          additionalTrainingTime
+        }}
+        result={null}
+        calculationStatus="idle"
+        isFormOpen={false}
+        onChange={cy.stub()}
+        onFormOpenChange={cy.stub()}
+        onDirtyChange={cy.stub()}
+      />
+    );
+  };
+
+  it("offers another entry below the maximum", () => {
+    mountWithEntries(CCT_MAX_TRAINING_TIME_ENTRIES - 1);
+    cy.get('[data-cy="cct-add-additional-time"]').should("exist");
+    cy.get('[data-cy="cct-max-additional-time"]').should("not.exist");
+  });
+
+  it("replaces Add with the limit at the maximum, for that kind only", () => {
+    mountWithEntries(CCT_MAX_TRAINING_TIME_ENTRIES);
+    cy.get('[data-cy="cct-add-additional-time"]').should("not.exist");
+    cy.get('[data-cy="cct-max-additional-time"]').should(
+      "contain.text",
+      "You have reached the maximum of 20 additional training time entries."
+    );
+    cy.get('[data-cy="cct-add-accelerated-time"]').should("exist");
+  });
+
+  it("puts focus on the new entry when adding it takes the place of Add", () => {
+    function StatefulSection() {
+      const [programmeDetails, setProgrammeDetails] = useState({
+        ...paediatricsProgrammeDetails("2023-08-02"),
+        additionalTrainingTime: new Array<CctTrainingTime>(
+          CCT_MAX_TRAINING_TIME_ENTRIES - 1
+        ).fill({ grade: "ST1", months: 1, notes: "Outcome 3" })
+      });
+      const [isFormOpen, setIsFormOpen] = useState(false);
+      return (
+        <CctTrainingTimeSection
+          programmeDetails={programmeDetails}
+          result={null}
+          calculationStatus="idle"
+          isFormOpen={isFormOpen}
+          onChange={setProgrammeDetails}
+          onFormOpenChange={setIsFormOpen}
+          onDirtyChange={() => {}}
+        />
+      );
+    }
+    mount(
+      <Provider store={createStore()}>
+        <Router history={history}>
+          <StatefulSection />
+        </Router>
+      </Provider>
+    );
+
+    addTrainingTime("additional", "ST1", "1", "Outcome 3");
+    cy.get('[data-cy="cct-max-additional-time"]').should("exist");
+    cy.focused().should(
+      "have.attr",
+      "data-cy",
+      `cct-additional-time-${CCT_MAX_TRAINING_TIME_ENTRIES - 1}-edit`
+    );
   });
 });
 

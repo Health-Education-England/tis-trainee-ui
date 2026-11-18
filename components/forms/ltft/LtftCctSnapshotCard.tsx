@@ -37,7 +37,9 @@ import {
 import { ActionModal } from "../../common/ActionModal";
 import Loading from "../../common/Loading";
 import { CctChangesTable } from "../cct/CctChangesSection";
+import { CctGradeProgressionSummary } from "../cct/CctGradeProgressionSection";
 import { CctProgrammeDetailsSummary } from "../cct/CctProgrammeDetailsSection";
+import { CctTrainingTimeSummary } from "../cct/CctTrainingTimeSection";
 import { CctRequestError } from "../cct/CctRequestError";
 
 const SAVE_HINT_TEXT =
@@ -334,6 +336,19 @@ function AttachedCctCalculationDetails({
           specialties={specialties}
           result={calculation.result}
           calculationStatus="succeeded"
+        />
+
+        <h3 className="nhsuk-heading-s">Training time adjustments</h3>
+        <CctTrainingTimeSummary
+          programmeDetails={calculation.programmeDetails}
+          result={calculation.result}
+          calculationStatus="succeeded"
+          headingLevel="h4"
+        />
+
+        <h3 className="nhsuk-heading-s">Grade progression adjustments</h3>
+        <CctGradeProgressionSummary
+          programmeDetails={calculation.programmeDetails}
         />
 
         <h3 className="nhsuk-heading-s">Changes</h3>
