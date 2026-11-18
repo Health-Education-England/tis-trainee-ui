@@ -87,12 +87,13 @@ export type CctProgrammeDetails = {
 
 export type CctGradeYear = {
   yearNumber: number;
-  grade: string; // generated arithmetically, so can fall outside CctTrainingGrade
-  endDate: string | null;
+  grade: CctTrainingGrade | null; // null past the highest known grade
+  endDate: string;
   skippedGradeBeforeThisRow: CctTrainingGrade | null;
   extendedToEighteenMonths: boolean;
-  extendedToTwentyFourMonths: boolean;
   exceedsKnownTrainingGrade: boolean;
+  additionalMonths: number;
+  acceleratedMonths: number;
 };
 
 export type CctAssumedFullTimePeriod = {
@@ -110,7 +111,7 @@ export type CctResult = {
   monthsRemaining: number; // could be negative if training is already complete
   assumedFullTimePeriods: CctAssumedFullTimePeriod[];
   projection: CctProjection;
-  gradeProgression?: CctGradeYear[];
+  gradeProgression: CctGradeYear[];
 };
 
 export type CctBodyValidationError = {

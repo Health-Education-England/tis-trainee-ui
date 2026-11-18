@@ -16,7 +16,79 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 84,
         wteMonths: 84
-      }
+      },
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2026-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2027-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2028-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2029-07-29",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2030-07-29",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -52,7 +124,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 77.98,
         wteMonths: 77.98
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -88,7 +161,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 0.6,
         calendarMonths: 109.91666666666667,
         wteMonths: 65.95
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -124,7 +198,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 62.36,
         wteMonths: 62.36
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -160,7 +235,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 74.37,
         wteMonths: 74.37
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -196,7 +272,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 77.98,
         wteMonths: 77.98
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -232,7 +309,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: -11.08,
         wteMonths: -11.08
-      }
+      },
+      gradeProgression: []
     },
     errors: [
       {
@@ -274,7 +352,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 0,
         wteMonths: 0
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -293,7 +372,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 84,
         wteMonths: 84
-      }
+      },
+      gradeProgression: []
     },
     errors: []
   },
@@ -323,7 +403,8 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         wte: 1,
         calendarMonths: 84,
         wteMonths: 84
-      }
+      },
+      gradeProgression: []
     },
     errors: [
       {

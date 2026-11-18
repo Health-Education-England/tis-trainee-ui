@@ -47,7 +47,8 @@ describe("CctService", () => {
             wte: 1,
             calendarMonths: 96,
             wteMonths: 96
-          }
+          },
+          gradeProgression: []
         },
         errors: []
       };

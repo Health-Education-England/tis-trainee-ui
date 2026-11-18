@@ -826,6 +826,24 @@ describe("LTFT Form View - CCT calculation snapshot", () => {
       "contain.text",
       "Agreed with my TPD"
     );
+    cy.get('[data-cy="cct-grade-year-2-row"]')
+      .should("contain.text", "ST2")
+      .and("contain.text", ddmmyyyy("2025-11-29"));
+    cy.get('[data-cy="cct-grade-year-7-row"]')
+      .should("contain.text", "ST7")
+      .and("contain.text", ddmmyyyy("2034-03-27"));
+    cy.get('[data-cy="cct-grade-years-hint"]').should("exist");
+  });
+
+  it("hides the grade progression when the attached copy has none", () => {
+    const calculation = mockCctCalculation({ id: "calc-1" });
+    calculation.result = { ...calculation.result, gradeProgression: [] };
+    mountEditable(buildLtftCctSnapshot(calculation), [calculation]);
+
+    cy.get('[data-cy="cctSnapshotExpanderSummary"]').click();
+    cy.get('[data-cy="cctSnapshotResult"]').should("exist");
+    cy.get('[data-cy="cct-grade-years-table"]').should("not.exist");
+    cy.contains("h3", /^Grade progression$/).should("not.exist");
   });
 
   it("shows the attached calculation's training time in the expander", () => {

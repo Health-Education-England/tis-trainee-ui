@@ -1,9 +1,15 @@
 import { useState } from "react";
-import { Button, Card, SummaryList } from "nhsuk-react-components";
+import { Button, Card, SummaryList, Table } from "nhsuk-react-components";
 import { FormData, FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
-import { CctProgrammeDetails, CctSpecialty } from "../../../models/CctTypes";
 import {
+  CctGradeYear,
+  CctProgrammeDetails,
+  CctSpecialty
+} from "../../../models/CctTypes";
+import { CCT_NO_VALUE } from "../../../utilities/CctConstants";
+import {
+  formatCctDate,
   mapFormDataToProgrammeDetails,
   mapProgrammeDetailsToFormData
 } from "../../../utilities/CctUtilities";
@@ -190,6 +196,81 @@ export function CctGradeProgressionSummary({
           data-cy="cct-no-grade-progression-adjustments"
         >
           No grade progression adjustments recorded.
+        </p>
+      )}
+    </>
+  );
+}
+
+type CctGradeYearsTableProps = {
+  gradeYears: CctGradeYear[];
+  programmeDetails: CctProgrammeDetails;
+  isPrint?: boolean;
+};
+
+export function CctGradeYearsTable({
+  gradeYears,
+  programmeDetails,
+  isPrint
+}: Readonly<CctGradeYearsTableProps>) {
+  const hasEighteenMonthYear = gradeYears.some(
+    year => year.extendedToEighteenMonths
+  );
+  const hasSkippedGrade = gradeYears.some(
+    year => year.skippedGradeBeforeThisRow !== null
+  );
+  const hasYearPastHighestGrade = gradeYears.some(
+    year => year.exceedsKnownTrainingGrade
+  );
+
+  return (
+    <>
+      <Table responsive={!isPrint} data-cy="cct-grade-years-table">
+        <Table.Head>
+          <Table.Row>
+            <Table.Cell>Training year</Table.Cell>
+            <Table.Cell>Grade</Table.Cell>
+            <Table.Cell>Grade end date</Table.Cell>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>
+          {gradeYears.map(year => (
+            <Table.Row
+              key={year.yearNumber}
+              data-cy={`cct-grade-year-${year.yearNumber}-row`}
+            >
+              <Table.Cell>{`Year ${year.yearNumber}`}</Table.Cell>
+              <Table.Cell>
+                {year.grade ?? CCT_NO_VALUE}
+                {year.skippedGradeBeforeThisRow &&
+                  ` (${year.skippedGradeBeforeThisRow} skipped)`}
+                {year.extendedToEighteenMonths && " (18-month final year)"}
+                {year.exceedsKnownTrainingGrade &&
+                  " (grade label not automatically assigned)"}
+              </Table.Cell>
+              <Table.Cell>{formatCctDate(year.endDate)}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+      <p className="nhsuk-hint" data-cy="cct-grade-years-hint">
+        Grade end dates are calculated from your entries and may not match your
+        official training record.
+      </p>
+      {hasEighteenMonthYear && (
+        <p className="nhsuk-hint" data-cy="cct-grade-years-eighteen-month-hint">
+          {`${programmeDetails.eighteenMonthFinalGrade} is an 18-month final year. It uses six months already in the programme length, so it does not move the completion date.`}
+        </p>
+      )}
+      {hasSkippedGrade && (
+        <p className="nhsuk-hint" data-cy="cct-grade-years-skipped-hint">
+          {`${programmeDetails.skippedGrade} is skipped, so later years move up a grade. This does not shorten training; any reduction is recorded as accelerated training time.`}
+        </p>
+      )}
+      {hasYearPastHighestGrade && (
+        <p className="nhsuk-hint" data-cy="cct-grade-years-past-highest-hint">
+          Some years go past the highest grade the calculator assigns, so they
+          have no grade. Check your official training record.
         </p>
       )}
     </>

@@ -37,7 +37,10 @@ import {
 import { ActionModal } from "../../common/ActionModal";
 import Loading from "../../common/Loading";
 import { CctChangesTable } from "../cct/CctChangesSection";
-import { CctGradeProgressionSummary } from "../cct/CctGradeProgressionSection";
+import {
+  CctGradeProgressionSummary,
+  CctGradeYearsTable
+} from "../cct/CctGradeProgressionSection";
 import { CctProgrammeDetailsSummary } from "../cct/CctProgrammeDetailsSection";
 import { CctTrainingTimeSummary } from "../cct/CctTrainingTimeSection";
 import { CctRequestError } from "../cct/CctRequestError";
@@ -362,6 +365,16 @@ function AttachedCctCalculationDetails({
             calculatedChanges={calculation.changes}
             result={calculation.result}
           />
+        )}
+
+        {calculation.result.gradeProgression.length > 0 && (
+          <>
+            <h3 className="nhsuk-heading-s">Grade progression</h3>
+            <CctGradeYearsTable
+              gradeYears={calculation.result.gradeProgression}
+              programmeDetails={calculation.programmeDetails}
+            />
+          </>
         )}
       </Details.Text>
     </Details>
