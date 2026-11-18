@@ -56,7 +56,8 @@ const responseFor = (cctDate: string): CctCalculateResponse => ({
       wte: 1,
       calendarMonths: 78,
       wteMonths: 78
-    }
+    },
+    gradeProgression: []
   },
   errors: []
 });

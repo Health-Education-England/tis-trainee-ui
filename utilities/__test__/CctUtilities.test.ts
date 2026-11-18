@@ -207,7 +207,8 @@ describe("deriveCctChangesTable", () => {
       wte: 1,
       calendarMonths: 70,
       wteMonths: 70
-    }
+    },
+    gradeProgression: []
   };
 
   it("takes the total from the engine's result rather than adding up the rows", () => {

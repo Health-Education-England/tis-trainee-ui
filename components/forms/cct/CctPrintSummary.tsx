@@ -25,7 +25,10 @@ import {
   isOpenLtftChange
 } from "../../../utilities/CctUtilities";
 import { DateUtilities } from "../../../utilities/DateUtilities";
-import { CctGradeProgressionSummary } from "./CctGradeProgressionSection";
+import {
+  CctGradeProgressionSummary,
+  CctGradeYearsTable
+} from "./CctGradeProgressionSection";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctTrainingTimeSummary } from "./CctTrainingTimeSection";
 import style from "./CctPrintSummary.module.scss";
@@ -140,6 +143,17 @@ export function CctPrintSummary({
           calculatedChanges={calculatedChanges}
           result={result}
         />
+      )}
+
+      {result.gradeProgression.length > 0 && (
+        <>
+          <h2 className="nhsuk-heading-m">Grade progression</h2>
+          <CctGradeYearsTable
+            gradeYears={result.gradeProgression}
+            programmeDetails={programmeDetails}
+            isPrint
+          />
+        </>
       )}
     </div>
   );

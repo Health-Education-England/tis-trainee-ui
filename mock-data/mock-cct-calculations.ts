@@ -52,7 +52,79 @@ export const mockCctCalculation = (
       wte: 0.6,
       calendarMonths: 109.91666666666667,
       wteMonths: 65.95
-    }
+    },
+    gradeProgression: [
+      {
+        yearNumber: 1,
+        grade: "ST1",
+        endDate: "2024-07-31",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 2,
+        grade: "ST2",
+        endDate: "2025-11-29",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 3,
+        grade: "ST3",
+        endDate: "2027-07-30",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 4,
+        grade: "ST4",
+        endDate: "2029-03-29",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 5,
+        grade: "ST5",
+        endDate: "2030-11-27",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 6,
+        grade: "ST6",
+        endDate: "2032-07-27",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      },
+      {
+        yearNumber: 7,
+        grade: "ST7",
+        endDate: "2034-03-27",
+        skippedGradeBeforeThisRow: null,
+        extendedToEighteenMonths: false,
+        exceedsKnownTrainingGrade: false,
+        additionalMonths: 0,
+        acceleratedMonths: 0
+      }
+    ]
   },
   created: "2026-10-20T09:00:00Z",
   lastModified: "2026-10-28T12:00:00Z",

@@ -45,7 +45,8 @@ const calculation: CctCalculation = {
       wte: 1,
       calendarMonths: 84,
       wteMonths: 84
-    }
+    },
+    gradeProgression: []
   },
   created: "2026-10-28T10:00:00Z",
   lastModified: "2026-10-28T10:00:00Z"

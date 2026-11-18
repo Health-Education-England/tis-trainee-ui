@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  InsetText,
-  SummaryList,
-  Table
-} from "nhsuk-react-components";
+import { Button, Card, InsetText, SummaryList } from "nhsuk-react-components";
 import {
   CctCalculatedChange,
   CctChange,
@@ -26,7 +20,10 @@ import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation
 import { CctSaveStatus } from "../../../redux/slices/cctSlice";
 import { CctChangesTable } from "./CctChangesSection";
 import { CctDeleteButton } from "./CctDeleteButton";
-import { CctGradeProgressionSummary } from "./CctGradeProgressionSection";
+import {
+  CctGradeProgressionSummary,
+  CctGradeYearsTable
+} from "./CctGradeProgressionSection";
 import { CctPrintSummary } from "./CctPrintSummary";
 import { CctProgrammeDetailsSummary } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
@@ -159,10 +156,15 @@ export function CctSummary({
           />
         </Card>
 
-        <Card feature>
-          <Card.Heading>Grade progression</Card.Heading>
-          <CctGradeProgressionTable result={result} />
-        </Card>
+        {programmeDetails && result && result.gradeProgression.length > 0 && (
+          <Card feature>
+            <Card.Heading>Grade progression</Card.Heading>
+            <CctGradeYearsTable
+              gradeYears={result.gradeProgression}
+              programmeDetails={programmeDetails}
+            />
+          </Card>
+        )}
 
         {calculationStatus === "succeeded" && (
           <Card feature>
@@ -224,44 +226,5 @@ export function CctSummary({
         />
       )}
     </>
-  );
-}
-
-type CctGradeProgressionTableProps = {
-  result: CctResult | null;
-};
-
-function CctGradeProgressionTable({
-  result
-}: Readonly<CctGradeProgressionTableProps>) {
-  const gradeProgression = result?.gradeProgression ?? [];
-
-  if (gradeProgression.length === 0) {
-    return (
-      <p data-cy="cct-no-grade-progression">
-        <em>This feature is coming soon.</em>
-      </p>
-    );
-  }
-
-  return (
-    <Table responsive data-cy="cct-grade-progression-table">
-      <Table.Head>
-        <Table.Row>
-          <Table.Cell>Year</Table.Cell>
-          <Table.Cell>Grade</Table.Cell>
-          <Table.Cell>End date</Table.Cell>
-        </Table.Row>
-      </Table.Head>
-      <Table.Body>
-        {gradeProgression.map(gradeYear => (
-          <Table.Row key={gradeYear.yearNumber}>
-            <Table.Cell>{gradeYear.yearNumber}</Table.Cell>
-            <Table.Cell>{gradeYear.grade}</Table.Cell>
-            <Table.Cell>{formatCctDate(gradeYear.endDate)}</Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
   );
 }

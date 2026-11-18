@@ -13,9 +13,11 @@ import { mockCctCalculateResponses } from "../../../../mock-data/mock-cct-calcul
 import { mockCctSpecialties } from "../../../../mock-data/mock-cct-specialties";
 import { CctChangesSection } from "../../../../components/forms/cct/CctChangesSection";
 import { CctTrainingTimeSection } from "../../../../components/forms/cct/CctTrainingTimeSection";
+import { CctGradeYearsTable } from "../../../../components/forms/cct/CctGradeProgressionSection";
 import {
   CctChange,
   CctChangeDto,
+  CctGradeYear,
   CctProgrammeDetails,
   CctTrainingTime
 } from "../../../../models/CctTypes";
@@ -1007,10 +1009,28 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-summary-no-changes"]').should("exist");
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
-    cy.get('[data-cy="cct-no-grade-progression"]').should(
-      "have.text",
-      "This feature is coming soon."
+    cy.get('[data-cy="cct-grade-years-table"]').should("have.length", 2);
+    cy.get('[data-cy="cct-print-summary"]')
+      .find('[data-cy="cct-grade-years-table"]')
+      .should("exist");
+    cy.get('[data-cy="cct-grade-year-1-row"]')
+      .first()
+      .should("contain.text", "Year 1")
+      .and("contain.text", "ST1")
+      .and("contain.text", "31/07/2024");
+    cy.get('[data-cy="cct-grade-year-7-row"]')
+      .first()
+      .should("contain.text", "Year 7")
+      .and("contain.text", "ST7")
+      .and("contain.text", "29/07/2030");
+    cy.get('[data-cy="cct-grade-years-hint"]')
+      .first()
+      .should("contain.text", "may not match your official training record");
+    cy.get('[data-cy="cct-grade-years-eighteen-month-hint"]').should(
+      "not.exist"
     );
+    cy.get('[data-cy="cct-grade-years-skipped-hint"]').should("not.exist");
+    cy.get('[data-cy="cct-grade-years-past-highest-hint"]').should("not.exist");
     cy.get('[data-cy="cct-delete"]').should("not.exist");
     cy.get('[data-cy="navNext"]').should("not.exist");
     cy.get('[data-cy="navPrevious"]').click();
@@ -2242,6 +2262,76 @@ describe("CctChangesSection change cap", () => {
     cy.get('[data-cy="cct-max-changes"]').should(
       "contain.text",
       "You have reached the maximum of 50 changes."
+    );
+  });
+});
+
+describe("CctGradeYearsTable", () => {
+  const gradeYear = (
+    yearNumber: number,
+    grade: CctGradeYear["grade"],
+    endDate: string,
+    overrides: Partial<CctGradeYear> = {}
+  ): CctGradeYear => ({
+    yearNumber,
+    grade,
+    endDate,
+    skippedGradeBeforeThisRow: null,
+    extendedToEighteenMonths: false,
+    exceedsKnownTrainingGrade: false,
+    additionalMonths: 0,
+    acceleratedMonths: 0,
+    ...overrides
+  });
+
+  it("marks the skipped, 18-month and past-highest years and explains each", () => {
+    mount(
+      <CctGradeYearsTable
+        gradeYears={[
+          gradeYear(1, "ST1", "2024-07-31"),
+          gradeYear(2, "ST3", "2025-07-31", {
+            skippedGradeBeforeThisRow: "ST2"
+          }),
+          gradeYear(3, "ST4", "2027-01-30", {
+            extendedToEighteenMonths: true
+          }),
+          gradeYear(4, null, "2028-01-30", {
+            exceedsKnownTrainingGrade: true
+          })
+        ]}
+        programmeDetails={{
+          ...paediatricsProgrammeDetails("2023-08-02"),
+          eighteenMonthFinalGrade: "ST4",
+          eighteenMonthFinalGradeNotes: "Agreed with my TPD",
+          skippedGrade: "ST2",
+          skippedGradeNotes: "Core competencies"
+        }}
+      />
+    );
+
+    cy.get('[data-cy="cct-grade-year-2-row"]').should(
+      "contain.text",
+      "ST3 (ST2 skipped)"
+    );
+    cy.get('[data-cy="cct-grade-year-3-row"]')
+      .should("contain.text", "ST4 (18-month final year)")
+      .and("contain.text", "30/01/2027");
+    cy.get('[data-cy="cct-grade-year-4-row"]').should(
+      "contain.text",
+      "— (grade label not automatically assigned)"
+    );
+    cy.get('[data-cy="cct-grade-years-hint"]').should("exist");
+    cy.get('[data-cy="cct-grade-years-eighteen-month-hint"]').should(
+      "contain.text",
+      "ST4 is an 18-month final year."
+    );
+    cy.get('[data-cy="cct-grade-years-skipped-hint"]').should(
+      "contain.text",
+      "ST2 is skipped, so later years move up a grade."
+    );
+    cy.get('[data-cy="cct-grade-years-past-highest-hint"]').should(
+      "contain.text",
+      "Check your official training record."
     );
   });
 });
