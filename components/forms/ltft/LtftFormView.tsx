@@ -80,7 +80,7 @@ export const LtftFormView = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(loadSavedLtft(id));
+      void dispatch(loadSavedLtft(id));
     }
   }, [id, dispatch]);
 
