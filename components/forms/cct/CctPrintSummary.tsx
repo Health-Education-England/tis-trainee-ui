@@ -122,6 +122,17 @@ export function CctPrintSummary({
         calculationStatus="succeeded"
       />
 
+      {result.gradeProgression.length > 0 && (
+        <>
+          <h2 className="nhsuk-heading-m">Grade progression</h2>
+          <CctGradeYearsTable
+            gradeYears={result.gradeProgression}
+            programmeDetails={programmeDetails}
+            isPrint
+          />
+        </>
+      )}
+
       <h2 className="nhsuk-heading-m">Training time adjustments</h2>
       <CctTrainingTimeSummary
         programmeDetails={programmeDetails}
@@ -143,17 +154,6 @@ export function CctPrintSummary({
           calculatedChanges={calculatedChanges}
           result={result}
         />
-      )}
-
-      {result.gradeProgression.length > 0 && (
-        <>
-          <h2 className="nhsuk-heading-m">Grade progression</h2>
-          <CctGradeYearsTable
-            gradeYears={result.gradeProgression}
-            programmeDetails={programmeDetails}
-            isPrint
-          />
-        </>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  ErrorSummary,
   InsetText,
   SummaryList,
   WarningCallout
@@ -17,6 +18,8 @@ import {
   CCT_NOT_CALCULATED
 } from "../../../utilities/CctConstants";
 import {
+  CctInvalidAdjustment,
+  CctProgrammeDetailsErrorTarget,
   deriveCctAdjustedLengthMonths,
   findCctSpecialty,
   formatCctDate,
@@ -29,10 +32,17 @@ import {
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctSpecialtiesStatus } from "../../../utilities/hooks/useCctSpecialties";
-import { CctGradeProgressionSection } from "./CctGradeProgressionSection";
+import {
+  CctGradeProgressionSection,
+  CctGradeYearsTable
+} from "./CctGradeProgressionSection";
 import { CctProgrammeDetailsForm } from "./CctProgrammeDetailsForm";
 import { CctRequestError } from "./CctRequestError";
-import { CctTrainingTimeSection } from "./CctTrainingTimeSection";
+import {
+  CctTrainingTimeSection,
+  editButtonId as trainingTimeEditButtonId
+} from "./CctTrainingTimeSection";
+import { CCT_TRAINING_TIME_KINDS } from "./cctTrainingTimeKinds";
 
 type CctProgrammeDetailsSectionProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -46,6 +56,7 @@ type CctProgrammeDetailsSectionProps = {
   isRetryingCalculation: boolean;
   onRetryCalculation: () => void;
   hasInvalidChanges: boolean;
+  invalidAdjustments: CctInvalidAdjustment[];
   isAdjustmentFormOpen: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onEditingChange: (isEditing: boolean) => void;
@@ -65,6 +76,7 @@ export function CctProgrammeDetailsSection({
   isRetryingCalculation,
   onRetryCalculation,
   hasInvalidChanges,
+  invalidAdjustments,
   isAdjustmentFormOpen,
   onChange,
   onEditingChange,
@@ -143,6 +155,7 @@ export function CctProgrammeDetailsSection({
               calculationStatus={calculationStatus}
             />
             <Button
+              id="cct-edit-programme-details"
               secondary
               type="button"
               disabled={isAdjustmentFormOpen}
@@ -156,10 +169,20 @@ export function CctProgrammeDetailsSection({
       </Card>
       {programmeDetails && !isEditing && (
         <>
+          {result && result.gradeProgression.length > 0 && (
+            <Card feature data-cy="cct-part1-grade-progression">
+              <Card.Heading>Grade progression</Card.Heading>
+              <CctGradeYearsTable
+                gradeYears={result.gradeProgression}
+                programmeDetails={programmeDetails}
+              />
+            </Card>
+          )}
           <CctTrainingTimeSection
             programmeDetails={programmeDetails}
             result={result}
             calculationStatus={calculationStatus}
+            invalidAdjustments={invalidAdjustments}
             isFormOpen={isAdjustmentFormOpen}
             onChange={onChange}
             onFormOpenChange={onAdjustmentFormOpenChange}
@@ -168,14 +191,105 @@ export function CctProgrammeDetailsSection({
           <CctGradeProgressionSection
             programmeDetails={programmeDetails}
             specialties={specialties}
+            result={result}
+            invalidAdjustments={invalidAdjustments}
             isFormOpen={isAdjustmentFormOpen}
             onChange={onChange}
             onFormOpenChange={onAdjustmentFormOpenChange}
             onDirtyChange={onDirtyChange}
           />
+          {invalidAdjustments.length > 0 && (
+            <CctInvalidAdjustmentsSummary
+              programmeDetails={programmeDetails}
+              invalidAdjustments={invalidAdjustments}
+            />
+          )}
         </>
       )}
     </>
+  );
+}
+
+const describeInvalidAdjustment = (
+  programmeDetails: CctProgrammeDetails,
+  { field, index }: CctProgrammeDetailsErrorTarget
+) => {
+  const kind = CCT_TRAINING_TIME_KINDS.find(kind => kind.field === field);
+  if (kind && index !== null) {
+    const entry = programmeDetails[kind.field][index];
+    return {
+      label: `${kind.title} (${entry.grade}, ${entry.months} months)`,
+      editButtonId: trainingTimeEditButtonId(kind, index)
+    };
+  }
+  if (kind)
+    return {
+      label: kind.title,
+      editButtonId: trainingTimeEditButtonId(kind, 0)
+    };
+  if (field === "skippedGrade" || field === "skippedGradeNotes")
+    return {
+      label: "Skipped grade year",
+      editButtonId: "cct-edit-grade-progression"
+    };
+  if (
+    field === "eighteenMonthFinalGrade" ||
+    field === "eighteenMonthFinalGradeNotes"
+  )
+    return {
+      label: "18-month final year",
+      editButtonId: "cct-edit-grade-progression"
+    };
+  return {
+    label: "Programme details",
+    editButtonId: "cct-edit-programme-details"
+  };
+};
+
+type CctInvalidAdjustmentsSummaryProps = {
+  programmeDetails: CctProgrammeDetails;
+  invalidAdjustments: CctInvalidAdjustment[];
+};
+
+function CctInvalidAdjustmentsSummary({
+  programmeDetails,
+  invalidAdjustments
+}: Readonly<CctInvalidAdjustmentsSummaryProps>) {
+  return (
+    <ErrorSummary
+      aria-labelledby="cct-invalid-adjustments-title"
+      disableAutoFocus
+      data-cy="cct-invalid-adjustments-summary"
+    >
+      <ErrorSummary.Title id="cct-invalid-adjustments-title">
+        There is a problem with your adjustments
+      </ErrorSummary.Title>
+      <ErrorSummary.List>
+        {invalidAdjustments.map(adjustment => {
+          const { label, editButtonId } = describeInvalidAdjustment(
+            programmeDetails,
+            adjustment
+          );
+          return (
+            <ErrorSummary.ListItem
+              key={`${adjustment.pointer}-${adjustment.message}`}
+              href={`#${editButtonId}`}
+              onClick={e => {
+                e.preventDefault();
+                const editButton = document.getElementById(editButtonId);
+                editButton?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center"
+                });
+                editButton?.focus({ preventScroll: true });
+              }}
+            >
+              {`${label}: ${adjustment.message}`}
+            </ErrorSummary.ListItem>
+          );
+        })}
+      </ErrorSummary.List>
+    </ErrorSummary>
   );
 }
 

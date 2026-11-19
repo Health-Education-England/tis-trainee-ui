@@ -1,6 +1,7 @@
 import {
   CctCalculatedChange,
   CctChange,
+  CctGradeYear,
   CctProgrammeDetails,
   CctResult,
   CctSpecialty,
@@ -8,8 +9,11 @@ import {
 } from "../../models/CctTypes";
 import {
   cctChangeIndexFromPointer,
+  cctProgrammeDetailsErrorTarget,
   deriveCctAdjustedLengthMonths,
   deriveCctChangesTable,
+  findCctEighteenMonthFinalGrade,
+  findCctProgressionGrades,
   findCctTrainingTimeGrades,
   fromCctChangeDtos,
   isCctLengthAdjusted,
@@ -22,7 +26,8 @@ import {
   newCctChangeId,
   pickCctCalculatedChanges,
   sortCctChanges,
-  toCctChangeDtos
+  toCctChangeDtos,
+  toCctGradeOptions
 } from "../CctUtilities";
 
 const change = (id: string, startDate = "2024-02-01"): CctChange => ({
@@ -161,6 +166,71 @@ describe("cctChangeIndexFromPointer", () => {
       cctChangeIndexFromPointer("#/programmeDetails/startDate")
     ).toBeNull();
     expect(cctChangeIndexFromPointer("#/changes")).toBeNull();
+  });
+});
+
+describe("cctProgrammeDetailsErrorTarget", () => {
+  it("reads the field and entry index from a pointer to a training time entry", () => {
+    expect(
+      cctProgrammeDetailsErrorTarget(
+        "#/programmeDetails/additionalTrainingTime[0]/grade"
+      )
+    ).toEqual({ field: "additionalTrainingTime", index: 0, property: "grade" });
+    expect(
+      cctProgrammeDetailsErrorTarget(
+        "#/programmeDetails/acceleratedTrainingTime[11]/months"
+      )
+    ).toEqual({
+      field: "acceleratedTrainingTime",
+      index: 11,
+      property: "months"
+    });
+  });
+
+  it("reads the field, with no index or property, from a pointer to a single field", () => {
+    expect(
+      cctProgrammeDetailsErrorTarget("#/programmeDetails/skippedGrade")
+    ).toEqual({ field: "skippedGrade", index: null, property: null });
+    expect(
+      cctProgrammeDetailsErrorTarget(
+        "#/programmeDetails/eighteenMonthFinalGrade"
+      )
+    ).toEqual({
+      field: "eighteenMonthFinalGrade",
+      index: null,
+      property: null
+    });
+    expect(
+      cctProgrammeDetailsErrorTarget("#/programmeDetails/skippedGradeNotes")
+    ).toEqual({ field: "skippedGradeNotes", index: null, property: null });
+  });
+
+  it("reads the field, with no index or property, from a pointer to a whole training time list", () => {
+    expect(
+      cctProgrammeDetailsErrorTarget(
+        "#/programmeDetails/additionalTrainingTime"
+      )
+    ).toEqual({
+      field: "additionalTrainingTime",
+      index: null,
+      property: null
+    });
+  });
+
+  it("is null for a pointer to anything but the programme details", () => {
+    expect(cctProgrammeDetailsErrorTarget("#/changes[0]/startDate")).toBeNull();
+    expect(cctProgrammeDetailsErrorTarget("#/programmeDetails")).toBeNull();
+    expect(
+      cctProgrammeDetailsErrorTarget("#/programmeDetailsExtra/skippedGrade")
+    ).toBeNull();
+  });
+
+  it("is null for a pointer deeper than an entry's property", () => {
+    expect(
+      cctProgrammeDetailsErrorTarget(
+        "#/programmeDetails/additionalTrainingTime[0]/grade/extra"
+      )
+    ).toBeNull();
   });
 });
 
@@ -371,6 +441,97 @@ describe("findCctTrainingTimeGrades", () => {
       expect(findCctTrainingTimeGrades(startGrade)).toEqual(grades);
     }
   );
+});
+
+describe("findCctProgressionGrades", () => {
+  const gradeYear = (
+    yearNumber: number,
+    grade: CctGradeYear["grade"]
+  ): CctGradeYear => ({
+    yearNumber,
+    grade,
+    endDate: "2030-01-01",
+    skippedGradeBeforeThisRow: null,
+    extendedToEighteenMonths: false,
+    exceedsKnownTrainingGrade: grade === null,
+    additionalMonths: 0,
+    acceleratedMonths: 0
+  });
+  const resultWith = (gradeProgression: CctGradeYear[]) =>
+    ({ gradeProgression } as CctResult);
+
+  it("offers each grade in the result's progression once, in grade order", () => {
+    const result = resultWith([
+      gradeYear(1, "ST1"),
+      gradeYear(2, "ST3"),
+      gradeYear(3, "ST4"),
+      gradeYear(4, "ST4"),
+      gradeYear(5, null)
+    ]);
+
+    expect(findCctProgressionGrades("ST1", result)).toEqual([
+      "ST1",
+      "ST3",
+      "ST4"
+    ]);
+  });
+
+  it("falls back to the start grade and the later grades of its kind without a progression", () => {
+    expect(findCctProgressionGrades("CT2", null)).toEqual([
+      "CT2",
+      "CT3",
+      "CT4"
+    ]);
+    expect(findCctProgressionGrades("CT2", resultWith([]))).toEqual([
+      "CT2",
+      "CT3",
+      "CT4"
+    ]);
+  });
+});
+
+describe("findCctEighteenMonthFinalGrade", () => {
+  it("gives the last full year's grade of a length with a half year", () => {
+    expect(findCctEighteenMonthFinalGrade("ST1", 90, null)).toBe("ST7");
+    expect(findCctEighteenMonthFinalGrade("ST3", 66, null)).toBe("ST7");
+  });
+
+  it("moves on a grade when the skipped grade is before the last full year", () => {
+    expect(findCctEighteenMonthFinalGrade("ST1", 90, "ST3")).toBe("ST8");
+    expect(findCctEighteenMonthFinalGrade("ST1", 90, "ST8")).toBe("ST7");
+  });
+
+  it("gives no grade without a half year or a full year", () => {
+    expect(findCctEighteenMonthFinalGrade("ST1", 84, null)).toBeNull();
+    expect(findCctEighteenMonthFinalGrade("ST1", 63, null)).toBeNull();
+    expect(findCctEighteenMonthFinalGrade("ST1", 6, null)).toBeNull();
+  });
+
+  it("gives no grade past the highest known grade", () => {
+    expect(findCctEighteenMonthFinalGrade("ST4", 90, null)).toBeNull();
+  });
+
+  it("gives an unnumbered grade only when it has one full year", () => {
+    expect(findCctEighteenMonthFinalGrade("DFT", 18, null)).toBe("DFT");
+    expect(findCctEighteenMonthFinalGrade("DFT", 30, null)).toBeNull();
+  });
+});
+
+describe("toCctGradeOptions", () => {
+  it("adds any current grade missing from the grades, in grade order", () => {
+    expect(toCctGradeOptions(["ST2", "ST3"], "ST8", null, undefined)).toEqual([
+      { value: "ST2", label: "ST2" },
+      { value: "ST3", label: "ST3" },
+      { value: "ST8", label: "ST8" }
+    ]);
+  });
+
+  it("does not repeat a current grade that is already offered", () => {
+    expect(toCctGradeOptions(["ST2", "ST3"], "ST2")).toEqual([
+      { value: "ST2", label: "ST2" },
+      { value: "ST3", label: "ST3" }
+    ]);
+  });
 });
 
 describe("mapFormDataToTrainingTime", () => {

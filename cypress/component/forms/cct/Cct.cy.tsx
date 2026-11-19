@@ -127,6 +127,43 @@ const calculateWithMockBackend = ({
   return { statusCode: 200, body };
 };
 
+const paediatricsGrades = ["ST1", "ST2", "ST3", "ST4", "ST5", "ST6", "ST7"];
+
+const calculateWithGradeChecks = (request: CctCalculateRequest) => {
+  const reply = calculateWithMockBackend(request);
+  const { additionalTrainingTime, skippedGrade } = request.programmeDetails;
+  const notInProgression = (grade: string) =>
+    `${grade} is not part of this programme's grade progression.`;
+  const errors = [
+    ...additionalTrainingTime.flatMap(({ grade }, index) =>
+      paediatricsGrades.includes(grade)
+        ? []
+        : [
+            {
+              pointer: `#/programmeDetails/additionalTrainingTime[${index}]/grade`,
+              detail: notInProgression(grade)
+            }
+          ]
+    ),
+    ...(skippedGrade && !paediatricsGrades.includes(skippedGrade)
+      ? [
+          {
+            pointer: "#/programmeDetails/skippedGrade",
+            detail: notInProgression(skippedGrade)
+          }
+        ]
+      : [])
+  ];
+  return { ...reply, body: { ...reply.body, errors } };
+};
+
+const calculateWithErrors =
+  (errors: { pointer: string; detail: string }[]) =>
+  (request: CctCalculateRequest) => {
+    const reply = calculateWithMockBackend(request);
+    return { ...reply, body: { ...reply.body, errors } };
+  };
+
 const savedCalculationId = "5f0c9a3e-8a4d-4c55-9a51-0f6a2f1d7c11";
 const savedCalculationUrl = `/api/trainee/cct/calculation/${savedCalculationId}`;
 
@@ -178,6 +215,22 @@ const savedCalculation = (name: string, startDate = "2023-08-02") =>
     programmeDetails: paediatricsProgrammeDetails(startDate),
     changes: [parentalLeaveChange]
   }).body;
+
+const mountSavedCalculationWith = (
+  programmeDetails: Partial<CctProgrammeDetails>
+) => {
+  cy.intercept("GET", savedCalculationUrl, {
+    body: saveWithMockBackend({
+      name: "No longer valid",
+      programmeDetails: {
+        ...paediatricsProgrammeDetails("2023-08-02"),
+        ...programmeDetails
+      },
+      changes: []
+    }).body
+  });
+  mountCct(`/cct/${savedCalculationId}`);
+};
 
 const calculationsUrl = "/api/trainee/cct/calculation";
 
@@ -1959,7 +2012,7 @@ describe("Cct training time and grade progression adjustments", () => {
     );
   });
 
-  it("offers the start grade and the later grades of its kind", () => {
+  it("offers the grades in the calculated grade progression", () => {
     mountCct();
     saveProgrammeDetails();
     cy.get('[data-cy="cct-add-additional-time"]').click();
@@ -1967,7 +2020,8 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="grade"] .react-select__control').click();
     cy.get(".react-select__menu")
       .should("contain.text", "ST1")
-      .and("contain.text", "ST9")
+      .and("contain.text", "ST7")
+      .and("not.contain.text", "ST8")
       .and("not.contain.text", "CT1")
       .and("not.contain.text", "F2");
   });
@@ -2117,6 +2171,83 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="navNext"]').should("exist");
   });
 
+  it("offers an 18-month final year only for a programme length with a half year", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithMockBackend(req.body))
+    ).as("calculate");
+    mountCct();
+    saveProgrammeDetails();
+    cy.wait("@calculate");
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
+      "not.exist"
+    );
+    cy.get('[data-cy="cct-grade-progression-cancel"]').click();
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get("#lengthMonths").clear();
+    cy.get("#lengthMonths").type("90");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.wait("@calculate");
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should("not.exist");
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').check();
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should(
+      "contain.text",
+      "Final grade lasting 18 months: ST7"
+    );
+    cy.get('[data-cy="hasSkippedGrade-checkbox"]').check();
+    selectOption("skippedGrade", "ST3");
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should(
+      "contain.text",
+      "Final grade lasting 18 months: ST8"
+    );
+    cy.get("#eighteenMonthFinalGradeNotes").type("ICM dual specialty");
+    cy.get("#skippedGradeNotes").type("Core competencies");
+
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", {
+        eighteenMonthFinalGrade: "ST8",
+        eighteenMonthFinalGradeNotes: "ICM dual specialty"
+      });
+    cy.get('[data-cy="cct-grade-progression-summary"]')
+      .should("contain.text", "18-month final year")
+      .and("contain.text", "ST8");
+
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').uncheck();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", {
+        eighteenMonthFinalGrade: null,
+        eighteenMonthFinalGradeNotes: ""
+      });
+  });
+
+  it("lets a saved 18-month final year be unticked once the length has no half year", () => {
+    mountSavedCalculationWith({
+      eighteenMonthFinalGrade: "ST6",
+      eighteenMonthFinalGradeNotes: "ICM dual specialty"
+    });
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
+      "be.checked"
+    );
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should(
+      "contain.text",
+      "Final grade lasting 18 months: ST6"
+    );
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').uncheck();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
   it("shows the adjustments read-only on the summary", () => {
     mountCct();
     saveProgrammeDetails();
@@ -2139,6 +2270,151 @@ describe("Cct training time and grade progression adjustments", () => {
       });
     cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
   });
+
+  it("lists training time in a grade outside the progression, and hides Next until it is fixed", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }]
+    });
+    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Additional training time (ST8, 6 months): ST8 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-additional-time-0-grade-error"]').should(
+      "contain.text",
+      "ST8 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+
+    cy.focused().click();
+    cy.get('[data-cy="grade"] .react-select__control').click();
+    cy.get(".react-select__menu")
+      .should("contain.text", "ST7")
+      .and("contain.text", "ST8")
+      .and("not.contain.text", "ST9");
+    cy.get(".react-select__menu").contains("ST2").click();
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should("not.exist");
+    cy.get('[data-cy="cct-additional-time-0-grade-error"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("exist");
+  });
+
+  it("lists a skipped grade outside the progression and links to the grade progression adjustments", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      skippedGrade: "ST9",
+      skippedGradeNotes: "Core competencies"
+    });
+    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Skipped grade year: ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-skippedGrade-error"]').should(
+      "contain.text",
+      "ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
+  });
+
+  it("lists a missing skipped grade reason against the skipped grade year", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(
+        calculateWithErrors([
+          {
+            pointer: "#/programmeDetails/skippedGradeNotes",
+            detail: "Please enter a reason for skipping a grade year."
+          }
+        ])(req.body)
+      )
+    );
+    mountSavedCalculationWith({ skippedGrade: "ST2", skippedGradeNotes: "" });
+    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Skipped grade year: Please enter a reason for skipping a grade year."
+    );
+    cy.get('[data-cy="cct-skippedGrade-error"]').should(
+      "contain.text",
+      "Please enter a reason for skipping a grade year."
+    );
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
+  });
+
+  it("lists a training time total over the limit against its kind and links to the first entry", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(
+        calculateWithErrors([
+          {
+            pointer: "#/programmeDetails/additionalTrainingTime",
+            detail:
+              "Total additional training time cannot be more than 24 months."
+          }
+        ])(req.body)
+      )
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [
+        { grade: "ST2", months: 6, notes: "Outcome 3" },
+        { grade: "ST3", months: 6, notes: "Second outcome 3" }
+      ]
+    });
+    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Additional training time: Total additional training time cannot be more than 24 months."
+    );
+    cy.get('[data-cy$="-error"]').should("not.exist");
+    cy.get('[data-cy="navNext"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+  });
+
+  it("points to the programme details instead of saving or printing when a saved adjustment is no longer valid", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }]
+    });
+
+    cy.get('[data-cy="cct-save-blocked-adjustments"]').should(
+      "contain.text",
+      "There is a problem with your training time or grade progression adjustments."
+    );
+    cy.get('[data-cy="cct-save-blocked"]').should("not.exist");
+    cy.get('[data-cy="cct-save-form"]').should("not.exist");
+    cy.get('[data-cy="cct-save-pdf"]').should("not.exist");
+
+    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Part 1 of 3 - Programme details"
+    );
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "ST8 is not part of this programme's grade progression."
+    );
+  });
 });
 
 describe("CctTrainingTimeSection entry cap", () => {
@@ -2156,6 +2432,7 @@ describe("CctTrainingTimeSection entry cap", () => {
         }}
         result={null}
         calculationStatus="idle"
+        invalidAdjustments={[]}
         isFormOpen={false}
         onChange={cy.stub()}
         onFormOpenChange={cy.stub()}
@@ -2194,6 +2471,7 @@ describe("CctTrainingTimeSection entry cap", () => {
           programmeDetails={programmeDetails}
           result={null}
           calculationStatus="idle"
+          invalidAdjustments={[]}
           isFormOpen={isFormOpen}
           onChange={setProgrammeDetails}
           onFormOpenChange={setIsFormOpen}
@@ -2332,6 +2610,38 @@ describe("CctGradeYearsTable", () => {
     cy.get('[data-cy="cct-grade-years-past-highest-hint"]').should(
       "contain.text",
       "Check your official training record."
+    );
+    cy.get('[data-cy="cct-grade-years-training-time-hint"]').should(
+      "not.exist"
+    );
+  });
+
+  it("marks the years with additional or accelerated training time and explains them", () => {
+    mount(
+      <CctGradeYearsTable
+        gradeYears={[
+          gradeYear(1, "ST1", "2024-04-30", { acceleratedMonths: 3 }),
+          gradeYear(2, "ST2", "2025-10-31", { additionalMonths: 6 }),
+          gradeYear(3, "ST3", "2026-10-31")
+        ]}
+        programmeDetails={paediatricsProgrammeDetails("2023-08-02")}
+      />
+    );
+
+    cy.get('[data-cy="cct-grade-year-1-row"]').should(
+      "contain.text",
+      "ST1 (-3 months accelerated)"
+    );
+    cy.get('[data-cy="cct-grade-year-2-row"]').should(
+      "contain.text",
+      "ST2 (+6 months additional)"
+    );
+    cy.get('[data-cy="cct-grade-year-3-row"]')
+      .should("contain.text", "ST3")
+      .and("not.contain.text", "(");
+    cy.get('[data-cy="cct-grade-years-training-time-hint"]').should(
+      "contain.text",
+      "Additional training time moves that grade's end date and every later grade on. Accelerated training time brings them forward."
     );
   });
 });

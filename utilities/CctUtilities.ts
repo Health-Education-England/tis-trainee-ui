@@ -76,7 +76,7 @@ export const deriveCctAdjustedLengthMonths = ({
   sumCctTrainingTime(acceleratedTrainingTime);
 
 export const findCctTrainingTimeGrades = (startGrade: CctTrainingGrade) => {
-  const gradeKind = (grade: string) => grade.replace(/\d+$/, "");
+  const gradeKind = (grade: string) => grade.replace(/\d/g, "");
   const sameKindGrades = CCT_TRAINING_GRADES.filter(
     grade => gradeKind(grade) === gradeKind(startGrade)
   );
@@ -117,6 +117,67 @@ export const cctChangeIndexFromPointer = (pointer: string) => {
   const index = /^#\/changes\[(\d+)\]\//.exec(pointer)?.[1];
   return index === undefined ? null : Number(index);
 };
+
+export type CctProgrammeDetailsErrorTarget = {
+  field: string;
+  index: number | null;
+  property: string | null;
+};
+
+export type CctInvalidAdjustment = CctProgrammeDetailsErrorTarget & {
+  pointer: string;
+  message: string;
+};
+
+export const cctProgrammeDetailsErrorTarget = (
+  pointer: string
+): CctProgrammeDetailsErrorTarget | null => {
+  const match = /^#\/programmeDetails\/(\w+)(?:\[(\d+)\])?(?:\/(\w+))?$/.exec(
+    pointer
+  );
+  if (!match) return null;
+  return {
+    field: match[1],
+    index: match[2] === undefined ? null : Number(match[2]),
+    property: match[3] ?? null
+  };
+};
+
+export const findCctProgressionGrades = (
+  startGrade: CctTrainingGrade,
+  result: CctResult | null
+) =>
+  result && result.gradeProgression.length > 0
+    ? CCT_TRAINING_GRADES.filter(grade =>
+        result.gradeProgression.some(year => year.grade === grade)
+      )
+    : findCctTrainingTimeGrades(startGrade);
+
+export const findCctEighteenMonthFinalGrade = (
+  startGrade: CctTrainingGrade,
+  lengthMonths: number,
+  skippedGrade: string | null | undefined
+) => {
+  const fullYears = Math.floor(lengthMonths / 12);
+  if (lengthMonths % 12 !== 6 || fullYears < 1) return null;
+  const numbered = /^([A-Z]+)(\d+)$/.exec(startGrade);
+  if (!numbered) return fullYears === 1 ? startGrade : null;
+  const grades = Array.from(
+    { length: fullYears + 1 },
+    (_, years) => `${numbered[1]}${Number(numbered[2]) + years}`
+  );
+  const isSkipped = grades.slice(0, fullYears).includes(skippedGrade ?? "");
+  const grade = grades[isSkipped ? fullYears : fullYears - 1];
+  return CCT_TRAINING_GRADES.find(known => known === grade) ?? null;
+};
+
+export const toCctGradeOptions = (
+  grades: CctTrainingGrade[],
+  ...currentGrades: (string | null | undefined)[]
+) =>
+  CCT_TRAINING_GRADES.filter(
+    grade => grades.includes(grade) || currentGrades.includes(grade)
+  ).map(grade => ({ value: grade, label: grade }));
 
 export function pickCctCalculatedChanges(
   calculatedChanges: CctCalculatedChange[],
