@@ -40,7 +40,9 @@ type CctSummaryProps = {
   isRetrying: boolean;
   onRetry: () => void;
   hasInvalidChanges: boolean;
+  hasInvalidAdjustments: boolean;
   onGoToChanges: () => void;
+  onGoToProgrammeDetails: () => void;
   savedCalculationId?: string;
   savedName: string;
   name: string;
@@ -59,7 +61,9 @@ export function CctSummary({
   isRetrying,
   onRetry,
   hasInvalidChanges,
+  hasInvalidAdjustments,
   onGoToChanges,
+  onGoToProgrammeDetails,
   savedCalculationId,
   savedName,
   name,
@@ -69,7 +73,10 @@ export function CctSummary({
 }: Readonly<CctSummaryProps>) {
   const noResultText =
     calculationStatus === "failed" ? CCT_NO_VALUE : CCT_NOT_CALCULATED;
-  const canPrint = calculationStatus === "succeeded" && !hasInvalidChanges;
+  const canPrint =
+    calculationStatus === "succeeded" &&
+    !hasInvalidChanges &&
+    !hasInvalidAdjustments;
 
   return (
     <>
@@ -124,6 +131,16 @@ export function CctSummary({
           )}
         </Card>
 
+        {programmeDetails && result && result.gradeProgression.length > 0 && (
+          <Card feature>
+            <Card.Heading>Grade progression</Card.Heading>
+            <CctGradeYearsTable
+              gradeYears={result.gradeProgression}
+              programmeDetails={programmeDetails}
+            />
+          </Card>
+        )}
+
         {programmeDetails && (
           <>
             <Card feature>
@@ -156,20 +173,27 @@ export function CctSummary({
           />
         </Card>
 
-        {programmeDetails && result && result.gradeProgression.length > 0 && (
-          <Card feature>
-            <Card.Heading>Grade progression</Card.Heading>
-            <CctGradeYearsTable
-              gradeYears={result.gradeProgression}
-              programmeDetails={programmeDetails}
-            />
-          </Card>
-        )}
-
         {calculationStatus === "succeeded" && (
           <Card feature>
             <Card.Heading>Save your calculation</Card.Heading>
-            {hasInvalidChanges ? (
+            {hasInvalidAdjustments && (
+              <>
+                <p data-cy="cct-save-blocked-adjustments">
+                  There is a problem with your training time or grade
+                  progression adjustments. You need to fix it before you can
+                  save this calculation.
+                </p>
+                <Button
+                  secondary
+                  type="button"
+                  onClick={onGoToProgrammeDetails}
+                  data-cy="cct-go-to-programme-details"
+                >
+                  Go to programme details
+                </Button>
+              </>
+            )}
+            {hasInvalidChanges && (
               <>
                 <p data-cy="cct-save-blocked">
                   There is a problem with your changes. You need to fix it
@@ -184,7 +208,8 @@ export function CctSummary({
                   Go to changes
                 </Button>
               </>
-            ) : (
+            )}
+            {!hasInvalidAdjustments && !hasInvalidChanges && (
               <CctSaveForm
                 name={name}
                 saveStatus={saveStatus}

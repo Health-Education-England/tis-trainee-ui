@@ -97,10 +97,6 @@ export const cctProgrammeDetailsValidationSchema = yup.object({
 });
 
 export const cctGradeProgressionValidationSchema = yup.object({
-  eighteenMonthFinalGrade: yup
-    .string()
-    .nullable()
-    .required("Please choose the grade with an 18-month final year."),
   eighteenMonthFinalGradeNotes: requiredText(
     "Please enter a reason for the 18-month final year."
   ),

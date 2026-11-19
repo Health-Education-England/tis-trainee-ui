@@ -2,8 +2,15 @@ import { useEffect, useRef } from "react";
 import { Button } from "nhsuk-react-components";
 import { FormData, FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
-import { CctProgrammeDetails, CctTrainingTime } from "../../../models/CctTypes";
-import { findCctTrainingTimeGrades } from "../../../utilities/CctUtilities";
+import {
+  CctProgrammeDetails,
+  CctResult,
+  CctTrainingTime
+} from "../../../models/CctTypes";
+import {
+  findCctProgressionGrades,
+  toCctGradeOptions
+} from "../../../utilities/CctUtilities";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
 import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 import { CctFields } from "./CctFields";
@@ -14,6 +21,7 @@ import { buildCctTrainingTimeValidationSchema } from "./cctValidationSchema";
 type CctTrainingTimeFormProps = {
   kind: CctTrainingTimeKind;
   programmeDetails: CctProgrammeDetails;
+  result: CctResult | null;
   otherEntries: CctTrainingTime[];
   initialData: FormData;
   isEditing: boolean;
@@ -40,6 +48,7 @@ export function CctTrainingTimeForm({
 function CctTrainingTimeFormBody({
   kind,
   programmeDetails,
+  result,
   otherEntries,
   isEditing,
   onSubmit,
@@ -61,9 +70,10 @@ function CctTrainingTimeFormBody({
   }, []);
 
   const options = {
-    trainingTimeGrades: findCctTrainingTimeGrades(
-      programmeDetails.startGrade
-    ).map(grade => ({ value: grade, label: grade }))
+    trainingTimeGrades: toCctGradeOptions(
+      findCctProgressionGrades(programmeDetails.startGrade, result),
+      formData.grade
+    )
   };
 
   return (

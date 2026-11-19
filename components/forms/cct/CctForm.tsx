@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Card } from "nhsuk-react-components";
 import {
   CctCalculation,
   CctChange,
@@ -11,6 +12,7 @@ import {
 } from "../../../redux/slices/cctSlice";
 import {
   cctChangeIndexFromPointer,
+  cctProgrammeDetailsErrorTarget,
   fromCctChangeDtos,
   sortCctChanges,
   toCctChangeDtos
@@ -22,6 +24,7 @@ import history from "../../navigation/history";
 import { LeavePageGuard } from "../../common/LeavePageGuard";
 import { CctChangesSection } from "./CctChangesSection";
 import { CctFormShell } from "./CctFormShell";
+import { CctGradeYearsTable } from "./CctGradeProgressionSection";
 import {
   CctProgrammeDetailsInset,
   CctProgrammeDetailsSection
@@ -83,8 +86,15 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
       .filter(({ pointer }) => cctChangeIndexFromPointer(pointer) === index)
       .map(({ pointer, detail }) => ({ change, pointer, message: detail }))
   );
+  const invalidAdjustments = errors.flatMap(({ pointer, detail }) => {
+    const target = cctProgrammeDetailsErrorTarget(pointer);
+    return target ? [{ ...target, pointer, message: detail }] : [];
+  });
   const isProgrammeDetailsDone =
-    !isEditingProgrammeDetails && !isAdjustmentFormOpen && result !== null;
+    !isEditingProgrammeDetails &&
+    !isAdjustmentFormOpen &&
+    result !== null &&
+    invalidAdjustments.length === 0;
   const isChangesDone =
     !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;
   const hasUnsavedChanges =
@@ -142,6 +152,7 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           isRetryingCalculation={isRetrying}
           onRetryCalculation={retry}
           hasInvalidChanges={invalidChanges.length > 0}
+          invalidAdjustments={invalidAdjustments}
           isAdjustmentFormOpen={isAdjustmentFormOpen}
           onChange={setProgrammeDetails}
           onEditingChange={setIsEditingProgrammeDetails}
@@ -156,6 +167,15 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
             result={result}
             onEdit={() => goToPage(0)}
           />
+          {programmeDetails && result && result.gradeProgression.length > 0 && (
+            <Card feature data-cy="cct-changes-grade-progression">
+              <Card.Heading>Grade progression</Card.Heading>
+              <CctGradeYearsTable
+                gradeYears={result.gradeProgression}
+                programmeDetails={programmeDetails}
+              />
+            </Card>
+          )}
           <CctChangesSection
             programmeDetails={programmeDetails}
             changes={changes}
@@ -184,7 +204,9 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           isRetrying={isRetrying}
           onRetry={retry}
           hasInvalidChanges={invalidChanges.length > 0}
+          hasInvalidAdjustments={invalidAdjustments.length > 0}
           onGoToChanges={() => goToPage(1)}
+          onGoToProgrammeDetails={() => goToPage(0)}
           savedCalculationId={savedCalculation?.id}
           savedName={savedCalculation?.name ?? ""}
           name={name}

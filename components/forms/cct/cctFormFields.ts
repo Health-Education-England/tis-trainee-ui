@@ -118,15 +118,6 @@ export const cctGradeProgressionFields: Field[] = [
     visible: true
   },
   {
-    name: "eighteenMonthFinalGrade",
-    label: "Final grade lasting 18 months",
-    type: "select",
-    visible: false,
-    visibleIf: showWhenTrue("hasEighteenMonthFinalYear"),
-    optionsKey: "trainingGrades",
-    hint: "For specialties with an 18-month final year, for example intensive care medicine with a dual specialty. This changes grade progression, not total training time."
-  },
-  {
     name: "eighteenMonthFinalGradeNotes",
     label: "Reason for an 18-month final year",
     type: "text",
@@ -147,7 +138,7 @@ export const cctGradeProgressionFields: Field[] = [
     type: "select",
     visible: false,
     visibleIf: showWhenTrue("hasSkippedGrade"),
-    optionsKey: "trainingGrades",
+    optionsKey: "skippableGrades",
     hint: "This moves later displayed grades on by one year. Record any shorter programme duration separately as accelerated training time."
   },
   {

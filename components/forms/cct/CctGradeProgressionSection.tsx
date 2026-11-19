@@ -1,22 +1,34 @@
 import { useState } from "react";
-import { Button, Card, SummaryList, Table } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  ErrorMessage,
+  SummaryList,
+  Table
+} from "nhsuk-react-components";
 import { FormData, FormErrors } from "../form-builder/FormBuilder";
 import { FormProvider, useFormContext } from "../form-builder/FormContext";
 import {
   CctGradeYear,
   CctProgrammeDetails,
-  CctSpecialty
+  CctResult,
+  CctSpecialty,
+  CctTrainingGrade
 } from "../../../models/CctTypes";
 import { CCT_NO_VALUE } from "../../../utilities/CctConstants";
 import {
+  CctInvalidAdjustment,
+  findCctEighteenMonthFinalGrade,
+  findCctProgressionGrades,
   formatCctDate,
   mapFormDataToProgrammeDetails,
-  mapProgrammeDetailsToFormData
+  mapProgrammeDetailsToFormData,
+  toCctGradeOptions
 } from "../../../utilities/CctUtilities";
 import { useCctFormErrors } from "../../../utilities/hooks/useCctFormErrors";
 import { useReportCctFormDirty } from "../../../utilities/hooks/useReportCctFormDirty";
 import { CctFields } from "./CctFields";
-import { cctFieldOptions, cctGradeProgressionFields } from "./cctFormFields";
+import { cctGradeProgressionFields } from "./cctFormFields";
 import { cctGradeProgressionValidationSchema } from "./cctValidationSchema";
 
 const CCT_GRADE_PROGRESSION_HINT =
@@ -25,6 +37,8 @@ const CCT_GRADE_PROGRESSION_HINT =
 type CctGradeProgressionSectionProps = {
   programmeDetails: CctProgrammeDetails;
   specialties: CctSpecialty[];
+  result: CctResult | null;
+  invalidAdjustments: CctInvalidAdjustment[];
   isFormOpen: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onFormOpenChange: (isFormOpen: boolean) => void;
@@ -34,6 +48,8 @@ type CctGradeProgressionSectionProps = {
 export function CctGradeProgressionSection({
   programmeDetails,
   specialties,
+  result,
+  invalidAdjustments,
   isFormOpen,
   onChange,
   onFormOpenChange,
@@ -64,6 +80,11 @@ export function CctGradeProgressionSection({
             autosave={false}
           >
             <CctGradeProgressionFormBody
+              progressionGrades={findCctProgressionGrades(
+                programmeDetails.startGrade,
+                result
+              )}
+              programmeDetails={programmeDetails}
               onSubmit={formData => {
                 onChange(mapFormDataToProgrammeDetails(formData));
                 setEditing(false);
@@ -75,8 +96,12 @@ export function CctGradeProgressionSection({
         </>
       ) : (
         <>
-          <CctGradeProgressionSummary programmeDetails={programmeDetails} />
+          <CctGradeProgressionSummary
+            programmeDetails={programmeDetails}
+            invalidAdjustments={invalidAdjustments}
+          />
           <Button
+            id="cct-edit-grade-progression"
             secondary
             type="button"
             disabled={isFormOpen}
@@ -94,17 +119,35 @@ export function CctGradeProgressionSection({
 }
 
 type CctGradeProgressionFormBodyProps = {
+  progressionGrades: CctTrainingGrade[];
+  programmeDetails: CctProgrammeDetails;
   onSubmit: (formData: FormData) => void;
   onCancel: () => void;
   onDirtyChange: (isDirty: boolean) => void;
 };
 
 function CctGradeProgressionFormBody({
+  progressionGrades,
+  programmeDetails,
   onSubmit,
   onCancel,
   onDirtyChange
 }: Readonly<CctGradeProgressionFormBodyProps>) {
   const { formData } = useFormContext();
+  const options = {
+    skippableGrades: toCctGradeOptions(
+      progressionGrades,
+      programmeDetails.skippedGrade,
+      formData.skippedGrade
+    )
+  };
+  const eighteenMonthFinalGrade =
+    findCctEighteenMonthFinalGrade(
+      programmeDetails.startGrade,
+      programmeDetails.lengthMonths,
+      formData.skippedGrade as string | null
+    ) ?? programmeDetails.eighteenMonthFinalGrade;
+  const [eighteenMonthCheckbox, ...otherFields] = cctGradeProgressionFields;
   const { errors, isValidOnSubmit } = useCctFormErrors(
     cctGradeProgressionFields,
     cctGradeProgressionValidationSchema
@@ -118,14 +161,38 @@ function CctGradeProgressionFormBody({
       noValidate
       onSubmit={e => {
         e.preventDefault();
-        if (isValidOnSubmit()) onSubmit(formData);
+        if (isValidOnSubmit())
+          onSubmit({
+            ...formData,
+            eighteenMonthFinalGrade: formData.hasEighteenMonthFinalYear
+              ? eighteenMonthFinalGrade
+              : null
+          });
       }}
     >
-      <CctFields
-        fields={cctGradeProgressionFields}
-        options={cctFieldOptions}
-        errors={errors}
-      />
+      {eighteenMonthFinalGrade && (
+        <CctFields
+          fields={[eighteenMonthCheckbox]}
+          options={options}
+          errors={errors}
+        />
+      )}
+      {eighteenMonthFinalGrade && formData.hasEighteenMonthFinalYear && (
+        <div
+          className="nhsuk-form-group"
+          data-cy="cct-eighteen-month-final-grade"
+        >
+          <p className="nhsuk-body nhsuk-u-margin-bottom-1">
+            Final grade lasting 18 months: <b>{eighteenMonthFinalGrade}</b>
+          </p>
+          <p className="nhsuk-hint">
+            For specialties with an 18-month final year, for example intensive
+            care medicine with a dual specialty. This changes grade progression,
+            not total training time.
+          </p>
+        </div>
+      )}
+      <CctFields fields={otherFields} options={options} errors={errors} />
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
       <div className="nhsuk-button-group">
         <Button type="submit" data-cy="cct-grade-progression-submit">
@@ -146,10 +213,12 @@ function CctGradeProgressionFormBody({
 
 type CctGradeProgressionSummaryProps = {
   programmeDetails: CctProgrammeDetails;
+  invalidAdjustments?: CctInvalidAdjustment[];
 };
 
 export function CctGradeProgressionSummary({
-  programmeDetails
+  programmeDetails,
+  invalidAdjustments
 }: Readonly<CctGradeProgressionSummaryProps>) {
   const {
     eighteenMonthFinalGrade,
@@ -157,6 +226,17 @@ export function CctGradeProgressionSummary({
     skippedGrade,
     skippedGradeNotes
   } = programmeDetails;
+  const errorsFor = (field: "eighteenMonthFinalGrade" | "skippedGrade") =>
+    invalidAdjustments
+      ?.filter(
+        adjustment =>
+          adjustment.field === field || adjustment.field === `${field}Notes`
+      )
+      .map(({ pointer, message }) => (
+        <ErrorMessage key={pointer} data-cy={`cct-${field}-error`}>
+          {message}
+        </ErrorMessage>
+      ));
 
   return (
     <>
@@ -167,6 +247,7 @@ export function CctGradeProgressionSummary({
             <SummaryList.Row>
               <SummaryList.Key>18-month final year</SummaryList.Key>
               <SummaryList.Value>
+                {errorsFor("eighteenMonthFinalGrade")}
                 {eighteenMonthFinalGrade}
                 {eighteenMonthFinalGradeNotes && (
                   <div className="nhsuk-hint nhsuk-u-margin-top-1">
@@ -180,6 +261,7 @@ export function CctGradeProgressionSummary({
             <SummaryList.Row>
               <SummaryList.Key>Skipped grade year</SummaryList.Key>
               <SummaryList.Value>
+                {errorsFor("skippedGrade")}
                 {skippedGrade}
                 {skippedGradeNotes && (
                   <div className="nhsuk-hint nhsuk-u-margin-top-1">
@@ -222,6 +304,9 @@ export function CctGradeYearsTable({
   const hasYearPastHighestGrade = gradeYears.some(
     year => year.exceedsKnownTrainingGrade
   );
+  const hasTrainingTime = gradeYears.some(
+    year => year.additionalMonths > 0 || year.acceleratedMonths > 0
+  );
 
   return (
     <>
@@ -245,6 +330,10 @@ export function CctGradeYearsTable({
                 {year.skippedGradeBeforeThisRow &&
                   ` (${year.skippedGradeBeforeThisRow} skipped)`}
                 {year.extendedToEighteenMonths && " (18-month final year)"}
+                {year.additionalMonths > 0 &&
+                  ` (+${year.additionalMonths} months additional)`}
+                {year.acceleratedMonths > 0 &&
+                  ` (-${year.acceleratedMonths} months accelerated)`}
                 {year.exceedsKnownTrainingGrade &&
                   " (grade label not automatically assigned)"}
               </Table.Cell>
@@ -265,6 +354,12 @@ export function CctGradeYearsTable({
       {hasSkippedGrade && (
         <p className="nhsuk-hint" data-cy="cct-grade-years-skipped-hint">
           {`${programmeDetails.skippedGrade} is skipped, so later years move up a grade. This does not shorten training; any reduction is recorded as accelerated training time.`}
+        </p>
+      )}
+      {hasTrainingTime && (
+        <p className="nhsuk-hint" data-cy="cct-grade-years-training-time-hint">
+          Additional training time moves that grade&apos;s end date and every
+          later grade on. Accelerated training time brings them forward.
         </p>
       )}
       {hasYearPastHighestGrade && (

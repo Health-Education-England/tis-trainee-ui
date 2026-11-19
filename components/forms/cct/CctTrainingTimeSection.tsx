@@ -1,6 +1,12 @@
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { Button, Card, SummaryList, Table } from "nhsuk-react-components";
+import {
+  Button,
+  Card,
+  ErrorMessage,
+  SummaryList,
+  Table
+} from "nhsuk-react-components";
 import { FormData } from "../form-builder/FormBuilder";
 import {
   CctProgrammeDetails,
@@ -13,6 +19,7 @@ import {
   CCT_NOT_CALCULATED
 } from "../../../utilities/CctConstants";
 import {
+  CctInvalidAdjustment,
   deriveCctAdjustedLengthMonths,
   formatCctDate,
   isCctLengthAdjusted,
@@ -31,7 +38,7 @@ import {
 
 const addButtonId = (kind: CctTrainingTimeKind) => `cct-add-${kind.label}-time`;
 
-const editButtonId = (kind: CctTrainingTimeKind, index: number) =>
+export const editButtonId = (kind: CctTrainingTimeKind, index: number) =>
   `cct-${kind.label}-time-${index}-edit`;
 
 type CctTrainingTimeEditing = {
@@ -43,6 +50,7 @@ type CctTrainingTimeSectionProps = {
   programmeDetails: CctProgrammeDetails;
   result: CctResult | null;
   calculationStatus: CctCalculationStatus;
+  invalidAdjustments: CctInvalidAdjustment[];
   isFormOpen: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onFormOpenChange: (isFormOpen: boolean) => void;
@@ -53,6 +61,7 @@ export function CctTrainingTimeSection({
   programmeDetails,
   result,
   calculationStatus,
+  invalidAdjustments,
   isFormOpen,
   onChange,
   onFormOpenChange,
@@ -117,6 +126,9 @@ export function CctTrainingTimeSection({
             <CctTrainingTimeTable
               kind={kind}
               entries={entries}
+              invalidAdjustments={invalidAdjustments.filter(
+                ({ field }) => field === kind.field
+              )}
               editingIndex={editingIndex}
               isFormOpen={isFormOpen}
               onEdit={index => openForm(kind, index)}
@@ -127,6 +139,7 @@ export function CctTrainingTimeSection({
                 key={editingIndex ?? "new"}
                 kind={kind}
                 programmeDetails={programmeDetails}
+                result={result}
                 otherEntries={entries.filter((_, i) => i !== editingIndex)}
                 initialData={mapTrainingTimeToFormData(
                   editingIndex === null ? null : entries[editingIndex]
@@ -235,6 +248,7 @@ export function CctTrainingTimeSummary({
 type CctTrainingTimeTableProps = {
   kind: CctTrainingTimeKind;
   entries: CctTrainingTime[];
+  invalidAdjustments?: CctInvalidAdjustment[];
   isPrint?: boolean;
   editingIndex?: number | null;
   isFormOpen?: boolean;
@@ -245,6 +259,7 @@ type CctTrainingTimeTableProps = {
 function CctTrainingTimeTable({
   kind,
   entries,
+  invalidAdjustments,
   isPrint,
   editingIndex,
   isFormOpen,
@@ -277,6 +292,11 @@ function CctTrainingTimeTable({
             kind={kind}
             entry={entry}
             index={index}
+            invalidAdjustments={
+              invalidAdjustments?.filter(
+                adjustment => adjustment.index === index
+              ) ?? []
+            }
             isFormOpen={isFormOpen}
             isEditing={editingIndex === index}
             onEdit={onEdit}
@@ -302,6 +322,7 @@ type CctTrainingTimeRowProps = {
   kind: CctTrainingTimeKind;
   entry: CctTrainingTime;
   index: number;
+  invalidAdjustments: CctInvalidAdjustment[];
   isFormOpen?: boolean;
   isEditing: boolean;
   onEdit?: (index: number) => void;
@@ -312,6 +333,7 @@ function CctTrainingTimeRow({
   kind,
   entry,
   index,
+  invalidAdjustments,
   isFormOpen,
   isEditing,
   onEdit,
@@ -321,11 +343,29 @@ function CctTrainingTimeRow({
   const removeButtonRef = useRef<HTMLButtonElement>(null);
   const rowLabel = `${entry.grade} ${kind.label} training time`;
   const rowCy = `cct-${kind.label}-time-${index}`;
+  const errorsFor = (property: "grade" | "months") =>
+    invalidAdjustments
+      .filter(adjustment =>
+        property === "months"
+          ? adjustment.property === "months"
+          : adjustment.property !== "months"
+      )
+      .map(({ pointer, message }) => (
+        <ErrorMessage key={pointer} data-cy={`${rowCy}-${property}-error`}>
+          {message}
+        </ErrorMessage>
+      ));
 
   return (
     <Table.Row data-cy={`${rowCy}-row`}>
-      <Table.Cell>{entry.grade}</Table.Cell>
-      <Table.Cell>{`${entry.months} months`}</Table.Cell>
+      <Table.Cell>
+        {errorsFor("grade")}
+        {entry.grade}
+      </Table.Cell>
+      <Table.Cell>
+        {errorsFor("months")}
+        {`${entry.months} months`}
+      </Table.Cell>
       <Table.Cell>
         <CctNotes
           notes={entry.notes}
