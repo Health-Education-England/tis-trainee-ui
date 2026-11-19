@@ -125,7 +125,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 77.98,
         wteMonths: 77.98
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2025-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2026-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2027-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2028-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2029-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2030-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -162,7 +233,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 109.91666666666667,
         wteMonths: 65.95
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-11-29",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2027-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2029-03-29",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2030-11-27",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2032-07-27",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2034-03-27",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -199,7 +341,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 62.36,
         wteMonths: 62.36
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2026-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2027-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2028-10-11",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2029-10-10",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2030-10-10",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -236,7 +449,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 74.37,
         wteMonths: 74.37
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-10-13",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2026-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2027-10-12",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2028-10-11",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2029-10-11",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2030-10-10",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -273,7 +557,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 77.98,
         wteMonths: 77.98
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2025-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2026-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2027-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2028-01-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2029-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2030-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-01-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -310,7 +665,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: -11.08,
         wteMonths: -11.08
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2026-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2027-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2028-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2029-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-02-26",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: [
       {
@@ -353,7 +779,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 0,
         wteMonths: 0
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2024-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2025-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2026-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2027-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2028-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2029-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-02-26",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -373,7 +870,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 84,
         wteMonths: 84
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2025-02-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2026-02-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2027-02-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2028-02-28",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2029-02-27",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2030-02-26",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-02-26",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: []
   },
@@ -404,7 +972,78 @@ export const mockCctCalculateResponses: Record<string, CctCalculateResponse> = {
         calendarMonths: 84,
         wteMonths: 84
       },
-      gradeProgression: []
+      gradeProgression: [
+        {
+          yearNumber: 1,
+          grade: "ST1",
+          endDate: "2025-08-01",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 2,
+          grade: "ST2",
+          endDate: "2026-08-01",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 3,
+          grade: "ST3",
+          endDate: "2027-08-01",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 4,
+          grade: "ST4",
+          endDate: "2028-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 5,
+          grade: "ST5",
+          endDate: "2029-07-31",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 6,
+          grade: "ST6",
+          endDate: "2030-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        },
+        {
+          yearNumber: 7,
+          grade: "ST7",
+          endDate: "2031-07-30",
+          skippedGradeBeforeThisRow: null,
+          extendedToEighteenMonths: false,
+          exceedsKnownTrainingGrade: false,
+          additionalMonths: 0,
+          acceleratedMonths: 0
+        }
+      ]
     },
     errors: [
       {
