@@ -18,6 +18,7 @@ type TextProps = {
   width?: number;
   isNumberField?: boolean;
   readOnly?: boolean;
+  disabled?: boolean;
   dtoName?: string;
   hint?: string;
   maxDigits?: number;
@@ -34,6 +35,7 @@ export const Text: React.FC<TextProps> = ({
   width = 20,
   isNumberField,
   readOnly,
+  disabled,
   dtoName,
   hint,
   maxDigits
@@ -107,6 +109,7 @@ export const Text: React.FC<TextProps> = ({
         }
         maxLength={isNumberField ? maxDigits : 4096}
         readOnly={readOnly}
+        disabled={disabled}
       />
       {warningMsgs.length > 0 && !fieldError && (
         <FieldWarningMsg warningMsgs={warningMsgs} />

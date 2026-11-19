@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
 import { ReasonMsgObj } from "../components/common/ActionModal";
-import { LtftDto, LtftObjNew } from "../models/LtftTypes";
+import { CctCalculation } from "../models/CctTypes";
+import { LtftCctSnapshot, LtftDto, LtftObjNew } from "../models/LtftTypes";
 import { PersonalDetails } from "../models/PersonalDetails";
 import { ProgrammeMembership } from "../models/ProgrammeMembership";
 import { unsubmitLtftForm, withdrawLtftForm } from "../redux/slices/ltftSlice";
 import store from "../redux/store/store";
 import { ACTION_REASONS, LTFT_ROTATION_WINDOW_URLS } from "./Constants";
-import { findLinkedProgramme } from "./CctUtilities";
 import { computedValueGenerators, isFormDeleted } from "./FormBuilderUtilities";
+import { findLinkedProgramme } from "./ProfileUtilities";
 import { ActionState } from "./hooks/useActionState";
 
 export function populateLtftDraftNew(
@@ -51,6 +52,7 @@ export function populateLtftDraftNew(
       publicHealthNumber: personalDetails?.publicHealthNumber ?? null
     },
     skilledWorkerVisaHolder: null,
+    cctSnapshot: null,
     reasonsSelected: null,
     reasonsOtherDetail: null,
     supportingInformation: null,
@@ -139,6 +141,7 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
       supportingInformation: ltftObj.exceptionalReasons ?? null,
       startDate: ltftObj.exceptionalReasonsDate ?? null
     },
+    cctSnapshot: ltftObj.cctSnapshot ?? null,
     status: {
       current: {
         state: ltftObj.status.current.state,
@@ -227,6 +230,8 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
     },
     skilledWorkerVisaHolder:
       ltftDto.personalDetails.skilledWorkerVisaHolder ?? null,
+    // Note: no snapshot on applications submitted before the linkage feature.
+    cctSnapshot: ltftDto.cctSnapshot ?? null,
     reasonsSelected: ltftDto.reasons.selected,
     reasonsOtherDetail: ltftDto.reasons.otherDetail ?? null,
     supportingInformation: ltftDto.reasons.supportingInformation ?? null,
@@ -378,6 +383,36 @@ export function stampLtftStartDateOnSubmit(formData: LtftObjNew): LtftObjNew {
     ...formData,
     startDate: computedValueGenerators.ltft16WeeksNoticeDate()
   };
+}
+
+export function buildLtftCctSnapshot(
+  calculation: CctCalculation
+): LtftCctSnapshot {
+  return {
+    calculationId: calculation.id,
+    calculation
+  };
+}
+
+export function findAttachedCctCalculation(
+  snapshot: LtftCctSnapshot,
+  calculations: CctCalculation[]
+): CctCalculation | null {
+  return (
+    calculations.find(
+      calculation => calculation.id === snapshot.calculationId
+    ) ?? null
+  );
+}
+
+export function hasAttachedCctCalculationChanged(
+  snapshot: LtftCctSnapshot,
+  savedCalculation: CctCalculation | null
+): boolean {
+  return (
+    !!savedCalculation &&
+    savedCalculation.lastModified !== snapshot.calculation.lastModified
+  );
 }
 
 export function findLatestSubmissionDate(formData: LtftObjNew): string | null {

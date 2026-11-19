@@ -1,14 +1,48 @@
-import { Fieldset, Legend } from "nhsuk-react-components";
+import { Fieldset, Legend, NotificationBanner } from "nhsuk-react-components";
+import { Link, Route, Switch, useLocation } from "react-router-dom";
 import style from "../../Common.module.scss";
-import { Route, Switch } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
+import { CctCalculation } from "../../../models/CctTypes";
+import { CctForm } from "./CctForm";
 import { CctHome } from "./CctHome";
-import { CctCalcView } from "./CctCalcView";
+import { CctSavedCalculation } from "./CctSavedCalculation";
+
+type LocationState = {
+  savedCalculation?: Pick<CctCalculation, "id" | "name">;
+  deletedCalculation?: Pick<CctCalculation, "name">;
+};
 
 export function Cct() {
+  const location = useLocation<LocationState>();
+  const savedCalculation = location.state?.savedCalculation;
+  const deletedCalculation = location.state?.deletedCalculation;
+
   return (
     <>
-      <Fieldset>
+      {deletedCalculation && (
+        <NotificationBanner success data-cy="cct-deleted-banner">
+          <NotificationBanner.Heading>
+            {`Your calculation '${deletedCalculation.name}' has been deleted`}
+          </NotificationBanner.Heading>
+        </NotificationBanner>
+      )}
+      {savedCalculation && (
+        <NotificationBanner success data-cy="cct-saved-banner">
+          <NotificationBanner.Heading>
+            {`Your calculation '${savedCalculation.name}' has been saved`}
+          </NotificationBanner.Heading>
+          <p className="nhsuk-body">
+            <NotificationBanner.Link
+              asElement={Link}
+              to={`/cct/${savedCalculation.id}`}
+              data-cy="cct-saved-banner-link"
+            >
+              View or change your calculation
+            </NotificationBanner.Link>
+          </p>
+        </NotificationBanner>
+      )}
+      <Fieldset className="hide-from-print">
         <Legend
           isPageHeading
           className={style.fieldLegHeader}
@@ -19,9 +53,9 @@ export function Cct() {
         </Legend>
       </Fieldset>
       <Switch>
-        <Route exact path="/cct/view" component={CctCalcView} />
-        <Route exact path="/cct/view/:id" component={CctCalcView} />
         <Route exact path="/cct" component={CctHome} />
+        <Route exact path="/cct/create" component={CctForm} />
+        <Route exact path="/cct/:id" component={CctSavedCalculation} />
         <Route path="/cct/*" component={PageNotFound} />
       </Switch>
     </>

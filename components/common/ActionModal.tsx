@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
 import {
   Button,
+  ErrorSummary,
   Radios,
   Textarea,
   WarningCallout
@@ -27,6 +28,8 @@ type ActionModalProps = {
   actionType?: ActionType;
   isSubmitting: boolean;
   additionalInfo?: string;
+  errorText?: string;
+  confirmBtnText?: string;
 };
 
 export function ActionModal({
@@ -39,7 +42,9 @@ export function ActionModal({
   submittingBtnText,
   actionType,
   isSubmitting = false,
-  additionalInfo
+  additionalInfo,
+  errorText,
+  confirmBtnText = "Confirm & Continue"
 }: Readonly<ActionModalProps>) {
   const hasReason = actionType === "Unsubmit" || actionType === "Withdraw";
   const [reason, setReason] = useState("");
@@ -64,6 +69,12 @@ export function ActionModal({
         <p data-cy={`warningText-${warningLabel}`}>{warningText}</p>
         {additionalInfo && <p data-cy="additionalInfo">{additionalInfo}</p>}
       </WarningCallout>
+      {errorText && (
+        <ErrorSummary disableAutoFocus data-cy="actionModalError">
+          <ErrorSummary.Title>Oops! Something went wrong</ErrorSummary.Title>
+          <p>{errorText}</p>
+        </ErrorSummary>
+      )}
       <div>
         {hasReason && (
           <>
@@ -113,7 +124,7 @@ export function ActionModal({
           disabled={isSubmitting || (hasReason && !reason)}
           data-cy={`submitBtn-${warningLabel}`}
         >
-          {isSubmitting ? `${submittingBtnText}...` : "Confirm & Continue"}
+          {isSubmitting ? `${submittingBtnText}...` : confirmBtnText}
         </Button>
       </div>
     </Modal>
