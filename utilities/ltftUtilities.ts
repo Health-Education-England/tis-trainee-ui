@@ -26,7 +26,6 @@ export function populateLtftDraftNew(
     type: "LTFT",
     canGiveCompliantStartDate: null,
     startDate: null,
-    altStartDate: null,
     exceptionalReasons: null,
     exceptionalReasonsDate: null,
     wteBeforeChange: null,
@@ -84,7 +83,6 @@ export const mapLtftObjToDto = (ltftObj: LtftObjNew): LtftDto => {
     change: {
       type: "LTFT",
       startDate: ltftObj.startDate,
-      altStartDate: ltftObj.altStartDate ? ltftObj.altStartDate : null,
       wte: ltftObj.wte ? ltftObj.wte / 100 : 0,
       id: null
     },
@@ -194,7 +192,6 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
         ? null
         : !ltftDto.exceptionalReasons.exceptional,
     startDate: ltftDto.change.startDate,
-    altStartDate: ltftDto.change.altStartDate ?? null,
     exceptionalReasons:
       ltftDto.exceptionalReasons?.supportingInformation ?? null,
     exceptionalReasonsDate: ltftDto.exceptionalReasons?.startDate ?? null,
@@ -269,14 +266,12 @@ export const mapLtftDtoToObj = (ltftDto: LtftDto): LtftObjNew => {
 export const clearStartDateSection = (ltftObj: LtftObjNew): LtftObjNew => ({
   ...ltftObj,
   startDate: null,
-  altStartDate: null,
   exceptionalReasons: null,
   exceptionalReasonsDate: null
 });
 
 export const hasLegacyStartDateData = (ltftObj: LtftObjNew): boolean =>
-  ltftObj.canGiveCompliantStartDate === null &&
-  (ltftObj.startDate != null || ltftObj.altStartDate != null);
+  ltftObj.canGiveCompliantStartDate === null && ltftObj.startDate != null;
 
 // Note: legacy DRAFT, canGiveCompliantStartDate is null. Its old start date answers no longer fit the new start date flow, so clear and make trainee complete that page from scratch. ('New' drafts that haven't answered the question yet already have these fields null).
 export const resetLegacyStartDateSection = (

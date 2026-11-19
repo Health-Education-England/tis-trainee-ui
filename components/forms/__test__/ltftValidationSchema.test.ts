@@ -25,7 +25,6 @@ const baseValid = {
   },
   canGiveCompliantStartDate: false,
   startDate: beyond16w,
-  altStartDate: null,
   exceptionalReasons: "A valid exceptional reason",
   exceptionalReasonsDate: within16w,
   skilledWorkerVisaHolder: false,

@@ -374,13 +374,11 @@ describe("LtftForm - start date exceptions (No / exceptional path)", () => {
 
 describe("LtftForm - legacy Start date page gate", () => {
   const legacyStartDate = dayjs().add(20, "week").format("YYYY-MM-DD");
-  const legacyAltStartDate = dayjs().add(30, "week").format("YYYY-MM-DD");
 
   const mockLegacyUnsubmitted: LtftObjNew = {
     ...mockLtftUnsubmittedFormObj,
     canGiveCompliantStartDate: null,
     startDate: legacyStartDate,
-    altStartDate: legacyAltStartDate,
     exceptionalReasons: null,
     exceptionalReasonsDate: null
   };
