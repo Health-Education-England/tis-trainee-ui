@@ -98,6 +98,12 @@ const addParentalLeaveChange = () => {
   cy.get('[data-cy="cct-change-form-submit"]').click();
 };
 
+const addParentalLeaveChangeAndWait = () => {
+  cy.intercept("POST", "/api/trainee/cct/calculate").as("calculateChange");
+  addParentalLeaveChange();
+  cy.wait("@calculateChange");
+};
+
 const addTrainingTime = (
   kind: "additional" | "accelerated",
   grade: string,
@@ -652,7 +658,7 @@ describe("Cct", () => {
     mountCct();
     saveProgrammeDetails();
     cy.get('[data-cy="navNext"]').click();
-    addParentalLeaveChange();
+    addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy="cct-changes-table"]').should(
       "have.class",
@@ -662,6 +668,7 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-projection-row"]')
       .find(".nhsuk-table-responsive__heading")
       .should("contain.text", "WTE");
+    cy.get('[data-cy="cct-total-row"]').scrollIntoView();
     cy.get('[data-cy="cct-total-row"] td:visible').should("have.length", 3);
   });
 
@@ -874,7 +881,7 @@ describe("Cct", () => {
     mountCct();
     saveProgrammeDetails();
     cy.get('[data-cy="navNext"]').click();
-    addParentalLeaveChange();
+    addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy^="cct-edit-change-"]').click();
 
@@ -900,7 +907,7 @@ describe("Cct", () => {
     mountCct();
     saveProgrammeDetails();
     cy.get('[data-cy="navNext"]').click();
-    addParentalLeaveChange();
+    addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy^="cct-edit-change-"]').click();
     cy.get('[data-cy="cct-change-form-submit"]').click();
