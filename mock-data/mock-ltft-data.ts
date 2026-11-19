@@ -180,7 +180,6 @@ export const mockLtftNewFormObj: LtftObjNew = {
   skilledWorkerVisaHolder: null,
   canGiveCompliantStartDate: null,
   startDate: null,
-  altStartDate: null,
   exceptionalReasons: null,
   exceptionalReasonsDate: null,
   status: {
@@ -228,7 +227,6 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   change: {
     type: "LTFT",
     startDate: null,
-    altStartDate: null,
     wte: 0,
     id: null
   },
@@ -407,7 +405,6 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
   skilledWorkerVisaHolder: null,
   canGiveCompliantStartDate: null,
   startDate: null,
-  altStartDate: null,
   exceptionalReasons: null,
   exceptionalReasonsDate: null,
   status: {
@@ -452,7 +449,6 @@ export const mockLtftSubmittedFormObj: LtftObjNew = {
   type: "LTFT",
   canGiveCompliantStartDate: false,
   startDate: compliantStartDate,
-  altStartDate: null,
   exceptionalReasons: "My exceptional reason for a late application",
   exceptionalReasonsDate: exceptionalRequestedDate,
   wteBeforeChange: wteBeforeChange,

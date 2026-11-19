@@ -80,7 +80,7 @@ export const LtftFormView = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(loadSavedLtft(id));
+      void dispatch(loadSavedLtft(id));
     }
   }, [id, dispatch]);
 
@@ -90,7 +90,7 @@ export const LtftFormView = () => {
     formData
   );
 
-  // Note: a legacy application can be re-submitted with its original start date details (e.g. startDate <16wks; altStartDate) untouched, so it is exempt from the 'new page' validation.
+  // Note: a legacy application can be re-submitted with its original start date details (e.g. startDate <16wks) untouched, so it is exempt from the 'new page' validation.
   const isStartDateSectionSubmittable =
     hasLegacyStartDate || isStartDateSectionValid;
 
@@ -412,16 +412,6 @@ function LtftChangeSummaryCard({
             />
           </SummaryList.Value>
         </SummaryList.Row>
-        {formData.altStartDate && (
-          <SummaryList.Row>
-            <SummaryList.Key data-cy="altStartDateKey">
-              Alternative start date
-            </SummaryList.Key>
-            <SummaryList.Value data-cy="altStartDateValue">
-              {dayjs(formData.altStartDate).format("DD/MM/YYYY")}
-            </SummaryList.Value>
-          </SummaryList.Row>
-        )}
       </SummaryList>
       <CompletionDateChangeText
         wteBeforeChange={formData.wteBeforeChange}

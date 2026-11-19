@@ -16,7 +16,6 @@ export type LtftChange = {
   calculationId?: string | null;
   type: CctType;
   startDate: Date | string | null;
-  altStartDate?: Date | string | null;
   endDate?: Date | string | null;
   wte: number;
 };
@@ -103,7 +102,6 @@ export type LtftObjNew = {
   type: CctType;
   canGiveCompliantStartDate: boolean | null;
   startDate: Date | string | null;
-  altStartDate: Date | string | null;
   exceptionalReasons: string | null;
   exceptionalReasonsDate: Date | string | null;
   wteBeforeChange: number | null; // currently belongs to PM but needed here for ease of use

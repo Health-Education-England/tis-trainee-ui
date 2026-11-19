@@ -55,15 +55,6 @@ describe("mapLtftObjToDto", () => {
     });
   });
 
-  it("should map empty altStartDate to null", () => {
-    const mappedDto = mapLtftObjToDto({
-      ...mockLtftDraftUpdatedPmFormObjNoSave,
-      altStartDate: ""
-    });
-
-    expect(mappedDto.change.altStartDate).toBeNull();
-  });
-
   it("maps the No path (canGiveCompliantStartDate false) to exceptional true", () => {
     const noPath = {
       ...mockLtftDraftUpdatedPmFormObjNoSave,
@@ -181,15 +172,6 @@ describe("hasLegacyStartDateData", () => {
     ).toBe(true);
   });
 
-  it("is true when canGiveCompliantStartDate is null and only an altStartDate was given", () => {
-    expect(
-      hasLegacyStartDateData({
-        ...mockLtftNewFormObj,
-        altStartDate: "2026-06-01"
-      })
-    ).toBe(true);
-  });
-
   it("is false for a new form that has not reached the Start date page yet", () => {
     expect(hasLegacyStartDateData(mockLtftNewFormObj)).toBe(false);
   });
@@ -198,7 +180,6 @@ describe("hasLegacyStartDateData", () => {
     const reset = {
       ...mockLtftNewFormObj,
       startDate: null,
-      altStartDate: null,
       status: {
         ...mockLtftNewFormObj.status,
         current: {
@@ -227,7 +208,6 @@ describe("resetLegacyStartDateSection", () => {
     const legacyDraft = {
       ...mockLtftNewFormObj,
       startDate: "2026-01-01",
-      altStartDate: "2026-06-01",
       exceptionalReasons: "legacy reason",
       exceptionalReasonsDate: "2026-02-01"
     };
@@ -235,7 +215,6 @@ describe("resetLegacyStartDateSection", () => {
     const result = resetLegacyStartDateSection(legacyDraft);
 
     expect(result.startDate).toBeNull();
-    expect(result.altStartDate).toBeNull();
     expect(result.exceptionalReasons).toBeNull();
     expect(result.exceptionalReasonsDate).toBeNull();
     expect(result.canGiveCompliantStartDate).toBeNull();
@@ -254,7 +233,7 @@ describe("resetLegacyStartDateSection", () => {
   it("leaves non-DRAFT forms untouched even when canGiveCompliantStartDate is null", () => {
     const submittedLegacy = {
       ...mockLtftNewFormObj,
-      altStartDate: "2026-06-01",
+      startDate: "2026-06-01",
       status: {
         ...mockLtftNewFormObj.status,
         current: {

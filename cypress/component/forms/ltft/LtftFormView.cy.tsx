@@ -434,7 +434,7 @@ describe("LTFT Form View - new flow: 'can give...' answer", () => {
   });
 });
 
-// Note Legacy forms pre-date the "16 weeks' notice" question, so canGiveCompliantStartDate is null while startDate/altStartDate hold the old answers.
+// Note Legacy forms pre-date the "16 weeks' notice" question, so canGiveCompliantStartDate is null while startDate holds the old answer.
 describe("LTFT Form View - legacy: retrospective 16-week warning", () => {
   const submissionDate = dayjs().subtract(1, "week").toISOString();
   const lateStartDate = dayjs(submissionDate).add(15, "week").toDate();
@@ -485,12 +485,10 @@ describe("LTFT Form View - legacy: retrospective 16-week warning", () => {
 });
 
 describe("LTFT Form View - legacy: read-only display & Update migration", () => {
-  const legacyAltStartDate = dayjs().add(30, "week").format("YYYY-MM-DD");
   const makeLegacy = (base: LtftObjNew): LtftObjNew => ({
     ...base,
     canGiveCompliantStartDate: null,
     startDate: startDate,
-    altStartDate: legacyAltStartDate,
     exceptionalReasons: null,
     exceptionalReasonsDate: null
   });
@@ -512,10 +510,6 @@ describe("LTFT Form View - legacy: read-only display & Update migration", () => 
       "include.text",
       ddmmyyyy(startDate)
     );
-    cy.get('[data-cy="altStartDateValue"]').should(
-      "include.text",
-      ddmmyyyy(legacyAltStartDate)
-    );
   });
 
   it("UNSUBMITTED (editable): hides the 'can give' question and its edit link, shows the Update action, no per-field edit links", () => {
@@ -529,9 +523,7 @@ describe("LTFT Form View - legacy: read-only display & Update migration", () => 
     cy.get('[data-cy="updateLegacyStartDate"]').should("exist");
     // Note: dates display read-only in the summary card (no per-field edit links)
     cy.get('[data-cy="completionDateChangeStartDateValue"]').should("exist");
-    cy.get('[data-cy="altStartDateValue"]').should("exist");
     cy.get('[data-cy="edit-legacy-startDate"]').should("not.exist");
-    cy.get('[data-cy="edit-legacy-altStartDate"]').should("not.exist");
   });
 
   // Note: Integration test across the route: LtftFormView -> ActionModal -> LtftForm
@@ -610,7 +602,6 @@ describe("LTFT Form View - incomplete Start date section", () => {
     ...base,
     canGiveCompliantStartDate: null,
     startDate: null,
-    altStartDate: null,
     exceptionalReasons: null,
     exceptionalReasonsDate: null
   });
@@ -655,7 +646,6 @@ describe("LTFT Form View - incomplete Start date section", () => {
       ...mockLtftUnsubmittedFormObj,
       canGiveCompliantStartDate: null,
       startDate: startDate,
-      altStartDate: dayjs().add(30, "week").format("YYYY-MM-DD"),
       exceptionalReasons: null,
       exceptionalReasonsDate: null
     });
