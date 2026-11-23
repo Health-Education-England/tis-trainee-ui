@@ -1,6 +1,6 @@
 import { WarningCallout } from "nhsuk-react-components";
 import { Link } from "react-router-dom";
-import { ExpanderMsg } from "../../../common/ExpanderMsg";
+import { tier2SkilledWorkerVisaInfo } from "../../../../utilities/Constants";
 
 type ImportantText = {
   txtName: string;
@@ -312,7 +312,7 @@ const displayText: DisplayText = {
   ltftTier2VisaImportantText: (
     <>
       <p>{ltftTier2VisaImportantText1}</p>
-      <ExpanderMsg expanderName="skilledVisaWorkerMoreInfo" />
+      <p>{tier2SkilledWorkerVisaInfo}</p>
     </>
   ),
   personalDetailsCheckText: (
