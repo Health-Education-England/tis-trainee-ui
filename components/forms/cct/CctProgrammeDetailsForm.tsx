@@ -154,25 +154,23 @@ function CctProgrammeDetailsFormBody({
         />
       )}
       {Object.keys(errors).length > 0 && <FormErrors formErrors={errors} />}
-      <div className="nhsuk-button-group">
-        <Button
-          type="submit"
-          disabled={!selectedSpecialty}
-          data-cy="cct-programme-details-submit"
-        >
-          {submitLabel}
-        </Button>
-        {onCancel && (
-          <Button
-            secondary
-            type="button"
-            onClick={onCancel}
-            data-cy="cct-programme-details-cancel"
-          >
-            Cancel
+      {selectedSpecialty && (
+        <div className="nhsuk-button-group">
+          <Button type="submit" data-cy="cct-programme-details-submit">
+            {submitLabel}
           </Button>
-        )}
-      </div>
+          {onCancel && (
+            <Button
+              secondary
+              type="button"
+              onClick={onCancel}
+              data-cy="cct-programme-details-cancel"
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
+      )}
     </form>
   );
 }

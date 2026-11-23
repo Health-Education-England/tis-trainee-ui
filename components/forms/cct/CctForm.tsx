@@ -23,6 +23,7 @@ import { useCctCalculation } from "../../../utilities/hooks/useCctCalculation";
 import { useCctSpecialties } from "../../../utilities/hooks/useCctSpecialties";
 import history from "../../navigation/history";
 import { LeavePageGuard } from "../../common/LeavePageGuard";
+import Loading from "../../common/Loading";
 import { CctChangesSection } from "./CctChangesSection";
 import { CctFormShell } from "./CctFormShell";
 import {
@@ -316,6 +317,14 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           saveStatus={saveStatus}
           onSave={handleSave}
           onNameChange={setName}
+        />
+      )}
+      {status === "loading" && (
+        <Loading
+          delay={300}
+          height={64}
+          width={64}
+          text="Calculating your training dates…"
         />
       )}
       <LeavePageGuard hasUnsavedChanges={hasUnsavedChanges} />

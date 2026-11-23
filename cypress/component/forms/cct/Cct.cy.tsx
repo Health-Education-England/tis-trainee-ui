@@ -284,6 +284,51 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-continue"]').should("not.exist");
   });
 
+  it("shows Confirm programme details only once a specialty is picked", () => {
+    mountCct();
+    cy.get('[data-cy="specialty"]').should("exist");
+    cy.get('[data-cy="cct-programme-details-submit"]').should("not.exist");
+
+    selectOption("specialty", "Paediatrics");
+    cy.get('[data-cy="cct-programme-details-submit"]')
+      .should("have.text", "Confirm programme details")
+      .and("be.enabled");
+  });
+
+  it("shows that the programme is being calculated until the result arrives", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply({ ...calculateWithMockBackend(req.body), delay: 1500 })
+    ).as("slowCalculate");
+    mountCct();
+    saveProgrammeDetails();
+
+    cy.get('[data-cy="loading"]').should("exist");
+    cy.get(".loading output").should(
+      "have.text",
+      "Calculating your training dates…"
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+    cy.wait("@slowCalculate");
+    cy.get('[data-cy="loading"]').should("not.exist");
+    cy.get('[data-cy="cct-grade-progression"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
+  });
+
+  it("shows that the changes are being calculated until the result arrives", () => {
+    mountCct();
+    saveProgrammeDetails();
+    goToChanges();
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply({ ...calculateWithMockBackend(req.body), delay: 1500 })
+    ).as("slowCalculate");
+    addParentalLeaveChange();
+
+    cy.get('[data-cy="loading"]').should("exist");
+    cy.wait("@slowCalculate");
+    cy.get('[data-cy="loading"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("have.text", "Show summary");
+  });
+
   it("moves through the steps with Continue and the back link", () => {
     mountCct();
     saveProgrammeDetails();
