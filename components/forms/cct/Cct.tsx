@@ -54,7 +54,11 @@ export function Cct() {
       </Fieldset>
       <Switch>
         <Route exact path="/cct" component={CctHome} />
-        <Route exact path="/cct/create" component={CctForm} />
+        <Route
+          exact
+          path="/cct/create"
+          render={() => <CctForm key={location.key} />}
+        />
         <Route exact path="/cct/:id" component={CctSavedCalculation} />
         <Route path="/cct/*" component={PageNotFound} />
       </Switch>

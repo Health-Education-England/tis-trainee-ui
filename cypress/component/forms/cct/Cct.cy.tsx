@@ -1249,7 +1249,7 @@ describe("Cct", () => {
     });
   });
 
-  it("disables the name and ignores Back to CCT home while the calculation saves, then shows the home page", () => {
+  it("disables the name and ignores Back to CCT home and Start over while the calculation saves, then shows the home page", () => {
     cy.intercept("POST", "/api/trainee/cct/calculation", req =>
       req.reply({ ...saveWithMockBackend(req.body), delay: 1500 })
     ).as("save");
@@ -1262,6 +1262,8 @@ describe("Cct", () => {
     cy.get('[data-cy="calculationName-input"]').should("be.disabled");
 
     cy.get('[data-cy="cct-back-link"]').click();
+    cy.get('[data-cy="cct-start-over"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
       "Step 5 of 5 - Summary"
@@ -1946,6 +1948,108 @@ describe("Cct", () => {
     cy.get('[data-cy="submitBtn-Delete"]').click();
     cy.get('[data-cy="cct-deleted-banner"]').should("exist");
     cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("starts over without asking when nothing has been entered", () => {
+    mountCct();
+    cy.get('[data-cy="cct-start-over"]').should("have.text", "Start over");
+    cy.get('[data-cy="cct-start-over"]').click();
+
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 1 of 5 - Programme details"
+    );
+    cy.get('[data-cy="cct-programme-details-form"]').should("exist");
+  });
+
+  it("offers Start over on every step of a new calculation, and stays on Cancel", () => {
+    mountCct();
+    saveProgrammeDetails();
+    [1, 2, 3].forEach(() => {
+      cy.get('[data-cy="cct-start-over"]').should("exist");
+      clickContinue();
+    });
+    addParentalLeaveChangeAndWait();
+
+    cy.get('[data-cy="cct-start-over"]').click();
+    cy.get('[data-cy="warningText-Start over"]').should(
+      "have.text",
+      "If you start over, everything you have entered will be cleared."
+    );
+    cy.get('[data-cy="submitBtn-Start over"]').should(
+      "have.text",
+      "Start over"
+    );
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="cct-start-over"]').should("have.focus");
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 4 of 5 - Changes"
+    );
+    cy.get('[data-cy^="cct-edit-change-"]').should("have.length", 1);
+  });
+
+  it("clears everything and goes back to an empty step 1 once confirmed", () => {
+    mountCct();
+    saveProgrammeDetails();
+    goToChanges();
+    addParentalLeaveChangeAndWait();
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
+
+    cy.get('[data-cy="cct-start-over"]').click();
+    cy.get('[data-cy="submitBtn-Start over"]').click();
+
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 1 of 5 - Programme details"
+    );
+    cy.get('[data-cy="cct-programme-details-form"]').should("exist");
+    selectedValue("specialty").should("not.exist");
+    cy.get('[data-cy="startDate-input"]').should("not.exist");
+    cy.get('[data-cy="cct-back-link"]').should("have.text", "Back to CCT home");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
+
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
+    clickContinue(3);
+    cy.get('[data-cy^="cct-edit-change-"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').should("have.value", "");
+  });
+
+  it("doesn't warn about leaving after starting over with nothing re-entered", () => {
+    mountCct();
+    selectOption("specialty", "Paediatrics");
+    cy.get('[data-cy="cct-start-over"]').click();
+    cy.get('[data-cy="submitBtn-Start over"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't offer Start over on an opened calculation", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+    cy.get('[data-cy="cct-start-over"]').should("not.exist");
+
+    cy.get('[data-cy="cct-change-programme-details"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 1 of 5 - Programme details"
+    );
+    cy.get('[data-cy="cct-start-over"]').should("not.exist");
   });
 
   it("warns before leaving when only a dropdown option has been picked", () => {

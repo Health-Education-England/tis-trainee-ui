@@ -37,6 +37,7 @@ import {
   CctProgrammeDetailsSection
 } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
+import { CctStartOverButton } from "./CctStartOverButton";
 import { CctSummary } from "./CctSummary";
 import { CctTrainingTimeSection } from "./CctTrainingTimeSection";
 
@@ -180,6 +181,11 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
       canReturnToSummary={hasReachedSummary}
       onNavigate={goToPage}
       onBackToHome={goToHome}
+      startOverButton={
+        !savedCalculation && (
+          <CctStartOverButton hasUnsavedChanges={hasUnsavedChanges} />
+        )
+      }
     >
       {currentPage === CCT_PAGES.programmeDetails && (
         <CctProgrammeDetailsSection

@@ -8,6 +8,7 @@ type CctFormShellProps = {
   canReturnToSummary: boolean;
   onNavigate: (targetPage: number) => void;
   onBackToHome: () => void;
+  startOverButton?: React.ReactNode;
   children: React.ReactNode;
 };
 
@@ -18,6 +19,7 @@ export function CctFormShell({
   canReturnToSummary,
   onNavigate,
   onBackToHome,
+  startOverButton,
   children
 }: Readonly<CctFormShellProps>) {
   const lastPage = pageNames.length - 1;
@@ -66,6 +68,9 @@ export function CctFormShell({
             </Button>
           )}
         </div>
+      )}
+      {startOverButton && (
+        <div className="hide-from-print">{startOverButton}</div>
       )}
     </>
   );
