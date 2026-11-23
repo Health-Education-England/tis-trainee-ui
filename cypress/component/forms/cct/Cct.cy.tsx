@@ -246,10 +246,19 @@ const listedCalculation = (id: string, name: string, lastModified: string) => ({
   lastModified
 });
 
-const goToSummary = () => {
-  cy.get('[data-cy="navNext"]').click();
-  cy.get('[data-cy="navNext"]').click();
+const clickContinue = (times = 1) => {
+  for (let step = 0; step < times; step++)
+    cy.get('[data-cy="cct-continue"]').click();
 };
+
+const clickBack = (times = 1) => {
+  for (let step = 0; step < times; step++)
+    cy.get('[data-cy="cct-back-link"]').click();
+};
+
+const goToChanges = () => clickContinue(3);
+
+const goToSummary = () => clickContinue(4);
 
 describe("Cct", () => {
   beforeEach(() => {
@@ -262,17 +271,55 @@ describe("Cct", () => {
     cy.intercept("GET", calculationsUrl, { body: [] });
   });
 
-  it("starts on part 1 with the programme details form open", () => {
+  it("starts on step 1 with the programme details form open", () => {
     mountCct();
 
     cy.get('[data-cy="cct-header"]').should("exist");
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 1 of 3 - Programme details"
+      "Step 1 of 5 - Programme details"
     );
     cy.get('[data-cy="cct-programme-details-form"]').should("exist");
-    cy.get('[data-cy="navPrevious"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-back-link"]').should("have.text", "Back to CCT home");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+  });
+
+  it("moves through the steps with Continue and the back link", () => {
+    mountCct();
+    saveProgrammeDetails();
+
+    [
+      ["Step 2 of 5 - Training time adjustments", "Back to Programme details"],
+      [
+        "Step 3 of 5 - Grade progression adjustments",
+        "Back to Training time adjustments"
+      ],
+      ["Step 4 of 5 - Changes", "Back to Grade progression adjustments"]
+    ].forEach(([heading, backLink]) => {
+      cy.get('[data-cy="cct-continue"]').should("have.text", "Continue");
+      cy.get('[data-cy="cct-continue"]').click();
+      cy.get('[data-cy="progress-header"]').should("contain.text", heading);
+      cy.get('[data-cy="cct-back-link"]').should("have.text", backLink);
+    });
+    cy.get('[data-cy="cct-continue"]').should("have.text", "Show summary");
+    cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
+
+    [
+      "Step 3 of 5 - Grade progression adjustments",
+      "Step 2 of 5 - Training time adjustments",
+      "Step 1 of 5 - Programme details"
+    ].forEach(heading => {
+      cy.get('[data-cy="cct-back-link"]').click();
+      cy.get('[data-cy="progress-header"]').should("contain.text", heading);
+    });
+
+    goToSummary();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 5 of 5 - Summary"
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+    cy.get('[data-cy="cct-back-link"]').should("have.text", "Back to CCT home");
   });
 
   it("reveals the rest of the form and defaults length and grade from the specialty", () => {
@@ -294,14 +341,14 @@ describe("Cct", () => {
       .and("contain.text", "84 months")
       .and("contain.text", "02/08/2023");
     cy.get('[data-cy="cct-programme-details-form"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
 
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="cct-programme-details-form"]').should("exist");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-programme-details-cancel"]').click();
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
   it("asks for a reason as soon as the start grade differs from the specialty default", () => {
@@ -453,7 +500,7 @@ describe("Cct", () => {
   it("rejects a change's dates outside the date limits", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Parental leave");
 
@@ -481,7 +528,7 @@ describe("Cct", () => {
     cy.get('[data-cy="errorSummary"]').should("not.exist");
   });
 
-  it("keeps the error box up and Next hidden until a retry succeeds", () => {
+  it("keeps the error box up and Continue hidden until a retry succeeds", () => {
     cy.intercept("POST", "/api/trainee/cct/calculate", {
       statusCode: 500,
       body: {}
@@ -494,7 +541,7 @@ describe("Cct", () => {
       "contain.text",
       "—"
     );
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.intercept("POST", "/api/trainee/cct/calculate", req =>
       req.reply({ ...calculateWithMockBackend(req.body), delay: 1500 })
@@ -505,14 +552,25 @@ describe("Cct", () => {
       "Trying again…"
     );
     cy.focused().should("have.attr", "data-cy", "cct-request-retry");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 2 of 3 - Changes"
+      "Step 2 of 5 - Training time adjustments"
     );
+
+    cy.intercept("POST", "/api/trainee/cct/calculate", {
+      statusCode: 500,
+      body: {}
+    });
+    addTrainingTime("additional", "ST2", "6", "Outcome 3 following ARCP");
+    cy.get('[data-cy="cct-request-error"]').should(
+      "contain.text",
+      "We could not calculate your programme end date."
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
   });
 
   it("shows a loading indicator until the specialties arrive", () => {
@@ -554,17 +612,17 @@ describe("Cct", () => {
 
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
   it("holds the table back until the first change is added", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 2 of 3 - Changes"
+      "Step 4 of 5 - Changes"
     );
     // Note: with nothing entered the table would say no more than the programme details already do.
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
@@ -585,7 +643,7 @@ describe("Cct", () => {
   it("moves the projection start to the day after the last change ends", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
 
     cy.get('[data-cy="cct-projection-row"]')
@@ -603,7 +661,7 @@ describe("Cct", () => {
   it("shows the gap before a change as an assumed full-time row", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
 
     // Note: the period from the prog start to the day before the change, which nothing covers.
@@ -622,7 +680,7 @@ describe("Cct", () => {
   it("shows the assumed full-time rows only once the calculation returns them", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.intercept("POST", "/api/trainee/cct/calculate", req =>
       req.reply({ ...calculateWithMockBackend(req.body), delay: 1500 })
     );
@@ -641,7 +699,7 @@ describe("Cct", () => {
   it("hides the assumed full-time rows and splits the totals on request", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
 
     cy.get('[data-cy="cct-hide-assumed-periods"]').check();
@@ -657,7 +715,7 @@ describe("Cct", () => {
   it("stacks each row under its column labels on a narrow viewport", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy="cct-changes-table"]').should(
@@ -675,7 +733,7 @@ describe("Cct", () => {
   it("keeps an LTFT change that runs to completion as its own row and projects from it", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Less than full time (LTFT)");
@@ -711,7 +769,7 @@ describe("Cct", () => {
   it("reopens a change that runs to completion with its duration preselected", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Less than full time (LTFT)");
@@ -743,7 +801,7 @@ describe("Cct", () => {
   it("asks for an end date again if the LTFT change stops running to completion", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Less than full time (LTFT)");
@@ -759,7 +817,7 @@ describe("Cct", () => {
   it("navigates to the changes page and adds a change", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Less than full time (LTFT)");
@@ -780,7 +838,7 @@ describe("Cct", () => {
   it("only offers the completion credit choice for the types that allow it", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="cct-add-change"]').click();
 
     selectOption("type", "Sickness absence");
@@ -798,7 +856,7 @@ describe("Cct", () => {
   it("sends no credit for an OOPR change once its credit is unticked", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Out of programme - research (OOPR)");
     cy.get('[data-cy="startDate-input"]').type("2024-02-01");
@@ -821,13 +879,13 @@ describe("Cct", () => {
       expect(response?.statusCode).to.eq(200);
     });
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
   it("asks for an end date only once the answers so far call for one", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="cct-add-change"]').click();
 
     cy.get('[data-cy="endDate-input"]').should("not.exist");
@@ -842,7 +900,7 @@ describe("Cct", () => {
   it("offers the duration choice for LTFT only", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="cct-add-change"]').click();
 
     selectOption("type", "Parental leave");
@@ -857,7 +915,7 @@ describe("Cct", () => {
     cy.viewport(800, 800);
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
 
     cy.get('[data-cy="cct-changes-scroll"]')
@@ -880,7 +938,7 @@ describe("Cct", () => {
     cy.viewport(800, 400);
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy^="cct-edit-change-"]').click();
@@ -895,7 +953,7 @@ describe("Cct", () => {
   it("focuses the change type when the add form opens", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
 
@@ -906,7 +964,7 @@ describe("Cct", () => {
     cy.viewport(800, 400);
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChangeAndWait();
 
     cy.get('[data-cy^="cct-edit-change-"]').click();
@@ -919,27 +977,27 @@ describe("Cct", () => {
     });
   });
 
-  it("hides Next on the changes page while a change form is open", () => {
+  it("hides Continue on the changes page while a change form is open", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 2 of 3 - Changes"
+      "Step 4 of 5 - Changes"
     );
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
 
     cy.get('[data-cy="cct-add-change"]').click();
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-change-form-cancel"]').click();
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
-  it("hides Next on the changes page while the calculation fails, until the rejected change is removed", () => {
+  it("hides Continue on the changes page while the calculation fails, until the rejected change is removed", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.intercept("POST", "/api/trainee/cct/calculate", req => {
       if (req.body.changes.length > 0) {
@@ -950,22 +1008,22 @@ describe("Cct", () => {
     });
     addParentalLeaveChange();
     cy.get('[data-cy="cct-request-error"]').should("exist");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
     cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy="cct-request-error"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
-  it("hides Next on the changes page while a saved change is invalid", () => {
+  it("hides Continue on the changes page while a saved change is invalid", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
 
-    cy.get('[data-cy="navPrevious"]').click();
+    clickBack(3);
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="startDate-input"]').clear();
     cy.get('[data-cy="startDate-input"]').type("2024-03-01");
@@ -974,26 +1032,26 @@ describe("Cct", () => {
       "contain.text",
       "26/02/2031"
     );
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-invalid-changes-summary"]').should(
       "contain.text",
       "Start date cannot be before programme start"
     );
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy^="cct-remove-change-"]').click();
     cy.get('[data-cy="submitBtn-Remove"]').click();
     cy.get('[data-cy="cct-invalid-changes-summary"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
-  it("warns on the programme details page while new programme details make a change invalid", () => {
+  it("warns on the programme details and adjustment steps while new programme details make a change invalid", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
-    cy.get('[data-cy="navPrevious"]').click();
+    clickBack(3);
     cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
     cy.get('[data-cy="cct-invalid-changes-notice"]').should("not.exist");
 
@@ -1005,7 +1063,15 @@ describe("Cct", () => {
       "contain.text",
       "Some of your changes no longer fit within your programme dates."
     );
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
+
+    clickContinue(2);
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 3 of 5 - Grade progression adjustments"
+    );
+    cy.get('[data-cy="cct-invalid-changes-notice"]').should("exist");
+    clickBack(2);
 
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="startDate-input"]').clear();
@@ -1018,7 +1084,7 @@ describe("Cct", () => {
   it("flags the projection row as invalid while a change runs past completion, until the change ends on the date quoted", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
 
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Less than full time (LTFT)");
@@ -1041,7 +1107,7 @@ describe("Cct", () => {
     cy.get('[data-cy="endDate-input"]').type("2031-02-26");
     cy.get('[data-cy="cct-change-form-submit"]').click();
 
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
     cy.get('[data-cy="cct-invalid-changes-summary"]').should("not.exist");
     cy.get('[data-cy="cct-invalid-projection"]').should("not.exist");
     cy.get('[data-cy="cct-projection-row"]')
@@ -1052,12 +1118,12 @@ describe("Cct", () => {
   it("shows the summary with the calculated completion date", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
+    cy.get('[data-cy="cct-continue"]').click();
 
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 3 of 3 - Summary"
+      "Step 5 of 5 - Summary"
     );
     cy.get('[data-cy="cct-result-summary"]').should(
       "contain.text",
@@ -1092,12 +1158,52 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-grade-years-skipped-hint"]').should("not.exist");
     cy.get('[data-cy="cct-grade-years-past-highest-hint"]').should("not.exist");
     cy.get('[data-cy="cct-delete"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("not.exist");
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+  });
+
+  it("opens each step from its Change action on the summary, with a shortcut back", () => {
+    mountCct();
+    saveProgrammeDetails();
+    cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
+    goToSummary();
+
+    cy.get('[data-cy="cct-change-programme-details"]').should(
+      "have.text",
+      "Change (Programme details)"
+    );
+    [
+      ["cct-change-programme-details", "Step 1 of 5 - Programme details"],
+      [
+        "cct-change-training-time-adjustments",
+        "Step 2 of 5 - Training time adjustments"
+      ],
+      [
+        "cct-change-grade-progression-adjustments",
+        "Step 3 of 5 - Grade progression adjustments"
+      ]
+    ].forEach(([action, heading]) => {
+      cy.get(`[data-cy="${action}"]`).click();
+      cy.get('[data-cy="progress-header"]').should("contain.text", heading);
+      cy.get('[data-cy="cct-continue"]').should("have.text", "Continue");
+      cy.get('[data-cy="cct-return-to-summary"]').click();
+      cy.get('[data-cy="progress-header"]').should(
+        "contain.text",
+        "Step 5 of 5 - Summary"
+      );
+    });
+
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 2 of 3 - Changes"
+      "Step 4 of 5 - Changes"
     );
+    cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("have.text", "Show summary");
+
+    clickBack(2);
+    cy.get('[data-cy="cct-add-additional-time"]').click();
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+    cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
   });
 
   it("saves the named calculation, then shows the home page with a success banner", () => {
@@ -1106,9 +1212,9 @@ describe("Cct", () => {
     ).as("save");
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
 
     cy.get('[data-cy="calculationName-input"]').type(
       "  Parental leave in 2024  "
@@ -1143,7 +1249,7 @@ describe("Cct", () => {
     });
   });
 
-  it("disables the name and ignores Previous while the calculation saves, then shows the home page", () => {
+  it("disables the name and ignores Back to CCT home while the calculation saves, then shows the home page", () => {
     cy.intercept("POST", "/api/trainee/cct/calculation", req =>
       req.reply({ ...saveWithMockBackend(req.body), delay: 1500 })
     ).as("save");
@@ -1155,11 +1261,14 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-save-submit"]').should("contain.text", "Saving…");
     cy.get('[data-cy="calculationName-input"]').should("be.disabled");
 
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-back-link"]').click();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 3 of 3 - Summary"
+      "Step 5 of 5 - Summary"
     );
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
 
     cy.wait("@save");
     cy.get('[data-cy="cct-saved-banner"]').should(
@@ -1236,9 +1345,9 @@ describe("Cct", () => {
     }).as("load");
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
+    goToChanges();
     addParentalLeaveChange();
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
     cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
     cy.get('[data-cy="cct-save-submit"]').click();
 
@@ -1265,7 +1374,7 @@ describe("Cct", () => {
 
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 3 of 3 - Summary"
+      "Step 5 of 5 - Summary"
     );
     cy.get('[data-cy="cct-result-summary"]').should(
       "contain.text",
@@ -1302,7 +1411,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
 
     cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
     cy.get('[data-cy^="cct-edit-change-"]').click();
@@ -1321,7 +1430,7 @@ describe("Cct", () => {
     addParentalLeaveChange();
     cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
 
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
     cy.get('[data-cy="cct-result-summary"]').should(
       "contain.text",
       "28/01/2031"
@@ -1401,22 +1510,32 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-summary-disclaimer"]').should("exist");
   });
 
-  it("points to the changes instead of saving when a saved change is no longer valid", () => {
+  it("shows the problem in the Changes card instead of saving when a saved change is no longer valid", () => {
     cy.intercept("GET", savedCalculationUrl, {
       body: savedCalculation("No longer valid", "2024-03-01")
     });
     mountCct(`/cct/${savedCalculationId}`);
 
+    cy.get('[data-cy="cct-summary-errors"] a')
+      .should("have.length", 1)
+      .and("have.text", "Changes");
+    cy.get('[data-cy="cct-card-error-changes"]').should(
+      "contain.text",
+      "Start date cannot be before programme start"
+    );
+    cy.get('[data-cy^="cct-card-error-"]').should("have.length", 1);
     cy.get('[data-cy="cct-save-blocked"]').should(
       "contain.text",
-      "There is a problem with your changes."
+      "You need to fix the problems above before you can save this calculation."
     );
     cy.get('[data-cy="cct-save-form"]').should("not.exist");
 
-    cy.get('[data-cy="cct-go-to-changes"]').click();
+    cy.get('[data-cy="cct-summary-error-link-changes"]').click();
+    cy.focused().should("have.attr", "data-cy", "cct-change-changes");
+    cy.focused().click();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 2 of 3 - Changes"
+      "Step 4 of 5 - Changes"
     );
     cy.get('[data-cy="cct-invalid-changes-summary"]').should(
       "contain.text",
@@ -1433,8 +1552,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-programme-details"]').click();
 
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="cct-request-error"]').should(
@@ -1667,11 +1785,11 @@ describe("Cct", () => {
     });
   });
 
-  it("warns before leaving unsaved changes, but not on moving between parts, and stays on request", () => {
+  it("warns before leaving unsaved changes, but not on moving between steps, and stays on request", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="navNext"]').click();
-    cy.get('[data-cy="navPrevious"]').click();
+    goToChanges();
+    clickBack(3);
     cy.get('[data-cy="dialogModal"]').should("not.exist");
 
     cy.then(() => history.push("/home"));
@@ -1690,6 +1808,13 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-edit-programme-details"]').should("exist");
     cy.then(() => {
       expect(history.location.pathname).to.equal("/cct/create");
+    });
+
+    cy.get('[data-cy="cct-back-link"]').click();
+    cy.get('[data-cy="submitBtn-You have unsaved changes"]').click();
+    cy.get('[data-cy="cct-new-calculation"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
     });
   });
 
@@ -1784,7 +1909,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy^="cct-edit-change-"]').click();
     cy.get('[data-cy="cct-change-form-cancel"]').click();
 
@@ -1798,7 +1923,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy^="cct-remove-change-"]').click();
     cy.get('[data-cy="submitBtn-Remove"]').click();
 
@@ -1839,7 +1964,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy="cct-add-change"]').click();
     selectOption("type", "Parental leave");
 
@@ -1858,20 +1983,20 @@ describe("Cct", () => {
     cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
   });
 
-  it("keeps an edited name when moving between parts, and warns before leaving it", () => {
+  it("keeps an edited name when moving between steps, and warns before leaving it", () => {
     cy.intercept("GET", savedCalculationUrl, {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
     cy.get('[data-cy="calculationName-input"]').clear();
     cy.get('[data-cy="calculationName-input"]').type("Renamed");
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy="cct-save-form"]').should("not.exist");
 
     cy.then(() => history.push("/cct"));
     cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
     cy.get('[data-cy="modal-cancel-btn"]').click();
-    cy.get('[data-cy="navNext"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
     cy.get('[data-cy="calculationName-input"]').should("have.value", "Renamed");
   });
 
@@ -1906,8 +2031,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-programme-details"]').click();
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="cct-programme-details-submit"]').click();
     cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
@@ -1930,8 +2054,7 @@ describe("Cct", () => {
       }).body
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-programme-details"]').click();
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get('[data-cy="cct-programme-details-submit"]').click();
     cy.get('[data-cy="cct-programme-details-summary"]').should(
@@ -1949,7 +2072,7 @@ describe("Cct", () => {
       body: savedCalculation("Parental leave in 2024")
     });
     mountCct(`/cct/${savedCalculationId}`);
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-changes"]').click();
     cy.get('[data-cy^="cct-remove-change-"]').click();
     cy.get('[data-cy="submitBtn-Remove"]').click();
     addParentalLeaveChange();
@@ -1975,10 +2098,12 @@ describe("Cct training time and grade progression adjustments", () => {
   it("records none of either kind until some is added", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
 
     cy.get('[data-cy="cct-no-additional-time"]').should("exist");
     cy.get('[data-cy="cct-no-accelerated-time"]').should("exist");
     cy.get('[data-cy="cct-adjusted-length"]').should("not.exist");
+    clickContinue();
     cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
   });
 
@@ -1986,6 +2111,7 @@ describe("Cct training time and grade progression adjustments", () => {
     mountCct();
     saveProgrammeDetails();
     cy.wait("@calculate");
+    clickContinue();
 
     addTrainingTime("additional", "ST2", "6", "Outcome 3 following ARCP");
 
@@ -2022,6 +2148,7 @@ describe("Cct training time and grade progression adjustments", () => {
   it("offers the grades in the calculated grade progression", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     cy.get('[data-cy="cct-add-additional-time"]').click();
 
     cy.get('[data-cy="grade"] .react-select__control').click();
@@ -2036,6 +2163,7 @@ describe("Cct training time and grade progression adjustments", () => {
   it("asks for a grade, whole months and a reason, and caps accelerated time at 12 months in total", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     cy.get('[data-cy="cct-add-accelerated-time"]').click();
     cy.get('[data-cy="cct-training-time-form-submit"]').click();
     cy.get('[data-cy="errorSummary"]')
@@ -2067,6 +2195,7 @@ describe("Cct training time and grade progression adjustments", () => {
   it("edits an entry, and removes it only once confirmed", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     addTrainingTime("additional", "ST2", "6", "Outcome 3");
 
     cy.get('[data-cy="cct-additional-time-0-edit"]').click();
@@ -2092,6 +2221,7 @@ describe("Cct training time and grade progression adjustments", () => {
   it("puts focus back on the button that opened the form when it closes", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
 
     cy.get('[data-cy="cct-add-additional-time"]').click();
     cy.get('[data-cy="cct-training-time-form-cancel"]').click();
@@ -2109,35 +2239,47 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
   });
 
-  it("holds Next and the other edits back while a training time form is open", () => {
+  it("holds Continue and the other edits back while a training time form is open", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     cy.get('[data-cy="cct-add-additional-time"]').click();
 
-    cy.get('[data-cy="navNext"]').should("not.exist");
-    cy.get('[data-cy="cct-edit-programme-details"]').should("be.disabled");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
     cy.get('[data-cy="cct-add-accelerated-time"]').should("be.disabled");
-    cy.get('[data-cy="cct-edit-grade-progression"]').should("be.disabled");
 
     cy.get('[data-cy="cct-training-time-form-cancel"]').click();
-    cy.get('[data-cy="navNext"]').should("exist");
-    cy.get('[data-cy="cct-edit-programme-details"]').should("be.enabled");
+    cy.get('[data-cy="cct-continue"]').should("exist");
+    cy.get('[data-cy="cct-add-accelerated-time"]').should("be.enabled");
   });
 
-  it("hides the adjustments while the programme details are edited", () => {
+  it("puts each kind of adjustment on its own step", () => {
     mountCct();
     saveProgrammeDetails();
-    cy.get('[data-cy="cct-edit-programme-details"]').click();
-
+    cy.get('[data-cy="cct-grade-years-table"]').should("exist");
     cy.get('[data-cy="cct-training-time-section"]').should("not.exist");
     cy.get('[data-cy="cct-grade-progression-section"]').should("not.exist");
+
+    clickContinue();
+    cy.get('[data-cy="cct-programme-details-inset"]').should("exist");
+    cy.get('[data-cy="cct-grade-years-table"]').should("exist");
+    cy.get('[data-cy="cct-training-time-section"]').should("exist");
+    cy.get('[data-cy="cct-grade-progression-section"]').should("not.exist");
+
+    clickContinue();
+    cy.get('[data-cy="cct-programme-details-inset"]').should("exist");
+    cy.get('[data-cy="cct-grade-years-table"]').should("exist");
+    cy.get('[data-cy="cct-grade-progression-section"]').should("exist");
+    cy.get('[data-cy="cct-training-time-section"]').should("not.exist");
   });
 
   it("rejects a programme length the accelerated time would use up", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     addTrainingTime("accelerated", "ST1", "12", "Prior learning");
 
+    clickBack();
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get("#lengthMonths").clear();
     cy.get("#lengthMonths").type("12");
@@ -2152,6 +2294,7 @@ describe("Cct training time and grade progression adjustments", () => {
   it("records the grade progression adjustments in their own section", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue(2);
     cy.get('[data-cy="cct-edit-grade-progression"]')
       .should("have.text", "Add grade progression adjustments")
       .click();
@@ -2161,7 +2304,7 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="errorSummary"]')
       .should("contain.text", "Please choose the grade year to skip.")
       .and("contain.text", "Please enter a reason for skipping a grade year.");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     selectOption("skippedGrade", "ST2");
     cy.get("#skippedGradeNotes").type("Core competencies");
@@ -2175,7 +2318,7 @@ describe("Cct training time and grade progression adjustments", () => {
       "have.text",
       "Edit grade progression adjustments"
     );
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
   it("offers an 18-month final year only for a programme length with a half year", () => {
@@ -2185,18 +2328,21 @@ describe("Cct training time and grade progression adjustments", () => {
     mountCct();
     saveProgrammeDetails();
     cy.wait("@calculate");
+    clickContinue(2);
     cy.get('[data-cy="cct-edit-grade-progression"]').click();
     cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
       "not.exist"
     );
     cy.get('[data-cy="cct-grade-progression-cancel"]').click();
 
+    clickBack(2);
     cy.get('[data-cy="cct-edit-programme-details"]').click();
     cy.get("#lengthMonths").clear();
     cy.get("#lengthMonths").type("90");
     cy.get("#lengthOverrideNotes").type("Agreed locally");
     cy.get('[data-cy="cct-programme-details-submit"]').click();
     cy.wait("@calculate");
+    clickContinue(2);
     cy.get('[data-cy="cct-edit-grade-progression"]').click();
     cy.get('[data-cy="cct-eighteen-month-final-grade"]').should("not.exist");
     cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').check();
@@ -2240,8 +2386,7 @@ describe("Cct training time and grade progression adjustments", () => {
       eighteenMonthFinalGrade: "ST6",
       eighteenMonthFinalGradeNotes: "ICM dual specialty"
     });
-    cy.get('[data-cy="navPrevious"]').click();
-    cy.get('[data-cy="navPrevious"]').click();
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
     cy.get('[data-cy="cct-edit-grade-progression"]').click();
     cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
       "be.checked"
@@ -2258,8 +2403,9 @@ describe("Cct training time and grade progression adjustments", () => {
   it("shows the adjustments read-only on the summary", () => {
     mountCct();
     saveProgrammeDetails();
+    clickContinue();
     addTrainingTime("additional", "ST2", "6", "Outcome 3");
-    goToSummary();
+    clickContinue(3);
 
     cy.get('[data-cy="cct-training-time-summary"]')
       .first()
@@ -2278,15 +2424,19 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
   });
 
-  it("lists training time in a grade outside the progression, and hides Next until it is fixed", () => {
+  it("lists training time in a grade outside the progression, and hides Continue until it is fixed", () => {
     cy.intercept("POST", "/api/trainee/cct/calculate", req =>
       req.reply(calculateWithGradeChecks(req.body))
     );
     mountSavedCalculationWith({
       additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }]
     });
-    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get('[data-cy="cct-change-training-time-adjustments"]').click();
 
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 2 of 5 - Training time adjustments"
+    );
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
       "contain.text",
       "Additional training time (ST8, 6 months): ST8 is not part of this programme's grade progression."
@@ -2295,7 +2445,7 @@ describe("Cct training time and grade progression adjustments", () => {
       "contain.text",
       "ST8 is not part of this programme's grade progression."
     );
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
     cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
@@ -2310,7 +2460,8 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="cct-training-time-form-submit"]').click();
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should("not.exist");
     cy.get('[data-cy="cct-additional-time-0-grade-error"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
+    cy.get('[data-cy="cct-return-to-summary"]').should("exist");
   });
 
   it("lists a skipped grade outside the progression and links to the grade progression adjustments", () => {
@@ -2321,7 +2472,11 @@ describe("Cct training time and grade progression adjustments", () => {
       skippedGrade: "ST9",
       skippedGradeNotes: "Core competencies"
     });
-    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 3 of 5 - Grade progression adjustments"
+    );
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
       "contain.text",
@@ -2331,7 +2486,7 @@ describe("Cct training time and grade progression adjustments", () => {
       "contain.text",
       "ST9 is not part of this programme's grade progression."
     );
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
     cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
@@ -2349,7 +2504,7 @@ describe("Cct training time and grade progression adjustments", () => {
       )
     );
     mountSavedCalculationWith({ skippedGrade: "ST2", skippedGradeNotes: "" });
-    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
       "contain.text",
@@ -2359,7 +2514,7 @@ describe("Cct training time and grade progression adjustments", () => {
       "contain.text",
       "Please enter a reason for skipping a grade year."
     );
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
     cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
@@ -2383,39 +2538,70 @@ describe("Cct training time and grade progression adjustments", () => {
         { grade: "ST3", months: 6, notes: "Second outcome 3" }
       ]
     });
-    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get('[data-cy="cct-change-training-time-adjustments"]').click();
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
       "contain.text",
       "Additional training time: Total additional training time cannot be more than 24 months."
     );
     cy.get('[data-cy$="-error"]').should("not.exist");
-    cy.get('[data-cy="navNext"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
 
     cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
     cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
   });
 
-  it("points to the programme details instead of saving or printing when a saved adjustment is no longer valid", () => {
+  it("shows each invalid adjustment in its own card instead of saving or printing", () => {
     cy.intercept("POST", "/api/trainee/cct/calculate", req =>
       req.reply(calculateWithGradeChecks(req.body))
     );
     mountSavedCalculationWith({
-      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }]
+      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }],
+      skippedGrade: "ST9",
+      skippedGradeNotes: "Core competencies"
     });
 
-    cy.get('[data-cy="cct-save-blocked-adjustments"]').should(
+    cy.get('[data-cy="cct-summary-errors"] a').then($links => {
+      expect($links.toArray().map(link => link.textContent)).to.deep.equal([
+        "Training time adjustments",
+        "Grade progression adjustments"
+      ]);
+    });
+    cy.get('[data-cy="cct-card-error-training-time-adjustments"]').should(
       "contain.text",
-      "There is a problem with your training time or grade progression adjustments."
+      "Additional training time (ST8, 6 months): ST8 is not part of this programme's grade progression."
     );
-    cy.get('[data-cy="cct-save-blocked"]').should("not.exist");
+    cy.get('[data-cy="cct-card-error-grade-progression-adjustments"]').should(
+      "contain.text",
+      "Skipped grade year: ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-card-error-programme-details"]').should("not.exist");
+    cy.get('[data-cy="cct-card-error-changes"]').should("not.exist");
+    cy.get('[data-cy="cct-save-blocked"]').should("exist");
     cy.get('[data-cy="cct-save-form"]').should("not.exist");
     cy.get('[data-cy="cct-save-pdf"]').should("not.exist");
 
-    cy.get('[data-cy="cct-go-to-programme-details"]').click();
+    cy.get(
+      '[data-cy="cct-summary-error-link-grade-progression-adjustments"]'
+    ).click();
+    cy.focused().should(
+      "have.attr",
+      "data-cy",
+      "cct-change-grade-progression-adjustments"
+    );
+
+    cy.get(
+      '[data-cy="cct-summary-error-link-training-time-adjustments"]'
+    ).click();
+    cy.focused().should(
+      "have.attr",
+      "data-cy",
+      "cct-change-training-time-adjustments"
+    );
+    cy.focused().click();
     cy.get('[data-cy="progress-header"]').should(
       "contain.text",
-      "Part 1 of 3 - Programme details"
+      "Step 2 of 5 - Training time adjustments"
     );
     cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
       "contain.text",

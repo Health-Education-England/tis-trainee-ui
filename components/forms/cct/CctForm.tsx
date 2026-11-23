@@ -17,6 +17,7 @@ import {
   sortCctChanges,
   toCctChangeDtos
 } from "../../../utilities/CctUtilities";
+import { CCT_PAGE_NAMES, CCT_PAGES } from "../../../utilities/CctConstants";
 import { isDeepEqual } from "../../../utilities/ObjectUtilities";
 import { useCctCalculation } from "../../../utilities/hooks/useCctCalculation";
 import { useCctSpecialties } from "../../../utilities/hooks/useCctSpecialties";
@@ -24,22 +25,28 @@ import history from "../../navigation/history";
 import { LeavePageGuard } from "../../common/LeavePageGuard";
 import { CctChangesSection } from "./CctChangesSection";
 import { CctFormShell } from "./CctFormShell";
-import { CctGradeYearsTable } from "./CctGradeProgressionSection";
 import {
+  CctGradeProgressionSection,
+  CctGradeYearsTable
+} from "./CctGradeProgressionSection";
+import {
+  cctAdjustmentErrorPage,
+  CctInvalidAdjustmentsSummary,
+  CctInvalidChangesNotice,
   CctProgrammeDetailsInset,
   CctProgrammeDetailsSection
 } from "./CctProgrammeDetailsSection";
+import { CctRequestError } from "./CctRequestError";
 import { CctSummary } from "./CctSummary";
-
-const CCT_PAGE_NAMES = ["Programme details", "Changes", "Summary"];
+import { CctTrainingTimeSection } from "./CctTrainingTimeSection";
 
 type CctFormProps = {
   savedCalculation?: CctCalculation;
 };
 
 export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
-  const [currentPage, setCurrentPage] = useState(
-    savedCalculation ? CCT_PAGE_NAMES.length - 1 : 0
+  const [currentPage, setCurrentPage] = useState<number>(
+    savedCalculation ? CCT_PAGES.summary : CCT_PAGES.programmeDetails
   );
   const [programmeDetails, setProgrammeDetails] =
     useState<CctProgrammeDetails | null>(
@@ -55,6 +62,9 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
   const [isAdjustmentFormOpen, setIsAdjustmentFormOpen] = useState(false);
   const [isSubFormDirty, setIsSubFormDirty] = useState(false);
+  const [hasReachedSummary, setHasReachedSummary] = useState(
+    !!savedCalculation
+  );
   const openedRef = useRef({ programmeDetails, changes, name });
 
   const { result, calculatedChanges, errors, status, isRetrying, retry } =
@@ -90,13 +100,37 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     const target = cctProgrammeDetailsErrorTarget(pointer);
     return target ? [{ ...target, pointer, message: detail }] : [];
   });
-  const isProgrammeDetailsDone =
-    !isEditingProgrammeDetails &&
-    !isAdjustmentFormOpen &&
-    result !== null &&
-    invalidAdjustments.length === 0;
-  const isChangesDone =
-    !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0;
+  const invalidAdjustmentsOn = (page: number) =>
+    invalidAdjustments.filter(
+      adjustment => cctAdjustmentErrorPage(adjustment) === page
+    );
+  const programmeDetailsErrors = invalidAdjustmentsOn(
+    CCT_PAGES.programmeDetails
+  );
+  const trainingTimeErrors = invalidAdjustmentsOn(CCT_PAGES.trainingTime);
+  const gradeProgressionErrors = invalidAdjustmentsOn(
+    CCT_PAGES.gradeProgression
+  );
+  const isPageDone: Record<number, boolean> = {
+    [CCT_PAGES.programmeDetails]:
+      !isEditingProgrammeDetails &&
+      result !== null &&
+      programmeDetailsErrors.length === 0,
+    [CCT_PAGES.trainingTime]:
+      !isAdjustmentFormOpen &&
+      result !== null &&
+      trainingTimeErrors.length === 0,
+    [CCT_PAGES.gradeProgression]:
+      !isAdjustmentFormOpen &&
+      result !== null &&
+      gradeProgressionErrors.length === 0,
+    [CCT_PAGES.changes]:
+      !isChangeFormOpen && status === "succeeded" && invalidChanges.length === 0
+  };
+  const isSetupPage = currentPage < CCT_PAGES.summary;
+  const isAdjustmentsPage =
+    currentPage === CCT_PAGES.trainingTime ||
+    currentPage === CCT_PAGES.gradeProgression;
   const hasUnsavedChanges =
     isSubFormDirty ||
     name.trim() !== openedRef.current.name ||
@@ -108,11 +142,17 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
 
   const goToPage = (targetPage: number) => {
     if (saveStatus === "loading") return;
-    if (targetPage < 0 || targetPage > CCT_PAGE_NAMES.length - 1) return;
+    if (targetPage < 0 || targetPage > CCT_PAGES.summary) return;
     setCurrentPage(targetPage);
+    if (targetPage === CCT_PAGES.summary) setHasReachedSummary(true);
     setIsChangeFormOpen(false);
     setIsAdjustmentFormOpen(false);
     window.scrollTo({ top: 0 });
+  };
+
+  const goToHome = () => {
+    if (saveStatus === "loading") return;
+    history.push("/cct");
   };
 
   const handleSave = async (name: string) => {
@@ -136,10 +176,12 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
     <CctFormShell
       pageNames={CCT_PAGE_NAMES}
       currentPage={currentPage}
-      canGoNext={currentPage === 0 ? isProgrammeDetailsDone : isChangesDone}
+      canGoNext={isPageDone[currentPage] ?? false}
+      canReturnToSummary={hasReachedSummary}
       onNavigate={goToPage}
+      onBackToHome={goToHome}
     >
-      {currentPage === 0 && (
+      {currentPage === CCT_PAGES.programmeDetails && (
         <CctProgrammeDetailsSection
           programmeDetails={programmeDetails}
           specialties={specialties}
@@ -152,48 +194,102 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           isRetryingCalculation={isRetrying}
           onRetryCalculation={retry}
           hasInvalidChanges={invalidChanges.length > 0}
-          invalidAdjustments={invalidAdjustments}
-          isAdjustmentFormOpen={isAdjustmentFormOpen}
+          invalidAdjustments={programmeDetailsErrors}
           onChange={setProgrammeDetails}
           onEditingChange={setIsEditingProgrammeDetails}
-          onAdjustmentFormOpenChange={setIsAdjustmentFormOpen}
           onDirtyChange={setIsSubFormDirty}
         />
       )}
-      {currentPage === 1 && (
+      {isAdjustmentsPage && (
         <>
-          <CctProgrammeDetailsInset
-            programmeDetails={programmeDetails}
-            result={result}
-            onEdit={() => goToPage(0)}
-          />
-          {programmeDetails && result && result.gradeProgression.length > 0 && (
-            <Card feature data-cy="cct-changes-grade-progression">
-              <Card.Heading>Grade progression</Card.Heading>
-              <CctGradeYearsTable
-                gradeYears={result.gradeProgression}
-                programmeDetails={programmeDetails}
-              />
-            </Card>
+          {status === "failed" && (
+            <CctRequestError
+              isRetrying={isRetrying}
+              onRetry={retry}
+              message="We could not calculate your programme end date."
+            />
           )}
-          <CctChangesSection
-            programmeDetails={programmeDetails}
-            changes={changes}
-            calculatedChanges={calculatedChanges}
-            result={result}
-            cctDate={cctDate}
-            invalidChanges={invalidChanges}
-            calculationStatus={status}
-            isRetrying={isRetrying}
-            isFormOpen={isChangeFormOpen}
-            onRetry={retry}
-            onChange={next => setChanges(sortCctChanges(next))}
-            onFormOpenChange={setIsChangeFormOpen}
-            onDirtyChange={setIsSubFormDirty}
-          />
+          {invalidChanges.length > 0 && <CctInvalidChangesNotice />}
         </>
       )}
-      {currentPage === 2 && (
+      {isSetupPage && currentPage !== CCT_PAGES.programmeDetails && (
+        <CctProgrammeDetailsInset
+          programmeDetails={programmeDetails}
+          result={result}
+          onEdit={() => goToPage(CCT_PAGES.programmeDetails)}
+        />
+      )}
+      {isSetupPage &&
+        !isEditingProgrammeDetails &&
+        programmeDetails &&
+        result &&
+        result.gradeProgression.length > 0 && (
+          <Card feature data-cy="cct-grade-progression">
+            <Card.Heading>Grade progression</Card.Heading>
+            <CctGradeYearsTable
+              gradeYears={result.gradeProgression}
+              programmeDetails={programmeDetails}
+            />
+          </Card>
+        )}
+      {currentPage === CCT_PAGES.trainingTime && programmeDetails && (
+        <>
+          <CctTrainingTimeSection
+            programmeDetails={programmeDetails}
+            result={result}
+            calculationStatus={status}
+            invalidAdjustments={trainingTimeErrors}
+            isFormOpen={isAdjustmentFormOpen}
+            onChange={setProgrammeDetails}
+            onFormOpenChange={setIsAdjustmentFormOpen}
+            onDirtyChange={setIsSubFormDirty}
+          />
+          {trainingTimeErrors.length > 0 && (
+            <CctInvalidAdjustmentsSummary
+              programmeDetails={programmeDetails}
+              invalidAdjustments={trainingTimeErrors}
+            />
+          )}
+        </>
+      )}
+      {currentPage === CCT_PAGES.gradeProgression && programmeDetails && (
+        <>
+          <CctGradeProgressionSection
+            programmeDetails={programmeDetails}
+            specialties={specialties}
+            result={result}
+            invalidAdjustments={gradeProgressionErrors}
+            isFormOpen={isAdjustmentFormOpen}
+            onChange={setProgrammeDetails}
+            onFormOpenChange={setIsAdjustmentFormOpen}
+            onDirtyChange={setIsSubFormDirty}
+          />
+          {gradeProgressionErrors.length > 0 && (
+            <CctInvalidAdjustmentsSummary
+              programmeDetails={programmeDetails}
+              invalidAdjustments={gradeProgressionErrors}
+            />
+          )}
+        </>
+      )}
+      {currentPage === CCT_PAGES.changes && (
+        <CctChangesSection
+          programmeDetails={programmeDetails}
+          changes={changes}
+          calculatedChanges={calculatedChanges}
+          result={result}
+          cctDate={cctDate}
+          invalidChanges={invalidChanges}
+          calculationStatus={status}
+          isRetrying={isRetrying}
+          isFormOpen={isChangeFormOpen}
+          onRetry={retry}
+          onChange={next => setChanges(sortCctChanges(next))}
+          onFormOpenChange={setIsChangeFormOpen}
+          onDirtyChange={setIsSubFormDirty}
+        />
+      )}
+      {currentPage === CCT_PAGES.summary && (
         <CctSummary
           programmeDetails={programmeDetails}
           specialties={specialties}
@@ -203,10 +299,11 @@ export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
           calculationStatus={status}
           isRetrying={isRetrying}
           onRetry={retry}
-          hasInvalidChanges={invalidChanges.length > 0}
-          hasInvalidAdjustments={invalidAdjustments.length > 0}
-          onGoToChanges={() => goToPage(1)}
-          onGoToProgrammeDetails={() => goToPage(0)}
+          invalidChanges={invalidChanges}
+          programmeDetailsErrors={programmeDetailsErrors}
+          trainingTimeErrors={trainingTimeErrors}
+          gradeProgressionErrors={gradeProgressionErrors}
+          onGoToPage={goToPage}
           savedCalculationId={savedCalculation?.id}
           savedName={savedCalculation?.name ?? ""}
           name={name}

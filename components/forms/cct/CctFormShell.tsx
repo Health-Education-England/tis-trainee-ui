@@ -1,75 +1,72 @@
 import React from "react";
-import { ArrowLeftIcon, ArrowRightIcon } from "nhsuk-react-components";
-import { Link } from "react-router-dom";
+import { BackLink, Button } from "nhsuk-react-components";
 
 type CctFormShellProps = {
   pageNames: string[];
   currentPage: number;
   canGoNext: boolean;
+  canReturnToSummary: boolean;
   onNavigate: (targetPage: number) => void;
+  onBackToHome: () => void;
   children: React.ReactNode;
 };
 
-// Note: the progress header and pagination are copied from FormBuilder so the calculator reads like the other forms. Put them in a shared component if a third form needs them.
 export function CctFormShell({
   pageNames,
   currentPage,
   canGoNext,
+  canReturnToSummary,
   onNavigate,
+  onBackToHome,
   children
 }: Readonly<CctFormShellProps>) {
   const lastPage = pageNames.length - 1;
+  const isBackToHome = currentPage === 0 || currentPage === lastPage;
 
   return (
     <>
+      <BackLink
+        asElement="button"
+        type="button"
+        className="nhsuk-u-margin-bottom-7"
+        onClick={() =>
+          isBackToHome ? onBackToHome() : onNavigate(currentPage - 1)
+        }
+        data-cy="cct-back-link"
+      >
+        {isBackToHome
+          ? "Back to CCT home"
+          : `Back to ${pageNames[currentPage - 1]}`}
+      </BackLink>
       <div data-cy="progress-header">
         <h3 className="hide-from-print">
-          {`Part ${currentPage + 1} of ${pageNames.length} - ${
+          {`Step ${currentPage + 1} of ${pageNames.length} - ${
             pageNames[currentPage]
           }`}
         </h3>
         {children}
       </div>
-      <nav className="nhsuk-pagination">
-        <ul className="nhsuk-list nhsuk-pagination__list">
-          <li className="nhsuk-pagination-item--previous">
-            {currentPage > 0 && (
-              <Link
-                to="#"
-                className="nhsuk-pagination__link nhsuk-pagination__link--prev"
-                onClick={() => onNavigate(currentPage - 1)}
-                data-cy="navPrevious"
-              >
-                <span className="nhsuk-pagination__title">Previous</span>
-                <span className="nhsuk-u-visually-hidden">:</span>
-                <span className="nhsuk-pagination__page">
-                  <div>{`${currentPage}. ${pageNames[currentPage - 1]}`}</div>
-                </span>
-                <ArrowLeftIcon />
-              </Link>
-            )}
-          </li>
-          <li className="nhsuk-pagination-item--next">
-            {currentPage < lastPage && canGoNext && (
-              <Link
-                to="#"
-                className="nhsuk-pagination__link nhsuk-pagination__link--next"
-                onClick={() => onNavigate(currentPage + 1)}
-                data-cy="navNext"
-              >
-                <span className="nhsuk-pagination__title">Next</span>
-                <span className="nhsuk-u-visually-hidden">:</span>
-                <span className="nhsuk-pagination__page">
-                  <div>{`${currentPage + 2}. ${
-                    pageNames[currentPage + 1]
-                  }`}</div>
-                </span>
-                <ArrowRightIcon />
-              </Link>
-            )}
-          </li>
-        </ul>
-      </nav>
+      {currentPage < lastPage && canGoNext && (
+        <div className="nhsuk-button-group hide-from-print">
+          <Button
+            type="button"
+            onClick={() => onNavigate(currentPage + 1)}
+            data-cy="cct-continue"
+          >
+            {currentPage === lastPage - 1 ? "Show summary" : "Continue"}
+          </Button>
+          {canReturnToSummary && currentPage < lastPage - 1 && (
+            <Button
+              secondary
+              type="button"
+              onClick={() => onNavigate(lastPage)}
+              data-cy="cct-return-to-summary"
+            >
+              Return to summary
+            </Button>
+          )}
+        </div>
+      )}
     </>
   );
 }

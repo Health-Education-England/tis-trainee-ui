@@ -78,3 +78,19 @@ export const CCT_INDICATIVE_DATE_TEXT =
 export const CCT_NOTES_MAX_LENGTH = 1000;
 export const CCT_NOTES_PREVIEW_LENGTH = 80;
 export const CCT_NOTES_TOO_LONG_ERROR = `Notes must be ${CCT_NOTES_MAX_LENGTH} characters or less`;
+
+export const CCT_PAGES = {
+  programmeDetails: 0,
+  trainingTime: 1,
+  gradeProgression: 2,
+  changes: 3,
+  summary: 4
+} as const;
+
+export const CCT_PAGE_NAMES = [
+  "Programme details",
+  "Training time adjustments",
+  "Grade progression adjustments",
+  "Changes",
+  "Summary"
+];

@@ -15,7 +15,8 @@ import {
 import Loading from "../../common/Loading";
 import {
   CCT_NO_VALUE,
-  CCT_NOT_CALCULATED
+  CCT_NOT_CALCULATED,
+  CCT_PAGES
 } from "../../../utilities/CctConstants";
 import {
   CctInvalidAdjustment,
@@ -32,16 +33,9 @@ import {
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctSpecialtiesStatus } from "../../../utilities/hooks/useCctSpecialties";
-import {
-  CctGradeProgressionSection,
-  CctGradeYearsTable
-} from "./CctGradeProgressionSection";
 import { CctProgrammeDetailsForm } from "./CctProgrammeDetailsForm";
 import { CctRequestError } from "./CctRequestError";
-import {
-  CctTrainingTimeSection,
-  editButtonId as trainingTimeEditButtonId
-} from "./CctTrainingTimeSection";
+import { editButtonId as trainingTimeEditButtonId } from "./CctTrainingTimeSection";
 import { CCT_TRAINING_TIME_KINDS } from "./cctTrainingTimeKinds";
 
 type CctProgrammeDetailsSectionProps = {
@@ -57,10 +51,8 @@ type CctProgrammeDetailsSectionProps = {
   onRetryCalculation: () => void;
   hasInvalidChanges: boolean;
   invalidAdjustments: CctInvalidAdjustment[];
-  isAdjustmentFormOpen: boolean;
   onChange: (programmeDetails: CctProgrammeDetails) => void;
   onEditingChange: (isEditing: boolean) => void;
-  onAdjustmentFormOpenChange: (isFormOpen: boolean) => void;
   onDirtyChange: (isDirty: boolean) => void;
 };
 
@@ -77,10 +69,8 @@ export function CctProgrammeDetailsSection({
   onRetryCalculation,
   hasInvalidChanges,
   invalidAdjustments,
-  isAdjustmentFormOpen,
   onChange,
   onEditingChange,
-  onAdjustmentFormOpenChange,
   onDirtyChange
 }: Readonly<CctProgrammeDetailsSectionProps>) {
   const handleSubmit = (formData: FormData) => {
@@ -137,17 +127,7 @@ export function CctProgrammeDetailsSection({
                 message="We could not calculate your programme end date."
               />
             )}
-            {hasInvalidChanges && (
-              <WarningCallout data-cy="cct-invalid-changes-notice">
-                <WarningCallout.Heading visuallyHiddenText="">
-                  Important
-                </WarningCallout.Heading>
-                <p>
-                  Some of your changes no longer fit within your programme
-                  dates. Check them on the Changes page.
-                </p>
-              </WarningCallout>
-            )}
+            {hasInvalidChanges && <CctInvalidChangesNotice />}
             <CctProgrammeDetailsSummary
               programmeDetails={programmeDetails}
               specialties={specialties}
@@ -158,7 +138,6 @@ export function CctProgrammeDetailsSection({
               id="cct-edit-programme-details"
               secondary
               type="button"
-              disabled={isAdjustmentFormOpen}
               onClick={() => onEditingChange(true)}
               data-cy="cct-edit-programme-details"
             >
@@ -167,48 +146,44 @@ export function CctProgrammeDetailsSection({
           </>
         )}
       </Card>
-      {programmeDetails && !isEditing && (
-        <>
-          {result && result.gradeProgression.length > 0 && (
-            <Card feature data-cy="cct-part1-grade-progression">
-              <Card.Heading>Grade progression</Card.Heading>
-              <CctGradeYearsTable
-                gradeYears={result.gradeProgression}
-                programmeDetails={programmeDetails}
-              />
-            </Card>
-          )}
-          <CctTrainingTimeSection
-            programmeDetails={programmeDetails}
-            result={result}
-            calculationStatus={calculationStatus}
-            invalidAdjustments={invalidAdjustments}
-            isFormOpen={isAdjustmentFormOpen}
-            onChange={onChange}
-            onFormOpenChange={onAdjustmentFormOpenChange}
-            onDirtyChange={onDirtyChange}
-          />
-          <CctGradeProgressionSection
-            programmeDetails={programmeDetails}
-            specialties={specialties}
-            result={result}
-            invalidAdjustments={invalidAdjustments}
-            isFormOpen={isAdjustmentFormOpen}
-            onChange={onChange}
-            onFormOpenChange={onAdjustmentFormOpenChange}
-            onDirtyChange={onDirtyChange}
-          />
-          {invalidAdjustments.length > 0 && (
-            <CctInvalidAdjustmentsSummary
-              programmeDetails={programmeDetails}
-              invalidAdjustments={invalidAdjustments}
-            />
-          )}
-        </>
+      {programmeDetails && !isEditing && invalidAdjustments.length > 0 && (
+        <CctInvalidAdjustmentsSummary
+          programmeDetails={programmeDetails}
+          invalidAdjustments={invalidAdjustments}
+        />
       )}
     </>
   );
 }
+
+export function CctInvalidChangesNotice() {
+  return (
+    <WarningCallout data-cy="cct-invalid-changes-notice">
+      <WarningCallout.Heading visuallyHiddenText="">
+        Important
+      </WarningCallout.Heading>
+      <p>
+        Some of your changes no longer fit within your programme dates. Check
+        them on the Changes page.
+      </p>
+    </WarningCallout>
+  );
+}
+
+const CCT_GRADE_PROGRESSION_ERROR_FIELDS = new Set([
+  "skippedGrade",
+  "skippedGradeNotes",
+  "eighteenMonthFinalGrade",
+  "eighteenMonthFinalGradeNotes"
+]);
+
+export const cctAdjustmentErrorPage = ({ field }: CctInvalidAdjustment) => {
+  if (CCT_TRAINING_TIME_KINDS.some(kind => kind.field === field))
+    return CCT_PAGES.trainingTime;
+  if (CCT_GRADE_PROGRESSION_ERROR_FIELDS.has(field))
+    return CCT_PAGES.gradeProgression;
+  return CCT_PAGES.programmeDetails;
+};
 
 const describeInvalidAdjustment = (
   programmeDetails: CctProgrammeDetails,
@@ -246,12 +221,20 @@ const describeInvalidAdjustment = (
   };
 };
 
+export const cctInvalidAdjustmentText = (
+  programmeDetails: CctProgrammeDetails,
+  adjustment: CctInvalidAdjustment
+) =>
+  `${describeInvalidAdjustment(programmeDetails, adjustment).label}: ${
+    adjustment.message
+  }`;
+
 type CctInvalidAdjustmentsSummaryProps = {
   programmeDetails: CctProgrammeDetails;
   invalidAdjustments: CctInvalidAdjustment[];
 };
 
-function CctInvalidAdjustmentsSummary({
+export function CctInvalidAdjustmentsSummary({
   programmeDetails,
   invalidAdjustments
 }: Readonly<CctInvalidAdjustmentsSummaryProps>) {
@@ -266,7 +249,7 @@ function CctInvalidAdjustmentsSummary({
       </ErrorSummary.Title>
       <ErrorSummary.List>
         {invalidAdjustments.map(adjustment => {
-          const { label, editButtonId } = describeInvalidAdjustment(
+          const { editButtonId } = describeInvalidAdjustment(
             programmeDetails,
             adjustment
           );
@@ -284,7 +267,7 @@ function CctInvalidAdjustmentsSummary({
                 editButton?.focus({ preventScroll: true });
               }}
             >
-              {`${label}: ${adjustment.message}`}
+              {cctInvalidAdjustmentText(programmeDetails, adjustment)}
             </ErrorSummary.ListItem>
           );
         })}

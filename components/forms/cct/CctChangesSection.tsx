@@ -51,11 +51,20 @@ type CctChangesSectionProps = {
   onDirtyChange: (isDirty: boolean) => void;
 };
 
-type CctInvalidChange = {
+export type CctInvalidChange = {
   change: CctChange;
   pointer: string;
   message: string;
 };
+
+export const cctInvalidChangeText = ({ change, message }: CctInvalidChange) =>
+  `${getCctChangeTypeShortLabel(change.type)} (${formatCctDate(
+    change.startDate
+  )} - ${
+    isOpenLtftChange(change)
+      ? "remainder of training"
+      : formatCctDate(change.endDate)
+  }): ${message}`;
 
 const editButtonId = (changeId: string) => `cct-edit-change-${changeId}`;
 
@@ -223,14 +232,14 @@ function CctInvalidChangesSummary({
         There is a problem with your changes
       </ErrorSummary.Title>
       <ErrorSummary.List>
-        {invalidChanges.map(({ change, pointer, message }) => (
+        {invalidChanges.map(invalidChange => (
           <ErrorSummary.ListItem
-            key={`${change.id}-${pointer}`}
-            href={`#${editButtonId(change.id)}`}
+            key={`${invalidChange.change.id}-${invalidChange.pointer}`}
+            href={`#${editButtonId(invalidChange.change.id)}`}
             onClick={e => {
               e.preventDefault();
               const editButton = document.getElementById(
-                editButtonId(change.id)
+                editButtonId(invalidChange.change.id)
               );
               editButton?.scrollIntoView({
                 behavior: "smooth",
@@ -239,13 +248,7 @@ function CctInvalidChangesSummary({
               editButton?.focus({ preventScroll: true });
             }}
           >
-            {`${getCctChangeTypeShortLabel(change.type)} (${formatCctDate(
-              change.startDate
-            )} - ${
-              isOpenLtftChange(change)
-                ? "remainder of training"
-                : formatCctDate(change.endDate)
-            }): ${message}`}
+            {cctInvalidChangeText(invalidChange)}
           </ErrorSummary.ListItem>
         ))}
       </ErrorSummary.List>
