@@ -1,26 +1,24 @@
-import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
 import { CctHome } from "../../../../components/forms/cct/CctHome";
-import store from "../../../../redux/store/store";
 import { mount } from "cypress/react";
-import { updatedTraineeProfileData } from "../../../../redux/slices/traineeProfileSlice";
-import { mockTraineeProfile } from "../../../../mock-data/trainee-profile";
 
 describe("CctHome", () => {
-  it("renders the CctHome component", () => {
-    store.dispatch(updatedTraineeProfileData(mockTraineeProfile));
+  it("says a new calculator is on its way and links to external calculators", () => {
     mount(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={["/cct"]}>
-          <CctHome />
-        </MemoryRouter>
-      </Provider>
+      <MemoryRouter initialEntries={["/cct"]}>
+        <CctHome />
+      </MemoryRouter>
     );
-    cy.get('[data-cy="cct-home-warning"]')
-      .should("exist")
-      .contains("Please read before proceeding");
-    cy.get('[data-cy="cct-home-subheader-calcs"]')
-      .should("exist")
-      .contains("Saved calculations");
+    cy.get('[data-cy="cct-home-warning-text"]').should(
+      "contain.text",
+      "A new CCT calculator is on its way"
+    );
+    cy.get('[data-cy="cct-home-warning"] a')
+      .should("have.length", 2)
+      .first()
+      .should("have.attr", "href", "https://rcem.ac.uk/cct-recalculations/");
+    cy.get('[data-cy="cct-home-warning"] a')
+      .last()
+      .should("have.attr", "href", "https://rcoa.ac.uk/cct-date-calculator");
   });
 });

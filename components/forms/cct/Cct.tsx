@@ -3,7 +3,6 @@ import style from "../../Common.module.scss";
 import { Route, Switch } from "react-router-dom";
 import PageNotFound from "../../common/PageNotFound";
 import { CctHome } from "./CctHome";
-import { CctCalcView } from "./CctCalcView";
 
 export function Cct() {
   return (
@@ -19,8 +18,6 @@ export function Cct() {
         </Legend>
       </Fieldset>
       <Switch>
-        <Route exact path="/cct/view" component={CctCalcView} />
-        <Route exact path="/cct/view/:id" component={CctCalcView} />
         <Route exact path="/cct" component={CctHome} />
         <Route path="/cct/*" component={PageNotFound} />
       </Switch>
