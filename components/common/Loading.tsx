@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactLoading, { LoadingType } from "react-loading";
 
 type LoadingProps = Readonly<{
@@ -8,6 +8,7 @@ type LoadingProps = Readonly<{
   delay?: number;
   type?: LoadingType;
   className?: string;
+  text?: string;
 }>;
 
 export default function Loading({
@@ -16,21 +17,37 @@ export default function Loading({
   width = 100,
   delay = 0,
   type = "bubbles",
-  className = ""
+  className = "",
+  text
 }: LoadingProps) {
   const loadingType: LoadingType = type;
+  const [isShown, setIsShown] = useState(delay === 0);
+
+  useEffect(() => {
+    if (delay === 0) return;
+    const timer = setTimeout(() => setIsShown(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  if (!isShown && !text) return null;
 
   return (
     <div className={`loading ${className}`}>
-      <ReactLoading
-        data-cy="loading"
-        type={loadingType}
-        color={color}
-        height={height}
-        width={width}
-        delay={delay}
-        aria-label="loading-icon"
-      />
+      {isShown && (
+        <ReactLoading
+          data-cy="loading"
+          type={loadingType}
+          color={color}
+          height={height}
+          width={width}
+          aria-label="loading-icon"
+        />
+      )}
+      {text && (
+        <p className={isShown ? "nhsuk-body" : "nhsuk-u-visually-hidden"}>
+          <output>{isShown ? text : ""}</output>
+        </p>
+      )}
     </div>
   );
 }
