@@ -1,9 +1,19 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "nhsuk-react-components";
-import { CctChange, CctProgrammeDetails } from "../../../models/CctTypes";
+import {
+  CctCalculation,
+  CctChange,
+  CctProgrammeDetails
+} from "../../../models/CctTypes";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/hooks";
+import {
+  saveCctCalculation,
+  updatedCctSaveStatus
+} from "../../../redux/slices/cctSlice";
 import {
   cctChangeIndexFromPointer,
   cctProgrammeDetailsErrorTarget,
+  fromCctChangeDtos,
   sortCctChanges,
   toCctChangeDtos
 } from "../../../utilities/CctUtilities";
@@ -32,20 +42,32 @@ import { CctStartOverButton } from "./CctStartOverButton";
 import { CctSummary } from "./CctSummary";
 import { CctTrainingTimeSection } from "./CctTrainingTimeSection";
 
-export function CctForm() {
+type CctFormProps = {
+  savedCalculation?: CctCalculation;
+};
+
+export function CctForm({ savedCalculation }: Readonly<CctFormProps>) {
   const [currentPage, setCurrentPage] = useState<number>(
-    CCT_PAGES.programmeDetails
+    savedCalculation ? CCT_PAGES.summary : CCT_PAGES.programmeDetails
   );
   const [programmeDetails, setProgrammeDetails] =
-    useState<CctProgrammeDetails | null>(null);
-  const [isEditingProgrammeDetails, setIsEditingProgrammeDetails] =
-    useState(true);
-  const [changes, setChanges] = useState<CctChange[]>([]);
+    useState<CctProgrammeDetails | null>(
+      savedCalculation?.programmeDetails ?? null
+    );
+  const [isEditingProgrammeDetails, setIsEditingProgrammeDetails] = useState(
+    !savedCalculation
+  );
+  const [changes, setChanges] = useState<CctChange[]>(() =>
+    fromCctChangeDtos(savedCalculation?.changes ?? [])
+  );
+  const [name, setName] = useState(savedCalculation?.name ?? "");
   const [isChangeFormOpen, setIsChangeFormOpen] = useState(false);
   const [isAdjustmentFormOpen, setIsAdjustmentFormOpen] = useState(false);
   const [isSubFormDirty, setIsSubFormDirty] = useState(false);
-  const [hasReachedSummary, setHasReachedSummary] = useState(false);
-  const openedRef = useRef({ programmeDetails, changes });
+  const [hasReachedSummary, setHasReachedSummary] = useState(
+    !!savedCalculation
+  );
+  const openedRef = useRef({ programmeDetails, changes, name });
 
   const { result, calculatedChanges, errors, status, isRetrying, retry } =
     useCctCalculation(programmeDetails, changes);
@@ -55,6 +77,20 @@ export function CctForm() {
     isRetrying: isRetryingSpecialties,
     retry: retrySpecialties
   } = useCctSpecialties();
+  const dispatch = useAppDispatch();
+  const saveStatus = useAppSelector(state => state.cct.saveStatus);
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    dispatch(updatedCctSaveStatus("idle"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const cctDate = status === "succeeded" ? result?.cctDate ?? null : null;
   const invalidChanges = changes.flatMap((change, index) =>
@@ -99,6 +135,7 @@ export function CctForm() {
     currentPage === CCT_PAGES.gradeProgression;
   const hasUnsavedChanges =
     isSubFormDirty ||
+    name.trim() !== openedRef.current.name ||
     !isDeepEqual(programmeDetails, openedRef.current.programmeDetails) ||
     !isDeepEqual(
       toCctChangeDtos(changes),
@@ -106,12 +143,35 @@ export function CctForm() {
     );
 
   const goToPage = (targetPage: number) => {
+    if (saveStatus === "loading") return;
     if (targetPage < 0 || targetPage > CCT_PAGES.summary) return;
     setCurrentPage(targetPage);
     if (targetPage === CCT_PAGES.summary) setHasReachedSummary(true);
     setIsChangeFormOpen(false);
     setIsAdjustmentFormOpen(false);
     window.scrollTo({ top: 0 });
+  };
+
+  const goToHome = () => {
+    if (saveStatus === "loading") return;
+    history.push("/cct");
+  };
+
+  const handleSave = async (name: string) => {
+    if (!programmeDetails) return;
+    const action = await dispatch(
+      saveCctCalculation({
+        id: savedCalculation?.id,
+        name,
+        programmeDetails,
+        changes: toCctChangeDtos(changes)
+      })
+    );
+    if (saveCctCalculation.fulfilled.match(action) && isMountedRef.current) {
+      history.replace("/cct", {
+        savedCalculation: { id: action.payload.id, name: action.payload.name }
+      });
+    }
   };
 
   return (
@@ -121,9 +181,11 @@ export function CctForm() {
       canGoNext={isPageDone[currentPage] ?? false}
       canReturnToSummary={hasReachedSummary}
       onNavigate={goToPage}
-      onBackToHome={() => history.push("/cct")}
+      onBackToHome={goToHome}
       startOverButton={
-        <CctStartOverButton hasUnsavedChanges={hasUnsavedChanges} />
+        !savedCalculation && (
+          <CctStartOverButton hasUnsavedChanges={hasUnsavedChanges} />
+        )
       }
     >
       {currentPage === CCT_PAGES.programmeDetails && (
@@ -249,6 +311,12 @@ export function CctForm() {
           trainingTimeErrors={trainingTimeErrors}
           gradeProgressionErrors={gradeProgressionErrors}
           onGoToPage={goToPage}
+          savedCalculationId={savedCalculation?.id}
+          savedName={savedCalculation?.name ?? ""}
+          name={name}
+          saveStatus={saveStatus}
+          onSave={handleSave}
+          onNameChange={setName}
         />
       )}
       {status === "loading" && (
