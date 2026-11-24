@@ -238,7 +238,14 @@ describe("LtftForm - draft", () => {
     cy.get(".nhsuk-card--warning .nhsuk-card__content > p").contains(
       ltftTier2VisaImportantText1
     );
-    cy.get('[data-cy="skilledVisaWorkerMoreInfoSummary"]').should("exist");
+    cy.contains(
+      "there are minimum requirements and conditions attached to your visa"
+    ).should("be.visible");
+
+    cy.contains("a", "Less than full-time (LTFT) minimum salary requirements")
+      .should("be.visible")
+      .and("have.attr", "href")
+      .and("include", "less-than-full-time-ltft-minimum-salary-requirements");
     cy.navNext();
     cy.get("#skilledWorkerVisaHolder-error").contains(LtftVisaError);
     cy.get('[data-cy="skilledWorkerVisaHolder-Yes-input"]').check();
