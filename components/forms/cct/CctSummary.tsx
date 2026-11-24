@@ -33,10 +33,15 @@ import {
   cctInvalidChangeText
 } from "./CctChangesSection";
 import {
+  CctGradeProgressionSummary,
+  CctGradeYearsTable
+} from "./CctGradeProgressionSection";
+import {
   cctInvalidAdjustmentText,
   CctProgrammeDetailsSummary
 } from "./CctProgrammeDetailsSection";
 import { CctRequestError } from "./CctRequestError";
+import { CctTrainingTimeSummary } from "./CctTrainingTimeSection";
 
 function CctChangeButton(
   props: Readonly<ButtonHTMLAttributes<HTMLButtonElement>>
@@ -61,6 +66,8 @@ type CctSummaryProps = {
   onRetry: () => void;
   invalidChanges: CctInvalidChange[];
   programmeDetailsErrors: CctInvalidAdjustment[];
+  trainingTimeErrors: CctInvalidAdjustment[];
+  gradeProgressionErrors: CctInvalidAdjustment[];
   onGoToPage: (page: number) => void;
 };
 
@@ -75,6 +82,8 @@ export function CctSummary({
   onRetry,
   invalidChanges,
   programmeDetailsErrors,
+  trainingTimeErrors,
+  gradeProgressionErrors,
   onGoToPage
 }: Readonly<CctSummaryProps>) {
   const noResultText =
@@ -82,11 +91,17 @@ export function CctSummary({
   const pageSlug = (page: number) =>
     CCT_PAGE_NAMES[page].toLowerCase().replaceAll(" ", "-");
   const changeLinkId = (page: number) => `cct-change-${pageSlug(page)}`;
+  const adjustmentErrors = (adjustments: CctInvalidAdjustment[]) =>
+    programmeDetails
+      ? adjustments.map(adjustment => ({
+          key: `${adjustment.pointer}-${adjustment.message}`,
+          text: cctInvalidAdjustmentText(programmeDetails, adjustment)
+        }))
+      : [];
   const cardErrors: Record<number, { key: string; text: string }[]> = {
-    [CCT_PAGES.programmeDetails]: programmeDetailsErrors.map(adjustment => ({
-      key: `${adjustment.pointer}-${adjustment.message}`,
-      text: cctInvalidAdjustmentText(adjustment)
-    })),
+    [CCT_PAGES.programmeDetails]: adjustmentErrors(programmeDetailsErrors),
+    [CCT_PAGES.trainingTime]: adjustmentErrors(trainingTimeErrors),
+    [CCT_PAGES.gradeProgression]: adjustmentErrors(gradeProgressionErrors),
     [CCT_PAGES.changes]: invalidChanges.map(invalidChange => ({
       key: `${invalidChange.change.id}-${invalidChange.pointer}`,
       text: cctInvalidChangeText(invalidChange)
@@ -94,6 +109,8 @@ export function CctSummary({
   };
   const pagesWithErrors = [
     CCT_PAGES.programmeDetails,
+    CCT_PAGES.trainingTime,
+    CCT_PAGES.gradeProgression,
     CCT_PAGES.changes
   ].filter(page => cardErrors[page].length > 0);
   const changeAction = (page: number) => (
@@ -200,6 +217,38 @@ export function CctSummary({
           />
         )}
       </Card>
+
+      {programmeDetails && result && result.gradeProgression.length > 0 && (
+        <Card feature>
+          <Card.Heading>Grade progression</Card.Heading>
+          <CctGradeYearsTable
+            gradeYears={result.gradeProgression}
+            programmeDetails={programmeDetails}
+          />
+        </Card>
+      )}
+
+      {programmeDetails && (
+        <>
+          <Card feature>
+            <Card.Heading>Training time adjustments</Card.Heading>
+            {changeAction(CCT_PAGES.trainingTime)}
+            {cardErrorMessages(CCT_PAGES.trainingTime)}
+            <CctTrainingTimeSummary
+              programmeDetails={programmeDetails}
+              result={result}
+              calculationStatus={calculationStatus}
+              headingLevel="h3"
+            />
+          </Card>
+          <Card feature>
+            <Card.Heading>Grade progression adjustments</Card.Heading>
+            {changeAction(CCT_PAGES.gradeProgression)}
+            {cardErrorMessages(CCT_PAGES.gradeProgression)}
+            <CctGradeProgressionSummary programmeDetails={programmeDetails} />
+          </Card>
+        </>
+      )}
 
       <Card feature>
         <Card.Heading>Changes</Card.Heading>

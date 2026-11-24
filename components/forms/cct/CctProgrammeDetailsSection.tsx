@@ -15,21 +15,28 @@ import {
 import Loading from "../../common/Loading";
 import {
   CCT_NO_VALUE,
-  CCT_NOT_CALCULATED
+  CCT_NOT_CALCULATED,
+  CCT_PAGES
 } from "../../../utilities/CctConstants";
 import {
   CctInvalidAdjustment,
+  CctProgrammeDetailsErrorTarget,
+  deriveCctAdjustedLengthMonths,
   findCctSpecialty,
   formatCctDate,
+  isCctLengthAdjusted,
   isCctLengthOverridden,
   isCctStartGradeOverridden,
   mapFormDataToProgrammeDetails,
-  mapProgrammeDetailsToFormData
+  mapProgrammeDetailsToFormData,
+  sumCctTrainingTime
 } from "../../../utilities/CctUtilities";
 import { CctCalculationStatus } from "../../../utilities/hooks/useCctCalculation";
 import { CctSpecialtiesStatus } from "../../../utilities/hooks/useCctSpecialties";
 import { CctProgrammeDetailsForm } from "./CctProgrammeDetailsForm";
 import { CctRequestError } from "./CctRequestError";
+import { editButtonId as trainingTimeEditButtonId } from "./CctTrainingTimeSection";
+import { CCT_TRAINING_TIME_KINDS } from "./cctTrainingTimeKinds";
 
 type CctProgrammeDetailsSectionProps = {
   programmeDetails: CctProgrammeDetails | null;
@@ -140,7 +147,10 @@ export function CctProgrammeDetailsSection({
         )}
       </Card>
       {programmeDetails && !isEditing && invalidAdjustments.length > 0 && (
-        <CctInvalidAdjustmentsSummary invalidAdjustments={invalidAdjustments} />
+        <CctInvalidAdjustmentsSummary
+          programmeDetails={programmeDetails}
+          invalidAdjustments={invalidAdjustments}
+        />
       )}
     </>
   );
@@ -160,16 +170,72 @@ export function CctInvalidChangesNotice() {
   );
 }
 
-const editButtonId = "cct-edit-programme-details";
+const CCT_GRADE_PROGRESSION_ERROR_FIELDS = new Set([
+  "skippedGrade",
+  "skippedGradeNotes",
+  "eighteenMonthFinalGrade",
+  "eighteenMonthFinalGradeNotes"
+]);
 
-export const cctInvalidAdjustmentText = ({ message }: CctInvalidAdjustment) =>
-  `Programme details: ${message}`;
+export const cctAdjustmentErrorPage = ({ field }: CctInvalidAdjustment) => {
+  if (CCT_TRAINING_TIME_KINDS.some(kind => kind.field === field))
+    return CCT_PAGES.trainingTime;
+  if (CCT_GRADE_PROGRESSION_ERROR_FIELDS.has(field))
+    return CCT_PAGES.gradeProgression;
+  return CCT_PAGES.programmeDetails;
+};
+
+const describeInvalidAdjustment = (
+  programmeDetails: CctProgrammeDetails,
+  { field, index }: CctProgrammeDetailsErrorTarget
+) => {
+  const kind = CCT_TRAINING_TIME_KINDS.find(kind => kind.field === field);
+  if (kind && index !== null) {
+    const entry = programmeDetails[kind.field][index];
+    return {
+      label: `${kind.title} (${entry.grade}, ${entry.months} months)`,
+      editButtonId: trainingTimeEditButtonId(kind, index)
+    };
+  }
+  if (kind)
+    return {
+      label: kind.title,
+      editButtonId: trainingTimeEditButtonId(kind, 0)
+    };
+  if (field === "skippedGrade" || field === "skippedGradeNotes")
+    return {
+      label: "Skipped grade year",
+      editButtonId: "cct-edit-grade-progression"
+    };
+  if (
+    field === "eighteenMonthFinalGrade" ||
+    field === "eighteenMonthFinalGradeNotes"
+  )
+    return {
+      label: "18-month final year",
+      editButtonId: "cct-edit-grade-progression"
+    };
+  return {
+    label: "Programme details",
+    editButtonId: "cct-edit-programme-details"
+  };
+};
+
+export const cctInvalidAdjustmentText = (
+  programmeDetails: CctProgrammeDetails,
+  adjustment: CctInvalidAdjustment
+) =>
+  `${describeInvalidAdjustment(programmeDetails, adjustment).label}: ${
+    adjustment.message
+  }`;
 
 type CctInvalidAdjustmentsSummaryProps = {
+  programmeDetails: CctProgrammeDetails;
   invalidAdjustments: CctInvalidAdjustment[];
 };
 
 export function CctInvalidAdjustmentsSummary({
+  programmeDetails,
   invalidAdjustments
 }: Readonly<CctInvalidAdjustmentsSummaryProps>) {
   return (
@@ -182,23 +248,29 @@ export function CctInvalidAdjustmentsSummary({
         There is a problem with your adjustments
       </ErrorSummary.Title>
       <ErrorSummary.List>
-        {invalidAdjustments.map(adjustment => (
-          <ErrorSummary.ListItem
-            key={`${adjustment.pointer}-${adjustment.message}`}
-            href={`#${editButtonId}`}
-            onClick={e => {
-              e.preventDefault();
-              const editButton = document.getElementById(editButtonId);
-              editButton?.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-              });
-              editButton?.focus({ preventScroll: true });
-            }}
-          >
-            {cctInvalidAdjustmentText(adjustment)}
-          </ErrorSummary.ListItem>
-        ))}
+        {invalidAdjustments.map(adjustment => {
+          const { editButtonId } = describeInvalidAdjustment(
+            programmeDetails,
+            adjustment
+          );
+          return (
+            <ErrorSummary.ListItem
+              key={`${adjustment.pointer}-${adjustment.message}`}
+              href={`#${editButtonId}`}
+              onClick={e => {
+                e.preventDefault();
+                const editButton = document.getElementById(editButtonId);
+                editButton?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "center"
+                });
+                editButton?.focus({ preventScroll: true });
+              }}
+            >
+              {cctInvalidAdjustmentText(programmeDetails, adjustment)}
+            </ErrorSummary.ListItem>
+          );
+        })}
       </ErrorSummary.List>
     </ErrorSummary>
   );
@@ -216,12 +288,30 @@ export function CctProgrammeDetailsInset({
   onEdit
 }: Readonly<CctProgrammeDetailsInsetProps>) {
   if (!programmeDetails) return null;
+  const additionalMonths = sumCctTrainingTime(
+    programmeDetails.additionalTrainingTime
+  );
+  const acceleratedMonths = sumCctTrainingTime(
+    programmeDetails.acceleratedTrainingTime
+  );
 
   return (
     <InsetText data-cy="cct-programme-details-inset">
       <p>
         <strong>{programmeDetails.specialty}</strong>
-        {`, ${programmeDetails.lengthMonths} months`}
+        {`, ${deriveCctAdjustedLengthMonths(programmeDetails)} months`}
+        {isCctLengthAdjusted(programmeDetails) && (
+          <>
+            <br />
+            {`(${[
+              `${programmeDetails.lengthMonths} months`,
+              additionalMonths > 0 && `+${additionalMonths} additional`,
+              acceleratedMonths > 0 && `-${acceleratedMonths} accelerated`
+            ]
+              .filter(Boolean)
+              .join(", ")})`}
+          </>
+        )}
         <br />
         {`Start date ${formatCctDate(
           programmeDetails.startDate
