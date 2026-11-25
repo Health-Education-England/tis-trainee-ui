@@ -140,7 +140,7 @@ describe("LtftForm - draft", () => {
     cy.get("#canGiveCompliantStartDate-error").should("not.exist");
     cy.get('[data-cy="earliestStartDateInfo-info"]')
       .should("be.visible")
-      .contains("16 weeks from today");
+      .contains("ensure that the selected date meets any additional requirements");
     cy.get('[data-cy="exceptionalReasons-text-area-input"]').should(
       "not.exist"
     );
