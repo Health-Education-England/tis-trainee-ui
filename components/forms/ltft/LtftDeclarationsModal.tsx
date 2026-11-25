@@ -45,7 +45,10 @@ export const LtftDeclarationsModal = ({
           <HintText className="checkbox-hint">
             You can make a CCT Calculation using a{" "}
             <Link to="/cct">CCT Calculator</Link> to get an idea how changing
-            your hours will affect your programme completion date.
+            your hours will affect your programme completion date. If you save a
+            calculation, you can attach a copy to this application before you
+            submit it, so your Local Office can see how your completion date was
+            worked out.
           </HintText>
           <Checkboxes.Item
             name="discussedWithTpd"
