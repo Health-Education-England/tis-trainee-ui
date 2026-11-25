@@ -1,5 +1,4 @@
 import { SaveStatusProps } from "../components/forms/AutosaveMessage";
-import { CctCalculation, CctType } from "../redux/slices/cctSlice";
 import { ProfileSType } from "../utilities/ProfileUtilities";
 
 export type LtftFormStatus =
@@ -14,7 +13,7 @@ export type LtftFormStatus =
 export type LtftChange = {
   id?: string | null;
   calculationId?: string | null;
-  type: CctType;
+  type: "LTFT";
   startDate: Date | string | null;
   endDate?: Date | string | null;
   wte: number;
@@ -99,7 +98,7 @@ export type LtftObjNew = {
   managingDeanery: string;
 
   // change: LtftChange
-  type: CctType;
+  type: "LTFT";
   canGiveCompliantStartDate: boolean | null;
   startDate: Date | string | null;
   exceptionalReasons: string | null;
@@ -129,7 +128,6 @@ export type LtftObjNew = {
 
 export type LtftState = {
   formData: LtftObjNew;
-  LtftCctSnapshot: CctCalculation;
   status: string;
   error: any;
   canEdit: boolean;
