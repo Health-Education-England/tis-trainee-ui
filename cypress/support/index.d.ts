@@ -21,7 +21,6 @@ declare global {
       checkAndFillSection9(): Chainable<Element>;
       checkAndFillSection10(): Chainable<Element>;
       checkAndFillCovidSection(): Chainable<Element>;
-      checkAndFillNewCctCalcForm(): Chainable<Element>;
       checkAndFillPhGmcGdc(): Chainable<Element>;
       checkElement(
         selector: string,

@@ -20,7 +20,8 @@ jest.mock("../../redux/store/store", () => ({
   })
 }));
 
-jest.mock("../CctUtilities", () => ({
+jest.mock("../ProfileUtilities", () => ({
+  ...jest.requireActual("../ProfileUtilities"),
   findLinkedProgramme: jest.fn().mockImplementation(id => {
     if (id === "pm-123") {
       return {
@@ -33,8 +34,7 @@ jest.mock("../CctUtilities", () => ({
       };
     }
     return null;
-  }),
-  calcCctDate: jest.fn()
+  })
 }));
 
 jest.mock("../../components/navigation/history", () => ({
