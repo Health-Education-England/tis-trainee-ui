@@ -7,7 +7,6 @@ export type ExpanderNameType =
   | "formRDeclarationsExplained"
   | "postTypes"
   | "skilledVisaWorker"
-  | "skilledVisaWorkerMoreInfo"
   | "whatIsLtft"
   | "preApproverInfo"
   | "ltft16WeeksNotice";
@@ -109,10 +108,6 @@ export const ExpanderMsg = ({
     },
     skilledVisaWorker: {
       summary: "Are you a Skilled Worker visa holder?",
-      text: tier2SkilledWorkerVisaInfo
-    },
-    skilledVisaWorkerMoreInfo: {
-      summary: "More information for Skilled Worker visa holders",
       text: tier2SkilledWorkerVisaInfo
     },
     whatIsLtft: {
