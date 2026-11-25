@@ -92,7 +92,7 @@
             {
               "name": "earliestStartDateInfo",
               "type": "info",
-              "label": "The earliest date this change to your working hours can begin is {value} (16 weeks from today).",
+              "label": "The earliest date this change to your working hours can begin is {value}. It is your responsibility to ensure that the selected date meets any additional requirements.",
               "visible": false,
               "visibleIf": {
                 "matcher": "valueInList",
