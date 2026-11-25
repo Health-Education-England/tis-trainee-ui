@@ -149,13 +149,6 @@
                 "field": "canGiveCompliantStartDate",
                 "values": [false]
               }
-            },
-            {
-              "name": "altStartDate",
-              "label": "If you have an alternative start date that gives at least 16 weeks notice, please enter it here.",
-              "hint": "Leave blank if there is no suitable alternative",
-              "type": "date",
-              "visible": false
             }
           ]
         }
