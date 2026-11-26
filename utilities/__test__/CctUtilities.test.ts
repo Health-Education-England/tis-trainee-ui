@@ -327,7 +327,8 @@ describe("isCctStartGradeOverridden", () => {
   const paediatrics: CctSpecialty = {
     name: "Paediatrics",
     lengthMonths: 84,
-    entryGrade: "ST1"
+    entryGrade: "ST1",
+    eighteenMonthFinalYear: false
   };
 
   it("is true when the start grade differs from the specialty's entry grade", () => {
@@ -353,7 +354,8 @@ describe("isCctLengthOverridden", () => {
   const paediatrics: CctSpecialty = {
     name: "Paediatrics",
     lengthMonths: 84,
-    entryGrade: "ST1"
+    entryGrade: "ST1",
+    eighteenMonthFinalYear: false
   };
 
   it("is true when the length differs from the specialty's default", () => {
@@ -569,7 +571,12 @@ describe("mapFormDataToTrainingTime", () => {
 
 describe("mapProgrammeDetailsToFormData", () => {
   const specialties: CctSpecialty[] = [
-    { name: "Paediatrics", lengthMonths: 84, entryGrade: "ST1" }
+    {
+      name: "Paediatrics",
+      lengthMonths: 84,
+      entryGrade: "ST1",
+      eighteenMonthFinalYear: false
+    }
   ];
   const programmeDetails: CctProgrammeDetails = {
     specialty: "Paediatrics",

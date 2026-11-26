@@ -62,6 +62,7 @@ export type CctSpecialty = {
   name: string;
   lengthMonths: number;
   entryGrade: CctTrainingGrade;
+  eighteenMonthFinalYear: boolean;
 };
 
 export type CctTrainingTime = {

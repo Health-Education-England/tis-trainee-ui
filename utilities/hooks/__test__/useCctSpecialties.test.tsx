@@ -7,7 +7,12 @@ import { CctService } from "../../../services/CctService";
 import { useCctSpecialties } from "../useCctSpecialties";
 
 const specialties: CctSpecialty[] = [
-  { name: "Paediatrics", lengthMonths: 84, entryGrade: "ST1" }
+  {
+    name: "Paediatrics",
+    lengthMonths: 84,
+    entryGrade: "ST1",
+    eighteenMonthFinalYear: false
+  }
 ];
 
 const createStore = () =>

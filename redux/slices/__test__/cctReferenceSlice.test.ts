@@ -2,7 +2,12 @@ import { CctSpecialty } from "../../../models/CctTypes";
 import cctReferenceReducer, { fetchCctSpecialties } from "../cctReferenceSlice";
 
 const specialties: CctSpecialty[] = [
-  { name: "Paediatrics", lengthMonths: 84, entryGrade: "ST1" }
+  {
+    name: "Paediatrics",
+    lengthMonths: 84,
+    entryGrade: "ST1",
+    eighteenMonthFinalYear: false
+  }
 ];
 
 describe("cctReferenceSlice", () => {

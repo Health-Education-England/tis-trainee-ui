@@ -87,7 +87,12 @@ describe("CctService", () => {
   describe("getSpecialties", () => {
     it("gets the list from the BE", async () => {
       const specialties: CctSpecialty[] = [
-        { name: "Paediatrics", lengthMonths: 84, entryGrade: "ST1" }
+        {
+          name: "Paediatrics",
+          lengthMonths: 84,
+          entryGrade: "ST1",
+          eighteenMonthFinalYear: false
+        }
       ];
       const service = new CctService();
       jest.spyOn(service, "get").mockResolvedValue(okResponse(specialties));
