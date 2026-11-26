@@ -21,6 +21,7 @@ import {
   findCctEighteenMonthFinalGrade,
   findCctProgressionGrades,
   formatCctDate,
+  isCctEighteenMonthDefault,
   mapFormDataToProgrammeDetails,
   mapProgrammeDetailsToFormData,
   toCctGradeOptions
@@ -104,6 +105,10 @@ export function CctGradeProgressionSection({
             <CctGradeProgressionFormBody
               skippableGrades={skippableGrades}
               programmeDetails={programmeDetails}
+              isEighteenMonthDefault={isCctEighteenMonthDefault(
+                specialties,
+                programmeDetails
+              )}
               onSubmit={formData => {
                 onChange(mapFormDataToProgrammeDetails(formData));
                 setEditing(false);
@@ -140,6 +145,7 @@ export function CctGradeProgressionSection({
 type CctGradeProgressionFormBodyProps = {
   skippableGrades: CctTrainingGrade[];
   programmeDetails: CctProgrammeDetails;
+  isEighteenMonthDefault: boolean;
   onSubmit: (formData: FormData) => void;
   onCancel: () => void;
   onDirtyChange: (isDirty: boolean) => void;
@@ -148,6 +154,7 @@ type CctGradeProgressionFormBodyProps = {
 function CctGradeProgressionFormBody({
   skippableGrades,
   programmeDetails,
+  isEighteenMonthDefault,
   onSubmit,
   onCancel,
   onDirtyChange
@@ -168,12 +175,15 @@ function CctGradeProgressionFormBody({
     ) ?? programmeDetails.eighteenMonthFinalGrade;
   const [eighteenMonthCheckbox, eighteenMonthNotes, ...skippedGradeFields] =
     cctGradeProgressionFields;
+  const eighteenMonthNotesFields = isEighteenMonthDefault
+    ? []
+    : [eighteenMonthNotes];
   const otherFields =
     options.skippableGrades.length > 0
-      ? [eighteenMonthNotes, ...skippedGradeFields]
-      : [eighteenMonthNotes];
+      ? [...eighteenMonthNotesFields, ...skippedGradeFields]
+      : eighteenMonthNotesFields;
   const { errors, isValidOnSubmit } = useCctFormErrors(
-    cctGradeProgressionFields,
+    [eighteenMonthCheckbox, ...eighteenMonthNotesFields, ...skippedGradeFields],
     cctGradeProgressionValidationSchema
   );
   useReportCctFormDirty(onDirtyChange);
@@ -214,6 +224,12 @@ function CctGradeProgressionFormBody({
             care medicine with a dual specialty. This changes grade progression,
             not total training time.
           </p>
+          {isEighteenMonthDefault && (
+            <p className="nhsuk-hint" data-cy="cct-eighteen-month-default-hint">
+              Your specialty has an 18-month final year, so this is set for you
+              and needs no reason. Untick it if it does not apply to you.
+            </p>
+          )}
         </div>
       )}
       <CctFields fields={otherFields} options={options} errors={errors} />

@@ -1741,6 +1741,119 @@ describe("Cct training time and grade progression adjustments", () => {
       });
   });
 
+  const saveEighteenMonthProgrammeDetails = () => {
+    selectOption(
+      "specialty",
+      "Intensive care with Renal medicine, and GIM (ST4 start)"
+    );
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+  };
+
+  it("defaults an 18-month final year that can be unticked without a reason", () => {
+    mountCct();
+    saveEighteenMonthProgrammeDetails();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", {
+        eighteenMonthFinalGrade: "ST9",
+        eighteenMonthFinalGradeNotes: ""
+      });
+    clickContinue(2);
+    cy.get('[data-cy="cct-grade-progression-summary"]')
+      .should("contain.text", "18-month final year")
+      .and("contain.text", "ST9");
+
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
+      "be.checked"
+    );
+    cy.get("#eighteenMonthFinalGradeNotes").should("not.exist");
+    cy.get('[data-cy="cct-eighteen-month-default-hint"]').should(
+      "have.text",
+      "Your specialty has an 18-month final year, so this is set for you and needs no reason. Untick it if it does not apply to you."
+    );
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').uncheck();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", { eighteenMonthFinalGrade: null });
+
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').check();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", {
+        eighteenMonthFinalGrade: "ST9",
+        eighteenMonthFinalGradeNotes: ""
+      });
+  });
+
+  it("keeps an untick when the specialty, length and start grade stay the same", () => {
+    mountCct();
+    saveEighteenMonthProgrammeDetails();
+    clickContinue(2);
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').uncheck();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+
+    clickBack(2);
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    clickContinue(2);
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
+  it("clears a default 18-month final year when the length is overridden, and sets it again on the specialty's length", () => {
+    mountCct();
+    saveEighteenMonthProgrammeDetails();
+    cy.wait("@calculate");
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get("#lengthMonths").clear();
+    cy.get("#lengthMonths").type("72");
+    cy.get("#lengthOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", { eighteenMonthFinalGrade: null });
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get("#lengthMonths").clear();
+    cy.get("#lengthMonths").type("78");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", { eighteenMonthFinalGrade: "ST9" });
+  });
+
+  it("asks for a reason for an 18-month final year once the start grade is overridden", () => {
+    mountCct();
+    saveEighteenMonthProgrammeDetails();
+    cy.wait("@calculate");
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    selectOption("startGrade", "ST3");
+    cy.get("#startGradeOverrideNotes").type("Agreed locally");
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.wait("@calculate")
+      .its("request.body.programmeDetails")
+      .should("deep.include", { eighteenMonthFinalGrade: null });
+
+    clickContinue(2);
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').check();
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should(
+      "contain.text",
+      "Final grade lasting 18 months: ST8"
+    );
+    cy.get('[data-cy="cct-eighteen-month-default-hint"]').should("not.exist");
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.get('[data-cy="cct-grade-progression-form"]').should(
+      "contain.text",
+      "Please enter a reason for the 18-month final year."
+    );
+  });
+
   it("shows the adjustments read-only on the summary", () => {
     mountCct();
     saveProgrammeDetails();

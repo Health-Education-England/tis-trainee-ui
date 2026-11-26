@@ -19,6 +19,7 @@ import {
   CCT_PAGES
 } from "../../../utilities/CctConstants";
 import {
+  applyCctEighteenMonthDefault,
   CctInvalidAdjustment,
   CctProgrammeDetailsErrorTarget,
   deriveCctAdjustedLengthMonths,
@@ -74,7 +75,13 @@ export function CctProgrammeDetailsSection({
   onDirtyChange
 }: Readonly<CctProgrammeDetailsSectionProps>) {
   const handleSubmit = (formData: FormData) => {
-    onChange(mapFormDataToProgrammeDetails(formData));
+    onChange(
+      applyCctEighteenMonthDefault(
+        programmeDetails,
+        mapFormDataToProgrammeDetails(formData),
+        specialties
+      )
+    );
     onEditingChange(false);
   };
 

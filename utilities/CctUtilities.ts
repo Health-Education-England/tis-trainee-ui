@@ -303,6 +303,44 @@ export const isCctLengthOverridden = (
   !!lengthMonths &&
   Number(lengthMonths) !== specialty.lengthMonths;
 
+export const isCctEighteenMonthDefault = (
+  specialties: CctSpecialty[],
+  { specialty, lengthMonths, startGrade }: CctProgrammeDetails
+) => {
+  const specialtyDefault = findCctSpecialty(specialties, specialty);
+  return (
+    !!specialtyDefault?.eighteenMonthFinalYear &&
+    lengthMonths === specialtyDefault.lengthMonths &&
+    startGrade === specialtyDefault.entryGrade
+  );
+};
+
+export function applyCctEighteenMonthDefault(
+  previous: CctProgrammeDetails | null,
+  programmeDetails: CctProgrammeDetails,
+  specialties: CctSpecialty[]
+): CctProgrammeDetails {
+  const { specialty, lengthMonths, startGrade } = programmeDetails;
+  if (
+    previous?.specialty === specialty &&
+    previous.lengthMonths === lengthMonths &&
+    previous.startGrade === startGrade
+  )
+    return programmeDetails;
+  if (isCctEighteenMonthDefault(specialties, programmeDetails))
+    return {
+      ...programmeDetails,
+      eighteenMonthFinalGrade: findCctEighteenMonthFinalGrade(
+        startGrade,
+        lengthMonths,
+        programmeDetails.skippedGrade
+      )
+    };
+  if (!programmeDetails.eighteenMonthFinalGradeNotes)
+    return { ...programmeDetails, eighteenMonthFinalGrade: null };
+  return programmeDetails;
+}
+
 export function mapProgrammeDetailsToFormData(
   programmeDetails: CctProgrammeDetails | null,
   specialties: CctSpecialty[]

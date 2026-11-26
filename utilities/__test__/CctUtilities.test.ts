@@ -8,6 +8,7 @@ import {
   CctTrainingTime
 } from "../../models/CctTypes";
 import {
+  applyCctEighteenMonthDefault,
   cctChangeIndexFromPointer,
   cctProgrammeDetailsErrorTarget,
   deriveCctAdjustedLengthMonths,
@@ -517,6 +518,100 @@ describe("findCctEighteenMonthFinalGrade", () => {
   it("gives an unnumbered grade only when it has one full year", () => {
     expect(findCctEighteenMonthFinalGrade("DFT", 18, null)).toBe("DFT");
     expect(findCctEighteenMonthFinalGrade("DFT", 30, null)).toBeNull();
+  });
+});
+
+describe("applyCctEighteenMonthDefault", () => {
+  const specialties: CctSpecialty[] = [
+    {
+      name: "Intensive care with Renal medicine, and GIM",
+      lengthMonths: 90,
+      entryGrade: "ST3",
+      eighteenMonthFinalYear: true
+    },
+    {
+      name: "Paediatrics",
+      lengthMonths: 90,
+      entryGrade: "ST3",
+      eighteenMonthFinalYear: false
+    }
+  ];
+  const flagged: CctProgrammeDetails = {
+    specialty: "Intensive care with Renal medicine, and GIM",
+    startDate: "2023-08-02",
+    lengthMonths: 90,
+    lengthOverrideNotes: "",
+    startGrade: "ST3",
+    startGradeOverrideNotes: "",
+    additionalTrainingTime: [],
+    acceleratedTrainingTime: [],
+    eighteenMonthFinalGrade: null,
+    eighteenMonthFinalGradeNotes: "",
+    skippedGrade: null,
+    skippedGradeNotes: ""
+  };
+  const withDefault = { ...flagged, eighteenMonthFinalGrade: "ST9" as const };
+
+  it("sets the 18-month final grade for a new flagged programme", () => {
+    expect(
+      applyCctEighteenMonthDefault(null, flagged, specialties)
+        .eighteenMonthFinalGrade
+    ).toBe("ST9");
+  });
+
+  it("sets it again when the programme moves back to the specialty's own length", () => {
+    expect(
+      applyCctEighteenMonthDefault(
+        { ...flagged, lengthMonths: 84 },
+        flagged,
+        specialties
+      ).eighteenMonthFinalGrade
+    ).toBe("ST9");
+  });
+
+  it("leaves the 18-month final grade alone when the specialty, length and start grade stay the same", () => {
+    const unticked = { ...flagged, startDate: "2024-08-07" };
+    expect(applyCctEighteenMonthDefault(flagged, unticked, specialties)).toBe(
+      unticked
+    );
+  });
+
+  it("clears a default 18-month final grade when the length or start grade is overridden", () => {
+    expect(
+      applyCctEighteenMonthDefault(
+        withDefault,
+        { ...withDefault, lengthMonths: 78 },
+        specialties
+      ).eighteenMonthFinalGrade
+    ).toBeNull();
+    expect(
+      applyCctEighteenMonthDefault(
+        withDefault,
+        { ...withDefault, startGrade: "ST2" },
+        specialties
+      ).eighteenMonthFinalGrade
+    ).toBeNull();
+  });
+
+  it("keeps an 18-month final grade that has a reason when the length is overridden", () => {
+    const withReason = {
+      ...withDefault,
+      lengthMonths: 78,
+      eighteenMonthFinalGradeNotes: "ICM dual specialty"
+    };
+    expect(
+      applyCctEighteenMonthDefault(withDefault, withReason, specialties)
+    ).toBe(withReason);
+  });
+
+  it("sets no default for a specialty that is not flagged", () => {
+    expect(
+      applyCctEighteenMonthDefault(
+        null,
+        { ...flagged, specialty: "Paediatrics" },
+        specialties
+      ).eighteenMonthFinalGrade
+    ).toBeNull();
   });
 });
 
