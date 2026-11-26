@@ -59,11 +59,33 @@ export function CctGradeProgressionSection({
   const hasAdjustment =
     !!programmeDetails.eighteenMonthFinalGrade ||
     !!programmeDetails.skippedGrade;
+  const skippableGrades = findCctProgressionGrades(
+    programmeDetails.startGrade,
+    result
+  ).filter(grade => grade !== programmeDetails.startGrade);
+  const canAdjust =
+    hasAdjustment ||
+    skippableGrades.length > 0 ||
+    !!findCctEighteenMonthFinalGrade(
+      programmeDetails.startGrade,
+      programmeDetails.lengthMonths,
+      null
+    );
 
   const setEditing = (editing: boolean) => {
     setIsEditing(editing);
     onFormOpenChange(editing);
   };
+
+  if (!canAdjust)
+    return (
+      <Card feature data-cy="cct-grade-progression-section">
+        <Card.Heading>Grade progression adjustments</Card.Heading>
+        <p className="nhsuk-hint" data-cy="cct-no-grade-progression-options">
+          No grade progression adjustments apply to this programme.
+        </p>
+      </Card>
+    );
 
   return (
     <Card feature data-cy="cct-grade-progression-section">
@@ -80,10 +102,7 @@ export function CctGradeProgressionSection({
             autosave={false}
           >
             <CctGradeProgressionFormBody
-              progressionGrades={findCctProgressionGrades(
-                programmeDetails.startGrade,
-                result
-              )}
+              skippableGrades={skippableGrades}
               programmeDetails={programmeDetails}
               onSubmit={formData => {
                 onChange(mapFormDataToProgrammeDetails(formData));
@@ -119,7 +138,7 @@ export function CctGradeProgressionSection({
 }
 
 type CctGradeProgressionFormBodyProps = {
-  progressionGrades: CctTrainingGrade[];
+  skippableGrades: CctTrainingGrade[];
   programmeDetails: CctProgrammeDetails;
   onSubmit: (formData: FormData) => void;
   onCancel: () => void;
@@ -127,7 +146,7 @@ type CctGradeProgressionFormBodyProps = {
 };
 
 function CctGradeProgressionFormBody({
-  progressionGrades,
+  skippableGrades,
   programmeDetails,
   onSubmit,
   onCancel,
@@ -136,7 +155,7 @@ function CctGradeProgressionFormBody({
   const { formData } = useFormContext();
   const options = {
     skippableGrades: toCctGradeOptions(
-      progressionGrades,
+      skippableGrades,
       programmeDetails.skippedGrade,
       formData.skippedGrade
     )
@@ -147,7 +166,12 @@ function CctGradeProgressionFormBody({
       programmeDetails.lengthMonths,
       formData.skippedGrade as string | null
     ) ?? programmeDetails.eighteenMonthFinalGrade;
-  const [eighteenMonthCheckbox, ...otherFields] = cctGradeProgressionFields;
+  const [eighteenMonthCheckbox, eighteenMonthNotes, ...skippedGradeFields] =
+    cctGradeProgressionFields;
+  const otherFields =
+    options.skippableGrades.length > 0
+      ? [eighteenMonthNotes, ...skippedGradeFields]
+      : [eighteenMonthNotes];
   const { errors, isValidOnSubmit } = useCctFormErrors(
     cctGradeProgressionFields,
     cctGradeProgressionValidationSchema

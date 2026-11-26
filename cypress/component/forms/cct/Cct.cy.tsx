@@ -1628,6 +1628,59 @@ describe("Cct training time and grade progression adjustments", () => {
     cy.get('[data-cy="cct-continue"]').should("exist");
   });
 
+  it("does not offer the start grade as a grade year to skip", () => {
+    mountCct();
+    saveProgrammeDetails();
+    clickContinue(2);
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasSkippedGrade-checkbox"]').check();
+    cy.get('[data-cy="skippedGrade"] .react-select__control').click();
+    cy.get(".react-select__option")
+      .should("not.contain.text", "ST1")
+      .and("contain.text", "ST2");
+  });
+
+  const saveDftProgrammeDetails = (lengthMonths?: string) => {
+    const { result, ...response } = mockCctCalculateResponses["2023-08-02"];
+    cy.intercept("POST", "/api/trainee/cct/calculate", {
+      body: {
+        ...response,
+        result: {
+          ...result,
+          gradeProgression: [{ ...result.gradeProgression[0], grade: "DFT" }]
+        }
+      }
+    });
+    selectOption("specialty", "Dental foundation training");
+    cy.get('[data-cy="startDate-input"]').type("2023-08-02");
+    if (lengthMonths) {
+      cy.get("#lengthMonths").clear();
+      cy.get("#lengthMonths").type(lengthMonths);
+      cy.get("#lengthOverrideNotes").type("Agreed locally");
+    }
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+  };
+
+  it("does not offer a grade year to skip when there is none after the start grade", () => {
+    mountCct();
+    saveDftProgrammeDetails("18");
+    clickContinue(2);
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should("exist");
+    cy.get('[data-cy="hasSkippedGrade-checkbox"]').should("not.exist");
+  });
+
+  it("says no adjustments apply when neither can be made", () => {
+    mountCct();
+    saveDftProgrammeDetails();
+    clickContinue(2);
+    cy.get('[data-cy="cct-no-grade-progression-options"]').should(
+      "have.text",
+      "No grade progression adjustments apply to this programme."
+    );
+    cy.get('[data-cy="cct-edit-grade-progression"]').should("not.exist");
+  });
+
   it("offers an 18-month final year only for a programme length with a half year", () => {
     cy.intercept("POST", "/api/trainee/cct/calculate", req =>
       req.reply(calculateWithMockBackend(req.body))
