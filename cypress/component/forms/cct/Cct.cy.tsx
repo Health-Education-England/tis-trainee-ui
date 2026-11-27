@@ -16,6 +16,7 @@ import { CctTrainingTimeSection } from "../../../../components/forms/cct/CctTrai
 import { CctGradeYearsTable } from "../../../../components/forms/cct/CctGradeProgressionSection";
 import {
   CctChange,
+  CctChangeDto,
   CctGradeYear,
   CctProgrammeDetails,
   CctTrainingTime
@@ -25,7 +26,10 @@ import {
   CCT_MAX_CHANGES,
   CCT_MAX_TRAINING_TIME_ENTRIES
 } from "../../../../utilities/CctConstants";
-import { CctCalculateRequest } from "../../../../services/CctService";
+import {
+  CctCalculateRequest,
+  CctCalculationSaveRequest
+} from "../../../../services/CctService";
 
 const createStore = () =>
   configureStore({
@@ -129,6 +133,62 @@ const calculateWithMockBackend = ({
   return { statusCode: 200, body };
 };
 
+const paediatricsGrades = ["ST1", "ST2", "ST3", "ST4", "ST5", "ST6", "ST7"];
+
+const calculateWithGradeChecks = (request: CctCalculateRequest) => {
+  const reply = calculateWithMockBackend(request);
+  const { additionalTrainingTime, skippedGrade } = request.programmeDetails;
+  const notInProgression = (grade: string) =>
+    `${grade} is not part of this programme's grade progression.`;
+  const errors = [
+    ...additionalTrainingTime.flatMap(({ grade }, index) =>
+      paediatricsGrades.includes(grade)
+        ? []
+        : [
+            {
+              pointer: `#/programmeDetails/additionalTrainingTime/${index}/grade`,
+              detail: notInProgression(grade)
+            }
+          ]
+    ),
+    ...(skippedGrade && !paediatricsGrades.includes(skippedGrade)
+      ? [
+          {
+            pointer: "#/programmeDetails/skippedGrade",
+            detail: notInProgression(skippedGrade)
+          }
+        ]
+      : [])
+  ];
+  return { ...reply, body: { ...reply.body, errors } };
+};
+
+const calculateWithErrors =
+  (errors: { pointer: string; detail: string }[]) =>
+  (request: CctCalculateRequest) => {
+    const reply = calculateWithMockBackend(request);
+    return { ...reply, body: { ...reply.body, errors } };
+  };
+
+const savedCalculationId = "5f0c9a3e-8a4d-4c55-9a51-0f6a2f1d7c11";
+const savedCalculationUrl = `/api/trainee/cct/calculation/${savedCalculationId}`;
+
+const saveWithMockBackend = (request: CctCalculationSaveRequest) => {
+  const { body } = calculateWithMockBackend(request);
+  return {
+    statusCode: 201,
+    body: {
+      id: savedCalculationId,
+      name: request.name,
+      programmeDetails: request.programmeDetails,
+      changes: body.changes,
+      result: body.result,
+      created: "2026-10-28T12:00:00Z",
+      lastModified: "2026-10-28T12:00:00Z"
+    }
+  };
+};
+
 const paediatricsProgrammeDetails = (
   startDate: string
 ): CctProgrammeDetails => ({
@@ -145,6 +205,38 @@ const paediatricsProgrammeDetails = (
   skippedGrade: null,
   skippedGradeNotes: ""
 });
+
+const parentalLeaveChange: CctChangeDto = {
+  type: "PARENTAL",
+  startDate: "2024-02-01",
+  endDate: "2024-08-01",
+  wte: null,
+  countsTowardsCompletion: false,
+  notes: ""
+};
+
+const savedCalculation = (name: string, startDate = "2023-08-02") =>
+  saveWithMockBackend({
+    name,
+    programmeDetails: paediatricsProgrammeDetails(startDate),
+    changes: [parentalLeaveChange]
+  }).body;
+
+const mountSavedCalculationWith = (
+  programmeDetails: Partial<CctProgrammeDetails>
+) => {
+  cy.intercept("GET", savedCalculationUrl, {
+    body: saveWithMockBackend({
+      name: "No longer valid",
+      programmeDetails: {
+        ...paediatricsProgrammeDetails("2023-08-02"),
+        ...programmeDetails
+      },
+      changes: []
+    }).body
+  });
+  mountCct(`/cct/${savedCalculationId}`);
+};
 
 const clickContinue = (times = 1) => {
   for (let step = 0; step < times; step++)
@@ -1079,7 +1171,10 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-summary-no-changes"]').should("exist");
     cy.get('[data-cy="cct-changes-table"]').should("not.exist");
-    cy.get('[data-cy="cct-grade-years-table"]').should("have.length", 1);
+    cy.get('[data-cy="cct-grade-years-table"]').should("have.length", 2);
+    cy.get('[data-cy="cct-print-summary"]')
+      .find('[data-cy="cct-grade-years-table"]')
+      .should("exist");
     cy.get('[data-cy="cct-grade-year-1-row"]')
       .first()
       .should("contain.text", "Year 1")
@@ -1098,6 +1193,7 @@ describe("Cct", () => {
     );
     cy.get('[data-cy="cct-grade-years-skipped-hint"]').should("not.exist");
     cy.get('[data-cy="cct-grade-years-past-highest-hint"]').should("not.exist");
+    cy.get('[data-cy="cct-delete"]').should("not.exist");
     cy.get('[data-cy="cct-continue"]').should("not.exist");
   });
 
@@ -1144,6 +1240,415 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-add-additional-time"]').click();
     cy.get('[data-cy="cct-continue"]').should("not.exist");
     cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
+  });
+
+  it("saves the named calculation, then shows the home page with a success banner", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply({ ...saveWithMockBackend(req.body), delay: 500 })
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    goToChanges();
+    addParentalLeaveChange();
+    cy.get('[data-cy="cct-continue"]').click();
+
+    cy.get('[data-cy="calculationName-input"]').type(
+      "  Parental leave in 2024  "
+    );
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-save-submit"]')
+      .should("be.disabled")
+      .and("contain.text", "Saving…");
+
+    cy.wait("@save").then(({ request }) => {
+      expect(request.body).to.not.have.property("id");
+      expect(request.body.name).to.equal("Parental leave in 2024");
+      expect(request.body.programmeDetails).to.deep.include({
+        specialty: "Paediatrics",
+        startDate: "2023-08-02"
+      });
+      expect(request.body.changes).to.have.length(1);
+      expect(request.body.changes[0]).to.not.have.property("id");
+      expect(request.body.changes[0]).to.deep.include({
+        type: "PARENTAL",
+        startDate: "2024-02-01",
+        endDate: "2024-08-01"
+      });
+    });
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Parental leave in 2024' has been saved"
+    );
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
+    });
+  });
+
+  it("disables the name and ignores Back to CCT home and Start over while the calculation saves, then shows the home page", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply({ ...saveWithMockBackend(req.body), delay: 1500 })
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+    cy.get('[data-cy="calculationName-input"]').type("Full time");
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-save-submit"]').should("contain.text", "Saving…");
+    cy.get('[data-cy="calculationName-input"]').should("be.disabled");
+
+    cy.get('[data-cy="cct-back-link"]').click();
+    cy.get('[data-cy="cct-start-over"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 5 of 5 - Summary"
+    );
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct/create");
+    });
+
+    cy.wait("@save");
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Full time' has been saved"
+    );
+  });
+
+  it("asks for a name and sends nothing until one is given", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply(saveWithMockBackend(req.body))
+    ).as("save");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+
+    cy.get('[data-cy="calculationName-input"]').type("   ");
+    cy.get('[data-cy="cct-save-submit"]').click();
+
+    cy.get('[data-cy="errorSummary"]').should(
+      "contain.text",
+      "Please enter a name for your calculation."
+    );
+    cy.get('[data-cy="cct-save-form"] .nhsuk-error-message').should(
+      "contain.text",
+      "Please enter a name for your calculation."
+    );
+    cy.get("@save.all").should("have.length", 0);
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+  });
+
+  it("keeps the summary and shows an error when saving fails, then saves on the next try", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", {
+      statusCode: 500,
+      body: {}
+    }).as("failedSave");
+    mountCct();
+    saveProgrammeDetails();
+    goToSummary();
+
+    cy.get('[data-cy="calculationName-input"]').type("Full time");
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.wait("@failedSave");
+
+    cy.get('[data-cy="cct-save-error"]').should(
+      "contain.text",
+      "We could not save your calculation."
+    );
+    cy.get('[data-cy="cct-save-submit"]')
+      .should("not.be.disabled")
+      .and("contain.text", "Save calculation");
+    cy.get('[data-cy="calculationName-input"]')
+      .should("have.value", "Full time")
+      .and("not.be.disabled");
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+    cy.get('[data-cy="cct-saved-banner"]').should("not.exist");
+
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply(saveWithMockBackend(req.body))
+    );
+    cy.get('[data-cy="cct-save-submit"]').click();
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Full time' has been saved"
+    );
+  });
+
+  it("reopens a saved calculation from the success banner's link", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculation", req =>
+      req.reply(saveWithMockBackend(req.body))
+    );
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    }).as("load");
+    mountCct();
+    saveProgrammeDetails();
+    goToChanges();
+    addParentalLeaveChange();
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
+    cy.get('[data-cy="cct-save-submit"]').click();
+
+    cy.get('[data-cy="cct-saved-banner-link"]').click();
+    cy.wait("@load");
+    cy.get('[data-cy="cct-saved-banner"]').should("not.exist");
+    cy.get('[data-cy="calculationName-input"]').should(
+      "have.value",
+      "Parental leave in 2024"
+    );
+    cy.then(() => {
+      expect(history.location.pathname).to.equal(`/cct/${savedCalculationId}`);
+    });
+  });
+
+  it("opens a saved calculation on the summary with its name, and saves it again with a PUT", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("PUT", savedCalculationUrl, req =>
+      req.reply({ ...saveWithMockBackend(req.body), statusCode: 200 })
+    ).as("update");
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 5 of 5 - Summary"
+    );
+    cy.get('[data-cy="cct-result-summary"]').should(
+      "contain.text",
+      "28/01/2031"
+    );
+    cy.get('[data-cy="calculationName-input"]').should(
+      "have.value",
+      "Parental leave in 2024"
+    );
+
+    cy.get('[data-cy="calculationName-input"]').clear();
+    cy.get('[data-cy="calculationName-input"]').type("Renamed");
+    cy.get('[data-cy="cct-save-submit"]').click();
+
+    cy.wait("@update").then(({ request }) => {
+      expect(request.body.id).to.equal(savedCalculationId);
+      expect(request.body.name).to.equal("Renamed");
+      expect(request.body.programmeDetails).to.deep.equal(
+        paediatricsProgrammeDetails("2023-08-02")
+      );
+      expect(request.body.changes).to.deep.equal([parentalLeaveChange]);
+    });
+    cy.get('[data-cy="cct-saved-banner"]').should(
+      "contain.text",
+      "Your calculation 'Renamed' has been saved"
+    );
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
+    });
+  });
+
+  it("lets the changes of an opened calculation be edited, removed and added to", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-changes"]').click();
+
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+    cy.get('[data-cy^="cct-edit-change-"]').click();
+    cy.get('[data-cy="endDate-input"]').should("have.value", "2024-08-01");
+    cy.get('[data-cy="cct-change-form-cancel"]').click();
+
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+    cy.get('[data-cy^="cct-remove-change-"]').should("have.focus");
+
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
+    cy.get('[data-cy^="cct-change-row-"]').should("not.exist");
+    addParentalLeaveChange();
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="cct-result-summary"]').should(
+      "contain.text",
+      "28/01/2031"
+    );
+  });
+
+  it("says a missing, malformed or someone else's calculation can't be found, with a link back instead of a retry", () => {
+    cy.intercept("GET", savedCalculationUrl, { statusCode: 404, body: {} });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-calculation-not-found"]').should(
+      "contain.text",
+      "We could not find this calculation."
+    );
+    cy.get('[data-cy="cct-request-retry"]').should("not.exist");
+    cy.get('[data-cy="cct-home-link"]').click();
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+
+    cy.intercept("GET", savedCalculationUrl, { statusCode: 403, body: {} });
+    cy.then(() => history.push(`/cct/${savedCalculationId}`));
+    cy.get('[data-cy="cct-calculation-not-found"]').should("exist");
+
+    cy.intercept("GET", "/api/trainee/cct/calculation/not-a-uuid", {
+      statusCode: 400,
+      body: {}
+    }).as("malformedLoad");
+    cy.then(() => history.push("/cct/not-a-uuid"));
+    cy.wait("@malformedLoad");
+    cy.get('[data-cy="cct-calculation-not-found"]').should("exist");
+  });
+
+  it("offers a retry when a saved calculation fails to load, then opens it", () => {
+    cy.intercept("GET", savedCalculationUrl, { statusCode: 500, body: {} });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-request-error"]').should(
+      "contain.text",
+      "We could not load your calculation."
+    );
+
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024"),
+      delay: 1000
+    });
+    cy.get('[data-cy="cct-request-retry"]').click();
+    cy.get('[data-cy="cct-request-retry"]').should(
+      "contain.text",
+      "Trying again…"
+    );
+    cy.get('[data-cy="calculationName-input"]').should(
+      "have.value",
+      "Parental leave in 2024"
+    );
+  });
+
+  it("hides the indicative date note on the summary until there is a result", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("POST", "/api/trainee/cct/calculate", {
+      statusCode: 500,
+      body: {}
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-result-summary"]').should("contain.text", "—");
+    cy.get('[data-cy="cct-summary-disclaimer"]').should("not.exist");
+
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithMockBackend(req.body))
+    );
+    cy.get('[data-cy="cct-request-retry"]').click();
+    cy.get('[data-cy="cct-result-summary"]').should(
+      "contain.text",
+      "28/01/2031"
+    );
+    cy.get('[data-cy="cct-summary-disclaimer"]').should("exist");
+  });
+
+  it("shows the problem in the Changes card instead of saving when a saved change is no longer valid", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("No longer valid", "2024-03-01")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-summary-errors"] a')
+      .should("have.length", 1)
+      .and("have.text", "Changes");
+    cy.get('[data-cy="cct-card-error-changes"]').should(
+      "contain.text",
+      "Start date cannot be before programme start"
+    );
+    cy.get('[data-cy^="cct-card-error-"]').should("have.length", 1);
+    cy.get('[data-cy="cct-save-blocked"]').should(
+      "contain.text",
+      "You need to fix the problems above before you can save this calculation."
+    );
+    cy.get('[data-cy="cct-save-form"]').should("not.exist");
+
+    cy.get('[data-cy="cct-summary-error-link-changes"]').click();
+    cy.focused().should("have.attr", "data-cy", "cct-change-changes");
+    cy.focused().click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 4 of 5 - Changes"
+    );
+    cy.get('[data-cy="cct-invalid-changes-summary"]').should(
+      "contain.text",
+      "Start date cannot be before programme start"
+    );
+  });
+
+  it("lets an opened calculation's programme details edit be cancelled while the specialties fail to load", () => {
+    cy.intercept("GET", "/api/trainee/cct/specialties", {
+      statusCode: 500,
+      body: {}
+    });
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-programme-details"]').click();
+
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-request-error"]').should(
+      "contain.text",
+      "We could not load the list of specialties."
+    );
+    cy.get('[data-cy="cct-programme-details-cancel"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+  });
+
+  it("deletes an opened calculation from its summary and returns to the CCT home page", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { body: true }).as("delete");
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-delete"]')
+      .should("have.text", "Delete this calculation")
+      .click();
+    cy.get('[data-cy="warningText-Delete"]').should(
+      "contain.text",
+      "'Parental leave in 2024'"
+    );
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+
+    cy.wait("@delete");
+    cy.get('[data-cy="cct-deleted-banner"]').should(
+      "contain.text",
+      "Your calculation 'Parental leave in 2024' has been deleted"
+    );
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal("/cct");
+    });
+  });
+
+  it("keeps the confirmation open with an error when a delete fails, then deletes on retry", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { statusCode: 500, body: {} });
+    mountCct(`/cct/${savedCalculationId}`);
+
+    cy.get('[data-cy="cct-delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="actionModalError"]').should(
+      "contain.text",
+      "We could not delete your calculation. Try again."
+    );
+    cy.get('[data-cy="cct-deleted-banner"]').should("not.exist");
+
+    cy.intercept("DELETE", savedCalculationUrl, { body: true, delay: 1000 });
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]')
+      .should("contain.text", "Deleting...")
+      .and("be.disabled");
+    cy.get('[data-cy="cct-deleted-banner"]').should("exist");
   });
 
   it("lets a new calculation be left before anything is entered", () => {
@@ -1277,6 +1782,50 @@ describe("Cct", () => {
     cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
   });
 
+  it("lets an opened calculation be looked through and left without a warning", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-changes"]').click();
+    cy.get('[data-cy^="cct-edit-change-"]').click();
+    cy.get('[data-cy="cct-change-form-cancel"]').click();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("warns before leaving an opened calculation once a change is removed", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-changes"]').click();
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.then(() => {
+      expect(history.location.pathname).to.equal(`/cct/${savedCalculationId}`);
+    });
+  });
+
+  it("deletes an opened calculation with unsaved changes without warning about them", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    cy.intercept("DELETE", savedCalculationUrl, { body: true });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+
+    cy.get('[data-cy="cct-delete"]').click();
+    cy.get('[data-cy="submitBtn-Delete"]').click();
+    cy.get('[data-cy="cct-deleted-banner"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
   it("starts over without asking when nothing has been entered", () => {
     mountCct();
     cy.get('[data-cy="cct-start-over"]').should("have.text", "Start over");
@@ -1325,6 +1874,7 @@ describe("Cct", () => {
     goToChanges();
     addParentalLeaveChangeAndWait();
     cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
 
     cy.get('[data-cy="cct-start-over"]').click();
     cy.get('[data-cy="submitBtn-Start over"]').click();
@@ -1346,6 +1896,8 @@ describe("Cct", () => {
     cy.get('[data-cy="cct-return-to-summary"]').should("not.exist");
     clickContinue(3);
     cy.get('[data-cy^="cct-edit-change-"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').should("have.value", "");
   });
 
   it("doesn't warn about leaving after starting over with nothing re-entered", () => {
@@ -1360,6 +1912,22 @@ describe("Cct", () => {
     cy.get('[data-cy="dialogModal"]').should("not.exist");
   });
 
+  it("doesn't offer Start over on an opened calculation", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-result-summary"]').should("exist");
+    cy.get('[data-cy="cct-start-over"]').should("not.exist");
+
+    cy.get('[data-cy="cct-change-programme-details"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 1 of 5 - Programme details"
+    );
+    cy.get('[data-cy="cct-start-over"]').should("not.exist");
+  });
+
   it("warns before leaving when only a dropdown option has been picked", () => {
     mountCct();
     selectOption("specialty", "Paediatrics");
@@ -1369,6 +1937,130 @@ describe("Cct", () => {
     cy.then(() => {
       expect(history.location.pathname).to.equal("/cct/create");
     });
+  });
+
+  it("warns before leaving part-way through adding a change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-changes"]').click();
+    cy.get('[data-cy="cct-add-change"]').click();
+    selectOption("type", "Parental leave");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+  });
+
+  it("warns before leaving once an opened calculation's name is edited", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+  });
+
+  it("keeps an edited name when moving between steps, and warns before leaving it", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').clear();
+    cy.get('[data-cy="calculationName-input"]').type("Renamed");
+    cy.get('[data-cy="cct-change-changes"]').click();
+    cy.get('[data-cy="cct-save-form"]').should("not.exist");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="warningText-You have unsaved changes"]').should("exist");
+    cy.get('[data-cy="modal-cancel-btn"]').click();
+    cy.get('[data-cy="cct-continue"]').click();
+    cy.get('[data-cy="calculationName-input"]').should("have.value", "Renamed");
+  });
+
+  it("stops warning once an edited name is put back as it was", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="calculationName-input"]').type(" (old)");
+    cy.get('[data-cy="calculationName-input"]').clear();
+    cy.get('[data-cy="calculationName-input"]').type("Parental leave in 2024");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't count hiding the assumed full-time periods as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-hide-assumed-periods"]').check();
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't count programme details confirmed without a change as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-programme-details"]').click();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should("exist");
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("doesn't count an overridden start grade confirmed without a change as an unsaved change", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: saveWithMockBackend({
+        name: "Entered at ST4",
+        programmeDetails: {
+          ...paediatricsProgrammeDetails("2023-08-02"),
+          startGrade: "ST4",
+          startGradeOverrideNotes: "Entered at ST4"
+        },
+        changes: [parentalLeaveChange]
+      }).body
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-programme-details"]').click();
+    cy.get('[data-cy="cct-edit-programme-details"]').click();
+    cy.get('[data-cy="cct-programme-details-submit"]').click();
+    cy.get('[data-cy="cct-programme-details-summary"]').should(
+      "contain.text",
+      "ST4"
+    );
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
+  });
+
+  it("stops warning once a removed change is added back as it was", () => {
+    cy.intercept("GET", savedCalculationUrl, {
+      body: savedCalculation("Parental leave in 2024")
+    });
+    mountCct(`/cct/${savedCalculationId}`);
+    cy.get('[data-cy="cct-change-changes"]').click();
+    cy.get('[data-cy^="cct-remove-change-"]').click();
+    cy.get('[data-cy="submitBtn-Remove"]').click();
+    addParentalLeaveChange();
+    cy.get('[data-cy^="cct-change-row-"]').should("have.length", 1);
+
+    cy.then(() => history.push("/cct"));
+    cy.get('[data-cy="cct-home-warning"]').should("exist");
+    cy.get('[data-cy="dialogModal"]').should("not.exist");
   });
 });
 
@@ -1854,6 +2546,25 @@ describe("Cct training time and grade progression adjustments", () => {
     );
   });
 
+  it("lets a saved 18-month final year be unticked once the length has no half year", () => {
+    mountSavedCalculationWith({
+      eighteenMonthFinalGrade: "ST6",
+      eighteenMonthFinalGradeNotes: "ICM dual specialty"
+    });
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
+    cy.get('[data-cy="cct-edit-grade-progression"]').click();
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').should(
+      "be.checked"
+    );
+    cy.get('[data-cy="cct-eighteen-month-final-grade"]').should(
+      "contain.text",
+      "Final grade lasting 18 months: ST6"
+    );
+    cy.get('[data-cy="hasEighteenMonthFinalYear-checkbox"]').uncheck();
+    cy.get('[data-cy="cct-grade-progression-submit"]').click();
+    cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
   it("shows the adjustments read-only on the summary", () => {
     mountCct();
     saveProgrammeDetails();
@@ -1876,6 +2587,191 @@ describe("Cct training time and grade progression adjustments", () => {
         cy.get("button").should("not.exist");
       });
     cy.get('[data-cy="cct-no-grade-progression-adjustments"]').should("exist");
+  });
+
+  it("lists training time in a grade outside the progression, and hides Continue until it is fixed", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }]
+    });
+    cy.get('[data-cy="cct-change-training-time-adjustments"]').click();
+
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 2 of 5 - Training time adjustments"
+    );
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Additional training time (ST8, 6 months): ST8 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-additional-time-0-grade-error"]').should(
+      "contain.text",
+      "ST8 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+
+    cy.focused().click();
+    cy.get('[data-cy="grade"] .react-select__control').click();
+    cy.get(".react-select__menu")
+      .should("contain.text", "ST7")
+      .and("contain.text", "ST8")
+      .and("not.contain.text", "ST9");
+    cy.get(".react-select__menu").contains("ST2").click();
+    cy.get('[data-cy="cct-training-time-form-submit"]').click();
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should("not.exist");
+    cy.get('[data-cy="cct-additional-time-0-grade-error"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("exist");
+    cy.get('[data-cy="cct-return-to-summary"]').should("exist");
+  });
+
+  it("lists a skipped grade outside the progression and links to the grade progression adjustments", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      skippedGrade: "ST9",
+      skippedGradeNotes: "Core competencies"
+    });
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 3 of 5 - Grade progression adjustments"
+    );
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Skipped grade year: ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-skippedGrade-error"]').should(
+      "contain.text",
+      "ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
+  });
+
+  it("lists a missing skipped grade reason against the skipped grade year", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(
+        calculateWithErrors([
+          {
+            pointer: "#/programmeDetails/skippedGradeNotes",
+            detail: "Please enter a reason for skipping a grade year."
+          }
+        ])(req.body)
+      )
+    );
+    mountSavedCalculationWith({ skippedGrade: "ST2", skippedGradeNotes: "" });
+    cy.get('[data-cy="cct-change-grade-progression-adjustments"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Skipped grade year: Please enter a reason for skipping a grade year."
+    );
+    cy.get('[data-cy="cct-skippedGrade-error"]').should(
+      "contain.text",
+      "Please enter a reason for skipping a grade year."
+    );
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-edit-grade-progression");
+  });
+
+  it("lists a training time total over the limit against its kind and links to the first entry", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(
+        calculateWithErrors([
+          {
+            pointer: "#/programmeDetails/additionalTrainingTime",
+            detail:
+              "Total additional training time cannot be more than 24 months."
+          }
+        ])(req.body)
+      )
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [
+        { grade: "ST2", months: 6, notes: "Outcome 3" },
+        { grade: "ST3", months: 6, notes: "Second outcome 3" }
+      ]
+    });
+    cy.get('[data-cy="cct-change-training-time-adjustments"]').click();
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "Additional training time: Total additional training time cannot be more than 24 months."
+    );
+    cy.get('[data-cy$="-error"]').should("not.exist");
+    cy.get('[data-cy="cct-continue"]').should("not.exist");
+
+    cy.get('[data-cy="cct-invalid-adjustments-summary"] a').click();
+    cy.focused().should("have.attr", "data-cy", "cct-additional-time-0-edit");
+  });
+
+  it("shows each invalid adjustment in its own card instead of saving or printing", () => {
+    cy.intercept("POST", "/api/trainee/cct/calculate", req =>
+      req.reply(calculateWithGradeChecks(req.body))
+    );
+    mountSavedCalculationWith({
+      additionalTrainingTime: [{ grade: "ST8", months: 6, notes: "Outcome 3" }],
+      skippedGrade: "ST9",
+      skippedGradeNotes: "Core competencies"
+    });
+
+    cy.get('[data-cy="cct-summary-errors"] a').then($links => {
+      expect($links.toArray().map(link => link.textContent)).to.deep.equal([
+        "Training time adjustments",
+        "Grade progression adjustments"
+      ]);
+    });
+    cy.get('[data-cy="cct-card-error-training-time-adjustments"]').should(
+      "contain.text",
+      "Additional training time (ST8, 6 months): ST8 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-card-error-grade-progression-adjustments"]').should(
+      "contain.text",
+      "Skipped grade year: ST9 is not part of this programme's grade progression."
+    );
+    cy.get('[data-cy="cct-card-error-programme-details"]').should("not.exist");
+    cy.get('[data-cy="cct-card-error-changes"]').should("not.exist");
+    cy.get('[data-cy="cct-save-blocked"]').should("exist");
+    cy.get('[data-cy="cct-save-form"]').should("not.exist");
+    cy.get('[data-cy="cct-save-pdf"]').should("not.exist");
+
+    cy.get(
+      '[data-cy="cct-summary-error-link-grade-progression-adjustments"]'
+    ).click();
+    cy.focused().should(
+      "have.attr",
+      "data-cy",
+      "cct-change-grade-progression-adjustments"
+    );
+
+    cy.get(
+      '[data-cy="cct-summary-error-link-training-time-adjustments"]'
+    ).click();
+    cy.focused().should(
+      "have.attr",
+      "data-cy",
+      "cct-change-training-time-adjustments"
+    );
+    cy.focused().click();
+    cy.get('[data-cy="progress-header"]').should(
+      "contain.text",
+      "Step 2 of 5 - Training time adjustments"
+    );
+    cy.get('[data-cy="cct-invalid-adjustments-summary"]').should(
+      "contain.text",
+      "ST8 is not part of this programme's grade progression."
+    );
   });
 });
 
@@ -1958,6 +2854,7 @@ describe("CctTrainingTimeSection entry cap", () => {
     );
   });
 });
+
 describe("CctChangesSection change cap", () => {
   const mountWithChanges = (count: number) => {
     const changes = new Array<CctChange>(count)
