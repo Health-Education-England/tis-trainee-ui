@@ -80,8 +80,16 @@ export const CCT_NOTES_TOO_LONG_ERROR = `Notes must be ${CCT_NOTES_MAX_LENGTH} c
 
 export const CCT_PAGES = {
   programmeDetails: 0,
-  changes: 1,
-  summary: 2
+  trainingTime: 1,
+  gradeProgression: 2,
+  changes: 3,
+  summary: 4
 } as const;
 
-export const CCT_PAGE_NAMES = ["Programme details", "Changes", "Summary"];
+export const CCT_PAGE_NAMES = [
+  "Programme details",
+  "Training time adjustments",
+  "Grade progression adjustments",
+  "Changes",
+  "Summary"
+];
