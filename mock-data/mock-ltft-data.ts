@@ -151,6 +151,7 @@ export const mockLtftsList1 = [
 
 // New form Obj
 export const mockLtftNewFormObj: LtftObjNew = {
+  cctSnapshot: null,
   declarations: {
     discussedWithTpd: true,
     informationIsCorrect: null,
@@ -224,6 +225,7 @@ export const mockLtftDraftUpdatedPmFormDtoFirstSavePayload: LtftDto = {
   id: null,
   formRef: null,
   name: null,
+  cctSnapshot: null,
   change: {
     type: "LTFT",
     startDate: null,
@@ -319,7 +321,6 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
   },
   change: {
     id: null,
-    calculationId: null,
     type: "LTFT",
     wte: 0.0,
     startDate: null,
@@ -371,6 +372,7 @@ export const mockLtftDraftFirstSuccessSaveResponseDto: LtftDto = {
 
 // Mapped Obj after first save
 export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
+  cctSnapshot: null,
   created: "2026-01-13T18:15:08.376574339Z",
   declarations: {
     discussedWithTpd: true,
@@ -435,6 +437,7 @@ export const mockLtftFormObjAfterFirstSave: LtftObjNew = {
 };
 
 export const mockLtftSubmittedFormObj: LtftObjNew = {
+  cctSnapshot: null,
   traineeTisId: "47165",
   id: "68c4d30e-bc10-4556-a9f3-7effe265f466",
   formRef: "ltft_47165_001",

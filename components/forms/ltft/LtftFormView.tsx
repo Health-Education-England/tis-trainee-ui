@@ -43,6 +43,7 @@ import { LtftObjNew } from "../../../models/LtftTypes";
 import FormBackLink from "../../common/FormBackLink";
 import dayjs from "dayjs";
 import FieldWarningMsg from "../FieldWarningMsg";
+import { LtftCctSnapshotCard } from "./LtftCctSnapshotCard";
 import { LtftStatusDetails } from "./LtftStatusDetails";
 import store from "../../../redux/store/store";
 import { ltft16WeeksWarningTextSubmitted } from "../../../utilities/Constants";
@@ -219,6 +220,13 @@ export const LtftFormView = () => {
         <LtftChangeSummaryCard
           formData={formData}
           hasLegacyStartDate={hasLegacyStartDate}
+        />
+        <LtftCctSnapshotCard
+          snapshot={formData.cctSnapshot ?? null}
+          canEdit={canEditStatus}
+          onChange={cctSnapshot =>
+            dispatch(updatedLtft({ ...formData, cctSnapshot }))
+          }
         />
         <WarningCallout>
           <WarningCallout.Heading>Declarations</WarningCallout.Heading>
