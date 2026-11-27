@@ -6,11 +6,12 @@ import {
 import { Form } from "../../components/forms/form-builder/FormBuilder";
 
 const useFormAutosave = (
-  jsonForm: Form,
+  jsonForm: Form | undefined,
   formData: FormDataType,
-  setIsAutoSaving: (isAutoSaving: boolean) => void
+  setIsAutoSaving: (isAutoSaving: boolean) => void,
+  isEnabled: boolean = true
 ) => {
-  const formName = jsonForm.name;
+  const formName = jsonForm?.name;
   const firstRender = useRef(false);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ const useFormAutosave = (
   }, []);
 
   useEffect(() => {
+    if (!isEnabled || !jsonForm) return;
     if (firstRender.current) {
       firstRender.current = false;
       return;
@@ -33,7 +35,7 @@ const useFormAutosave = (
       clearTimeout(timeoutId);
       setIsAutoSaving(false);
     };
-  }, [formData, formName, setIsAutoSaving]);
+  }, [formData, formName, setIsAutoSaving, isEnabled]);
 };
 
 export default useFormAutosave;
