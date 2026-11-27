@@ -12,6 +12,8 @@ import notificationsReducer from "./notificationsSlice";
 import ltftReducer from "./ltftSlice";
 import ltftSummaryListReducer from "./ltftSummaryListSlice";
 import announcementsReducer from "./announcementsSlice";
+import cctReferenceReducer from "./cctReferenceSlice";
+import cctReducer from "./cctSlice";
 
 const rootReducer = combineReducers({
   traineeProfile: traineeProfileReducer,
@@ -26,7 +28,9 @@ const rootReducer = combineReducers({
   notifications: notificationsReducer,
   ltft: ltftReducer,
   ltftSummaryList: ltftSummaryListReducer,
-  announcements: announcementsReducer
+  announcements: announcementsReducer,
+  cctReference: cctReferenceReducer,
+  cct: cctReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
